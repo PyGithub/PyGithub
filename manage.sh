@@ -4,7 +4,6 @@
 function publish {
     bump
     readme
-    #doc
     push
 }
 
@@ -42,19 +41,7 @@ function readme {
     changelog=$(tail -n +6 doc/changes.rst)
     gitlog=$(git log v$previousVersion.. --oneline --pretty=format:'* %s (%h)' | grep -v "Merge")
     today=$(date "+(%B %m, %Y)")
-    echo "Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion $version $today\n-----------------------------------\n\n$gitlog\n$changelog" > doc/changes.rst
-}
-
-function doc {
-    rm -rf gh-pages
-    git clone . gh-pages -b gh-pages || exit
-    sphinx-build -b html -d doc/doctrees doc gh-pages/v1 || exit
-
-    cd gh-pages
-    git add . --all || exit
-    git commit --message "Generate doc of v1" || exit
-    git push origin gh-pages || exit
-    cd ..
+    echo -e "Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion $version $today\n-----------------------------------\n\n$gitlog\n$changelog" > doc/changes.rst
 }
 
 function push {
@@ -67,33 +54,6 @@ function push {
 
     git push origin master
     git push --tags
-}
-
-function unmerged {
-    BRANCHES_NOT_TO_BE_MERGED="-e gh-pages -e topic/DependencyGraph"
-    COMMITS_NOT_TO_BE_MERGED="-e 1bea00a -e 11aeaa7 -e dd1e255 -e 670c6fb -e ed87a91 -e 072fbcb -e 421a743 -e 0c45af7 -e 92e4df4 -e 79ebd4b -e 0965ffd -e e1990c5 -e 55f3250"
-
-    for b in `git branch -a --no-merged | grep -v $BRANCHES_NOT_TO_BE_MERGED`
-    do
-        if git --no-pager log ..$b --oneline | grep -v $COMMITS_NOT_TO_BE_MERGED > /dev/null
-        then
-            echo $b
-            git --no-pager log ..$b --oneline
-            echo
-        fi
-    done
-}
-
-function compare_to_api_ref_doc {
-    if [ -e developer.github.com ]
-    then
-        cd developer.github.com
-        git pull
-        cd ..
-    else
-        git clone https://github.com/github/developer.github.com.git
-    fi
-    python scripts/compare_to_api_ref_doc.py
 }
 
 $1

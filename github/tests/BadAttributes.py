@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +24,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import datetime
 
@@ -56,10 +60,7 @@ class BadAttributes(Framework.TestCase):
             self.assertEqual(e.actual_value, "foobar")
             self.assertEqual(e.expected_type, (str, unicode))
             self.assertEqual(e.transformation_exception.__class__, ValueError)
-            if Framework.atLeastPython26:
-                self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
-            else:
-                self.assertEqual(e.transformation_exception.args, ('time data did not match format:  data=foobar  fmt=%Y-%m-%dT%H:%M:%SZ',))
+            self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
         self.assertTrue(raised)
 
     def testBadTransformedAttribute(self):

@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Matt Babineau <babineaum@users.noreply.github.com>            #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -23,7 +30,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -38,6 +45,7 @@ class Issue(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.closed_at, datetime.datetime(2012, 5, 26, 14, 59, 33))
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
@@ -67,8 +75,9 @@ class Issue(Framework.TestCase):
     def testEditWithAllParameters(self):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
-        self.issue.edit("Title edited by PyGithub", "Body edited by PyGithub", user, "open", milestone, ["Bug"], ["assigned1", "assigned2"])
+        self.issue.edit("Title edited by PyGithub", "Body edited by PyGithub", user, "open", milestone, ["Bug"], ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.state, "open")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
@@ -99,6 +108,15 @@ class Issue(Framework.TestCase):
 
     def testGetLabels(self):
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
+
+    def testAddAndRemoveAssignees(self):
+        user1 = "jayfk"
+        user2 = self.g.get_user("jzelinskie")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.issue.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
+        self.issue.remove_from_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
 
     def testAddAndRemoveLabels(self):
         bug = self.repo.get_label("Bug")
@@ -139,3 +157,13 @@ class Issue(Framework.TestCase):
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
+
+    def testGetReactions(self):
+        reactions = self.issue.get_reactions()
+        self.assertEqual(reactions[0].content, "+1")
+
+    def testCreateReaction(self):
+        reaction = self.issue.create_reaction("hooray")
+
+        self.assertEqual(reaction.id, 16917472)
+        self.assertEqual(reaction.content, "hooray")

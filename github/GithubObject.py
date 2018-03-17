@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Andrew Scheller <github@loowis.durge.org>                     #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jakub Wilk <jwilk@jwilk.net>                                  #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -23,7 +30,8 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
+
 import sys
 import datetime
 from operator import itemgetter
@@ -220,7 +228,10 @@ class GithubObject(object):
             else:
                 items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
-                yield '{k}="{v}"'.format(k=k, v=v) if isinstance(v, (str, unicode)) else '{k}={v}'.format(k=k, v=v)
+                isText = isinstance(v, (str, unicode))
+                if isText and not atLeastPython3:
+                    v = v.encode('utf-8')
+                yield '{k}="{v}"'.format(k=k, v=v) if isText else '{k}={v}'.format(k=k, v=v)
         return '{class_name}({params})'.format(
             class_name=self.__class__.__name__,
             params=", ".join(list(format_params(params)))

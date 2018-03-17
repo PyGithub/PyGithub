@@ -4,6 +4,94 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.37 (March 03, 2018)
+-----------------------------------
+
+* Add __eq__ and __hash__ to NamedUser (#706) (8a13b274)
+* Add maintainer can modify flag to create pull request (#703) (0e5a1d1d)
+* Fix typo in Design.md (#701) (98d32af4)
+* Add role parameter to Team.add_membership method (#638) (01ab4cc6)
+* Add add_membership testcase (#637) (5a1424bb)
+
+Version 1.36 (February 02, 2018)
+-----------------------------------
+
+* Fix changelog generation (5d911e22)
+* Add collaborator permission support (#699) (167f85ef)
+* Use datetime object in create_milestone (#698) (cef98416)
+* Fix date format for milestone creation (#593) (e671fdd0)
+* Remove the default "null" input send during GET request (#691) (cbfe8d0f)
+* Updated PullRequest reviewer request according to API changes (#690) (5c9c2f75)
+* make created_at/published_at attrs available for Release objects (#689) (2f9b1e01)
+* Add committer/author to Repository.delete_file (#678) (3baa682c)
+* Add method to get latest release of a repository (#609) (45d18436)
+* Add permissions field to NamedUser (#676) (6cfe46b7)
+* Fix all pep8 coding conventions (6bc804dc)
+* Add new params for /users/:user/repos endpoint (89834a9b)
+* Add support for changing PR head commit (#632) (3f77e537)
+* Use print() syntax in README (#681) (c5988c39)
+* Add PyPI badge and installation instructions to README (#682) (3726f686)
+* Drop support for EOL Python 2.5-2.6 and 3.2-3.3 (#674) (6735be49)
+* Add Reactions feature (#671) (ba50af53)
+* Add ping_url and ping to Hook (#669) (6169d8ea)
+* Add Repository.archived property (#657) (35333e03)
+* Add unit test for tree attribute of GitCommit (#668) (e5bfdbeb)
+* Add read_only attribute to Deploy Keys (#570) (dbc6f5ab)
+* Doc create instance from token (#667) (c33a3883)
+* Fix uploading binary files on Python 3 (#621) (317079ef)
+* Decode jwt bytes object in Python 3 (#633) (84b43da7)
+* Remove broken downloads badge (#644) (15cdc2f8)
+* Added missing parameters for repo creation (#623) (5c41120a)
+* Add ability to access github Release Asset API. (#525) (52449649)
+* Add 'submitted at' to PullRequestReview (#565) (ebe7277a)
+* Quote path for /contents API (#614) (554c1ab1)
+* Add Python 3.6 (2533bed9)
+* Add Python 3.6 (e78f0ece)
+* Updated references in introduction.rst (d2c72bb3)
+* fix failing tests on py26 (291f6dde)
+* Import missing exception (67b078e9)
+
+Version 1.35 (July 10, 2017)
+-----------------------------------
+
+* Add Support for repository collaborator invitations.
+
+Version 1.34 (abril 04, 2017)
+-----------------------------------
+
+* Add Support for Pull Request Reviews feature.
+
+Version 1.32 (February 1, 2017)
+-----------------------------------
+
+* Support for Integrations installation endpoint (656e70e1)
+
+Version 1.31 (January 30, 2017)
+-----------------------------------
+
+* Support HTTP 302 redirect in Organization.has_in_members (0154c6b)
+* Add details of repo type for get_repos documentation (f119147)
+* Note explicit support for Python 3.5 (3ae55f0)
+* Fix README instructions (5b0224e)
+* An easier to see link to the documentation in response to issue #480. (6039a4b)
+* Encode GithubObject repr values in utf-8 when using Python2 (8ab9082)
+* Updated documentation (4304ccd)
+* Added a subscribers count field (a2da7f9)
+* Added "add_to_assignees" & "remove_from_assignees" method to Issue object. (66430d7)
+* Added "assignees" attribute to PullRequest object. (c0de6be)
+* add html_url to GitRelease (ec633aa)
+* Removed unused imports (65afc3f)
+* Fix typo in a constant (10a28e0)
+* Fix changelog formatting glitch (03a9227)
+* Added "assignees" argument in Repository.create_issue() (ba007dc)
+* Enhance support of "assignees" argument in Issue.edit() (14dd9f0)
+* Added "assignees" attribute to Issue object. (e0e5fdf)
+
+Version 1.30 (January 30, 2017)
+-----------------------------------
+
+* adds GitHub integrations (d60943d)
+
 Version 1.29 (October 10, 2016)
 -----------------------------------
 

@@ -14,13 +14,17 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 First create a Github instance::
 
     from github import Github
-
+    
+    # using username and password
     g = Github("user", "password")
+    
+    # or using an access token
+    g = Github("access_token")
 
 Then play with your Github objects::
 
     for repo in g.get_user().get_repos():
-        print repo.name
+        print(repo.name)
         repo.edit(has_wiki=False)
 
 Download and install
@@ -31,6 +35,9 @@ This package is in the `Python Package Index
 be enough.  You can also clone it on `Github
 <http://github.com/PyGithub/PyGithub>`__.
 
+If you wish to use GitHub Integrations, you'll want to be sure to install the
+'integrations' option: ``pip install PyGithub['integrations']``
+
 Licensing
 ---------
 
@@ -40,9 +47,9 @@ See files COPYING and COPYING.LESSER, as requested by `GNU <http://www.gnu.org/l
 What next?
 ----------
 
-You need to use a Github API and wonder which class implements it? [`Reference of APIs`](http://jacquev6.net/PyGithub/v1/apis.html) __
+You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
-You want all the details about PyGithub classes? [`Reference of classes`](http://jacquev6.net/PyGithub/v1/github_objects.html) __
+You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
 
 Projects using PyGithub
 -----------------------
@@ -60,6 +67,7 @@ Projects using PyGithub
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
+* https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
 
 They talk about PyGithub
 ------------------------

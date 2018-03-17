@@ -1,11 +1,29 @@
-# ########################## Copyrights and license ############################
+# -*- coding: utf-8 -*-
+
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +38,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -198,13 +216,13 @@ class Repository(Framework.TestCase):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
         question = self.repo.get_label("Question")
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateIssueWithAllArgumentsStringLabel(self):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ['Question'])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ["Question"], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateLabel(self):
@@ -290,6 +308,35 @@ class Repository(Framework.TestCase):
         commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [], github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"))
         self.assertEqual(commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea")
 
+    def testCreateGitRelease(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest",
+            "vX.Y.Z: PyGithub acctest",
+            "This release is created by PyGithub",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.body, "This release is created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
+    def testCreateGitReleaseWithAllArguments(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest2",
+            "vX.Y.Z: PyGithub acctest2",
+            "This release is also created by PyGithub",
+            False,
+            True,
+            "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.body, "This release is also created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, True)
+        tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
+        self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag("TaggedByPyGithub", "Tag created by PyGithub", "0b820628236ab8bab3890860fc414fa757ca15f4", "commit")
         self.assertEqual(tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a")
@@ -307,7 +354,13 @@ class Repository(Framework.TestCase):
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
         self.repo.add_to_collaborators(lyloa)
         self.assertTrue(self.repo.has_in_collaborators(lyloa))
-        self.assertListKeyEqual(self.repo.get_collaborators(), lambda u: u.login, ["jacquev6", "Lyloa"])
+        collaborators = self.repo.get_collaborators()
+        self.assertListKeyEqual(collaborators, lambda u: u.login, ["jacquev6", "Lyloa"])
+        jacquev6 = [u for u in collaborators if u.login == "jacquev6"][0]
+        self.assertTrue(jacquev6.permissions.admin, True)
+        self.assertTrue(jacquev6.permissions.pull, True)
+        self.assertTrue(jacquev6.permissions.push, True)
+        self.assertFalse(jacquev6.site_admin)
         self.repo.remove_from_collaborators(lyloa)
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
 
@@ -455,7 +508,7 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_subscribers(), lambda u: u.login, ["jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa"])
 
     def testCreatePull(self):
-        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master")
+        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master", True)
         self.assertEqual(pull.id, 1436215)
 
     def testCreatePullFromIssue(self):
