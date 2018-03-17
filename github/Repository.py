@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -8,10 +8,50 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
+# Copyright 2013 David Farr <david.farr@sap.com>                               #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2015 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Jay <ja.geb@me.com>                                           #
+# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2015 Jonathan Debonis <jon@ip-172-20-10-5.ec2.internal>            #
+# Copyright 2015 Kevin Lewandowski <kevinsl@gmail.com>                         #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
+# Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
+# Copyright 2016 ghfan <gavintofan@gmail.com>                                  #
+# Copyright 2017 Andreas Lutro <anlutro@gmail.com>                             #
+# Copyright 2017 Ben Firshman <ben@firshman.co.uk>                             #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
+# Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,7 +69,8 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
+
 import sys
 import urllib
 import datetime
