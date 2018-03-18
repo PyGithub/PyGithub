@@ -68,7 +68,8 @@ Projects using PyGithub
 * https://github.com/robcowie/virtualenvwrapper.github
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
 * https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
-
+* https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
+ 
 They talk about PyGithub
 ------------------------
 
