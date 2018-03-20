@@ -392,6 +392,31 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
+    def create_review(self, commit, body, event=github.GithubObject.NotSet, comments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :param commit: github.Commit.Commit
+        :param body: string
+        :param event: string
+        :param comments: list
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(body, str), body
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
+        post_parameters = {'commit_id': commit.sha, 'body': body}
+        post_parameters['event'] = 'COMMENT' if event == github.GithubObject.NotSet else event
+        if comments is github.GithubObject.NotSet:
+            post_parameters['comments'] = []
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reviews",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
