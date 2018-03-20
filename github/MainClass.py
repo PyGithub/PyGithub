@@ -273,54 +273,6 @@ class Github(object):
             None
         )
 
-    def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
-        """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :param language: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
-        args = {} if language is github.GithubObject.NotSet else {"language": language}
-        return Legacy.PaginatedList(
-            "/legacy/repos/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            args,
-            self.__requester,
-            "repositories",
-            Legacy.convertRepo,
-            github.Repository.Repository,
-        )
-
-    def legacy_search_users(self, keyword):
-        """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        return Legacy.PaginatedList(
-            "/legacy/user/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            {},
-            self.__requester,
-            "users",
-            Legacy.convertUser,
-            github.NamedUser.NamedUser,
-        )
-
-    def legacy_search_user_by_email(self, email):
-        """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
-        :param email: string
-        :rtype: :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(email, (str, unicode)), email
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            "/legacy/user/email/" + email
-        )
-        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
-
     def search_repositories(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
         """
         :calls: `GET /search/repositories <http://developer.github.com/v3/search>`_
