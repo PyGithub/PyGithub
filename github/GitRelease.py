@@ -141,6 +141,38 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
+    @property
+    def tarball_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._tarball_url)
+        return self._tarball_url.value
+
+    @property
+    def zipball_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._zipball_url)
+        return self._zipball_url.value
+
+    @property
+    def prerelease(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._prerelease)
+        return self._prerelease.value
+
+    @property
+    def draft(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
+
     def delete_release(self):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -208,6 +240,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._published_at = github.GithubObject.NotSet
+        self._tarball_url = github.GithubObject.NotSet
+        self._zipball_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:
@@ -230,7 +264,15 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
         if "html_url" in attributes:
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "prerelease" in attributes:
+            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
+        if "draft" in attributes:
+            self._draft = self._makeBoolAttribute(attributes["draft"])
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "published_at" in attributes:
             self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
+        if "tarball_url" in attributes:
+            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
+        if "zipball_url" in attributes:
+            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])

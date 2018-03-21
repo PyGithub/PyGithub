@@ -72,6 +72,8 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
         self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
         self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))
+        self.assertEqual(self.release.tarball_url, "https://api.github.com/repos/edhollandAL/PyGithub/tarball/v1.25.2")
+        self.assertEqual(self.release.zipball_url, "https://api.github.com/repos/edhollandAL/PyGithub/zipball/v1.25.2")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
