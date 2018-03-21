@@ -43,7 +43,7 @@
 import setuptools
 import textwrap
 
-version = "1.37"
+version = "1.38"
 
 
 if __name__ == "__main__":

@@ -4,6 +4,22 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.38 (March 21, 2018)
+-----------------------------------
+
+* Updated readthedocs, PyPI to reflect latest version
+* Added option to create review for Pull request (#662) (162f0397)
+* Depreciat legacy search API (3cd176e3)
+* Filter team members  by role (#491) (10ee17a2)
+* Add url attribute to PullRequestReview object (#731) (0fb176fd)
+* Added target_commitish option to Repository.create_git_release() (#625) (0f0a7d4e)
+* Fix broken Github reference link in class docstrings (a32a17bf)
+* Add hook support for organizations (#729) (c7f6563c)
+* Get organization from the team (#590) (d9c5a07f)
+* Added search_commits (#727) (aa556f85)
+* Collaborator site admin (#719) (f8b23505)
+* Fix add_to_watched for AuthenticatedUser (#716) (6109eb3c)
+
 Version 1.37 (March 03, 2018)
 -----------------------------------
 
