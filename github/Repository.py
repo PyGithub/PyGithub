@@ -107,6 +107,7 @@ import github.Download
 import github.Permissions
 import github.Event
 import github.Legacy
+import github.SourceImport
 import github.StatsContributor
 import github.StatsCommitActivity
 import github.StatsCodeFrequency
@@ -1092,6 +1093,41 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
+    def create_source_import(self, vcs, vcs_url, vcs_username=github.GithubObject.NotSet, vcs_password=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#start-an-import`_
+        :param vcs: string
+        :param vcs_url: string
+        :param vcs_username: string
+        :param vcs_password: string
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        assert isinstance(vcs, (str, unicode)), vcs
+        assert isinstance(vcs_url, (str, unicode)), vcs_url
+        assert vcs_username is github.GithubObject.NotSet or isinstance(vcs_username, (str, unicode)), vcs_username
+        assert vcs_password is github.GithubObject.NotSet or isinstance(vcs_password, (str, unicode)), vcs_password
+        put_parameters = {
+            "vcs": vcs,
+            "vcs_url": vcs_url
+        }
+
+        if vcs_username is not github.GithubObject.NotSet:
+            put_parameters["vcs_username"] = vcs_username
+
+        if vcs_password is not github.GithubObject.NotSet:
+            put_parameters["vcs_password"] = vcs_password
+
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/import",
+            headers=import_header,
+            input=put_parameters
+        )
+
+        return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
@@ -2039,6 +2075,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             parameters=url_parameters
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def get_source_import(self):
+        """
+        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/import",
+            headers=import_header,
+        )
+        if not data:
+            return None
+        else:
+            return github.SourceImport.SourceImport(self._requester, headers, data, completed=True)
 
     def get_stargazers(self):
         """

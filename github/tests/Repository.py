@@ -349,6 +349,19 @@ class Repository(Framework.TestCase):
         key = self.repo.create_key("Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE")
         self.assertEqual(key.id, 2626761)
 
+    def testCreateSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.create_source_import("mercurial", "https://bitbucket.org/hfuss/source-import-test")
+        self.assertEqual(source_import.authors_count, 0)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "importing")
+        self.assertEqual(source_import.status_text, "Importing...")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
@@ -485,6 +498,23 @@ class Repository(Framework.TestCase):
 
     def testGetWatchers(self):
         self.assertListKeyEqual(self.repo.get_watchers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "BeaverSoftware"])
+
+    def testGetSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.get_source_import()
+        self.assertEqual(source_import.authors_count, 1)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.has_large_files, False)
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.large_files_count, 0)
+        self.assertEqual(source_import.large_files_size, 0)
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "complete")
+        self.assertEqual(source_import.status_text, "Done")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.use_lfs, "undecided")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
 
     def testGetStargazers(self):
         self.assertListKeyEqual(self.repo.get_stargazers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca"])
