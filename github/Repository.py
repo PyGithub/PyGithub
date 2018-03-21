@@ -738,6 +738,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Invitation.Invitation(self._requester, headers, data, completed=True) if \
             data is not None else None
 
+    def import_source(self, vcs, vcs_username, vcs_password, vcs_url):
+        """
+        :calls: `PUT /repos/:owner/:repo/import <http://developer.github.com/v3/repos/import>`_
+        :param vcs: string 
+        :param vcs_username: string 
+        :param vcs_password: string 
+        :param vcs_url: string 
+        :rtype: None
+        """
+        import_header = { "Accept": "application/vnd.github.barred-rock-preview" }
+        put_parameters = {
+                "vcs": vcs,
+                "vcs_username": vcs_username,
+                "vcs_password": vcs_password,
+                "vcs_url": vcs_url
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/import",
+            headers=import_header,
+            input=put_parameters
+        )
+
     def compare(self, base, head):
         """
         :calls: `GET /repos/:owner/:repo/compare/:base...:head <http://developer.github.com/v3/repos/commits>`_
