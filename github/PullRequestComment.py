@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -8,9 +8,14 @@
 # Copyright 2013 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +30,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 
@@ -178,6 +183,42 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         self._useAttributes(data)
+
+    def get_reactions(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number/reactions
+                <https://developer.github.com/v3/reactions/#list-reactions-for-a-pull-request-review-comment>`
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Reaction.Reaction,
+            self._requester,
+            self.url + "/reactions",
+            None,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+
+    def create_reaction(self, reaction_type):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/comments/:number/reactions
+                <https://developer.github.com/v3/reactions/#create-reaction-for-a-pull-request-review-comment>`_
+        :param reaction_type: string
+        :rtype: :class:`github.Reaction.Reaction`
+        """
+        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
+            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+
+        post_parameters = {
+            "content": reaction_type,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reactions",
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet

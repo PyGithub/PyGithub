@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -8,13 +8,53 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
+# Copyright 2013 David Farr <david.farr@sap.com>                               #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2015 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Jay <ja.geb@me.com>                                           #
+# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2015 Jonathan Debonis <jon@ip-172-20-10-5.ec2.internal>            #
+# Copyright 2015 Kevin Lewandowski <kevinsl@gmail.com>                         #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
+# Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
+# Copyright 2016 ghfan <gavintofan@gmail.com>                                  #
+# Copyright 2017 Andreas Lutro <anlutro@gmail.com>                             #
+# Copyright 2017 Ben Firshman <ben@firshman.co.uk>                             #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
+# Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -29,7 +69,8 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
+
 import sys
 import urllib
 import datetime
@@ -46,6 +87,7 @@ import github.GitBlob
 import github.Organization
 import github.GitRef
 import github.GitRelease
+import github.GitReleaseAsset
 import github.Issue
 import github.Repository
 import github.PullRequest
@@ -65,6 +107,7 @@ import github.Download
 import github.Permissions
 import github.Event
 import github.Legacy
+import github.SourceImport
 import github.StatsContributor
 import github.StatsCommitActivity
 import github.StatsCodeFrequency
@@ -72,7 +115,6 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
@@ -83,6 +125,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def archived(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._archived)
+        return self._archived.value
 
     @property
     def archive_url(self):
@@ -579,7 +629,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
-    
+
     @property
     def subscribers_count(self):
         """
@@ -660,21 +710,34 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
 
-    def add_to_collaborators(self, collaborator):
+    def add_to_collaborators(self, collaborator, permission=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string 'pull', 'push' or 'admin'
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
 
+        if permission is not github.GithubObject.NotSet:
+            put_parameters = {'permission': permission}
+        else:
+            put_parameters = None
+
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/collaborators/" + collaborator
+            self.url + "/collaborators/" + collaborator,
+            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
+            input=put_parameters
         )
+        # return an invitation object if there's data returned by the API. If data is empty
+        # there's a pending invitation for the given user.
+        return github.Invitation.Invitation(self._requester, headers, data, completed=True) if \
+            data is not None else None
 
     def compare(self, base, head):
         """
@@ -766,12 +829,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
-    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+    def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert target_commitish is github.GithubObject.NotSet or isinstance(target_commitish, (str, unicode, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit)), target_commitish
         post_parameters = {
             "tag_name": tag,
             "name": name,
@@ -779,6 +843,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
+        if isinstance(target_commitish, (str, unicode)):
+            post_parameters["target_commitish"] = target_commitish
+        elif isinstance(target_commitish, github.Branch.Branch):
+            post_parameters["target_commitish"] = target_commitish.name
+        elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
+            post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/releases",
@@ -906,18 +976,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_key(self, title, key):
+    def create_key(self, title, key, read_only=False):
         """
         :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
         :param title: string
         :param key: string
+        :param read_only: bool
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
         assert isinstance(title, (str, unicode)), title
         assert isinstance(key, (str, unicode)), key
+        assert isinstance(read_only, bool), read_only
         post_parameters = {
             "title": title,
             "key": key,
+            "read_only": read_only,
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -952,13 +1025,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param state: string
         :param description: string
-        :param due_on: date
+        :param due_on: datetime
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, (str, unicode)), title
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, (datetime.datetime, datetime.date)), due_on
         post_parameters = {
             "title": title,
         }
@@ -967,7 +1040,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
-            post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
+            if isinstance(due_on, datetime.date):
+                post_parameters["due_on"] = due_on.strftime("%Y-%m-%dT%H:%M:%SZ")
+            else:
+                post_parameters["due_on"] = due_on.isoformat()
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
@@ -983,19 +1059,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param issue: :class:`github.Issue.Issue`
         :param base: string
         :param head: string
+        :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
-        if len(args) + len(kwds) == 4:
+        if len(args) + len(kwds) >= 4:
             return self.__create_pull_1(*args, **kwds)
         else:
             return self.__create_pull_2(*args, **kwds)
 
-    def __create_pull_1(self, title, body, base, head):
+    def __create_pull_1(self, title, body, base, head, maintainer_can_modify=github.GithubObject.NotSet):
         assert isinstance(title, (str, unicode)), title
         assert isinstance(body, (str, unicode)), body
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        return self.__create_pull(title=title, body=body, base=base, head=head)
+        assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(maintainer_can_modify, bool), maintainer_can_modify
+        if maintainer_can_modify is not github.GithubObject.NotSet:
+            return self.__create_pull(title=title, body=body, base=base, head=head, maintainer_can_modify=maintainer_can_modify)
+        else:
+            return self.__create_pull(title=title, body=body, base=base, head=head)
 
     def __create_pull_2(self, issue, base, head):
         assert isinstance(issue, github.Issue.Issue), issue
@@ -1011,6 +1092,41 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+
+    def create_source_import(self, vcs, vcs_url, vcs_username=github.GithubObject.NotSet, vcs_password=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#start-an-import`_
+        :param vcs: string
+        :param vcs_url: string
+        :param vcs_username: string
+        :param vcs_password: string
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        assert isinstance(vcs, (str, unicode)), vcs
+        assert isinstance(vcs_url, (str, unicode)), vcs_url
+        assert vcs_username is github.GithubObject.NotSet or isinstance(vcs_username, (str, unicode)), vcs_username
+        assert vcs_password is github.GithubObject.NotSet or isinstance(vcs_password, (str, unicode)), vcs_password
+        put_parameters = {
+            "vcs": vcs,
+            "vcs_url": vcs_url
+        }
+
+        if vcs_username is not github.GithubObject.NotSet:
+            put_parameters["vcs_username"] = vcs_username
+
+        if vcs_password is not github.GithubObject.NotSet:
+            put_parameters["vcs_password"] = vcs_password
+
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/import",
+            headers=import_header,
+            input=put_parameters
+        )
+
+        return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
 
     def delete(self):
         """
@@ -1247,7 +1363,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             parameters=url_parameters
         )
         if isinstance(data, list):
@@ -1267,8 +1383,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param message: string, (required), commit message
         :param content: string, (required), the actual data in the file
         :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
-        :param committer: dict, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: dict, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1277,7 +1393,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
@@ -1290,7 +1406,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -1306,7 +1424,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1324,6 +1442,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param content: string, Required. The updated file content, Base64 encoded.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1332,7 +1452,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert isinstance(sha, (str, unicode)),                    \
             'sha must be a str/unicode object'
@@ -1347,7 +1467,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -1365,7 +1487,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1373,13 +1495,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 'content': github.ContentFile.ContentFile(self._requester, headers, data["content"], completed=False)}
 
     def delete_file(self, path, message, sha,
-                    branch=github.GithubObject.NotSet):
+                    branch=github.GithubObject.NotSet,
+                    committer=github.GithubObject.NotSet,
+                    author=github.GithubObject.NotSet):
         """This method delete a file in a repository
         :calls: `DELETE /repos/:owner/:repo/contents/:path <https://developer.github.com/v3/repos/contents/#delete-a-file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`null <github.GithubObject.NotSet>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1393,14 +1519,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
             'branch must be a str/unicode object'
+        assert author is github.GithubObject.NotSet                \
+            or isinstance(author, github.InputGitAuthor),          \
+            'author must be a github.InputGitAuthor object'
+        assert committer is github.GithubObject.NotSet             \
+            or isinstance(committer, github.InputGitAuthor),       \
+            'committer must be a github.InputGitAuthor object'
 
         url_parameters = {'message': message, 'sha': sha}
         if branch is not github.GithubObject.NotSet:
             url_parameters['branch'] = branch
+        if author is not github.GithubObject.NotSet:
+            url_parameters["author"] = author._identity
+        if committer is not github.GithubObject.NotSet:
+            url_parameters["committer"] = committer._identity
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=url_parameters
         )
 
@@ -1421,7 +1557,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             parameters=url_parameters
         )
 
@@ -1940,6 +2076,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
+    def get_source_import(self):
+        """
+        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/import",
+            headers=import_header,
+        )
+        if not data:
+            return None
+        else:
+            return github.SourceImport.SourceImport(self._requester, headers, data, completed=True)
+
     def get_stargazers(self):
         """
         :calls: `GET /repos/:owner/:repo/stargazers <http://developer.github.com/v3/activity/starring>`_
@@ -2071,7 +2223,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_releases(self):
         """
         :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRelease.GitRelease`
         """
         return github.PaginatedList.PaginatedList(
             github.GitRelease.GitRelease,
@@ -2098,6 +2250,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self.url + "/releases/tags/" + id
             )
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
+    def get_latest_release(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/latest"
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """
@@ -2294,7 +2457,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.owner.login + "/" + self.name
 
+    def get_release_asset(self, id):
+        assert isinstance(id, (int)), id
+
+        resp_headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/assets/" + str(id)
+        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+
     def _initAttributes(self):
+        self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
         self._blobs_url = github.GithubObject.NotSet
@@ -2369,6 +2542,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "archived" in attributes:  # pragma no branch
+            self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
             self._archive_url = self._makeStringAttribute(attributes["archive_url"])
         if "assignees_url" in attributes:  # pragma no branch

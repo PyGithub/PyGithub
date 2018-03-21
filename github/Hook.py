@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -23,7 +29,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 
@@ -32,7 +38,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
+    This class represents Hooks. The reference can be found here http://developer.github.com/v3/repos/hooks
     """
 
     def __repr__(self):
@@ -118,6 +124,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def ping_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._ping_url)
+        return self._ping_url.value
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
@@ -174,6 +188,16 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self.url + "/tests"
         )
 
+    def ping(self):
+        """
+        :calls: `POST /repos/:owner/:repo/hooks/:id/pings <http://developer.github.com/v3/repos/hooks>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/pings"
+        )
+
     def _initAttributes(self):
         self._active = github.GithubObject.NotSet
         self._config = github.GithubObject.NotSet
@@ -185,6 +209,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._test_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._ping_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "active" in attributes:  # pragma no branch
@@ -207,3 +232,5 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "ping_url" in attributes:  # pragma no branch
+            self._ping_url = self._makeStringAttribute(attributes["ping_url"])

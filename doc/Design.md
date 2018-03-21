@@ -22,7 +22,7 @@ They
    - may be GET-able (to ask if an object is in the list)
    - may be DELETE-able (to remove an object from the list)
 
-Lazyness
+Laziness
 ========
 
 An URL returning a list of objects returns most of the information

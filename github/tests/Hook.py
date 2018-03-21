@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,7 +27,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -46,6 +51,8 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.name, "web")
         self.assertEqual(self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47))
         self.assertEqual(self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993")
+        self.assertEqual(self.hook.test_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests")
+        self.assertEqual(self.hook.ping_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.hook.__repr__(), 'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)')
@@ -60,6 +67,9 @@ class Hook(Framework.TestCase):
 
     def testTest(self):
         self.hook.test()  # This does not update attributes of hook
+
+    def testPing(self):
+        self.hook.ping()  # This does not update attributes of hook
 
     def testEditWithAllParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com"}, events=["fork", "push"])
