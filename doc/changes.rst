@@ -9,7 +9,7 @@ Version 1.38 (March 21, 2018)
 
 * Updated readthedocs, PyPI to reflect latest version
 * Added option to create review for Pull request (#662) (162f0397)
-* Depreciat legacy search API (3cd176e3)
+* Depreciate legacy search API (3cd176e3)
 * Filter team members  by role (#491) (10ee17a2)
 * Add url attribute to PullRequestReview object (#731) (0fb176fd)
 * Added target_commitish option to Repository.create_git_release() (#625) (0f0a7d4e)
