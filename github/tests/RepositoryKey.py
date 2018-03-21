@@ -31,29 +31,26 @@
 
 import Framework
 
+import datetime
+
 
 class RepositoryKey(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.key = self.g.get_user().get_repo("PyGithub").get_key(2626761)
+        # When recording test, be sure to create a deploy key for yourself on
+        # Github and update it here.
+        self.key = self.g.get_user("lra").get_repo("mackup").get_key(21870881)
 
     def testAttributes(self):
-        self.assertEqual(self.key.id, 2626761)
-        self.assertEqual(self.key.key, "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw==")
-        self.assertEqual(self.key.title, "Key added through PyGithub")
-        self.assertEqual(self.key.url, "https://api.github.com/user/keys/2626761")
+        self.assertEqual(self.key.id, 21870881)
+        self.assertEqual(self.key.key, "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB")
+        self.assertEqual(self.key.title, "PyGithub Test Key")
+        self.assertEqual(self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881")
+        self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.key.__repr__(), 'RepositoryKey(id=2626761)')
-
-    def testEdit(self):
-        self.key.edit("Title edited by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q58YmzZjU64prR5Pk91MfeHezOTgLqDYmepYbv3qjguiHtPai1vSai5WvUv3hgf9DArXsXE5CV6yoBIhAdGtpJKExHuQ2m4XTFCdbrgfQ3ypcSdgzEiQemyTA6TWwhbuwjJ1IqJMYOVLH+FBCkD8pyIpUDO7v3vaR2TCEuNwOS7lbsRsW3OkGYnUKjaPaCTe/inrqb7I3OE8cPhWJ3dM/zzzBj22J4LCNKhjKua8TFS74xGm3lNDZ6/twQl4n4xmrH/3tG+WOJicNO3JohNHqK9T0pILnr3epEyfdkBjcG0qXApqWvH2WipJhaH6of8Gdr0Z/K/7p8QFddmwNgdPQ==")
-        self.assertEqual(self.key.key, "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q58YmzZjU64prR5Pk91MfeHezOTgLqDYmepYbv3qjguiHtPai1vSai5WvUv3hgf9DArXsXE5CV6yoBIhAdGtpJKExHuQ2m4XTFCdbrgfQ3ypcSdgzEiQemyTA6TWwhbuwjJ1IqJMYOVLH+FBCkD8pyIpUDO7v3vaR2TCEuNwOS7lbsRsW3OkGYnUKjaPaCTe/inrqb7I3OE8cPhWJ3dM/zzzBj22J4LCNKhjKua8TFS74xGm3lNDZ6/twQl4n4xmrH/3tG+WOJicNO3JohNHqK9T0pILnr3epEyfdkBjcG0qXApqWvH2WipJhaH6of8Gdr0Z/K/7p8QFddmwNgdPQ==")
-        self.assertEqual(self.key.title, "Title edited by PyGithub")
-
-    def testEditWithoutParameters(self):
-        self.key.edit()
+        self.assertEqual(self.key.__repr__(), 'RepositoryKey(id=21870881)')
 
     def testDelete(self):
         self.key.delete()
