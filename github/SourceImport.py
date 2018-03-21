@@ -29,8 +29,7 @@ import github.GithubObject
 
 class SourceImport(github.GithubObject.CompletableGithubObject):
     """
-    This class represents a Source Import for a given Repository.
-    The reference can be found here https://developer.github.com/v3/migration/source_imports/
+    This class represents SourceImports. The reference can be found here https://developer.github.com/v3/migration/source_imports/
     """
 
     def __repr__(self):
