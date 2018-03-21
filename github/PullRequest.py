@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -8,9 +8,18 @@
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Thibault Jamet <tjamet@users.noreply.github.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +34,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -37,6 +46,8 @@ import github.PullRequestComment
 import github.File
 import github.IssueComment
 import github.Commit
+import github.PullRequestReview
+import github.PullRequestReviewerRequest
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
@@ -381,17 +392,44 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
+    def create_review(self, commit, body, event=github.GithubObject.NotSet, comments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :param commit: github.Commit.Commit
+        :param body: string
+        :param event: string
+        :param comments: list
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(body, str), body
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
+        post_parameters = {'commit_id': commit.sha, 'body': body}
+        post_parameters['event'] = 'COMMENT' if event == github.GithubObject.NotSet else event
+        if comments is github.GithubObject.NotSet:
+            post_parameters['comments'] = []
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reviews",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
         :param title: string
         :param body: string
         :param state: string
+        :param base: string
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert base is github.GithubObject.NotSet or isinstance(base, (str, unicode)), base
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -399,6 +437,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["body"] = body
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
+        if base is not github.GithubObject.NotSet:
+            post_parameters["base"] = base
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -495,6 +535,47 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_review(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/reviews/:id <https://developer.github.com/v3/pulls/reviews>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/reviews/" + str(id),
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+        )
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def get_reviews(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReview.PullRequestReview`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestReview.PullRequestReview,
+            self._requester,
+            self.url + "/reviews",
+            None,
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+        )
+
+    def get_reviewer_requests(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.InspectionReviewers.InspectionReviewers`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestReviewerRequest.PullRequestReviewerRequest,
+            self._requester,
+            self.url + "/requested_reviewers",
+            None,
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'},
+            list_item='users'
+        )
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
@@ -506,16 +587,25 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def merge(self, commit_message=github.GithubObject.NotSet):
+    def merge(self, commit_message=github.GithubObject.NotSet, commit_title=github.GithubObject.NotSet, merge_method=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
         assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
+        assert commit_title is github.GithubObject.NotSet or isinstance(commit_title, (str, unicode)), commit_title
+        assert merge_method is github.GithubObject.NotSet or isinstance(merge_method, (str, unicode)), merge_method
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
+        if commit_title is not github.GithubObject.NotSet:
+            post_parameters["commit_title"] = commit_title
+        if merge_method is not github.GithubObject.NotSet:
+            post_parameters["merge_method"] = merge_method
+        if sha is not github.GithubObject.NotSet:
+            post_parameters["sha"] = sha
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/merge",

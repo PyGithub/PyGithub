@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +23,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 import sys
@@ -54,6 +57,10 @@ class Search(Framework.TestCase):
     def testSearchIssues(self):
         issues = self.g.search_issues("compile", sort="comments", order="desc", language="C++")
         self.assertListKeyBegin(issues, lambda i: i.id, [12068673, 23250111, 14371957, 9423897, 24277400, 2408877, 11338741, 13980502, 27697165, 23102422])
+
+    def testPaginateSearchCommits(self):
+        commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
+        self.assertEqual(commits.totalCount, 3)
 
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")

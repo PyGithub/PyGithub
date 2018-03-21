@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -8,9 +8,15 @@
 # Copyright 2013 Srijan Choudhary <srijan4@gmail.com>                          #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +31,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 
@@ -86,6 +92,14 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
+    @property
+    def read_only(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys>`_
@@ -123,6 +137,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._title = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._verified = github.GithubObject.NotSet
+        self._read_only = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -135,3 +150,5 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])

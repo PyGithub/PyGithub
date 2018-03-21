@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,7 +28,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -77,6 +83,18 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.location, "Location edited by PyGithub")
         self.assertEqual(self.org.name, "Name edited by PyGithub")
 
+    def testEditHookWithMinimalParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"})
+        hook = self.org.edit_hook(hook.id, "mobile", {"url": "http://barfoo.com"})
+        self.assertEqual(hook.name, "mobile")
+
+    def testEditHookWithAllParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
+        hook = self.org.edit_hook(hook.id, "mobile", {"url": "http://barfoo.com"}, ["spoon"], True)
+        self.assertEqual(hook.name, "mobile")
+        self.assertEqual(hook.events, ["spoon"])
+        self.assertEqual(hook.active, True)
+
     def testCreateTeam(self):
         team = self.org.create_team("Team created by PyGithub")
         self.assertEqual(team.id, 189850)
@@ -85,6 +103,10 @@ class Organization(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         team = self.org.create_team("Team also created by PyGithub", [repo], "push")
         self.assertEqual(team.id, 189852)
+
+    def testDeleteHook(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"})
+        self.org.delete_hook(hook.id)
 
     def testPublicMembers(self):
         lyloa = self.g.get_user("Lyloa")
@@ -96,6 +118,9 @@ class Organization(Framework.TestCase):
 
     def testGetPublicMembers(self):
         self.assertListKeyEqual(self.org.get_public_members(), lambda u: u.login, ["jacquev6"])
+
+    def testGetHooks(self):
+        self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
 
     def testGetIssues(self):
         self.assertListKeyEqual(self.org.get_issues(), lambda i: i.id, [])
@@ -126,17 +151,27 @@ class Organization(Framework.TestCase):
     def testGetTeams(self):
         self.assertListKeyEqual(self.org.get_teams(), lambda t: t.name, ["Members", "Owners"])
 
+    def testCreateHookWithMinimalParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"})
+        self.assertEqual(hook.id, 257967)
+
+    def testCreateHookWithAllParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
+        self.assertTrue(hook.active)
+        self.assertEqual(hook.id, 257993)
+
     def testCreateRepoWithMinimalArguments(self):
-        repo = self.org.create_repo("TestPyGithub")
+        repo = self.org.create_repo(name="TestPyGithub")
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateRepoWithAllArguments(self):
         team = self.org.get_team(141496)
-        repo = self.org.create_repo("TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, team)
+        repo = self.org.create_repo(name="TestPyGithub2", description="Repo created by PyGithub", homepage="http://foobar.com",
+                                    private=False, has_issues=False, has_wiki=False, has_downloads=False, team_id=team.id)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.org.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
+        repo = self.org.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateFork(self):
