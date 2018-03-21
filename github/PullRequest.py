@@ -474,16 +474,21 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         return self.get_review_comments()
 
-    def get_review_comments(self):
+    def get_review_comments(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
             self.url + "/comments",
-            None
+            url_parameters
         )
 
     def get_commits(self):
