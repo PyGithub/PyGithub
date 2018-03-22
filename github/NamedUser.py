@@ -512,7 +512,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
-    def get_starred(self):
+    def get_starred(self, params=None):
         """
         :calls: `GET /users/:user/starred <http://developer.github.com/v3/activity/starring>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -521,10 +521,23 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository,
             self._requester,
             self.url + "/starred",
-            None
+            params
         )
 
-    def get_subscriptions(self):
+     def get_starred_with_dates(self, params=None):
+        """
+        :calls: `GET /users/:user/starred <http://developer.github.com/v3/activity/starring>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self._requester,
+            self.url + "/starred",
+            params,
+            headers={'Accept': 'application/vnd.github.v3.star+json'}
+        )
+
+   def get_subscriptions(self):
         """
         :calls: `GET /users/:user/subscriptions <http://developer.github.com/v3/activity/watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
