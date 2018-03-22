@@ -1928,6 +1928,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return data
 
+    def get_license(self):
+        """
+        :calls: `GET /repos/:owner/:repo/license <https://developer.github.com/v3/licenses>`_
+        :rtype: :class:`github.ContentFile.ContentFile`
+        """
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/license"
+        )
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
     def get_milestone(self, number):
         """
         :calls: `GET /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_

@@ -58,6 +58,7 @@ import github.PaginatedList
 import Repository
 import Installation
 import Legacy
+import License
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
@@ -168,6 +169,35 @@ class Github(object):
         :type: list of string
         """
         return self.__requester.oauth_scopes
+
+    def get_license(self, key=github.GithubObject.NotSet):
+        """
+        :calls: `GET /license/:license <https://developer.github.com/v3/licenses/#get-an-individual-license>`_
+        :param key: string
+        :rtype: :class:`github.License.License`
+        """
+
+        assert isinstance(key, (str, unicode)), key
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/licenses/" + key
+        )
+        return github.License.License(self.__requester, headers, data, completed=True)
+
+    def get_licenses(self):
+        """
+        :calls: `GET /licenses <https://developer.github.com/v3/licenses/#list-all-licenses>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.License.License`
+        """
+
+        url_parameters = dict()
+
+        return github.PaginatedList.PaginatedList(
+            github.License.License,
+            self.__requester,
+            "/licenses",
+            url_parameters
+        )
 
     def get_user(self, login=github.GithubObject.NotSet):
         """

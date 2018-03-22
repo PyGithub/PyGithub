@@ -60,6 +60,7 @@ from Issue import *
 from IssueComment import *
 from Reaction import *
 from IssueEvent import *
+from License import *
 from Label import *
 from Milestone import *
 from NamedUser import *
