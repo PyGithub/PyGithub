@@ -97,7 +97,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__writeLine(self.__port)
         self.__writeLine(url)
         self.__writeLine(str(headers))
-        self.__writeLine(input.replace('\n', '').replace('\r', ''))
+        self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
