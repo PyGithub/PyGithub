@@ -109,3 +109,4 @@ from Issue214 import *
 from Issue216 import *
 from Issue278 import *
 from Issue494 import *
+from Issue572 import *

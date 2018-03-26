@@ -338,6 +338,17 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def as_issue(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
+        :rtype: :class:`github.Issue.Issue`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/issues/".join(self.url.rsplit("/pulls/", 1))
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
     def create_comment(self, body, commit_id, path, position):
         """
         :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
