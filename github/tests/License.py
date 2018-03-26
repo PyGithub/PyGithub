@@ -2,7 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright                                                                    #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
