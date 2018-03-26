@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -8,9 +8,18 @@
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Sebastien Besson <seb.besson@gmail.com>                       #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
+# Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +34,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import datetime
 
@@ -308,7 +317,41 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
+    def create_hook(self, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
+        """
+        :calls: `POST /orgs/:owner/hooks <http://developer.github.com/v3/orgs/hooks>`_
+        :param name: string
+        :param config: dict
+        :param events: list of string
+        :param active: bool
+        :rtype: :class:`github.Hook.Hook`
+        """
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(config, dict), config
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
+        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
+        post_parameters = {
+            "name": name,
+            "config": config,
+        }
+        if events is not github.GithubObject.NotSet:
+            post_parameters["events"] = events
+        if active is not github.GithubObject.NotSet:
+            post_parameters["active"] = active
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/hooks",
+            input=post_parameters
+        )
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
+
+    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet,
+                    private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet,
+                    has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet,
+                    has_projects=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet,
+                    auto_init=github.GithubObject.NotSet, license_template=github.GithubObject.NotSet,
+                    gitignore_template=github.GithubObject.NotSet, allow_squash_merge=github.GithubObject.NotSet,
+                    allow_merge_commit=github.GithubObject.NotSet, allow_rebase_merge=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -318,9 +361,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param has_issues: bool
         :param has_wiki: bool
         :param has_downloads: bool
-        :param team_id: :class:`github.Team.Team`
+        :param has_projects: bool
+        :param team_id: : int
         :param auto_init: bool
+        :param license_template: string
         :param gitignore_template: string
+        :param allow_squash_merge: bool
+        :param allow_merge_commit: bool
+        :param allow_rebase_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, (str, unicode)), name
@@ -330,9 +378,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
-        assert team_id is github.GithubObject.NotSet or isinstance(team_id, github.Team.Team), team_id
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, (int, long)), team_id
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         post_parameters = {
             "name": name,
         }
@@ -348,12 +401,22 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["has_wiki"] = has_wiki
         if has_downloads is not github.GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
+        if has_projects is not github.GithubObject.NotSet:
+            post_parameters["has_projects"] = has_projects
         if team_id is not github.GithubObject.NotSet:
-            post_parameters["team_id"] = team_id._identity
+            post_parameters["team_id"] = team_id
         if auto_init is not github.GithubObject.NotSet:
             post_parameters["auto_init"] = auto_init
+        if license_template is not github.GithubObject.NotSet:
+            post_parameters["license_template"] = license_template
         if gitignore_template is not github.GithubObject.NotSet:
             post_parameters["gitignore_template"] = gitignore_template
+        if allow_squash_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_merge_commit is not github.GithubObject.NotSet:
+            post_parameters["allow_merge_commit"] = allow_merge_commit
+        if allow_rebase_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_rebase_merge"] = allow_rebase_merge
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/repos",
@@ -385,6 +448,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
+
+    def delete_hook(self, id):
+        """
+        :calls: `DELETE /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
+        :param id: integer
+        :rtype: None`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/hooks/" + str(id)
+        )
 
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
@@ -423,6 +498,36 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def edit_hook(self, id, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
+        :param id: integer
+        :param name: string
+        :param config: dict
+        :param events: list of string
+        :param active: bool
+        :rtype: :class:`github.Hook.Hook`
+        """
+        assert isinstance(id, (int, long)), id
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(config, dict), config
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
+        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
+        post_parameters = {
+            "name": name,
+            "config": config,
+        }
+        if events is not github.GithubObject.NotSet:
+            post_parameters["events"] = events
+        if active is not github.GithubObject.NotSet:
+            post_parameters["active"] = active
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/hooks/" + str(id),
+            input=post_parameters
+        )
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
+
     def get_events(self):
         """
         :calls: `GET /orgs/:org/events <http://developer.github.com/v3/activity/events>`_
@@ -432,6 +537,31 @@ class Organization(github.GithubObject.CompletableGithubObject):
             github.Event.Event,
             self._requester,
             self.url + "/events",
+            None
+        )
+
+    def get_hook(self, id):
+        """
+        :calls: `GET /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
+        :param id: integer
+        :rtype: :class:`github.Hook.Hook`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/hooks/" + str(id)
+        )
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
+
+    def get_hooks(self):
+        """
+        :calls: `GET /orgs/:owner/hooks <http://developer.github.com/v3/orgs/hooks>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Hook.Hook`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Hook.Hook,
+            self._requester,
+            self.url + "/hooks",
             None
         )
 

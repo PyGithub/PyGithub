@@ -1,9 +1,11 @@
 # PyGitHub
 
+[![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
 [![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
-[![PyPi](https://img.shields.io/pypi/dm/pygithub.svg)](https://pypi.python.org/pypi?%3Aaction=search&term=pygithub&submit=search)
-[![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.org/en/stable)
+[![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
+[![Join the chat at https://gitter.im/PyGithub/PyGithub](https://badges.gitter.im/PyGithub/PyGithub.svg)](https://gitter.im/PyGithub/PyGithub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Open Source Helpers](https://www.codetriage.com/pygithub/pygithub/badges/users.svg)](https://www.codetriage.com/pygithub/pygithub)
 
 PyGitHub is a Python (2 and 3) library to access the [GitHub API v3].
 This library enables you to manage [GitHub] resources such as repositories, user profiles, and organizations in your Python applications.
@@ -11,17 +13,28 @@ This library enables you to manage [GitHub] resources such as repositories, user
 [GitHub API v3]: https://developer.github.com/v3
 [GitHub]: https://github.com
 
+## Install
+
+```bash
+$ pip install pygithub
+```
+
 ## Simple Demo
 
 ```python
 from github import Github
 
 # First create a Github instance:
+
+# using username and password
 g = Github("user", "password")
+
+# or using an access token
+g = Github("access_token")
 
 # Then play with your Github objects:
 for repo in g.get_user().get_repos():
-    print repo.name
+    print(repo.name)
 ```
 
 ## Documentation
