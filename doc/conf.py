@@ -267,7 +267,7 @@ autoclass_content = "both"
 
 githubClasses = [
     fileName[10:-3]
-    for fileName in glob.glob("../github/*.py")
+    for fileName in sorted(glob.glob("../github/*.py"))
     if fileName not in [
         "../github/GithubException.py",
         "../github/GithubObject.py",
