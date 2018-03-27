@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -8,9 +8,18 @@
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Thibault Jamet <tjamet@users.noreply.github.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +34,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -329,6 +338,17 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def as_issue(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
+        :rtype: :class:`github.Issue.Issue`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/issues/".join(self.url.rsplit("/pulls/", 1))
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
     def create_comment(self, body, commit_id, path, position):
         """
         :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
@@ -382,6 +402,31 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+
+    def create_review(self, commit, body, event=github.GithubObject.NotSet, comments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :param commit: github.Commit.Commit
+        :param body: string
+        :param event: string
+        :param comments: list
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(body, str), body
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
+        post_parameters = {'commit_id': commit.sha, 'body': body}
+        post_parameters['event'] = 'COMMENT' if event == github.GithubObject.NotSet else event
+        if comments is github.GithubObject.NotSet:
+            post_parameters['comments'] = []
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reviews",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
@@ -440,15 +485,34 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         return self.get_review_comments()
 
-    def get_review_comments(self):
+    def get_review_comments(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
             self.url + "/comments",
+            url_parameters
+        )
+
+    def get_single_review_comments(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/review/:id/comments <https://developer.github.com/v3/pulls/reviews/>`_
+        :param id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
+        """
+        assert isinstance(id, (int, long)), id
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestComment.PullRequestComment,
+            self._requester,
+            self.url + "/reviews/" + str(id) + "/comments",
             None
         )
 

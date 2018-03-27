@@ -23,6 +23,17 @@ Pull Requests should clearly describe two things:
 
 Ideally, changes should be made in logical commits and tests added to improve the project's coverage of the GitHub API.
 
+## Adding missing attributes for a GithubObject
+
+```bash
+$ python scripts/add_attribute.py [class_name] [attribute_name] [attribute_type]
+
+# For example, if you want to add a `url` attribute of string type to the Commit class
+# Note: adding multiple attributes you have to run the script multiple times
+
+$ python scripts/add_attribute.py Commit url string
+```
+
 ## Automated tests
 
 You can run the tests through `python -m github.tests`.

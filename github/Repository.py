@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -8,13 +8,53 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
+# Copyright 2013 David Farr <david.farr@sap.com>                               #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2015 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Jay <ja.geb@me.com>                                           #
+# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2015 Jonathan Debonis <jon@ip-172-20-10-5.ec2.internal>            #
+# Copyright 2015 Kevin Lewandowski <kevinsl@gmail.com>                         #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
+# Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
+# Copyright 2016 ghfan <gavintofan@gmail.com>                                  #
+# Copyright 2017 Andreas Lutro <anlutro@gmail.com>                             #
+# Copyright 2017 Ben Firshman <ben@firshman.co.uk>                             #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
+# Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -29,7 +69,8 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
+
 import sys
 import urllib
 import datetime
@@ -66,6 +107,7 @@ import github.Download
 import github.Permissions
 import github.Event
 import github.Legacy
+import github.SourceImport
 import github.StatsContributor
 import github.StatsCommitActivity
 import github.StatsCodeFrequency
@@ -668,21 +710,29 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
 
-    def add_to_collaborators(self, collaborator):
+    def add_to_collaborators(self, collaborator, permission=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string 'pull', 'push' or 'admin'
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
 
+        if permission is not github.GithubObject.NotSet:
+            put_parameters = {'permission': permission}
+        else:
+            put_parameters = None
+
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator,
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'}
+            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
+            input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty
         # there's a pending invitation for the given user.
@@ -779,12 +829,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
-    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+    def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert target_commitish is github.GithubObject.NotSet or isinstance(target_commitish, (str, unicode, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit)), target_commitish
         post_parameters = {
             "tag_name": tag,
             "name": name,
@@ -792,6 +843,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
+        if isinstance(target_commitish, (str, unicode)):
+            post_parameters["target_commitish"] = target_commitish
+        elif isinstance(target_commitish, github.Branch.Branch):
+            post_parameters["target_commitish"] = target_commitish.name
+        elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
+            post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/releases",
@@ -968,13 +1025,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param state: string
         :param description: string
-        :param due_on: date
+        :param due_on: datetime
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, (str, unicode)), title
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, (datetime.datetime, datetime.date)), due_on
         post_parameters = {
             "title": title,
         }
@@ -983,7 +1040,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
-            post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
+            if isinstance(due_on, datetime.date):
+                post_parameters["due_on"] = due_on.strftime("%Y-%m-%dT%H:%M:%SZ")
+            else:
+                post_parameters["due_on"] = due_on.isoformat()
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
@@ -999,19 +1059,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param issue: :class:`github.Issue.Issue`
         :param base: string
         :param head: string
+        :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
-        if len(args) + len(kwds) == 4:
+        if len(args) + len(kwds) >= 4:
             return self.__create_pull_1(*args, **kwds)
         else:
             return self.__create_pull_2(*args, **kwds)
 
-    def __create_pull_1(self, title, body, base, head):
+    def __create_pull_1(self, title, body, base, head, maintainer_can_modify=github.GithubObject.NotSet):
         assert isinstance(title, (str, unicode)), title
         assert isinstance(body, (str, unicode)), body
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        return self.__create_pull(title=title, body=body, base=base, head=head)
+        assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(maintainer_can_modify, bool), maintainer_can_modify
+        if maintainer_can_modify is not github.GithubObject.NotSet:
+            return self.__create_pull(title=title, body=body, base=base, head=head, maintainer_can_modify=maintainer_can_modify)
+        else:
+            return self.__create_pull(title=title, body=body, base=base, head=head)
 
     def __create_pull_2(self, issue, base, head):
         assert isinstance(issue, github.Issue.Issue), issue
@@ -1027,6 +1092,41 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+
+    def create_source_import(self, vcs, vcs_url, vcs_username=github.GithubObject.NotSet, vcs_password=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#start-an-import`_
+        :param vcs: string
+        :param vcs_url: string
+        :param vcs_username: string
+        :param vcs_password: string
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        assert isinstance(vcs, (str, unicode)), vcs
+        assert isinstance(vcs_url, (str, unicode)), vcs_url
+        assert vcs_username is github.GithubObject.NotSet or isinstance(vcs_username, (str, unicode)), vcs_username
+        assert vcs_password is github.GithubObject.NotSet or isinstance(vcs_password, (str, unicode)), vcs_password
+        put_parameters = {
+            "vcs": vcs,
+            "vcs_url": vcs_url
+        }
+
+        if vcs_username is not github.GithubObject.NotSet:
+            put_parameters["vcs_username"] = vcs_username
+
+        if vcs_password is not github.GithubObject.NotSet:
+            put_parameters["vcs_password"] = vcs_password
+
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/import",
+            headers=import_header,
+            input=put_parameters
+        )
+
+        return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
 
     def delete(self):
         """
@@ -1976,6 +2076,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
+    def get_source_import(self):
+        """
+        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :rtype: :class:`github.SourceImport.SourceImport`
+        """
+        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/import",
+            headers=import_header,
+        )
+        if not data:
+            return None
+        else:
+            return github.SourceImport.SourceImport(self._requester, headers, data, completed=True)
+
     def get_stargazers(self):
         """
         :calls: `GET /repos/:owner/:repo/stargazers <http://developer.github.com/v3/activity/starring>`_
@@ -2107,7 +2223,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_releases(self):
         """
         :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRelease.GitRelease`
         """
         return github.PaginatedList.PaginatedList(
             github.GitRelease.GitRelease,

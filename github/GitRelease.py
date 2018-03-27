@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2016 Benjamin Whitney <benjamin.whitney@ironnetcybersecurity.com>  #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +29,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 from os.path import basename
 import github.GithubObject
@@ -30,7 +39,7 @@ import github.GitReleaseAsset
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitRelease as returned for example by https://developer.github.com/v3/repos/releases
+    This class represents GitReleases. The reference can be found here https://developer.github.com/v3/repos/releases
     """
 
     def __repr__(self):
@@ -67,6 +76,22 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._tag_name)
         return self._tag_name.value
+
+    @property
+    def draft(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
+
+    @property
+    def prerelease(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._prerelease)
+        return self._prerelease.value
 
     @property
     def author(self):
@@ -115,6 +140,22 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
+
+    @property
+    def tarball_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._tarball_url)
+        return self._tarball_url.value
+
+    @property
+    def zipball_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._zipball_url)
+        return self._zipball_url.value
 
     def delete_release(self):
         headers, data = self._requester.requestJsonAndCheck(
@@ -175,12 +216,16 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._tag_name = github.GithubObject.NotSet
+        self._draft = github.GithubObject.NotSet
+        self._prerelease = github.GithubObject.NotSet
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._published_at = github.GithubObject.NotSet
+        self._tarball_url = github.GithubObject.NotSet
+        self._zipball_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:
@@ -191,6 +236,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._title = self._makeStringAttribute(attributes["name"])
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        if "draft" in attributes:
+            self._draft = self._makeBoolAttribute(attributes["draft"])
+        if "prerelease" in attributes:
+            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
             self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
         if "url" in attributes:
@@ -203,3 +252,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "published_at" in attributes:
             self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
+        if "tarball_url" in attributes:
+            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
+        if "zipball_url" in attributes:
+            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])

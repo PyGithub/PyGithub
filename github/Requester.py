@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
 # Copyright 2012 Dima Kukushkin <dima@kukushkin.me>                            #
@@ -10,13 +10,29 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Brian Eugley <Brian.Eugley@capitalone.com>                    #
+# Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
+# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2016 Denis K <f1nal@cgaming.org>                                   #
+# Copyright 2016 Jared K. Smith <jaredsmith@jaredsmith.net>                    #
+# Copyright 2016 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2016 Mathieu Mitchell <mmitchell@iweb.com>                         #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -31,7 +47,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import base64
 import json

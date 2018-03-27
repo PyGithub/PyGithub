@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2016 Benjamin Whitney <benjamin.whitney@ironnetcybersecurity.com>  #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +29,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import os
 import zipfile
@@ -56,11 +65,15 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
         self.assertEqual(self.release.body, "Body")
         self.assertEqual(self.release.title, "Test")
+        self.assertEqual(self.release.draft, False)
+        self.assertEqual(self.release.prerelease, False)
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
         self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
         self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))
+        self.assertEqual(self.release.tarball_url, "https://api.github.com/repos/edhollandAL/PyGithub/tarball/v1.25.2")
+        self.assertEqual(self.release.zipball_url, "https://api.github.com/repos/edhollandAL/PyGithub/zipball/v1.25.2")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')

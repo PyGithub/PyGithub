@@ -1,15 +1,31 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
+# Copyright 2013 Steve Brown <steve@evolvedlight.co.uk>                        #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 C. R. Oldham <cro@ncbt.org>                                   #
+# Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
+# Copyright 2014 Tyler Treat <ttreat31@gmail.com>                              #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
+# Copyright 2015 Joseph Rawson <joseph.rawson.works@littledebian.org>          #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -24,7 +40,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import urllib
 import pickle
@@ -61,7 +77,7 @@ DEFAULT_PER_PAGE = 30
 
 class Github(object):
     """
-    This is the main class you instanciate to access the Github API v3. Optional parameters allow different authentication methods.
+    This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
     def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False):
@@ -257,54 +273,6 @@ class Github(object):
             None
         )
 
-    def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
-        """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :param language: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
-        args = {} if language is github.GithubObject.NotSet else {"language": language}
-        return Legacy.PaginatedList(
-            "/legacy/repos/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            args,
-            self.__requester,
-            "repositories",
-            Legacy.convertRepo,
-            github.Repository.Repository,
-        )
-
-    def legacy_search_users(self, keyword):
-        """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        return Legacy.PaginatedList(
-            "/legacy/user/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            {},
-            self.__requester,
-            "users",
-            Legacy.convertUser,
-            github.NamedUser.NamedUser,
-        )
-
-    def legacy_search_user_by_email(self, email):
-        """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
-        :param email: string
-        :rtype: :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(email, (str, unicode)), email
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            "/legacy/user/email/" + email
-        )
-        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
-
     def search_repositories(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
         """
         :calls: `GET /search/repositories <http://developer.github.com/v3/search>`_
@@ -443,6 +411,45 @@ class Github(object):
             self.__requester,
             "/search/code",
             url_parameters
+        )
+
+
+    def search_commits(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
+        """
+        :calls: `GET /search/commits <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param sort: string ('author-date', 'committer-date')
+        :param order: string ('asc', 'desc')
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert sort in ('author-date', 'committer-date'), sort
+            url_parameters["sort"] = sort
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert order in ('asc', 'desc'), order
+            url_parameters["order"] = order
+
+        query_chunks = []
+        if query:  # pragma no branch (Should be covered)
+            query_chunks.append(query)
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.Commit.Commit,
+            self.__requester,
+            "/search/commits",
+            url_parameters,
+            headers={
+                "Accept": "application/vnd.github.cloak-preview"
+            }
         )
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):

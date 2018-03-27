@@ -9,6 +9,8 @@ script:
 - python setup.py test
 notifications:
   email: false
+  webhooks: https://www.travisbuddy.com/
+  on_success: never
 deploy:
   provider: pypi
   user: pygithubtravis

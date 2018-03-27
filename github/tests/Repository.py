@@ -1,11 +1,29 @@
-# ########################## Copyrights and license ############################
+# -*- coding: utf-8 -*-
+
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -20,7 +38,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -290,6 +308,35 @@ class Repository(Framework.TestCase):
         commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [], github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"))
         self.assertEqual(commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea")
 
+    def testCreateGitRelease(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest",
+            "vX.Y.Z: PyGithub acctest",
+            "This release is created by PyGithub",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.body, "This release is created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
+    def testCreateGitReleaseWithAllArguments(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest2",
+            "vX.Y.Z: PyGithub acctest2",
+            "This release is also created by PyGithub",
+            False,
+            True,
+            "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.body, "This release is also created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, True)
+        tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
+        self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag("TaggedByPyGithub", "Tag created by PyGithub", "0b820628236ab8bab3890860fc414fa757ca15f4", "commit")
         self.assertEqual(tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a")
@@ -302,6 +349,19 @@ class Repository(Framework.TestCase):
         key = self.repo.create_key("Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE")
         self.assertEqual(key.id, 2626761)
 
+    def testCreateSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.create_source_import("mercurial", "https://bitbucket.org/hfuss/source-import-test")
+        self.assertEqual(source_import.authors_count, 0)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "importing")
+        self.assertEqual(source_import.status_text, "Importing...")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
@@ -313,6 +373,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(jacquev6.permissions.admin, True)
         self.assertTrue(jacquev6.permissions.pull, True)
         self.assertTrue(jacquev6.permissions.push, True)
+        self.assertFalse(jacquev6.site_admin)
         self.repo.remove_from_collaborators(lyloa)
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
 
@@ -438,6 +499,23 @@ class Repository(Framework.TestCase):
     def testGetWatchers(self):
         self.assertListKeyEqual(self.repo.get_watchers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "BeaverSoftware"])
 
+    def testGetSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.get_source_import()
+        self.assertEqual(source_import.authors_count, 1)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.has_large_files, False)
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.large_files_count, 0)
+        self.assertEqual(source_import.large_files_size, 0)
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "complete")
+        self.assertEqual(source_import.status_text, "Done")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.use_lfs, "undecided")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
+
     def testGetStargazers(self):
         self.assertListKeyEqual(self.repo.get_stargazers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca"])
 
@@ -460,7 +538,7 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_subscribers(), lambda u: u.login, ["jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa"])
 
     def testCreatePull(self):
-        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master")
+        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master", True)
         self.assertEqual(pull.id, 1436215)
 
     def testCreatePullFromIssue(self):

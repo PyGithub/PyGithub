@@ -1,15 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 poulp <mathieu.nerv@gmail.com>                                #
+# Copyright 2014 Tomas Radej <tradej@redhat.com>                               #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 E. Dunham <github@edunham.net>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -24,7 +37,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import datetime
 
@@ -45,7 +58,7 @@ import github.Notification
 
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
-    This class represents AuthenticatedUsers as returned for example by http://developer.github.com/v3/todo
+    This class represents AuthenticatedUsers as returned by https://developer.github.com/v3/users/#get-the-authenticated-user
 
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
@@ -393,14 +406,15 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_watched(self, watched):
         """
-        :calls: `PUT /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `PUT /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription",
+            input={"subscribed": True}
         )
 
     def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet, onetime_password=None):
@@ -952,13 +966,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_watched(self):
         """
-        :calls: `GET /user/watched <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /user/subscriptions <http://developer.github.com/v3/activity/watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            "/user/watched",
+            "/user/subscriptions",
             None
         )
 
@@ -1003,16 +1017,16 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_watched(self, watched):
         """
-        :calls: `GET /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(watched, github.Repository.Repository), watched
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
-        return status == 204
+        return status == 200
 
     def remove_from_emails(self, *emails):
         """
@@ -1066,14 +1080,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_watched(self, watched):
         """
-        :calls: `DELETE /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `DELETE /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
 
     def accept_invitation(self, invitation):

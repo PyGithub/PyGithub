@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jakub Wilk <jwilk@jwilk.net>                                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -21,19 +26,9 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
-# #193: Line endings should be linux style
 
-# TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013
-# lots of consts in this project are explict
-# should realy round them up and reference them by consts
-# EDIT: well, maybe :-)
-
-# ##############################################################################
-# Request Header                                                               #
-# (Case sensitive)                                                             #
-# ##############################################################################
 REQ_IF_NONE_MATCH = "If-None-Match"
 REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
 

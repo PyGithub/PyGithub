@@ -24,7 +24,7 @@ First create a Github instance::
 Then play with your Github objects::
 
     for repo in g.get_user().get_repos():
-        print repo.name
+        print(repo.name)
         repo.edit(has_wiki=False)
 
 Download and install
@@ -67,7 +67,9 @@ Projects using PyGithub
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
-
+* https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
+* https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
+ 
 They talk about PyGithub
 ------------------------
 
