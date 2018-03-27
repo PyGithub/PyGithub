@@ -999,23 +999,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self.url)
 
-    def create_label(self, name, color):
+    def create_label(self, name, color, description=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/labels <http://developer.github.com/v3/issues/labels>`_
         :param name: string
         :param color: string
+        :param description: string
         :rtype: :class:`github.Label.Label`
         """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(color, (str, unicode)), color
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "name": name,
             "color": color,
         }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
-            input=post_parameters
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
