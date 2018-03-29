@@ -52,6 +52,14 @@ class Label(github.GithubObject.CompletableGithubObject):
         return self._color.value
 
     @property
+    def description(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._description)
+        return self._description.value
+
+    @property
     def name(self):
         """
         :type: string
@@ -77,23 +85,28 @@ class Label(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, color):
+    def edit(self, name, color, description=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :param name: string
         :param color: string
+        :param description: string
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(color, (str, unicode)), color
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "name": name,
             "color": color,
         }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            input=post_parameters
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
         )
         self._useAttributes(data)
 
@@ -103,12 +116,15 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._color = github.GithubObject.NotSet
+        self._description = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
