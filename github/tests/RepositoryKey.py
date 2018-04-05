@@ -50,7 +50,7 @@ class RepositoryKey(Framework.TestCase):
         self.assertTrue(self.key.verified)
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.key.__repr__(), 'RepositoryKey(id=21870881)')
+        self.assertEqual(self.key.__repr__(), 'RepositoryKey(title="PyGithub Test Key", id=21870881)')
 
     def testDelete(self):
         self.key.delete()
