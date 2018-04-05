@@ -71,6 +71,24 @@ class Organization(Framework.TestCase):
         # test __repr__() based on this attributes
         self.assertEqual(self.org.__repr__(), 'Organization(name=None, id=1424031)')
 
+    def testAddMembersDefaultRole(self):
+        lyloa = self.g.get_user("lyloa")
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.add_to_members(lyloa, role='member')
+        self.assertTrue(self.org.has_in_pending_members(lyloa))
+        self.org.remove_from_membership(lyloa)
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.assertFalse(self.org.has_in_pending_members(lyloa))
+
+    def testAddMembersAdminRole(self):
+        lyloa = self.g.get_user("lyloa")
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.add_to_members(lyloa, role='admin')
+        self.assertTrue(self.org.has_in_pending_members(lyloa))
+        self.org.remove_from_membership(lyloa)
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.assertFalse(self.org.has_in_pending_members(lyloa))
+
     def testEditWithoutArguments(self):
         self.org.edit()
 
