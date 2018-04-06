@@ -718,6 +718,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
 
+    def testGetLicense(self):
+        self.assertEqual(len(self.repo.get_license().content), 47646)
+
 
 class LazyRepository(Framework.TestCase):
 
