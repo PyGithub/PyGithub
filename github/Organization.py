@@ -300,6 +300,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/public_members/" + public_member._identity
         )
 
+    def add_to_members(self, member, role=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /orgs/:org/memberships/:user <http://developer.github.com/v3/orgs/members>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :param role: string
+        :rtype: None
+        """
+        assert isinstance(role, (str, unicode)), role
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        url_parameters = {
+            "role": role,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity, parameters=url_parameters
+        )
+
     def create_fork(self, repo):
         """
         :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks>`_
