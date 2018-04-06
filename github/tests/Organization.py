@@ -101,7 +101,7 @@ class Organization(Framework.TestCase):
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
-        team = self.org.create_team("Team also created by PyGithub", [repo], "push")
+        team = self.org.create_team("Team also created by PyGithub", [repo], "push", "secret")
         self.assertEqual(team.id, 189852)
 
     def testDeleteHook(self):
