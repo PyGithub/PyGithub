@@ -762,7 +762,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_membership(self, member):
         """
-        :calls: `DELETE /orgs/:org/memberships/:user <http://developer.github.com/v3/orgs/memberships>`_
+        :calls: `DELETE /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#remove-organization-membership>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -771,7 +771,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url + "/memberships/" + member._identity
         )
-
 
     def remove_from_members(self, member):
         """
