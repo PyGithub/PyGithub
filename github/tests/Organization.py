@@ -75,19 +75,19 @@ class Organization(Framework.TestCase):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.add_to_members(lyloa, role='member')
-        self.assertTrue(self.org.has_in_pending_members(lyloa))
+        # 'Pending' members won't be in /orgs/:org/members/:user
+        self.assertFalse(self.org.has_in_members(lyloa))
         self.org.remove_from_membership(lyloa)
         self.assertFalse(self.org.has_in_members(lyloa))
-        self.assertFalse(self.org.has_in_pending_members(lyloa))
 
     def testAddMembersAdminRole(self):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.add_to_members(lyloa, role='admin')
-        self.assertTrue(self.org.has_in_pending_members(lyloa))
+        # 'Pending' members won't be in /orgs/:org/members/:user
+        self.assertFalse(self.org.has_in_members(lyloa))
         self.org.remove_from_membership(lyloa)
         self.assertFalse(self.org.has_in_members(lyloa))
-        self.assertFalse(self.org.has_in_pending_members(lyloa))
 
     def testEditWithoutArguments(self):
         self.org.edit()

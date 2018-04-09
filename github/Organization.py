@@ -731,22 +731,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
             )
         return status == 204
 
-    def has_in_pending_members(self, member):
-        """
-        :calls: `GET /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#get-organization-membership>`_
-        :param member: :class:`github.NamedUser.NamedUser`
-        :rtype: bool
-        """
-        assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestJson(
-            "GET",
-            self.url + "/memberships/" + member._identity
-        )
-        # Not sure why, but I had to coerce the data to a dictionary
-        data = json.loads(data)
-        state = data.get('state')
-        return state == 'pending'
-
     def has_in_public_members(self, public_member):
         """
         :calls: `GET /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
