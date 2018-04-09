@@ -37,6 +37,7 @@
 ################################################################################
 
 import datetime
+import json
 
 import github.GithubObject
 import github.PaginatedList
@@ -287,6 +288,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    def add_to_members(self, member, role=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#add-or-update-organization-membership>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :param role: string
+        :rtype: None
+        """
+        assert isinstance(role, (str, unicode)), role
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        url_parameters = {
+            "role": role,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity, parameters=url_parameters
+        )
 
     def add_to_public_members(self, public_member):
         """
@@ -729,6 +747,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/public_members/" + public_member._identity
         )
         return status == 204
+
+    def remove_from_membership(self, member):
+        """
+        :calls: `DELETE /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#remove-organization-membership>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/memberships/" + member._identity
+        )
 
     def remove_from_members(self, member):
         """

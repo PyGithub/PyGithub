@@ -41,35 +41,53 @@ class Organization(Framework.TestCase):
         self.org = self.g.get_organization("BeaverSoftware")
 
     def testAttributes(self):
-        self.assertEqual(self.org.avatar_url, "https://secure.gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png")
-        self.assertEqual(self.org.billing_email, "BeaverSoftware@vincent-jacques.net")
-        self.assertEqual(self.org.blog, None)
-        self.assertEqual(self.org.collaborators, 0)
+        self.assertEqual(self.org.avatar_url, "https://avatars1.githubusercontent.com/u/1?v=4")
+        self.assertEqual(self.org.billing_email, "foo@example.com")
+        self.assertEqual(self.org.blog, "http://www.example.com")
+        self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2012, 2, 9, 19, 20, 12))
-        self.assertEqual(self.org.disk_usage, 112)
-        self.assertEqual(self.org.email, None)
+        self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(self.org.disk_usage, 2)
+        self.assertEqual(self.org.email, '')
         self.assertEqual(self.org.followers, 0)
         self.assertEqual(self.org.following, 0)
         self.assertEqual(self.org.gravatar_id, None)
         self.assertEqual(self.org.html_url, "https://github.com/BeaverSoftware")
-        self.assertEqual(self.org.id, 1424031)
+        self.assertEqual(self.org.id, 1)
         self.assertEqual(self.org.location, "Paris, France")
         self.assertEqual(self.org.login, "BeaverSoftware")
-        self.assertEqual(self.org.name, None)
+        self.assertEqual(self.org.name, "BeaverSoftware")
         self.assertEqual(self.org.owned_private_repos, 0)
         self.assertEqual(self.org.plan.name, "free")
-        self.assertEqual(self.org.plan.private_repos, 0)
-        self.assertEqual(self.org.plan.space, 307200)
+        self.assertEqual(self.org.plan.private_repos, 3)
+        self.assertEqual(self.org.plan.space, 1)
         self.assertEqual(self.org.private_gists, 0)
         self.assertEqual(self.org.public_gists, 0)
-        self.assertEqual(self.org.public_repos, 2)
-        self.assertEqual(self.org.total_private_repos, 0)
+        self.assertEqual(self.org.public_repos, 27)
+        self.assertEqual(self.org.total_private_repos, 7)
         self.assertEqual(self.org.type, "Organization")
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.org.__repr__(), 'Organization(name=None, id=1424031)')
+        self.assertEqual(self.org.__repr__(), 'Organization(name="BeaverSoftware", id=1)')
+
+    def testAddMembersDefaultRole(self):
+        lyloa = self.g.get_user("lyloa")
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.add_to_members(lyloa, role='member')
+        # 'Pending' members won't be in /orgs/:org/members/:user
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.remove_from_membership(lyloa)
+        self.assertFalse(self.org.has_in_members(lyloa))
+
+    def testAddMembersAdminRole(self):
+        lyloa = self.g.get_user("lyloa")
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.add_to_members(lyloa, role='admin')
+        # 'Pending' members won't be in /orgs/:org/members/:user
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.remove_from_membership(lyloa)
+        self.assertFalse(self.org.has_in_members(lyloa))
 
     def testEditWithoutArguments(self):
         self.org.edit()
