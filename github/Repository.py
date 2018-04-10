@@ -830,6 +830,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
     def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/releases <http://developer.github.com/v3/repos/releases>`_
+        :param tag: string
+        :param name: string
+        :param message: string
+        :param draft: bool
+        :param prerelease: bool
+        :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
