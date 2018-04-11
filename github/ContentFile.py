@@ -67,6 +67,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return base64.b64decode(content)
 
     @property
+    def download_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._download_url)
+        return self._download_url.value
+
+    @property
     def encoding(self):
         """
         :type: string
@@ -89,6 +97,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
+
+    @property
+    def license(self):
+        """
+        :type: :class:`github.License.License`
+        """
+        self._completeIfNotSet(self._license)
+        return self._license.value
 
     @property
     def name(self):
@@ -152,8 +168,10 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
+        self._download_url = github.GithubObject.NotSet
         self._git_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
@@ -164,12 +182,16 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
+        if "download_url" in attributes:  # pragma no branch
+            self._download_url = self._makeStringAttribute(attributes["download_url"])
         if "encoding" in attributes:  # pragma no branch
             self._encoding = self._makeStringAttribute(attributes["encoding"])
         if "git_url" in attributes:  # pragma no branch
             self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "license" in attributes:  # pragma no branch
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch

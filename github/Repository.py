@@ -830,6 +830,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
     def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/releases <http://developer.github.com/v3/repos/releases>`_
+        :param tag: string
+        :param name: string
+        :param message: string
+        :param draft: bool
+        :param prerelease: bool
+        :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
@@ -997,25 +1007,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/keys",
             input=post_parameters
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self.url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
-    def create_label(self, name, color):
+    def create_label(self, name, color, description=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/labels <http://developer.github.com/v3/issues/labels>`_
         :param name: string
         :param color: string
+        :param description: string
         :rtype: :class:`github.Label.Label`
         """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(color, (str, unicode)), color
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "name": name,
             "color": color,
         }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
-            input=post_parameters
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -1878,7 +1893,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/keys/" + str(id)
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self.url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
     def get_keys(self):
         """
@@ -1886,7 +1901,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
-            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(requester, headers, data, completed, repoUrl=self.url),
+            github.RepositoryKey.RepositoryKey,
             self._requester,
             self.url + "/keys",
             None
@@ -1927,6 +1942,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/languages"
         )
         return data
+
+    def get_license(self):
+        """
+        :calls: `GET /repos/:owner/:repo/license <https://developer.github.com/v3/licenses>`_
+        :rtype: :class:`github.ContentFile.ContentFile`
+        """
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/license"
+        )
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_milestone(self, number):
         """

@@ -37,6 +37,7 @@
 ################################################################################
 
 import datetime
+import json
 
 import github.GithubObject
 import github.PaginatedList
@@ -288,6 +289,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def add_to_members(self, member, role=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#add-or-update-organization-membership>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :param role: string
+        :rtype: None
+        """
+        assert isinstance(role, (str, unicode)), role
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        url_parameters = {
+            "role": role,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity, parameters=url_parameters
+        )
+
     def add_to_public_members(self, public_member):
         """
         :calls: `PUT /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
@@ -424,17 +442,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
+    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
         :param permission: string
+        :param privacy: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, (str, unicode)), name
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
@@ -442,6 +462,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters['privacy'] = privacy
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
@@ -725,6 +747,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/public_members/" + public_member._identity
         )
         return status == 204
+
+    def remove_from_membership(self, member):
+        """
+        :calls: `DELETE /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members/#remove-organization-membership>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/memberships/" + member._identity
+        )
 
     def remove_from_members(self, member):
         """

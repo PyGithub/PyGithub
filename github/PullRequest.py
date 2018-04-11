@@ -480,6 +480,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
+        Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
         :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """

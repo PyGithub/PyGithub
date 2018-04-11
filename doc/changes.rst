@@ -4,6 +4,28 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.39 (April 10, 2018)
+-----------------------------------
+
+* Add documentation to github.Repository.Repository.create_git_release() (#747) (a769c2ff)
+* Add add_to_members() and remove_from_membership() (#741) (4da483d1)
+* Documentation: clarify semantics of get_comments (#743) (fec3c943)
+* Add download_url to ContentFile, closes #575 (ca6fbc45)
+* Add PullRequestComment.in_reply_to_id (#718) (eaa6a508)
+* Add team privacy parameter to create team (#702) (5cb5ab71)
+* Implement License API (#734) (b54ccc78)
+* Fix delete method for RepositoryKey (911bf615)
+* Remove edit for UserKey (722f2534)
+* Labels API: support description (#738) (42e75938)
+* Added Issue.as_pull_request() and PullReqest.as_issue() (#630) (6bf2acc7)
+* Documentation: sort the Github Objects (#735) (1497e826)
+* Add support for getting PR single review's comments. (#670) (612c3500)
+* Update the RepositoryKey class (#530) (5e8c6832)
+* Added since to PR review comments get (#577) (d8508285)
+* Remove some duplicate attributes introduced in #522 (566b28d3)
+* Added tarball_url, zipball_url, prerelease and draft property (#522) (c76e67b7)
+* Source Import API (#673) (864c663a)
+
 Version 1.38 (March 21, 2018)
 -----------------------------------
 

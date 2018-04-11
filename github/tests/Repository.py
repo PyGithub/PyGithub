@@ -226,8 +226,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(issue.number, 30)
 
     def testCreateLabel(self):
-        label = self.repo.create_label("Label with silly name % * + created by PyGithub", "00ff00")
+        label = self.repo.create_label("Label with silly name % * + created by PyGithub", "00ff00", "Description of label with silly name")
         self.assertEqual(label.color, "00ff00")
+        self.assertEqual(label.description, "Description of label with silly name")
         self.assertEqual(label.name, "Label with silly name % * + created by PyGithub")
         self.assertEqual(label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+silly+name+%25+%2A+%2B+created+by+PyGithub")
 
@@ -716,6 +717,9 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+    def testGetLicense(self):
+        self.assertEqual(len(self.repo.get_license().content), 47646)
 
 
 class LazyRepository(Framework.TestCase):

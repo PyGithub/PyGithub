@@ -91,27 +91,6 @@ class UserKey(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
-        """
-        :calls: `PATCH /user/keys/:id <http://developer.github.com/v3/users/keys>`_
-        :param title: string
-        :param key: string
-        :rtype: None
-        """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert key is github.GithubObject.NotSet or isinstance(key, (str, unicode)), key
-        post_parameters = dict()
-        if title is not github.GithubObject.NotSet:
-            post_parameters["title"] = title
-        if key is not github.GithubObject.NotSet:
-            post_parameters["key"] = key
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
-        )
-        self._useAttributes(data)
-
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._key = github.GithubObject.NotSet
