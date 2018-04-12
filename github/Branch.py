@@ -67,11 +67,18 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return self._protected.value
 
     @property
-    def enforcement_level(self):
+    def include_admins(self):
         """
-        :type: string
+        :type: bool
         """
-        return self._enforcement_level.value
+        return self._include_admins.value
+
+    @property
+    def strict(self):
+        """
+        :type: bool
+        """
+        return self._strict.value
 
     @property
     def contexts(self):
@@ -91,5 +98,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "protection" in attributes:
             self._protected = self._makeBoolAttribute(attributes["protection"]["enabled"])
-            self._enforcement_level = self._makeStringAttribute(attributes["protection"]["required_status_checks"]["enforcement_level"])
+            self._include_admins = self._makeBoolAttribute(attributes["protection"]["required_status_checks"]["include_admins"])
+            self._strict = self._makeBoolAttribute(attributes["protection"]["required_status_checks"]["strict"])
             self._contexts = self._makeListOfStringsAttribute(attributes["protection"]["required_status_checks"]["contexts"])

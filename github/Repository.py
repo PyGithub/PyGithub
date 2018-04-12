@@ -2392,29 +2392,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
+    def protect_branch(self, branch, enabled, include_admins=github.GithubObject.NotSet, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
         :param branch: string
         :param enabled: boolean
-        :param enforcement_level: string
+        :param include_admins: boolean
+        :param strict: boolean
         :param contexts: list of strings
         :rtype: None
         """
 
         assert isinstance(branch, (str, unicode))
         assert isinstance(enabled, bool)
-        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
+        assert isinstance(include_admins, bool)
+        assert isinstance(strict, bool)
         assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
 
         post_parameters = {
-            "protection": {}
+            "protection": {"required_status_checks": {}}
         }
+
         if enabled is not github.GithubObject.NotSet:
             post_parameters["protection"]["enabled"] = enabled
-        if enforcement_level is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"] = {}
-            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
+        if include_admins is not github.GithubObject.NotSet:
+            post_parameters["protection"]["required_status_checks"]["include_admins"] = include_admins
+        if strict is not github.GithubObject.NotSet:
+            post_parameters["protection"]["required_status_checks"]["strict"] = strict
         if contexts is not github.GithubObject.NotSet:
             post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
