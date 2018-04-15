@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
+# Copyright 2017 Mike Miller <github@mikeage.net>                              #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,16 +23,25 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
+
+import datetime
+
 
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(538)
-        
+
+        # Test ability to create a review
+        self.created_pullreview = self.pull.create_review(
+            self.repo.get_commit('2f0e4e55fe87e38d26efc9aa1346f56abfbd6c52'),
+            'Some review created by PyGithub'
+        )
+
         # Test ability to get all reviews
         self.pullreviews = self.pull.get_reviews()
 
@@ -46,6 +56,8 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(self.pullreview.state, "APPROVED")
         self.assertEqual(self.pullreview.html_url, "https://github.com/PyGithub/PyGithub/pull/538#pullrequestreview-28482091")
         self.assertEqual(self.pullreview.pull_request_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/538")
+        self.assertEqual(self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59))
+        self.assertIn(self.created_pullreview, self.pullreviews)
 
         # test __repr__() based on this attributes
         self.assertEqual(self.pullreview.__repr__(), 'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)')

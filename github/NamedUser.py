@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -24,7 +33,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -32,6 +41,7 @@ import github.PaginatedList
 import github.Gist
 import github.Repository
 import github.NamedUser
+import github.Permissions
 import github.Plan
 import github.Organization
 import github.Event
@@ -39,11 +49,17 @@ import github.Event
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
-    This class represents NamedUsers as returned for example by http://developer.github.com/v3/todo
+    This class represents NamedUsers. The reference can be found here https://developer.github.com/v3/users/#get-a-single-user
     """
 
     def __repr__(self):
         return self.get__repr__({"login": self._login.value})
+
+    def __hash__(self):
+        return hash((self.id, self.login))
+
+    def __eq__(self, other):
+        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
 
     @property
     def avatar_url(self):
@@ -238,6 +254,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._owned_private_repos.value
 
     @property
+    def permissions(self):
+        """
+        :type: :class:`github.Permissions.Permissions`
+        """
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
+
+    @property
     def plan(self):
         """
         :type: :class:`github.Plan.Plan`
@@ -284,6 +308,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._repos_url)
         return self._repos_url.value
+
+    @property
+    def site_admin(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._site_admin)
+        return self._site_admin.value
 
     @property
     def starred_url(self):
@@ -454,16 +486,25 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet):
+    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet,
+                  direction=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user/repos <http://developer.github.com/v3/repos>`_
         :param type: string
+        :param sort: string
+        :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
@@ -549,12 +590,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
+        self._permissions = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
         self._private_gists = github.GithubObject.NotSet
         self._public_gists = github.GithubObject.NotSet
         self._public_repos = github.GithubObject.NotSet
         self._received_events_url = github.GithubObject.NotSet
         self._repos_url = github.GithubObject.NotSet
+        self._site_admin = github.GithubObject.NotSet
         self._starred_url = github.GithubObject.NotSet
         self._subscriptions_url = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
@@ -611,6 +654,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
             self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "plan" in attributes:  # pragma no branch
             self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch
@@ -623,6 +668,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
+        if "site_admin" in attributes:  # pragma no branch
+            self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_url" in attributes:  # pragma no branch
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch

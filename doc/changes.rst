@@ -4,6 +4,91 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.39 (April 10, 2018)
+-----------------------------------
+
+* Add documentation to github.Repository.Repository.create_git_release() (#747) (a769c2ff)
+* Add add_to_members() and remove_from_membership() (#741) (4da483d1)
+* Documentation: clarify semantics of get_comments (#743) (fec3c943)
+* Add download_url to ContentFile, closes #575 (ca6fbc45)
+* Add PullRequestComment.in_reply_to_id (#718) (eaa6a508)
+* Add team privacy parameter to create team (#702) (5cb5ab71)
+* Implement License API (#734) (b54ccc78)
+* Fix delete method for RepositoryKey (911bf615)
+* Remove edit for UserKey (722f2534)
+* Labels API: support description (#738) (42e75938)
+* Added Issue.as_pull_request() and PullReqest.as_issue() (#630) (6bf2acc7)
+* Documentation: sort the Github Objects (#735) (1497e826)
+* Add support for getting PR single review's comments. (#670) (612c3500)
+* Update the RepositoryKey class (#530) (5e8c6832)
+* Added since to PR review comments get (#577) (d8508285)
+* Remove some duplicate attributes introduced in #522 (566b28d3)
+* Added tarball_url, zipball_url, prerelease and draft property (#522) (c76e67b7)
+* Source Import API (#673) (864c663a)
+
+Version 1.38 (March 21, 2018)
+-----------------------------------
+
+* Updated readthedocs, PyPI to reflect latest version
+* Added option to create review for Pull request (#662) (162f0397)
+* Depreciate legacy search API (3cd176e3)
+* Filter team members  by role (#491) (10ee17a2)
+* Add url attribute to PullRequestReview object (#731) (0fb176fd)
+* Added target_commitish option to Repository.create_git_release() (#625) (0f0a7d4e)
+* Fix broken Github reference link in class docstrings (a32a17bf)
+* Add hook support for organizations (#729) (c7f6563c)
+* Get organization from the team (#590) (d9c5a07f)
+* Added search_commits (#727) (aa556f85)
+* Collaborator site admin (#719) (f8b23505)
+* Fix add_to_watched for AuthenticatedUser (#716) (6109eb3c)
+
+Version 1.37 (March 03, 2018)
+-----------------------------------
+
+* Add __eq__ and __hash__ to NamedUser (#706) (8a13b274)
+* Add maintainer can modify flag to create pull request (#703) (0e5a1d1d)
+* Fix typo in Design.md (#701) (98d32af4)
+* Add role parameter to Team.add_membership method (#638) (01ab4cc6)
+* Add add_membership testcase (#637) (5a1424bb)
+
+Version 1.36 (February 02, 2018)
+-----------------------------------
+
+* Fix changelog generation (5d911e22)
+* Add collaborator permission support (#699) (167f85ef)
+* Use datetime object in create_milestone (#698) (cef98416)
+* Fix date format for milestone creation (#593) (e671fdd0)
+* Remove the default "null" input send during GET request (#691) (cbfe8d0f)
+* Updated PullRequest reviewer request according to API changes (#690) (5c9c2f75)
+* make created_at/published_at attrs available for Release objects (#689) (2f9b1e01)
+* Add committer/author to Repository.delete_file (#678) (3baa682c)
+* Add method to get latest release of a repository (#609) (45d18436)
+* Add permissions field to NamedUser (#676) (6cfe46b7)
+* Fix all pep8 coding conventions (6bc804dc)
+* Add new params for /users/:user/repos endpoint (89834a9b)
+* Add support for changing PR head commit (#632) (3f77e537)
+* Use print() syntax in README (#681) (c5988c39)
+* Add PyPI badge and installation instructions to README (#682) (3726f686)
+* Drop support for EOL Python 2.5-2.6 and 3.2-3.3 (#674) (6735be49)
+* Add Reactions feature (#671) (ba50af53)
+* Add ping_url and ping to Hook (#669) (6169d8ea)
+* Add Repository.archived property (#657) (35333e03)
+* Add unit test for tree attribute of GitCommit (#668) (e5bfdbeb)
+* Add read_only attribute to Deploy Keys (#570) (dbc6f5ab)
+* Doc create instance from token (#667) (c33a3883)
+* Fix uploading binary files on Python 3 (#621) (317079ef)
+* Decode jwt bytes object in Python 3 (#633) (84b43da7)
+* Remove broken downloads badge (#644) (15cdc2f8)
+* Added missing parameters for repo creation (#623) (5c41120a)
+* Add ability to access github Release Asset API. (#525) (52449649)
+* Add 'submitted at' to PullRequestReview (#565) (ebe7277a)
+* Quote path for /contents API (#614) (554c1ab1)
+* Add Python 3.6 (2533bed9)
+* Add Python 3.6 (e78f0ece)
+* Updated references in introduction.rst (d2c72bb3)
+* fix failing tests on py26 (291f6dde)
+* Import missing exception (67b078e9)
+
 Version 1.35 (July 10, 2017)
 -----------------------------------
 

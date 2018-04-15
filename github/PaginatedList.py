@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -8,9 +8,18 @@
 # Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
+# Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Eliot Walker <eliot@lyft.com>                                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -25,7 +34,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 
@@ -89,7 +98,7 @@ class PaginatedList(PaginatedListBase):
     You can simply enumerate through instances of this class::
 
         for repo in user.get_repos():
-            print repo.name
+            print(repo.name)
 
     You can also index them or take slices::
 
@@ -99,7 +108,7 @@ class PaginatedList(PaginatedListBase):
     If you want to iterate in reversed order, just do::
 
         for repo in user.get_repos().reversed:
-            print repo.name
+            print(repo.name)
 
     And if you really need it, you can explicitely access a specific page::
 
@@ -175,7 +184,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self.__totalCount = data.get('total_count')
             data = data[self.__list_item]
 
         content = [
@@ -211,7 +220,7 @@ class PaginatedList(PaginatedListBase):
         )
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self.__totalCount = data.get('total_count')
             data = data[self.__list_item]
 
         return [

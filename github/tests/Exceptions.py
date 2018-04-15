@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 humbug <bah>                                                  #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,7 +28,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github
 import sys
@@ -30,7 +36,6 @@ import pickle
 
 import Framework
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atMostPython2 = sys.hexversion < 0x03000000
 
 
@@ -82,7 +87,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
@@ -96,7 +101,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
@@ -110,12 +115,11 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 401)
             self.assertEqual(exception.data, {"message": "Bad credentials"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
             else:
                 self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
-
 
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
