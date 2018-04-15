@@ -427,20 +427,12 @@ class Requester:
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         kwds["timeout"] = self.__timeout
 
-        ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
-        ##
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        # The actual proxy connection is handled within the requests library
-        conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+        self.__connection = self.__connectionClass(self.__hostname, self.__port, **kwds)
 
-        self.__connection = conn
-
-        return conn
+        return self.__connection
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
