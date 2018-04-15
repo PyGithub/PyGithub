@@ -87,6 +87,12 @@ class Github(Framework.TestCase):
     def testGetUsersSince(self):
         self.assertListKeyBegin(self.g.get_users(since=1000), lambda u: u.login, ["sbecker"])
 
+    def testGetOrganizations(self):
+        self.assertListKeyBegin(self.g.get_organizations(), lambda u: u.login, ['errfree', 'engineyard', "ministrycentered", "collectiveidea", "ogc", "sevenwire", "entryway"])
+
+    def testGetOrganizationsSince(self):
+        self.assertListKeyBegin(self.g.get_organizations(since=1000), lambda u: u.login, ["railslove", "railsdog", "netguru", "webhostio", "animikii", "sauspiel", "wherecloud", "triveos"])
+
     def testGetRepos(self):
         self.assertListKeyBegin(self.g.get_repos(), lambda r: r.name, ["grit", "merb-core", "rubinius", "god", "jsawesome", "jspec", "exception_logger", "ambition"])
 

@@ -245,6 +245,23 @@ class Github(object):
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
+    def get_organizations(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /organizations <http://developer.github.com/v3/orgs#list-all-organizations>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self.__requester,
+            "/organizations",
+            url_parameters
+        )
+
     def get_repo(self, full_name_or_id, lazy=True):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
