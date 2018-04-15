@@ -435,20 +435,8 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
-        if proxy_uri is not None:
-            url = urlparse.urlparse(proxy_uri)
-            conn = self.__connectionClass(url.hostname, url.port, **kwds)
-            headers = {}
-            if url.username and url.password:
-                auth = '%s:%s' % (url.username, url.password)
-                if atLeastPython3 and isinstance(auth, str):
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth.encode()).decode()
-                else:
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
-            conn.set_tunnel(self.__hostname, self.__port, headers)
-        else:
-            conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+        # The actual proxy connection is handled within the requests library
+        conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
 
         self.__connection = conn
 
