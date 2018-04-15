@@ -75,7 +75,10 @@ class RequestsResponse:
         self.text = r.text
 
     def getheaders(self):
-        return self.headers.iteritems()
+        if atLeastPython3:
+            return self.headers.items()
+        else:
+            return self.headers.iteritems()
 
     def read(self):
         return self.text
