@@ -138,7 +138,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, http_proxy):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -180,6 +180,7 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
+        self.__httpProxy = http_proxy
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
@@ -365,7 +366,7 @@ class Requester:
         ## set.
         ## http_proxy: http://user:password@proxy_host:proxy_port
         ##
-        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
+        proxy_uri = self.__httpProxy or os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)
             conn = self.__connectionClass(url.hostname, url.port, **kwds)
