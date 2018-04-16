@@ -111,6 +111,13 @@ class Organization(Framework.TestCase):
     def testGetOutsideCollaborators(self):
         self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
 
+    def testOutsideCollaborators(self):
+        octocat = self.g.get_user("octocat")
+        self.org.convert_to_outside_collaborator(octocat)
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
+        self.org.remove_outside_collaborator(octocat)
+        self.assertEqual(list(self.org.get_outside_collaborators()), [])
+
     def testMembers(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertTrue(self.org.has_in_members(lyloa))

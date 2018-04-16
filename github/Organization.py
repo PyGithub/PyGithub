@@ -529,6 +529,30 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def remove_outside_collaborator(self, collaborator):
+        """
+        :calls: `DELETE /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/outside_collaborators/" + collaborator._identity
+        )
+
+    def convert_to_outside_collaborator(self, member):
+        """
+        :calls: `PUT /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/outside_collaborators/" + member._identity
+        )
+
     def get_repo(self, name):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
