@@ -84,6 +84,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def description(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._description)
+        return self.description.value
+
+    @property
     def permission(self):
         """
         :type: string
@@ -318,6 +326,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._permission = github.GithubObject.NotSet
+        self._permission = github.GithubObject.NotSet
         self._repos_count = github.GithubObject.NotSet
         self._repositories_url = github.GithubObject.NotSet
         self._slug = github.GithubObject.NotSet
@@ -333,6 +342,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch
