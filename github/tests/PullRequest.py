@@ -61,7 +61,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.head.label, "BeaverSoftware:master")
         self.assertEqual(self.pull.html_url, "https://github.com/jacquev6/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
-        self.assertEqual(self.pull.issue_url, "https://github.com/jacquev6/PyGithub/issues/31")
+        self.assertEqual(self.pull.issue_url, "https://api.github.com/repos/jacquev6/PyGithub/issues/31")
         self.assertListKeyEqual(self.pull.labels, lambda a: a.name, ["refactoring"])
         self.assertFalse(self.pull.mergeable)
         self.assertTrue(self.pull.merged)
