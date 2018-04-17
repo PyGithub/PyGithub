@@ -1,1 +1,2 @@
+requests>=2.14.0
 pyjwt
