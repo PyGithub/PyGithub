@@ -355,7 +355,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/issues/".join(self.url.rsplit("/pulls/", 1))
+            self.issue_url
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -408,7 +408,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self.issue_url + "/comments",
             input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
@@ -560,7 +560,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id)
+            self._parentUrl(self.issue_url) + "/comments/" + str(id)
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -572,7 +572,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self.issue_url + "/comments",
             None
         )
 
