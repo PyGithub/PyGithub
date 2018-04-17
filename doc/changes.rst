@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40a1 (April 17, 2018)
+-----------------------------------
+
+* Use requests instead of httplib (#664) (9aed19dd)
+* PullRequest labels should use Issues URL (#754) (678b6b20)
+* Support labels for PullRequests (#752) (a308dc92)
+* Add get_organizations() (#748) (1e0150b5)
+
 Version 1.39 (April 10, 2018)
 -----------------------------------
 
