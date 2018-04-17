@@ -325,7 +325,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._members_count = github.GithubObject.NotSet
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
-        self._permission = github.GithubObject.NotSet
+        self._description = github.GithubObject.NotSet
         self._permission = github.GithubObject.NotSet
         self._repos_count = github.GithubObject.NotSet
         self._repositories_url = github.GithubObject.NotSet
