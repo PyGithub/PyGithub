@@ -619,19 +619,19 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
             github.Label.Label,
             self._requester,
-            self.url + "/labels",
+            self.issue_url + "/labels",
             None
         )
 
     def add_to_labels(self, *labels):
         """
-        :calls: `POST /repos/:owner/:repo/pulls/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
@@ -639,23 +639,23 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/labels",
+            self.issue_url + "/labels",
             input=post_parameters
         )
 
     def delete_labels(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/pulls/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels"
+            self.issue_url + "/labels"
         )
 
     def remove_from_labels(self, label):
         """
-        :calls: `DELETE /repos/:owner/:repo/pulls/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
@@ -666,12 +666,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             label = urllib.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels/" + label
+            self.issue_url + "/labels/" + label
         )
 
     def set_labels(self, *labels):
         """
-        :calls: `PUT /repos/:owner/:repo/pulls/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
@@ -679,7 +679,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/labels",
+            self.issue_url + "/labels",
             input=post_parameters
         )
 
