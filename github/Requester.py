@@ -90,6 +90,7 @@ class HTTPSRequestsConnectionClass(object):
         self.host = host
         self.protocol = "https"
         self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
 
     def request(self, verb, url, input, headers):
@@ -101,7 +102,7 @@ class HTTPSRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
         return RequestsResponse(r)
 
     def close(self):
@@ -115,6 +116,7 @@ class HTTPRequestsConnectionClass(object):
         self.host = host
         self.protocol = "http"
         self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
 
     def request(self, verb, url, input, headers):
@@ -126,7 +128,7 @@ class HTTPRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
         return RequestsResponse(r)
 
     def close(self):
@@ -208,7 +210,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -250,6 +252,7 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
+        self.__verify = verify
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
@@ -429,6 +432,7 @@ class Requester:
         if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         kwds["timeout"] = self.__timeout
+        kwds["verify"] = self.__verify
 
         if self.__persist and self.__connection is not None:
             return self.__connection
