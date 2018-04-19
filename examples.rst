@@ -61,7 +61,7 @@ Create repo for an orginization
         print(ghe)
 
     try:
-        org.create_repo(
+        repo = org.create_repo(
             "myNewRepo", # name -- string
             "My new repo, created using PyGithub", # description -- string
             "http://www.example.org", # homepage -- string
@@ -73,7 +73,9 @@ Create repo for an orginization
             gitignore_template="Python")
 
         # You could also set team_id= to something of type github.Team.Team
-
+        
+        repo.create_file("/FILENAME.md", "commit description", "This is the text which will show up in the file")
+        
     except GithubException as ghe:
         print(ghe)
 
