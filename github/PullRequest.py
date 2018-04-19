@@ -586,7 +586,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/reviews/" + str(id),
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
@@ -600,7 +599,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/reviews",
             None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
 
     def get_reviewer_requests(self):
@@ -613,7 +611,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/requested_reviewers",
             None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'},
             list_item='users'
         )
 
