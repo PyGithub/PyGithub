@@ -606,7 +606,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     def get_reviewer_requests(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.InspectionReviewers.InspectionReviewers`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReviewerRequest.PullRequestReviewerRequest`
         """
         return github.PaginatedList.PaginatedList(
             github.PullRequestReviewerRequest.PullRequestReviewerRequest,
