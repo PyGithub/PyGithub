@@ -2319,7 +2319,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/topics",
             headers={'Accept': 'application/vnd.github.mercy-preview+json'}
         )
-        return data
+        return data['names']
 
     def get_watchers(self):
         """

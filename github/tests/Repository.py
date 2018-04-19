@@ -723,7 +723,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(self.repo.get_license().content), 47646)
 
     def testGetTopics(self):
-        self.assertEqual(self.repo.get_topics()['topics'], u'github')
+        topic_list = self.repo.get_topics()
+        topic = u'github'
+        self.assertEquals(topic in topic_list, True)
 
 
 class LazyRepository(Framework.TestCase):
