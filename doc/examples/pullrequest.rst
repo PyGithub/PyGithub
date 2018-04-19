@@ -7,6 +7,7 @@ Getting a list of all pull requests open for an originization
 -----------------
 
 ::
+
     from github     import Github
     g       = Github('yourusername', 'yourpassword')    #login
     org     = g.get_organization('orgName')             #get an orginization
@@ -16,6 +17,7 @@ Getting a list of all pull requests open for an originization
 
 Checking pull request comments
 -----------------
+
 
 Closing a pull request
 -----------------
