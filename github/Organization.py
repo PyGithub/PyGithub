@@ -662,6 +662,49 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_outside_collaborators(self, filter_=github.GithubObject.NotSet):
+        """
+        :calls: `GET /orgs/:org/outside_collaborators <http://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param filter_: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert (filter_ is github.GithubObject.NotSet or
+                isinstance(filter_, (str, unicode))), filter_
+
+        url_parameters = {}
+        if filter_ is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter_
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/outside_collaborators",
+            url_parameters
+        )
+
+    def remove_outside_collaborator(self, collaborator):
+        """
+        :calls: `DELETE /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/outside_collaborators/" + collaborator._identity
+        )
+
+    def convert_to_outside_collaborator(self, member):
+        """
+        :calls: `PUT /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/outside_collaborators/" + member._identity
+        )
+
     def get_repo(self, name):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
