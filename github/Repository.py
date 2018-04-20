@@ -2312,7 +2312,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_topics(self):
         """
         :calls: `GET /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
-        :rtype: list of unicode strings
+        :rtype: list of strings
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -2447,7 +2447,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def replace_topics(self, topics):
         """
         :calls: `PUT /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
-        :param topics: list of unicode strings`
+        :param topics: list of strings
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
