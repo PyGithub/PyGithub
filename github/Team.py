@@ -139,6 +139,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._organization)
         return self._organization.value
 
+    @property
+    def privacy(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._privacy)
+        return self._privacy.value
+
     def add_to_members(self, member):
         """
         :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
@@ -215,20 +223,24 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, permission=github.GithubObject.NotSet):
+    def edit(self, name, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param permission: string
+        :param privacy: string
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters["privacy"] = privacy
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -332,6 +344,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._slug = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._organization = github.GithubObject.NotSet
+        self._privacy = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -356,3 +369,5 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "privacy" in attributes:  # pragma no branch
+            self._privacy = self._makeStringAttribute(attributes["privacy"])
