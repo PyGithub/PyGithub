@@ -98,6 +98,16 @@ class PullRequest(Framework.TestCase):
         comment = self.pull.get_issue_comment(8387331)
         self.assertEqual(comment.body, "Issue comment created by PyGithub")
 
+    def testReviewRequests(self):
+        self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
+        review_requests = self.pull.get_review_requests()
+        self.assertListKeyEqual(review_requests[0], lambda c: c.login, ["sfdye"])
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
+        self.pull.delete_review_request(reviewers="sfdye")
+        review_requests = self.pull.get_review_requests()
+        self.assertEqual(list(review_requests[0]), [])
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
+
     def testEditWithoutArguments(self):
         self.pull.edit()
 
