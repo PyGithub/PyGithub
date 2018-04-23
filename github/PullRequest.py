@@ -669,7 +669,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     def set_labels(self, *labels):
         """
         :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
-        :param label: :class:`github.Label.Label`
+        :param labels: list of :class:`github.Label.Label` or strings
         :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
