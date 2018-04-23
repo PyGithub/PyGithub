@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40a2 (April 23, 2018)
+-----------------------------------
+
+* Re-work PullRequest reviewer request (#765) (e2e29918)
+* Add support for team privacy (#763) (1f23c06a)
+* Add support for organization outside collaborators (#533) (c4446996)
+* Make use of issue_url in PullRequest (#755) (0dba048f)
+
 Version 1.40a1 (April 17, 2018)
 -----------------------------------
 
