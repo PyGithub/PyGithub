@@ -49,7 +49,6 @@ import github.File
 import github.IssueComment
 import github.Commit
 import github.PullRequestReview
-import github.PullRequestReviewerRequest
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
@@ -438,6 +437,46 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
+    def create_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
+        """
+        :calls `POST /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
+        """
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
+
+    def delete_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
+        """
+        :calls `DELETE /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
+        """
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
+
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
@@ -601,17 +640,26 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_reviewer_requests(self):
+    def get_review_requests(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReviewerRequest.PullRequestReviewerRequest`
+        :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
-        return github.PaginatedList.PaginatedList(
-            github.PullRequestReviewerRequest.PullRequestReviewerRequest,
-            self._requester,
-            self.url + "/requested_reviewers",
-            None,
-            list_item='users'
+        return (
+            github.PaginatedList.PaginatedList(
+                github.NamedUser.NamedUser,
+                self._requester,
+                self.url + "/requested_reviewers",
+                None,
+                list_item='users'
+            ),
+            github.PaginatedList.PaginatedList(
+                github.Team.Team,
+                self._requester,
+                self.url + "/requested_reviewers",
+                None,
+                list_item='teams'
+            )
         )
 
     def get_labels(self):
