@@ -34,7 +34,7 @@ None
 https
 POST
 uploads.github.com
-None
+443
 /repos/edhollandAL/PyGithub/releases/1210837/assets?label=unit+test+artifact&name=archive.zip
 {'Authorization': 'Basic login_and_password_removed', 'Content-Length': 140, 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/zip'}
 None
