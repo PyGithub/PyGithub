@@ -267,7 +267,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b")
 
     def testCreateGitTreeWithBaseTree(self):
-        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b")
+        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b", recursive=False)
         tree = self.repo.create_git_tree(
             [github.InputGitTreeElement(
                 "Barbaz.txt",
