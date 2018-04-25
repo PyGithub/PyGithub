@@ -273,8 +273,13 @@ class Requester:
         cnx = None
         if not url.startswith("/"):
             o = urlparse.urlparse(url)
-            if o.hostname != self.__hostname or o.port != self.__port:
-                cnx = self.__httpsConnectionClass(o.hostname, o.port)
+            if o.hostname != self.__hostname or \
+               (o.port and o.port != self.__port) or \
+               (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
+                if o.scheme == 'http':
+                    cnx = self.__httpConnectionClass(o.hostname, o.port)
+                elif o.scheme == 'https':
+                    cnx = self.__httpsConnectionClass(o.hostname, o.port)
         return cnx
 
     def __createException(self, status, headers, output):
