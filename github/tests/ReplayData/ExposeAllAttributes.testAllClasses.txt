@@ -265,7 +265,7 @@ None
 https
 GET
 status.github.com
-443
+None
 /api/status.json
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
@@ -276,7 +276,7 @@ None
 https
 GET
 status.github.com
-443
+None
 /api/last-message.json
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
