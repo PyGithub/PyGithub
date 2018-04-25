@@ -258,8 +258,6 @@ class Requester:
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        o = urlparse.urlparse(url)
-        self.__hostname = o.hostname
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input))
 
     def __check(self, status, responseHeaders, output):
@@ -342,6 +340,8 @@ class Requester:
         if self.__apiPreview:
             requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
+        if url.startswith("https://uploads.github.com"):
+            cnx = "uploads"
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
@@ -369,8 +369,9 @@ class Requester:
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        else:
-            assert cnx == "status"
+        elif cnx == "uploads":
+            cnx = self.__httpsConnectionClass("uploads.github.com", 443)
+        elif cnx == "status":
             cnx = self.__httpsConnectionClass("status.github.com", 443)
         cnx.request(
             verb,
