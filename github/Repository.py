@@ -1727,8 +1727,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         assert recursive is github.GithubObject.NotSet or isinstance(recursive, bool), recursive
         url_parameters = dict()
-        if recursive is not github.GithubObject.NotSet:
-            url_parameters["recursive"] = recursive
+        if recursive is not github.GithubObject.NotSet and recursive:
+            # GitHub API requires the recursive parameter be set to 1.
+            url_parameters["recursive"] = 1
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/trees/" + sha,
