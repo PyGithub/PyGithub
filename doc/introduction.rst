@@ -38,6 +38,34 @@ be enough.  You can also clone it on `Github
 If you wish to use GitHub Integrations, you'll want to be sure to install the
 'integrations' option: ``pip install PyGithub['integrations']``
 
+Working with Pull Request
+-------------------------
+
+Once you have the github object, Get your repository::
+
+     repo = g.get_repo("<YOUR_GITBU_OWNER_NAME>/%s" % repo_name, lazy=True)
+     
+Get Pull Request Object::
+
+     pull_request = repo.create_pull(<pass_your_title>, <body_description>, <base>, <head>)
+     
+Play with the pull request object to get the details::
+
+     print pull_request.html_url
+     print pull_request.number
+     
+Post comment on the commit lines::
+    
+     pull_request.create_comment(<body>, <commit_id>, <path>, <position>)
+
+Merge the pull request::
+
+     pull_request.merge()
+     
+Close the pull request::  
+
+     pull_request.edit(state="closed")
+
 Licensing
 ---------
 
@@ -50,6 +78,7 @@ What next?
 You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
 You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
+
 
 Projects using PyGithub
 -----------------------
@@ -69,6 +98,7 @@ Projects using PyGithub
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
 * https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
 * https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
+* https://github.com/SOM-Research/Gitana - a SQL-based Project Activity Inspector
  
 They talk about PyGithub
 ------------------------
