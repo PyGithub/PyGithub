@@ -41,9 +41,9 @@ If you wish to use GitHub Integrations, you'll want to be sure to install the
 Working with Pull Request
 -------------------------
 
-Once you have the github object, Get your repository::
+Once you have the github object, get your repository::
 
-     repo = g.get_repo("<YOUR_GITBU_OWNER_NAME>/%s" % repo_name, lazy=True)
+     repo = g.get_repo("<YOUR_GITBUB_OWNER_NAME>/%s" % <your_repo_name>, lazy=True)
      
 Get Pull Request Object::
 
