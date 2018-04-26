@@ -43,7 +43,7 @@
 import setuptools
 import textwrap
 
-version = "1.40a2"
+version = "1.40a3"
 
 
 if __name__ == "__main__":

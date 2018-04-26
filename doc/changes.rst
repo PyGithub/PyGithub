@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40a3 (April 26, 2018)
+-----------------------------------
+
+* Add ability to skip SSL cert verification for Github Enterprise (#758) (85a9124b)
+* Correct Repository.get_git_tree recursive use (#767) (bd0cf309)
+
 Version 1.40a2 (April 23, 2018)
 -----------------------------------
 
