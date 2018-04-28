@@ -102,14 +102,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._company.value
 
     @property
-    def contributions(self):
-        """
-        :type: integer
-        """
-        self._completeIfNotSet(self._contributions)
-        return self._contributions.value
-
-    @property
     def created_at(self):
         """
         :type: datetime.datetime
@@ -571,7 +563,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._blog = github.GithubObject.NotSet
         self._collaborators = github.GithubObject.NotSet
         self._company = github.GithubObject.NotSet
-        self._contributions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
@@ -616,8 +607,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
             self._company = self._makeStringAttribute(attributes["company"])
-        if "contributions" in attributes:  # pragma no branch
-            self._contributions = self._makeIntAttribute(attributes["contributions"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch
