@@ -198,7 +198,7 @@ class Repository(Framework.TestCase):
         repo.delete()
 
     def testGetContributors(self):
-        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: (c.login, c.contributions), [("jacquev6", 355)])
+        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: c.login, ["jacquev6"])
 
     def testCreateMilestone(self):
         milestone = self.repo.create_milestone("Milestone created by PyGithub", state="open", description="Description created by PyGithub", due_on=datetime.date(2012, 6, 15))
