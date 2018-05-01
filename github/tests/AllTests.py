@@ -53,6 +53,7 @@ from GitCommit import *
 from Github_ import *
 from GitRef import *
 from GitRelease import *
+from GitReleaseAsset import *
 from GitTag import *
 from GitTree import *
 from Hook import *

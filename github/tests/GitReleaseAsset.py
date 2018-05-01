@@ -57,8 +57,7 @@ class ReleaseAsset(Framework.TestCase):
         self.assertEqual(asset.created_at, datetime.datetime(2017, 2, 1, 22, 40, 58))
         self.assertEqual(asset.updated_at, datetime.datetime(2017, 2, 1, 22, 44, 58))
         self.assertEqual(asset.browser_download_url, "https://github.com/edhollandAL/PyGithub/releases/download/v1.25.2/Asset.zip")
-
-        # test __repr__() based on this attributes
+        self.assertEqual(asset.uploader.login, "PyGithub")
         self.assertEqual(asset.__repr__(), 'GitReleaseAsset(url="https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")')
 
     def testDelete(self):
