@@ -351,6 +351,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._has_issues.value
 
     @property
+    def has_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_projects)
+        return self._NoneIfNotSet(self._has_projects)
+
+    @property
     def has_wiki(self):
         """
         :type: bool
@@ -2521,6 +2529,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._git_url = github.GithubObject.NotSet
         self._has_downloads = github.GithubObject.NotSet
         self._has_issues = github.GithubObject.NotSet
+        self._has_projects = github.GithubObject.NotSet
         self._has_wiki = github.GithubObject.NotSet
         self._homepage = github.GithubObject.NotSet
         self._hooks_url = github.GithubObject.NotSet
@@ -2624,6 +2633,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
         if "has_issues" in attributes:  # pragma no branch
             self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
+        if "has_projects" in attributes:  # pragma no branch
+            assert attributes["has_projects"] is None or isinstance(attributes["has_projects"], bool), attributes["has_projects"]
+            self._has_projects = attributes["has_projects"]
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
