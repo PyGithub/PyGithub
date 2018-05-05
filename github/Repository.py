@@ -1161,7 +1161,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
+    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_projects=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -1169,6 +1169,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param homepage: string
         :param private: bool
         :param has_issues: bool
+        :param has_projects: bool
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
@@ -1181,6 +1182,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
@@ -1195,6 +1197,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["private"] = private
         if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
+        if has_projects is not github.GithubObject.NotSet:
+            post_parameters["has_projects"] = has_projects
         if has_wiki is not github.GithubObject.NotSet:
             post_parameters["has_wiki"] = has_wiki
         if has_downloads is not github.GithubObject.NotSet:
