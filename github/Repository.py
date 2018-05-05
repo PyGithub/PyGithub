@@ -52,6 +52,7 @@
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Asa Gage <asagage@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -125,6 +126,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def allow_merge_commit(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_merge_commit)
+        return self._allow_merge_commit.value
+
+    @property
+    def allow_squash_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_squash_merge)
+        return self._allow_squash_merge.value
+
+    @property
+    def allow_rebase_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_rebase_merge)
+        return self._allow_rebase_merge.value
 
     @property
     def archived(self):
@@ -1153,7 +1178,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
+    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet, allow_merge_commit=github.GithubObject.NotSet, allow_rebase_merge=github.GithubObject.NotSet, allow_squash_merge=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -1164,6 +1189,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
+        :param allow_merge_commit: bool
+        :param allow_rebase_merge: bool
+        :param allow_squash_merge: bool
         :rtype: None
         """
         if name is None:
@@ -1176,6 +1204,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
         post_parameters = {
             "name": name,
         }
@@ -1193,6 +1224,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["has_downloads"] = has_downloads
         if default_branch is not github.GithubObject.NotSet:
             post_parameters["default_branch"] = default_branch
+        if allow_merge_commit is not github.GithubObject.NotSet:
+            post_parameters["allow_merge_commit"] = allow_merge_commit
+        if allow_rebase_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if allow_squash_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_squash_merge"] = allow_squash_merge
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -2493,6 +2530,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
+        self._allow_merge_commit = github.GithubObject.NotSet
+        self._allow_rebase_merge = github.GithubObject.NotSet
+        self._allow_squash_merge = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -2568,6 +2608,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "allow_merge_commit" in attributes:  # pragma no branch
+            self._allow_merge_commit = self._makeBoolAttribute(attributes["allow_merge_commit"])
+        if "allow_rebase_merge" in attributes:  # pragma no branch
+            self._allow_rebase_merge = self._makeBoolAttribute(attributes["allow_rebase_merge"])
+        if "allow_squash_merge" in attributes:  # pragma no branch
+            self._allow_squash_merge = self._makeBoolAttribute(attributes["allow_squash_merge"])
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
