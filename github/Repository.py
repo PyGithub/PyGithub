@@ -2634,8 +2634,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "has_issues" in attributes:  # pragma no branch
             self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
         if "has_projects" in attributes:  # pragma no branch
-            assert attributes["has_projects"] is None or isinstance(attributes["has_projects"], bool), attributes["has_projects"]
-            self._has_projects = attributes["has_projects"]
+            self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
