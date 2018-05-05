@@ -356,7 +356,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._has_projects)
-        return self._NoneIfNotSet(self._has_projects)
+        return self._has_projects.value
 
     @property
     def has_wiki(self):
