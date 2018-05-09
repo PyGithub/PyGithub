@@ -327,7 +327,7 @@ class Requester:
             return mime_type, f
 
         if input:
-            headers["Content-Length"] = os.path.getsize(input)
+            headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
