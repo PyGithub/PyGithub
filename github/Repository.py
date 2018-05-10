@@ -2392,7 +2392,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
+    def protect_branch(self,
+                       branch,
+                       enabled,
+                       strict=False,
+                       contexts=[],
+                       enforce_admins=False,
+                       dismissal_restrictions=None,
+                       dismiss_stale_reviews=False,
+                       dismissal_users=None,
+                       dismissal_teams=None,
+                       require_code_owner_reviews=False,
+                       required_approving_review_count=0,
+                       restrictions=None,
+                       users=[],
+                       teams=[]
+                       ):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
         :param branch: string
@@ -2404,22 +2419,37 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         assert isinstance(branch, (str, unicode))
         assert isinstance(enabled, bool)
-        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
+        assert isinstance(strict, bool)
+        assert isintance(contexts, list)
+
+        assert contexts is [] or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
 
         post_parameters = {
             "protection": {}
         }
         if enabled is not github.GithubObject.NotSet:
             post_parameters["protection"]["enabled"] = enabled
-        if enforcement_level is not github.GithubObject.NotSet:
+        if strict:
             post_parameters["protection"]["required_status_checks"] = {}
-            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
-        if contexts is not github.GithubObject.NotSet:
+            post_parameters["protection"]["required_status_checks"]["strict"] = strict
             post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
+        if enforce_admins:
+            post_parameters["protection"]["enforce_admins"] = enforce_admins
+        if dismissal_restrictions or dismiss_stale_reviews or require_code_owner_reviews or required_approving_review_count > 0:
+            post_parameters["protection"]["required_pull_request_reviews"]["dismissal_restrictions"] = dismissal_restrictions
+            post_parameters["protection"]["required_pull_request_reviews"]["dismissal_stale_reviews"] = dismissal_stale_reviews
+            post_parameters["protection"]["required_pull_request_reviews"]["require_code_owner_reviews"] = require_code_owner_reviews
+            post_parameters["protection"]["required_pull_request_reviews"]["required_approving_review_count"] = required_approving_review_count
+        if dismissal_restrictions:
+            post_parameters["protection"]["required_pull_request_reviews"]["dismissal_restrictions"]["users"] = dismissal_users
+            post_parameters["protection"]["required_pull_request_reviews"]["dismissal_restrictions"]["teams"] = dismissal_teams
+        if restrictions:
+            post_parameters["protection"]["restrictions"]["users"] = users
+            post_parameters["protection"]["restrictions"]["teams"] = teams
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url + "/branches/" + branch,
+            headers={'Accept': 'application/vnd.github.luke-cage-preview+json'},
             input=post_parameters
         )
 
