@@ -78,6 +78,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._tag_name.value
 
     @property
+    def target_commitish(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._target_commitish)
+        return self._target_commitish.value
+
+    @property
     def draft(self):
         """
         :type: bool
@@ -216,6 +224,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._tag_name = github.GithubObject.NotSet
+        self._target_commitish = github.GithubObject.NotSet
         self._draft = github.GithubObject.NotSet
         self._prerelease = github.GithubObject.NotSet
         self._author = github.GithubObject.NotSet
@@ -236,6 +245,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._title = self._makeStringAttribute(attributes["name"])
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        if "target_commitish" in attributes:
+            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
         if "draft" in attributes:
             self._draft = self._makeBoolAttribute(attributes["draft"])
         if "prerelease" in attributes:
