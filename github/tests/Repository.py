@@ -721,6 +721,23 @@ class Repository(Framework.TestCase):
     def testGetLicense(self):
         self.assertEqual(len(self.repo.get_license().content), 47646)
 
+    def testSetAllowMergeCommit(self):
+        self.repo.edit(allow_merge_commit=False)
+        self.assertEqual(self.repo.allow_merge_commit, False)
+        self.repo.edit(allow_merge_commit=True)
+        self.assertEqual(self.repo.allow_merge_commit, True)
+
+    def testSetAllowRebaseMerge(self):
+        self.repo.edit(allow_rebase_merge=False)
+        self.assertEqual(self.repo.allow_rebase_merge, False)
+        self.repo.edit(allow_rebase_merge=True)
+        self.assertEqual(self.repo.allow_rebase_merge, True)
+
+    def testSetAllowSquashMerge(self):
+        self.repo.edit(allow_squash_merge=False)
+        self.assertEqual(self.repo.allow_squash_merge, False)
+        self.repo.edit(allow_squash_merge=True)
+        self.assertEqual(self.repo.allow_squash_merge, True)
 
 class LazyRepository(Framework.TestCase):
 
