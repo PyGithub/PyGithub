@@ -30,6 +30,7 @@
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Maarten Fonville <maarten.fonville@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ import os
 import re
 import requests
 import sys
+import time
 import urllib
 import urlparse
 from io import IOBase
@@ -390,6 +392,10 @@ class Requester:
                 input.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+
+        if status == 202:
+            time.sleep(Consts.PROCESSING_202_WAIT_TIME)
+            return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
             return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
