@@ -1,17 +1,55 @@
 Examples from the community
 ==============
 
-These are examples submited by the community to ilustrate PyGithub in action.
+These are examples submited by the community to illustrate PyGithub in action.
 
-These examples are intended to compliment the documentation by showing ways you could use pyGitHub. They are not intended to replace the reading the documentation.
+These examples are intended to compliment the documentation by showing ways you could use pyGitHub. They are not intended to replace reading the documentation.
 
-If there is something which you found confusing when using pyGitHub please add an example to the docs/examples.rst file
+Please add your own example(s) to the docs/examples.rst file to help the pyGitHub community!
 
 Basic Examples
 ==============
 
+Accessing the API endpoints with your GitHub API key
+----------------------------------------------------
+::
 
-Login using getpass and read a users repos
+First, obtain your GitHub API key while logged in by going to Settings --> Developer Settings --> Personal Access Tokens --> Generate New Token (button). Give your token a name, select the scope required for your use case, and click the green "Generate Token" button at the bottom of the page.
+
+Copy your new token but DO NOT put it anywhere yet, and especially don't commit it!
+
+(1) Create a file in your main project directory called ``.gitignore``. This file tells git what it should NOT commit (ie: what it can ignore). You should never commit your API key, so we're going to store the API key in a separate file,  list **that** file in ``.gitignore``, and then commit ``.gitignore`` instead of the file that has your API key in it. The name of this "storage" file is ``secrets.sh``, so add the text ``secrets.sh`` to ``.gitignore``. Commit ``.gitignore``.
+
+(2) Now, create a file in your main project directory and name it ``secrets.sh``. Type this line into ``secrets.sh``, pasting in your GitHub API key as a string where specified:
+
+    ``export GITHUB_API_KEY='yourkeygoeshere'``
+    
+    If you run ``git status`` at this point you'll see that ``secrets.sh`` does not appear in the output. It's safely hiding inside ``.gitignore``.
+    
+(3) In your Terminal -- and you're inside an environment, right? -- run ``source secrets.sh``. This will make your GitHub API key visible to your computer.
+
+(4) Next, create a new file in your project directory that will hold your code. In this example we'll call it ``try_pygithub.py``. Copy and paste this code into ``try_pygithub.py``. Be sure to read the explanation that follows.
+
+.. codeblock:: python
+    from github import Github
+    import os
+
+    GITHUB_API_KEY = os.environ['GITHUB_API_KEY']
+    g = Github(GITHUB_API_KEY)
+        
+In the code snippet above, we import the ``Github`` class from pyGitHub and also import Python's ``os`` package. The ``os`` package gives us a way to pull in the GitHub API key that the computer can now see after sourcing ``secrets.sh``. We then pass the API key in as an argument when creating a new ``Github`` instance called ``g``. From here, we can call `any of the methods that are associated with the Github object <http://pygithub.readthedocs.io/en/latest/github.html>`_ on **our** instance, ``g``. For example, we can call `the get_user() method <http://pygithub.readthedocs.io/en/latest/github.html#github.MainClass.Github.get_user>`_ which returns a `NamedUser object <http://pygithub.readthedocs.io/en/latest/github_objects/NamedUser.html#github.NamedUser.NamedUser>`_, which itself gives us access to attributes like the user's avatar URL, bio, company, email, etc.
+
+.. codeblock:: python
+
+    # Continued from previous code
+    def get_email():
+        user = g.get_user('allardbrain')
+        user_url = user.url
+        print(user_url)
+
+        return
+
+Login using getpass and read a user's repos
 -----------------
 ::
 
@@ -29,6 +67,7 @@ Login using getpass and read a users repos
 
     for repo in g.get_user().get_repos():
         print (repo.name)
+
 
 Create repo for an orginization
 -----------------
@@ -78,6 +117,10 @@ Create repo for an orginization
         
     except GithubException as ghe:
         print(ghe)
+
+
+Working with a repo's code using the ContentFile class
+======================================================
 
 
 
