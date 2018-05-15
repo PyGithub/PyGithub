@@ -393,7 +393,7 @@ class Requester:
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
-        if status == 202:
+        if status == 202 and (verb == 'GET' or verb == 'HEAD'):  # only for requests that are considered 'safe' in RFC 2616
             time.sleep(Consts.PROCESSING_202_WAIT_TIME)
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
