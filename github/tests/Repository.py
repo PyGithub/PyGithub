@@ -674,17 +674,7 @@ class Repository(Framework.TestCase):
     def testUnsubscribePubSubHubbub(self):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
 
-    def testStatisticsBeforeCaching(self):
-        self.assertEqual(self.repo.get_stats_contributors(), None)
-        self.assertEqual(self.repo.get_stats_commit_activity(), None)
-        self.assertEqual(self.repo.get_stats_code_frequency(), None)
-        # ReplayData for those last two get_stats is forged because I was not
-        # able to find a repo where participation and punch_card had never been
-        # computed, and pushing to master did not reset the cache for them
-        self.assertEqual(self.repo.get_stats_participation(), None)
-        self.assertEqual(self.repo.get_stats_punch_card(), None)
-
-    def testStatisticsAfterCaching(self):
+    def testStatistics(self):
         stats = self.repo.get_stats_contributors()
         seenJacquev6 = False
         for s in stats:
