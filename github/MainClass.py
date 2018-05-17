@@ -72,7 +72,10 @@ import Invitation
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
-DEFAULT_TIMEOUT = 10
+# As of 2018-05-17, github imposes a 10s limit for completion of API requests.
+# Thus, the timeout should be slightly > 10s to account for network/front-end
+# latency.
+DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
 
 
