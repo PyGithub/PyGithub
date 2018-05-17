@@ -240,6 +240,7 @@ class Requester:
             assert False, "Unknown URL scheme"
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
+        self.runtime_rack = None
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page
 
@@ -360,6 +361,10 @@ class Requester:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
         if "x-ratelimit-reset" in responseHeaders:
             self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
+        if "x-runtime-rack" in responseHeaders:
+            self.runtime_rack = float(responseHeaders["x-runtime-rack"])
+        else:
+            self.runtime_rack = None
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")

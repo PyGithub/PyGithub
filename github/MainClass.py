@@ -151,6 +151,14 @@ class Github(object):
             self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
 
+    @property
+    def runtime_rack(self):
+        """
+        rack runtime of last request.
+        :type: float
+        """
+        return self.__requester.runtime_rack
+
     def get_rate_limit(self):
         """
         Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
