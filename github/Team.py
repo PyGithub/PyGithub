@@ -89,7 +89,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._description)
-        return self.description.value
+        return self._description.value
 
     @property
     def permission(self):
