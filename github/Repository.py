@@ -2263,7 +2263,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
         :param id: int (release id), str (tag name)
-        :rtype: None or :class:`github.GitRelease.GitRelease`
+        :rtype: raises :class:`github.GithubException.UnknownObjectException` or :class:`github.GitRelease.GitRelease`
         """
         if isinstance(id, int):
             headers, data = self._requester.requestJsonAndCheck(
