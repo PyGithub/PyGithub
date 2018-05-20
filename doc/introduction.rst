@@ -38,6 +38,34 @@ be enough.  You can also clone it on `Github
 If you wish to use GitHub Integrations, you'll want to be sure to install the
 'integrations' option: ``pip install PyGithub['integrations']``
 
+Working with Pull Request
+-------------------------
+
+Once you have the github object, get your repository::
+
+     repo = g.get_repo("<YOUR_GITBUB_OWNER_NAME>/%s" % <your_repo_name>, lazy=True)
+     
+Get Pull Request Object::
+
+     pull_request = repo.create_pull(<pass_your_title>, <body_description>, <base>, <head>)
+     
+Play with the pull request object to get the details::
+
+     print pull_request.html_url
+     print pull_request.number
+     
+Post comment on the commit lines::
+    
+     pull_request.create_comment(<body>, <commit_id>, <path>, <position>)
+
+Merge the pull request::
+
+     pull_request.merge()
+     
+Close the pull request::  
+
+     pull_request.edit(state="closed")
+
 Licensing
 ---------
 
@@ -50,6 +78,7 @@ What next?
 You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
 You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
+
 
 Projects using PyGithub
 -----------------------
