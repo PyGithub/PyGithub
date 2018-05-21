@@ -62,6 +62,7 @@ class Release(Framework.TestCase):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
         self.assertEqual(self.release.id, 1210814)
         self.assertEqual(self.release.tag_name, "v1.25.2")
+        self.assertEqual(self.release.target_commitish, "master")
         self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
         self.assertEqual(self.release.body, "Body")
         self.assertEqual(self.release.title, "Test")
