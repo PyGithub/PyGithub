@@ -66,6 +66,28 @@ Close the pull request::
 
      pull_request.edit(state="closed")
 
+
+Working with Issues
+-------------------
+
+Example::
+
+    from github import Github
+    import os
+    GITHUB_API_KEY = os.environ['GITHUB_API_KEY']
+    GITHUB_ORG = os.environ['ORG']
+    GITHUB_REPO = os.environ['REPO']
+    g = Github(GITHUB_API_KEY)
+
+    repo = g.get_repo("%s/%s" % (GITHUB_ORG, GITHUB_REPO))
+    total_issues = 0
+    for issue in repo.get_issues(state='all'):
+        print(issue.title)
+        total_issues += 1
+
+    print("Total issues=", total_issues)    
+
+
 Licensing
 ---------
 
