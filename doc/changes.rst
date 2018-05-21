@@ -4,6 +4,15 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40a4 (May 21, 2018)
+-----------------------------------
+
+* Increase default timeout from 10s to 15s (#793) (140c6480)
+* Fix Team.description (#797) (0e8ae376)
+* Fix Content-Length invalid headers exception (#787) (23395f5f)
+* Remove NamedUser.contributions (#774) (a519e467)
+* Branch protection methods no longer require loki (#775) (b1e9ae68)
+
 Version 1.40a3 (April 26, 2018)
 -----------------------------------
 
