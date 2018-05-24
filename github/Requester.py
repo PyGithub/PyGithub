@@ -30,6 +30,7 @@
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Maarten Fonville <maarten.fonville@gmail.com                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ import os
 import re
 import requests
 import sys
+import time
 import urllib
 import urlparse
 from io import IOBase
@@ -210,7 +212,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, retry50x, verify):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -252,6 +254,7 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
+        self.__retry50x = retry50x
         self.__verify = verify
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
@@ -365,7 +368,7 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input, self.__retry50x)
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
@@ -379,7 +382,7 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def __requestRaw(self, cnx, verb, url, requestHeaders, input):
+    def __requestRaw(self, cnx, verb, url, requestHeaders, input, retry50x=0):
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
@@ -403,7 +406,11 @@ class Requester:
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
         if status == 301 and 'location' in responseHeaders:
-            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
+            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input, retry50x)
+
+        if retry50x > 0 and status >= 501 and status <= 503:  # the HTTP errors GitHub can throw at you for temporarily not handling the request
+            time.sleep(Consts.HTTPSTATUS_50X_WAIT_TIME)
+            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input, retry50x - 1)
 
         return status, responseHeaders, output
 
