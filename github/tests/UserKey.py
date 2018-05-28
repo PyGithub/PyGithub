@@ -46,13 +46,5 @@ class UserKey(Framework.TestCase):
         # test __repr__() based on this attributes
         self.assertEqual(self.key.__repr__(), 'UserKey(title="Key added through PyGithub", id=2626650)')
 
-    def testEditWithoutArguments(self):
-        self.key.edit()
-
-    def testEditWithAllArguments(self):
-        self.key.edit("Title edited by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q58YmzZjU64prR5Pk91MfeHezOTgLqDYmepYbv3qjguiHtPai1vSai5WvUv3hgf9DArXsXE5CV6yoBIhAdGtpJKExHuQ2m4XTFCdbrgfQ3ypcSdgzEiQemyTA6TWwhbuwjJ1IqJMYOVLH+FBCkD8pyIpUDO7v3vaR2TCEuNwOS7lbsRsW3OkGYnUKjaPaCTe/inrqb7I3OE8cPhWJ3dM/zzzBj22J4LCNKhjKua8TFS74xGm3lNDZ6/twQl4n4xmrH/3tG+WOJicNO3JohNHqK9T0pILnr3epEyfdkBjcG0qXApqWvH2WipJhaH6of8Gdr0Z/K/7p8QFddmwNgdPQ==")
-        self.assertEqual(self.key.key, "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q58YmzZjU64prR5Pk91MfeHezOTgLqDYmepYbv3qjguiHtPai1vSai5WvUv3hgf9DArXsXE5CV6yoBIhAdGtpJKExHuQ2m4XTFCdbrgfQ3ypcSdgzEiQemyTA6TWwhbuwjJ1IqJMYOVLH+FBCkD8pyIpUDO7v3vaR2TCEuNwOS7lbsRsW3OkGYnUKjaPaCTe/inrqb7I3OE8cPhWJ3dM/zzzBj22J4LCNKhjKua8TFS74xGm3lNDZ6/twQl4n4xmrH/3tG+WOJicNO3JohNHqK9T0pILnr3epEyfdkBjcG0qXApqWvH2WipJhaH6of8Gdr0Z/K/7p8QFddmwNgdPQ==")
-        self.assertEqual(self.key.title, "Title edited by PyGithub")
-
     def testDelete(self):
         self.key.delete()

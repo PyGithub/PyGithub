@@ -4,6 +4,59 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40a4 (May 21, 2018)
+-----------------------------------
+
+* Increase default timeout from 10s to 15s (#793) (140c6480)
+* Fix Team.description (#797) (0e8ae376)
+* Fix Content-Length invalid headers exception (#787) (23395f5f)
+* Remove NamedUser.contributions (#774) (a519e467)
+* Branch protection methods no longer require loki (#775) (b1e9ae68)
+
+Version 1.40a3 (April 26, 2018)
+-----------------------------------
+
+* Add ability to skip SSL cert verification for Github Enterprise (#758) (85a9124b)
+* Correct Repository.get_git_tree recursive use (#767) (bd0cf309)
+
+Version 1.40a2 (April 23, 2018)
+-----------------------------------
+
+* Re-work PullRequest reviewer request (#765) (e2e29918)
+* Add support for team privacy (#763) (1f23c06a)
+* Add support for organization outside collaborators (#533) (c4446996)
+* Make use of issue_url in PullRequest (#755) (0dba048f)
+
+Version 1.40a1 (April 17, 2018)
+-----------------------------------
+
+* Use requests instead of httplib (#664) (9aed19dd)
+* PullRequest labels should use Issues URL (#754) (678b6b20)
+* Support labels for PullRequests (#752) (a308dc92)
+* Add get_organizations() (#748) (1e0150b5)
+
+Version 1.39 (April 10, 2018)
+-----------------------------------
+
+* Add documentation to github.Repository.Repository.create_git_release() (#747) (a769c2ff)
+* Add add_to_members() and remove_from_membership() (#741) (4da483d1)
+* Documentation: clarify semantics of get_comments (#743) (fec3c943)
+* Add download_url to ContentFile, closes #575 (ca6fbc45)
+* Add PullRequestComment.in_reply_to_id (#718) (eaa6a508)
+* Add team privacy parameter to create team (#702) (5cb5ab71)
+* Implement License API (#734) (b54ccc78)
+* Fix delete method for RepositoryKey (911bf615)
+* Remove edit for UserKey (722f2534)
+* Labels API: support description (#738) (42e75938)
+* Added Issue.as_pull_request() and PullReqest.as_issue() (#630) (6bf2acc7)
+* Documentation: sort the Github Objects (#735) (1497e826)
+* Add support for getting PR single review's comments. (#670) (612c3500)
+* Update the RepositoryKey class (#530) (5e8c6832)
+* Added since to PR review comments get (#577) (d8508285)
+* Remove some duplicate attributes introduced in #522 (566b28d3)
+* Added tarball_url, zipball_url, prerelease and draft property (#522) (c76e67b7)
+* Source Import API (#673) (864c663a)
+
 Version 1.38 (March 21, 2018)
 -----------------------------------
 

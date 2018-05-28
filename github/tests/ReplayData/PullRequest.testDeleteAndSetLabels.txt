@@ -1,0 +1,77 @@
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/labels/wip
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4992'), ('content-length', '97'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"569c414d87e8ec43ec269a9e28bc2982"'), ('date', 'Sun, 27 May 2012 09:04:01 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"color":"eb6420","url":"https://api.github.com/repos/jacquev6/PyGithub/labels/wip","name":"wip"}
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/labels/refactoring
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4991'), ('content-length', '113'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"b659c8dcc1212c71f826547c3cc7ae99"'), ('date', 'Sun, 27 May 2012 09:04:02 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/refactoring","name":"refactoring","color":"fbca04"}
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/issues/31/labels
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4972'), ('content-length', '335'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d135d74d2ea2159d044676a220d41d3a"'), ('date', 'Sun, 27 May 2012 09:06:39 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/wip","name":"wip","color":"eb6420"},{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/refactoring","name":"refactoring","color":"fbca04"},{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/improvement","name":"improvement","color":"ffffff"}]
+
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/issues/31/labels
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4971'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 09:06:39 GMT')]
+
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/issues/31/labels
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4970'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sun, 27 May 2012 09:06:40 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[]
+
+https
+PUT
+api.github.com
+None
+/repos/jacquev6/PyGithub/issues/31/labels
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+["wip", "refactoring"]
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4969'), ('content-length', '213'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"1a56634d9c1050a88592ff55ed8adc62"'), ('date', 'Sun, 27 May 2012 09:06:40 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/wip","name":"wip","color":"eb6420"},{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/refactoring","name":"refactoring","color":"fbca04"}]
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/issues/31/labels
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4968'), ('content-length', '213'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"1a56634d9c1050a88592ff55ed8adc62"'), ('date', 'Sun, 27 May 2012 09:06:41 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/wip","name":"wip","color":"eb6420"},{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/refactoring","name":"refactoring","color":"fbca04"}]
+

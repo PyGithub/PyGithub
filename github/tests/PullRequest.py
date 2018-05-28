@@ -10,6 +10,7 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,6 +41,37 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 
+        self.pullIssue256Closed = self.g.get_repo("MarcoFalke/PyGithub").get_pull(1)
+        self.pullIssue256Merged = self.g.get_repo("MarcoFalke/PyGithub").get_pull(2)
+        self.pullIssue256Conflict = self.g.get_repo("MarcoFalke/PyGithub").get_pull(3)
+        self.pullIssue256Uncached = self.g.get_repo("MarcoFalke/PyGithub").get_pull(4)
+
+    def testAttributesIssue256(self):
+        self.assertEqual(self.pullIssue256Closed.closed_at, datetime.datetime(2018, 5, 22, 14, 50, 43))
+        self.assertEqual(self.pullIssue256Merged.closed_at, datetime.datetime(2018, 5, 22, 14, 53, 13))
+        self.assertEqual(self.pullIssue256Conflict.closed_at, None)
+        self.assertEqual(self.pullIssue256Uncached.closed_at, None)
+
+        self.assertEqual(self.pullIssue256Closed.state, 'closed')
+        self.assertEqual(self.pullIssue256Merged.state, 'closed')
+        self.assertEqual(self.pullIssue256Conflict.state, 'open')
+        self.assertEqual(self.pullIssue256Uncached.state, 'open')
+
+        self.assertFalse(self.pullIssue256Closed.merged)
+        self.assertTrue(self.pullIssue256Merged.merged)
+        self.assertFalse(self.pullIssue256Conflict.merged)
+        self.assertFalse(self.pullIssue256Uncached.merged)
+
+        self.assertEqual(self.pullIssue256Closed.mergeable, None)
+        self.assertEqual(self.pullIssue256Merged.mergeable, None)
+        self.assertTrue(self.pullIssue256Conflict.mergeable)
+        self.assertEqual(self.pullIssue256Uncached.mergeable, None)
+
+        self.assertEqual(self.pullIssue256Closed.mergeable_state, 'unknown')
+        self.assertEqual(self.pullIssue256Merged.mergeable_state, 'unknown')
+        self.assertEqual(self.pullIssue256Conflict.mergeable_state, 'clean')
+        self.assertEqual(self.pullIssue256Uncached.mergeable_state, 'unknown')
+
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
@@ -60,7 +92,8 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.head.label, "BeaverSoftware:master")
         self.assertEqual(self.pull.html_url, "https://github.com/jacquev6/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
-        self.assertEqual(self.pull.issue_url, "https://github.com/jacquev6/PyGithub/issues/31")
+        self.assertEqual(self.pull.issue_url, "https://api.github.com/repos/jacquev6/PyGithub/issues/31")
+        self.assertListKeyEqual(self.pull.labels, lambda a: a.name, ["refactoring"])
         self.assertFalse(self.pull.mergeable)
         self.assertTrue(self.pull.merged)
         self.assertEqual(self.pull.merged_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
@@ -96,6 +129,16 @@ class PullRequest(Framework.TestCase):
         comment = self.pull.get_issue_comment(8387331)
         self.assertEqual(comment.body, "Issue comment created by PyGithub")
 
+    def testReviewRequests(self):
+        self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
+        review_requests = self.pull.get_review_requests()
+        self.assertListKeyEqual(review_requests[0], lambda c: c.login, ["sfdye"])
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
+        self.pull.delete_review_request(reviewers="sfdye")
+        review_requests = self.pull.get_review_requests()
+        self.assertEqual(list(review_requests[0]), [])
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
+
     def testEditWithoutArguments(self):
         self.pull.edit()
 
@@ -110,6 +153,49 @@ class PullRequest(Framework.TestCase):
 
     def testGetFiles(self):
         self.assertListKeyEqual(self.pull.get_files(), lambda f: f.filename, ["codegen/templates/GithubObject.py", "src/github/AuthenticatedUser.py", "src/github/Authorization.py", "src/github/Branch.py", "src/github/Commit.py", "src/github/CommitComment.py", "src/github/CommitFile.py", "src/github/CommitStats.py", "src/github/Download.py", "src/github/Event.py", "src/github/Gist.py", "src/github/GistComment.py", "src/github/GistHistoryState.py", "src/github/GitAuthor.py", "src/github/GitBlob.py", "src/github/GitCommit.py", "src/github/GitObject.py", "src/github/GitRef.py", "src/github/GitTag.py", "src/github/GitTree.py", "src/github/GitTreeElement.py", "src/github/Hook.py", "src/github/Issue.py", "src/github/IssueComment.py", "src/github/IssueEvent.py", "src/github/Label.py", "src/github/Milestone.py", "src/github/NamedUser.py", "src/github/Organization.py", "src/github/Permissions.py", "src/github/Plan.py", "src/github/PullRequest.py", "src/github/PullRequestComment.py", "src/github/PullRequestFile.py", "src/github/Repository.py", "src/github/RepositoryKey.py", "src/github/Tag.py", "src/github/Team.py", "src/github/UserKey.py", "test/Issue.py", "test/IssueEvent.py", "test/ReplayData/Issue.testAddAndRemoveLabels.txt", "test/ReplayData/Issue.testDeleteAndSetLabels.txt", "test/ReplayData/Issue.testGetLabels.txt", "test/ReplayData/IssueEvent.setUp.txt"])
+
+    def testGetLabels(self):
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+
+    def testAddAndRemoveLabels(self):
+        wip = self.repo.get_label("wip")
+        refactoring = self.repo.get_label("refactoring")
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+        self.pull.remove_from_labels(wip)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.pull.remove_from_labels(refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.pull.add_to_labels(wip, refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+
+    def testAddAndRemoveLabelsWithStringArguments(self):
+        wip = "wip"
+        refactoring = "refactoring"
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+        self.pull.remove_from_labels(wip)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.pull.remove_from_labels(refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.pull.add_to_labels(wip, refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+
+    def testDeleteAndSetLabels(self):
+        wip = self.repo.get_label("wip")
+        refactoring = self.repo.get_label("refactoring")
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+        self.pull.delete_labels()
+        self.assertListKeyEqual(self.pull.get_labels(), None, [])
+        self.pull.set_labels(wip, refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+
+    def testDeleteAndSetLabelsWithStringArguments(self):
+        wip = "wip"
+        refactoring = "refactoring"
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring", "improvement"])
+        self.pull.delete_labels()
+        self.assertListKeyEqual(self.pull.get_labels(), None, [])
+        self.pull.set_labels(wip, refactoring)
+        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
 
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())

@@ -32,7 +32,6 @@
 #                                                                              #
 ################################################################################
 
-import httplib
 import json
 import os
 import sys
@@ -122,14 +121,14 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
 
 
 class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
-    _realConnection = httplib.HTTPConnection
+    _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
 class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
-    _realConnection = httplib.HTTPSConnection
+    _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "https", *args, **kwds)

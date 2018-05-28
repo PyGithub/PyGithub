@@ -58,6 +58,7 @@ import github.PaginatedList
 import Repository
 import Installation
 import Legacy
+import License
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
@@ -71,7 +72,10 @@ import Invitation
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
-DEFAULT_TIMEOUT = 10
+# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
+# Thus, the timeout should be slightly > 10s to account for network/front-end
+# latency.
+DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
 
 
@@ -80,7 +84,7 @@ class Github(object):
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False):
+    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True):
         """
         :param login_or_token: string
         :param password: string
@@ -90,6 +94,7 @@ class Github(object):
         :param client_secret: string
         :param user_agent: string
         :param per_page: int
+        :param verify: boolean or string
         """
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
@@ -100,7 +105,7 @@ class Github(object):
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview)
+        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
@@ -169,6 +174,35 @@ class Github(object):
         """
         return self.__requester.oauth_scopes
 
+    def get_license(self, key=github.GithubObject.NotSet):
+        """
+        :calls: `GET /license/:license <https://developer.github.com/v3/licenses/#get-an-individual-license>`_
+        :param key: string
+        :rtype: :class:`github.License.License`
+        """
+
+        assert isinstance(key, (str, unicode)), key
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/licenses/" + key
+        )
+        return github.License.License(self.__requester, headers, data, completed=True)
+
+    def get_licenses(self):
+        """
+        :calls: `GET /licenses <https://developer.github.com/v3/licenses/#list-all-licenses>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.License.License`
+        """
+
+        url_parameters = dict()
+
+        return github.PaginatedList.PaginatedList(
+            github.License.License,
+            self.__requester,
+            "/licenses",
+            url_parameters
+        )
+
     def get_user(self, login=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
@@ -214,6 +248,23 @@ class Github(object):
             "/orgs/" + login
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
+
+    def get_organizations(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /organizations <http://developer.github.com/v3/orgs#list-all-organizations>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self.__requester,
+            "/organizations",
+            url_parameters
+        )
 
     def get_repo(self, full_name_or_id, lazy=True):
         """

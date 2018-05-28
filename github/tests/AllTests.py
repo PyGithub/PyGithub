@@ -53,6 +53,7 @@ from GitCommit import *
 from Github_ import *
 from GitRef import *
 from GitRelease import *
+from GitReleaseAsset import *
 from GitTag import *
 from GitTree import *
 from Hook import *
@@ -60,6 +61,7 @@ from Issue import *
 from IssueComment import *
 from Reaction import *
 from IssueEvent import *
+from License import *
 from Label import *
 from Milestone import *
 from NamedUser import *
@@ -69,7 +71,6 @@ from Organization import *
 from PullRequest import *
 from PullRequestComment import *
 from PullRequestReview import *
-from PullRequestReviewerRequests import *
 from PullRequestFile import *
 from RateLimiting import *
 from Repository import *

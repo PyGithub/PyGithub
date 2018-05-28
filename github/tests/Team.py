@@ -48,6 +48,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.repos_count, 0)
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
         self.assertEqual(self.team.organization, self.org)
+        self.assertEqual(self.team.privacy, "closed")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
@@ -85,9 +86,10 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
-        self.team.edit("Name edited twice by PyGithub", "admin")
+        self.team.edit("Name edited twice by PyGithub", "admin", "secret")
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.permission, "admin")
+        self.assertEqual(self.team.privacy, "secret")
 
     def testDelete(self):
         self.team.delete()

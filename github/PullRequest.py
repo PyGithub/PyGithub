@@ -17,6 +17,7 @@
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
 # Copyright 2018 Thibault Jamet <tjamet@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,6 +37,7 @@
 #                                                                              #
 ################################################################################
 
+import urllib
 import github.GithubObject
 import github.PaginatedList
 
@@ -47,7 +49,6 @@ import github.File
 import github.IssueComment
 import github.Commit
 import github.PullRequestReview
-import github.PullRequestReviewerRequest
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
@@ -203,6 +204,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._issue_url.value
 
     @property
+    def labels(self):
+        """
+        :type: list of :class:`github.Label.Label`
+        """
+        self._completeIfNotSet(self._labels)
+        return self._labels.value
+
+    @property
     def merge_commit_sha(self):
         """
         :type: string
@@ -345,7 +354,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/issues/".join(self.url.rsplit("/pulls/", 1))
+            self.issue_url
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -398,7 +407,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self.issue_url + "/comments",
             input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
@@ -427,6 +436,46 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def create_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
+        """
+        :calls `POST /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
+        """
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
+
+    def delete_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
+        """
+        :calls `DELETE /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
+        """
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, (str, unicode)) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
@@ -480,6 +529,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
+        Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
         :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -549,7 +599,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id)
+            self._parentUrl(self.issue_url) + "/comments/" + str(id)
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -561,7 +611,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self.issue_url + "/comments",
             None
         )
 
@@ -575,7 +625,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/reviews/" + str(id),
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
@@ -589,21 +638,94 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/reviews",
             None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
 
-    def get_reviewer_requests(self):
+    def get_review_requests(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.InspectionReviewers.InspectionReviewers`
+        :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return (
+            github.PaginatedList.PaginatedList(
+                github.NamedUser.NamedUser,
+                self._requester,
+                self.url + "/requested_reviewers",
+                None,
+                list_item='users'
+            ),
+            github.PaginatedList.PaginatedList(
+                github.Team.Team,
+                self._requester,
+                self.url + "/requested_reviewers",
+                None,
+                list_item='teams'
+            )
+        )
+
+    def get_labels(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.PullRequestReviewerRequest.PullRequestReviewerRequest,
+            github.Label.Label,
             self._requester,
-            self.url + "/requested_reviewers",
-            None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'},
-            list_item='users'
+            self.issue_url + "/labels",
+            None
+        )
+
+    def add_to_labels(self, *labels):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :param label: :class:`github.Label.Label` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.issue_url + "/labels",
+            input=post_parameters
+        )
+
+    def delete_labels(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.issue_url + "/labels"
+        )
+
+    def remove_from_labels(self, label):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
+        :param label: :class:`github.Label.Label` or string
+        :rtype: None
+        """
+        assert isinstance(label, (github.Label.Label, str, unicode)), label
+        if isinstance(label, github.Label.Label):
+            label = label._identity
+        else:
+            label = urllib.quote(label)
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.issue_url + "/labels/" + label
+        )
+
+    def set_labels(self, *labels):
+        """
+        :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
+        :param labels: list of :class:`github.Label.Label` or strings
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.issue_url + "/labels",
+            input=post_parameters
         )
 
     def is_merged(self):
@@ -662,6 +784,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._issue_url = github.GithubObject.NotSet
+        self._labels = github.GithubObject.NotSet
         self._merge_commit_sha = github.GithubObject.NotSet
         self._mergeable = github.GithubObject.NotSet
         self._mergeable_state = github.GithubObject.NotSet
@@ -722,6 +845,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_url" in attributes:  # pragma no branch
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
+        if "labels" in attributes:  # pragma no branch
+            self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
         if "merge_commit_sha" in attributes:  # pragma no branch
             self._merge_commit_sha = self._makeStringAttribute(attributes["merge_commit_sha"])
         if "mergeable" in attributes:  # pragma no branch

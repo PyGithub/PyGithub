@@ -442,17 +442,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
+    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
         :param permission: string
+        :param privacy: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, (str, unicode)), name
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
@@ -460,6 +462,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters['privacy'] = privacy
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
@@ -656,6 +660,49 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/public_members",
             None
+        )
+
+    def get_outside_collaborators(self, filter_=github.GithubObject.NotSet):
+        """
+        :calls: `GET /orgs/:org/outside_collaborators <http://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param filter_: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert (filter_ is github.GithubObject.NotSet or
+                isinstance(filter_, (str, unicode))), filter_
+
+        url_parameters = {}
+        if filter_ is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter_
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/outside_collaborators",
+            url_parameters
+        )
+
+    def remove_outside_collaborator(self, collaborator):
+        """
+        :calls: `DELETE /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/outside_collaborators/" + collaborator._identity
+        )
+
+    def convert_to_outside_collaborator(self, member):
+        """
+        :calls: `PUT /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/outside_collaborators/" + member._identity
         )
 
     def get_repo(self, name):

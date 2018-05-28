@@ -69,6 +69,8 @@ Projects using PyGithub
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
 * https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
 * https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
+* https://github.com/SOM-Research/Gitana - a SQL-based Project Activity Inspector
+* https://github.com/YakDriver/satsukia - Python package that helps manage GitHub releases and release assets
  
 They talk about PyGithub
 ------------------------

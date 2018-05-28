@@ -198,7 +198,7 @@ class Repository(Framework.TestCase):
         repo.delete()
 
     def testGetContributors(self):
-        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: (c.login, c.contributions), [("jacquev6", 355)])
+        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: c.login, ["jacquev6"])
 
     def testCreateMilestone(self):
         milestone = self.repo.create_milestone("Milestone created by PyGithub", state="open", description="Description created by PyGithub", due_on=datetime.date(2012, 6, 15))
@@ -267,7 +267,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b")
 
     def testCreateGitTreeWithBaseTree(self):
-        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b")
+        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b", recursive=False)
         tree = self.repo.create_git_tree(
             [github.InputGitTreeElement(
                 "Barbaz.txt",
@@ -717,6 +717,9 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+    def testGetLicense(self):
+        self.assertEqual(len(self.repo.get_license().content), 47646)
 
 
 class LazyRepository(Framework.TestCase):

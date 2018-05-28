@@ -87,8 +87,27 @@ class Github(Framework.TestCase):
     def testGetUsersSince(self):
         self.assertListKeyBegin(self.g.get_users(since=1000), lambda u: u.login, ["sbecker"])
 
+    def testGetOrganizations(self):
+        self.assertListKeyBegin(self.g.get_organizations(), lambda u: u.login, ['errfree', 'engineyard', "ministrycentered", "collectiveidea", "ogc", "sevenwire", "entryway"])
+
+    def testGetOrganizationsSince(self):
+        self.assertListKeyBegin(self.g.get_organizations(since=1000), lambda u: u.login, ["railslove", "railsdog", "netguru", "webhostio", "animikii", "sauspiel", "wherecloud", "triveos"])
+
     def testGetRepos(self):
         self.assertListKeyBegin(self.g.get_repos(), lambda r: r.name, ["grit", "merb-core", "rubinius", "god", "jsawesome", "jspec", "exception_logger", "ambition"])
 
     def testGetReposSince(self):
         self.assertListKeyBegin(self.g.get_repos(since=1000), lambda r: r.name, ["jquery-humanize-messages-plugin", "4slicer", "fixture-scenarios", "mongrel_proctitle", "rails-plugins"])
+
+    def testGetLicenses(self):
+        self.assertListKeyBegin(self.g.get_licenses(), lambda r: r.name, ['GNU General Public License v3.0',
+                                                                          'BSD 2-Clause "Simplified" License',
+                                                                          'MIT License',
+                                                                          'GNU Lesser General Public License v2.1',
+                                                                          'GNU General Public License v2.0',
+                                                                          'GNU Lesser General Public License v3.0',
+                                                                          'Mozilla Public License 2.0',
+                                                                          'BSD 3-Clause "New" or "Revised" License'])
+
+    def testGetLicense(self):
+        self.assertEqual(self.g.get_license("mit").description, "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.")

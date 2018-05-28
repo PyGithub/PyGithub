@@ -830,6 +830,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
     def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/releases <http://developer.github.com/v3/repos/releases>`_
+        :param tag: string
+        :param name: string
+        :param message: string
+        :param draft: bool
+        :param prerelease: bool
+        :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
@@ -997,7 +1007,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/keys",
             input=post_parameters
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self.url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
     def create_label(self, name, color, description=github.GithubObject.NotSet):
         """
@@ -1242,8 +1252,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(branch, (str, unicode)), branch
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/branches/" + branch,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            self.url + "/branches/" + branch
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -1717,8 +1726,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         assert recursive is github.GithubObject.NotSet or isinstance(recursive, bool), recursive
         url_parameters = dict()
-        if recursive is not github.GithubObject.NotSet:
-            url_parameters["recursive"] = recursive
+        if recursive is not github.GithubObject.NotSet and recursive:
+            # GitHub API requires the recursive parameter be set to 1.
+            url_parameters["recursive"] = 1
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/trees/" + sha,
@@ -1883,7 +1893,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/keys/" + str(id)
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self.url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
     def get_keys(self):
         """
@@ -1891,7 +1901,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
-            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(requester, headers, data, completed, repoUrl=self.url),
+            github.RepositoryKey.RepositoryKey,
             self._requester,
             self.url + "/keys",
             None
@@ -1932,6 +1942,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/languages"
         )
         return data
+
+    def get_license(self):
+        """
+        :calls: `GET /repos/:owner/:repo/license <https://developer.github.com/v3/licenses>`_
+        :rtype: :class:`github.ContentFile.ContentFile`
+        """
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/license"
+        )
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_milestone(self, number):
         """
@@ -2398,8 +2420,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url + "/branches/" + branch,
-            input=post_parameters,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            input=post_parameters
         )
 
     def remove_from_collaborators(self, collaborator):

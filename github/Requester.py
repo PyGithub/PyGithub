@@ -50,12 +50,12 @@
 ################################################################################
 
 import base64
-import httplib
 import json
 import logging
 import mimetypes
 import os
 import re
+import requests
 import sys
 import urllib
 import urlparse
@@ -67,19 +67,91 @@ import GithubException
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
+class RequestsResponse:
+    # mimic the httplib response object
+    def __init__(self, r):
+        self.status = r.status_code
+        self.headers = r.headers
+        self.text = r.text
+
+    def getheaders(self):
+        if atLeastPython3:
+            return self.headers.items()
+        else:
+            return self.headers.iteritems()
+
+    def read(self):
+        return self.text
+
+class HTTPSRequestsConnectionClass(object):
+    # mimic the httplib connection object
+    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+        self.port = port if port else 443
+        self.host = host
+        self.protocol = "https"
+        self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
+        self.session = requests.Session()
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
+
+
+class HTTPRequestsConnectionClass(object):
+    # mimic the httplib connection object
+    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+        self.port = port if port else 80
+        self.host = host
+        self.protocol = "http"
+        self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
+        self.session = requests.Session()
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
+
+
 class Requester:
-    __httpConnectionClass = httplib.HTTPConnection
-    __httpsConnectionClass = httplib.HTTPSConnection
+    __httpConnectionClass = HTTPRequestsConnectionClass
+    __httpsConnectionClass = HTTPSRequestsConnectionClass
+    __connection = None
+    __persist = True
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
+        cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = httplib.HTTPConnection
-        cls.__httpsConnectionClass = httplib.HTTPSConnection
+        cls.__persist = True
+        cls.__httpConnectionClass = HTTPRequestsConnectionClass
+        cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
     #############################################################
     # For Debug
@@ -138,7 +210,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -180,6 +252,7 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
+        self.__verify = verify
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
@@ -257,7 +330,7 @@ class Requester:
             return mime_type, f
 
         if input:
-            headers["Content-Length"] = os.path.getsize(input)
+            headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
@@ -359,28 +432,14 @@ class Requester:
         if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         kwds["timeout"] = self.__timeout
+        kwds["verify"] = self.__verify
 
-        ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
-        ##
-        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
-        if proxy_uri is not None:
-            url = urlparse.urlparse(proxy_uri)
-            conn = self.__connectionClass(url.hostname, url.port, **kwds)
-            headers = {}
-            if url.username and url.password:
-                auth = '%s:%s' % (url.username, url.password)
-                if atLeastPython3 and isinstance(auth, str):
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth.encode()).decode()
-                else:
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
-            conn.set_tunnel(self.__hostname, self.__port, headers)
-        else:
-            conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+        if self.__persist and self.__connection is not None:
+            return self.__connection
 
-        return conn
+        self.__connection = self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        return self.__connection
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)

@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/outside_collaborators
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('content-length', '175'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f7f3d1eaa1c0d14d590b09dbb439db2e"'), ('date', 'Sun, 28 Feb 2017 09:51:20 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"login": "octocat","id": 1,"avatar_url": "https://github.com/images/error/octocat_happy.gif","gravatar_id": "","url": "https://api.github.com/users/octocat","html_url": "https://github.com/octocat","followers_url": "https://api.github.com/users/octocat/followers","following_url": "https://api.github.com/users/octocat/following{/other_user}","gists_url": "https://api.github.com/users/octocat/gists{/gist_id}","starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}","subscriptions_url": "https://api.github.com/users/octocat/subscriptions","organizations_url": "https://api.github.com/users/octocat/orgs","repos_url": "https://api.github.com/users/octocat/repos","events_url": "https://api.github.com/users/octocat/events{/privacy}","received_events_url": "https://api.github.com/users/octocat/received_events","type": "User","site_admin": false}]

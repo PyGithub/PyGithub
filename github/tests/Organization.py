@@ -119,7 +119,7 @@ class Organization(Framework.TestCase):
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
-        team = self.org.create_team("Team also created by PyGithub", [repo], "push")
+        team = self.org.create_team("Team also created by PyGithub", [repo], "push", "secret")
         self.assertEqual(team.id, 189852)
 
     def testDeleteHook(self):
@@ -150,6 +150,16 @@ class Organization(Framework.TestCase):
 
     def testGetMembers(self):
         self.assertListKeyEqual(self.org.get_members(), lambda u: u.login, ["cjuniet", "jacquev6", "Lyloa"])
+
+    def testGetOutsideCollaborators(self):
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
+
+    def testOutsideCollaborators(self):
+        octocat = self.g.get_user("octocat")
+        self.org.convert_to_outside_collaborator(octocat)
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
+        self.org.remove_outside_collaborator(octocat)
+        self.assertEqual(list(self.org.get_outside_collaborators()), [])
 
     def testMembers(self):
         lyloa = self.g.get_user("Lyloa")
