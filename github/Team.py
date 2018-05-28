@@ -149,6 +149,9 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_members(self, member):
         """
+        This API call is deprecated. Use `add_membership` instead.
+        https://developer.github.com/v3/teams/members/#deprecation-notice-1
+
         :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
@@ -304,8 +307,23 @@ class Team(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def remove_membership(self, member):
+        """
+        :calls: `DELETE /teams/:team_id/memberships/:username <https://developer.github.com/v3/teams/members/#remove-team-membership>`
+        :param member:
+        :return:
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/memberships/" + member._identity
+        )
+
     def remove_from_members(self, member):
         """
+        This API call is deprecated. Use `remove_membership` instead:
+        https://developer.github.com/v3/teams/members/#deprecation-notice-2
+
         :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
