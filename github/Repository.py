@@ -75,6 +75,7 @@ import sys
 import urllib
 import datetime
 from base64 import b64encode
+import warnings
 
 import github.GithubObject
 import github.PaginatedList
@@ -1244,17 +1245,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
     def get_protected_branch(self, branch):
-        """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
-        :param branch: string
-        :rtype: :class:`github.Branch.Branch`
-        """
-        assert isinstance(branch, (str, unicode)), branch
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/branches/" + branch
-        )
-        return github.Branch.Branch(self._requester, headers, data, completed=True)
+        message = ("Repository.get_protected_branch() will be removed in "
+                   "a future release, use Repository.get_branch()")
+        warnings.warn(message, DeprecationWarning, stacklevel=2)
+        return self.get_branch(branch)
 
     def get_branches(self):
         """

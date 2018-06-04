@@ -48,6 +48,7 @@ import time
 import sys
 from httplib import HTTPSConnection
 import jwt
+import warnings
 
 from Requester import Requester, json
 import AuthenticatedUser
@@ -106,6 +107,8 @@ class Github(object):
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
         self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify)
+        # Always warn about deprecation
+        warnings.simplefilter('always', DeprecationWarning)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
