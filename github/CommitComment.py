@@ -162,7 +162,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
     def get_reactions(self):
         """
         :calls: `GET /repos/:owner/:repo/comments/:id/reactions
-                <https://developer.github.com/v3/reactions/#list-reactions-for-a-commit-comment>`
+                <https://developer.github.com/v3/reactions/#list-reactions-for-a-commit-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
         return github.PaginatedList.PaginatedList(

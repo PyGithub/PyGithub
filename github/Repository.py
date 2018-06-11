@@ -1110,7 +1110,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_source_import(self, vcs, vcs_url, vcs_username=github.GithubObject.NotSet, vcs_password=github.GithubObject.NotSet):
         """
-        :calls: `PUT /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#start-an-import`_
+        :calls: `PUT /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#start-an-import>`_
         :param vcs: string
         :param vcs_url: string
         :param vcs_username: string
@@ -1392,6 +1392,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                     committer=github.GithubObject.NotSet,
                     author=github.GithubObject.NotSet):
         """Create a file in this repository.
+
         :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#create-a-file>`_
         :param path: string, (required), path of the file in the repository
         :param message: string, (required), commit message
@@ -1450,6 +1451,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                     committer=github.GithubObject.NotSet,
                     author=github.GithubObject.NotSet):
         """This method updates a file in a repository
+
         :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#update-a-file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
@@ -1512,7 +1514,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
                     branch=github.GithubObject.NotSet,
                     committer=github.GithubObject.NotSet,
                     author=github.GithubObject.NotSet):
-        """This method delete a file in a repository
+        """This method deletes a file in a repository
+
         :calls: `DELETE /repos/:owner/:repo/contents/:path <https://developer.github.com/v3/repos/contents/#delete-a-file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
@@ -2261,7 +2264,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_release(self, id):
         """
-        :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
+        :calls: `GET /repos/:owner/:repo/releases/:id <https://developer.github.com/v3/repos/releases/#get-a-single-release>`_
         :param id: int (release id), str (tag name)
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """

@@ -439,7 +439,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
         """
-        :calls `POST /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :calls: `POST /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
         :param reviewers: list of strings
         :param team_reviewers: list of strings
         :rtype: None
@@ -459,7 +459,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def delete_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
         """
-        :calls `DELETE /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :calls: `DELETE /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
         :param reviewers: list of strings
         :param team_reviewers: list of strings
         :rtype: None
@@ -530,6 +530,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     def get_comments(self):
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
+
         :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
