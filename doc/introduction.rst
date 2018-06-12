@@ -72,6 +72,7 @@ Projects using PyGithub
 * https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
 * https://github.com/SOM-Research/Gitana - a SQL-based Project Activity Inspector
 * https://github.com/YakDriver/satsukia - Python package that helps manage GitHub releases and release assets
+* `check-in <https://github.com/webknjaz/check-in>`_ — Python CLI distribution that allows user to use GitHub Checks API as a bot.
  
 They talk about PyGithub
 ------------------------
