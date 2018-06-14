@@ -134,8 +134,20 @@ class PaginatedList(PaginatedListBase):
     @property
     def totalCount(self):
         if not self.__totalCount:
-            self._grow()
-
+            params = {} if self.__nextParams is None else self.__nextParams.copy()
+            params.update({"per_page": 1, "page": 1})
+            headers, data = self.__requester.requestJsonAndCheck(
+                "GET",
+                self.__firstUrl,
+                parameters=params,
+                headers=self.__headers
+            )
+            if 'link' not in headers:
+                self.__totalCount = len(data)
+            else:
+                links = self.__parseLinkHeader(headers)
+                lastUrl = links.get("last")
+                self.__totalCount = int(re.match(r'.*[&\?]page=(\d*).*?', lastUrl).group(1))
         return self.__totalCount
 
     def _getLastPageUrl(self):
