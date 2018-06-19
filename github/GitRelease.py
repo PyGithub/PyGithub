@@ -168,13 +168,12 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     def delete_release(self):
         """
         :calls: `DELETE /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#delete-a-release>`_
-        :rtype: bool
+        :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
+        self._requester.requestJsonAndCheck(
             "DELETE",
             self.url
         )
-        return True
 
     def update_release(self, name, message, draft=False, prerelease=False):
         """
