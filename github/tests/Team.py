@@ -65,6 +65,7 @@ class Team(Framework.TestCase):
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_membership(user, "maintainer")
         self.assertRaises(AssertionError, self.team.add_membership, user, "admin")
+        self.team.remove_membership(user)
 
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
