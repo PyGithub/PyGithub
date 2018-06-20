@@ -166,13 +166,20 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._zipball_url.value
 
     def delete_release(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#delete-a-release>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url
         )
-        return True
 
     def update_release(self, name, message, draft=False, prerelease=False):
+        """
+        :calls: `PATCH /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#edit-a-release>`_
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
@@ -192,6 +199,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def upload_asset(self, path, label="", content_type=""):
+        """
+        :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets?name=foo.zip <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
+        :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
+        """
         assert isinstance(path, (str, unicode)), path
         assert isinstance(label, (str, unicode)), label
 
@@ -212,6 +223,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def get_assets(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#list-assets-for-a-release>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList`
+        """
         return github.PaginatedList.PaginatedList(
             github.GitReleaseAsset.GitReleaseAsset,
             self._requester,

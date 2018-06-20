@@ -81,7 +81,7 @@ class Release(Framework.TestCase):
 
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
-        self.assertTrue(self.release.delete_release())
+        self.release.delete_release()
 
     def testUpdate(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
