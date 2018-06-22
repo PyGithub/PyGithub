@@ -89,21 +89,28 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
     def request(self, verb, url, input, headers):
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
-        copied_headers = headers.copy() # fixAuthorizationHeader fixes *in place* which breaks requests
-        fixAuthorizationHeader(copied_headers)
+        # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
+        # however, this is the real dictionary that *will be sent* by "requests",
+        # since we are writing here *before* doing the actual request.
+        # So we must avoid changing the real "headers" or this create this:
+        # https://github.com/PyGithub/PyGithub/pull/664#issuecomment-389964369
+        # https://github.com/PyGithub/PyGithub/issues/822
+        # Since it's dict[str, str], a simple copy is enough.
+        anonymous_headers = headers.copy()
+        fixAuthorizationHeader(anonymous_headers)
         self.__writeLine(self.__protocol)
         self.__writeLine(verb)
         self.__writeLine(self.__host)
         self.__writeLine(self.__port)
         self.__writeLine(url)
-        self.__writeLine(str(copied_headers))
+        self.__writeLine(str(anonymous_headers))
         self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
 
         status = res.status
-        print("=>", status)
+        print "=>", status
         headers = res.getheaders()
         output = res.read()
 
