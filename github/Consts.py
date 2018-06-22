@@ -31,6 +31,7 @@
 
 REQ_IF_NONE_MATCH = "If-None-Match"
 REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
+HTTPSTATUS_50X_WAIT_TIME = "10"
 
 # ##############################################################################
 # Response Header                                                              #
