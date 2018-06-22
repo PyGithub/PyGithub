@@ -254,22 +254,33 @@ class Requester:
         self.__apiPreview = api_preview
         self.__verify = verify
 
-    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
+    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
+        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        o = urlparse.urlparse(url)
-        self.__hostname = o.hostname
-        return self.__check(*self.requestBlob(verb, url, parameters, headers, input))
+        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise self.__createException(status, responseHeaders, output)
         return responseHeaders, output
+
+    def __customConnection(self, url):
+        cnx = None
+        if not url.startswith("/"):
+            o = urlparse.urlparse(url)
+            if o.hostname != self.__hostname or \
+               (o.port and o.port != self.__port) or \
+               (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
+                if o.scheme == 'http':
+                    cnx = self.__httpConnectionClass(o.hostname, o.port)
+                elif o.scheme == 'https':
+                    cnx = self.__httpsConnectionClass(o.hostname, o.port)
+        return cnx
 
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
@@ -303,7 +314,7 @@ class Requester:
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None):
+    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -317,9 +328,9 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestBlob(self, verb, url, parameters={}, headers={}, input=None):
+    def requestBlob(self, verb, url, parameters={}, headers={}, input=None, cnx=None):
         def encode(local_path):
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
@@ -331,7 +342,7 @@ class Requester:
 
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
-        return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
@@ -372,9 +383,6 @@ class Requester:
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        else:
-            assert cnx == "status"
-            cnx = self.__httpsConnectionClass("status.github.com", 443)
         cnx.request(
             verb,
             url,
@@ -413,8 +421,8 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.hostname in [self.__hostname, "uploads.github.com"], o.hostname
-            assert o.path.startswith((self.__prefix, "/api/uploads"))
+            assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
+            assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
             url = o.path
             if o.query != "":
