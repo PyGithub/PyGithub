@@ -459,6 +459,8 @@ class Requester:
         logger = logging.getLogger(__name__)
         if logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
+                # don't modify original requestHeaders
+                requestHeaders = requestHeaders.copy()
                 if requestHeaders["Authorization"].startswith("Basic"):
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
