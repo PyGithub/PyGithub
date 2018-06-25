@@ -195,7 +195,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
     def get_reactions(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/comments/:number/reactions
-                <https://developer.github.com/v3/reactions/#list-reactions-for-a-pull-request-review-comment>`
+                <https://developer.github.com/v3/reactions/#list-reactions-for-a-pull-request-review-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
         return github.PaginatedList.PaginatedList(

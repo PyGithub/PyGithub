@@ -61,6 +61,7 @@ Projects using PyGithub
 * `Upverter <https://upverter.com>`__ is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * `Notifico <http://n.tkte.ch>`__ receives messages (such as commits and issues) from services and scripts and delivers them to IRC channels. It can import/sync from Github.
 * `Tratihubis <http://pypi.python.org/pypi/tratihubis/>`__ converts Trac tickets to Github issues
+* https://github.com/fga-gpp-mds/2018.1-Cardinals - website that shows metrics for any public repository (issues, commits, pull requests etc)
 * https://github.com/CMB/cligh
 * https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
 * https://gist.github.com/3433798
@@ -71,6 +72,7 @@ Projects using PyGithub
 * https://github.com/gomesfernanda/some-github-metrics - Python functions for relevant metrics on GitHub repositories
 * https://github.com/SOM-Research/Gitana - a SQL-based Project Activity Inspector
 * https://github.com/YakDriver/satsukia - Python package that helps manage GitHub releases and release assets
+* `check-in <https://github.com/webknjaz/check-in>`_ — Python CLI distribution that allows user to use GitHub Checks API as a bot.
  
 They talk about PyGithub
 ------------------------

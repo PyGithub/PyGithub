@@ -41,6 +41,37 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 
+        self.pullIssue256Closed = self.g.get_repo("MarcoFalke/PyGithub").get_pull(1)
+        self.pullIssue256Merged = self.g.get_repo("MarcoFalke/PyGithub").get_pull(2)
+        self.pullIssue256Conflict = self.g.get_repo("MarcoFalke/PyGithub").get_pull(3)
+        self.pullIssue256Uncached = self.g.get_repo("MarcoFalke/PyGithub").get_pull(4)
+
+    def testAttributesIssue256(self):
+        self.assertEqual(self.pullIssue256Closed.closed_at, datetime.datetime(2018, 5, 22, 14, 50, 43))
+        self.assertEqual(self.pullIssue256Merged.closed_at, datetime.datetime(2018, 5, 22, 14, 53, 13))
+        self.assertEqual(self.pullIssue256Conflict.closed_at, None)
+        self.assertEqual(self.pullIssue256Uncached.closed_at, None)
+
+        self.assertEqual(self.pullIssue256Closed.state, 'closed')
+        self.assertEqual(self.pullIssue256Merged.state, 'closed')
+        self.assertEqual(self.pullIssue256Conflict.state, 'open')
+        self.assertEqual(self.pullIssue256Uncached.state, 'open')
+
+        self.assertFalse(self.pullIssue256Closed.merged)
+        self.assertTrue(self.pullIssue256Merged.merged)
+        self.assertFalse(self.pullIssue256Conflict.merged)
+        self.assertFalse(self.pullIssue256Uncached.merged)
+
+        self.assertEqual(self.pullIssue256Closed.mergeable, None)
+        self.assertEqual(self.pullIssue256Merged.mergeable, None)
+        self.assertTrue(self.pullIssue256Conflict.mergeable)
+        self.assertEqual(self.pullIssue256Uncached.mergeable, None)
+
+        self.assertEqual(self.pullIssue256Closed.mergeable_state, 'unknown')
+        self.assertEqual(self.pullIssue256Merged.mergeable_state, 'unknown')
+        self.assertEqual(self.pullIssue256Conflict.mergeable_state, 'clean')
+        self.assertEqual(self.pullIssue256Uncached.mergeable_state, 'unknown')
+
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")

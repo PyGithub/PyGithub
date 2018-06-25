@@ -89,13 +89,21 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
     def request(self, verb, url, input, headers):
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
-        fixAuthorizationHeader(headers)
+        # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
+        # however, this is the real dictionary that *will be sent* by "requests",
+        # since we are writing here *before* doing the actual request.
+        # So we must avoid changing the real "headers" or this create this:
+        # https://github.com/PyGithub/PyGithub/pull/664#issuecomment-389964369
+        # https://github.com/PyGithub/PyGithub/issues/822
+        # Since it's dict[str, str], a simple copy is enough.
+        anonymous_headers = headers.copy()
+        fixAuthorizationHeader(anonymous_headers)
         self.__writeLine(self.__protocol)
         self.__writeLine(verb)
         self.__writeLine(self.__host)
         self.__writeLine(self.__port)
         self.__writeLine(url)
-        self.__writeLine(str(headers))
+        self.__writeLine(str(anonymous_headers))
         self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
@@ -108,7 +116,10 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
 
         self.__writeLine(str(status))
         self.__writeLine(str(headers))
-        self.__writeLine(str(output))
+        if atLeastPython3: # In Py3, return from "read" is bytes
+            self.__writeLine(output)
+        else:
+            self.__writeLine(str(output))
 
         return FakeHttpResponse(status, headers, output)
 
@@ -117,7 +128,13 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(line + "\n")
+        if atLeastPython3:
+            try:  # Detect str/bytes
+                self.__file.write(line + b"\n")
+            except TypeError:
+                self.__file.write((line + "\n").encode('utf-8'))
+        else:
+            self.__file.write(line + "\n")
 
 
 class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
@@ -192,6 +209,7 @@ def ReplayingHttpsConnection(testCase, file, *args, **kwds):
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
+    replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
         unittest.TestCase.setUp(self)
@@ -229,7 +247,7 @@ class BasicTestCase(unittest.TestCase):
         for (_, _, functionName, _) in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
                 if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(os.path.dirname(__file__), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt")
+                    fileName = os.path.join(self.replayDataFolder, self.__class__.__name__ + "." + functionName + ".txt")
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName

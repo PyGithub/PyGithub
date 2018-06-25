@@ -454,7 +454,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_reactions(self):
         """
-        :calls: `GET /repos/:owner/:repo/issues/:number/reactions <https://developer.github.com/v3/reactions/#list-reactions-for-an-issue>`
+        :calls: `GET /repos/:owner/:repo/issues/:number/reactions <https://developer.github.com/v3/reactions/#list-reactions-for-an-issue>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
         return github.PaginatedList.PaginatedList(
