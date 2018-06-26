@@ -4,33 +4,24 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.40a4 (May 21, 2018)
+Version 1.40 (June 26, 2018)
 -----------------------------------
-
-* Increase default timeout from 10s to 15s (#793) (140c6480)
+* Major enhancement: use requests for HTTP instead of httplib (#664) (9aed19dd)
+* Test Framework improvement (#795) (faa8f205)
+* Handle HTTP 202 HEAD & GET with a retry (#791) (3aead158)
+* Fix github API requests after asset upload (#771) (8bdac23c)
+* Add remove_membership() method to Teams class (#807) (817f2230)
+* Add check-in to projects using PyGithub (#814) (05f49a59)
+* Include target_commitish in GitRelease (#788) (ba5bf2d7)
+* Fix asset upload timeout, increase default timeout from 10s to 15s (#793) (140c6480)
 * Fix Team.description (#797) (0e8ae376)
 * Fix Content-Length invalid headers exception (#787) (23395f5f)
 * Remove NamedUser.contributions (#774) (a519e467)
-* Branch protection methods no longer require loki (#775) (b1e9ae68)
-
-Version 1.40a3 (April 26, 2018)
------------------------------------
-
 * Add ability to skip SSL cert verification for Github Enterprise (#758) (85a9124b)
 * Correct Repository.get_git_tree recursive use (#767) (bd0cf309)
-
-Version 1.40a2 (April 23, 2018)
------------------------------------
-
 * Re-work PullRequest reviewer request (#765) (e2e29918)
 * Add support for team privacy (#763) (1f23c06a)
 * Add support for organization outside collaborators (#533) (c4446996)
-* Make use of issue_url in PullRequest (#755) (0dba048f)
-
-Version 1.40a1 (April 17, 2018)
------------------------------------
-
-* Use requests instead of httplib (#664) (9aed19dd)
 * PullRequest labels should use Issues URL (#754) (678b6b20)
 * Support labels for PullRequests (#752) (a308dc92)
 * Add get_organizations() (#748) (1e0150b5)
