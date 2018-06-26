@@ -114,6 +114,7 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+import github.Traffic
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -1268,6 +1269,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_clones(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/clones>
+        :rtype: :class:`github.Traffic.Clones`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", "/repos/" + self.full_name + "/traffic/clones"
+        )
+        return github.Traffic.Clones(self._requester, headers, data, completed=True)
+
     def get_collaborators(self):
         """
         :calls: `GET /repos/:owner/:repo/collaborators <http://developer.github.com/v3/repos/collaborators>`_
@@ -2303,6 +2314,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/teams",
             None
         )
+
+    def get_views(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/views>
+        :rtype: :class:`github.Traffic.Views`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", "/repos/" + self.full_name + "/traffic/views"
+        )
+        return github.Traffic.Views(self._requester, headers, data, completed=True)
 
     def get_watchers(self):
         """
