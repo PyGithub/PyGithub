@@ -1,10 +1,29 @@
-# ########################## Copyrights and license ############################
+# -*- coding: utf-8 -*-
+
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
+# Copyright 2015 Enix Yu <enix223@163.com>                                     #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Enix Yu <enix223@163.com>                                     #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -19,7 +38,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -66,6 +85,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28))
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")')
 
     def testProtectBranch(self):
         self.repo.protect_branch("master", True, "everyone", ["test"])
@@ -176,7 +198,7 @@ class Repository(Framework.TestCase):
         repo.delete()
 
     def testGetContributors(self):
-        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: (c.login, c.contributions), [("jacquev6", 355)])
+        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: c.login, ["jacquev6"])
 
     def testCreateMilestone(self):
         milestone = self.repo.create_milestone("Milestone created by PyGithub", state="open", description="Description created by PyGithub", due_on=datetime.date(2012, 6, 15))
@@ -194,18 +216,19 @@ class Repository(Framework.TestCase):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
         question = self.repo.get_label("Question")
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateIssueWithAllArgumentsStringLabel(self):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ['Question'])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ["Question"], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateLabel(self):
-        label = self.repo.create_label("Label with silly name % * + created by PyGithub", "00ff00")
+        label = self.repo.create_label("Label with silly name % * + created by PyGithub", "00ff00", "Description of label with silly name")
         self.assertEqual(label.color, "00ff00")
+        self.assertEqual(label.description, "Description of label with silly name")
         self.assertEqual(label.name, "Label with silly name % * + created by PyGithub")
         self.assertEqual(label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+silly+name+%25+%2A+%2B+created+by+PyGithub")
 
@@ -244,7 +267,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b")
 
     def testCreateGitTreeWithBaseTree(self):
-        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b")
+        base_tree = self.repo.get_git_tree("41cf8c178c636a018d537cb20daae09391efd70b", recursive=False)
         tree = self.repo.create_git_tree(
             [github.InputGitTreeElement(
                 "Barbaz.txt",
@@ -286,6 +309,35 @@ class Repository(Framework.TestCase):
         commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [], github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"))
         self.assertEqual(commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea")
 
+    def testCreateGitRelease(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest",
+            "vX.Y.Z: PyGithub acctest",
+            "This release is created by PyGithub",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.body, "This release is created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
+    def testCreateGitReleaseWithAllArguments(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest2",
+            "vX.Y.Z: PyGithub acctest2",
+            "This release is also created by PyGithub",
+            False,
+            True,
+            "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.body, "This release is also created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, True)
+        tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
+        self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag("TaggedByPyGithub", "Tag created by PyGithub", "0b820628236ab8bab3890860fc414fa757ca15f4", "commit")
         self.assertEqual(tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a")
@@ -298,12 +350,31 @@ class Repository(Framework.TestCase):
         key = self.repo.create_key("Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE")
         self.assertEqual(key.id, 2626761)
 
+    def testCreateSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.create_source_import("mercurial", "https://bitbucket.org/hfuss/source-import-test")
+        self.assertEqual(source_import.authors_count, 0)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "importing")
+        self.assertEqual(source_import.status_text, "Importing...")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
         self.repo.add_to_collaborators(lyloa)
         self.assertTrue(self.repo.has_in_collaborators(lyloa))
-        self.assertListKeyEqual(self.repo.get_collaborators(), lambda u: u.login, ["jacquev6", "Lyloa"])
+        collaborators = self.repo.get_collaborators()
+        self.assertListKeyEqual(collaborators, lambda u: u.login, ["jacquev6", "Lyloa"])
+        jacquev6 = [u for u in collaborators if u.login == "jacquev6"][0]
+        self.assertTrue(jacquev6.permissions.admin, True)
+        self.assertTrue(jacquev6.permissions.pull, True)
+        self.assertTrue(jacquev6.permissions.push, True)
+        self.assertFalse(jacquev6.site_admin)
         self.repo.remove_from_collaborators(lyloa)
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
 
@@ -429,6 +500,23 @@ class Repository(Framework.TestCase):
     def testGetWatchers(self):
         self.assertListKeyEqual(self.repo.get_watchers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "BeaverSoftware"])
 
+    def testGetSourceImport(self):
+        import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
+        source_import = import_repo.get_source_import()
+        self.assertEqual(source_import.authors_count, 1)
+        self.assertEqual(source_import.authors_url, "https://api.github.com/repos/brix4dayz/source-import-test/import/authors")
+        self.assertEqual(source_import.has_large_files, False)
+        self.assertEqual(source_import.html_url, "https://github.com/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.large_files_count, 0)
+        self.assertEqual(source_import.large_files_size, 0)
+        self.assertEqual(source_import.repository_url, "https://api.github.com/repos/brix4dayz/source-import-test")
+        self.assertEqual(source_import.status, "complete")
+        self.assertEqual(source_import.status_text, "Done")
+        self.assertEqual(source_import.url, "https://api.github.com/repos/brix4dayz/source-import-test/import")
+        self.assertEqual(source_import.use_lfs, "undecided")
+        self.assertEqual(source_import.vcs, "mercurial")
+        self.assertEqual(source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
+
     def testGetStargazers(self):
         self.assertListKeyEqual(self.repo.get_stargazers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca"])
 
@@ -451,7 +539,7 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_subscribers(), lambda u: u.login, ["jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa"])
 
     def testCreatePull(self):
-        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master")
+        pull = self.repo.create_pull("Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master", True)
         self.assertEqual(pull.id, 1436215)
 
     def testCreatePullFromIssue(self):
@@ -494,11 +582,39 @@ class Repository(Framework.TestCase):
 
     def testGetContents(self):
         self.assertEqual(len(self.repo.get_readme().content), 10212)
-        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md").content), 38121)
+        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md").content), 38121)
+
+    def testGetContentDir(self):
+
+        contents = self.repo.get_contents("/")
+        self.assertTrue(isinstance(contents, list))
+        self.assertEquals(len(contents), 14)
 
     def testGetContentsWithRef(self):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
-        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+
+    def testCreateFile(self):
+        newFile = '/doc/testCreateUpdateDeleteFile.md'
+        content = 'Hello world'
+        self.repo.create_file(
+            path=newFile, message='Create file for testCreateFile', content=content,
+            branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
+            author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
+
+    def testUpdateFile(self):
+        updateFile = '/doc/testCreateUpdateDeleteFile.md'
+        content = 'Hello World'
+        sha = self.repo.get_contents(updateFile).sha
+        self.repo.update_file(
+            path=updateFile, message='Update file for testUpdateFile', content=content, sha=sha,
+            branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
+            author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
+
+    def testDeleteFile(self):
+        deleteFile = '/doc/testCreateUpdateDeleteFile.md'
+        sha = self.repo.get_contents(deleteFile).sha
+        self.repo.delete_file(path=deleteFile, message='Delete file for testDeleteFile', sha=sha, branch="master")
 
     def testGetArchiveLink(self):
         self.assertEqual(self.repo.get_archive_link("tarball"), "https://nodeload.github.com/jacquev6/PyGithub/tarball/master")
@@ -558,17 +674,7 @@ class Repository(Framework.TestCase):
     def testUnsubscribePubSubHubbub(self):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
 
-    def testStatisticsBeforeCaching(self):
-        self.assertEqual(self.repo.get_stats_contributors(), None)
-        self.assertEqual(self.repo.get_stats_commit_activity(), None)
-        self.assertEqual(self.repo.get_stats_code_frequency(), None)
-        # ReplayData for those last two get_stats is forged because I was not
-        # able to find a repo where participation and punch_card had never been
-        # computed, and pushing to master did not reset the cache for them
-        self.assertEqual(self.repo.get_stats_participation(), None)
-        self.assertEqual(self.repo.get_stats_punch_card(), None)
-
-    def testStatisticsAfterCaching(self):
+    def testStatistics(self):
         stats = self.repo.get_stats_contributors()
         seenJacquev6 = False
         for s in stats:
@@ -601,6 +707,9 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+    def testGetLicense(self):
+        self.assertEqual(len(self.repo.get_license().content), 47646)
 
 
 class LazyRepository(Framework.TestCase):

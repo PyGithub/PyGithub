@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -21,7 +28,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -62,6 +69,9 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/nvie")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.user.__repr__(), 'NamedUser(login="nvie")')
+
     def testAttributesOfSelf(self):
         self.assertEqual(self.user.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png")
         self.assertEqual(self.user.bio, "")
@@ -91,6 +101,9 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.total_private_repos, 5)
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.user.__repr__(), 'NamedUser(login="jacquev6")')
 
     def testGetGists(self):
         self.assertListKeyEqual(self.user.get_gists(), lambda g: g.description, ["Gist created by PyGithub", "FairThreadPoolPool.cpp", "How to error 500 Github API v3, as requested by Rick (GitHub Staff)", "Cadfael: order of episodes in French DVD edition"])
@@ -140,3 +153,10 @@ class NamedUser(Framework.TestCase):
 
     def testGetKeys(self):
         self.assertListKeyEqual(self.user.get_keys(), lambda k: k.id, [3557894, 3791954, 3937333, 4051357, 4051492])
+
+    def testUserEquality(self):
+        u1 = self.g.get_user("nvie")
+        u2 = self.g.get_user("nvie")
+        self.assertTrue(u1 == u2)
+        self.assertEqual(u1, u2)
+        self.assertEqual(u1.__hash__(), u2.__hash__())

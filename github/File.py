@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Jeffrey Melvin <jeffrey.melvin@workiva.com>                   #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,15 +30,18 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github.GithubObject
 
 
 class File(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Files as returned for example by http://developer.github.com/v3/todo
+    This class represents Files
     """
+
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value, "filename": self._filename.value})
 
     @property
     def additions(self):
@@ -82,6 +93,13 @@ class File(github.GithubObject.NonCompletableGithubObject):
         return self._patch.value
 
     @property
+    def previous_filename(self):
+        """
+        :type: string
+        """
+        return self._previous_filename.value
+
+    @property
     def raw_url(self):
         """
         :type: string
@@ -110,6 +128,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         self._deletions = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._patch = github.GithubObject.NotSet
+        self._previous_filename = github.GithubObject.NotSet
         self._raw_url = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
@@ -129,6 +148,8 @@ class File(github.GithubObject.NonCompletableGithubObject):
             self._filename = self._makeStringAttribute(attributes["filename"])
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
+        if "previous_filename" in attributes:  # pragma no branch
+            self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch

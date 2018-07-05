@@ -4,10 +4,247 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.40 (June 26, 2018)
+-----------------------------------
+* Major enhancement: use requests for HTTP instead of httplib (#664) (9aed19dd)
+* Test Framework improvement (#795) (faa8f205)
+* Handle HTTP 202 HEAD & GET with a retry (#791) (3aead158)
+* Fix github API requests after asset upload (#771) (8bdac23c)
+* Add remove_membership() method to Teams class (#807) (817f2230)
+* Add check-in to projects using PyGithub (#814) (05f49a59)
+* Include target_commitish in GitRelease (#788) (ba5bf2d7)
+* Fix asset upload timeout, increase default timeout from 10s to 15s (#793) (140c6480)
+* Fix Team.description (#797) (0e8ae376)
+* Fix Content-Length invalid headers exception (#787) (23395f5f)
+* Remove NamedUser.contributions (#774) (a519e467)
+* Add ability to skip SSL cert verification for Github Enterprise (#758) (85a9124b)
+* Correct Repository.get_git_tree recursive use (#767) (bd0cf309)
+* Re-work PullRequest reviewer request (#765) (e2e29918)
+* Add support for team privacy (#763) (1f23c06a)
+* Add support for organization outside collaborators (#533) (c4446996)
+* PullRequest labels should use Issues URL (#754) (678b6b20)
+* Support labels for PullRequests (#752) (a308dc92)
+* Add get_organizations() (#748) (1e0150b5)
+
+Version 1.39 (April 10, 2018)
+-----------------------------------
+
+* Add documentation to github.Repository.Repository.create_git_release() (#747) (a769c2ff)
+* Add add_to_members() and remove_from_membership() (#741) (4da483d1)
+* Documentation: clarify semantics of get_comments (#743) (fec3c943)
+* Add download_url to ContentFile, closes #575 (ca6fbc45)
+* Add PullRequestComment.in_reply_to_id (#718) (eaa6a508)
+* Add team privacy parameter to create team (#702) (5cb5ab71)
+* Implement License API (#734) (b54ccc78)
+* Fix delete method for RepositoryKey (911bf615)
+* Remove edit for UserKey (722f2534)
+* Labels API: support description (#738) (42e75938)
+* Added Issue.as_pull_request() and PullReqest.as_issue() (#630) (6bf2acc7)
+* Documentation: sort the Github Objects (#735) (1497e826)
+* Add support for getting PR single review's comments. (#670) (612c3500)
+* Update the RepositoryKey class (#530) (5e8c6832)
+* Added since to PR review comments get (#577) (d8508285)
+* Remove some duplicate attributes introduced in #522 (566b28d3)
+* Added tarball_url, zipball_url, prerelease and draft property (#522) (c76e67b7)
+* Source Import API (#673) (864c663a)
+
+Version 1.38 (March 21, 2018)
+-----------------------------------
+
+* Updated readthedocs, PyPI to reflect latest version
+* Added option to create review for Pull request (#662) (162f0397)
+* Depreciate legacy search API (3cd176e3)
+* Filter team members  by role (#491) (10ee17a2)
+* Add url attribute to PullRequestReview object (#731) (0fb176fd)
+* Added target_commitish option to Repository.create_git_release() (#625) (0f0a7d4e)
+* Fix broken Github reference link in class docstrings (a32a17bf)
+* Add hook support for organizations (#729) (c7f6563c)
+* Get organization from the team (#590) (d9c5a07f)
+* Added search_commits (#727) (aa556f85)
+* Collaborator site admin (#719) (f8b23505)
+* Fix add_to_watched for AuthenticatedUser (#716) (6109eb3c)
+
+Version 1.37 (March 03, 2018)
+-----------------------------------
+
+* Add __eq__ and __hash__ to NamedUser (#706) (8a13b274)
+* Add maintainer can modify flag to create pull request (#703) (0e5a1d1d)
+* Fix typo in Design.md (#701) (98d32af4)
+* Add role parameter to Team.add_membership method (#638) (01ab4cc6)
+* Add add_membership testcase (#637) (5a1424bb)
+
+Version 1.36 (February 02, 2018)
+-----------------------------------
+
+* Fix changelog generation (5d911e22)
+* Add collaborator permission support (#699) (167f85ef)
+* Use datetime object in create_milestone (#698) (cef98416)
+* Fix date format for milestone creation (#593) (e671fdd0)
+* Remove the default "null" input send during GET request (#691) (cbfe8d0f)
+* Updated PullRequest reviewer request according to API changes (#690) (5c9c2f75)
+* make created_at/published_at attrs available for Release objects (#689) (2f9b1e01)
+* Add committer/author to Repository.delete_file (#678) (3baa682c)
+* Add method to get latest release of a repository (#609) (45d18436)
+* Add permissions field to NamedUser (#676) (6cfe46b7)
+* Fix all pep8 coding conventions (6bc804dc)
+* Add new params for /users/:user/repos endpoint (89834a9b)
+* Add support for changing PR head commit (#632) (3f77e537)
+* Use print() syntax in README (#681) (c5988c39)
+* Add PyPI badge and installation instructions to README (#682) (3726f686)
+* Drop support for EOL Python 2.5-2.6 and 3.2-3.3 (#674) (6735be49)
+* Add Reactions feature (#671) (ba50af53)
+* Add ping_url and ping to Hook (#669) (6169d8ea)
+* Add Repository.archived property (#657) (35333e03)
+* Add unit test for tree attribute of GitCommit (#668) (e5bfdbeb)
+* Add read_only attribute to Deploy Keys (#570) (dbc6f5ab)
+* Doc create instance from token (#667) (c33a3883)
+* Fix uploading binary files on Python 3 (#621) (317079ef)
+* Decode jwt bytes object in Python 3 (#633) (84b43da7)
+* Remove broken downloads badge (#644) (15cdc2f8)
+* Added missing parameters for repo creation (#623) (5c41120a)
+* Add ability to access github Release Asset API. (#525) (52449649)
+* Add 'submitted at' to PullRequestReview (#565) (ebe7277a)
+* Quote path for /contents API (#614) (554c1ab1)
+* Add Python 3.6 (2533bed9)
+* Add Python 3.6 (e78f0ece)
+* Updated references in introduction.rst (d2c72bb3)
+* fix failing tests on py26 (291f6dde)
+* Import missing exception (67b078e9)
+
+Version 1.35 (July 10, 2017)
+-----------------------------------
+
+* Add Support for repository collaborator invitations.
+
+Version 1.34 (abril 04, 2017)
+-----------------------------------
+
+* Add Support for Pull Request Reviews feature.
+
+Version 1.32 (February 1, 2017)
+-----------------------------------
+
+* Support for Integrations installation endpoint (656e70e1)
+
+Version 1.31 (January 30, 2017)
+-----------------------------------
+
+* Support HTTP 302 redirect in Organization.has_in_members (0154c6b)
+* Add details of repo type for get_repos documentation (f119147)
+* Note explicit support for Python 3.5 (3ae55f0)
+* Fix README instructions (5b0224e)
+* An easier to see link to the documentation in response to issue #480. (6039a4b)
+* Encode GithubObject repr values in utf-8 when using Python2 (8ab9082)
+* Updated documentation (4304ccd)
+* Added a subscribers count field (a2da7f9)
+* Added "add_to_assignees" & "remove_from_assignees" method to Issue object. (66430d7)
+* Added "assignees" attribute to PullRequest object. (c0de6be)
+* add html_url to GitRelease (ec633aa)
+* Removed unused imports (65afc3f)
+* Fix typo in a constant (10a28e0)
+* Fix changelog formatting glitch (03a9227)
+* Added "assignees" argument in Repository.create_issue() (ba007dc)
+* Enhance support of "assignees" argument in Issue.edit() (14dd9f0)
+* Added "assignees" attribute to Issue object. (e0e5fdf)
+
+Version 1.30 (January 30, 2017)
+-----------------------------------
+
+* adds GitHub integrations (d60943d)
+
+Version 1.29 (October 10, 2016)
+-----------------------------------
+
+* add issue assignee param (3a8edc7)
+* Fix diffrerent case (fcf6cfb)
+* DOC: remove easy_install suggestion; update links (45e76d9)
+* Add permission param documentation (9347345)
+* Add ability to set permission for team repo (5dddea7)
+* Fix status check (073bb44)
+* adds support for content dirs (0799753)
+
+Version 1.28 (September 09, 2016)
+-----------------------------------
+
+* test against python 3.5 (5d35284)
+* sort params and make them work on py3 (78374b9)
+* adds a nicer __repr__ (8571d87)
+* Add missing space (464259d)
+* Properly handle HTTP Proxy authentication with Python 3 (d015154)
+* Fix small typo (987bca0)
+* push to 'origin' instead of 'github' (d640666)
+
+Version 1.27.1 (August 12, 2016)
+-----------------------------------
+
+* upgrade release process based on travis (3c20a66)
+* change file content encoding to support unicode(like chinese), py2 (5404030)
+* adds missing testfile corrections (9134aa2)
+* fixed file API return values (0f29a53)
+* assert by str and unicode to make it more py3 friendly (7390827)
+* Patch issue 358 status context (#428) (70e30c5)
+* Adding "since" param to Issue.get_comments() (#426) (3c6f99f)
+* update doc url everywhere (#420) (cb0cf0a)
+* fix a couple typos to be clearer (#419) (23c0e75)
+* Document how one gets an AuthenticatedUser object (ba66862)
+* fix wrong expectance on requestJsonAndCheck() returning {} if no data (8985368)
+* Add previous_filename property to File (e1be1e6)
+* add changelog entry for 1.26.0 (a1f3de2)
+* update project files (be2e98b)
+* fix update/create/delete file api return value issue (8bb765a)
+* fix typo (a7929ac)
+* fix update/delete/create content return value invalid issue (a0a4511)
+* Follow redirects in the case of a 301 status code (c29f533)
+* Fix for pickling exception when deserializing GithubException. (8f8b455)
+* add support for the head parameter in Repository.get_pulls (397a74d)
+* Add:   - CommitCombinedStatus class   - get_combined_status() to Commit class to return combined status   - Add test for combined status. (5823ed7)
+* fix python3 compatibility issue for using json/base64 (5b7f0bb)
+* remove not covered API from readme (9c6f881)
+* change replay data for update file test case (46895df)
+* fix python3 compatability error in test case (00777db)
+* Add repo content create/update/delete testcase (4aaeb9e)
+* add MAINTAINERS file (a16b55b)
+* travis: disable email (6347157)
+* fix protect branch tests (65360b0)
+* Add branch protection endpoint (737f0c3)
+* fix request parameters issue (ae37d44)
+* add content file create/update/delete api (b83ffbf)
+* Add travis button on README. (a83649b)
+* fix misspelling: https://github.com/PyGithub/PyGithub/issues/363 (a06b5ec)
+* Adding base parameter to get_pulls() method. (71593a8)
+* add support for the direction parameter in Repository.get_pulls (70bcb6d)
+* added creator parameter (ca9af4f)
+
+Version 1.27.0 (August 12, 2016)
+-----------------------------------
+
+* this version was never released to PyPi due to a problem with the deployment
+
+Version 1.26.0 (November 5th, 2015)
+-----------------------------------
+
+* Added context parameter to Status API
+* Changed InputGitAuthor to reflect that time is an optional parameter
+* Added sort option to get_pulls
+* Added api_preview parameter to Requester class
+* Return empty list instead of None for pagination with no pages
+* Removed URL scheme validation that broke GitHub Enterprise
+* Added "add_membership" call to Teams
+* Added support to lazily load repositories
+* Updated test suite to record with oauth tokens
+* Added support for http_proxy
+* Add support for filter/role options in Organization.get_members()
+* Changed Organization.get_members's filter parameter to _filter
+* Fix escaping so that labels now support whitespaces
+* Updated create_issue to support taking a list of strings for labels
+* Added support for long integers in get_repo
+* Fixed pagination to thread headers between requests
+* Added repo.get_stargazers_with_dates()
+
 Version 1.25.2 (October 7th, 2014)
 ----------------------------------
 
-* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the GitHub API v3 returning `null`s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
+* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the GitHub API v3 returning `null`\s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
 
 Version 1.25.1 (September 28th, 2014)
 -------------------------------------

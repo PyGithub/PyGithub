@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
+# Copyright 2013 Steve Brown <steve@evolvedlight.co.uk>                        #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 C. R. Oldham <cro@ncbt.org>                                   #
+# Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
+# Copyright 2014 Tyler Treat <ttreat31@gmail.com>                              #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
+# Copyright 2015 Joseph Rawson <joseph.rawson.works@littledebian.org>          #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -23,38 +40,52 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import urllib
 import pickle
+import time
+import sys
+from httplib import HTTPSConnection
+import jwt
 
-from Requester import Requester
+from Requester import Requester, json
 import AuthenticatedUser
 import NamedUser
 import Organization
 import Gist
 import github.PaginatedList
 import Repository
+import Installation
 import Legacy
+import License
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
 import Status
 import StatusMessage
 import RateLimit
+import InstallationAuthorization
+import GithubException
+import Invitation
 
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
-DEFAULT_TIMEOUT = 10
+DEFAULT_STATUS_URL = "https://status.github.com"
+# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
+# Thus, the timeout should be slightly > 10s to account for network/front-end
+# latency.
+DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
 
 
 class Github(object):
     """
-    This is the main class you instanciate to access the Github API v3. Optional parameters allow different authentication methods.
+    This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False):
+    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True):
         """
         :param login_or_token: string
         :param password: string
@@ -64,6 +95,7 @@ class Github(object):
         :param client_secret: string
         :param user_agent: string
         :param per_page: int
+        :param verify: boolean or string
         """
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
@@ -74,7 +106,7 @@ class Github(object):
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview)
+        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
@@ -143,6 +175,35 @@ class Github(object):
         """
         return self.__requester.oauth_scopes
 
+    def get_license(self, key=github.GithubObject.NotSet):
+        """
+        :calls: `GET /license/:license <https://developer.github.com/v3/licenses/#get-an-individual-license>`_
+        :param key: string
+        :rtype: :class:`github.License.License`
+        """
+
+        assert isinstance(key, (str, unicode)), key
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/licenses/" + key
+        )
+        return github.License.License(self.__requester, headers, data, completed=True)
+
+    def get_licenses(self):
+        """
+        :calls: `GET /licenses <https://developer.github.com/v3/licenses/#list-all-licenses>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.License.License`
+        """
+
+        url_parameters = dict()
+
+        return github.PaginatedList.PaginatedList(
+            github.License.License,
+            self.__requester,
+            "/licenses",
+            url_parameters
+        )
+
     def get_user(self, login=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
@@ -188,6 +249,23 @@ class Github(object):
             "/orgs/" + login
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
+
+    def get_organizations(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /organizations <http://developer.github.com/v3/orgs#list-all-organizations>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self.__requester,
+            "/organizations",
+            url_parameters
+        )
 
     def get_repo(self, full_name_or_id, lazy=True):
         """
@@ -246,54 +324,6 @@ class Github(object):
             "/gists/public",
             None
         )
-
-    def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
-        """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :param language: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
-        args = {} if language is github.GithubObject.NotSet else {"language": language}
-        return Legacy.PaginatedList(
-            "/legacy/repos/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            args,
-            self.__requester,
-            "repositories",
-            Legacy.convertRepo,
-            github.Repository.Repository,
-        )
-
-    def legacy_search_users(self, keyword):
-        """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
-        :param keyword: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(keyword, (str, unicode)), keyword
-        return Legacy.PaginatedList(
-            "/legacy/user/search/" + urllib.quote_plus(keyword, safe='/%:><'),
-            {},
-            self.__requester,
-            "users",
-            Legacy.convertUser,
-            github.NamedUser.NamedUser,
-        )
-
-    def legacy_search_user_by_email(self, email):
-        """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
-        :param email: string
-        :rtype: :class:`github.NamedUser.NamedUser`
-        """
-        assert isinstance(email, (str, unicode)), email
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            "/legacy/user/email/" + email
-        )
-        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
     def search_repositories(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
         """
@@ -435,6 +465,45 @@ class Github(object):
             url_parameters
         )
 
+
+    def search_commits(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
+        """
+        :calls: `GET /search/commits <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param sort: string ('author-date', 'committer-date')
+        :param order: string ('asc', 'desc')
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert sort in ('author-date', 'committer-date'), sort
+            url_parameters["sort"] = sort
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert order in ('asc', 'desc'), order
+            url_parameters["order"] = order
+
+        query_chunks = []
+        if query:  # pragma no branch (Should be covered)
+            query_chunks.append(query)
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.Commit.Commit,
+            self.__requester,
+            "/search/commits",
+            url_parameters,
+            headers={
+                "Accept": "application/vnd.github.cloak-preview"
+            }
+        )
+
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
         :calls: `POST /markdown <http://developer.github.com/v3/markdown>`_
@@ -557,8 +626,7 @@ class Github(object):
         """
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
-            "/api/status.json",
-            cnx="status"
+            DEFAULT_STATUS_URL + "/api/status.json"
         )
         return Status.Status(self.__requester, headers, attributes, completed=True)
 
@@ -571,8 +639,7 @@ class Github(object):
         """
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
-            "/api/last-message.json",
-            cnx="status"
+            DEFAULT_STATUS_URL + "/api/last-message.json"
         )
         return StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True)
 
@@ -585,7 +652,102 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/api/messages.json",
-            cnx="status"
+            DEFAULT_STATUS_URL + "/api/messages.json"
         )
         return [StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True) for attributes in data]
+
+    def get_installation(self, id):
+        """
+
+        :param id:
+        :return:
+        """
+        return Installation.Installation(self.__requester, headers={}, attributes={"id": id}, completed=True)
+
+
+class GithubIntegration(object):
+    """
+    Main class to obtain tokens for a GitHub integration.
+    """
+
+    def __init__(self, integration_id, private_key):
+        """
+        :param integration_id: int
+        :param private_key: string
+        """
+        self.integration_id = integration_id
+        self.private_key = private_key
+
+    def create_jwt(self):
+        """
+        Creates a signed JWT, valid for 60 seconds.
+        :return:
+        """
+        now = int(time.time())
+        payload = {
+            "iat": now,
+            "exp": now + 60,
+            "iss": self.integration_id
+        }
+        encrypted = jwt.encode(
+            payload,
+            key=self.private_key,
+            algorithm="RS256"
+        )
+
+        if atLeastPython3:
+            encrypted = encrypted.decode('utf-8')
+
+        return encrypted
+
+    def get_access_token(self, installation_id, user_id=None):
+        """
+        Get an access token for the given installation id.
+        POSTs https://api.github.com/installations/<installation_id>/access_tokens
+        :param user_id: int
+        :param installation_id: int
+        :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
+        """
+        body = None
+        if user_id:
+            body = json.dumps({"user_id": user_id})
+        conn = HTTPSConnection("api.github.com")
+        conn.request(
+            method="POST",
+            url="/installations/{}/access_tokens".format(installation_id),
+            headers={
+                "Authorization": "Bearer {}".format(self.create_jwt()),
+                "Accept": "application/vnd.github.machine-man-preview+json",
+                "User-Agent": "PyGithub/Python"
+            },
+            body=body
+        )
+        response = conn.getresponse()
+        response_text = response.read()
+
+        if atLeastPython3:
+            response_text = response_text.decode('utf-8')
+
+        conn.close()
+        if response.status == 201:
+            data = json.loads(response_text)
+            return InstallationAuthorization.InstallationAuthorization(
+                requester=None,  # not required, this is a NonCompletableGithubObject
+                headers={},  # not required, this is a NonCompletableGithubObject
+                attributes=data,
+                completed=True
+            )
+        elif response.status == 403:
+            raise GithubException.BadCredentialsException(
+                status=response.status,
+                data=response_text
+            )
+        elif response.status == 404:
+            raise GithubException.UnknownObjectException(
+                status=response.status,
+                data=response_text
+            )
+        raise GithubException.GithubException(
+            status=response.status,
+            data=response_text
+        )

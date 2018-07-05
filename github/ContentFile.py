@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,7 +29,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import base64
 import sys
@@ -36,8 +43,11 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
     """
-    This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
+    This class represents ContentFiles. The reference can be found here https://developer.github.com/v3/repos/contents/#get-contents
     """
+
+    def __repr__(self):
+        return self.get__repr__({"path": self._path.value})
 
     @property
     def content(self):
@@ -55,6 +65,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         else:
             content = self.content
         return base64.b64decode(content)
+
+    @property
+    def download_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._download_url)
+        return self._download_url.value
 
     @property
     def encoding(self):
@@ -79,6 +97,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
+
+    @property
+    def license(self):
+        """
+        :type: :class:`github.License.License`
+        """
+        self._completeIfNotSet(self._license)
+        return self._license.value
 
     @property
     def name(self):
@@ -142,8 +168,10 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
+        self._download_url = github.GithubObject.NotSet
         self._git_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
@@ -154,12 +182,16 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
+        if "download_url" in attributes:  # pragma no branch
+            self._download_url = self._makeStringAttribute(attributes["download_url"])
         if "encoding" in attributes:  # pragma no branch
             self._encoding = self._makeStringAttribute(attributes["encoding"])
         if "git_url" in attributes:  # pragma no branch
             self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "license" in attributes:  # pragma no branch
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch

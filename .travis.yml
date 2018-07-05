@@ -1,16 +1,23 @@
 language: python
-
 python:
-  - "2.7"
-  - "2.6"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
 sudo: false
-
 script:
-  - python setup.py test
-
+- python setup.py test
 notifications:
   email: false
+  webhooks: https://www.travisbuddy.com/
+  on_success: never
+deploy:
+  provider: pypi
+  user: pygithubtravis
+  password:
+    secure: 4Sq7v7glMElq2zrZhvJ6QYr8tffl8UeVHKXipRFp3xZYMUOtCOewMFzbF+IKqx3VmgHKYaLwkN6+8w1xo/GsvBb4XM1ybb5aAYicuH7rLrA9uG9n+MEy3DTLbe0Z6U6z+9cTBvd8aDYZAvgz0nnH7qun+P7QMEJtziCSN24CK6k=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: PyGithub/PyGithub
+    python: '2.7'

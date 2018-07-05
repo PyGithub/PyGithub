@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -22,24 +30,18 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
+import json
 import os
 import sys
-import unittest
-import httplib
 import traceback
+import unittest
 
 import github
 
-atLeastPython26 = sys.hexversion >= 0x02060000
+python2 = sys.hexversion < 0x03000000
 atLeastPython3 = sys.hexversion >= 0x03000000
-atMostPython32 = sys.hexversion < 0x03030000
-
-if atLeastPython26:
-    import json
-else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
 
 def readLine(file):
@@ -87,14 +89,22 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
     def request(self, verb, url, input, headers):
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
-        fixAuthorizationHeader(headers)
+        # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
+        # however, this is the real dictionary that *will be sent* by "requests",
+        # since we are writing here *before* doing the actual request.
+        # So we must avoid changing the real "headers" or this create this:
+        # https://github.com/PyGithub/PyGithub/pull/664#issuecomment-389964369
+        # https://github.com/PyGithub/PyGithub/issues/822
+        # Since it's dict[str, str], a simple copy is enough.
+        anonymous_headers = headers.copy()
+        fixAuthorizationHeader(anonymous_headers)
         self.__writeLine(self.__protocol)
         self.__writeLine(verb)
         self.__writeLine(self.__host)
         self.__writeLine(self.__port)
         self.__writeLine(url)
-        self.__writeLine(str(headers))
-        self.__writeLine(input.replace('\n', '').replace('\r', ''))
+        self.__writeLine(str(anonymous_headers))
+        self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -106,7 +116,10 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
 
         self.__writeLine(str(status))
         self.__writeLine(str(headers))
-        self.__writeLine(str(output))
+        if atLeastPython3: # In Py3, return from "read" is bytes
+            self.__writeLine(output)
+        else:
+            self.__writeLine(str(output))
 
         return FakeHttpResponse(status, headers, output)
 
@@ -115,18 +128,24 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(line + "\n")
+        if atLeastPython3:
+            try:  # Detect str/bytes
+                self.__file.write(line + b"\n")
+            except TypeError:
+                self.__file.write((line + "\n").encode('utf-8'))
+        else:
+            self.__file.write(line + "\n")
 
 
 class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
-    _realConnection = httplib.HTTPConnection
+    _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
 class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
-    _realConnection = httplib.HTTPSConnection
+    _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "https", *args, **kwds)
@@ -149,12 +168,16 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
-        if input.startswith("{"):
-            self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
-        elif atMostPython32:  # @todo Test in all cases, including Python 3.3
-            # In Python 3.3, dicts are not output in the same order as in Python 2.5 -> 3.2.
-            # So, form-data encoding is not deterministic and is difficult to test.
-            self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+        if isinstance(input, (str, unicode)):
+            if input.startswith("{"):
+                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
+            elif python2:  # @todo Test in all cases, including Python 3.4+
+                # In Python 3.4+, dicts are not output in the same order as in Python 2.7.
+                # So, form-data encoding is not deterministic and is difficult to test.
+                self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+        else:
+            # for non-string input (e.g. upload asset), let it pass.
+            pass
 
     def __splitUrl(self, url):
         splitedUrl = url.split("?")
@@ -186,6 +209,7 @@ def ReplayingHttpsConnection(testCase, file, *args, **kwds):
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
+    replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
         unittest.TestCase.setUp(self)
@@ -223,7 +247,7 @@ class BasicTestCase(unittest.TestCase):
         for (_, _, functionName, _) in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
                 if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(os.path.dirname(__file__), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt")
+                    fileName = os.path.join(self.replayDataFolder, self.__class__.__name__ + "." + functionName + ".txt")
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName

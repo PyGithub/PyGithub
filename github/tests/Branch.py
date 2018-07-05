@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -21,7 +27,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import Framework
 
@@ -34,6 +40,9 @@ class Branch(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
         self.assertEqual(self.branch.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.branch.__repr__(), 'Branch(name="topic/RewriteWithGeneratedCode")')
 
     def testProtectedAttributes(self):
         self.branch = self.g.get_user().get_repo("PyGithub").get_protected_branch("master")
