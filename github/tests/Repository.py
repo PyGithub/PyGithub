@@ -715,8 +715,10 @@ class Repository(Framework.TestCase):
     def testGetTopics(self):
         topic_list = self.repo.get_topics()
         topic = u'github'
-        self.assertEquals(topic in topic_list, True)
+        self.assertIn(topic, topic_list)
 
+    def testReplaceTopics(self):
+        self.repo.replace_topics(['github', 'testing'])
 
 class LazyRepository(Framework.TestCase):
 

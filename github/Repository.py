@@ -673,7 +673,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def topics(self):
         """
-        :type: list 
+        :type: list of strings
         """
         self._completeIfNotSet(self._topics)
         return self._topics.value
@@ -2314,7 +2314,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_topics(self):
         """
-        :calls: `GET /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/:owner/:repo/topics <https://developer.github.com/v3/repos/#list-all-topics-for-a-repository>`_
         :rtype: list of strings
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -2452,11 +2452,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param topics: list of strings
         :rtype: None
         """
+        post_parameters = {
+            'names': topics
+        }
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/topics",
             headers={'Accept': 'application/vnd.github.mercy-preview+json'},
-            input=topics
+            input=post_parameters
         )
 
     def remove_from_collaborators(self, collaborator):
