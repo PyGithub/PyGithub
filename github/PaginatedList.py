@@ -36,6 +36,11 @@
 #                                                                              #
 ################################################################################
 
+try:
+    from urllib.parse import parse_qs
+except ImportError:
+    from urlparse import parse_qs
+
 import github.GithubObject
 
 
@@ -135,7 +140,8 @@ class PaginatedList(PaginatedListBase):
     def totalCount(self):
         if not self.__totalCount:
             params = {} if self.__nextParams is None else self.__nextParams.copy()
-            params.update({"per_page": 1, "page": 1})
+            # set per_page = 1 so the totalCount is just the number of pages
+            params.update({"per_page": 1})
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 self.__firstUrl,
@@ -147,7 +153,7 @@ class PaginatedList(PaginatedListBase):
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
-                self.__totalCount = int(re.match(r'.*[&\?]page=(\d*).*?', lastUrl).group(1))
+                self.__totalCount = int(parse_qs(lastUrl)['page'][0])
         return self.__totalCount
 
     def _getLastPageUrl(self):

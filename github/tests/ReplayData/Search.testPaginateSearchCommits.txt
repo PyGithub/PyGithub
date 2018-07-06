@@ -2,7 +2,7 @@ https
 GET
 api.github.com
 None
-/search/commits?q=hash%3A5b0224e868cc9242c9450ef02efbe3097abd7ba2
+/search/commits?q=hash%3A5b0224e868cc9242c9450ef02efbe3097abd7ba2&per_page=1
 {'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.cloak-preview', 'User-Agent': 'PyGithub/Python'}
 null
 200

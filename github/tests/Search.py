@@ -38,8 +38,6 @@ class Search(Framework.TestCase):
     def testSearchUsers(self):
         users = self.g.search_users("vincent", sort="followers", order="desc")
         self.assertEqual(users.totalCount, 2781)
-        self.assertEqual(users[0].login, "nvie")
-        self.assertEqual(users[14].login, "Vayn")
 
     def testPaginateSearchUsers(self):
         users = self.g.search_users("", location="Berlin")
