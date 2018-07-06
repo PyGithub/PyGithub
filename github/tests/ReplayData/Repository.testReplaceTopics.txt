@@ -1,0 +1,11 @@
+https
+PUT
+api.github.com
+None
+/repos/jacquev6/PyGithub/topics
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.mercy-preview+json', 'User-Agent': 'PyGithub/Python'}
+{"names": ["github", "testing"]}
+200
+[('content-length', '30'), ('x-runtime-rack', '0.081855'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"c34823528b2c41eadf247bcea3b7dabc"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('x-github-media-type', 'github.mercy-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '4C20:5398:FE4A88:26DA323:5AD7F450'), ('date', 'Thu, 19 Apr 2018 01:43:45 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1524105758')]
+{"names": ["testing","github"]}
+
