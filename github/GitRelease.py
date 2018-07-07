@@ -175,22 +175,30 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def update_release(self, name, message, draft=False, prerelease=False):
+    def update_release(self, name, message, draft=False, prerelease=False, tag_name=None, target_commitish=None):
         """
         :calls: `PATCH /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#edit-a-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
+        if not tag_name:
+            tag_name = self.tag_name
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert isinstance(tag_name, (str, unicode)), tag_name
         post_parameters = {
-            "tag_name": self.tag_name,
+            "tag_name": tag_name,
             "name": name,
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
         }
+        # Do not set target_commitish to self.target_commitish when ommited, just don't send it
+        # alltogether in that case, in order to match the Github API behaviour. Only send it when set.
+        if target_commitish:
+            assert isinstance(target_commitish, (str, unicode)), target_commitish
+            post_parameters['target_commitish'] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
