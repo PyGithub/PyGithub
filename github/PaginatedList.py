@@ -105,6 +105,11 @@ class PaginatedList(PaginatedListBase):
         for repo in user.get_repos():
             print(repo.name)
 
+    If you want to know the total number of items in the list::
+
+        print(user.get_repos().totalCount)
+        print(len(user.get_repos()))
+
     You can also index them or take slices::
 
         second_repo = user.get_repos()[1]
@@ -115,7 +120,7 @@ class PaginatedList(PaginatedListBase):
         for repo in user.get_repos().reversed:
             print(repo.name)
 
-    And if you really need it, you can explicitely access a specific page::
+    And if you really need it, you can explicitly access a specific page::
 
         some_repos = user.get_repos().get_page(0)
         some_other_repos = user.get_repos().get_page(3)
@@ -166,6 +171,9 @@ class PaginatedList(PaginatedListBase):
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
         return lastUrl
+
+    def __len__(self):
+        return self.totalCount
 
     @property
     def reversed(self):
