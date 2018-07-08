@@ -64,6 +64,11 @@ class PaginatedListBase:
             for element in newElements:
                 yield element
 
+    def __len__(self):
+        while self._couldGrow():
+            self._grow()
+        return len(self.__elements)
+
     def _isBiggerThan(self, index):
         return len(self.__elements) > index or self._couldGrow()
 
@@ -135,6 +140,12 @@ class PaginatedList(PaginatedListBase):
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
         self.__totalCount = None
+
+    def __len__(self):
+        if self.totalCount:
+            return self.totalCount
+        else:
+            return PaginatedListBase.__len__(self)
 
     @property
     def totalCount(self):
