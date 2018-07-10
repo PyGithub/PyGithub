@@ -14,9 +14,10 @@
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
 # Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -104,6 +105,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def description(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._description)
+        return self._description.value
 
     @property
     def disk_usage(self):
@@ -483,12 +492,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/hooks/" + str(id)
         )
 
-    def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
+    def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, description=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
         :calls: `PATCH /orgs/:org <http://developer.github.com/v3/orgs>`_
         :param billing_email: string
         :param blog: string
         :param company: string
+        :param description: string
         :param email: string
         :param location: string
         :param name: string
@@ -497,6 +507,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert billing_email is github.GithubObject.NotSet or isinstance(billing_email, (str, unicode)), billing_email
         assert blog is github.GithubObject.NotSet or isinstance(blog, (str, unicode)), blog
         assert company is github.GithubObject.NotSet or isinstance(company, (str, unicode)), company
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert email is github.GithubObject.NotSet or isinstance(email, (str, unicode)), email
         assert location is github.GithubObject.NotSet or isinstance(location, (str, unicode)), location
         assert name is github.GithubObject.NotSet or isinstance(name, (str, unicode)), name
@@ -507,6 +518,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["blog"] = blog
         if company is not github.GithubObject.NotSet:
             post_parameters["company"] = company
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
         if email is not github.GithubObject.NotSet:
             post_parameters["email"] = email
         if location is not github.GithubObject.NotSet:
@@ -834,6 +847,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._collaborators = github.GithubObject.NotSet
         self._company = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
+        self._description = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
         self._events_url = github.GithubObject.NotSet
@@ -871,6 +885,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._company = self._makeStringAttribute(attributes["company"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
         if "disk_usage" in attributes:  # pragma no branch
             self._disk_usage = self._makeIntAttribute(attributes["disk_usage"])
         if "email" in attributes:  # pragma no branch

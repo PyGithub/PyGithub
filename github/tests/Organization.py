@@ -8,9 +8,10 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,6 +48,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
         self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(self.org.description, 'BeaverSoftware writes software.')
         self.assertEqual(self.org.disk_usage, 2)
         self.assertEqual(self.org.email, '')
         self.assertEqual(self.org.followers, 0)
@@ -93,10 +95,11 @@ class Organization(Framework.TestCase):
         self.org.edit()
 
     def testEditWithAllArguments(self):
-        self.org.edit("BeaverSoftware2@vincent-jacques.net", "http://vincent-jacques.net", "Company edited by PyGithub", "BeaverSoftware2@vincent-jacques.net", "Location edited by PyGithub", "Name edited by PyGithub")
+        self.org.edit("BeaverSoftware2@vincent-jacques.net", "http://vincent-jacques.net", "Company edited by PyGithub", "Description edited by PyGithub", "BeaverSoftware2@vincent-jacques.net", "Location edited by PyGithub", "Name edited by PyGithub")
         self.assertEqual(self.org.billing_email, "BeaverSoftware2@vincent-jacques.net")
         self.assertEqual(self.org.blog, "http://vincent-jacques.net")
         self.assertEqual(self.org.company, "Company edited by PyGithub")
+        self.assertEqual(self.org.description, "Description edited by PyGithub")
         self.assertEqual(self.org.email, "BeaverSoftware2@vincent-jacques.net")
         self.assertEqual(self.org.location, "Location edited by PyGithub")
         self.assertEqual(self.org.name, "Name edited by PyGithub")
