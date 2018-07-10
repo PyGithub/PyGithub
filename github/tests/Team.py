@@ -12,6 +12,7 @@
 # Copyright 2018 Isuru Fernando <isuruf@gmail.com>                             #
 # Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -87,8 +88,9 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
-        self.team.edit("Name edited twice by PyGithub", "admin", "secret")
+        self.team.edit("Name edited twice by PyGithub", "Description edited by PyGithub", "admin", "secret")
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
+        self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
 
