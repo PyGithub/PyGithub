@@ -175,18 +175,25 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def update_release(self, name, message, draft=False, prerelease=False, tag_name=None, target_commitish=None):
+    def update_release(self, name, message, draft=False, prerelease=False,
+                       tag_name=github.GithubObject.NotSet,
+                       target_commitish=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#edit-a-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
-        if not tag_name:
-            tag_name = self.tag_name
+        assert tag_name is github.GithubObject.NotSet              \
+            or isinstance(tag_name, (str, unicode)),               \
+            'tag_name must be a str/unicode object'
+        assert target_commitish is github.GithubObject.NotSet      \
+            or isinstance(target_commitish, (str, unicode)),       \
+            'target_commitish must be a str/unicode object'
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(tag_name, (str, unicode)), tag_name
+        if tag_name is github.GithubObject.NotSet:
+            tag_name = self.tag_name
         post_parameters = {
             "tag_name": tag_name,
             "name": name,
@@ -196,8 +203,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         }
         # Do not set target_commitish to self.target_commitish when ommited, just don't send it
         # alltogether in that case, in order to match the Github API behaviour. Only send it when set.
-        if target_commitish:
-            assert isinstance(target_commitish, (str, unicode)), target_commitish
+        if target_commitish is not github.GithubObject.NotSet:
             post_parameters['target_commitish'] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
