@@ -172,9 +172,6 @@ class PaginatedList(PaginatedListBase):
         lastUrl = links.get("last")
         return lastUrl
 
-    def __len__(self):
-        return self.totalCount
-
     @property
     def reversed(self):
         r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams)
