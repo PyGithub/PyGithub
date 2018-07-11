@@ -1161,7 +1161,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
+    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet, archived=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -1172,6 +1172,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
+        :param archived: bool 
         :rtype: None
         """
         if name is None:
@@ -1184,6 +1185,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
+        assert archived is github.GithubObject.NotSet or isinstance(archived, bool), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -1201,6 +1203,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["has_downloads"] = has_downloads
         if default_branch is not github.GithubObject.NotSet:
             post_parameters["default_branch"] = default_branch
+        if archived is not github.GithubObject.NotSet:
+            post_parameters["archived"] = archived 
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
