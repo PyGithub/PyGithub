@@ -1172,7 +1172,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
-        :param archived: bool 
+        :param archived: bool, (optional), Valid values are: True or github.GithubObject.NotSet.  Un-archiving repositories is currently unsupported (https://developer.github.com/v3/repos/#edit)
         :rtype: None
         """
         if name is None:
@@ -1185,7 +1185,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
-        assert archived is github.GithubObject.NotSet or isinstance(archived, bool), has_downloads
+        assert archived is github.GithubObject.NotSet or (isinstance(archived, bool) and archived is True), archived
         post_parameters = {
             "name": name,
         }
