@@ -1172,7 +1172,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
-        :param archived: bool, (optional), Valid values are: True or github.GithubObject.NotSet.  Un-archiving repositories is currently unsupported (https://developer.github.com/v3/repos/#edit)
+        :param archived: bool. Unarchiving repositories is currently not supported through API (https://developer.github.com/v3/repos/#edit)
         :rtype: None
         """
         if name is None:
