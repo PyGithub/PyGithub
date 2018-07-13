@@ -198,7 +198,8 @@ class Organization(Framework.TestCase):
     def testCreateRepoWithAllArguments(self):
         team = self.org.get_team(141496)
         repo = self.org.create_repo(name="TestPyGithub2", description="Repo created by PyGithub", homepage="http://foobar.com",
-                                    private=False, has_issues=False, has_wiki=False, has_downloads=False, team_id=team.id)
+                                    private=False, has_issues=False, has_projects=False, has_wiki=False, has_downloads=False,
+                                    team_id=team.id, allow_squash_merge=False, allow_merge_commit=False, allow_rebase_merge=True)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
 
     def testCreateRepositoryWithAutoInit(self):

@@ -13,6 +13,7 @@
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -115,7 +116,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         output = res.read()
 
         self.__writeLine(str(status))
-        self.__writeLine(str(headers))
+        self.__writeLine(str(list(headers)))
         if atLeastPython3: # In Py3, return from "read" is bytes
             self.__writeLine(output)
         else:

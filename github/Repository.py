@@ -29,7 +29,7 @@
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                   #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
 # Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
@@ -41,7 +41,7 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
@@ -52,6 +52,7 @@
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -125,6 +126,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def allow_merge_commit(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_merge_commit)
+        return self._allow_merge_commit.value
+
+    @property
+    def allow_rebase_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_rebase_merge)
+        return self._allow_rebase_merge.value
+
+    @property
+    def allow_squash_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_squash_merge)
+        return self._allow_squash_merge.value
 
     @property
     def archived(self):
@@ -349,6 +374,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_issues)
         return self._has_issues.value
+
+    @property
+    def has_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_projects)
+        return self._has_projects.value
 
     @property
     def has_wiki(self):
@@ -2536,6 +2569,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
+        self._allow_merge_commit = github.GithubObject.NotSet
+        self._allow_rebase_merge = github.GithubObject.NotSet
+        self._allow_squash_merge = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -2564,6 +2600,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._git_url = github.GithubObject.NotSet
         self._has_downloads = github.GithubObject.NotSet
         self._has_issues = github.GithubObject.NotSet
+        self._has_projects = github.GithubObject.NotSet
         self._has_wiki = github.GithubObject.NotSet
         self._homepage = github.GithubObject.NotSet
         self._hooks_url = github.GithubObject.NotSet
@@ -2612,6 +2649,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "allow_merge_commit" in attributes:  # pragma no branch
+            self._allow_merge_commit = self._makeBoolAttribute(attributes["allow_merge_commit"])
+        if "allow_rebase_merge" in attributes:  # pragma no branch
+            self._allow_rebase_merge = self._makeBoolAttribute(attributes["allow_rebase_merge"])
+        if "allow_squash_merge" in attributes:  # pragma no branch
+            self._allow_squash_merge = self._makeBoolAttribute(attributes["allow_squash_merge"])
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
@@ -2668,6 +2711,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
         if "has_issues" in attributes:  # pragma no branch
             self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
+        if "has_projects" in attributes:  # pragma no branch
+            self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
