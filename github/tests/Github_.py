@@ -111,3 +111,7 @@ class Github(Framework.TestCase):
 
     def testGetLicense(self):
         self.assertEqual(self.g.get_license("mit").description, "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.")
+
+    def testRuntimeRack(self):
+        self.g.get_organizations()
+        self.assertEqual(self.g.runtime_rack, 0.060304)
