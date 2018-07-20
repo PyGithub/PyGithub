@@ -82,9 +82,6 @@ if __name__ == "__main__":
             "github",
             "github.tests",
         ],
-        package_data={
-            "github": ["tests/ReplayData/*.txt"]
-        },
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
