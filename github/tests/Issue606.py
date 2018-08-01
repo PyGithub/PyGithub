@@ -26,13 +26,13 @@ import Framework
 
 import github
 
+# TODO: test for retrieving organization projects
+# TODO: test for getting issue / pull request content from card
+
 class Issue606(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_user().get_repo("PyGithub")
-
-    def testHello(self):
-        print "hello"
 
     def testProjectList(self):
         for proj in self.repo.get_projects():

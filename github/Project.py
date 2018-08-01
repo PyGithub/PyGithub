@@ -27,7 +27,7 @@ import json
 import github.GithubObject
 
 
-# TODO: remaining properties
+# TODO: remaining Project properties
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here http://developer.github.com/v3/projects
@@ -87,13 +87,13 @@ class Project(github.GithubObject.CompletableGithubObject):
     def get_columns(self):
         """
         :calls: `GET /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#list-project-columns>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectColumn.ProjectColumn`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectColumn`
         """
         # 'Accept' header required while Github Projects API still in preview mode.
         headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
         
         return github.PaginatedList.PaginatedList(
-            ProjectColumn, # TODO github.ProjectColumn.ProjectColumn,
+            ProjectColumn,
             self._requester,
             self.url + "/columns",
             None,
@@ -122,7 +122,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
-# TODO: remaining properties
+# TODO: remaining ProjectColumn properties
 class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here http://developer.github.com/v3/projects/columns
@@ -155,16 +155,16 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
     def get_cards(self):
         """
         :calls: `GET /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#list-project-cards>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectColumn.ProjectCard`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectCard`
         """
         url_parameters = dict()
-        # TODO: archived_state parameter: all,archived, or not_archived
+        # TODO: support for archived_state parameter when getting cards: all,archived, or not_archived
         
         # 'Accept' header required while Github Projects API still in preview mode.
         headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
         
         return github.PaginatedList.PaginatedList(
-            ProjectCard, # TODO github.ProjectCard.ProjectCard,
+            ProjectCard,
             self._requester,
             self.url + "/cards",
             url_parameters,
@@ -184,7 +184,7 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
-# TODO: remaining properties
+# TODO: remaining ProjectCard properties
 # NOTE: There is currently no current way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 class ProjectCard(github.GithubObject.NonCompletableGithubObject):
@@ -240,7 +240,7 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    # TODO: card can be pull request, issue, or note - how should we handle these (for now just doing pull requests)
+    # TODO: get issue from card, not just pull request ("get_content" method?)
     def get_pullrequest(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
