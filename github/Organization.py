@@ -18,6 +18,7 @@
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,6 +48,7 @@ import github.Plan
 import github.Team
 import github.Event
 import github.Repository
+import github.Project
 import github.NamedUser
 
 
@@ -663,6 +665,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def get_projects(self):
+        """
+        :calls: `GET /orgs/:org/projects <https://developer.github.com/v3/projects/#list-organization-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        """
+        # TODO: centralize preview header management
+        # 'Accept' header required while Github Projects API still in preview mode.
+        headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
+        
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            None,
+            headers
+        )
+        
     def get_public_members(self):
         """
         :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/orgs/members>`_

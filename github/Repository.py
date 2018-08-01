@@ -95,6 +95,7 @@ import github.PullRequest
 import github.RepositoryKey
 import github.NamedUser
 import github.Milestone
+import github.Project
 import github.Comparison
 import github.CommitComment
 import github.GitCommit
@@ -1447,6 +1448,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def get_projects(self):
+        """
+        :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        """
+        # TODO: centralize preview header management
+        # 'Accept' header required while Github Projects API still in preview mode.
+        headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
+        
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            None,
+            headers
+        )
 
     def create_file(self, path, message, content,
                     branch=github.GithubObject.NotSet,

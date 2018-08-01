@@ -40,7 +40,7 @@ You can run the tests through `python -m github.tests`.
 Run a specific test with `python -m github.tests TestCase` or `python -m github.tests TestCase.testMethod`.
 
 If you add a new test, for example `Issue139.testCompletion`, you must add an import in `github/tests/AllTests.py`.
-Then, you have to run `python -m github.tests Issue139.testCompletion --record` to create the `github/tests/ReplayData/*.txt` files needed for you new test.
+Then, you have to run `python -m github.tests Issue139.testCompletion --record` to create the `github/tests/ReplayData/*.txt` files needed for your new test.
 Check them and commit them as well.
 You will need a `GithubCredentials.py` file at the root of the project with the following contents:
 
@@ -51,7 +51,7 @@ oauth_token = "my_token"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. NB that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used.
+You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. Also note that you need to provide the `--auth_with_token` command line argument when running the test, not just when recording.
 
 ## Coding conventions
 
