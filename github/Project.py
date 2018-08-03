@@ -152,13 +152,17 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    def get_cards(self):
+    def get_cards(self,archived_state=github.GithubObject.NotSet):
         """
         :calls: `GET /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#list-project-cards>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectCard`
+        :param archived_state: string
         """
+        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, unicode)), archived_state
+        
         url_parameters = dict()
-        # TODO: support for archived_state parameter when getting cards: all,archived, or not_archived
+        if archived_state is not github.GithubObject.NotSet:
+            url_parameters["archived_state"] = archived_state
         
         # 'Accept' header required while Github Projects API still in preview mode.
         headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
@@ -187,6 +191,9 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
 # TODO: remaining ProjectCard properties
 # NOTE: There is currently no current way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
+#
+# See also https://developer.github.com/v4/reference/object/projectcard for the next generation GitHub API,
+# which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
 class ProjectCard(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Project Cards. The reference can be found here https://developer.github.com/v3/projects/cards
