@@ -37,16 +37,136 @@ import datetime
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.event = self.g.get_user().get_repo("PyGithub").get_issues_event(16348656)
+        
+        self.event_subscribed               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16347479) # Issue 30 / 16347479
+        self.event_assigned                 = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16347480) # Issue 30 / 16347480
+        self.event_referenced               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue 30 / 16348656
+        self.event_closed                   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16351220) # Issue 30 / 16351220
+        self.event_labeled                  = self.g.get_repo("PyGithub/PyGithub").get_issues_event(98136337) # Issue 30 / 98136337
+        
+#        self.event_reopened                 = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_merged                   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_mentioned                = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_unassigned               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_unlabeled                = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_milestoned               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_demilestoned             = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_renamed                  = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_locked                   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_unlocked                 = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_head_ref_deleted         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_head_ref_restored        = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_base_ref_changed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_review_dismissed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_review_requested         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_review_request_removed   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_marked_as_duplicate      = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_added_to_project         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_moved_columns_in_project = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_removed_from_project     = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
+#        self.event_converted_not_to_issue   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656) # Issue XX / xxxxxxxxx 
 
-    def testAttributes(self):
-        self.assertEqual(self.event.actor.login, "jacquev6")
-        self.assertEqual(self.event.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433")
-        self.assertEqual(self.event.created_at, datetime.datetime(2012, 5, 27, 7, 29, 25))
-        self.assertEqual(self.event.event, "referenced")
-        self.assertEqual(self.event.id, 16348656)
-        self.assertEqual(self.event.issue.number, 30)
-        self.assertEqual(self.event.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/events/16348656")
-
+    def testEvent_subscribed_Attributes(self):
+        self.assertEqual(self.event_subscribed.actor.login, "jacquev6")
+        self.assertEqual(self.event_subscribed.commit_id, None)
+        self.assertEqual(self.event_subscribed.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15))
+        self.assertEqual(self.event_subscribed.event, "subscribed")
+        self.assertEqual(self.event_subscribed.id, 16347479)
+        self.assertEqual(self.event_subscribed.issue.number, 30)
+        self.assertEqual(self.event_subscribed.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347479")
+        self.assertEqual(self.event_subscribed.node_id, "MDE1OlN1YnNjcmliZWRFdmVudDE2MzQ3NDc5")
+        self.assertEqual(self.event_subscribed.commit_url, None)
+        self.assertEqual(self.event_subscribed.label, None)
+        self.assertEqual(self.event_subscribed.assignee, None)
+        self.assertEqual(self.event_subscribed.assigner, None)
+        self.assertEqual(self.event_subscribed.review_requester, None)
+        self.assertEqual(self.event_subscribed.requested_reviewer, None)
+        self.assertEqual(self.event_subscribed.milestone, None)
+        self.assertEqual(self.event_subscribed.rename, None)
+        self.assertEqual(self.event_subscribed.dismissed_review, None)
         # test __repr__() based on this attributes
-        self.assertEqual(self.event.__repr__(), 'IssueEvent(id=16348656)')
+        self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
+
+    def testEvent_assigned_Attributes(self):
+        self.assertEqual(self.event_assigned.actor.login, "jacquev6")
+        self.assertEqual(self.event_assigned.commit_id, None)
+        self.assertEqual(self.event_assigned.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15))
+        self.assertEqual(self.event_assigned.event, "assigned")
+        self.assertEqual(self.event_assigned.id, 16347480)
+        self.assertEqual(self.event_assigned.issue.number, 30)
+        self.assertEqual(self.event_assigned.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347480")
+        self.assertEqual(self.event_assigned.node_id, "MDEzOkFzc2lnbmVkRXZlbnQxNjM0NzQ4MA==")
+        self.assertEqual(self.event_assigned.commit_url, None)
+        self.assertEqual(self.event_assigned.label, None)
+        self.assertEqual(self.event_assigned.assignee.login, "jacquev6")
+        self.assertEqual(self.event_assigned.assigner.login, "ghost")
+        self.assertEqual(self.event_assigned.review_requester, None)
+        self.assertEqual(self.event_assigned.requested_reviewer, None)
+        self.assertEqual(self.event_assigned.milestone, None)
+        self.assertEqual(self.event_assigned.rename, None)
+        self.assertEqual(self.event_assigned.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
+
+    def testEvent_referenced_Attributes(self):
+        self.assertEqual(self.event_referenced.actor.login, "jacquev6")
+        self.assertEqual(self.event_referenced.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433")
+        self.assertEqual(self.event_referenced.created_at, datetime.datetime(2012, 5, 27, 7, 29, 25))
+        self.assertEqual(self.event_referenced.event, "referenced")
+        self.assertEqual(self.event_referenced.id, 16348656)
+        self.assertEqual(self.event_referenced.issue.number, 30)
+        self.assertEqual(self.event_referenced.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16348656")
+        self.assertEqual(self.event_referenced.node_id, "MDE1OlJlZmVyZW5jZWRFdmVudDE2MzQ4NjU2")
+        self.assertEqual(self.event_referenced.commit_url, "https://api.github.com/repos/PyGithub/PyGithub/commits/ed866fc43833802ab553e5ff8581c81bb00dd433")
+        self.assertEqual(self.event_referenced.label, None)
+        self.assertEqual(self.event_referenced.assignee, None)
+        self.assertEqual(self.event_referenced.assigner, None)
+        self.assertEqual(self.event_referenced.review_requester, None)
+        self.assertEqual(self.event_referenced.requested_reviewer, None)
+        self.assertEqual(self.event_referenced.milestone, None)
+        self.assertEqual(self.event_referenced.rename, None)
+        self.assertEqual(self.event_referenced.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
+
+    def testEvent_closed_Attributes(self):
+        self.assertEqual(self.event_closed.actor.login, "jacquev6")
+        self.assertEqual(self.event_closed.commit_id, None)
+        self.assertEqual(self.event_closed.created_at, datetime.datetime(2012, 5, 27, 11, 4, 25))
+        self.assertEqual(self.event_closed.event, "closed")
+        self.assertEqual(self.event_closed.id, 16351220)
+        self.assertEqual(self.event_closed.issue.number, 30)
+        self.assertEqual(self.event_closed.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16351220")
+        self.assertEqual(self.event_closed.node_id, "MDExOkNsb3NlZEV2ZW50MTYzNTEyMjA=")
+        self.assertEqual(self.event_closed.commit_url, None)
+        self.assertEqual(self.event_closed.label, None)
+        self.assertEqual(self.event_closed.assignee, None)
+        self.assertEqual(self.event_closed.assigner, None)
+        self.assertEqual(self.event_closed.review_requester, None)
+        self.assertEqual(self.event_closed.requested_reviewer, None)
+        self.assertEqual(self.event_closed.milestone, None)
+        self.assertEqual(self.event_closed.rename, None)
+        self.assertEqual(self.event_closed.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
+
+    def testEvent_labeled_Attributes(self):
+        self.assertEqual(self.event_labeled.actor.login, "jacquev6")
+        self.assertEqual(self.event_labeled.commit_id, None)
+        self.assertEqual(self.event_labeled.created_at, datetime.datetime(2014, 3, 2, 18, 55, 10))
+        self.assertEqual(self.event_labeled.event, "labeled")
+        self.assertEqual(self.event_labeled.id, 98136337)
+        self.assertEqual(self.event_labeled.issue.number, 30)
+        self.assertEqual(self.event_labeled.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/98136337")
+        self.assertEqual(self.event_labeled.node_id, "MDEyOkxhYmVsZWRFdmVudDk4MTM2MzM3")
+        self.assertEqual(self.event_labeled.commit_url, None)
+        self.assertEqual(self.event_labeled.label.name, "v1")
+        self.assertEqual(self.event_labeled.assignee, None)
+        self.assertEqual(self.event_labeled.assigner, None)
+        self.assertEqual(self.event_labeled.review_requester, None)
+        self.assertEqual(self.event_labeled.requested_reviewer, None)
+        self.assertEqual(self.event_labeled.milestone, None)
+        self.assertEqual(self.event_labeled.rename, None)
+        self.assertEqual(self.event_labeled.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
