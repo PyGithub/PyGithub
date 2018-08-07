@@ -37,7 +37,7 @@ import datetime
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        
+
         # From Issue #30
         self.event_subscribed               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16347479)
         self.event_assigned                 = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16347480)
@@ -238,7 +238,3 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.dismissed_review, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_review_requested.__repr__(), 'IssueEvent(id=1011101309)')
-
-
-
-

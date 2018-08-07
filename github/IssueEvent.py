@@ -109,7 +109,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
-        
+
     @property
     def commit_url(self):
         """
@@ -190,15 +190,15 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._dismissed_review)
         return self._dismissed_review.value
 
-    # lock_reason is documented in API, but not provided in response 
-    # to events "locked" or "unlocked", left here as a future placeholder.
-    #@property
-    #def lock_reason(self):
-    #    """
-    #    :type: string
-    #    """
-    #    self._completeIfNotSet(self._lock_reason)
-    #    return self._lock_reason.value
+#    # lock_reason is documented in API, but not provided in response
+#    # to events "locked" or "unlocked", left here as a future placeholder.
+#    @property
+#    def lock_reason(self):
+#        """
+#        :type: string
+#        """
+#        self._completeIfNotSet(self._lock_reason)
+#        return self._lock_reason.value
 
     def _initAttributes(self):
         self._actor = github.GithubObject.NotSet
@@ -211,17 +211,17 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._node_id = github.GithubObject.NotSet
         self._commit_url = github.GithubObject.NotSet
         self._label = github.GithubObject.NotSet
-        self._assignee = github.GithubObject.NotSet              
+        self._assignee = github.GithubObject.NotSet
         self._assigner = github.GithubObject.NotSet
         self._review_requester = github.GithubObject.NotSet
         self._requested_reviewer = github.GithubObject.NotSet
         self._milestone = github.GithubObject.NotSet
-        self._rename = github.GithubObject.NotSet                
-        self._dismissed_review = github.GithubObject.NotSet      
-        
-        # lock_reason is documented in API, but not provided in response 
-        # to events "locked" or "unlocked", left here as a future placeholder.
-        #self._lock_reason = github.GithubObject.NotSet           
+        self._rename = github.GithubObject.NotSet
+        self._dismissed_review = github.GithubObject.NotSet
+
+#        # lock_reason is documented in API, but not provided in response
+#        # to events "locked" or "unlocked", left here as a future placeholder.
+#        self._lock_reason = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
@@ -259,7 +259,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         if "dismissed_review" in attributes:  # pragma no branch
             self._dismissed_review = self._makeDictAttribute(attributes["dismissed_review"])
 
-        # lock_reason is documented in API, but not provided in response 
-        # to events "locked" or "unlocked", left here as a future placeholder.
-        #if "lock_reason" in attributes:  # pragma no branch
-        #    self._lock_reason = self._makeStringAttribute(attributes["lock_reason"])
+#        # lock_reason is documented in API, but not provided in response
+#        # to events "locked" or "unlocked", left here as a future placeholder.
+#        if "lock_reason" in attributes:  # pragma no branch
+#            self._lock_reason = self._makeStringAttribute(attributes["lock_reason"])
