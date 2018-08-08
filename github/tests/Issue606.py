@@ -38,11 +38,14 @@ class Issue606(Framework.BasicTestCase):
         self.repo = self.g.get_user().get_repo("PyGithub")
 
     def testProjectList(self):
+        expectedProjects = ['TestProject']
+        expectedCards = 3
+        projects = []
+        cards = 0
         for proj in self.repo.get_projects():
-            print "project: %s" % (proj.name)
+            projects.append(proj.name)
             for col in proj.get_columns():
-                print "  column: %d: %s" % (col.id, col.name)
                 for card in col.get_cards("all"):
-                    print "    card: %d: %s" % (card.id, card.note)
-                    print "      content type: %s" % (card.content_type)
-                    print "      content url: %s" % (card.content_url)
+                    cards += 1
+        self.assertEqual(projects, expectedProjects)
+        self.assertEqual(cards, expectedCards)

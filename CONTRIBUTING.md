@@ -51,9 +51,10 @@ oauth_token = "my_token"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. Also note that you need to provide the `--auth_with_token` command line argument when running the test, not just when recording.
+You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. Note that if you record your test data with `--auth_with_token` then you may need to modify the setup code for your test(s) to authenticate with the token, `self.g = github.Github(self.oauth_token)`.
 
 For running manual tests with external scripts that use the PyGithub package, you can install your development version with:
+
 ```
 pip install --editable (workspace)
 ```
