@@ -87,13 +87,18 @@ class RequestsResponse:
 
 class HTTPSRequestsConnectionClass(object):
     # mimic the httplib connection object
-    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
         self.port = port if port else 443
         self.host = host
         self.protocol = "https"
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # Code to support retries
+        if retry != None:
+            self.retry = retry
+            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
+            self.session.mount('https://', self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -113,13 +118,18 @@ class HTTPSRequestsConnectionClass(object):
 
 class HTTPRequestsConnectionClass(object):
     # mimic the httplib connection object
-    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
         self.port = port if port else 80
         self.host = host
         self.protocol = "http"
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # Code to support retries
+        if retry != None:
+            self.retry = retry
+            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
+            self.session.mount('http://', self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -212,7 +222,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -233,6 +243,7 @@ class Requester:
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
+        self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -279,9 +290,9 @@ class Requester:
                (o.port and o.port != self.__port) or \
                (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
                 if o.scheme == 'http':
-                    cnx = self.__httpConnectionClass(o.hostname, o.port)
+                    cnx = self.__httpConnectionClass(o.hostname, o.port, retry = self.__retry)
                 elif o.scheme == 'https':
-                    cnx = self.__httpsConnectionClass(o.hostname, o.port)
+                    cnx = self.__httpsConnectionClass(o.hostname, o.port, retry = self.__retry)
         return cnx
 
     def __createException(self, status, headers, output):
@@ -451,7 +462,7 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        self.__connection = self.__connectionClass(self.__hostname, self.__port, **kwds)
+        self.__connection = self.__connectionClass(self.__hostname, self.__port, retry = self.__retry, **kwds)
 
         return self.__connection
 
