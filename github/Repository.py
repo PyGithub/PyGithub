@@ -1454,16 +1454,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         """
-        # TODO: centralize preview header management
-        # 'Accept' header required while Github Projects API still in preview mode.
-        headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
         
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
             self.url + "/projects",
             None,
-            headers
+            github.Project.PROJECT_PREVIEW_HEADERS
         )
 
     def create_file(self, path, message, content,

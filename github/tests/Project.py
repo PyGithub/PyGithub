@@ -26,18 +26,40 @@ import Framework
 
 import github
 
-# TODO: test for retrieving organization projects
-# TODO: test for getting issue / pull request content from card
-
-# https://github.com/PyGithub/PyGithub/issues/606
-# https://github.com/PyGithub/PyGithub/pull/854
-class Issue606(Framework.BasicTestCase):
+class Project(Framework.TestCase):
     def setUp(self):
-        Framework.BasicTestCase.setUp(self)
-        self.g = github.Github(self.oauth_token)
+        # Force token authenticaton mode, since that's how the replay data was recorded.
+        self.tokenAuthMode = True
+        Framework.TestCase.setUp(self)
         self.repo = self.g.get_user().get_repo("PyGithub")
 
-    def testProjectList(self):
+    def testGetProject(self):
+        proj = self.g.get_project(1085833)
+        #print "Project: %s (id=%s)" % (proj.name, proj.id)
+        
+    def testGetOrganizationProjects(self):
+        org = self.g.get_organization("blackbirdinteractive")
+        #print "Organization: " + org.name
+        for proj in org.get_projects():
+            #print "  Project: %s (id=%s)" % (proj.name, proj.id)
+            pass
+        
+    def testGetRepositoryProjects(self):
+        pass
+        
+    def testProjectAttributes(self):
+        pass
+        
+    def testProjectColumnAttributes(self):
+        pass
+        
+    def testProjectCardAttributes(self):
+        pass
+
+    def testGetProjectCardContent(self):
+        pass
+        
+    def testGetAllProjectCards(self):
         expectedProjects = ['TestProject']
         expectedCards = 3
         projects = []

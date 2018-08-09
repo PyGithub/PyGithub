@@ -68,6 +68,7 @@ from NamedUser import *
 from Markdown import *
 from OrganizationHasInMembers import *
 from Organization import *
+from Project import *
 from PullRequest import *
 from PullRequestComment import *
 from PullRequestReview import *
@@ -111,4 +112,3 @@ from Issue216 import *
 from Issue278 import *
 from Issue494 import *
 from Issue572 import *
-from Issue606 import *

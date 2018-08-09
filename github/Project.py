@@ -26,8 +26,16 @@ import json
 
 import github.GithubObject
 
-
 # TODO: remaining Project properties
+
+# Original request for project support:
+#   https://github.com/PyGithub/PyGithub/issues/606
+# and pull request with initial functionality:
+#   https://github.com/PyGithub/PyGithub/pull/854
+
+# 'Accept' header required while Github Projects API still in preview mode.
+PROJECT_PREVIEW_HEADERS = {"Accept": "application/vnd.github.inertia-preview+json"}
+
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here http://developer.github.com/v3/projects
@@ -89,15 +97,13 @@ class Project(github.GithubObject.CompletableGithubObject):
         :calls: `GET /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#list-project-columns>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectColumn`
         """
-        # 'Accept' header required while Github Projects API still in preview mode.
-        headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
         
         return github.PaginatedList.PaginatedList(
             ProjectColumn,
             self._requester,
             self.url + "/columns",
             None,
-            headers
+            PROJECT_PREVIEW_HEADERS
         )
 
     def _initAttributes(self):
@@ -164,15 +170,12 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
         if archived_state is not github.GithubObject.NotSet:
             url_parameters["archived_state"] = archived_state
         
-        # 'Accept' header required while Github Projects API still in preview mode.
-        headers = { 'Accept': "application/vnd.github.inertia-preview+json" }
-        
         return github.PaginatedList.PaginatedList(
             ProjectCard,
             self._requester,
             self.url + "/cards",
             url_parameters,
-            headers
+            PROJECT_PREVIEW_HEADERS
         )
         
     def _initAttributes(self):
@@ -247,8 +250,8 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    # TODO: get issue from card, not just pull request ("get_content" method?)
-    def get_pullrequest(self):
+    # TODO: get issue if present, not just pull request
+    def get_content(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
         :rtype: :class:`github.PullRequest.PullRequest`
