@@ -74,7 +74,17 @@ def fixAuthorizationHeader(headers):
             # header as Python 2
             pass
         elif headers["Authorization"].startswith("token "):
-            headers["Authorization"] = "token private_token_removed"
+            # Note: For Token authentication, this line below used to say 
+            #       "token private_token_removed" 
+            #       and would work properly for a users playback testing.  However
+            #       when run on Travis (which apparently uses a basic login method)
+            #       the tests would fail due to Authorization mis-compares. 
+            #       https://github.com/PyGithub/PyGithub/issues/516
+            #       https://github.com/PyGithub/PyGithub/pull/857#issuecomment-411084352
+            #       Since the user recording data most likey does not care what
+            #       gets recorded (except that the auth data is private), this 
+            #       simple change will resolve the mis-compare. 
+            headers["Authorization"] = "Basic login_and_password_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
 
