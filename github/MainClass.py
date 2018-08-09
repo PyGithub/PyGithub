@@ -48,6 +48,7 @@ import time
 import sys
 from httplib import HTTPSConnection
 import jwt
+import urllib3
 
 from Requester import Requester, json
 import AuthenticatedUser
@@ -96,7 +97,7 @@ class Github(object):
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
-        :param retry: int or urllib3 Retry Object
+        :param retry: int or urllib3.util.retry.Retry object
         """
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
@@ -107,6 +108,7 @@ class Github(object):
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
+        assert retry is None or isinstance(retry, (int)) or isinstance(retry, (urllib3.util.Retry))
         self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
