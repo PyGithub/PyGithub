@@ -55,15 +55,16 @@ class IssueEvent(Framework.TestCase):
         self.event_unassigned               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782463379)
         self.event_unlabeled                = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782463917)
         self.event_renamed                  = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782472556)
+        self.event_base_ref_changed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782915693)
+        self.event_head_ref_deleted         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782917185)
+        self.event_head_ref_restored        = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1782917299)
+
 
         # TODO:PENDING Events - To Be Tested
 #        self.event_milestoned               = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_demilestoned             = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_locked                   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_unlocked                 = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_head_ref_deleted         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_head_ref_restored        = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_base_ref_changed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_review_dismissed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_review_request_removed   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_marked_as_duplicate      = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
@@ -324,4 +325,68 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_renamed.dismissed_review, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_renamed.__repr__(), 'IssueEvent(id=1782472556)')
+
+    def testEvent_base_ref_changed_Attributes(self):
+        self.assertEqual(self.event_base_ref_changed.actor.login, "allevin")
+        self.assertEqual(self.event_base_ref_changed.commit_id, None)
+        self.assertEqual(self.event_base_ref_changed.created_at, datetime.datetime(2018, 8, 10, 16, 38, 22))
+        self.assertEqual(self.event_base_ref_changed.event, "base_ref_changed")
+        self.assertEqual(self.event_base_ref_changed.id, 1782915693)
+        self.assertEqual(self.event_base_ref_changed.issue.number, 857)
+        self.assertEqual(self.event_base_ref_changed.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782915693")
+        self.assertEqual(self.event_base_ref_changed.node_id, "MDE5OkJhc2VSZWZDaGFuZ2VkRXZlbnQxNzgyOTE1Njkz")
+        self.assertEqual(self.event_base_ref_changed.commit_url, None)
+        self.assertEqual(self.event_base_ref_changed.label, None)
+        self.assertEqual(self.event_base_ref_changed.assignee, None)
+        self.assertEqual(self.event_base_ref_changed.assigner, None)
+        self.assertEqual(self.event_base_ref_changed.review_requester, None)
+        self.assertEqual(self.event_base_ref_changed.requested_reviewer, None)
+        self.assertEqual(self.event_base_ref_changed.milestone, None)
+        self.assertEqual(self.event_head_ref_deleted.rename, None)
+        self.assertEqual(self.event_base_ref_changed.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_base_ref_changed.__repr__(), 'IssueEvent(id=1782915693)')
+
+    def testEvent_head_ref_deleted_Attributes(self):
+        self.assertEqual(self.event_head_ref_deleted.actor.login, "allevin")
+        self.assertEqual(self.event_head_ref_deleted.commit_id, None)
+        self.assertEqual(self.event_head_ref_deleted.created_at, datetime.datetime(2018, 8, 10, 16, 39, 20))
+        self.assertEqual(self.event_head_ref_deleted.event, "head_ref_deleted")
+        self.assertEqual(self.event_head_ref_deleted.id, 1782917185)
+        self.assertEqual(self.event_head_ref_deleted.issue.number, 857)
+        self.assertEqual(self.event_head_ref_deleted.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782917185")
+        self.assertEqual(self.event_head_ref_deleted.node_id, "MDE5OkhlYWRSZWZEZWxldGVkRXZlbnQxNzgyOTE3MTg1")
+        self.assertEqual(self.event_head_ref_deleted.commit_url, None)
+        self.assertEqual(self.event_head_ref_deleted.label, None)
+        self.assertEqual(self.event_head_ref_deleted.assignee, None)
+        self.assertEqual(self.event_head_ref_deleted.assigner, None)
+        self.assertEqual(self.event_head_ref_deleted.review_requester, None)
+        self.assertEqual(self.event_head_ref_deleted.requested_reviewer, None)
+        self.assertEqual(self.event_head_ref_deleted.milestone, None)
+        self.assertEqual(self.event_head_ref_deleted.rename, None)
+        self.assertEqual(self.event_head_ref_deleted.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_head_ref_deleted.__repr__(), 'IssueEvent(id=1782917185)')
+
+    def testEvent_head_ref_restored_Attributes(self):
+        self.assertEqual(self.event_head_ref_restored.actor.login, "allevin")
+        self.assertEqual(self.event_head_ref_restored.commit_id, None)
+        self.assertEqual(self.event_head_ref_restored.created_at, datetime.datetime(2018, 8, 10, 16, 39, 23))
+        self.assertEqual(self.event_head_ref_restored.event, "head_ref_restored")
+        self.assertEqual(self.event_head_ref_restored.id, 1782917299)
+        self.assertEqual(self.event_head_ref_restored.issue.number, 857)
+        self.assertEqual(self.event_head_ref_restored.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782917299")
+        self.assertEqual(self.event_head_ref_restored.node_id, "MDIwOkhlYWRSZWZSZXN0b3JlZEV2ZW50MTc4MjkxNzI5OQ==")
+        self.assertEqual(self.event_head_ref_restored.commit_url, None)
+        self.assertEqual(self.event_head_ref_restored.label, None)
+        self.assertEqual(self.event_head_ref_restored.assignee, None)
+        self.assertEqual(self.event_head_ref_restored.assigner, None)
+        self.assertEqual(self.event_head_ref_restored.review_requester, None)
+        self.assertEqual(self.event_head_ref_restored.requested_reviewer, None)
+        self.assertEqual(self.event_head_ref_restored.milestone, None)
+        self.assertEqual(self.event_head_ref_deleted.rename, None)
+        self.assertEqual(self.event_head_ref_restored.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_head_ref_restored.__repr__(), 'IssueEvent(id=1782917299)')
+
 
