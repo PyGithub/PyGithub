@@ -85,6 +85,10 @@ class GithubObject(object):
         self._initAttributes()
         self._storeAndUseAttributes(headers, attributes)
 
+        # A cach used for fetches
+        print("Using yours")
+        self._fetch_cache = {}
+
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
         if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
