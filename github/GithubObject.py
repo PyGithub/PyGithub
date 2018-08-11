@@ -152,6 +152,10 @@ class GithubObject(object):
         return GithubObject.__makeSimpleAttribute(value, (int, long))
 
     @staticmethod
+    def _makeFloatAttribute(value):
+        return GithubObject.__makeSimpleAttribute(value, float)
+
+    @staticmethod
     def _makeBoolAttribute(value):
         return GithubObject.__makeSimpleAttribute(value, bool)
 
