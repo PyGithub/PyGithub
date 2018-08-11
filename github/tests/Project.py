@@ -23,32 +23,60 @@
 # ##############################################################################
 
 import Framework
-
 import github
 
+def dump(obj, name="obj"):
+    print
+    for attr in dir(obj):
+        if not attr.startswith("_") and not attr.startswith("raw"):
+            print "%s.%s =" % (name, attr),
+            print getattr(obj, attr)
+    
 class Project(Framework.TestCase):
     def setUp(self):
         # Force token authenticaton mode, since that's how the replay data was recorded.
         self.tokenAuthMode = True
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_user().get_repo('PyGithub')
 
     def testGetProject(self):
-        proj = self.g.get_project(1085833)
-        #print "Project: %s (id=%s)" % (proj.name, proj.id)
+        id = 1682941
+        proj = self.g.get_project(id)
+        self.assertEqual(proj.id, id)
+        self.assertEqual(proj.name, 'TestProject')
         
     def testGetOrganizationProjects(self):
-        org = self.g.get_organization("blackbirdinteractive")
-        #print "Organization: " + org.name
-        for proj in org.get_projects():
-            #print "  Project: %s (id=%s)" % (proj.name, proj.id)
-            pass
+        expectedProjects = ['Project1', 'Project2', 'Project3']
+        org = self.g.get_organization('PyGithubTestOrg')
+        projects = []
+        for proj in org.get_projects("open"):
+            projects.append(proj.name)
+        self.assertEqual(projects, expectedProjects)
         
     def testGetRepositoryProjects(self):
-        pass
+        expectedProjects = ['TestProject', 'TestProjectClosed']
+        projects = []
+        for proj in self.repo.get_projects("all"):
+            projects.append(proj.name)
+        self.assertEqual(projects, expectedProjects)
         
+    # See https://developer.github.com/v3/projects/#get-a-project
     def testProjectAttributes(self):
-        pass
+        id = 1682941
+        proj = self.g.get_project(id)
+        #self.assertEqual(proj.owner_url, "")
+        self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
+        #self.assertEqual(proj.html_url, "")
+        #self.assertEqual(proj.columns_url, "")
+        self.assertEqual(proj.id, id)
+        #self.assertEqual(proj.node_id, "")
+        self.assertEqual(proj.name, 'TestProject')
+        self.assertEqual(proj.body, "To be used for testing project access API for PyGithub.")
+        self.assertEqual(proj.number, 1)
+        #self.assertEqual(proj.state, "open")
+        self.assertEqual(proj.creator, self.repo.owner)
+        #self.assertEqual(proj.created_at, "2018-08-01")
+        #self.assertEqual(proj.updated_at, "2018-08-01")
         
     def testProjectColumnAttributes(self):
         pass

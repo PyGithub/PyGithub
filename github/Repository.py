@@ -53,6 +53,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1449,17 +1450,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
-    def get_projects(self):
+    def get_projects(self, state=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        :param state: string
         """
         
+        url_parameters = dict()
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+            
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
             self.url + "/projects",
-            None,
+            url_parameters,
             github.Project.PROJECT_PREVIEW_HEADERS
         )
 
