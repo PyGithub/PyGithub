@@ -85,8 +85,7 @@ class GithubObject(object):
         self._initAttributes()
         self._storeAndUseAttributes(headers, attributes)
 
-        # A cach used for fetches
-        print("Using yours")
+        # A cache used for fetches
         self._fetch_cache = {}
 
         # Ask requester to do some checking, for debug and test purpose

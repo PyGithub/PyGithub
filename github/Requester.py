@@ -346,7 +346,7 @@ class Requester:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
+    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode, etag=None):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -355,6 +355,7 @@ class Requester:
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
+        requestHeaders["If-None-Match"] = etag
         if self.__apiPreview:
             requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
