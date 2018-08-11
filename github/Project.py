@@ -22,11 +22,11 @@
 #                                                                              #
 ################################################################################
 
+import datetime
 import json
 
 import github.GithubObject
-
-# TODO: remaining Project properties
+import github.ProjectColumn
 
 # Original request for project support:
 #   https://github.com/PyGithub/PyGithub/issues/606
@@ -53,12 +53,36 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
+    def columns_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._columns_url)
+        return self._columns_url.value
+
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
     def creator(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._creator)
         return self._creator.value
+
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self):
@@ -77,12 +101,44 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def number(self):
         """
         :type: integer
         """
         self._completeIfNotSet(self._number)
         return self._number.value
+
+    @property
+    def owner_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._owner_url)
+        return self._owner_url.value
+
+    @property
+    def state(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._state)
+        return self._state.value
+
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -95,185 +151,65 @@ class Project(github.GithubObject.CompletableGithubObject):
     def get_columns(self):
         """
         :calls: `GET /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#list-project-columns>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectColumn`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectColumn.ProjectColumn`
         """
-        
+
         return github.PaginatedList.PaginatedList(
-            ProjectColumn,
+            github.ProjectColumn.ProjectColumn,
             self._requester,
-            self.url + "/columns",
+            self.columns_url,
             None,
             PROJECT_PREVIEW_HEADERS
         )
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
+        self._columns_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
+        self._owner_url = github.GithubObject.NotSet
+        self._state = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._zz = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
+        if "columns_url" in attributes:  # pragma no branch
+            assert attributes["columns_url"] is None or isinstance(attributes["columns_url"], (str, unicode)), attributes["columns_url"]
+            self._columns_url = self._makeStringAttribute(attributes["columns_url"])
+        if "created_at" in attributes:  # pragma no branch
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            assert attributes["node_id"] is None or isinstance(attributes["node_id"], (str, unicode)), attributes["node_id"]
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        if "owner_url" in attributes:  # pragma no branch
+            assert attributes["owner_url"] is None or isinstance(attributes["owner_url"], (str, unicode)), attributes["owner_url"]
+            self._owner_url = self._makeStringAttribute(attributes["owner_url"])
+        if "state" in attributes:  # pragma no branch
+            assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = self._makeStringAttribute(attributes["url"])
-
-# TODO: remaining ProjectColumn properties
-class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents Project Columns. The reference can be found here http://developer.github.com/v3/projects/columns
-    """
-
-    def __repr__(self):
-        return self.get__repr__({"name": self._name.value})
-
-    @property
-    def id(self):
-        """
-        :type: integer
-        """
-        return self._id.value
-
-    @property
-    def name(self):
-        """
-        :type: string
-        """
-        return self._name.value
-
-    @property
-    def url(self):
-        """
-        :type: string
-        """
-        return self._url.value
-
-    def get_cards(self,archived_state=github.GithubObject.NotSet):
-        """
-        :calls: `GET /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#list-project-cards>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`ProjectCard`
-        :param archived_state: string
-        """
-        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, unicode)), archived_state
-        
-        url_parameters = dict()
-        if archived_state is not github.GithubObject.NotSet:
-            url_parameters["archived_state"] = archived_state
-        
-        return github.PaginatedList.PaginatedList(
-            ProjectCard,
-            self._requester,
-            self.url + "/cards",
-            url_parameters,
-            PROJECT_PREVIEW_HEADERS
-        )
-        
-    def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-
-# TODO: remaining ProjectCard properties
-# NOTE: There is currently no current way to get cards "in triage" for a project.
-# https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
-#
-# See also https://developer.github.com/v4/reference/object/projectcard for the next generation GitHub API,
-# which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
-class ProjectCard(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents Project Cards. The reference can be found here https://developer.github.com/v3/projects/cards
-    """
-
-    def __repr__(self):
-        return self.get__repr__({"id": self._id.value})
-
-    # content_type is not a property of a returned card, but this property
-    # is consistent with the parameters provided when creating cards, see:
-    # https://developer.github.com/v3/projects/cards/#create-a-project-card
-    @property
-    def content_type(self):
-        """
-        :type: string
-        """
-        if not self.content_url:
-            return None
-        elif "/issues/" in self.content_url:
-            return "Issue"
-        elif "/pulls/" in self.content_url:
-            return "PullRequest"
-        else:
-            return "Unknown"
-            
-    @property
-    def content_url(self):
-        """
-        :type: string
-        """
-        return self._content_url.value
-       
-    @property
-    def id(self):
-        """
-        :type: integer
-        """
-        return self._id.value
-
-    @property
-    def note(self):
-        """
-        :type: string
-        """
-        return self._note.value
-
-    @property
-    def url(self):
-        """
-        :type: string
-        """
-        return self._url.value
-
-    # TODO: get issue if present, not just pull request
-    def get_content(self):
-        """
-        :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
-        :rtype: :class:`github.PullRequest.PullRequest`
-        """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.content_url
-        )
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
-
-    def _initAttributes(self):
-        self._content_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._note = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
-        if "content_url" in attributes:  # pragma no branch
-            self._content_url = self._makeStringAttribute(attributes["content_url"])
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "note" in attributes:  # pragma no branch
-            self._note = self._makeStringAttribute(attributes["note"])
-        if "url" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["url"])

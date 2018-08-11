@@ -64,19 +64,19 @@ class Project(Framework.TestCase):
     def testProjectAttributes(self):
         id = 1682941
         proj = self.g.get_project(id)
-        #self.assertEqual(proj.owner_url, "")
+        self.assertEqual(proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub")
         self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
-        #self.assertEqual(proj.html_url, "")
-        #self.assertEqual(proj.columns_url, "")
+        self.assertEqual(proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1")
+        self.assertEqual(proj.columns_url, "https://api.github.com/projects/1682941/columns")
         self.assertEqual(proj.id, id)
-        #self.assertEqual(proj.node_id, "")
+        self.assertEqual(proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
         self.assertEqual(proj.name, 'TestProject')
         self.assertEqual(proj.body, "To be used for testing project access API for PyGithub.")
         self.assertEqual(proj.number, 1)
-        #self.assertEqual(proj.state, "open")
+        self.assertEqual(proj.state, "open")
         self.assertEqual(proj.creator, self.repo.owner)
-        #self.assertEqual(proj.created_at, "2018-08-01")
-        #self.assertEqual(proj.updated_at, "2018-08-01")
+        self.assertEqual(proj.created_at.year, 2018)
+        self.assertTrue(proj.updated_at > proj.created_at)
         
     def testProjectColumnAttributes(self):
         pass
