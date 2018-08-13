@@ -26,7 +26,7 @@ import json
 
 import github.GithubObject
 
-# NOTE: There is currently no current way to get cards "in triage" for a project.
+# NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 #
 # See also https://developer.github.com/v4/reference/object/projectcard for the next generation GitHub API,

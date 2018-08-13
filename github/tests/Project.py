@@ -25,13 +25,6 @@
 import Framework
 import github
 
-def dump(obj, name="obj"):
-    print
-    for attr in dir(obj):
-        if not attr.startswith("_") and not attr.startswith("raw"):
-            print "%s.%s =" % (name, attr),
-            print getattr(obj, attr)
-    
 class Project(Framework.TestCase):
     def setUp(self):
         # Force token authenticaton mode, since that's how the replay data was recorded.
