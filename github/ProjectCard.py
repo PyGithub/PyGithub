@@ -120,14 +120,17 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
         if self.content_url == None:
             return None
             
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.content_url
-        )
-        
         if content_type == "PullRequest":
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.content_url.replace("issues", "pulls")
+            )
             return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
         elif content_type is github.GithubObject.NotSet or content_type == "Issue":
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.content_url
+            )
             return github.Issue.Issue(self._requester, headers, data, completed=True)
         else:
             assert False, "Unknown content type: %s" % content_type
