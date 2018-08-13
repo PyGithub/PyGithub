@@ -387,6 +387,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/issues/:issue_number/events <http://developer.github.com/v3/issues/events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
+        Note: PaginatedList of events does not support per_page option, user must call
+              github.PaginatedList.PaginatedList.get_page(x) for each specific page.
+              see: https://developer.github.com/v3/activity/events/
         """
         return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
