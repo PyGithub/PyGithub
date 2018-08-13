@@ -31,9 +31,6 @@
 import sys
 import os.path
 
-# This script is unable to add an attribute after all the existing ones
-# but, well, I'll do it manually in that case.
-
 className, attributeName, attributeType = sys.argv[1:]
 
 
@@ -59,13 +56,17 @@ i = 0
 
 added = False
 
+isCompletable = True
 isProperty = False
 while not added:
     line = lines[i].rstrip()
     i += 1
-    if line == "    @property":
+    if line.startswith("class "):
+        if "NonCompletableGithubObject" in line:
+            isCompletable = False
+    elif line == "    @property":
         isProperty = True
-    if line.startswith("    def "):
+    elif line.startswith("    def "):
         attrName = line[8:-7]
         # Properties will be inserted after __repr__, but before any other function.
         if attrName != "__repr__" and (attrName == "_identity" or attrName > attributeName or not isProperty):
@@ -75,7 +76,8 @@ while not added:
             newLines.append("        \"\"\"")
             newLines.append("        :type: " + attributeDocType)
             newLines.append("        \"\"\"")
-            newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
+            if isCompletable:
+                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
             newLines.append("        return self._" + attributeName + ".value")
             newLines.append("")
             if isProperty:

@@ -77,19 +77,58 @@ class Project(Framework.TestCase):
         self.assertEqual(proj.creator, self.repo.owner)
         self.assertEqual(proj.created_at.year, 2018)
         self.assertTrue(proj.updated_at > proj.created_at)
-        
+
+    # See https://developer.github.com/v3/projects/columns/#get-a-project-column
     def testProjectColumnAttributes(self):
-        pass
-        
+        proj = self.g.get_project(1682941)
+        col = proj.get_columns()[0]
+        self.assertEqual(col.id, 3138830)
+        self.assertEqual(col.node_id, "MDEzOlByb2plY3RDb2x1bW4zMTM4ODMw")
+        self.assertEqual(col.name, "To Do")
+        self.assertEqual(col.url, "https://api.github.com/projects/columns/3138830")
+        self.assertEqual(col.project_url, "https://api.github.com/projects/1682941")
+        self.assertEqual(col.cards_url, "https://api.github.com/projects/columns/3138830/cards")
+        self.assertEqual(col.created_at.year, 2018)
+        self.assertTrue(col.updated_at >= col.created_at)
+
+    # See https://developer.github.com/v3/projects/cards/#get-a-project-card
     def testProjectCardAttributes(self):
-        pass
+        proj = self.g.get_project(1682941)
+        col = proj.get_columns()[1]
+        card = col.get_cards()[0]
+        self.assertEqual(card.url, "https://api.github.com/projects/columns/cards/11780055")
+        self.assertEqual(card.column_url, "https://api.github.com/projects/columns/3138831")
+        self.assertEqual(card.content_url, "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1")
+        self.assertEqual(card.id, 11780055)
+        self.assertEqual(card.node_id, "MDExOlByb2plY3RDYXJkMTE3ODAwNTU=")
+        self.assertEqual(card.note, None)   # No notes for cards with content.
+        self.assertEqual(card.creator, self.repo.owner)
+        self.assertEqual(card.created_at.year, 2018)
+        self.assertTrue(card.updated_at >= card.created_at)
+        self.assertFalse(card.archived)
 
     def testGetProjectCardContent(self):
-        pass
+        proj = self.g.get_project(1682941)
+        col = proj.get_columns()[1]
+        cards = col.get_cards()
+
+        pull_card = cards[0]
+        pull = pull_card.get_content("PullRequest")
+        self.assertIsInstance(pull, github.PullRequest.PullRequest);
+        self.assertEqual(pull.title, "Work in progress on support for GitHub projects API.")
+
+        issue_card = cards[1]
+        issue = issue_card.get_content()
+        self.assertIsInstance(issue, github.Issue.Issue);
+        self.assertEqual(issue.title, "Test issue")
+
+        note_card = cards[2]
+        note_content = note_card.get_content()
+        self.assertEqual(note_content, None)
         
     def testGetAllProjectCards(self):
         expectedProjects = ['TestProject']
-        expectedCards = 3
+        expectedCards = 5
         projects = []
         cards = 0
         for proj in self.repo.get_projects():

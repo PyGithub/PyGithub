@@ -26,7 +26,6 @@ import json
 
 import github.GithubObject
 
-# TODO: remaining ProjectCard properties
 # NOTE: There is currently no current way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 #
@@ -40,22 +39,40 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
-    # content_type is not a property of a returned card, but this property
-    # is consistent with the parameters provided when creating cards, see:
-    # https://developer.github.com/v3/projects/cards/#create-a-project-card
     @property
-    def content_type(self):
+    def archived(self):
+        """
+        :type: bool
+        """
+        return self._archived.value
+
+    @property
+    def column_url(self):
         """
         :type: string
         """
-        if not self.content_url:
-            return None
-        elif "/issues/" in self.content_url:
-            return "Issue"
-        elif "/pulls/" in self.content_url:
-            return "PullRequest"
-        else:
-            return "Unknown"
+        return self._column_url.value
+
+    @property
+    def content_url(self):
+        """
+        :type: string
+        """
+        return self._content_url.value
+
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._created_at.value
+
+    @property
+    def creator(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
+        return self._creator.value
 
     @property
     def id(self):
@@ -65,30 +82,94 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
         return self._id.value
 
     @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        return self._node_id.value
+
+    @property
     def note(self):
         """
         :type: string
         """
         return self._note.value
 
-    # TODO: get issue if present, not just pull request
-    def get_content(self):
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._updated_at.value
+
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        return self._url.value
+
+    # Note that the content_url for any card will be an "issue" URL, from
+    # which you can retrieve either an Issue or a PullRequest. Unforunately
+    # the API doesn't make it clear which you are dealing with.
+    def get_content(self, content_type=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
-        :rtype: :class:`github.PullRequest.PullRequest`
+        :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
+        if self.content_url == None:
+            return None
+            
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.content_url
         )
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        
+        if content_type == "PullRequest":
+            return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        elif content_type is github.GithubObject.NotSet or content_type == "Issue":
+            return github.Issue.Issue(self._requester, headers, data, completed=True)
+        else:
+            assert False, "Unknown content type: %s" % content_type
 
     def _initAttributes(self):
+        self._archived = github.GithubObject.NotSet
+        self._column_url = github.GithubObject.NotSet
+        self._content_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._creator = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
         self._note = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "archived" in attributes:  # pragma no branch
+            assert attributes["archived"] is None or isinstance(attributes["archived"], bool), attributes["archived"]
+            self._archived = self._makeBoolAttribute(attributes["archived"])
+        if "column_url" in attributes:  # pragma no branch
+            assert attributes["column_url"] is None or isinstance(attributes["column_url"], (str, unicode)), attributes["column_url"]
+            self._column_url = self._makeStringAttribute(attributes["column_url"])
+        if "content_url" in attributes:  # pragma no branch
+            assert attributes["content_url"] is None or isinstance(attributes["content_url"], (str, unicode)), attributes["content_url"]
+            self._content_url = self._makeStringAttribute(attributes["content_url"])
+        if "created_at" in attributes:  # pragma no branch
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "creator" in attributes:  # pragma no branch
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            assert attributes["node_id"] is None or isinstance(attributes["node_id"], (str, unicode)), attributes["node_id"]
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "note" in attributes:  # pragma no branch
             self._note = self._makeStringAttribute(attributes["note"])
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])
+

@@ -28,7 +28,6 @@ import github.GithubObject
 import github.Project
 import github.ProjectCard
 
-# TODO: remaining ProjectColumn properties
 class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here http://developer.github.com/v3/projects/columns
@@ -36,6 +35,20 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def cards_url(self):
+        """
+        :type: string
+        """
+        return self._cards_url.value
+
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._created_at.value
 
     @property
     def id(self):
@@ -50,6 +63,27 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
         :type: string
         """
         return self._name.value
+
+    @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        return self._node_id.value
+
+    @property
+    def project_url(self):
+        """
+        :type: string
+        """
+        return self._project_url.value
+
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -79,15 +113,35 @@ class ProjectColumn(github.GithubObject.NonCompletableGithubObject):
         )
 
     def _initAttributes(self):
+        self._cards_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
+        self._project_url = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "cards_url" in attributes:  # pragma no branch
+            assert attributes["cards_url"] is None or isinstance(attributes["cards_url"], (str, unicode)), attributes["cards_url"]
+            self._cards_url = self._makeStringAttribute(attributes["cards_url"])
+        if "created_at" in attributes:  # pragma no branch
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            assert attributes["node_id"] is None or isinstance(attributes["node_id"], (str, unicode)), attributes["node_id"]
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "project_url" in attributes:  # pragma no branch
+            assert attributes["project_url"] is None or isinstance(attributes["project_url"], (str, unicode)), attributes["project_url"]
+            self._project_url = self._makeStringAttribute(attributes["project_url"])
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = self._makeStringAttribute(attributes["url"])
