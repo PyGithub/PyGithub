@@ -31,7 +31,11 @@
 import sys
 import os.path
 
-className, attributeName, attributeType = sys.argv[1:]
+className, attributeName, attributeType = sys.argv[1:4]
+if len(sys.argv) > 4:
+    attributeClassType = sys.argv[4]
+else:
+    attributeClassType = ""
 
 
 types = {
@@ -40,6 +44,7 @@ types = {
     "bool": ("bool", "bool", "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
     "float": ("float", "float", "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
     "datetime": ("datetime.datetime", "(str, unicode)", "self._makeDatetimeAttribute(attributes[\"" + attributeName + "\"])"),
+    "class": (":class:`" + attributeClassType + "`", None, "self._makeClassAttribute(" + attributeClassType + ", attributes[\"" + attributeName + "\"])"),
 }
 
 attributeDocType, attributeAssertType, attributeValue = types[attributeType]
@@ -120,7 +125,8 @@ while not added:
                 attrName = line[12:-36]
             if not line or attrName > attributeName:
                 newLines.append("        if \"" + attributeName + "\" in attributes:  # pragma no branch")
-                newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
+                if attributeAssertType:
+                    newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
                 newLines.append("            self._" + attributeName + " = " + attributeValue)
                 added = True
     newLines.append(line)
