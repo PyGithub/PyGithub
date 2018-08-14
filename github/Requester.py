@@ -390,14 +390,16 @@ class Requester:
             if status == 304:
                 print('NOT MODIFIED FOR ' + url)
                 output = self.fetch_cache[url]['response']
-                if 'link' in self.fetch_cache[url]:
+                if "link" in self.fetch_cache[url]:
                     responseHeaders['link'] = self.fetch_cache[url]['link']
-            elif status == 200:
+            elif status == 200 and 'etag' in responseHeaders:
                 print('Maybe modified for ' + url)
-                print(responseHeaders['etag'])
-                self.fetch_cache[url] = {'etag': responseHeaders['etag'][2:], 'response': output}
-                if 'link' in responseHeaders:
-                    self.fetch_cache[url]['link'] = responseHeaders['link']
+                etag_rgx = re.compile(r'"[^"]+"')
+                etag = etag_rgx.search(responseHeaders.get('etag'))
+                if etag:
+                    self.fetch_cache[url] = {'etag': etag.group(), 'response': output}
+                    if "link" in responseHeaders:
+                        self.fetch_cache[url]['link'] = responseHeaders['link']
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
