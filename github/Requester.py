@@ -366,8 +366,6 @@ class Requester:
         if url in self.fetch_cache and verb == 'GET':
             print('YES ' + url + ' IS IN CACHE')
             requestHeaders["If-None-Match"] = self.fetch_cache[url]['etag']
-        else:
-            print(self.fetch_cache.keys())
 
         encoded_input = None
         if input is not None:
@@ -392,10 +390,14 @@ class Requester:
             if status == 304:
                 print('NOT MODIFIED FOR ' + url)
                 output = self.fetch_cache[url]['response']
-                print(output)
-            else:
+                if 'link' in self.fetch_cache[url]:
+                    responseHeaders['link'] = self.fetch_cache[url]['link']
+            elif status == 200:
                 print('Maybe modified for ' + url)
+                print(responseHeaders['etag'])
                 self.fetch_cache[url] = {'etag': responseHeaders['etag'][2:], 'response': output}
+                if 'link' in responseHeaders:
+                    self.fetch_cache[url]['link'] = responseHeaders['link']
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
