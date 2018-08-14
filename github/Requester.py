@@ -142,6 +142,7 @@ class Requester:
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
     __persist = True
+    fetch_cache = {}
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -256,6 +257,7 @@ class Requester:
         self.__apiPreview = api_preview
         self.__verify = verify
 
+
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
@@ -346,7 +348,7 @@ class Requester:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode, etag=None):
+    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -355,12 +357,17 @@ class Requester:
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
-        requestHeaders["If-None-Match"] = etag
         if self.__apiPreview:
             requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
+
+        if url in self.fetch_cache and verb == 'GET':
+            print('YES ' + url + ' IS IN CACHE')
+            requestHeaders["If-None-Match"] = self.fetch_cache[url]['etag']
+        else:
+            print(self.fetch_cache.keys())
 
         encoded_input = None
         if input is not None:
@@ -380,6 +387,15 @@ class Requester:
 
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
+
+        if verb == "GET":
+            if status == 304:
+                print('NOT MODIFIED FOR ' + url)
+                output = self.fetch_cache[url]['response']
+                print(output)
+            else:
+                print('Maybe modified for ' + url)
+                self.fetch_cache[url] = {'etag': responseHeaders['etag'][2:], 'response': output}
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
