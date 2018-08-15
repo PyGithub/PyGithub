@@ -39,6 +39,7 @@ from AuthenticatedUser import *
 from Authentication import *
 from Authorization import *
 from Branch import *
+from BranchProtection import *
 from Commit import *
 from CommitCombinedStatus import *
 from CommitComment import *
@@ -75,6 +76,8 @@ from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *
+from RequiredPullRequestReviews import *
+from RequiredStatusChecks import *
 from SourceImport import *
 from Status import *
 from Tag import *
