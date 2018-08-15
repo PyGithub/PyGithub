@@ -94,7 +94,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         :type: dict of string to :class:`github.GistFile.GistFile`
         """
-        self._completeIfNotSet(self._files)
+        self._completeIfNeeded()
         return self._files.value
 
     @property
