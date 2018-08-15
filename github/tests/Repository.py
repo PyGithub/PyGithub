@@ -551,14 +551,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(commit, None)
 
     def testMergeWithConflict(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             commit = self.repo.merge("branchForBase", "branchForHead")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 409)
-            self.assertEqual(exception.data, {"message": "Merge conflict"})
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 409)
+        self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(self.repo.get_issues_comments()[:40], lambda c: c.id, [5168757, 5181640, 5183010, 5186061, 5226090, 5449237, 5518272, 5547576, 5780183, 5781803, 5820199, 5820912, 5924198, 5965724, 5965812, 5965891, 5966555, 5966633, 5981084, 5981232, 5981409, 5981451, 5991965, 6019700, 6088432, 6293572, 6305625, 6357374, 6357422, 6447481, 6467193, 6467312, 6467642, 6481200, 6481392, 6556134, 6557261, 6568164, 6568181, 6568553])
@@ -574,14 +570,10 @@ class Repository(Framework.TestCase):
         self.repo.subscribe_to_hub("push", "http://requestb.in/1bc1sc61", "my_secret")
 
     def testBadSubscribePubSubHubbub(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.subscribe_to_hub("non-existing-event", "http://requestb.in/1bc1sc61")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 422)
-            self.assertEqual(exception.data, {"message": "Invalid event: \"non-existing-event\""})
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(raisedexp.exception.data, {"message": "Invalid event: \"non-existing-event\""})
 
     def testUnsubscribePubSubHubbub(self):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
