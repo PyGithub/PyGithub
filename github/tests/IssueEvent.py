@@ -65,9 +65,9 @@ class IssueEvent(Framework.TestCase):
         self.event_review_dismissed         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1783605084)
         self.event_review_request_removed   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1783779835)
         self.event_marked_as_duplicate      = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1783779725)
+        self.event_unmarked_as_duplicate    = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1789228962)
 
         # TODO:PENDING Events - To Be Tested
-#        self.event_unmarked_as_duplicate    = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_added_to_project         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_moved_columns_in_project = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
 #        self.event_removed_from_project     = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
@@ -534,4 +534,25 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_marked_as_duplicate.dismissed_review, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_marked_as_duplicate.__repr__(), 'IssueEvent(id=1783779725)')
+
+    def testEvent_unmarked_as_duplicate_Attributes(self):
+        self.assertEqual(self.event_unmarked_as_duplicate.actor.login, "sfdye")
+        self.assertEqual(self.event_unmarked_as_duplicate.commit_id, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.created_at, datetime.datetime(2018, 8, 15, 2, 57, 46))
+        self.assertEqual(self.event_unmarked_as_duplicate.event, "unmarked_as_duplicate")
+        self.assertEqual(self.event_unmarked_as_duplicate.id, 1789228962)
+        self.assertEqual(self.event_unmarked_as_duplicate.issue.number, 857)
+        self.assertEqual(self.event_unmarked_as_duplicate.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1789228962")
+        self.assertEqual(self.event_unmarked_as_duplicate.node_id, "MDI0OlVubWFya2VkQXNEdXBsaWNhdGVFdmVudDE3ODkyMjg5NjI=")
+        self.assertEqual(self.event_unmarked_as_duplicate.commit_url, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.label, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.assignee, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.assigner, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.review_requester, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.requested_reviewer, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.milestone, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.rename, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_unmarked_as_duplicate.__repr__(), 'IssueEvent(id=1789228962)')
 
