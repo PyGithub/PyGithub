@@ -56,15 +56,11 @@ class Authentication(Framework.BasicTestCase):
     def testAuthorizationHeaderWithLogin(self):
         # See special case in Framework.fixAuthorizationHeader
         g = github.Github("fake_login", "fake_password")
-        try:
+        with self.assertRaises(github.GithubException):
             g.get_user().name
-        except github.GithubException:
-            pass
 
     def testAuthorizationHeaderWithToken(self):
         # See special case in Framework.fixAuthorizationHeader
         g = github.Github("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk")
-        try:
+        with self.assertRaises(github.GithubException):
             g.get_user().name
-        except github.GithubException:
-            pass

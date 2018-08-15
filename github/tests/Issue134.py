@@ -32,13 +32,9 @@ import github
 class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/pull/134
     def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
         g = github.Github(self.oauth_token)
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             list(g.get_user().get_authorizations())
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 404)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
         g = github.Github(self.login, self.password)
