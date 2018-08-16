@@ -66,12 +66,12 @@ class IssueEvent(Framework.TestCase):
         self.event_review_request_removed   = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1783779835)
         self.event_marked_as_duplicate      = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1783779725)
         self.event_unmarked_as_duplicate    = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1789228962)
-
-        # TODO:PENDING Events - To Be Tested
-#        self.event_added_to_project         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_moved_columns_in_project = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_removed_from_project     = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
-#        self.event_converted_note_to_issue  = self.g.get_repo("PyGithub/PyGithub").get_issues_event(16348656)
+        self.event_added_to_project         = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1791766828)
+        self.event_moved_columns_in_project = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1791767766)
+        self.event_removed_from_project     = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1791768212)
+        
+        # From Issue 866
+        self.event_converted_note_to_issue  = self.g.get_repo("PyGithub/PyGithub").get_issues_event(1791769149)
 
     def testEvent_subscribed_Attributes(self):
         self.assertEqual(self.event_subscribed.actor.login, "jacquev6")
@@ -555,4 +555,88 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unmarked_as_duplicate.dismissed_review, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_unmarked_as_duplicate.__repr__(), 'IssueEvent(id=1789228962)')
+
+    def testEvent_added_to_project_Attributes(self):
+        self.assertEqual(self.event_added_to_project.actor.login, "sfdye")
+        self.assertEqual(self.event_added_to_project.commit_id, None)
+        self.assertEqual(self.event_added_to_project.created_at, datetime.datetime(2018, 8, 16, 8, 13, 24))
+        self.assertEqual(self.event_added_to_project.event, "added_to_project")
+        self.assertEqual(self.event_added_to_project.id, 1791766828)
+        self.assertEqual(self.event_added_to_project.issue.number, 857)
+        self.assertEqual(self.event_added_to_project.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1791766828")
+        self.assertEqual(self.event_added_to_project.node_id, "MDE5OkFkZGVkVG9Qcm9qZWN0RXZlbnQxNzkxNzY2ODI4")
+        self.assertEqual(self.event_added_to_project.commit_url, None)
+        self.assertEqual(self.event_added_to_project.label, None)
+        self.assertEqual(self.event_added_to_project.assignee, None)
+        self.assertEqual(self.event_added_to_project.assigner, None)
+        self.assertEqual(self.event_added_to_project.review_requester, None)
+        self.assertEqual(self.event_added_to_project.requested_reviewer, None)
+        self.assertEqual(self.event_added_to_project.milestone, None)
+        self.assertEqual(self.event_added_to_project.rename, None)
+        self.assertEqual(self.event_added_to_project.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_added_to_project.__repr__(), 'IssueEvent(id=1791766828)')
+
+    def testEvent_moved_columns_in_project_Attributes(self):
+        self.assertEqual(self.event_moved_columns_in_project.actor.login, "sfdye")
+        self.assertEqual(self.event_moved_columns_in_project.commit_id, None)
+        self.assertEqual(self.event_moved_columns_in_project.created_at, datetime.datetime(2018, 8, 16, 8, 13, 55))
+        self.assertEqual(self.event_moved_columns_in_project.event, "moved_columns_in_project")
+        self.assertEqual(self.event_moved_columns_in_project.id, 1791767766)
+        self.assertEqual(self.event_moved_columns_in_project.issue.number, 857)
+        self.assertEqual(self.event_moved_columns_in_project.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1791767766")
+        self.assertEqual(self.event_moved_columns_in_project.node_id, "MDI2Ok1vdmVkQ29sdW1uc0luUHJvamVjdEV2ZW50MTc5MTc2Nzc2Ng==")
+        self.assertEqual(self.event_moved_columns_in_project.commit_url, None)
+        self.assertEqual(self.event_moved_columns_in_project.label, None)
+        self.assertEqual(self.event_moved_columns_in_project.assignee, None)
+        self.assertEqual(self.event_moved_columns_in_project.assigner, None)
+        self.assertEqual(self.event_moved_columns_in_project.review_requester, None)
+        self.assertEqual(self.event_moved_columns_in_project.requested_reviewer, None)
+        self.assertEqual(self.event_moved_columns_in_project.milestone, None)
+        self.assertEqual(self.event_moved_columns_in_project.rename, None)
+        self.assertEqual(self.event_moved_columns_in_project.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_moved_columns_in_project.__repr__(), 'IssueEvent(id=1791767766)')
+
+    def testEvent_removed_from_project_Attributes(self):
+        self.assertEqual(self.event_removed_from_project.actor.login, "sfdye")
+        self.assertEqual(self.event_removed_from_project.commit_id, None)
+        self.assertEqual(self.event_removed_from_project.created_at, datetime.datetime(2018, 8, 16, 8, 14, 8))
+        self.assertEqual(self.event_removed_from_project.event, "removed_from_project")
+        self.assertEqual(self.event_removed_from_project.id, 1791768212)
+        self.assertEqual(self.event_removed_from_project.issue.number, 857)
+        self.assertEqual(self.event_removed_from_project.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1791768212")
+        self.assertEqual(self.event_removed_from_project.node_id, "MDIzOlJlbW92ZWRGcm9tUHJvamVjdEV2ZW50MTc5MTc2ODIxMg==")
+        self.assertEqual(self.event_removed_from_project.commit_url, None)
+        self.assertEqual(self.event_removed_from_project.label, None)
+        self.assertEqual(self.event_removed_from_project.assignee, None)
+        self.assertEqual(self.event_removed_from_project.assigner, None)
+        self.assertEqual(self.event_removed_from_project.review_requester, None)
+        self.assertEqual(self.event_removed_from_project.requested_reviewer, None)
+        self.assertEqual(self.event_removed_from_project.milestone, None)
+        self.assertEqual(self.event_removed_from_project.rename, None)
+        self.assertEqual(self.event_removed_from_project.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_removed_from_project.__repr__(), 'IssueEvent(id=1791768212)')
+
+    def testEvent_converted_note_to_issue_Attributes(self):
+        self.assertEqual(self.event_converted_note_to_issue.actor.login, "sfdye")
+        self.assertEqual(self.event_converted_note_to_issue.commit_id, None)
+        self.assertEqual(self.event_converted_note_to_issue.created_at, datetime.datetime(2018, 8, 16, 8, 14, 34))
+        self.assertEqual(self.event_converted_note_to_issue.event, "converted_note_to_issue")
+        self.assertEqual(self.event_converted_note_to_issue.id, 1791769149)
+        self.assertEqual(self.event_converted_note_to_issue.issue.number, 866)
+        self.assertEqual(self.event_converted_note_to_issue.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1791769149")
+        self.assertEqual(self.event_converted_note_to_issue.node_id, "MDI1OkNvbnZlcnRlZE5vdGVUb0lzc3VlRXZlbnQxNzkxNzY5MTQ5")
+        self.assertEqual(self.event_converted_note_to_issue.commit_url, None)
+        self.assertEqual(self.event_converted_note_to_issue.label, None)
+        self.assertEqual(self.event_converted_note_to_issue.assignee, None)
+        self.assertEqual(self.event_converted_note_to_issue.assigner, None)
+        self.assertEqual(self.event_converted_note_to_issue.review_requester, None)
+        self.assertEqual(self.event_converted_note_to_issue.requested_reviewer, None)
+        self.assertEqual(self.event_converted_note_to_issue.milestone, None)
+        self.assertEqual(self.event_converted_note_to_issue.rename, None)
+        self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event_converted_note_to_issue.__repr__(), 'IssueEvent(id=1791769149)')
 
