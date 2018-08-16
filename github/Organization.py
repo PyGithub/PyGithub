@@ -18,7 +18,6 @@
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
-# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
