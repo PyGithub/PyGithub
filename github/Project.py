@@ -28,11 +28,6 @@ import json
 import github.GithubObject
 import github.ProjectColumn
 
-# Original request for project support:
-#   https://github.com/PyGithub/PyGithub/issues/606
-# and pull request with initial functionality:
-#   https://github.com/PyGithub/PyGithub/pull/854
-
 # 'Accept' header required while Github Projects API still in preview mode.
 PROJECT_PREVIEW_HEADERS = {"Accept": "application/vnd.github.inertia-preview+json"}
 
@@ -176,7 +171,6 @@ class Project(github.GithubObject.CompletableGithubObject):
         self._state = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
-        self._zz = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "body" in attributes:  # pragma no branch
