@@ -101,7 +101,6 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    # New Code
     @property
     def node_id(self):
         """
