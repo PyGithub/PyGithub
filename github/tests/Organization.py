@@ -8,10 +8,13 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

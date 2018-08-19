@@ -10,6 +10,7 @@
 # Copyright 2016 humbug <bah>                                                  #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #

@@ -28,9 +28,11 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Dylan <djstein@ncsu.edu>                                      #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Maarten Fonville <maarten.fonville@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

@@ -29,7 +29,7 @@
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                   #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
 # Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
@@ -41,18 +41,25 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
 # Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Nicholas Buse <NicholasBuse@users.noreply.github.com>         #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
+# Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1253,7 +1260,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if archived is not github.GithubObject.NotSet:
-            post_parameters["archived"] = archived 
+            post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,

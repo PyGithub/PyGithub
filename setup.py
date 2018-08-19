@@ -19,6 +19,7 @@
 # Copyright 2017 Nhomar Hernandez <nhomar@vauxoo.com>                          #
 # Copyright 2017 Paul Ortman <paul.ortman@gmail.com>                           #
 # Copyright 2018 Jason White <jasonaw0@gmail.com>                              #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #

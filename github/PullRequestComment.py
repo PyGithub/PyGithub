@@ -12,6 +12,8 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 Jess Morgan <979404+JessMorgan@users.noreply.github.com>      #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #

@@ -5,6 +5,7 @@
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Mike Miller <github@mikeage.net>                              #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #

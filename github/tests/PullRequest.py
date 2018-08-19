@@ -9,8 +9,9 @@
 # Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 MarcoFalke <falke.marco@gmail.com>                            #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

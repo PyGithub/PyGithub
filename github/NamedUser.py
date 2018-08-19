@@ -12,6 +12,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #

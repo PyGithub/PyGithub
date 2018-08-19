@@ -15,6 +15,10 @@
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #

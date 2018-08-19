@@ -21,6 +21,10 @@
 # Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Joshua Hoblitt <josh@hoblitt.com>                             #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
