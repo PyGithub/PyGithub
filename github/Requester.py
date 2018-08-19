@@ -104,7 +104,7 @@ class HTTPSRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
         return RequestsResponse(r)
 
     def close(self):
@@ -130,7 +130,7 @@ class HTTPRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
         return RequestsResponse(r)
 
     def close(self):
