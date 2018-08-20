@@ -1311,19 +1311,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
-    def get_protected_branch(self, branch):
-        """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
-        :param branch: string
-        :rtype: :class:`github.Branch.Branch`
-        """
-        assert isinstance(branch, (str, unicode)), branch
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/branches/" + branch
-        )
-        return github.Branch.Branch(self._requester, headers, data, completed=True)
-
     def get_branches(self):
         """
         :calls: `GET /repos/:owner/:repo/branches <http://developer.github.com/v3/repos>`_
