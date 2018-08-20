@@ -2176,7 +2176,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_source_import(self):
         """
-        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
         :rtype: :class:`github.SourceImport.SourceImport`
         """
         import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
@@ -2351,7 +2351,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_latest_release(self):
         """
-        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :calls: `GET /repos/:owner/:repo/releases/latest <https://developer.github.com/v3/repos/releases/#get-the-latest-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         headers, data = self._requester.requestJsonAndCheck(
