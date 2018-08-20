@@ -460,11 +460,20 @@ class Requester:
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
         if logger.isEnabledFor(logging.DEBUG):
-            if "Authorization" in requestHeaders:
-                if requestHeaders["Authorization"].startswith("Basic"):
-                    requestHeaders["Authorization"] = "Basic (login and password removed)"
-                elif requestHeaders["Authorization"].startswith("token"):
-                    requestHeaders["Authorization"] = "token (oauth token removed)"
-                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
+            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(self.__hideAuthortizationHeader(requestHeaders)),
+                         str(input), status, str(responseHeaders), str(output))
+
+    def __hideAuthortizationHeader(self, requestHeaders, modifyExisting=False):
+        if "Authorization" not in requestHeaders:
+            return requestHeaders
+
+        rh = requestHeaders if modifyExisting else dict(requestHeaders)
+
+        if rh["Authorization"].startswith("Basic"):
+            rh["Authorization"] = "Basic (login and password removed)"
+        elif rh["Authorization"].startswith("token"):
+            rh["Authorization"] = "token (oauth token removed)"
+        else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+            rh["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+
+        return rh
