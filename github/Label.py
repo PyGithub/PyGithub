@@ -35,6 +35,8 @@ import urllib
 
 import github.GithubObject
 
+import Consts
+
 
 class Label(github.GithubObject.CompletableGithubObject):
     """
@@ -107,7 +109,7 @@ class Label(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             input=post_parameters,
-            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
         self._useAttributes(data)
 

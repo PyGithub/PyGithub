@@ -123,6 +123,8 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
+import Consts
+
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
@@ -1077,7 +1079,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/labels",
             input=post_parameters,
-            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -1179,7 +1181,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if vcs_password is not github.GithubObject.NotSet:
             put_parameters["vcs_password"] = vcs_password
 
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -2165,7 +2167,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
         :rtype: :class:`github.SourceImport.SourceImport`
         """
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/import",
@@ -2198,7 +2200,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/stargazers",
             None,
-            headers={'Accept': 'application/vnd.github.v3.star+json'}
+            headers={'Accept': Consts.mediaTypeStarringPreview}
         )
 
     def get_stats_contributors(self):
@@ -2366,7 +2368,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'}
+            headers={'Accept': Consts.mediaTypeTopicsPreview}
         )
         return data['names']
 
@@ -2473,7 +2475,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'},
+            headers={'Accept': Consts.mediaTypeTopicsPreview},
             input=post_parameters
         )
 

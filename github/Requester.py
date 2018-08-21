@@ -289,7 +289,7 @@ class Requester:
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
-        elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
+        elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
@@ -340,7 +340,7 @@ class Requester:
                 mime_type = headers["Content-Type"]
             else:
                 guessed_type = mimetypes.guess_type(input)
-                mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
+                mime_type = guessed_type[0] if guessed_type[0] is not None else Consts.defaultMediaType
             f = open(local_path, 'rb')
             return mime_type, f
 
@@ -371,10 +371,10 @@ class Requester:
 
         status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
 
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
-        if "x-ratelimit-reset" in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
+        if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
+            self.rate_limiting = (int(responseHeaders[Consts.headerRateRemaining]), int(responseHeaders[Consts.headerRateLimit]))
+        if Consts.headerRateReset in responseHeaders:
+            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")

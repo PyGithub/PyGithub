@@ -73,6 +73,8 @@ import InstallationAuthorization
 import GithubException
 import Invitation
 
+import Consts
+
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -504,7 +506,7 @@ class Github(object):
             "/search/commits",
             url_parameters,
             headers={
-                "Accept": "application/vnd.github.cloak-preview"
+                "Accept": Consts.mediaTypeCommitSearchPreview
             }
         )
 
@@ -721,7 +723,7 @@ class GithubIntegration(object):
             url="/installations/{}/access_tokens".format(installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
-                "Accept": "application/vnd.github.machine-man-preview+json",
+                "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python"
             },
             body=body
