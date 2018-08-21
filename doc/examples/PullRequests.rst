@@ -21,8 +21,7 @@ Get Pull Requests by Query
     # direction = 'asc' | 'desc', 'desc' when sort = 'created" otherwise 'asc'
     # base = Filter by base (i.e. target) branch name
     # head = Filter by head (i.e. source) user and branch name (ex. user:ref-name)
-    
-    >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> pulls = repo.get_pulls(state='open', sort='created', base='master') 
-    >>> pr in pulls:
-    >>>     print pr.number
+    repo = g.get_repo("PyGithub/PyGithub")
+    pulls = repo.get_pulls(state='open', sort='created', base='master') 
+    pr in pulls:
+        print pr.number
