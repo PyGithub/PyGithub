@@ -6,8 +6,8 @@ Get Pull Request by Number
 
 .. code-block:: python
 
-    >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> pr = repo.get_pull(664)
+    repo = g.get_repo("PyGithub/PyGithub")
+    pr = repo.get_pull(664)
 
 
 Get Pull Requests by Query
