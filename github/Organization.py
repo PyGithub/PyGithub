@@ -59,7 +59,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"id": self._id.value, "name": self._name.value})
+        return self.get__repr__({"login": self._login.value})
 
     @property
     def avatar_url(self):
