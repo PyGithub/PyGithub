@@ -779,7 +779,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator,
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty

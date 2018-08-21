@@ -1104,7 +1104,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user/repository_invitations/" + str(invitation),
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input={}
         )
 
