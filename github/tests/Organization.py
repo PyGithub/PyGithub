@@ -74,7 +74,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.org.__repr__(), 'Organization(name="BeaverSoftware", id=1)')
+        self.assertEqual(self.org.__repr__(), 'Organization(login="BeaverSoftware")')
 
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
