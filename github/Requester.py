@@ -411,7 +411,7 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
+            return self.__requestRaw(original_cnx, verb, self.__getURLPath(responseHeaders['location']), requestHeaders, input)
 
         return status, responseHeaders, output
 
@@ -477,3 +477,6 @@ class Requester:
             rh["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
 
         return rh
+
+    def __getURLPath(self, url):
+        return urlparse.urlparse(url).path
