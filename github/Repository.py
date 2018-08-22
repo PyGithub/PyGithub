@@ -1495,7 +1495,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1559,7 +1559,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1609,7 +1609,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=url_parameters
         )
 
