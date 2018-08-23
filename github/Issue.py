@@ -395,7 +395,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/events",
-            None
+            None,
+            headers={'Accept': 'application/vnd.github.sailor-v-preview+json'}
         )
 
     def get_labels(self):

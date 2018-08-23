@@ -33,7 +33,6 @@ import Framework
 
 import datetime
 
-
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
@@ -91,6 +90,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_subscribed.milestone, None)
         self.assertEqual(self.event_subscribed.rename, None)
         self.assertEqual(self.event_subscribed.dismissed_review, None)
+        self.assertEqual(self.event_subscribed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_subscribed.__repr__(), 'IssueEvent(id=16347479)')
 
@@ -112,6 +112,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_assigned.milestone, None)
         self.assertEqual(self.event_assigned.rename, None)
         self.assertEqual(self.event_assigned.dismissed_review, None)
+        self.assertEqual(self.event_assigned.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_assigned.__repr__(), 'IssueEvent(id=16347480)')
 
@@ -133,6 +134,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_referenced.milestone, None)
         self.assertEqual(self.event_referenced.rename, None)
         self.assertEqual(self.event_referenced.dismissed_review, None)
+        self.assertEqual(self.event_referenced.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_referenced.__repr__(), 'IssueEvent(id=16348656)')
 
@@ -154,6 +156,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_closed.milestone, None)
         self.assertEqual(self.event_closed.rename, None)
         self.assertEqual(self.event_closed.dismissed_review, None)
+        self.assertEqual(self.event_closed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_closed.__repr__(), 'IssueEvent(id=16351220)')
 
@@ -175,6 +178,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_labeled.milestone, None)
         self.assertEqual(self.event_labeled.rename, None)
         self.assertEqual(self.event_labeled.dismissed_review, None)
+        self.assertEqual(self.event_labeled.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_labeled.__repr__(), 'IssueEvent(id=98136337)')
 
@@ -196,6 +200,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_mentioned.milestone, None)
         self.assertEqual(self.event_mentioned.rename, None)
         self.assertEqual(self.event_mentioned.dismissed_review, None)
+        self.assertEqual(self.event_mentioned.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_mentioned.__repr__(), 'IssueEvent(id=1009034767)')
 
@@ -217,6 +222,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_merged.milestone, None)
         self.assertEqual(self.event_merged.rename, None)
         self.assertEqual(self.event_merged.dismissed_review, None)
+        self.assertEqual(self.event_merged.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_merged.__repr__(), 'IssueEvent(id=1015402964)')
 
@@ -238,6 +244,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.milestone, None)
         self.assertEqual(self.event_review_requested.rename, None)
         self.assertEqual(self.event_review_requested.dismissed_review, None)
+        self.assertEqual(self.event_review_requested.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_review_requested.__repr__(), 'IssueEvent(id=1011101309)')
 
@@ -259,6 +266,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_reopened.milestone, None)
         self.assertEqual(self.event_reopened.rename, None)
         self.assertEqual(self.event_reopened.dismissed_review, None)
+        self.assertEqual(self.event_reopened.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_reopened.__repr__(), 'IssueEvent(id=1782463023)')
 
@@ -280,6 +288,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unassigned.milestone, None)
         self.assertEqual(self.event_unassigned.rename, None)
         self.assertEqual(self.event_unassigned.dismissed_review, None)
+        self.assertEqual(self.event_unassigned.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_unassigned.__repr__(), 'IssueEvent(id=1782463379)')
 
@@ -301,6 +310,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlabeled.milestone, None)
         self.assertEqual(self.event_unlabeled.rename, None)
         self.assertEqual(self.event_unlabeled.dismissed_review, None)
+        self.assertEqual(self.event_unlabeled.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_unlabeled.__repr__(), 'IssueEvent(id=1782463917)')
 
@@ -322,6 +332,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_renamed.milestone, None)
         self.assertEqual(self.event_renamed.rename, {u'to': u'Adding new attributes to IssueEvent', u'from': u'Adding new attributes to IssueEvent Object (DO NOT MERGE - SEE NOTES)'})
         self.assertEqual(self.event_renamed.dismissed_review, None)
+        self.assertEqual(self.event_renamed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_renamed.__repr__(), 'IssueEvent(id=1782472556)')
 
@@ -343,6 +354,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_base_ref_changed.milestone, None)
         self.assertEqual(self.event_head_ref_deleted.rename, None)
         self.assertEqual(self.event_base_ref_changed.dismissed_review, None)
+        self.assertEqual(self.event_base_ref_changed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_base_ref_changed.__repr__(), 'IssueEvent(id=1782915693)')
 
@@ -364,6 +376,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_deleted.milestone, None)
         self.assertEqual(self.event_head_ref_deleted.rename, None)
         self.assertEqual(self.event_head_ref_deleted.dismissed_review, None)
+        self.assertEqual(self.event_head_ref_deleted.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_head_ref_deleted.__repr__(), 'IssueEvent(id=1782917185)')
 
@@ -385,6 +398,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_restored.milestone, None)
         self.assertEqual(self.event_head_ref_deleted.rename, None)
         self.assertEqual(self.event_head_ref_restored.dismissed_review, None)
+        self.assertEqual(self.event_head_ref_deleted.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_head_ref_restored.__repr__(), 'IssueEvent(id=1782917299)')
 
@@ -406,6 +420,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_milestoned.milestone.title, "Version 1.25.0")
         self.assertEqual(self.event_milestoned.rename, None)
         self.assertEqual(self.event_milestoned.dismissed_review, None)
+        self.assertEqual(self.event_milestoned.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_milestoned.__repr__(), 'IssueEvent(id=1783596418)')
 
@@ -427,6 +442,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_demilestoned.milestone.title, "Version 1.25.0")
         self.assertEqual(self.event_demilestoned.rename, None)
         self.assertEqual(self.event_demilestoned.dismissed_review, None)
+        self.assertEqual(self.event_demilestoned.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_demilestoned.__repr__(), 'IssueEvent(id=1783596452)')
 
@@ -448,7 +464,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_locked.milestone, None)
         self.assertEqual(self.event_locked.rename, None)
         self.assertEqual(self.event_locked.dismissed_review, None)
-        # test __repr__() based on this attributes
+        self.assertEqual(self.event_locked.lock_reason, "too heated")
+###        # test __repr__() based on this attributes
         self.assertEqual(self.event_locked.__repr__(), 'IssueEvent(id=1783596743)')
 
     def testEvent_unlocked_Attributes(self):
@@ -469,6 +486,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlocked.milestone, None)
         self.assertEqual(self.event_unlocked.rename, None)
         self.assertEqual(self.event_unlocked.dismissed_review, None)
+        self.assertEqual(self.event_unlocked.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_unlocked.__repr__(), 'IssueEvent(id=1783596818)')
 
@@ -490,6 +508,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_dismissed.milestone, None)
         self.assertEqual(self.event_review_dismissed.rename, None)
         self.assertEqual(self.event_review_dismissed.dismissed_review, {u'dismissal_message': u'dismiss', u'state': u'changes_requested', u'review_id': 145431295})
+        self.assertEqual(self.event_review_dismissed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_review_dismissed.__repr__(), 'IssueEvent(id=1783605084)')
 
@@ -511,6 +530,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_request_removed.milestone, None)
         self.assertEqual(self.event_review_request_removed.rename, None)
         self.assertEqual(self.event_review_request_removed.dismissed_review, None)
+        self.assertEqual(self.event_review_request_removed.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_review_request_removed.__repr__(), 'IssueEvent(id=1783779835)')
 
@@ -532,6 +552,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_marked_as_duplicate.milestone, None)
         self.assertEqual(self.event_marked_as_duplicate.rename, None)
         self.assertEqual(self.event_marked_as_duplicate.dismissed_review, None)
+        self.assertEqual(self.event_marked_as_duplicate.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_marked_as_duplicate.__repr__(), 'IssueEvent(id=1783779725)')
 
@@ -553,6 +574,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unmarked_as_duplicate.milestone, None)
         self.assertEqual(self.event_unmarked_as_duplicate.rename, None)
         self.assertEqual(self.event_unmarked_as_duplicate.dismissed_review, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_unmarked_as_duplicate.__repr__(), 'IssueEvent(id=1789228962)')
 
@@ -574,6 +596,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_added_to_project.milestone, None)
         self.assertEqual(self.event_added_to_project.rename, None)
         self.assertEqual(self.event_added_to_project.dismissed_review, None)
+        self.assertEqual(self.event_added_to_project.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_added_to_project.__repr__(), 'IssueEvent(id=1791766828)')
 
@@ -595,6 +618,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.milestone, None)
         self.assertEqual(self.event_moved_columns_in_project.rename, None)
         self.assertEqual(self.event_moved_columns_in_project.dismissed_review, None)
+        self.assertEqual(self.event_moved_columns_in_project.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_moved_columns_in_project.__repr__(), 'IssueEvent(id=1791767766)')
 
@@ -616,6 +640,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_removed_from_project.milestone, None)
         self.assertEqual(self.event_removed_from_project.rename, None)
         self.assertEqual(self.event_removed_from_project.dismissed_review, None)
+        self.assertEqual(self.event_removed_from_project.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_removed_from_project.__repr__(), 'IssueEvent(id=1791768212)')
 
@@ -637,6 +662,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.milestone, None)
         self.assertEqual(self.event_converted_note_to_issue.rename, None)
         self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
+        self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_converted_note_to_issue.__repr__(), 'IssueEvent(id=1791769149)')
 

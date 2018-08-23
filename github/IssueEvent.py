@@ -189,15 +189,13 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._dismissed_review)
         return self._dismissed_review.value
 
-#    # lock_reason is documented in API, but not provided in response
-#    # to events "locked" or "unlocked", left here as a future placeholder.
-#    @property
-#    def lock_reason(self):
-#        """
-#        :type: string
-#        """
-#        self._completeIfNotSet(self._lock_reason)
-#        return self._lock_reason.value
+    @property
+    def lock_reason(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._lock_reason)
+        return self._lock_reason.value
 
     def _initAttributes(self):
         self._actor = github.GithubObject.NotSet
@@ -217,10 +215,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._milestone = github.GithubObject.NotSet
         self._rename = github.GithubObject.NotSet
         self._dismissed_review = github.GithubObject.NotSet
-
-#        # lock_reason is documented in API, but not provided in response
-#        # to events "locked" or "unlocked", left here as a future placeholder.
-#        self._lock_reason = github.GithubObject.NotSet
+        self._lock_reason = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
@@ -257,8 +252,5 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
             self._rename = self._makeDictAttribute(attributes["rename"])
         if "dismissed_review" in attributes:  # pragma no branch
             self._dismissed_review = self._makeDictAttribute(attributes["dismissed_review"])
-
-#        # lock_reason is documented in API, but not provided in response
-#        # to events "locked" or "unlocked", left here as a future placeholder.
-#        if "lock_reason" in attributes:  # pragma no branch
-#            self._lock_reason = self._makeStringAttribute(attributes["lock_reason"])
+        if "lock_reason" in attributes:  # pragma no branch
+            self._lock_reason = self._makeStringAttribute(attributes["lock_reason"])
