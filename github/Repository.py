@@ -1926,7 +1926,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/events/" + str(id),
-            headers={'Accept': 'application/vnd.github.sailor-v-preview+json'}
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
         return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
@@ -1940,7 +1940,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/issues/events",
             None,
-            headers={'Accept': 'application/vnd.github.sailor-v-preview+json'}
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
 
     def get_key(self, id):
