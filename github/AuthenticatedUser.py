@@ -55,6 +55,8 @@ import github.Event
 import github.Authorization
 import github.Notification
 
+import Consts
+
 
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
@@ -446,7 +448,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         if client_secret is not github.GithubObject.NotSet:
             post_parameters["client_secret"] = client_secret
         if onetime_password is not None:
-            request_header = {'X-GitHub-OTP': onetime_password}  # pragma no cover (Should be covered)
+            request_header = {Consts.headerOTP: onetime_password}  # pragma no cover (Should be covered)
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
@@ -1104,7 +1106,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user/repository_invitations/" + str(invitation),
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input={}
         )
 

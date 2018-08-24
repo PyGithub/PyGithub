@@ -29,7 +29,7 @@
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                   #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
 # Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
@@ -41,18 +41,25 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
 # Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Nicholas Buse <NicholasBuse@users.noreply.github.com>         #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
+# Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -115,6 +122,8 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+
+import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -772,7 +781,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator,
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty
@@ -1071,7 +1079,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/labels",
             input=post_parameters,
-            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -1173,7 +1181,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if vcs_password is not github.GithubObject.NotSet:
             put_parameters["vcs_password"] = vcs_password
 
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -1253,7 +1261,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if archived is not github.GithubObject.NotSet:
-            post_parameters["archived"] = archived 
+            post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -1294,19 +1302,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_branch(self, branch):
         """
         :calls: `GET /repos/:owner/:repo/branches/:branch <http://developer.github.com/v3/repos>`_
-        :param branch: string
-        :rtype: :class:`github.Branch.Branch`
-        """
-        assert isinstance(branch, (str, unicode)), branch
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/branches/" + branch
-        )
-        return github.Branch.Branch(self._requester, headers, data, completed=True)
-
-    def get_protected_branch(self, branch):
-        """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
         :param branch: string
         :rtype: :class:`github.Branch.Branch`
         """
@@ -2171,10 +2166,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_source_import(self):
         """
-        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
         :rtype: :class:`github.SourceImport.SourceImport`
         """
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/import",
@@ -2207,7 +2202,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/stargazers",
             None,
-            headers={'Accept': 'application/vnd.github.v3.star+json'}
+            headers={'Accept': Consts.mediaTypeStarringPreview}
         )
 
     def get_stats_contributors(self):
@@ -2346,7 +2341,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_latest_release(self):
         """
-        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :calls: `GET /repos/:owner/:repo/releases/latest <https://developer.github.com/v3/repos/releases/#get-the-latest-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -2375,7 +2370,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'}
+            headers={'Accept': Consts.mediaTypeTopicsPreview}
         )
         return data['names']
 
@@ -2470,37 +2465,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
-        """
-        :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
-        :param branch: string
-        :param enabled: boolean
-        :param enforcement_level: string
-        :param contexts: list of strings
-        :rtype: None
-        """
-
-        assert isinstance(branch, (str, unicode))
-        assert isinstance(enabled, bool)
-        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
-
-        post_parameters = {
-            "protection": {}
-        }
-        if enabled is not github.GithubObject.NotSet:
-            post_parameters["protection"]["enabled"] = enabled
-        if enforcement_level is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"] = {}
-            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
-        if contexts is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url + "/branches/" + branch,
-            input=post_parameters
-        )
-
     def replace_topics(self, topics):
         """
         :calls: `PUT /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
@@ -2513,7 +2477,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'},
+            headers={'Accept': Consts.mediaTypeTopicsPreview},
             input=post_parameters
         )
 

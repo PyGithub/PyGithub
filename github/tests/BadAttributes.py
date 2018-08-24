@@ -38,97 +38,69 @@ class BadAttributes(Framework.TestCase):
         user = self.g.get_user("klmitch")
         self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9))
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.name
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, 42)
-            self.assertEqual(e.expected_type, (str, unicode))
-            self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, 42)
+        self.assertEqual(raisedexp.exception.expected_type, (str, unicode))
+        self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadAttributeTransformation(self):
         user = self.g.get_user("klmitch")
         self.assertEqual(user.name, "Kevin L. Mitchell")
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.created_at
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, "foobar")
-            self.assertEqual(e.expected_type, (str, unicode))
-            self.assertEqual(e.transformation_exception.__class__, ValueError)
-            self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, "foobar")
+        self.assertEqual(raisedexp.exception.expected_type, (str, unicode))
+        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ValueError)
+        self.assertEqual(raisedexp.exception.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
 
     def testBadTransformedAttribute(self):
         user = self.g.get_user("klmitch")
         self.assertEqual(user.name, "Kevin L. Mitchell")
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.updated_at
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, 42)
-            self.assertEqual(e.expected_type, (str, unicode))
-            self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, 42)
+        self.assertEqual(raisedexp.exception.expected_type, (str, unicode))
+        self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadSimpleAttributeInList(self):
         hook = self.g.get_hook("activecollab")
         self.assertEqual(hook.name, "activecollab")
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             hook.events
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, ["push", 42])
-            self.assertEqual(e.expected_type, [(str, unicode)])
-            self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, ["push", 42])
+        self.assertEqual(raisedexp.exception.expected_type, [(str, unicode)])
+        self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadAttributeInClassAttribute(self):
         repo = self.g.get_repo("klmitch/turnstile")
         owner = repo.owner
         self.assertEqual(owner.id, 686398)
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             owner.avatar_url
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, 42)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, 42)
 
     def testBadTransformedAttributeInList(self):
         commit = self.g.get_repo("klmitch/turnstile").get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             commit.files
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, [42])
-            self.assertEqual(e.expected_type, [dict])
-            self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, [42])
+        self.assertEqual(raisedexp.exception.expected_type, [dict])
+        self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadTransformedAttributeInDict(self):
         gist = self.g.get_gist("6437766")
 
-        raised = False
-        try:
+        with self.assertRaises(github.BadAttributeException) as raisedexp:
             gist.files
-        except github.BadAttributeException, e:
-            raised = True
-            self.assertEqual(e.actual_value, {"test.py": 42})
-            self.assertEqual(e.expected_type, {(str, unicode): dict})
-            self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, {"test.py": 42})
+        self.assertEqual(raisedexp.exception.expected_type, {(str, unicode): dict})
+        self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testIssue195(self):
         hooks = self.g.get_hooks()
@@ -138,14 +110,10 @@ class BadAttributes(Framework.TestCase):
             if hook.name != "circleci":
                 hook.events
 
-        raised = False
         for hook in hooks:
             if hook.name == "circleci":
-                try:
+                with self.assertRaises(github.BadAttributeException) as raisedexp:
                     hook.events
-                except github.BadAttributeException, e:
-                    raised = True
-                    self.assertEqual(e.actual_value, [["commit_comment", "create", "delete", "download", "follow", "fork", "fork_apply", "gist", "gollum", "issue_comment", "issues", "member", "public", "pull_request", "pull_request_review_comment", "push", "status", "team_add", "watch"]])
-                    self.assertEqual(e.expected_type, [(str, unicode)])
-                    self.assertEqual(e.transformation_exception, None)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.actual_value, [["commit_comment", "create", "delete", "download", "follow", "fork", "fork_apply", "gist", "gollum", "issue_comment", "issues", "member", "public", "pull_request", "pull_request_review_comment", "push", "status", "team_add", "watch"]])
+        self.assertEqual(raisedexp.exception.expected_type, [(str, unicode)])
+        self.assertEqual(raisedexp.exception.transformation_exception, None)

@@ -21,6 +21,10 @@
 # Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Joshua Hoblitt <josh@hoblitt.com>                             #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
@@ -68,6 +72,8 @@ import RateLimit
 import InstallationAuthorization
 import GithubException
 import Invitation
+
+import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -500,7 +506,7 @@ class Github(object):
             "/search/commits",
             url_parameters,
             headers={
-                "Accept": "application/vnd.github.cloak-preview"
+                "Accept": Consts.mediaTypeCommitSearchPreview
             }
         )
 
@@ -717,7 +723,7 @@ class GithubIntegration(object):
             url="/installations/{}/access_tokens".format(installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
-                "Accept": "application/vnd.github.machine-man-preview+json",
+                "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python"
             },
             body=body

@@ -43,12 +43,9 @@ class Enterprise(Framework.BasicTestCase):
         self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
 
     def testUnknownUrlScheme(self):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
-        try:
+        with self.assertRaises(AssertionError) as raisedexp:
             github.Github(self.login, self.password, base_url="foobar://my.enterprise.com")
-        except AssertionError, exception:
-            raised = True
-            self.assertEqual(exception.args[0], "Unknown URL scheme")
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.args[0], "Unknown URL scheme")
 
     def testLongUrl(self):
         g = github.Github(self.login, self.password, base_url="http://my.enterprise.com/path/to/github")

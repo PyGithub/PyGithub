@@ -1,0 +1,21 @@
+https
+PATCH
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks
+{'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
+{"strict":true}
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"81ba94a48ad867b26d48c023ac584f43"'), ('date', 'Mon, 07 May 2018 13:42:41 GMT'), ('content-type', 'application/json; charset=utf-8')]
+''
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('x-runtime-rack', '0.033407'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', 'W/"f972722557f6bbc814f109abae4df24e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '9946:55F2:20CF9A0:423578E:5AF580B7'), ('date', 'Fri, 11 May 2018 11:38:40 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1526042267')]
+{"url":"https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks","strict":true,"contexts":["foo/bar"],"contexts_url":"https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts"}
