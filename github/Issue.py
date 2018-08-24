@@ -397,7 +397,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/events",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
 
     def get_labels(self):

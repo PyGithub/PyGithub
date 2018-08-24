@@ -77,3 +77,6 @@ mediaTypeTopicsPreview = "application/vnd.github.mercy-preview+json"
 
 # https://developer.github.com/changes/2018-02-22-label-description-search-preview/
 mediaTypeLabelDescriptionSearchPreview = "application/vnd.github.symmetra-preview+json"
+
+# https://developer.github.com/changes/2018-01-10-lock-reason-api-preview/
+mediaTypeLockReasonPreview = "application/vnd.github.sailor-v-preview+json"
