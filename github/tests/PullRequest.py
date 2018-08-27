@@ -42,10 +42,11 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 
-        self.pullIssue256Closed = self.g.get_repo("MarcoFalke/PyGithub").get_pull(1)
-        self.pullIssue256Merged = self.g.get_repo("MarcoFalke/PyGithub").get_pull(2)
-        self.pullIssue256Conflict = self.g.get_repo("MarcoFalke/PyGithub").get_pull(3)
-        self.pullIssue256Uncached = self.g.get_repo("MarcoFalke/PyGithub").get_pull(4)
+        marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
+        self.pullIssue256Closed = marco_repo.get_pull(1)
+        self.pullIssue256Merged = marco_repo.get_pull(2)
+        self.pullIssue256Conflict = marco_repo.get_pull(3)
+        self.pullIssue256Uncached = marco_repo.get_pull(4)
 
     def testAttributesIssue256(self):
         self.assertEqual(self.pullIssue256Closed.closed_at, datetime.datetime(2018, 5, 22, 14, 50, 43))

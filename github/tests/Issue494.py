@@ -29,7 +29,7 @@ import Framework
 class Issue494(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("apache/brooklyn-server")
+        self.repo = self.g.get_repo("apache/brooklyn-server", lazy=True)
         self.pull = self.repo.get_pull(465)
 
     def testRepr(self):

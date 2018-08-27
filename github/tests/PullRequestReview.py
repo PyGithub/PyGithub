@@ -34,7 +34,7 @@ import datetime
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.pull = self.repo.get_pull(538)
 
         # Test ability to create a review
