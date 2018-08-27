@@ -273,7 +273,7 @@ class Github(object):
             url_parameters
         )
 
-    def get_repo(self, full_name_or_id, lazy=True):
+    def get_repo(self, full_name_or_id, lazy=False):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
