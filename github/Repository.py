@@ -788,6 +788,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Invitation.Invitation(self._requester, headers, data, completed=True) if \
             data is not None else None
 
+    def get_collaborator_permission(self, collaborator):
+        """
+        :calls: `GET /repos/:owner/:repo/collaborators/:username/permission <http://developer.github.com/v3/repos/collaborators>`_
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :rtype: string
+        """
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/collaborators/" + collaborator + "/permission",
+        )
+        return data["permission"]
+
     def compare(self, base, head):
         """
         :calls: `GET /repos/:owner/:repo/compare/:base...:head <http://developer.github.com/v3/repos/commits>`_
