@@ -296,6 +296,19 @@ class Repository(Framework.TestCase):
         self.repo.remove_from_collaborators(lyloa)
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
 
+    def testCollaboratorPermission(self):
+        self.assertEqual(self.repo.get_collaborator_permission('jacquev6'), 'admin')
+
+    def testCollaboratorPermissionNoPushAccess(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.repo.get_collaborator_permission('lyloa')
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data, {
+            u'documentation_url': u'https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level',
+            u'message': u'Must have push access to view collaborator permission.'
+            }
+        )
+
     def testCompare(self):
         comparison = self.repo.compare("v0.6", "v0.7")
         self.assertEqual(comparison.status, "ahead")
