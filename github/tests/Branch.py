@@ -53,13 +53,14 @@ class Branch(Framework.TestCase):
         self.assertEqual(self.branch.__repr__(), 'Branch(name="topic/RewriteWithGeneratedCode")')
 
     def testEditProtection(self):
-        self.protected_branch.edit_protection(strict=True, require_code_owner_reviews=True)
+        self.protected_branch.edit_protection(strict=True, require_code_owner_reviews=True, required_approving_review_count=2)
         branch_protection = self.protected_branch.get_protection()
         self.assertTrue(branch_protection.required_status_checks.strict)
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(branch_protection.required_pull_request_reviews.require_code_owner_reviews)
+        self.assertEqual(branch_protection.required_pull_request_reviews.required_approving_review_count, 2)
 
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -127,10 +128,22 @@ class Branch(Framework.TestCase):
         )
 
     def testEditRequiredPullRequestReviews(self):
-        self.protected_branch.edit_required_pull_request_reviews(dismiss_stale_reviews=True)
+        self.protected_branch.edit_required_pull_request_reviews(dismiss_stale_reviews=True, required_approving_review_count=2)
         required_pull_request_reviews = self.protected_branch.get_required_pull_request_reviews()
         self.assertTrue(required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(required_pull_request_reviews.require_code_owner_reviews)
+        self.assertEqual(required_pull_request_reviews.required_approving_review_count, 2)
+
+    def testEditRequiredPullRequestReviewsWithTooLargeApprovingReviewCount(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.protected_branch.edit_required_pull_request_reviews(required_approving_review_count=9)
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(
+            raisedexp.exception.data, {
+                u'documentation_url': u'https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch',
+                u'message': u'Invalid request.\n\n9 must be less than or equal to 6.'
+            }
+        )
 
     def testEditRequiredPullRequestReviewsWithUserBranchAndDismissalUsers(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -148,6 +161,7 @@ class Branch(Framework.TestCase):
         required_pull_request_reviews = self.protected_branch.get_required_pull_request_reviews()
         self.assertFalse(required_pull_request_reviews.dismiss_stale_reviews)
         self.assertFalse(required_pull_request_reviews.require_code_owner_reviews)
+        self.assertEqual(required_pull_request_reviews.required_approving_review_count, 1)
 
     def testAdminEnforcement(self):
         self.protected_branch.remove_admin_enforcement()

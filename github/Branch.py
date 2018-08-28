@@ -40,6 +40,7 @@ import github.Commit
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 
+import Consts
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
     """
@@ -99,11 +100,12 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.protection_url
+            self.protection_url,
+            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews}
         )
         return github.BranchProtection.BranchProtection(self._requester, headers, data, completed=True)
 
-    def edit_protection(self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet, enforce_admins=github.GithubObject.NotSet, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet, user_push_restrictions=github.GithubObject.NotSet, team_push_restrictions=github.GithubObject.NotSet):
+    def edit_protection(self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet, enforce_admins=github.GithubObject.NotSet, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet, required_approving_review_count=github.GithubObject.NotSet, user_push_restrictions=github.GithubObject.NotSet, team_push_restrictions=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
         :strict: bool
@@ -113,6 +115,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :dismissal_teams: list of strings
         :dismiss_stale_reviews: bool
         :require_code_owner_reviews: bool
+        :required_approving_review_count: int
         :user_push_restrictions: list of strings
         :team_push_restrictions: list of strings
 
@@ -127,6 +130,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_teams), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
+        assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
 
         post_parameters = {}
         if strict is not github.GithubObject.NotSet or contexts is not github.GithubObject.NotSet:
@@ -143,12 +147,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         else:
             post_parameters["enforce_admins"] = None
 
-        if dismissal_users is not github.GithubObject.NotSet or dismissal_teams is not github.GithubObject.NotSet or dismiss_stale_reviews is not github.GithubObject.NotSet or require_code_owner_reviews is not github.GithubObject.NotSet:
+        if dismissal_users is not github.GithubObject.NotSet or dismissal_teams is not github.GithubObject.NotSet or dismiss_stale_reviews is not github.GithubObject.NotSet or require_code_owner_reviews is not github.GithubObject.NotSet or required_approving_review_count is not github.GithubObject.NotSet:
             post_parameters["required_pull_request_reviews"] = {}
             if dismiss_stale_reviews is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"]["dismiss_stale_reviews"] = dismiss_stale_reviews
             if require_code_owner_reviews is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"]["require_code_owner_reviews"] = require_code_owner_reviews
+            if required_approving_review_count is not github.GithubObject.NotSet:
+                post_parameters["required_pull_request_reviews"]["required_approving_review_count"] = required_approving_review_count
             if dismissal_users is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"]["dismissal_restrictions"] = {"users": dismissal_users}
             if dismissal_teams is not github.GithubObject.NotSet:
@@ -169,6 +175,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.protection_url,
+            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews},
             input=post_parameters
         )
 
@@ -228,22 +235,25 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.protection_url + "/required_pull_request_reviews"
+            self.protection_url + "/required_pull_request_reviews",
+            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews}
         )
         return github.RequiredPullRequestReviews.RequiredPullRequestReviews(self._requester, headers, data, completed=True)
 
-    def edit_required_pull_request_reviews(self, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet):
+    def edit_required_pull_request_reviews(self, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet, required_approving_review_count=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
         :dismissal_users: list of strings
         :dismissal_teams: list of strings
         :dismiss_stale_reviews: bool
         :require_code_owner_reviews: bool
+        :required_approving_review_count: int
         """
         assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_users), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_teams), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
+        assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
 
         post_parameters = {}
         if dismissal_users is not github.GithubObject.NotSet:
@@ -256,9 +266,12 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["dismiss_stale_reviews"] = dismiss_stale_reviews
         if require_code_owner_reviews is not github.GithubObject.NotSet:
             post_parameters["require_code_owner_reviews"] = require_code_owner_reviews
+        if required_approving_review_count is not github.GithubObject.NotSet:
+            post_parameters["required_approving_review_count"] = required_approving_review_count
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.protection_url + "/required_pull_request_reviews",
+            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews},
             input=post_parameters
         )
 

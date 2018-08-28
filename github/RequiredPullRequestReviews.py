@@ -53,6 +53,14 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._require_code_owner_reviews.value
 
     @property
+    def required_approving_review_count(self):
+        """
+        :type: int
+        """
+        self._completeIfNotSet(self._required_approving_review_count)
+        return self._required_approving_review_count.value
+
+    @property
     def url(self):
         """
         :type: string
@@ -79,6 +87,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._dismiss_stale_reviews = github.GithubObject.NotSet
         self._require_code_owner_reviews = github.GithubObject.NotSet
+        self._required_approving_review_count = github.GithubObject.NotSet
         self._users = github.GithubObject.NotSet
         self._teams = github.GithubObject.NotSet
 
@@ -92,5 +101,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
             self._dismiss_stale_reviews = self._makeBoolAttribute(attributes["dismiss_stale_reviews"])
         if "require_code_owner_reviews" in attributes:  # pragma no branch
             self._require_code_owner_reviews = self._makeBoolAttribute(attributes["require_code_owner_reviews"])
+        if "required_approving_review_count" in attributes:  # pragma no branch
+            self._required_approving_review_count = self._makeIntAttribute(attributes["required_approving_review_count"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
