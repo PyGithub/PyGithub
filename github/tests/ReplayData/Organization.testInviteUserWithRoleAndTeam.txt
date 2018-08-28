@@ -1,0 +1,21 @@
+https
+POST
+api.github.com
+None
+/orgs/BeaverSoftware/teams
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{"name": "Team created by PyGithub"}
+201
+[('status', '201 Created'), ('x-ratelimit-remaining', '4988'), ('content-length', '145'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"189a318993cde3e040f2efb4f634f8a8"'), ('date', 'Sat, 26 May 2012 20:58:53 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/teams/189850')]
+{"url":"https://api.github.com/teams/189850","members_count":0,"repos_count":0,"name":"Team created by PyGithub","permission":"pull","id":189850}
+
+https
+POST
+api.github.com
+None
+/orgs/BeaverSoftware/invitations
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.dazzler-preview+json'}
+{"email": "foo@example.com", "role": "billing_manager", "team_ids": [189850]}
+201
+[('content-length', '1278'), ('x-runtime-rack', '0.122927'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'admin:org'), ('etag', '"956a9bf38063ecf225e5970155c6022a"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '201 Created'), ('x-ratelimit-remaining', '4994'), ('x-github-media-type', 'github.dazzler-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'DA68:171E:16B488C:1C7BDFC:5B8232A3'), ('date', 'Sun, 26 Aug 2018 04:55:00 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1535261649')]
+{"created_at":"2018-08-26T04:55:00Z","email":"foo@example.com","invitation_teams_url":"https://api.github.com/organizations/32695636/invitations/12325953/teams","node_id":"MDIyOk9yZ2FuaXphdGlvbkludml0YXRpb24xMjQyMzQ1Mw==","role":"billing_manager","team_count":1,"login":null,"inviter":{"following_url":"https://api.github.com/users/jacquev6/following{/other_user}","events_url":"https://api.github.com/users/jacquev6/events{/privacy}","avatar_url":"https://avatars0.githubusercontent.com/u/327146?v=4","url":"https://api.github.com/users/jacquev6","gists_url":"https://api.github.com/users/jacquev6/gists{/gist_id}","html_url":"https://github.com/jacquev6","subscriptions_url":"https://api.github.com/users/jacquev6/subscriptions","node_id":"MDQ6VXNlcjE1MjI1MDU5","repos_url":"https://api.github.com/users/jacquev6/repos","received_events_url":"https://api.github.com/users/jacquev6/received_events","gravatar_id":"","starred_url":"https://api.github.com/users/jacquev6/starred{/owner}{/repo}","site_admin":false,"login":"jacquev6","type":"User","id":327146,"followers_url":"https://api.github.com/users/jacquev6/followers","organizations_url":"https://api.github.com/users/jacquev6/orgs"},"id":12423453}

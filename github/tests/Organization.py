@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+import github
+
 import Framework
 
 import datetime
@@ -213,3 +215,35 @@ class Organization(Framework.TestCase):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
         repo = self.org.create_fork(pygithub)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub")
+
+    def testInviteUserWithNeither(self):
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.invite_user()
+        self.assertEqual("specify only one of email or user", str(raisedexp.exception))
+
+    def testInviteUserWithBoth(self):
+        jacquev6 = self.g.get_user('jacquev6')
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.invite_user(email='foo', user=jacquev6)
+        self.assertEqual("specify only one of email or user", str(raisedexp.exception))
+
+    def testInviteUserByName(self):
+        jacquev6 = self.g.get_user('jacquev6')
+        self.org.invite_user(user=jacquev6)
+
+    def testInviteUserByEmail(self):
+        self.org.invite_user(email='foo@example.com')
+
+    def testInviteUserWithRoleAndTeam(self):
+        team = self.org.create_team("Team created by PyGithub")
+        self.org.invite_user(email='foo@example.com', role='billing_manager', teams=[team])
+
+    def testInviteUserAsNonOwner(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.org.invite_user(email='bar@example.com')
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data, {
+            u'documentation_url': u'https://developer.github.com/v3/orgs/members/#create-organization-invitation',
+            u'message': u'You must be an admin to create an invitation to an organization.'
+            }
+        )
