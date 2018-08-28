@@ -195,6 +195,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     def edit_required_status_checks(self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
+        :strict: bool
+        :contexts: list of strings
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
         assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
@@ -233,6 +235,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     def edit_required_pull_request_reviews(self, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
+        :dismissal_users: list of strings
+        :dismissal_teams: list of strings
+        :dismiss_stale_reviews: bool
+        :require_code_owner_reviews: bool
         """
         assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_users), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_teams), dismissal_teams
@@ -321,6 +327,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     def edit_user_push_restrictions(self, *users):
         """
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
+        :users: list of strings
         """
         assert all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in users), users
 
@@ -333,6 +340,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     def edit_team_push_restrictions(self, *teams):
         """
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
+        :teams: list of strings
         """
         assert all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in teams), teams
 
