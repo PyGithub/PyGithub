@@ -49,7 +49,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     @property
     def required_status_checks(self):
         """
-        :type: :class:github.RequiredStatusChecks.RequiredStatusChecks
+        :type: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
         """
         self._completeIfNotSet(self._required_status_checks)
         return self._required_status_checks.value
@@ -65,14 +65,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     @property
     def required_pull_request_reviews(self):
         """
-        :type: :class:github.RequiredPullRequestReviews.RequiredPullRequestReviews
+        :type: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
         """
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
     def get_user_push_restrictions(self):
         """
-        :rtype: :class:github.PaginatedList.PaginatedList of github.NamedUser.NamedUser
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         if self._user_push_restrictions is github.GithubObject.NotSet:
             return None
@@ -85,7 +85,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
 
     def get_team_push_restrictions(self):
         """
-        :rtype: :class:github.PaginatedList.PaginatedList of github.Team.Team
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         if self._team_push_restrictions is github.GithubObject.NotSet:
             return None
