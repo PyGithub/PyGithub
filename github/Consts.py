@@ -80,3 +80,6 @@ mediaTypeLabelDescriptionSearchPreview = "application/vnd.github.symmetra-previe
 
 # https://developer.github.com/changes/2018-01-10-lock-reason-api-preview/
 mediaTypeLockReasonPreview = "application/vnd.github.sailor-v-preview+json"
+
+# https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
+mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
