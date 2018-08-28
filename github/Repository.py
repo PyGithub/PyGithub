@@ -1433,7 +1433,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             parameters=url_parameters
         )
         if isinstance(data, list):

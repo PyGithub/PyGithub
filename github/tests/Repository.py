@@ -500,7 +500,7 @@ class Repository(Framework.TestCase):
 
     def testGetContents(self):
         self.assertEqual(len(self.repo.get_readme().content), 10212)
-        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md").content), 38121)
+        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md").content), 38121)
 
     def testGetContentDir(self):
 
@@ -510,7 +510,7 @@ class Repository(Framework.TestCase):
 
     def testGetContentsWithRef(self):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
-        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
 
     def testCreateFile(self):
         newFile = 'doc/testCreateUpdateDeleteFile.md'
