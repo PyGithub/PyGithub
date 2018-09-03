@@ -50,6 +50,7 @@ from httplib import HTTPSConnection
 import jwt
 
 from Requester import Requester, json
+import RequesterCache
 import AuthenticatedUser
 import NamedUser
 import Organization
@@ -127,6 +128,9 @@ class Github(object):
 
     def __set_per_page(self, value):
         self.__requester.per_page = value
+
+    def setCachePolicy(self):
+        Requester.setCachePolicy(RequesterCache.AggressiveCache())
 
     # v2: Remove this property? Why should it be necessary to read/modify it after construction
     per_page = property(__get_per_page, __set_per_page)

@@ -61,6 +61,7 @@ import sys
 import time
 import urllib
 import urlparse
+import RequesterCache
 from io import IOBase
 
 import Consts
@@ -142,7 +143,7 @@ class Requester:
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
     __persist = True
-    fetch_cache = {}
+    __fetch_cache = None
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -165,6 +166,10 @@ class Requester:
     @classmethod
     def setOnCheckMe(cls, onCheckMe):
         cls.ON_CHECK_ME = onCheckMe
+
+    @classmethod
+    def setCachePolicy(cls, cache):
+        cls.__fetch_cache = cache
 
     DEBUG_FLAG = False
 
@@ -363,9 +368,15 @@ class Requester:
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
-        if url in self.fetch_cache and verb == 'GET':
-            print('YES ' + url + ' IS IN CACHE')
-            requestHeaders["If-None-Match"] = self.fetch_cache[url]['etag']
+        # Use the none match header if request is a get with a possible etag
+        cached = None
+        if self.__fetch_cache is not None and verb == 'GET':
+            cached = self.__fetch_cache.lookup(url)
+            print("Looking for " + url)
+            print(cached)
+            if cached is not None:
+                print('YES ' + url + ' IS IN CACHE')
+                requestHeaders["If-None-Match"] = cached.etag
 
         encoded_input = None
         if input is not None:
@@ -386,20 +397,15 @@ class Requester:
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
 
-        if verb == "GET":
-            if status == 304:
+        if self.__fetch_cache is not None and verb == 'GET':
+            if status == 304: # "Unmodified" response
                 print('NOT MODIFIED FOR ' + url)
-                output = self.fetch_cache[url]['response']
-                if "link" in self.fetch_cache[url]:
-                    responseHeaders['link'] = self.fetch_cache[url]['link']
+                output = cached.response
+                responseHeaders.update(cached.headers)
             elif status == 200 and 'etag' in responseHeaders:
                 print('Maybe modified for ' + url)
-                etag_rgx = re.compile(r'"[^"]+"')
-                etag = etag_rgx.search(responseHeaders.get('etag'))
-                if etag:
-                    self.fetch_cache[url] = {'etag': etag.group(), 'response': output}
-                    if "link" in responseHeaders:
-                        self.fetch_cache[url]['link'] = responseHeaders['link']
+                self.__fetch_cache.insert(url, responseHeaders, output)
+                print(self.__fetch_cache.lookup(url))
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
