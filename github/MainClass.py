@@ -510,6 +510,36 @@ class Github(object):
             }
         )
 
+    def search_topics(self, query, **qualifiers):
+        """
+        :calls: `GET /search/topics <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+
+        query_chunks = []
+        if query:  # pragma no branch (Should be covered)
+            query_chunks.append(query)
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/search/topics",
+            url_parameters,
+            headers={
+                "Accept": Consts.mediaTypeTopicsPreview
+            }
+        )
+
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
         :calls: `POST /markdown <http://developer.github.com/v3/markdown>`_
