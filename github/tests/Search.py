@@ -61,6 +61,14 @@ class Search(Framework.TestCase):
         commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
         self.assertEqual(commits.totalCount, 3)
 
+    def testSearchTopics(self):
+        repos = self.g.search_topics("python", repositories=">950")
+        self.assertListKeyBegin(repos, lambda r: r.name, [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"])
+
+    def testPaginateSearchTopics(self):
+        repos = self.g.search_topics("python", repositories=">950")
+        self.assertEqual(repos.totalCount, 3)
+
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
         self.assertListKeyEqual(files, lambda f: f.name, [u'Commit.setUp.txt', u'PullRequest.testGetFiles.txt', u'NamedUser.testGetEvents.txt', u'PullRequest.testCreateComment.txt', u'PullRequestFile.setUp.txt', u'Repository.testGetIssuesWithWildcards.txt', u'Repository.testGetIssuesWithArguments.txt', u'test_ebnf.cpp', u'test_abnf.cpp', u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
