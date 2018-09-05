@@ -48,6 +48,7 @@ RES_LAST_MODIFIED = "last-modified"
 headerRateLimit = "x-ratelimit-limit"
 headerRateRemaining = "x-ratelimit-remaining"
 headerRateReset = "x-ratelimit-reset"
+headerOAuthScopes = "x-oauth-scopes"
 headerOTP = "X-GitHub-OTP"
 
 defaultMediaType = "application/octet-stream"
