@@ -144,6 +144,7 @@ class Github(object):
     def rate_limiting(self):
         """
         First value is requests remaining, second value is request limit.
+
         :type: (int, int)
         """
         remaining, limit = self.__requester.rate_limiting
@@ -155,6 +156,7 @@ class Github(object):
     def rate_limiting_resettime(self):
         """
         Unix timestamp indicating when rate limiting will reset.
+
         :type: int
         """
         if self.__requester.rate_limiting_resettime == 0:
@@ -163,16 +165,16 @@ class Github(object):
 
     def get_rate_limit(self):
         """
-        Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
+        Rate limit status for different resources (core/search/graphql).
 
         :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit>`_
         :rtype: :class:`github.RateLimit.RateLimit`
         """
-        headers, attributes = self.__requester.requestJsonAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             'GET',
             '/rate_limit'
         )
-        return RateLimit.RateLimit(self.__requester, headers, attributes, True)
+        return RateLimit.RateLimit(self.__requester, headers, data["resources"], True)
 
     @property
     def oauth_scopes(self):
