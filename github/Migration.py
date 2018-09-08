@@ -43,6 +43,7 @@ import github.File
 import github.CommitStats
 import github.CommitComment
 
+import Consts
 
 class Migration(github.GithubObject.CompletableGithubObject):
 
@@ -97,6 +98,16 @@ class Migration(github.GithubObject.CompletableGithubObject):
     def updated_at(self):
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    def get_archive_url(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/archive",
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+        return data["data"]
 
     def _initAttributes(self):
         self._migration_id = github.GithubObject.NotSet
