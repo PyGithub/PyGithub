@@ -118,6 +118,16 @@ class Migration(github.GithubObject.CompletableGithubObject):
             }
         )
 
+    def unlock_repo(self, repo_name):
+        assert isinstance(repo_name, (str, unicode)), repo_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/repos/" + repo_name + "/lock",
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+
     def _initAttributes(self):
         self._migration_id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
