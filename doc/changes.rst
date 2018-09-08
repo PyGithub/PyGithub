@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43 (September 08, 2018)
+---------------------------------
+
+https://github.com/PyGithub/PyGithub/compare/v1.42...v1.43 (@jacquev6 was lazy, feel free to update this file with
+an actual description of the significant changes).
+
 Version 1.42 (August 19, 2018)
 -----------------------------------
 
