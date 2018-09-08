@@ -129,8 +129,10 @@ class Github(object):
     def __set_per_page(self, value):
         self.__requester.per_page = value
 
-    def setCachePolicy(self):
-        Requester.setCachePolicy(RequesterCache.AggressiveCache())
+    def setCachePolicy(self, cache=None):
+        if (cache is None):
+            cache = RequesterCache.AggressiveCache()
+        Requester.setCachePolicy(cache)
 
     # v2: Remove this property? Why should it be necessary to read/modify it after construction
     per_page = property(__get_per_page, __set_per_page)

@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from Consts import RES_ETAG
 import re
 
 
 class CacheItem():
-    def __init__(self, response, headers, **kwargs):
+    def __init__(self, etag, response, headers, **kwargs):
         self.response = response
         self.headers = headers
-        self.etag = None
+        self.etag = etag
 
 
 class RequesterCache(ABC):
@@ -18,11 +19,11 @@ class RequesterCache(ABC):
         return self._cache.get(url)
 
     def _construct_item(self, url, responseHeaders, output, item=CacheItem):
-        if 'etag' in responseHeaders:
+        if RES_ETAG in responseHeaders:
             etag_rgx = re.compile(r'"[^"]+"')
-            etag = etag_rgx.search(responseHeaders['etag'])
+            etag = etag_rgx.search(responseHeaders[RES_ETAG])
             if etag:
-                return item(output, responseHeaders, url=url)
+                return item(etag.group(), output, responseHeaders, url=url)
         return None
 
 
@@ -39,8 +40,8 @@ class AggressiveCache(RequesterCache):
 class ClockCache(RequesterCache):
 
     class ClockItem(CacheItem):
-        def __init__(self, response, links=None, **kwargs):
-            super().__init__(response, links)
+        def __init__(self, etag, response, headers, **kwargs):
+            super().__init__(etag, response, headers)
             self._dirty = True
             self._url = kwargs.get('url')
 

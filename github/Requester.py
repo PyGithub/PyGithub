@@ -372,10 +372,7 @@ class Requester:
         cached = None
         if self.__fetch_cache is not None and verb == 'GET':
             cached = self.__fetch_cache.lookup(url)
-            print("Looking for " + url)
-            print(cached)
             if cached is not None:
-                print('YES ' + url + ' IS IN CACHE')
                 requestHeaders["If-None-Match"] = cached.etag
 
         encoded_input = None
@@ -399,13 +396,10 @@ class Requester:
 
         if self.__fetch_cache is not None and verb == 'GET':
             if status == 304: # "Unmodified" response
-                print('NOT MODIFIED FOR ' + url)
                 output = cached.response
                 responseHeaders.update(cached.headers)
-            elif status == 200 and 'etag' in responseHeaders:
-                print('Maybe modified for ' + url)
+            elif status == 200 and Consts.RES_ETAG in responseHeaders:
                 self.__fetch_cache.insert(url, responseHeaders, output)
-                print(self.__fetch_cache.lookup(url))
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
