@@ -1132,6 +1132,17 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Migration.Migration(self._requester, headers, data, completed=True)
 
+    def get_migrations(self):
+        return github.PaginatedList.PaginatedList(
+            github.Migration.Migration,
+            self._requester,
+            "/user/migrations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+
     def _initAttributes(self):
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
