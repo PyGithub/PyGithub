@@ -66,7 +66,6 @@ class ExposeAllAttributes(Framework.TestCase):
         status = self.g.get_api_status()
         statusMessage = self.g.get_last_api_status_message()
         rateLimit = self.g.get_rate_limit()
-        rate = rateLimit.rate
         hook = repository.get_hooks()[0]
         hookResponse = hook.last_response
         hookDescription = self.g.get_hooks()[0]
@@ -123,7 +122,6 @@ class ExposeAllAttributes(Framework.TestCase):
             pullRequestComment,
             # pullRequestMergeStatus,  # Only obtained when merging a pull request through the API
             pullRequestPart,
-            rate,
             rateLimit,
             repository,
             # repositoryKey,  # Security issue if put as-is in ReplayData
