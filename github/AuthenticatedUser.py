@@ -1111,7 +1111,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
 
     def create_migration(self, repos, lock_repositories=github.GithubObject.NotSet, exclude_attachments=github.GithubObject.NotSet):
-        assert any((isinstance(repos, list), isinstance(repos, tuple))), repos
+        """
+        :calls: `POST /user/migrations`_
+        :param repos: list or tuple of str
+        :param lock_repositories: bool
+        :param exclude_attachments: bool
+        :rtype: :class:`github.Migration.Migration`
+        """
+        assert isinstance(repos, (list, tuple)), repos
         assert all(isinstance(repo, (str, unicode)) for repo in repos), repos
         assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
         assert exclude_attachments is github.GithubObject.NotSet or isinstance(exclude_attachments, bool), exclude_attachments
@@ -1133,6 +1140,10 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         return github.Migration.Migration(self._requester, headers, data, completed=True)
 
     def get_migrations(self):
+        """
+        :calls: `GET /user/migrations`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
+        """
         return github.PaginatedList.PaginatedList(
             github.Migration.Migration,
             self._requester,
