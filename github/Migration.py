@@ -46,60 +46,99 @@ import github.CommitComment
 import Consts
 
 class Migration(github.GithubObject.CompletableGithubObject):
+    """
+    This class represents Migrations. The reference can be found here http://developer.github.com/v3/migrations/
+    """
 
     def __repr__(self):
         return self.get__repr__({"state": self._state.value, "url": self._migrationUrl.value})
 
     @property
     def migration_id(self):
+        """
+        :type: int
+        """
         return self._migration_id.value
 
     @property
     def owner(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
     @property
     def guid(self):
+        """
+        :type: str
+        """
         self._completeIfNotSet(self._guid)
         return self._guid.value
 
     @property
     def state(self):
+        """
+        :type: str
+        """
         self.update()
         return self._state.value
 
     @property
     def lock_repositories(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._repositories)
         return self._lock_repositories.value
 
     @property
     def exclude_attachments(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._exclude_attachments)
         return self._exclude_attachments.value
 
     @property
     def repositories(self):
+        """
+        :type: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         self._completeIfNotSet(self._repositories)
         return self._repositories.value
 
     @property
     def url(self):
+        """
+        :type: str
+        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        :rtype: None
+        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        :rtype: None
+        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     def get_archive_url(self):
+        """
+        :calls: `GET /user/migrations/:migration_id/archive`_
+        :rtype: str
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/archive",
@@ -110,6 +149,9 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return data["data"]
 
     def delete(self):
+        """
+        :calls: `DELETE /user/migrations/:migration_id/archive`_
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/archive",
@@ -119,6 +161,11 @@ class Migration(github.GithubObject.CompletableGithubObject):
         )
 
     def unlock_repo(self, repo_name):
+        """
+        :calls: `DELETE /user/migrations/:migration_id/repos/:repo_name/lock`_
+        :param repo_name: str
+        :rtype: None
+        """
         assert isinstance(repo_name, (str, unicode)), repo_name
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
