@@ -109,6 +109,15 @@ class Migration(github.GithubObject.CompletableGithubObject):
         )
         return data["data"]
 
+    def delete(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/archive",
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+
     def _initAttributes(self):
         self._migration_id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
