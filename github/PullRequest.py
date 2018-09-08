@@ -530,7 +530,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id)
         )
-        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
+        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)    
 
     def get_comments(self):
         """
@@ -631,6 +631,26 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/reviews/" + str(id),
+        )
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def dismiss_review(self, id, message):
+        """
+        :calls: `PUT /repos/:owner/:repo/pulls/:number/reviews/:review_id/dismissals <https://developer.github.com/v3/pulls/reviews>`_
+        :param id: integer
+        :param message: string
+        :rtype: None
+        """
+    
+        assert isinstance(id, int), id
+        assert isinstance(message, (str, unicode)), message
+        
+        put_parameters = {"message": message}
+        
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/reviews/" + str(id) + "/dismissals",
+            input=put_parameters
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 

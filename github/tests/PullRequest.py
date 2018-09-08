@@ -209,3 +209,11 @@ class PullRequest(Framework.TestCase):
 
     def testMergeWithCommitMessage(self):
         self.g.get_user().get_repo("PyGithub").get_pull(39).merge("Custom commit message created by PyGithub")
+
+    def testReviewDismiss(self):
+        commit = self.repo.get_commit(
+            "8a4f306d4b223682dd19410d4a9150636ebe4206")
+        review = self.pull.create_review(commit, 'Test case Review Dismiss')
+        review = self.pull.dismiss_review(review.id,
+                                          "Dismiss review test case")
+        self.assertEqual(review.state, 'DISMISSED')
