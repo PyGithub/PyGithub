@@ -218,6 +218,10 @@ class GithubObject(object):
         '''
         return self._headers.get(Consts.RES_LAST_MODIFIED)
 
+    @property
+    def media_type(self):
+        return self._headers.get(Consts.RES_MEDIA_TYPE_KEY)
+
     def get__repr__(self, params):
         """
         Converts the object to a nicely printable string.
@@ -280,6 +284,8 @@ class CompletableGithubObject(GithubObject):
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
         if self.last_modified is not None:
             conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+        if self.media_type == Consts.RES_MEDIA_TYPE_VALUE:
+            conditionalRequestHeader["Accept"] = Consts.mediaTypeMigrationPreview
 
         status, responseHeaders, output = self._requester.requestJson(
             "GET",

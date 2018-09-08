@@ -40,6 +40,8 @@ PROCESSING_202_WAIT_TIME = 2
 # ##############################################################################
 RES_ETAG = "etag"
 RES_LAST_MODIFIED = "last-modified"
+RES_MEDIA_TYPE_KEY = "x-github-media-type"
+RES_MEDIA_TYPE_VALUE = "github.wyandotte-preview; format=json"
 
 # Inspired by https://github.com/google/go-github
 
