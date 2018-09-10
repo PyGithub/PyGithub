@@ -397,7 +397,9 @@ class Requester:
         if self.__fetch_cache is not None and verb == 'GET':
             if status == 304: # "Unmodified" response
                 output = cached.response
-                responseHeaders.update(cached.headers)
+                new_headers = cached.headers
+                new_headers.update(responseHeaders)
+                responseHeaders = new_headers
             elif status == 200 and Consts.RES_ETAG in responseHeaders:
                 self.__fetch_cache.insert(url, responseHeaders, output)
         return status, responseHeaders, output
