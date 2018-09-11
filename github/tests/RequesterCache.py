@@ -62,7 +62,7 @@ class ActualRequest():
 class AggressiveCache(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.g.setCachePolicy()
+        self.g.setCachePolicy(github.RequesterCache.AggressiveCache())
         self.action = ActualRequest()
 
     def testSingle(self):

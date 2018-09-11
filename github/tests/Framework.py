@@ -291,6 +291,7 @@ class TestCase(BasicTestCase):
         github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+        github.Requester.Requester.setCachePolicy(None)
 
         if self.tokenAuthMode:
             self.g = github.Github(self.oauth_token)
