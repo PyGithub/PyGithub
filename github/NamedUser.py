@@ -12,6 +12,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
@@ -100,6 +101,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._company)
         return self._company.value
+
+    @property
+    def contributions(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._contributions)
+        return self._contributions.value
 
     @property
     def created_at(self):
@@ -563,6 +572,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._blog = github.GithubObject.NotSet
         self._collaborators = github.GithubObject.NotSet
         self._company = github.GithubObject.NotSet
+        self._contributions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
@@ -607,6 +617,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
             self._company = self._makeStringAttribute(attributes["company"])
+        if "contributions" in attributes:  # pragma no branch
+            self._contributions = self._makeIntAttribute(attributes["contributions"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch

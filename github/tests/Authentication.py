@@ -7,6 +7,7 @@
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -56,15 +57,11 @@ class Authentication(Framework.BasicTestCase):
     def testAuthorizationHeaderWithLogin(self):
         # See special case in Framework.fixAuthorizationHeader
         g = github.Github("fake_login", "fake_password")
-        try:
+        with self.assertRaises(github.GithubException):
             g.get_user().name
-        except github.GithubException:
-            pass
 
     def testAuthorizationHeaderWithToken(self):
         # See special case in Framework.fixAuthorizationHeader
         g = github.Github("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk")
-        try:
+        with self.assertRaises(github.GithubException):
             g.get_user().name
-        except github.GithubException:
-            pass

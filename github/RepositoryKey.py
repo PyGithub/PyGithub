@@ -13,6 +13,8 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Laurent Raufaste <analogue@glop.org>                          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
