@@ -33,4 +33,4 @@ class Issue142(unittest.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testDecodeJson(self):
         # This test has to hit GitHub for real, because the record-replay framework looses types
         # and python3 does not behave like python2 for strings and bytes
-        self.assertEqual(github.Github().get_rate_limit().rate.limit, 60)
+        self.assertEqual(github.Github().get_rate_limit().core.limit, 60)

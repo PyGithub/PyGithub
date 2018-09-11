@@ -9,6 +9,9 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #

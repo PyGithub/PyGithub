@@ -1,0 +1,22 @@
+https
+DELETE
+api.github.com
+None
+/repos/PyGithub/PyGithub/branches/master/protection/restrictions
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4994'), ('content-length', '330'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"2dada6dafd332016bcdf06e42487e520"'), ('date', 'Sun, 13 May 2012 10:46:19 GMT'), ('content-type', 'application/json; charset=utf-8')]
+
+
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/branches/master/protection/restrictions/users
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+404
+[('status', '404 Not Found'), ('content-length', '126'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'AE1E5031:A39B:2D392574:568E6BC1'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-ratelimit-remaining', '4991'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-xss-protection', '1; mode=block'), ('access-control-allow-credentials', 'true'), ('date', 'Sun, 13 May 2018 10:52:10 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-frame-options', 'deny'), ('x-ratelimit-reset', '1452177625')]
+{"documentation_url":"https://developer.github.com/v3/repos/branches/#list-team-restrictions-of-protected-branch","message":"Push restrictions not enabled"}
+

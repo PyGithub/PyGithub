@@ -5,6 +5,7 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Joel Koglin <JoelKoglin@gmail.com>                            #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -59,6 +60,14 @@ class Search(Framework.TestCase):
     def testPaginateSearchCommits(self):
         commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
         self.assertEqual(commits.totalCount, 3)
+
+    def testSearchTopics(self):
+        repos = self.g.search_topics("python", repositories=">950")
+        self.assertListKeyBegin(repos, lambda r: r.name, [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"])
+
+    def testPaginateSearchTopics(self):
+        repos = self.g.search_topics("python", repositories=">950")
+        self.assertEqual(repos.totalCount, 3)
 
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")

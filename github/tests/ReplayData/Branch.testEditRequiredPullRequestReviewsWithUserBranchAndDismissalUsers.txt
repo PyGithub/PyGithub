@@ -1,0 +1,10 @@
+https
+PATCH
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews
+{'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
+{"dismissal_restrictions":{"users":["jacquev6"]}}
+422
+[('status', '422 Unprocessable Entity'), ('content-length', '227'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'AE1E5031:A39B:2D392574:568E6BC1'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-ratelimit-remaining', '4991'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-xss-protection', '1; mode=block'), ('access-control-allow-credentials', 'true'), ('date', 'Mon, 07 May 2018 12:46:55 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-frame-options', 'deny'), ('x-ratelimit-reset', '1452177625')]
+{"documentation_url":"https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch","message":"Dismissal restrictions are supported only for repositories owned by an organization."}

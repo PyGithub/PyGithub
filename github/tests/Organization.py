@@ -8,10 +8,13 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,6 +33,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+import github
 
 import Framework
 
@@ -71,7 +76,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.org.__repr__(), 'Organization(name="BeaverSoftware", id=1)')
+        self.assertEqual(self.org.__repr__(), 'Organization(login="BeaverSoftware")')
 
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
@@ -210,3 +215,35 @@ class Organization(Framework.TestCase):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
         repo = self.org.create_fork(pygithub)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub")
+
+    def testInviteUserWithNeither(self):
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.invite_user()
+        self.assertEqual("specify only one of email or user", str(raisedexp.exception))
+
+    def testInviteUserWithBoth(self):
+        jacquev6 = self.g.get_user('jacquev6')
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.invite_user(email='foo', user=jacquev6)
+        self.assertEqual("specify only one of email or user", str(raisedexp.exception))
+
+    def testInviteUserByName(self):
+        jacquev6 = self.g.get_user('jacquev6')
+        self.org.invite_user(user=jacquev6)
+
+    def testInviteUserByEmail(self):
+        self.org.invite_user(email='foo@example.com')
+
+    def testInviteUserWithRoleAndTeam(self):
+        team = self.org.create_team("Team created by PyGithub")
+        self.org.invite_user(email='foo@example.com', role='billing_manager', teams=[team])
+
+    def testInviteUserAsNonOwner(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.org.invite_user(email='bar@example.com')
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data, {
+            u'documentation_url': u'https://developer.github.com/v3/orgs/members/#create-organization-invitation',
+            u'message': u'You must be an admin to create an invitation to an organization.'
+            }
+        )

@@ -15,6 +15,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Joel Koglin <JoelKoglin@gmail.com>                            #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #

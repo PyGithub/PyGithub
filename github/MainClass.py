@@ -21,6 +21,10 @@
 # Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Joshua Hoblitt <josh@hoblitt.com>                             #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
@@ -68,6 +72,8 @@ import RateLimit
 import InstallationAuthorization
 import GithubException
 import Invitation
+
+import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -138,6 +144,7 @@ class Github(object):
     def rate_limiting(self):
         """
         First value is requests remaining, second value is request limit.
+
         :type: (int, int)
         """
         remaining, limit = self.__requester.rate_limiting
@@ -149,6 +156,7 @@ class Github(object):
     def rate_limiting_resettime(self):
         """
         Unix timestamp indicating when rate limiting will reset.
+
         :type: int
         """
         if self.__requester.rate_limiting_resettime == 0:
@@ -157,16 +165,16 @@ class Github(object):
 
     def get_rate_limit(self):
         """
-        Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
+        Rate limit status for different resources (core/search/graphql).
 
         :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit>`_
         :rtype: :class:`github.RateLimit.RateLimit`
         """
-        headers, attributes = self.__requester.requestJsonAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             'GET',
             '/rate_limit'
         )
-        return RateLimit.RateLimit(self.__requester, headers, attributes, True)
+        return RateLimit.RateLimit(self.__requester, headers, data["resources"], True)
 
     @property
     def oauth_scopes(self):
@@ -267,7 +275,7 @@ class Github(object):
             url_parameters
         )
 
-    def get_repo(self, full_name_or_id, lazy=True):
+    def get_repo(self, full_name_or_id, lazy=False):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
@@ -500,7 +508,37 @@ class Github(object):
             "/search/commits",
             url_parameters,
             headers={
-                "Accept": "application/vnd.github.cloak-preview"
+                "Accept": Consts.mediaTypeCommitSearchPreview
+            }
+        )
+
+    def search_topics(self, query, **qualifiers):
+        """
+        :calls: `GET /search/topics <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+
+        query_chunks = []
+        if query:  # pragma no branch (Should be covered)
+            query_chunks.append(query)
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/search/topics",
+            url_parameters,
+            headers={
+                "Accept": Consts.mediaTypeTopicsPreview
             }
         )
 
@@ -717,7 +755,7 @@ class GithubIntegration(object):
             url="/installations/{}/access_tokens".format(installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
-                "Accept": "application/vnd.github.machine-man-preview+json",
+                "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python"
             },
             body=body

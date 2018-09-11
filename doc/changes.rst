@@ -4,6 +4,107 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43 (September 08, 2018)
+-----------------------------------
+
+
+**BUGFIX**
+
+* ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
+* Fixed ``Gistfile.content`` (#486) (e1df09f7)
+* Restored NamedUser.contributions attribute (#865) (b91dee8d)
+
+**New features**
+
+* Add support for repository topics (#832) (c6802b51)
+* Add support for required approving review count (#888) (ef16702)
+* Add ``Organization.invite_user`` (880)(eb80564)
+* Add support for search/graphql rate limit (fd8a036)
+* Add Support search by topics (#893) (3ce0418)
+* Branch Protection API overhaul (#790) (171cc567)
+
+  + (**breaking**) Removed Repository.protect_branch
+  + Add `BranchProtection <https://pygithub.readthedocs.io/en/latest/github_objects/BranchProtection.html>`__
+  + Add `RequiredPullRequestReviews <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredPullRequestReviews.html>`__
+  + Add `RequiredStatusChecks <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredStatusChecks.html>`__
+  + Add ``Branch.get_protection``, ``Branch.get_required_pull_request_reviews``, ``Branch.get_required_status_checks``, etc
+
+**Improvements**
+
+* Add missing arguments to ``Repository.edit`` (#844) (29d23151)
+* Add missing attributes to Repository (#842) (2b352fb3)
+* Adding archival support for ``Repository.edit`` (#843) (1a90f5db)
+* Add ``tag_name`` and ``target_commitish`` arguments to ``GitRelease.update_release`` (#834) (790f7dae)
+* Allow editing of Team descriptions (#839) (c0021747)
+* Add description to Organizations (#838) (1d918809)
+* Add missing attributes for IssueEvent (#857) (7ac2a2a)
+* Change ``MainClass.get_repo`` default laziness (#882) (6732517)
+
+**Deprecation**
+
+* Removed Repository.get_protected_branch (#871) (49db6f8)
+
+
+Version 1.42 (August 19, 2018)
+-----------------------------------
+
+* Fix travis upload issue
+
+**BUGFIX**
+
+* ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
+* Fixed ``Gistfile.content`` (#486) (e1df09f7)
+* Restored NamedUser.contributions attribute (#865) (b91dee8d)
+
+New features
+
+* Add support for repository topics (#832) (c6802b51)
+* Branch Protection API overhaul (#790) (171cc567)
+
+  + (**breaking**) Removed Repository.protect_branch
+  + Add `BranchProtection <https://pygithub.readthedocs.io/en/latest/github_objects/BranchProtection.html>`__
+  + Add `RequiredPullRequestReviews <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredPullRequestReviews.html>`__
+  + Add `RequiredStatusChecks <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredStatusChecks.html>`__
+  + Add ``Branch.get_protection``, ``Branch.get_required_pull_request_reviews``, ``Branch.get_required_status_checks``, etc
+
+Improvements
+
+* Add missing arguments to ``Repository.edit`` (#844) (29d23151)
+* Add missing properties to Repository (#842) (2b352fb3)
+* Adding archival support for ``Repository.edit`` (#843) (1a90f5db)
+* Add ``tag_name`` and ``target_commitish`` arguments to ``GitRelease.update_release`` (#834) (790f7dae)
+* Allow editing of Team descriptions (#839) (c0021747)
+* Add description to Organizations (#838) (1d918809)
+
+Version 1.41 (August 19, 2018)
+-----------------------------------
+
+**BUGFIX**
+
+* ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
+* Fixed ``Gistfile.content`` (#486) (e1df09f7)
+* Restored NamedUser.contributions attribute (#865) (b91dee8d)
+
+New features
+
+* Add support for repository topics (#832) (c6802b51)
+* Branch Protection API overhaul (#790) (171cc567)
+
+  + (**breaking**) Removed Repository.protect_branch
+  + Add `BranchProtection <https://pygithub.readthedocs.io/en/latest/github_objects/BranchProtection.html>`__
+  + Add `RequiredPullRequestReviews <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredPullRequestReviews.html>`__
+  + Add `RequiredStatusChecks <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredStatusChecks.html>`__
+  + Add ``Branch.get_protection``, ``Branch.get_required_pull_request_reviews``, ``Branch.get_required_status_checks``, etc
+
+Improvements
+
+* Add missing arguments to ``Repository.edit`` (#844) (29d23151)
+* Add missing properties to Repository (#842) (2b352fb3)
+* Adding archival support for ``Repository.edit`` (#843) (1a90f5db)
+* Add ``tag_name`` and ``target_commitish`` arguments to ``GitRelease.update_release`` (#834) (790f7dae)
+* Allow editing of Team descriptions (#839) (c0021747)
+* Add description to Organizations (#838) (1d918809)
+
 Version 1.40 (June 26, 2018)
 -----------------------------------
 * Major enhancement: use requests for HTTP instead of httplib (#664) (9aed19dd)

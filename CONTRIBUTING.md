@@ -57,3 +57,12 @@ You can use `python -m github.tests Issue139.testCompletion --record --auth_with
 
 PyGithub follows [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/) except for line length.
 Please check your code with [pep8 Python style guide checker](http://pypi.python.org/pypi/pep8), by running `pep8 --ignore=E501 github`.
+
+## Build documentation locally
+
+Note: only Python 2 is supported as of now
+
+```
+pip install -r requirements.txt
+sphinx-build doc build
+```
