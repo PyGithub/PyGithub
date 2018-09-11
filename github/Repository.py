@@ -1475,7 +1475,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/projects",
             url_parameters,
-            github.Project.PROJECT_PREVIEW_HEADERS
+            {"Accept": Consts.mediaTypeProjectsPreview}
         )
 
     def create_file(self, path, message, content,

@@ -39,9 +39,9 @@ else:
 
 
 types = {
-    "string": ("string", "(str, unicode)", "self._makeStringAttribute(attributes[\"" + attributeName + "\"])"),
-    "int": ("integer", "(int, long)", "self._makeIntAttribute(attributes[\"" + attributeName + "\"])"),
-    "bool": ("bool", "bool", "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
+    "string": ("string", None, "self._makeStringAttribute(attributes[\"" + attributeName + "\"])"),
+    "int": ("integer", None, "self._makeIntAttribute(attributes[\"" + attributeName + "\"])"),
+    "bool": ("bool", None, "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
     "datetime": ("datetime.datetime", "(str, unicode)", "self._makeDatetimeAttribute(attributes[\"" + attributeName + "\"])"),
     "class": (":class:`" + attributeClassType + "`", None, "self._makeClassAttribute(" + attributeClassType + ", attributes[\"" + attributeName + "\"])"),
 }

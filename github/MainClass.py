@@ -317,7 +317,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/projects/%d" % (id),
-            headers=github.Project.PROJECT_PREVIEW_HEADERS
+            headers={"Accept": Consts.mediaTypeProjectsPreview}
         )
         return github.Project.Project(self.__requester, headers, data, completed=True)
 

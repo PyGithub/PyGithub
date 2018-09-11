@@ -27,8 +27,6 @@ import github
 
 class Project(Framework.TestCase):
     def setUp(self):
-        # Force token authenticaton mode, since that's how the replay data was recorded.
-        self.tokenAuthMode = True
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_user().get_repo('PyGithub')
 

@@ -29,9 +29,9 @@ import github.GithubObject
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 #
-# See also https://developer.github.com/v4/reference/object/projectcard for the next generation GitHub API,
+# See also https://developer.github.com/v4/object/projectcard for the next generation GitHub API,
 # which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
-class ProjectCard(github.GithubObject.NonCompletableGithubObject):
+class ProjectCard(github.GithubObject.CompletableGithubObject):
     """
     This class represents Project Cards. The reference can be found here https://developer.github.com/v3/projects/cards
     """
@@ -149,30 +149,22 @@ class ProjectCard(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "archived" in attributes:  # pragma no branch
-            assert attributes["archived"] is None or isinstance(attributes["archived"], bool), attributes["archived"]
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "column_url" in attributes:  # pragma no branch
-            assert attributes["column_url"] is None or isinstance(attributes["column_url"], (str, unicode)), attributes["column_url"]
             self._column_url = self._makeStringAttribute(attributes["column_url"])
         if "content_url" in attributes:  # pragma no branch
-            assert attributes["content_url"] is None or isinstance(attributes["content_url"], (str, unicode)), attributes["content_url"]
             self._content_url = self._makeStringAttribute(attributes["content_url"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
-            assert attributes["node_id"] is None or isinstance(attributes["node_id"], (str, unicode)), attributes["node_id"]
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "note" in attributes:  # pragma no branch
             self._note = self._makeStringAttribute(attributes["note"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = self._makeStringAttribute(attributes["url"])
-

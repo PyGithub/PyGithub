@@ -66,6 +66,9 @@ mediaTypeReactionsPreview = "application/vnd.github.squirrel-girl-preview"
 # https://developer.github.com/changes/2016-09-14-Integrations-Early-Access/
 mediaTypeIntegrationPreview = "application/vnd.github.machine-man-preview+json"
 
+# https://developer.github.com/changes/2016-09-14-projects-api/
+mediaTypeProjectsPreview = "application/vnd.github.inertia-preview+json"
+
 # https://developer.github.com/changes/2017-01-05-commit-search-api/
 mediaTypeCommitSearchPreview = "application/vnd.github.cloak-preview"
 

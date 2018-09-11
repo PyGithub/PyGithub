@@ -685,7 +685,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/projects",
             url_parameters,
-            github.Project.PROJECT_PREVIEW_HEADERS
+            {"Accept": Consts.mediaTypeProjectsPreview}
         )
         
     def get_public_members(self):

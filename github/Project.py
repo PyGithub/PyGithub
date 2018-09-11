@@ -28,8 +28,7 @@ import json
 import github.GithubObject
 import github.ProjectColumn
 
-# 'Accept' header required while Github Projects API still in preview mode.
-PROJECT_PREVIEW_HEADERS = {"Accept": "application/vnd.github.inertia-preview+json"}
+import Consts
 
 class Project(github.GithubObject.CompletableGithubObject):
     """
@@ -154,7 +153,7 @@ class Project(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.columns_url,
             None,
-            PROJECT_PREVIEW_HEADERS
+            {"Accept": Consts.mediaTypeProjectsPreview}
         )
 
     def _initAttributes(self):
@@ -176,34 +175,26 @@ class Project(github.GithubObject.CompletableGithubObject):
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "columns_url" in attributes:  # pragma no branch
-            assert attributes["columns_url"] is None or isinstance(attributes["columns_url"], (str, unicode)), attributes["columns_url"]
             self._columns_url = self._makeStringAttribute(attributes["columns_url"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
-            assert attributes["node_id"] is None or isinstance(attributes["node_id"], (str, unicode)), attributes["node_id"]
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "owner_url" in attributes:  # pragma no branch
-            assert attributes["owner_url"] is None or isinstance(attributes["owner_url"], (str, unicode)), attributes["owner_url"]
             self._owner_url = self._makeStringAttribute(attributes["owner_url"])
         if "state" in attributes:  # pragma no branch
-            assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
             self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = self._makeStringAttribute(attributes["url"])
