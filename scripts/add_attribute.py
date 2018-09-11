@@ -8,6 +8,7 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,18 +31,19 @@
 import sys
 import os.path
 
-# This script is unable to add an attribute after all the existing ones
-# but, well, I'll do it manually in that case.
-
-className, attributeName, attributeType = sys.argv[1:]
+className, attributeName, attributeType = sys.argv[1:4]
+if len(sys.argv) > 4:
+    attributeClassType = sys.argv[4]
+else:
+    attributeClassType = ""
 
 
 types = {
-    "string": ("string", "(str, unicode)", "attributes[\"" + attributeName + "\"]"),
-    "int": ("integer", "(int, long)", "attributes[\"" + attributeName + "\"]"),
-    "bool": ("bool", "bool", "attributes[\"" + attributeName + "\"]"),
-    "float": ("float", "float", "attributes[\"" + attributeName + "\"]"),
-    "datetime": ("datetime.datetime", "(str, unicode)", "self._parseDatetime(attributes[\"" + attributeName + "\"])"),
+    "string": ("string", None, "self._makeStringAttribute(attributes[\"" + attributeName + "\"])"),
+    "int": ("integer", None, "self._makeIntAttribute(attributes[\"" + attributeName + "\"])"),
+    "bool": ("bool", None, "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
+    "datetime": ("datetime.datetime", "(str, unicode)", "self._makeDatetimeAttribute(attributes[\"" + attributeName + "\"])"),
+    "class": (":class:`" + attributeClassType + "`", None, "self._makeClassAttribute(" + attributeClassType + ", attributes[\"" + attributeName + "\"])"),
 }
 
 attributeDocType, attributeAssertType, attributeValue = types[attributeType]
@@ -58,25 +60,33 @@ i = 0
 
 added = False
 
+isCompletable = True
 isProperty = False
 while not added:
     line = lines[i].rstrip()
     i += 1
-    if line == "    @property":
+    if line.startswith("class "):
+        if "NonCompletableGithubObject" in line:
+            isCompletable = False
+    elif line == "    @property":
         isProperty = True
-    if line.startswith("    def "):
-        if isProperty:
-            attrName = line[8:-7]
-            if attrName == "_identity" or attrName > attributeName:
-                newLines.append("    def " + attributeName + "(self):")
-                newLines.append("        \"\"\"")
-                newLines.append("        :type: " + attributeDocType)
-                newLines.append("        \"\"\"")
-                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
-                newLines.append("        return self._NoneIfNotSet(self._" + attributeName + ")")
-                newLines.append("")
+    elif line.startswith("    def "):
+        attrName = line[8:-7]
+        # Properties will be inserted after __repr__, but before any other function.
+        if attrName != "__repr__" and (attrName == "_identity" or attrName > attributeName or not isProperty):
+            if not isProperty:
                 newLines.append("    @property")
-                added = True
+            newLines.append("    def " + attributeName + "(self):")
+            newLines.append("        \"\"\"")
+            newLines.append("        :type: " + attributeDocType)
+            newLines.append("        \"\"\"")
+            if isCompletable:
+                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
+            newLines.append("        return self._" + attributeName + ".value")
+            newLines.append("")
+            if isProperty:
+                newLines.append("    @property")
+            added = True
         isProperty = False
     newLines.append(line)
 
@@ -101,7 +111,10 @@ added = False
 
 inUse = False
 while not added:
-    line = lines[i].rstrip()
+    try:
+        line = lines[i].rstrip()
+    except IndexError:
+        line = ""
     i += 1
     if line == "    def _useAttributes(self, attributes):":
         inUse = True
@@ -111,7 +124,8 @@ while not added:
                 attrName = line[12:-36]
             if not line or attrName > attributeName:
                 newLines.append("        if \"" + attributeName + "\" in attributes:  # pragma no branch")
-                newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
+                if attributeAssertType:
+                    newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
                 newLines.append("            self._" + attributeName + " = " + attributeValue)
                 added = True
     newLines.append(line)

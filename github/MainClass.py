@@ -308,6 +308,19 @@ class Github(object):
             url_parameters
         )
 
+    def get_project(self, id):
+        """
+        :calls: `GET /projects/:project_id <https://developer.github.com/v3/projects/#get-a-project>`_
+        :rtype: :class:`github.Project.Project`
+        :param id: integer
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/projects/%d" % (id),
+            headers={"Accept": Consts.mediaTypeProjectsPreview}
+        )
+        return github.Project.Project(self.__requester, headers, data, completed=True)
+
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_

@@ -102,6 +102,7 @@ import github.PullRequest
 import github.RepositoryKey
 import github.NamedUser
 import github.Milestone
+import github.Project
 import github.Comparison
 import github.CommitComment
 import github.GitCommit
@@ -1457,6 +1458,25 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def get_projects(self, state=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        :param state: string
+        """
+        
+        url_parameters = dict()
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+            
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            url_parameters,
+            {"Accept": Consts.mediaTypeProjectsPreview}
+        )
 
     def create_file(self, path, message, content,
                     branch=github.GithubObject.NotSet,
