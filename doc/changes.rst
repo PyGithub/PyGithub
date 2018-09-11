@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.1 (September 11, 2018)
+-----------------------------------
+
+New feature:
+
+* Add support for Projects (#854) (faca4ce1)
+
 Version 1.43 (September 08, 2018)
 -----------------------------------
 
