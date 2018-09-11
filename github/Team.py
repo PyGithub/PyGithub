@@ -14,9 +14,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 mattjmorrison <mattjmorrison@mattjmorrison.com>               #
 # Copyright 2018 Isuru Fernando <isuruf@gmail.com>                             #
-# Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Manu Hortet <manuhortet@gmail.com>                            #
+# Copyright 2018 Michał Górny <mgorny@gentoo.org>                            #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

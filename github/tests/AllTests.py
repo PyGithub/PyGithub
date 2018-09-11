@@ -15,6 +15,10 @@
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -39,6 +43,7 @@ from AuthenticatedUser import *
 from Authentication import *
 from Authorization import *
 from Branch import *
+from BranchProtection import *
 from Commit import *
 from CommitCombinedStatus import *
 from CommitComment import *
@@ -76,6 +81,8 @@ from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *
+from RequiredPullRequestReviews import *
+from RequiredStatusChecks import *
 from SourceImport import *
 from Status import *
 from Tag import *

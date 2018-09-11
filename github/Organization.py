@@ -14,10 +14,14 @@
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
 # Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
+# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,6 +54,7 @@ import github.Repository
 import github.Project
 import github.NamedUser
 
+import Consts
 
 class Organization(github.GithubObject.CompletableGithubObject):
     """
@@ -57,7 +62,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"id": self._id.value, "name": self._name.value})
+        return self.get__repr__({"login": self._login.value})
 
     @property
     def avatar_url(self):
@@ -791,6 +796,37 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/teams",
             None
+        )
+
+    def invite_user(self, user=github.GithubObject.NotSet, email=github.GithubObject.NotSet, role=github.GithubObject.NotSet, teams=github.GithubObject.NotSet):
+        """
+        :calls: `POST /orgs/:org/invitations <http://developer.github.com/v3/orgs/members>`_
+        :param user: :class:`github.NamedUser.NamedUser`
+        :param email: string
+        :param role: string
+        :param teams: array of :class:`github.Team.Team`
+        :rtype: None
+        """
+        assert user is github.GithubObject.NotSet or isinstance(user, github.NamedUser.NamedUser), user
+        assert email is github.GithubObject.NotSet or isinstance(email, (str, unicode)), email
+        assert (email is github.GithubObject.NotSet) ^ (user is github.GithubObject.NotSet), "specify only one of email or user"
+        parameters = {}
+        if user is not github.GithubObject.NotSet:
+            parameters["invitee_id"] = user.id
+        elif email is not github.GithubObject.NotSet:
+            parameters["email"] = email
+        if role is not github.GithubObject.NotSet:
+            assert isinstance(role, (str, unicode)), role
+            assert role in ['admin', 'direct_member', 'billing_manager']
+            parameters["role"] = role
+        if teams is not github.GithubObject.NotSet:
+            assert all(isinstance(team, github.Team.Team) for team in teams)
+            parameters["team_ids"] = [t.id for t in teams]
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/invitations",
+            headers={'Accept': Consts.mediaTypeOrganizationInvitationPreview},
+            input=parameters
         )
 
     def has_in_members(self, member):

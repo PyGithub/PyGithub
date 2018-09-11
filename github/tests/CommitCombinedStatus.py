@@ -34,7 +34,7 @@ import datetime
 class CommitCombinedStatus(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.combined_status = self.g.get_repo("edx/edx-platform").get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659").get_combined_status()
+        self.combined_status = self.g.get_repo("edx/edx-platform", lazy=True).get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659").get_combined_status()
 
     def testAttributes(self):
         self.assertEqual(self.combined_status.state, "success")
