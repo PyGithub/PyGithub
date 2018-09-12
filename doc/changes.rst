@@ -4,6 +4,11 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.2 (September 12, 2018)
+-----------------------------------
+
+* Restore ``RateLimit.rate`` attribute, raise deprecation warning instead (d92389be)
+
 Version 1.43.1 (September 11, 2018)
 -----------------------------------
 
