@@ -34,6 +34,23 @@ $ python scripts/add_attribute.py [class_name] [attribute_name] [attribute_type]
 $ python scripts/add_attribute.py Commit url string
 ```
 
+## Deprecation warning
+
+Before removing attributes/methods, consider adding deprecation warnings instead. The [Deprecated](https://github.com/tantale/deprecated) packages provides a handy decorator to add deprecation warnings with an optional reason.
+
+```python
+from deprecated import deprecated
+
+@property
+@deprecated
+def rate(self):
+   pass
+   
+@deprecated(reason="Deprecated in favor of the new branch protection")
+def get_protected_branch(self):
+   pass
+```
+
 ## Automated tests
 
 You can run the tests through `python -m github.tests`.
