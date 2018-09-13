@@ -35,13 +35,7 @@
 import github.GithubObject
 import github.PaginatedList
 
-import github.GitCommit
 import github.NamedUser
-import github.CommitStatus
-import github.CommitCombinedStatus
-import github.File
-import github.CommitStats
-import github.CommitComment
 
 import Consts
 
@@ -51,7 +45,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"state": self._state.value, "url": self._migrationUrl.value})
+        return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
     def migration_id(self):
@@ -81,7 +75,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         """
         :type: str
         """
-        self.update()
+        self._completeIfNotSet(self._guid)
         return self._state.value
 
     @property
@@ -133,6 +127,21 @@ class Migration(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    def get_latest_state(self):
+        """
+        :calls: `GET /user/migrations/:migration_id`_
+        :rtype: str
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+        self._useAttributes(data)
+        return self.state
 
     def get_archive_url(self):
         """
