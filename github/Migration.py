@@ -48,11 +48,11 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
-    def migration_id(self):
+    def id(self):
         """
         :type: int
         """
-        return self._migration_id.value
+        return self._id.value
 
     @property
     def owner(self):
@@ -185,7 +185,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
-        self._migration_id = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
         self._guid = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
@@ -198,7 +198,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:
-            self._migration_id = self._makeIntAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "guid" in attributes:

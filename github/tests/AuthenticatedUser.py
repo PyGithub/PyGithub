@@ -246,3 +246,9 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testAcceptInvitation(self):
         self.assertEqual(self.user.accept_invitation(4294886), None)
+
+    def testCreateMigration(self):
+        self.assertTrue(isinstance(self.user.create_migration(["sample-repo"]), github.Migration.Migration))
+
+    def testGetMigrations(self):
+        self.assertEqual(self.user.get_migrations().totalCount, 46)

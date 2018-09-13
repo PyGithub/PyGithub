@@ -913,7 +913,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Migration.Migration,
             self._requester,
-            "/org/" + self.login + "/migrations",
+            "/orgs/" + self.login + "/migrations",
             None,
             headers={
                 "Accept": Consts.mediaTypeMigrationPreview
