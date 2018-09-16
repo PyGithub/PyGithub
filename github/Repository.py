@@ -1247,9 +1247,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
-        assert allow_squash_merge is github.GithubObject.NotSet or (isinstance(allow_squash_merge, bool) and allow_squash_merge is True), allow_squash_merge
-        assert allow_merge_commit is github.GithubObject.NotSet or (isinstance(allow_merge_commit, bool) and allow_merge_commit is True), allow_merge_commit
-        assert allow_rebase_merge is github.GithubObject.NotSet or (isinstance(allow_rebase_merge, bool) and allow_rebase_merge is True), allow_rebase_merge
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         assert archived is github.GithubObject.NotSet or (isinstance(archived, bool) and archived is True), archived
         post_parameters = {
             "name": name,
