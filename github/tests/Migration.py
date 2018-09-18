@@ -75,8 +75,8 @@ class Migration(Framework.TestCase):
 	def testGetArchiveUrlWhenNotExported(self):
 		self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
 
-	def testGetLatestState(self):
-		self.assertEqual(self.migration.get_latest_state(), "exported")
+	def testGetStatus(self):
+		self.assertEqual(self.migration.get_status(), "exported")
 
 	def testGetArchiveUrlWhenExported(self):
 		self.assertEqual(self.migration.get_archive_url(), "https://github-cloud.s3.amazonaws.com/migration/25320/24575?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20180913%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180913T201100Z&X-Amz-Expires=300&X-Amz-Signature=a0aeb638facd0c78c1ed3ca86022eddbee91e5fe1bb48ee830f54b8b7b305026&X-Amz-SignedHeaders=host&actor_id=41840111&response-content-disposition=filename%3D608bceae-b790-11e8-8b43-4e3cb0dd56cc.tar.gz&response-content-type=application%2Fx-gzip")

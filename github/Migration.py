@@ -128,7 +128,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
-    def get_latest_state(self):
+    def get_status(self):
         """
         :calls: `GET /user/migrations/:migration_id`_
         :rtype: str
