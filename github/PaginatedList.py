@@ -155,7 +155,7 @@ class PaginatedList(PaginatedListBase):
                 headers=self.__headers
             )
             if 'link' not in headers:
-                self.__totalCount = len(data)
+                self.__totalCount = len(data) if data else 0
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
