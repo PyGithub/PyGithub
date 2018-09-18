@@ -51,6 +51,7 @@ import github.Plan
 import github.Team
 import github.Event
 import github.Repository
+import github.Project
 import github.NamedUser
 
 import Consts
@@ -668,6 +669,25 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def get_projects(self, state=github.GithubObject.NotSet):
+        """
+        :calls: `GET /orgs/:org/projects <https://developer.github.com/v3/projects/#list-organization-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        :param state: string
+        """
+        
+        url_parameters = dict()
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+            
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            url_parameters,
+            {"Accept": Consts.mediaTypeProjectsPreview}
+        )
+        
     def get_public_members(self):
         """
         :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/orgs/members>`_

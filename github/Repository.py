@@ -102,6 +102,7 @@ import github.PullRequest
 import github.RepositoryKey
 import github.NamedUser
 import github.Milestone
+import github.Project
 import github.Comparison
 import github.CommitComment
 import github.GitCommit
@@ -1246,9 +1247,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
-        assert allow_squash_merge is github.GithubObject.NotSet or (isinstance(allow_squash_merge, bool) and allow_squash_merge is True), allow_squash_merge
-        assert allow_merge_commit is github.GithubObject.NotSet or (isinstance(allow_merge_commit, bool) and allow_merge_commit is True), allow_merge_commit
-        assert allow_rebase_merge is github.GithubObject.NotSet or (isinstance(allow_rebase_merge, bool) and allow_rebase_merge is True), allow_rebase_merge
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         assert archived is github.GithubObject.NotSet or (isinstance(archived, bool) and archived is True), archived
         post_parameters = {
             "name": name,
@@ -1457,6 +1458,25 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def get_projects(self, state=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        :param state: string
+        """
+        
+        url_parameters = dict()
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+            
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            url_parameters,
+            {"Accept": Consts.mediaTypeProjectsPreview}
+        )
 
     def create_file(self, path, message, content,
                     branch=github.GithubObject.NotSet,
