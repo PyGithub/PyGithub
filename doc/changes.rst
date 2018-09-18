@@ -32,6 +32,9 @@ Version 1.43 (September 08, 2018)
 * Add support for required approving review count (#888) (ef16702)
 * Add ``Organization.invite_user`` (880)(eb80564)
 * Add support for search/graphql rate limit (fd8a036)
+
+  + Deprecated ``RateLimit.rate``
+  + Add `RateLimit.core <https://pygithub.readthedocs.io/en/latest/github_objects/RateLimit.html#github.RateLimit.RateLimit.core>`__, `RateLimit.search <https://pygithub.readthedocs.io/en/latest/github_objects/RateLimit.html#github.RateLimit.RateLimit.search>`__ and `RateLimit.graphql <https://pygithub.readthedocs.io/en/latest/github_objects/RateLimit.html#github.RateLimit.RateLimit.graphql>`__
 * Add Support search by topics (#893) (3ce0418)
 * Branch Protection API overhaul (#790) (171cc567)
 
