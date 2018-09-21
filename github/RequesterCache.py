@@ -1,6 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 from Consts import RES_ETAG
 import re
+
+# compatible with Python 2 *and* 3:
+ABC = ABCMeta('ABC', (object,), {'__slots__': ()})
 
 
 class CacheItem():
@@ -25,7 +28,6 @@ class RequesterCache(ABC):
             if etag:
                 return item(etag.group(), output, responseHeaders, url=url)
         return None
-
 
     @abstractmethod
     def insert(self, url, responseHeaders, output):
