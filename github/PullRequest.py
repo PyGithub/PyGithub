@@ -434,6 +434,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         post_parameters['event'] = 'COMMENT' if event == github.GithubObject.NotSet else event
         if comments is github.GithubObject.NotSet:
             post_parameters['comments'] = []
+        else:
+            post_parameters['comments'] = comments
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/reviews",
