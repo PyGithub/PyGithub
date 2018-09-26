@@ -71,6 +71,16 @@ import GithubException
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
+def no_overwriting_netrc_auth(req):
+    # Use .netrc only if 'Authorization' header is absent.
+    if 'Authorization' in req.headers:
+        return req
+    netrc = requests.utils.get_netrc_auth(req.url)
+    if not netrc:
+        return req
+    return requests.auth.HTTPBasicAuth(*netrc)(req)
+
+
 class RequestsResponse:
     # mimic the httplib response object
     def __init__(self, r):
@@ -96,6 +106,7 @@ class HTTPSRequestsConnectionClass(object):
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        self.session.auth = no_overwriting_netrc_auth
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -122,6 +133,7 @@ class HTTPRequestsConnectionClass(object):
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        self.session.auth = no_overwriting_netrc_auth
 
     def request(self, verb, url, input, headers):
         self.verb = verb
