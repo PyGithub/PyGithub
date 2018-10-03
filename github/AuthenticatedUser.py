@@ -14,12 +14,13 @@
 # Copyright 2016 E. Dunham <github@edunham.net>                                #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -703,16 +704,21 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_gists(self):
+    def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists <http://developer.github.com/v3/gists>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self._requester,
             "/gists",
-            None
+            url_parameters
         )
 
     def get_issues(self, filter=github.GithubObject.NotSet, state=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):

@@ -11,6 +11,7 @@
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -107,6 +108,7 @@ class NamedUser(Framework.TestCase):
 
     def testGetGists(self):
         self.assertListKeyEqual(self.user.get_gists(), lambda g: g.description, ["Gist created by PyGithub", "FairThreadPoolPool.cpp", "How to error 500 Github API v3, as requested by Rick (GitHub Staff)", "Cadfael: order of episodes in French DVD edition"])
+        self.assertListKeyEqual(self.user.get_gists(since=datetime.datetime(2012, 3, 1, 17, 0, 0)), lambda g: g.description, ["Gist created by PyGithub", "FairThreadPoolPool.cpp"])
 
     def testGetFollowers(self):
         self.assertListKeyEqual(self.user.get_followers(), lambda f: f.login, ["jnorthrup", "brugidou", "regisb", "walidk", "afzalkhan", "sdanzan", "vineus", "gturri", "fjardon", "cjuniet", "jardon-u", "kamaradclimber", "L42y"])

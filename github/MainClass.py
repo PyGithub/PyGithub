@@ -27,6 +27,7 @@
 # Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,6 +46,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+import datetime
 
 import urllib
 import pickle
@@ -334,16 +337,21 @@ class Github(object):
         )
         return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
-    def get_gists(self):
+    def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists/public <http://developer.github.com/v3/gists>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self.__requester,
             "/gists/public",
-            None
+            url_parameters
         )
 
     def search_repositories(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
