@@ -899,18 +899,37 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
+    def get_repos(self,
+                  visibility=github.GithubObject.NotSet,
+                  affiliation=github.GithubObject.NotSet,
+                  type=github.GithubObject.NotSet,
+                  sort=github.GithubObject.NotSet,
+                  direction=github.GithubObject.NotSet):
         """
-        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`_
+        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`
+        :param visibility: string
+        :param affiliation: string
         :param type: string
         :param sort: string
         :param direction: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of
+        :class:`github.Repository.Repository`
         """
-        assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert visibility is github.GithubObject.NotSet or \
+               isinstance(visibility, (str, unicode)), visibility
+        assert affiliation is github.GithubObject.NotSet or \
+               isinstance(affiliation, (str, unicode)), affiliation
+        assert type is github.GithubObject.NotSet or \
+               isinstance(type, (str, unicode)), type
+        assert sort is github.GithubObject.NotSet or \
+               isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or \
+               isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
+        if visibility is not github.GithubObject.NotSet:
+            url_parameters["visibility"] = visibility
+        if affiliation is not github.GithubObject.NotSet:
+            url_parameters["affiliation"] = affiliation
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
         if sort is not github.GithubObject.NotSet:
