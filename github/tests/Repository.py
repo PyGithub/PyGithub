@@ -642,6 +642,11 @@ class Repository(Framework.TestCase):
     def testReplaceTopics(self):
         self.repo.replace_topics(['github', 'testing'])
 
+    def testGetRepositoryWith301Redirect(self):
+        repo = self.g.get_repo("protoncoin/protoncoin")
+        self.assertEqual(repo.full_name, 'padima2/protoncoin')
+
+
 class LazyRepository(Framework.TestCase):
 
     def setUp(self):
