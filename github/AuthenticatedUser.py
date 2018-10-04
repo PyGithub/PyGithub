@@ -907,8 +907,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param type: string
         :param sort: string
         :param direction: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of
-        :class:`github.Repository.Repository`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert visibility is github.GithubObject.NotSet or isinstance(visibility, (str, unicode)), visibility
         assert affiliation is github.GithubObject.NotSet or isinstance(affiliation, (str, unicode)), affiliation
