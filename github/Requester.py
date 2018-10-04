@@ -411,9 +411,19 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
+            redirect_url = self.__permanentRedirectURL(responseHeaders['location'], cnx)
+            return self.__requestRaw(original_cnx, verb, redirect_url, requestHeaders, input)
 
         return status, responseHeaders, output
+
+    def __permanentRedirectURL(self, url, cnx):
+        # Strip http:// or https://
+        if cnx.protocol is not None and url.startswith("%s://" % (cnx.protocol)):
+            url = url.replace("%s://" % (cnx.protocol), "")
+        # Strip host
+        if cnx.host is not None and url.startswith(cnx.host):
+            new_url = url.replace(cnx.host, "")
+        return url
 
     def __authenticate(self, url, requestHeaders, parameters):
         if self.__clientId and self.__clientSecret and "client_id=" not in url:
