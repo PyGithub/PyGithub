@@ -29,8 +29,7 @@ Get list of open issues
     >>> for issue in open_issues:
     ...    print(issue.title)
     ...
-    How to get public events?
-	GithubException: 500 None when using get_issues
+	How to get public events?
 	get_repo crashes with UnicodeEncodeError if log level..
 	Prevent .netrc from overwriting Auth header
 
