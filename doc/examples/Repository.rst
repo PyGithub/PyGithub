@@ -29,9 +29,11 @@ Get list of open issues
     >>> for issue in open_issues:
     ...    print(issue)
     ...
-	How to get public events?
-	get_repo crashes with UnicodeEncodeError if log level..
-	Prevent .netrc from overwriting Auth header
+	Issue(title="How to get public events?", number=913)
+	Issue(title="Prevent .netrc from overwriting Auth header", number=910)
+	Issue(title="Cache fetch responses", number=901)
+	Issue(title="Is suspended_users for github enterprise implemented in NamedUser?", number=900)
+	Issue(title="Adding migration api wrapper", number=899)
 
 Get all the labels of the repository
 ------------------------------------
@@ -39,11 +41,11 @@ Get all the labels of the repository
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> labels = repo.get_labels(state='open')
+    >>> labels = repo.get_labels()
     >>> for label in labels:
     ...    print(label)
     ...
-    Hacktoberfest
-    WIP
-    bug
-    documentation
+    Label(name="Hacktoberfest")
+    Label(name="WIP")
+    Label(name="bug")
+    Label(name="documentation")
