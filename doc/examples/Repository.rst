@@ -27,7 +27,7 @@ Get list of open issues
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> open_issues = repo.get_issues(state='open')
     >>> for issue in open_issues:
-    ...    print(issue.title)
+    ...    print(issue)
     ...
 	How to get public events?
 	get_repo crashes with UnicodeEncodeError if log level..
@@ -41,7 +41,7 @@ Get all the labels of the repository
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> labels = repo.get_labels(state='open')
     >>> for label in labels:
-    ...    print(label.name)
+    ...    print(label)
     ...
     Hacktoberfest
     WIP
