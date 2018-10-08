@@ -338,6 +338,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._subscriptions_url.value
 
     @property
+    def suspended_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._suspended_at)
+        return self._suspended_at.value
+
+    @property
     def total_private_repos(self):
         """
         :type: integer
@@ -609,6 +617,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._site_admin = github.GithubObject.NotSet
         self._starred_url = github.GithubObject.NotSet
         self._subscriptions_url = github.GithubObject.NotSet
+        self._suspended_at = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
@@ -683,6 +692,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
             self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
+        if "suspended_at" in attributes:  # pragma no branch
+            self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "type" in attributes:  # pragma no branch
