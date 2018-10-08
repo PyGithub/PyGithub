@@ -7,3 +7,5 @@ Examples
   examples/Repository
   examples/Commit
   examples/PullRequest
+  examples/Issue
+  examples/Milestone
