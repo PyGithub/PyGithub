@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = ">=2.14.0"
+PyJWT = "*"
+Sphinx = "<1.8"
+sphinx_rtd_theme = "<0.5"
+deprecated = "*"
+
+[dev-packages]
