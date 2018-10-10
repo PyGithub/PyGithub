@@ -165,8 +165,17 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def text_matches(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
+
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
+        self._text_matches = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
         self._download_url = github.GithubObject.NotSet
         self._git_url = github.GithubObject.NotSet
@@ -206,3 +215,5 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
