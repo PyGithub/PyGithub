@@ -459,12 +459,13 @@ class Github(object):
             url_parameters
         )
 
-    def search_code(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
+    def search_code(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, highlight=False, **qualifiers):
         """
         :calls: `GET /search/code <http://developer.github.com/v3/search>`_
         :param query: string
         :param sort: string ('indexed')
         :param order: string ('asc', 'desc')
+        :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ContentFile.ContentFile`
         """
@@ -487,13 +488,15 @@ class Github(object):
         url_parameters["q"] = ' '.join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
 
+        headers = {"Accept": Consts.highLightSearchPreview} if highlight else None
+
         return github.PaginatedList.PaginatedList(
             github.ContentFile.ContentFile,
             self.__requester,
             "/search/code",
-            url_parameters
+            url_parameters,
+            headers=headers
         )
-
 
     def search_commits(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
         """
