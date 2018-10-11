@@ -123,3 +123,14 @@ class SpecificExceptions(Framework.TestCase):
                 g.get_user("jacquev6")
 
         self.assertRaises(github.RateLimitExceededException, exceed)
+
+    def testAuthenticatedRateLimitExceeded(self):
+        Framework.TestCase.setUp(self)
+
+        def exceed():
+            search_results = self.g.search_code("Tuuu+Nya language:php", sort="indexed", order="desc")
+
+            for i in range(100):
+                search_results.get_page(i)
+
+        self.assertRaises(github.RateLimitExceededException, exceed)
