@@ -297,6 +297,8 @@ class Requester:
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
+        elif status in range(500, 600):
+            cls = GithubException.UnhandledServerException
         else:
             cls = GithubException.GithubException
         return cls(status, output)

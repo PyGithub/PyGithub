@@ -86,6 +86,12 @@ class RateLimitExceededException(GithubException):
     """
 
 
+class UnhandledServerException(GithubException):
+    """
+    Exception raised when a server unexpectedly raises a 5XX error
+    """
+
+
 class BadAttributeException(Exception):
     """
     Exception raised when Github returns an attribute with the wrong type.
