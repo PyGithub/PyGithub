@@ -15,3 +15,14 @@ Create commit status check
         description="FooCI is building",
         context="ci/FooCI"
     )
+
+Get commit date
+--------------------------
+
+.. code-block:: python
+
+    >>> commit = repo.get_commit(sha=sha)
+    >>> print(commit.commit.author.date)
+    2018-10-11 03:04:52
+    >>> print(commit.commit.committer.date)
+    2018-10-11 03:04:52
