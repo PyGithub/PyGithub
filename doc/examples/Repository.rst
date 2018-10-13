@@ -78,9 +78,16 @@ URL to send the payload to.
     HOST = ""
     ENDPOINT = ""
 
+    config = {
+        "url": "{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT),
+        "content_type": "x-www-form-urlencoded"
+    }
+
+    events = ["push", "pull_request"]
+
     g = Github(USERNAME, PASSWORD)
     repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
-    repo.subscribe_to_hub(EVENT, "{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT))
+    repo.create_hook("my-webhook", config, events, active=True)
 
     @app.route("/{endpoint}".format(endpoint=ENDPOINT), methods=['POST'])
     def recieve_event():
