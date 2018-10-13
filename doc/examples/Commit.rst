@@ -21,7 +21,8 @@ Get commit date
 
 .. code-block:: python
 
-    # Datetime is stored in the GitAuthor objects in the commit's GitCommit.
-    commit = repo.get_commit(sha=sha)
-    commit.commit.author.date
-    commit.commit.committer.date
+    >>> commit = repo.get_commit(sha=sha)
+    >>> print(commit.commit.author.date)
+    2018-10-11 03:04:52
+    >>> print(commit.commit.committer.date)
+    2018-10-11 03:04:52
