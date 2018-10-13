@@ -67,6 +67,9 @@ mediaTypeReactionsPreview = "application/vnd.github.squirrel-girl-preview"
 # https://developer.github.com/changes/2016-09-14-Integrations-Early-Access/
 mediaTypeIntegrationPreview = "application/vnd.github.machine-man-preview+json"
 
+# https://developer.github.com/changes/2016-09-14-projects-api/
+mediaTypeProjectsPreview = "application/vnd.github.inertia-preview+json"
+
 # https://developer.github.com/changes/2017-01-05-commit-search-api/
 mediaTypeCommitSearchPreview = "application/vnd.github.cloak-preview"
 
@@ -90,3 +93,6 @@ mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-pre
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
+
+# https://developer.github.com/v3/search/#highlighting-code-search-results-1
+highLightSearchPreview = "application/vnd.github.v3.text-match+json"

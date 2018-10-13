@@ -45,7 +45,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"number": self._number.value})
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
     def closed_issues(self):

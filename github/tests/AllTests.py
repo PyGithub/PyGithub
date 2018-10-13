@@ -73,6 +73,7 @@ from NamedUser import *
 from Markdown import *
 from OrganizationHasInMembers import *
 from Organization import *
+from Project import *
 from PullRequest import *
 from PullRequestComment import *
 from PullRequestReview import *

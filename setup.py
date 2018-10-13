@@ -44,7 +44,7 @@
 import setuptools
 import textwrap
 
-version = "1.43"
+version = "1.43.2"
 
 
 if __name__ == "__main__":
@@ -106,7 +106,8 @@ if __name__ == "__main__":
         python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
         install_requires=[
             "requests>=2.14.0",
-            "pyjwt"
+            "pyjwt",
+            "Deprecated"
         ],
         extras_require = {
             "integrations": ["cryptography"]

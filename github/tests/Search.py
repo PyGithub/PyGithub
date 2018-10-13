@@ -78,6 +78,10 @@ class Search(Framework.TestCase):
         else:
             self.assertEqual(files[0].decoded_content[:30], "https\nGET\napi.github.com\nNone\n")
 
+    def testSearchHighlightingCode(self):
+        files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6", highlight=True)
+        self.assertTrue(files[0].text_matches)
+
     def testUrlquotingOfQualifiers(self):
         # Example taken from #236
         issues = self.g.search_issues("repo:saltstack/salt-api type:Issues", updated=">2014-03-04T18:28:11Z")
