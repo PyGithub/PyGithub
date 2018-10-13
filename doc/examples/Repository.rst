@@ -56,11 +56,9 @@ Subscribe to Repository Events
 To receive a continuous stream of events, one can set up a Flask app to listen for
 events at a given repository.
 
-The below code sets up a listener which requests subscriptions to an event. Using
-'pull_request' for the EVENT attribute, any time a PR is opened, closed, or merged
-will result in Github sending a POST containing a payload with information about the
-PR and its state. The second string provided to the subscription method is the callback
-URL to send the payload to.
+The below code sets up a listener which creates and utilizes a webhook. Using
+'pull_request' and 'push' for the EVENT attributes, any time a PR is opened, closed, or merged, or a commit is pushed,
+Github sends a POST containing a payload with information about the PR/push and its state.
 
 .. code-block:: python
 
