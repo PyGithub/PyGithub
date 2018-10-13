@@ -49,3 +49,59 @@ Get all the labels of the repository
     Label(name="WIP")
     Label(name="bug")
     Label(name="documentation")
+
+Subscribe to Repository Events
+------------------------------------
+
+To receive a continuous stream of events, one can set up a Flask app to listen for
+events at a given repository.
+
+The below code sets up a listener which requests subscriptions to an event. Using
+'pull_request' for the EVENT attribute, any time a PR is opened, closed, or merged
+will result in Github sending a POST containing a payload with information about the
+PR and its state. The second string provided to the subscription method is the callback
+URL to send the payload to.
+
+.. code-block:: python
+
+    from flask import Flask, request, jsonify
+    from github import Github
+    import json
+
+    app = Flask(__name__)
+
+    USERNAME = ""
+    PASSWORD = ""
+    OWNER = ""
+    REPO_NAME = ""
+    EVENT = ""  # list can be found at https://developer.github.com/v3/issues/events/
+    HOST = ""
+    ENDPOINT = ""
+
+    g = Github(USERNAME, PASSWORD)
+    repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
+    repo.subscribe_to_hub(EVENT, "{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT))
+
+    @app.route("/{endpoint}".format(endpoint=ENDPOINT), methods=['POST'])
+    def recieve_event():
+        data = request.form
+        payload = json.loads(data['payload'])
+        return jsonify(success=True)
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=80)
+
+
+Assuming we get to the successful return statement, this
+is some of the data we could expect to see in the payload for a Pull Request:
+
+.. code-block:: python
+
+    >>> payload['action']
+    'closed'
+    >>> payload['number']
+    1
+    >>> payload['pull_request']['id']
+    222619227
+    >>> payload['pull_request']['commits']
+    2
