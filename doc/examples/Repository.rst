@@ -138,3 +138,12 @@ Delete a file in the repository
     >>> repo.delete_file(contents.path, "remove test", contents.sha, branch="test")
     {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
 
+=======
+======
+Mark the notifications of the repository as read
+------------------------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> repo.mark_notifications_has_read()
