@@ -1044,6 +1044,22 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return status == 200
 
+    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+        """
+        :calls: `PUT /notifications <https://developer.github.com/enterprise/11.10.340/v3/activity/notifications>`_
+        :param last_read_at: datetime
+        """
+        assert isinstance(last_read_at, datetime.datetime)
+        put_parameters = {
+            "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            "/notifications",
+            input=put_parameters
+        )
+
     def remove_from_emails(self, *emails):
         """
         :calls: `DELETE /user/emails <http://developer.github.com/v3/users/emails>`_
