@@ -29,8 +29,6 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
-
 import github.GithubObject
 
 import github.Repository
