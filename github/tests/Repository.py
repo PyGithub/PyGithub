@@ -517,7 +517,7 @@ class Repository(Framework.TestCase):
 
     def testGetContentDir(self):
 
-        contents = self.repo.get_contents("/")
+        contents = self.repo.get_contents("")
         self.assertTrue(isinstance(contents, list))
         self.assertEquals(len(contents), 14)
 
