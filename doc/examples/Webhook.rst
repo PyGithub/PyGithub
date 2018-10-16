@@ -63,6 +63,13 @@ on working with Webhooks. A list of all applicable event types for Webhooks can 
 
 
     def create_webhook():
+        """ Creates a webhook for the specified repository.
+
+        This is a programatic approach to creating webhooks with PyGithub's API. If you wish, this can be done
+        manually at your repository's page on Github in the "Settings" section. There is a option there to work with
+        and confgurd Webhooks.
+        """
+
         USERNAME = ""
         PASSWORD = ""
         OWNER = ""
