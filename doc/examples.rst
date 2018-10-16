@@ -9,3 +9,4 @@ Examples
   examples/PullRequest
   examples/Issue
   examples/Milestone
+  examples/Webhook
