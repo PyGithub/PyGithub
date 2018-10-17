@@ -16,7 +16,7 @@ Get count of stars
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> repo.stargrazers_count
+    >>> repo.stargazers_count
     2086
 
 Get list of open issues
