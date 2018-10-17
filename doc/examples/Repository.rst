@@ -27,7 +27,7 @@ Get list of open issues
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> open_issues = repo.get_issues(state='open')
     >>> for issue in open_issues:
-    ...    print(issue)
+    ...     print(issue)
     ...
     Issue(title="How to get public events?", number=913)
     Issue(title="Prevent .netrc from overwriting Auth header", number=910)
@@ -43,22 +43,22 @@ Get all the labels of the repository
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> labels = repo.get_labels()
     >>> for label in labels:
-    ...    print(label)
+    ...     print(label)
     ...
     Label(name="Hacktoberfest")
     Label(name="WIP")
     Label(name="bug")
     Label(name="documentation")
 
-Get all the contents of a directory of the repository
------------------------------------------------------
+Get all of the contents of the root directory of the repository
+---------------------------------------------------------------
 
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> contents = repo.get_contents("")
     >>> for content_file in contents:
-    ...   print(content_file)
+    ...     print(content_file)
     ...
     ContentFile(path=".github")
     ContentFile(path=".gitignore")
@@ -76,19 +76,19 @@ Get all the contents of a directory of the repository
     ContentFile(path="scripts")
     ContentFile(path="setup.py")
 
-Get all the contents of the repository
---------------------------------------
+Get all of the contents of the repository recursively
+-----------------------------------------------------
 
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> contents = repo.get_contents("")
     >>> while len(contents) > 1:
-    ...   file_content = contents.pop(0)
-    ...   if file_content.type == "dir":
-    ...     contents.extend(repo.get_contents(file_content.path))
-    ...   else:
-    ...     print(file_content)
+    ...     file_content = contents.pop(0)
+    ...     if file_content.type == "dir":
+    ...         contents.extend(repo.get_contents(file_content.path))
+    ...     else:
+    ...         print(file_content)
     ...
     ContentFile(path=".gitignore")
     ContentFile(path=".travis.yml")
