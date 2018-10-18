@@ -146,4 +146,4 @@ Mark the notifications of the repository as read
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> repo.mark_notifications_has_read()
+    >>> repo.mark_notifications_as_read()
