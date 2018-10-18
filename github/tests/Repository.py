@@ -500,6 +500,10 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
+    def testMarkNotificationsAsRead(self):
+        repo = self.g.get_user().get_repo("PyGithub")
+        repo.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 19, 43, 0))
+
     def testAssignees(self):
         lyloa = self.g.get_user("Lyloa")
         jacquev6 = self.g.get_user("jacquev6")
