@@ -71,6 +71,7 @@ from Label import *
 from Milestone import *
 from NamedUser import *
 from Markdown import *
+from Notification import *
 from OrganizationHasInMembers import *
 from Organization import *
 from Project import *

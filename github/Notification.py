@@ -115,6 +115,15 @@ class Notification(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def mark_as_read(self):
+        """
+        :calls: `PATCH /notifications/threads/:id <https://developer.github.com/v3/activity/notifications/>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._last_read_at = github.GithubObject.NotSet

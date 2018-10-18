@@ -2473,6 +2473,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             for element in data["issues"]
         ]
 
+    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+        """
+        :calls: `PUT /repos/:owner/:repo/notifications <https://developer.github.com/v3/activity/notifications>`_
+        :param last_read_at: datetime
+        """
+        assert isinstance(last_read_at, datetime.datetime)
+        put_parameters = {
+            "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/notifications",
+            input=put_parameters
+        )
+
     def merge(self, base, head, commit_message=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/merges <http://developer.github.com/v3/repos/merging>`_
