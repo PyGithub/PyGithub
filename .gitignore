@@ -44,3 +44,4 @@
 /gh-pages/
 /doc/doctrees/
 .vscode*
+.venv
