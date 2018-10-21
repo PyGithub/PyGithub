@@ -92,3 +92,6 @@ mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-pre
 
 # https://developer.github.com/v3/search/#highlighting-code-search-results-1
 highLightSearchPreview = "application/vnd.github.v3.text-match+json"
+
+# https://developer.github.com/changes/2018-02-22-protected-branches-required-signatures/
+signaturesProtectedBranchesPreview = "application/vnd.github.zzzax-preview+json"

@@ -371,3 +371,34 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE",
             self.protection_url + "/restrictions"
         )
+
+    def get_required_signatures(self):
+        """
+        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.protection_url + "/required_signatures",
+            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+        )
+        return data["enabled"]
+
+    def add_required_signatures(self):
+        """
+        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.protection_url + "/required_signatures",
+            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+        )
+
+    def remove_required_signatures(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.protection_url + "/required_signatures",
+            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+        )
