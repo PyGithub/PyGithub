@@ -60,6 +60,7 @@
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1340,16 +1341,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_collaborators(self):
+    def get_collaborators(self, affiliation=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/collaborators <http://developer.github.com/v3/repos/collaborators>`_
+        :param affiliation: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
+
+        url_parameters = dict()
+        allowed_affiliations = ['outside', 'direct', 'all']
+        if affiliation is not github.GithubObject.NotSet:
+            assert isinstance(affiliation, str), affiliation
+            assert affiliation in allowed_affiliations, \
+                'Affiliation can be one of ' + ', '.join(allowed_affiliations)
+            url_parameters['affiliation'] = affiliation
+
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/collaborators",
-            None
+            url_parameters
         )
 
     def get_comment(self, id):

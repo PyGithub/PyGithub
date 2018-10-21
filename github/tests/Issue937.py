@@ -1,14 +1,8 @@
+# -*- coding: utf-8 -*-
+
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Nic Dahlquist <nic@snapchat.com>                              #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
-# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,21 +21,18 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import Framework
 
-*.pyc
-.eggs/
-.python-version
+import github
 
-/GithubCredentials.py
-/scripts/TwitterCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/.idea
-/developer.github.com/
-/gh-pages/
-/doc/doctrees/
-.vscode*
-.venv
+class Issue937(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.user = self.g.get_user()
+        self.repo = self.user.get_repo("PyGithub")
+
+    def testCollaboratorsAffiliation(self):
+        collaborators = self.repo.get_collaborators(affiliation='direct')
+        self.assertListKeyEqual(collaborators, lambda u: u.login, ["hegde5"])
+        with self.assertRaises(AssertionError):
+            self.repo.get_collaborators(affiliation='invalid_option')
