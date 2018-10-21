@@ -20,6 +20,7 @@
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -120,3 +121,4 @@ from Issue216 import *
 from Issue278 import *
 from Issue494 import *
 from Issue572 import *
+from Issue937 import *

@@ -60,6 +60,7 @@
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
