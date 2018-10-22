@@ -188,3 +188,13 @@ class Branch(Framework.TestCase):
                 u'message': u'Push restrictions not enabled'
             }
         )
+
+    def testGetRequiredSignatures(self):
+        required_signature = self.protected_branch.get_required_signatures()
+        assert required_signature
+
+    def testRemoveRequiredSignatures(self):
+        self.protected_branch.remove_required_signatures()
+
+    def testAddRequiredSignatures(self):
+        self.protected_branch.add_required_signatures()
