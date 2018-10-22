@@ -309,7 +309,7 @@ class Requester:
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
             try:
                 return json.loads(data)
-            except ValueError, e:
+            except ValueError:
                 return {'data': data}
 
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):

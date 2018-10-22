@@ -94,6 +94,7 @@ import github.ContentFile
 import github.Label
 import github.GitBlob
 import github.Organization
+import github.GithubException
 import github.GitRef
 import github.GitRelease
 import github.GitReleaseAsset
@@ -1446,28 +1447,51 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         return self.get_file_contents(path, ref)
 
-    def get_file_contents(self, path, ref=github.GithubObject.NotSet):
+    def get_file_contents(self, path, ref=github.GithubObject.NotSet, if_none_match=None, if_modified_since=None):
         """
         :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
         :param path: string
         :param ref: string
+        :type if_none_match: string
+        :param if_none_match: Parameter corresponding to the `etag` property /
+               `ETag` header
+        :type if_modified_since: datetime.datetime or string
+        :param if_modified_since: Parameter corresponding to the `last_modified`
+               property / `Last-Modified` header.  If specified as a string,
+               passed verbatim in the request.  If specified as a
+               `datetime.datetime`, it is assumed to be in GMT.
         :rtype: :class:`github.ContentFile.ContentFile`
         """
         assert isinstance(path, (str, unicode)), path
         assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert if_none_match is None or isinstance(if_none_match, str), if_none_match
+        assert if_modified_since is None or isinstance(if_modified_since, (str, datetime.datetime)), if_modified_since
+        assert if_modified_since is None or isinstance(if_modified_since, str) or if_modified_since.utcoffset in (datetime.timedelta(0), None), 'if_modified_since must be GMT/UTC or naive, not %r' % if_modified_since
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
+
+        conditionalRequestHeader = dict()
+        if if_none_match is not None:
+            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = if_none_match
+        if if_modified_since is not None:
+            if isinstance(if_modified_since, datetime.datetime):
+                if_modified_since = if_modified_since.strftime('%a, %d %b %Y %H:%M:%S GMT')
+            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = if_modified_since
+
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/contents/" + urllib.quote(path),
-            parameters=url_parameters
+            parameters=url_parameters,
+            headers=conditionalRequestHeader
         )
         if isinstance(data, list):
             return [
                 github.ContentFile.ContentFile(self._requester, headers, item, completed=False)
                 for item in data
             ]
+        if data is None and headers['status'].startswith('304 '):
+            raise github.GithubException.NotModifiedException('This object has not been modified and a 304-eligible header was sent', data=headers)
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_projects(self, state=github.GithubObject.NotSet):

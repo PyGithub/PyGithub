@@ -121,3 +121,9 @@ class TwoFactorException(GithubException):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
     """
+
+
+class NotModifiedException(GithubException):
+    """
+    Exception raised when Github returns a "304 Not Modified" response for a request
+    """
