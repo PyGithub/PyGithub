@@ -123,3 +123,12 @@ class SpecificExceptions(Framework.TestCase):
                 g.get_user("jacquev6")
 
         self.assertRaises(github.RateLimitExceededException, exceed)
+
+    def testAuthenticatedRateLimitExceeded(self):
+
+        def exceed():
+            for i in range(100):
+                res = self.g.search_code("jacquev6")
+                res.get_page(0)
+
+        self.assertRaises(github.RateLimitExceededException, exceed)
