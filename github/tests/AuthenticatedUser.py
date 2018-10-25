@@ -257,3 +257,11 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetMigrations(self):
         self.assertEqual(self.user.get_migrations().totalCount, 46)
+
+    def testAddRepositoryToInstallation(self):
+        gitflow = self.g.get_user("nvie").get_repo("gitflow")
+        self.assertTrue(self.user.add_repository_to_installation(gitflow, 12345))
+
+    def testRemoveRepositoryFromInstallation(self):
+        gitflow = self.g.get_user("nvie").get_repo("gitflow")
+        self.assertTrue(self.user.remove_repository_from_installation(gitflow, 12345))

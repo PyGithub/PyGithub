@@ -358,6 +358,22 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def add_repository_to_installation(self, repository, installation_id):
+        """
+        :calls: `PUT /user/installations/:installation_id/repositories/:repository_id <https://developer.github.com/v3/apps/installations>`_
+        :param repository: :class:`github.Repository.Repository`
+        :param installation_id: int
+        :rtype: bool
+        """
+        assert isinstance(repository, github.Repository.Repository), repository
+        assert isinstance(installation_id, int), installation_id
+        status, headers, data = self._requester.requestJson(
+            "PUT",
+            "/user/installations/{}/repositories/{}".format(installation_id, repository.id),
+            headers={"Accept": Consts.mediaTypeIntegrationPreview},
+        )
+        return status == 204
+
     def add_to_emails(self, *emails):
         """
         :calls: `POST /user/emails <http://developer.github.com/v3/users/emails>`_
@@ -1122,6 +1138,22 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "DELETE",
             "/repos/" + watched._identity + "/subscription"
         )
+
+    def remove_repository_from_installation(self, repository, installation_id):
+        """
+        :calls: `DELETE /user/installations/:installation_id/repositories/:repository_id <https://developer.github.com/v3/apps/installations>`_
+        :param repository: :class:`github.Repository.Repository`
+        :param installation_id: int
+        :rtype: bool
+        """
+        assert isinstance(repository, github.Repository.Repository), repository
+        assert isinstance(installation_id, int), installation_id
+        status, headers, data = self._requester.requestJson(
+            "DELETE",
+            "/user/installations/{}/repositories/{}".format(installation_id, repository.id),
+            headers={"Accept": Consts.mediaTypeIntegrationPreview},
+        )
+        return status == 204
 
     def accept_invitation(self, invitation):
         """
