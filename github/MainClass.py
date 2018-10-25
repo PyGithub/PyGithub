@@ -186,6 +186,20 @@ class Github(object):
         """
         return self.__requester.oauth_scopes
 
+    def find_organization_installation(self, organization_name):
+        """
+        :calls: `GET /orgs/:org/installation <https://developer.github.com/v3/apps/>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert organization_name is None or isinstance(organization_name, (str, unicode)), organization_name
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/orgs/{}/installation".format(organization_name),
+            headers={"Accept": Consts.mediaTypeIntegrationPreview},
+        )
+        return github.Installation.Installation(self.__requester, headers, data, completed=True)
+
     def get_license(self, key=github.GithubObject.NotSet):
         """
         :calls: `GET /license/:license <https://developer.github.com/v3/licenses/#get-an-individual-license>`_
