@@ -214,10 +214,12 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
+    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
         self._initializeDebugFeature()
 
-        if password is not None:
+        if jwt is not None:
+            self.__authorizationHeader = "Bearer " + jwt
+        elif password is not None:
             login = login_or_token
             if atLeastPython3:
                 self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
@@ -469,6 +471,8 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
+                elif requestHeaders["Authorization"].startswith("Bearer"):
+                    requestHeaders["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
                     requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))

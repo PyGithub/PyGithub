@@ -80,6 +80,8 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "token private_token_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
+        elif headers["Authorization"].startswith("Bearer "):
+            headers["Authorization"] = "Bearer jwt_removed"
 
 
 class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
@@ -241,6 +243,7 @@ class BasicTestCase(unittest.TestCase):
             self.oauth_token = "oauth_token"
             self.client_id = "client_id"
             self.client_secret = "client_secret"
+            self.jwt = "jwt"
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
