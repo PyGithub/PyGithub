@@ -287,10 +287,10 @@ class Requester:
         return cnx
 
     def __createException(self, status, headers, output):
-        if status == 401 and output.get("message") == "Bad credentials":
-            cls = GithubException.BadCredentialsException
-        elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
+        if status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+        elif status == 401:
+            cls = GithubException.BadCredentialsException
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
