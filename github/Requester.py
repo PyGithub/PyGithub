@@ -217,9 +217,7 @@ class Requester:
     def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
         self._initializeDebugFeature()
 
-        if jwt is not None:
-            self.__authorizationHeader = "Bearer " + jwt
-        elif password is not None:
+        if password is not None:
             login = login_or_token
             if atLeastPython3:
                 self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
@@ -228,6 +226,8 @@ class Requester:
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
+        elif jwt is not None:
+            self.__authorizationHeader = "Bearer " + jwt
         else:
             self.__authorizationHeader = None
 
