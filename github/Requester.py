@@ -214,7 +214,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
+    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -226,6 +226,8 @@ class Requester:
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
+        elif jwt is not None:
+            self.__authorizationHeader = "Bearer " + jwt
         else:
             self.__authorizationHeader = None
 
@@ -469,6 +471,8 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
+                elif requestHeaders["Authorization"].startswith("Bearer"):
+                    requestHeaders["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
                     requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))

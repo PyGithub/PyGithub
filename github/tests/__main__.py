@@ -44,6 +44,10 @@ def main(argv):
         github.tests.Framework.activateTokenAuthMode()
         argv = [arg for arg in argv if arg != "--auth_with_token"]
 
+    if "--auth_with_jwt" in argv:
+        github.tests.Framework.activateJWTAuthMode()
+        argv = [arg for arg in argv if arg != "--auth_with_jwt"]
+
     unittest.main(module=github.tests.AllTests, argv=argv)
 
 

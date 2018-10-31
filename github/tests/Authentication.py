@@ -45,7 +45,11 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(self.oauth_token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
-    # Warning: I don't have a scret key, so the requests for this test are forged
+    def testJWTAuthentication(self):
+        g = github.Github(jwt=self.jwt)
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    # Warning: I don't have a secret key, so the requests for this test are forged
     def testSecretKeyAuthentication(self):
         g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
         self.assertListKeyEqual(g.get_organization("BeaverSoftware").get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])

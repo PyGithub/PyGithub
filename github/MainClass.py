@@ -94,7 +94,7 @@ class Github(object):
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True):
+    def __init__(self, login_or_token=None, password=None, jwt=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True):
         """
         :param login_or_token: string
         :param password: string
@@ -109,13 +109,14 @@ class Github(object):
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
         assert password is None or isinstance(password, (str, unicode)), password
+        assert jwt is None or isinstance(jwt, (str, unicode)), jwt
         assert isinstance(base_url, (str, unicode)), base_url
         assert isinstance(timeout, (int, long)), timeout
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify)
+        self.__requester = Requester(login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
