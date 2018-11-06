@@ -100,6 +100,9 @@ class GithubObject(object):
     @property
     def raw_data(self):
         """
+        Raw data of this object as a dictionary. 
+        Pass this value to ``json.dumps`` to convert it into json.
+
         :type: dict
         """
         self._completeIfNeeded()
@@ -108,6 +111,8 @@ class GithubObject(object):
     @property
     def raw_headers(self):
         """
+        Raw headers of this object as a dictionary.
+
         :type: dict
         """
         self._completeIfNeeded()
