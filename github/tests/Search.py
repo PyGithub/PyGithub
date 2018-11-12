@@ -62,8 +62,8 @@ class Search(Framework.TestCase):
         self.assertEqual(commits.totalCount, 3)
 
     def testSearchTopics(self):
-        repos = self.g.search_topics("python", repositories=">950")
-        self.assertListKeyBegin(repos, lambda r: r.name, [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"])
+        topics = self.g.search_topics("python", repositories=">950")
+        self.assertListKeyBegin(topics, lambda r: r.name, [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"])
 
     def testPaginateSearchTopics(self):
         repos = self.g.search_topics("python", repositories=">950")
