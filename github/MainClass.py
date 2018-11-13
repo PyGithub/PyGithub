@@ -66,6 +66,7 @@ import Repository
 import Installation
 import Legacy
 import License
+import Topic
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
@@ -542,7 +543,7 @@ class Github(object):
         :calls: `GET /search/topics <http://developer.github.com/v3/search>`_
         :param query: string
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Topic.Topic`
         """
         assert isinstance(query, (str, unicode)), query
         url_parameters = dict()
@@ -558,7 +559,7 @@ class Github(object):
         assert url_parameters["q"], "need at least one qualifier"
 
         return github.PaginatedList.PaginatedList(
-            github.Repository.Repository,
+            github.Topic.Topic,
             self.__requester,
             "/search/topics",
             url_parameters,
