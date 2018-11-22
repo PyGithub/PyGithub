@@ -53,6 +53,10 @@ class Search(Framework.TestCase):
         repos = self.g.search_repositories("github", sort="stars", order="desc", language="Python")
         self.assertListKeyBegin(repos, lambda r: r.full_name, [u'kennethreitz/legit', u'RuudBurger/CouchPotatoV1', u'gelstudios/gitfiti', u'gpjt/webgl-lessons', u'jacquev6/PyGithub', u'aaasen/github_globe', u'hmason/gitmarks', u'dnerdy/factory_boy', u'binaryage/drydrop', u'bgreenlee/sublime-github', u'karan/HackerNewsAPI', u'mfenniak/pyPdf', u'skazhy/github-decorator', u'llvmpy/llvmpy', u'lexrupy/gmate', u'ask/python-github2', u'audreyr/cookiecutter-pypackage', u'tabo/django-treebeard', u'dbr/tvdb_api', u'jchris/couchapp', u'joeyespo/grip', u'nigelsmall/py2neo', u'ask/chishop', u'sigmavirus24/github3.py', u'jsmits/github-cli', u'lincolnloop/django-layout', u'amccloud/django-project-skel', u'Stiivi/brewery', u'webpy/webpy.github.com', u'dustin/py-github', u'logsol/Github-Auto-Deploy', u'cloudkick/libcloud', u'berkerpeksag/github-badge', u'bitprophet/ssh', u'azavea/OpenTreeMap'])
 
+    def testSearchReposWithNoResults(self):
+        repos = self.g.search_repositories("doesnotexist")
+        self.assertEqual(repos.totalCount, 0)
+
     def testSearchIssues(self):
         issues = self.g.search_issues("compile", sort="comments", order="desc", language="C++")
         self.assertListKeyBegin(issues, lambda i: i.id, [12068673, 23250111, 14371957, 9423897, 24277400, 2408877, 11338741, 13980502, 27697165, 23102422])
@@ -67,7 +71,7 @@ class Search(Framework.TestCase):
 
     def testPaginateSearchTopics(self):
         repos = self.g.search_topics("python", repositories=">950")
-        self.assertEqual(repos.totalCount, 3)
+        self.assertEqual(repos.totalCount, 6)
 
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
