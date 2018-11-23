@@ -1209,6 +1209,34 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
 
+    def transfer(self, new_owner, team_ids=None):
+        """
+        Transfer repository ownership
+
+        :call: `POST /repos/:owner/:repo/transfer <https://developer.github.com/v3/repos/#transfer-a-repository>`
+        :param new_owner: The username or organization name the repository will be transferred to.
+        :type new_owner: str
+        :param team_ids: ID of the team or teams to add to the repository. Teams can only be added to
+        organization-owned repositories.
+        :type team_ids: str list
+        :rtype: `github.SourceImport.SourceImport`
+        """
+        assert isinstance(new_owner, (str, unicode)), new_owner
+        if team_ids:
+            assert isinstance(team_ids, list), team_ids
+        post_parameter = {
+            'new_owner': new_owner,
+            'team_ids': team_ids
+        }
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/transfer",
+            headers=import_header,
+            input=post_parameter
+        )
+        return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
@@ -1476,11 +1504,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-        
+
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-            
+
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
