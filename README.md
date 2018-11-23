@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
 [![Join the chat at https://gitter.im/PyGithub/PyGithub](https://badges.gitter.im/PyGithub/PyGithub.svg)](https://gitter.im/PyGithub/PyGithub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Open Source Helpers](https://www.codetriage.com/pygithub/pygithub/badges/users.svg)](https://www.codetriage.com/pygithub/pygithub)
+[![CodeFactor](https://www.codefactor.io/repository/github/titouanfreville/pygithub/badge)](https://www.codefactor.io/repository/github/titouanfreville/pygithub)
 
 PyGitHub is a Python (2 and 3) library to access the [GitHub API v3] and [Github Enterprise API v3].
 This library enables you to manage [GitHub] resources such as repositories, user profiles, and organizations in your Python applications.
