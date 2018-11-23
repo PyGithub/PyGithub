@@ -121,7 +121,7 @@ class Github(object):
         assert password is None or isinstance(password, six.string_types), password
         assert jwt is None or isinstance(jwt, six.string_types), jwt
         assert isinstance(base_url, six.string_types), base_url
-        assert isinstance(timeout, (int, long)), timeout
+        assert isinstance(timeout, six.integer_types), timeout
         assert client_id is None or isinstance(client_id, six.string_types), client_id
         assert client_secret is None or isinstance(client_secret, six.string_types), client_secret
         assert user_agent is None or isinstance(user_agent, six.string_types), user_agent
@@ -248,7 +248,7 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        assert since is github.GithubObject.NotSet or isinstance(since, six.integer_types), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -278,7 +278,7 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        assert since is github.GithubObject.NotSet or isinstance(since, six.integer_types), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -294,8 +294,8 @@ class Github(object):
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(full_name_or_id, (six.string_types, int, long)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) or isinstance(full_name_or_id, long) else "/repos/"
+        assert isinstance(full_name_or_id, (six.string_types, six.integer_types)), full_name_or_id
+        url_base = "/repositories/" if isinstance(full_name_or_id, six.integer_types) else "/repos/"
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
             return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
@@ -311,7 +311,7 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        assert since is github.GithubObject.NotSet or isinstance(since, six.integer_types), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since

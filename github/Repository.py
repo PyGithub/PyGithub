@@ -1373,7 +1373,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.CommitComment.CommitComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id)
@@ -1715,7 +1715,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Download.Download`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/downloads/" + str(id)
@@ -1851,7 +1851,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Hook.Hook`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/hooks/" + str(id)
@@ -1876,7 +1876,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param number: integer
         :rtype: :class:`github.Issue.Issue`
         """
-        assert isinstance(number, (int, long)), number
+        assert isinstance(number, six.integer_types), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/" + str(number)
@@ -1972,7 +1972,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.IssueEvent.IssueEvent`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/events/" + str(id),
@@ -1999,7 +1999,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/keys/" + str(id)
@@ -2072,7 +2072,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param number: integer
         :rtype: :class:`github.Milestone.Milestone`
         """
-        assert isinstance(number, (int, long)), number
+        assert isinstance(number, six.integer_types), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/milestones/" + str(number)
@@ -2122,7 +2122,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param number: integer
         :rtype: :class:`github.PullRequest.PullRequest`
         """
-        assert isinstance(number, (int, long)), number
+        assert isinstance(number, six.integer_types), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/pulls/" + str(number)

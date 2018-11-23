@@ -153,7 +153,7 @@ class GithubObject(object):
 
     @staticmethod
     def _makeIntAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, (int, long))
+        return GithubObject.__makeSimpleAttribute(value, six.integer_types)
 
     @staticmethod
     def _makeBoolAttribute(value):
@@ -165,7 +165,7 @@ class GithubObject(object):
 
     @staticmethod
     def _makeTimestampAttribute(value):
-        return GithubObject.__makeTransformedAttribute(value, (int, long), datetime.datetime.utcfromtimestamp)
+        return GithubObject.__makeTransformedAttribute(value, six.integer_types, datetime.datetime.utcfromtimestamp)
 
     @staticmethod
     def _makeDatetimeAttribute(value):

@@ -145,9 +145,9 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(body, six.string_types), body
-        assert line is github.GithubObject.NotSet or isinstance(line, (int, long)), line
+        assert line is github.GithubObject.NotSet or isinstance(line, six.integer_types), line
         assert path is github.GithubObject.NotSet or isinstance(path, six.string_types), path
-        assert position is github.GithubObject.NotSet or isinstance(position, (int, long)), position
+        assert position is github.GithubObject.NotSet or isinstance(position, six.integer_types), position
         post_parameters = {
             "body": body,
         }

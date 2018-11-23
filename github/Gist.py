@@ -270,7 +270,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id)

@@ -395,7 +395,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(body, six.string_types), body
         assert isinstance(commit_id, github.Commit.Commit), commit_id
         assert isinstance(path, six.string_types), path
-        assert isinstance(position, (int, long)), position
+        assert isinstance(position, six.integer_types), position
         post_parameters = {
             "body": body,
             "commit_id": commit_id._identity,
@@ -536,7 +536,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id)
@@ -575,7 +575,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
@@ -613,7 +613,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.issue_url) + "/comments/" + str(id)
@@ -638,7 +638,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/reviews/" + str(id),

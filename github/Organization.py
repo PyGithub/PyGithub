@@ -417,7 +417,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
-        assert team_id is github.GithubObject.NotSet or isinstance(team_id, (int, long)), team_id
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, six.integer_types), team_id
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
         assert license_template is github.GithubObject.NotSet or isinstance(license_template, six.string_types), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, six.string_types), gitignore_template
@@ -497,7 +497,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: None`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/hooks/" + str(id)
@@ -554,7 +554,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param active: bool
         :rtype: :class:`github.Hook.Hook`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         assert isinstance(name, six.string_types), name
         assert isinstance(config, dict), config
         assert events is github.GithubObject.NotSet or all(isinstance(element, six.string_types) for element in events), events
@@ -592,7 +592,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Hook.Hook`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/hooks/" + str(id)
@@ -784,7 +784,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Team.Team`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/teams/" + str(id)
