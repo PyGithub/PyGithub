@@ -32,6 +32,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.NamedUser
 
@@ -108,7 +110,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: None
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, six.string_types), body
         post_parameters = {
             "body": body,
         }

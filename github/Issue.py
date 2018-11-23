@@ -47,6 +47,8 @@ from __future__ import absolute_import
 import datetime
 import urllib
 
+import six
+
 import github.GithubObject
 import github.IssueComment
 import github.IssueEvent
@@ -266,7 +268,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        assert all(isinstance(element, (github.NamedUser.NamedUser, six.string_types)) for element in assignees), assignees
         post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -281,7 +283,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        assert all(isinstance(element, (github.Label.Label, six.string_types)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -295,7 +297,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, six.string_types), body
         post_parameters = {
             "body": body,
         }
@@ -328,20 +330,20 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, (str, unicode)) for element in assignees), assignees
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert title is github.GithubObject.NotSet or isinstance(title, six.string_types), title
+        assert body is github.GithubObject.NotSet or isinstance(body, six.string_types), body
+        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, six.string_types), assignee
+        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, six.string_types) for element in assignees), assignees
+        assert state is github.GithubObject.NotSet or isinstance(state, six.string_types), state
         assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, six.string_types) for element in labels), labels
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
         if assignee is not github.GithubObject.NotSet:
-            if isinstance(assignee, (str, unicode)):
+            if isinstance(assignee, six.string_types):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ''
@@ -421,7 +423,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        assert all(isinstance(element, (github.NamedUser.NamedUser, six.string_types)) for element in assignees), assignees
         post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -436,7 +438,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert isinstance(label, (github.Label.Label, str, unicode)), label
+        assert isinstance(label, (github.Label.Label, six.string_types)), label
         if isinstance(label, github.Label.Label):
             label = label._identity
         else:
@@ -452,7 +454,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label` or strings
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        assert all(isinstance(element, (github.Label.Label, six.string_types)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -479,7 +481,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert isinstance(reaction_type, six.string_types), "reaction type should be a string"
         assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
             "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 

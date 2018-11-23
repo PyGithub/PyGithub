@@ -44,9 +44,11 @@ import sys
 import traceback
 import unittest
 
+import six
+
 import github
-import github.Requester
 import github.GithubObject
+import github.Requester
 
 python2 = sys.hexversion < 0x03000000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -178,7 +180,7 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
-        if isinstance(input, (str, unicode)):
+        if isinstance(input, six.string_types):
             if input.startswith("{"):
                 self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
             elif python2:  # @todo Test in all cases, including Python 3.4+

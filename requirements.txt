@@ -3,3 +3,4 @@ pyjwt
 sphinx<1.8
 sphinx-rtd-theme<0.5
 Deprecated
+six

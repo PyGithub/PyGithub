@@ -35,6 +35,8 @@ from __future__ import absolute_import
 
 import urllib
 
+import six
+
 import github.GithubObject
 from github import Consts
 
@@ -97,9 +99,9 @@ class Label(github.GithubObject.CompletableGithubObject):
         :param description: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(color, (str, unicode)), color
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert isinstance(name, six.string_types), name
+        assert isinstance(color, six.string_types), color
+        assert description is github.GithubObject.NotSet or isinstance(description, six.string_types), description
         post_parameters = {
             "name": name,
             "color": color,

@@ -35,6 +35,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
@@ -209,7 +211,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, six.string_types), body
         post_parameters = {
             "body": body,
         }
@@ -248,7 +250,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
         :rtype: None
         """
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert description is github.GithubObject.NotSet or isinstance(description, six.string_types), description
         assert files is github.GithubObject.NotSet or all(element is None or isinstance(element, github.InputFileContent) for element in files.itervalues()), files
         post_parameters = dict()
         if description is not github.GithubObject.NotSet:

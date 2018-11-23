@@ -35,6 +35,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.BranchProtection
 import github.Commit
 import github.GithubObject
@@ -128,10 +130,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         changing. Use edit_required_status_checks() to avoid this.
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
+        assert contexts is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in contexts), contexts
         assert enforce_admins is github.GithubObject.NotSet or isinstance(enforce_admins, bool), enforce_admins
-        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_users), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_teams), dismissal_teams
+        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in dismissal_users), dismissal_users
+        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in dismissal_teams), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
         assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
@@ -210,7 +212,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :contexts: list of strings
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
+        assert contexts is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in contexts), contexts
 
         post_parameters = {}
         if strict is not github.GithubObject.NotSet:
@@ -253,8 +255,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
-        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_users), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in dismissal_teams), dismissal_teams
+        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in dismissal_users), dismissal_users
+        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in dismissal_teams), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
         assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
@@ -346,7 +348,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings
         """
-        assert all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in users), users
+        assert all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -359,7 +361,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings
         """
-        assert all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in teams), teams
+        assert all(isinstance(element, six.string_types) or isinstance(element, six.string_types) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",

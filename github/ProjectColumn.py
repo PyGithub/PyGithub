@@ -24,6 +24,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.PaginatedList
 import github.Project
@@ -101,7 +103,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, unicode)), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, six.string_types), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:

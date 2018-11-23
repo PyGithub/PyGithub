@@ -27,6 +27,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.NamedUser
 
@@ -167,8 +169,8 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         Update asset metadata.
         :rtype: github.GitReleaseAsset.GitReleaseAsset
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(label, (str, unicode)), label
+        assert isinstance(name, six.string_types), name
+        assert isinstance(label, six.string_types), label
         post_parameters = {
             "name": name,
             "label": label

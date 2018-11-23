@@ -39,6 +39,8 @@ from __future__ import absolute_import
 
 from os.path import basename
 
+import six
+
 import github.GitAuthor
 import github.GitReleaseAsset
 import github.GithubObject
@@ -191,13 +193,13 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert tag_name is github.GithubObject.NotSet              \
-            or isinstance(tag_name, (str, unicode)),               \
+            or isinstance(tag_name, six.string_types),               \
             'tag_name must be a str/unicode object'
         assert target_commitish is github.GithubObject.NotSet      \
-            or isinstance(target_commitish, (str, unicode)),       \
+            or isinstance(target_commitish, six.string_types),       \
             'target_commitish must be a str/unicode object'
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(message, (str, unicode)), message
+        assert isinstance(name, six.string_types), name
+        assert isinstance(message, six.string_types), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         if tag_name is github.GithubObject.NotSet:
@@ -225,8 +227,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets?name=foo.zip <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
         :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(label, (str, unicode)), label
+        assert isinstance(path, six.string_types), path
+        assert isinstance(label, six.string_types), label
 
         post_parameters = {
             "name": basename(path),
