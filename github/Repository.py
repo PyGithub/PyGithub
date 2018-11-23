@@ -1221,20 +1221,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :type team_ids: str list
         :rtype: `github.SourceImport.SourceImport`
         """
-        assert isinstance(new_owner, (str, unicode)), new_owner
+        assert isinstance(new_owner, str), new_owner
         if team_ids:
             assert isinstance(team_ids, list), team_ids
+        else:
+            team_ids = []
         post_parameter = {
             'new_owner': new_owner,
-            'team_ids': team_ids
-        }
-        import_header = {"Accept": Consts.mediaTypeImportPreview}
+            'team_ids' : team_ids
+            }
+        import_header = {"Accept": Consts.mediaTypeTransferPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/transfer",
-            headers=import_header,
-            input=post_parameter
-        )
+                "POST",
+                self.url + "/transfer",
+                headers=import_header,
+                input=post_parameter
+                )
         return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
 
     def delete(self):

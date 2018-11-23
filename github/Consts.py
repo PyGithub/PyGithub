@@ -54,6 +54,9 @@ defaultMediaType = "application/octet-stream"
 
 # Custom media type for preview API
 
+#  https://developer.github.com/v3/repos/#transfer-a-repository
+mediatTypeTransferPreview = 'application/vnd.github.nightshade-preview+json'
+
 # https://developer.github.com/changes/2014-12-09-new-attributes-for-stars-api/
 mediaTypeStarringPreview = "application/vnd.github.v3.star+json"
 
