@@ -487,11 +487,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Gist.Gist`
         """
         assert isinstance(public, bool), public
-        assert all(isinstance(element, github.InputFileContent) for element in files.itervalues()), files
+        assert all(isinstance(element, github.InputFileContent) for element in six.itervalues(files)), files
         assert description is github.GithubObject.NotSet or isinstance(description, six.string_types), description
         post_parameters = {
             "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
+            "files": dict((key, value._identity) for key, value in six.iteritems(files)),
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description

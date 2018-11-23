@@ -207,8 +207,8 @@ class GithubObject(object):
             return _BadAttribute(value, [dict])
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        if isinstance(value, dict) and all(isinstance(key, six.string_types) and isinstance(element, dict) for key, element in value.iteritems()):
-            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
+        if isinstance(value, dict) and all(isinstance(key, six.string_types) and isinstance(element, dict) for key, element in six.iteritems(value)):
+            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in six.iteritems(value)))
         else:
             return _BadAttribute(value, {six.string_types: dict})
 

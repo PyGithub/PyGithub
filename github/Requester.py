@@ -66,6 +66,7 @@ import urllib
 from io import IOBase
 
 import requests
+import six
 
 from github import Consts
 from github.GithubException import (
@@ -96,7 +97,7 @@ class RequestsResponse:
         if atLeastPython3:
             return self.headers.items()
         else:
-            return self.headers.iteritems()
+            return six.iteritems(self.headers)
 
     def read(self):
         return self.text
@@ -343,7 +344,7 @@ class Requester:
             eol = "\r\n"
 
             encoded_input = ""
-            for name, value in input.iteritems():
+            for name, value in six.iteritems(input):
                 encoded_input += "--" + boundary + eol
                 encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol

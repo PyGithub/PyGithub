@@ -251,12 +251,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert description is github.GithubObject.NotSet or isinstance(description, six.string_types), description
-        assert files is github.GithubObject.NotSet or all(element is None or isinstance(element, github.InputFileContent) for element in files.itervalues()), files
+        assert files is github.GithubObject.NotSet or all(element is None or isinstance(element, github.InputFileContent) for element in six.itervalues(files)), files
         post_parameters = dict()
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if files is not github.GithubObject.NotSet:
-            post_parameters["files"] = dict((key, None if value is None else value._identity) for key, value in files.iteritems())
+            post_parameters["files"] = dict((key, None if value is None else value._identity) for key, value in six.iteritems(files))
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
