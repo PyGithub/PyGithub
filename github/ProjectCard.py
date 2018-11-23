@@ -22,9 +22,13 @@
 #                                                                              #
 ################################################################################
 
-import json
+from __future__ import absolute_import
 
 import github.GithubObject
+import github.Issue
+import github.NamedUser
+import github.PullRequest
+
 
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784

@@ -31,11 +31,13 @@
 #                                                                              #
 ################################################################################
 
-import github
-import sys
-import pickle
+from __future__ import absolute_import
 
-import Framework
+import pickle
+import sys
+
+import github
+from . import Framework
 
 atMostPython2 = sys.hexversion < 0x03000000
 

@@ -33,13 +33,14 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.PaginatedList
+from __future__ import absolute_import
 
 import github.GistComment
-import github.NamedUser
 import github.GistFile
 import github.GistHistoryState
+import github.GithubObject
+import github.NamedUser
+import github.PaginatedList
 
 
 class Gist(github.GithubObject.CompletableGithubObject):

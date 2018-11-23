@@ -27,9 +27,11 @@
 #                                                                              #
 ################################################################################
 
-import github
 
-import Framework
+from __future__ import absolute_import
+
+import github
+from . import Framework
 
 
 class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/issues/80

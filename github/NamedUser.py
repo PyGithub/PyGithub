@@ -37,18 +37,19 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
 
-import github.GithubObject
-import github.PaginatedList
-
+import github.Event
 import github.Gist
-import github.Repository
-import github.NamedUser
+import github.GithubObject
+import github.Organization
+import github.PaginatedList
 import github.Permissions
 import github.Plan
-import github.Organization
-import github.Event
+import github.Repository
+import github.UserKey
 
 
 class NamedUser(github.GithubObject.CompletableGithubObject):

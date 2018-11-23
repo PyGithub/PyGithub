@@ -25,9 +25,10 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
 
 import github.NamedUser
+from . import Framework
 
 
 class RawData(Framework.TestCase):

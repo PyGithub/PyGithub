@@ -25,7 +25,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import, print_function
+
+from . import Framework
 
 
 class ExposeAllAttributes(Framework.TestCase):

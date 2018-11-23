@@ -41,8 +41,9 @@
 #                                                                              #
 ################################################################################
 
-import setuptools
 import textwrap
+
+import setuptools
 
 version = "1.43.3"
 

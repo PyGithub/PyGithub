@@ -37,13 +37,23 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
 
+from __future__ import absolute_import
+
 import logging
 
+from github.GithubException import (
+    BadAttributeException,
+    BadCredentialsException,
+    BadUserAgentException,
+    GithubException,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+)
+from github.InputFileContent import InputFileContent
+from github.InputGitAuthor import InputGitAuthor
+from github.InputGitTreeElement import InputGitTreeElement
 from github.MainClass import Github, GithubIntegration
-from GithubException import GithubException, BadCredentialsException, UnknownObjectException, BadUserAgentException, RateLimitExceededException, BadAttributeException, TwoFactorException
-from InputFileContent import InputFileContent
-from InputGitAuthor import InputGitAuthor
-from InputGitTreeElement import InputGitTreeElement
 
 
 def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)

@@ -32,13 +32,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
 
-import Framework
-
-import Time
-
 import github
+import github.GithubObject
+from . import Framework, Time
 
 
 class Github(Framework.TestCase):

@@ -33,10 +33,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import github.GithubObject
 import github.NamedUser
-
-import Consts
+import github.PaginatedList
+import github.Reaction
+from github import Consts
 
 
 class IssueComment(github.GithubObject.CompletableGithubObject):

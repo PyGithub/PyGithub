@@ -27,9 +27,9 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import absolute_import
 
-import Framework
+from . import Framework
 
 
 class Issue87(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/87

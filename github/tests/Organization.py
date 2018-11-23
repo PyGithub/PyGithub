@@ -34,11 +34,12 @@
 #                                                                              #
 ################################################################################
 
-import github
-
-import Framework
+from __future__ import absolute_import
 
 import datetime
+
+import github
+from . import Framework
 
 
 class Organization(Framework.TestCase):

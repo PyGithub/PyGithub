@@ -30,9 +30,10 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
 import github.GitObject
+import github.GithubObject
 
 
 class GitRef(github.GithubObject.CompletableGithubObject):

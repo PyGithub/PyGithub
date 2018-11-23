@@ -22,13 +22,14 @@
 #                                                                              #
 ################################################################################
 
-import datetime
-import json
+from __future__ import absolute_import
 
 import github.GithubObject
+import github.NamedUser
+import github.PaginatedList
 import github.ProjectColumn
+from github import Consts
 
-import Consts
 
 class Project(github.GithubObject.CompletableGithubObject):
     """

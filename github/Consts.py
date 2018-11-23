@@ -29,6 +29,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 
 REQ_IF_NONE_MATCH = "If-None-Match"
 REQ_IF_MODIFIED_SINCE = "If-Modified-Since"

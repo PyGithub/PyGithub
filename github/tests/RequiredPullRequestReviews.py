@@ -22,9 +22,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
 
-import github
+from . import Framework
 
 
 class RequiredPullRequestReviews(Framework.TestCase):

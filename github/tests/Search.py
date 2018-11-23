@@ -26,8 +26,11 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
 import sys
+
+from . import Framework
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 

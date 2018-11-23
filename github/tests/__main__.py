@@ -28,11 +28,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import sys
 import unittest
 
-import github.tests.Framework
 import github.tests.AllTests
+import github.tests.Framework
 
 
 def main(argv):

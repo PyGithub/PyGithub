@@ -26,7 +26,10 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import absolute_import
+
+import github.GithubObject
+import github.NamedUser
 
 
 class Stargazer(github.GithubObject.NonCompletableGithubObject):

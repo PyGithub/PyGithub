@@ -34,10 +34,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import github.GithubObject
 import github.NamedUser
+import github.Reaction
+import github.PaginatedList
+from github import Consts
 
-import Consts
 
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """

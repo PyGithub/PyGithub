@@ -30,10 +30,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
 import github.GitAuthor
 import github.GitTree
+import github.GithubObject
 
 
 class GitCommit(github.GithubObject.CompletableGithubObject):

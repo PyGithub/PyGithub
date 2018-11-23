@@ -52,21 +52,35 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import base64
 import json
 import logging
 import mimetypes
 import os
 import re
-import requests
 import sys
 import time
 import urllib
-import urlparse
 from io import IOBase
 
-import Consts
-import GithubException
+import requests
+
+from github import Consts
+from github.GithubException import (
+    BadCredentialsException,
+    BadUserAgentException,
+    GithubException,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+)
+
+try:
+    import urlparse
+except ImportError:
+    from urllib import parse as urlparse
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -290,20 +304,20 @@ class Requester:
 
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
-            cls = GithubException.BadCredentialsException
+            cls = BadCredentialsException
         elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
-            cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+            cls = TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
-            cls = GithubException.BadUserAgentException
+            cls = BadUserAgentException
         elif status == 403 and (
             output.get("message").lower().startswith("api rate limit exceeded")
             or output.get("message").lower().endswith("please wait a few minutes before you try again.")
         ):
-            cls = GithubException.RateLimitExceededException
+            cls = RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
-            cls = GithubException.UnknownObjectException
+            cls = UnknownObjectException
         else:
-            cls = GithubException.GithubException
+            cls = GithubException
         return cls(status, output)
 
     def __structuredFromJson(self, data):

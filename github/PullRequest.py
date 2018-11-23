@@ -42,18 +42,25 @@
 #                                                                              #
 ################################################################################
 
-import urllib
-import github.GithubObject
-import github.PaginatedList
+from __future__ import absolute_import
 
-import github.PullRequestMergeStatus
-import github.NamedUser
-import github.PullRequestPart
-import github.PullRequestComment
-import github.File
-import github.IssueComment
+import datetime
+import urllib
+
 import github.Commit
+import github.File
+import github.GithubObject
+import github.Issue
+import github.IssueComment
+import github.Label
+import github.Milestone
+import github.NamedUser
+import github.PaginatedList
+import github.PullRequestComment
+import github.PullRequestMergeStatus
+import github.PullRequestPart
 import github.PullRequestReview
+import github.Team
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):

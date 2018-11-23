@@ -22,13 +22,14 @@
 #                                                                              #
 ################################################################################
 
-import json
+from __future__ import absolute_import
 
 import github.GithubObject
+import github.PaginatedList
 import github.Project
 import github.ProjectCard
+from github import Consts
 
-import Consts
 
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
     """

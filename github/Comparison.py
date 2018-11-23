@@ -29,10 +29,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
 import github.Commit
 import github.File
+import github.GithubObject
 
 
 class Comparison(github.GithubObject.CompletableGithubObject):

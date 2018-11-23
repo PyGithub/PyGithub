@@ -21,9 +21,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-import Framework
 
-import github
+from __future__ import absolute_import
+
+from . import Framework
+
 
 class Issue937(Framework.TestCase):
     def setUp(self):

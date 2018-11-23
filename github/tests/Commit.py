@@ -29,7 +29,11 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
+import six
+
+from . import Framework
 
 
 class Commit(Framework.TestCase):

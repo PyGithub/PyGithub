@@ -31,12 +31,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import base64
 import sys
 
 import github.GithubObject
+import github.License
 import github.Repository
-
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 

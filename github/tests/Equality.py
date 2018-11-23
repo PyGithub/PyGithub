@@ -25,7 +25,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
+from . import Framework
 
 
 class Equality(Framework.TestCase):

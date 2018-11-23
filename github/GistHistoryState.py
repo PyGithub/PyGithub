@@ -29,11 +29,13 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
-import github.NamedUser
 import github.CommitStats
 import github.Gist
+import github.GistFile
+import github.GithubObject
+import github.NamedUser
 
 
 class GistHistoryState(github.GithubObject.CompletableGithubObject):

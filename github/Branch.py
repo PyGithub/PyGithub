@@ -33,14 +33,18 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
 import github.BranchProtection
 import github.Commit
+import github.GithubObject
+import github.NamedUser
+import github.PaginatedList
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+import github.Team
+from github import Consts
 
-import Consts
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
     """

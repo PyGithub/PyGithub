@@ -24,7 +24,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
+from . import Framework
 
 
 # Replay data forged by adding nulls to PaginatedList.setUp.txt and PaginatedList.testIteration.txt

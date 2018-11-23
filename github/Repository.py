@@ -80,52 +80,54 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
+import datetime
 import sys
 import urllib
-import datetime
 from base64 import b64encode
 
-import github.GithubObject
-import github.PaginatedList
-
+import github.AuthenticatedUser
 import github.Branch
-import github.IssueEvent
+import github.Commit
+import github.CommitComment
+import github.Comparison
 import github.ContentFile
-import github.Label
+import github.Download
+import github.Event
 import github.GitBlob
-import github.Organization
+import github.GitCommit
 import github.GitRef
 import github.GitRelease
 import github.GitReleaseAsset
+import github.GitTag
+import github.GitTree
+import github.GithubObject
+import github.Hook
+import github.Invitation
 import github.Issue
-import github.Repository
+import github.IssueComment
+import github.IssueEvent
+import github.Label
+import github.Legacy
+import github.Milestone
+import github.NamedUser
+import github.Organization
+import github.PaginatedList
+import github.Permissions
+import github.Project
 import github.PullRequest
 import github.RepositoryKey
-import github.NamedUser
-import github.Milestone
-import github.Project
-import github.Comparison
-import github.CommitComment
-import github.GitCommit
-import github.Team
-import github.Commit
-import github.GitTree
-import github.Hook
-import github.Tag
-import github.GitTag
-import github.Download
-import github.Permissions
-import github.Event
-import github.Legacy
 import github.SourceImport
-import github.StatsContributor
-import github.StatsCommitActivity
+import github.Stargazer
 import github.StatsCodeFrequency
+import github.StatsCommitActivity
+import github.StatsContributor
 import github.StatsParticipation
 import github.StatsPunchCard
-import github.Stargazer
-
-import Consts
+import github.Tag
+import github.Team
+from github import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 

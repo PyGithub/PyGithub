@@ -26,8 +26,9 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
+import github.GithubObject
 import github.NamedUser
 
 

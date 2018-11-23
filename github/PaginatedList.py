@@ -37,12 +37,9 @@
 #                                                                              #
 ################################################################################
 
-try:
-    from urllib.parse import parse_qs
-except ImportError:
-    from urlparse import parse_qs
+from __future__ import absolute_import
 
-import github.GithubObject
+from six.moves.urllib_parse import parse_qs
 
 
 class PaginatedListBase:

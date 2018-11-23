@@ -36,6 +36,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import, print_function
+
 import json
 import os
 import sys
@@ -43,6 +45,8 @@ import traceback
 import unittest
 
 import github
+import github.Requester
+import github.GithubObject
 
 python2 = sys.hexversion < 0x03000000
 atLeastPython3 = sys.hexversion >= 0x03000000

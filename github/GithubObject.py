@@ -32,12 +32,14 @@
 #                                                                              #
 ################################################################################
 
-import sys
+from __future__ import absolute_import
+
 import datetime
+import sys
 from operator import itemgetter
 
-import GithubException
-import Consts
+from github import Consts
+from github.GithubException import BadAttributeException
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -63,7 +65,7 @@ class _BadAttribute:
 
     @property
     def value(self):
-        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
+        raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject(object):

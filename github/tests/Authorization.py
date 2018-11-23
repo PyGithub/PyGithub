@@ -27,9 +27,11 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
 
 import datetime
+
+from . import Framework
 
 
 class Authorization(Framework.TestCase):

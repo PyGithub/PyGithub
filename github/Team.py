@@ -41,12 +41,13 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.PaginatedList
+from __future__ import absolute_import
 
-import github.Repository
+import github.GithubObject
 import github.NamedUser
 import github.Organization
+import github.PaginatedList
+import github.Repository
 
 
 class Team(github.GithubObject.CompletableGithubObject):

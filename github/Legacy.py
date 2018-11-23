@@ -29,7 +29,9 @@
 #                                                                              #
 ################################################################################
 
-import urlparse
+from __future__ import absolute_import
+
+from six.moves import urllib_parse
 
 import github.PaginatedList
 
@@ -133,7 +135,7 @@ def convertRepo(attributes):
 def convertIssue(attributes):
     convertedAttributes = {
         "number": attributes["number"],
-        "url": "/repos" + urlparse.urlparse(attributes["html_url"]).path,
+        "url": "/repos" + urllib_parse.urlparse(attributes["html_url"]).path,
         "user": {"login": attributes["user"], "url": "/users/" + attributes["user"]},
     }
     if "labels" in attributes:  # pragma no branch

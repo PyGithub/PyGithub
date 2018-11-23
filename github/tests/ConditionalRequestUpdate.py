@@ -27,8 +27,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
-import github
+from __future__ import absolute_import
+
+from . import Framework
 
 
 class ConditionalRequestUpdate(Framework.TestCase):

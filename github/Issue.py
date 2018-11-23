@@ -42,21 +42,23 @@
 #                                                                              #
 ################################################################################
 
-import urllib
+from __future__ import absolute_import
+
 import datetime
+import urllib
+
 import github.GithubObject
-import github.PaginatedList
-
-import github.Repository
-import github.IssueEvent
-import github.Label
-import github.NamedUser
-import github.Milestone
 import github.IssueComment
+import github.IssueEvent
 import github.IssuePullRequest
+import github.Label
+import github.Milestone
+import github.NamedUser
+import github.PaginatedList
+import github.PullRequest
 import github.Reaction
-
-import Consts
+import github.Repository
+from github import Consts
 
 
 class Issue(github.GithubObject.CompletableGithubObject):

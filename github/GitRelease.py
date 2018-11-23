@@ -35,10 +35,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 from os.path import basename
-import github.GithubObject
+
 import github.GitAuthor
 import github.GitReleaseAsset
+import github.GithubObject
+import github.PaginatedList
 
 
 class GitRelease(github.GithubObject.CompletableGithubObject):

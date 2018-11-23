@@ -25,7 +25,9 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
+from . import Framework
 
 
 class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133

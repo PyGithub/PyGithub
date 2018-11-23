@@ -24,9 +24,10 @@
 #                                                                              #
 ################################################################################
 
-import urllib
+from __future__ import absolute_import
 
 import github.GithubObject
+import github.Repository
 
 
 class Invitation(github.GithubObject.CompletableGithubObject):

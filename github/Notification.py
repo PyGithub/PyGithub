@@ -29,10 +29,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
-import github.Repository
+import github.GithubObject
 import github.NotificationSubject
+import github.Repository
 
 
 class Notification(github.GithubObject.CompletableGithubObject):

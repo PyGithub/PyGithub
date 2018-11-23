@@ -30,13 +30,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
 
 import github.GithubObject
-import github.PaginatedList
-
-import github.NamedUser
 import github.Label
+import github.NamedUser
+import github.PaginatedList
 
 
 class Milestone(github.GithubObject.CompletableGithubObject):

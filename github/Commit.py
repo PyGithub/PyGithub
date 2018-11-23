@@ -32,16 +32,17 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.PaginatedList
+from __future__ import absolute_import
 
-import github.GitCommit
-import github.NamedUser
-import github.CommitStatus
 import github.CommitCombinedStatus
-import github.File
-import github.CommitStats
 import github.CommitComment
+import github.CommitStats
+import github.CommitStatus
+import github.File
+import github.GitCommit
+import github.GithubObject
+import github.NamedUser
+import github.PaginatedList
 
 
 class Commit(github.GithubObject.CompletableGithubObject):

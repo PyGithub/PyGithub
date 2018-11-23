@@ -41,20 +41,23 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
-import json
 
-import github.GithubObject
-import github.PaginatedList
-
-import github.Plan
-import github.Team
 import github.Event
-import github.Repository
-import github.Project
+import github.GithubObject
+import github.Hook
+import github.Issue
+import github.Label
 import github.NamedUser
+import github.PaginatedList
+import github.Plan
+import github.Project
+import github.Repository
+import github.Team
+from github import Consts
 
-import Consts
 
 class Organization(github.GithubObject.CompletableGithubObject):
     """

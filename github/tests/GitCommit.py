@@ -29,9 +29,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
 
-import Framework
+from . import Framework
 
 
 class GitCommit(Framework.TestCase):

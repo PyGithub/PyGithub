@@ -47,37 +47,45 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import datetime
-
-import urllib
 import pickle
-import time
 import sys
-from httplib import HTTPSConnection
+import time
+
 import jwt
+from six.moves.http_client import HTTPSConnection
 
-from Requester import Requester, json
-import AuthenticatedUser
-import NamedUser
-import Organization
-import Gist
-import github.PaginatedList
-import Repository
-import Installation
-import Legacy
-import License
-import Topic
+import github.Commit
+import github.ContentFile
 import github.GithubObject
-import HookDescription
-import GitignoreTemplate
-import Status
-import StatusMessage
-import RateLimit
-import InstallationAuthorization
-import GithubException
-import Invitation
-
-import Consts
+import github.Issue
+import github.PaginatedList
+import github.Project
+from github import (
+    AuthenticatedUser,
+    Consts,
+    Gist,
+    GitignoreTemplate,
+    HookDescription,
+    Installation,
+    InstallationAuthorization,
+    License,
+    NamedUser,
+    Organization,
+    RateLimit,
+    Repository,
+    Status,
+    StatusMessage,
+    Topic,
+)
+from github.GithubException import (
+    BadCredentialsException,
+    GithubException,
+    UnknownObjectException,
+)
+from github.Requester import Requester, json
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -802,16 +810,16 @@ class GithubIntegration(object):
                 completed=True
             )
         elif response.status == 403:
-            raise GithubException.BadCredentialsException(
+            raise BadCredentialsException(
                 status=response.status,
                 data=response_text
             )
         elif response.status == 404:
-            raise GithubException.UnknownObjectException(
+            raise UnknownObjectException(
                 status=response.status,
                 data=response_text
             )
-        raise GithubException.GithubException(
+        raise GithubException(
             status=response.status,
             data=response_text
         )

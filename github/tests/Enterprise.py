@@ -27,9 +27,10 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import absolute_import
 
-import Framework
+import github
+from . import Framework
 
 
 # Replay data for this test case is forged, because I don't have access to a real Github Enterprise install

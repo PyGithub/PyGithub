@@ -30,9 +30,10 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import absolute_import
 
 import github.AuthorizationApplication
+import github.GithubObject
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):

@@ -22,8 +22,13 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from __future__ import absolute_import
+
 import github
+import github.Issue
+import github.PullRequest
+from . import Framework
+
 
 class Project(Framework.TestCase):
     def setUp(self):

@@ -29,8 +29,10 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+
 from github.PaginatedList import PaginatedList as PaginatedListImpl
+from . import Framework
 
 
 class PaginatedList(Framework.TestCase):

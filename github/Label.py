@@ -31,11 +31,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
+
 import urllib
 
 import github.GithubObject
-
-import Consts
+from github import Consts
 
 
 class Label(github.GithubObject.CompletableGithubObject):

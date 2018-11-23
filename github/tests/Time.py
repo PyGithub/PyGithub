@@ -20,7 +20,10 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timedelta, tzinfo
+from __future__ import absolute_import
+
+from datetime import timedelta, tzinfo
+
 
 class UTCtzinfo(tzinfo):
     def utcoffset(self, dt):
