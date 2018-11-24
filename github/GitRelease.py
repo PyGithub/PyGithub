@@ -37,7 +37,7 @@
 
 from os.path import basename
 import github.GithubObject
-import github.GitAuthor
+import github.NamedUser
 import github.GitReleaseAsset
 
 
@@ -108,7 +108,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     @property
     def author(self):
         """
-        :type: :class:`github.GitAuthor.GitAuthor`
+        :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._author)
         return self._author.value
