@@ -123,7 +123,7 @@ class StandardHeader:
 
         bodyLines = extractBodyLines(lines)
 
-        if len(bodyLines) and bodyLines[0] != "" > 0:
+        if len(bodyLines) and bodyLines[0] != "":
             newLines.append("")
         newLines += bodyLines
 
