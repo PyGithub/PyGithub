@@ -285,7 +285,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
-            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:
