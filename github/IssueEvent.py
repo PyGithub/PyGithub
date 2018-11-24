@@ -177,14 +177,6 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._rename.value
 
     @property
-    def rename(self):
-        """
-        :type: dict
-        """
-        self._completeIfNotSet(self._rename)
-        return self._rename.value
-
-    @property
     def dismissed_review(self):
         """
         :type: dict
