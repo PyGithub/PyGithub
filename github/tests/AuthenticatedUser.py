@@ -246,7 +246,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])
 
     def testMarkNotificationsAsRead(self):
-        self.user.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 20, 01, 0))
+        self.user.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 20, 1, 0))
 
     def testGetTeams(self):
         self.assertListKeyEqual(self.user.get_teams(), lambda t: t.name, ["Owners", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries"])
