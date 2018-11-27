@@ -81,9 +81,9 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         print(attributes)
         print(attributes["path"])
         if "path" in attributes:  # pragma no branch
-            self._referrer = self._makeStringAttribute(attributes["path"])
+            self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch
-            self._referrer = self._makeStringAttribute(attributes["title"])
+            self._title = self._makeStringAttribute(attributes["title"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch
