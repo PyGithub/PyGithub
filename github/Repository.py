@@ -1490,7 +1490,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_top_paths(self):
         """
-        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`+
+        :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`+
         :rtype: :class:`list` of :class:`github.Path.Path`
         """
         url_parameters = dict()
@@ -1503,6 +1503,52 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 github.Path.Path(self._requester, headers, item, completed=True)
                 for item in data
             ]
+
+    def get_views_breakdown(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.View.View`
+        """        
+        assert per is gitHub.GithubObject.NotSet or ( isinstance(per, (str, unicode)) 
+            and (per is "day" or per is "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url+"/traffic/views",
+            parameters=url_parameters
+        )
+        if isinstance(data, list):
+            return [
+                github.View.View(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+
+    def get_clones_breakdown(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.Clone.Clone`
+        """  
+        assert per is gitHub.GithubObject.NotSet or ( isinstance(per, (str, unicode)) 
+            and (per is "day" or per is "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url+"/traffic/clones",
+            parameters=url_parameters
+        )
+        if isinstance(data, list):
+            return [
+                github.Clone.Clone(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
 
     def get_projects(self, state=github.GithubObject.NotSet):
         """
