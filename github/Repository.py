@@ -124,6 +124,8 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+import github.Referrer
+import github.Path
 
 import Consts
 
@@ -1470,17 +1472,49 @@ class Repository(github.GithubObject.CompletableGithubObject):
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
+    def get_top_referrers(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`+
+        :rtype: :class:`list` of :class:`github.Referrer.Referrer`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/referrers"
+        )
+        if isinstance(data, list):
+            return [
+                github.Referrer.Referrer(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+    def get_top_paths(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`+
+        :rtype: :class:`list` of :class:`github.Path.Path`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/paths"
+        )
+        if isinstance(data, list):
+            return [
+                github.Path.Path(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
     def get_projects(self, state=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-        
+
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-            
+
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,

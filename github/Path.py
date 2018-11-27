@@ -78,6 +78,8 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         self._uniques = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        print(attributes)
+        print(attributes["path"])
         if "path" in attributes:  # pragma no branch
             self._referrer = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch
