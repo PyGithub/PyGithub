@@ -126,6 +126,8 @@ import github.StatsPunchCard
 import github.Stargazer
 import github.Referrer
 import github.Path
+import github.Clone
+import github.View
 
 import Consts
 
