@@ -1511,21 +1511,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.View.View`
-        """        
-        assert per is gitHub.GithubObject.NotSet or ( isinstance(per, (str, unicode)) 
+        """
+        assert per is github.GithubObject.NotSet or ( isinstance(per, (str, unicode))
             and (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url+"/traffic/views",
+            self.url + "/traffic/views",
             parameters=url_parameters
         )
-        if isinstance(data, list):
+        if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
             return [
                 github.View.View(self._requester, headers, item, completed=True)
-                for item in data
+                for item in data["views"]
             ]
 
 
@@ -1534,21 +1534,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clone.Clone`
-        """  
-        assert per is gitHub.GithubObject.NotSet or ( isinstance(per, (str, unicode)) 
+        """
+        assert per is github.GithubObject.NotSet or ( isinstance(per, (str, unicode))
             and (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url+"/traffic/clones",
+            self.url + "/traffic/clones",
             parameters=url_parameters
         )
-        if isinstance(data, list):
+        if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
             return [
                 github.Clone.Clone(self._requester, headers, item, completed=True)
-                for item in data
+                for item in data["clones"]
             ]
 
 

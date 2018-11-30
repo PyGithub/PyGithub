@@ -69,7 +69,7 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
         self._uniques = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "commit" in attributes:  # pragma no branch
+        if "referrer" in attributes:  # pragma no branch
             self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
