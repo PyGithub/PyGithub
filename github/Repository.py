@@ -1512,8 +1512,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.View.View`
         """
-        assert per is github.GithubObject.NotSet or ( isinstance(per, (str, unicode))
-            and (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and
+               (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
@@ -1523,11 +1523,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             parameters=url_parameters
         )
         if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
-            return [
+            data["views"] = [
                 github.View.View(self._requester, headers, item, completed=True)
                 for item in data["views"]
             ]
-
+            return data
 
     def get_clones_breakdown(self, per=github.GithubObject.NotSet):
         """
@@ -1535,8 +1535,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clone.Clone`
         """
-        assert per is github.GithubObject.NotSet or ( isinstance(per, (str, unicode))
-            and (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and
+               (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
@@ -1546,11 +1546,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             parameters=url_parameters
         )
         if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
-            return [
+            data["clones"] = [
                 github.Clone.Clone(self._requester, headers, item, completed=True)
                 for item in data["clones"]
             ]
-
+            return data
 
     def get_projects(self, state=github.GithubObject.NotSet):
         """

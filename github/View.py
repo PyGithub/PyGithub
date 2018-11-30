@@ -49,7 +49,6 @@ class View(github.GithubObject.NonCompletableGithubObject):
         """
         return self._timestamp.value
 
-
     @property
     def count(self):
         """
