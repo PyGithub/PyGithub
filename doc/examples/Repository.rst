@@ -138,6 +138,40 @@ Delete a file in the repository
     >>> repo.delete_file(contents.path, "remove test", contents.sha, branch="test")
     {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
 
+Get the top 10 referrers over the last 14 days
+-------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> contents = repo.get_top_referrers()
+
+Get the top 10 popular contents over the last 14 days
+-------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> contents = repo.get_top_paths()
+
+Get number of clones and breakdown for the last 14 days
+-------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> contents = repo.get_clones_traffic()
+    >>> contents = repo.get_clones_traffic(per="week")
+
+Get number of views and breakdown for the last 14 days
+-------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> contents = repo.get_views_traffic()
+    >>> contents = repo.get_views_traffic(per="week")
+
 =======
 ======
 Mark the notifications of the repository as read
