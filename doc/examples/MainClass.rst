@@ -39,6 +39,15 @@ Get organization by name
     >>> org.login
     u'PyGithub'
 
+Get response as python dictionary
+------------------------
+
+.. code-block:: python
+
+    >>> org = g.get_organization("PyGithub")
+    >>> org.raw_data
+    {'login': 'PyGithub', 'id': 11288996, ... 'url': 'https://api.github.com/orgs/PyGithub'}
+
 Search repositories by language
 -------------------------------
 
