@@ -46,8 +46,20 @@ class Traffic(Framework.TestCase):
 
     def testGetViews(self):
         viewsResponse = self.repo.get_views_traffic()
-        #self.assertEqual()
+        self.assertEqual(viewsResponse["count"], 93)
+        self.assertEqual(viewsResponse["uniques"], 4)
+        self.assertEqual(len(viewsResponse["views"]), 5)
+        view_obj = viewsResponse["views"][0]
+        self.assertEqual(view_obj.uniques, 4)
+        self.assertEqual(view_obj.timestamp, "2018-11-27T00:00:00Z")
+        self.assertEqual(view_obj.count, 56)
 
     def testGetClones(self):
         clonesResponse = self.repo.get_clones_traffic()
-        #self.assertEqual()
+        self.assertEqual(clonesResponse["count"], 4)
+        self.assertEqual(clonesResponse["uniques"], 4)
+        self.assertEqual(len(clonesResponse["clones"]), 1)
+        clone_obj = clonesResponse["clones"][0]
+        self.assertEqual(clone_obj.uniques, 4)
+        self.assertEqual(clone_obj.timestamp, "2018-11-27T00:00:00Z")
+        self.assertEqual(clone_obj.count, 4)
