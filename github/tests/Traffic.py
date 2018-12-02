@@ -38,7 +38,10 @@ class Traffic(Framework.TestCase):
 
     def testGetReferrers(self):
         referrerResponse = self.repo.get_top_referrers()
-        #self.assertEqual()
+        self.assertGreaterEqual(len(referrerResponse), 1)
+        self.assertEqual(referrerResponse[0].uniques, 1)
+        self.assertEqual(referrerResponse[0].referrer, "github.com")
+        self.assertEqual(referrerResponse[0].count, 5)
 
     def testGetPaths(self):
         pathsResponse = self.repo.get_top_paths()
