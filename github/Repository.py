@@ -1517,8 +1517,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.View.View`
         """
-        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and
-               (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
@@ -1540,8 +1539,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clone.Clone`
         """
-        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and
-               (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per is "day" or per is "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
@@ -2926,7 +2924,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
-        if "topics" in attributes: # pragma no branch
+        if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
