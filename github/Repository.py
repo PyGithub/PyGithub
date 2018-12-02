@@ -131,7 +131,7 @@ import github.StatsPunchCard
 import github.Stargazer
 import github.Referrer
 import github.Path
-import github.Clone
+import github.Clones
 import github.View
 
 import Consts
@@ -1550,7 +1550,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
             data["clones"] = [
-                github.Clone.Clone(self._requester, headers, item, completed=True)
+                github.Clones.Clones(self._requester, headers, item, completed=True)
                 for item in data["clones"]
             ]
             return data

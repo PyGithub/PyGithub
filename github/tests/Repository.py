@@ -649,12 +649,11 @@ class Repository(Framework.TestCase):
     def testGetRepositoryWith301Redirect(self):
         repo = self.g.get_repo("protoncoin/protoncoin")
         self.assertEqual(repo.full_name, 'padima2/protoncoin')
-    
-    
+
     def testGetReferrers(self):
         referrerResponse = self.repo.get_top_referrers()
         #self.assertEqual()
-    
+
     def testGetPaths(self):
         pathsResponse = self.repo.get_top_paths()
         #self.assertEqual()
@@ -662,7 +661,7 @@ class Repository(Framework.TestCase):
     def testGetViews(self):
         viewsResponse = self.repo.get_views_traffic()
         #self.assertEqual()
-    
+
     def testGetClones(self):
         clonesResponse = self.repo.get_clones_traffic()
         #self.assertEqual()
