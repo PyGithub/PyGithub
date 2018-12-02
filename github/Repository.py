@@ -60,7 +60,12 @@
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
+# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
+# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
+# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
+# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
+# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1506,7 +1511,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
 
-    def get_views_breakdown(self, per=github.GithubObject.NotSet):
+    def get_views_traffic(self, per=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
@@ -1529,7 +1534,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             ]
             return data
 
-    def get_clones_breakdown(self, per=github.GithubObject.NotSet):
+    def get_clones_traffic(self, per=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
