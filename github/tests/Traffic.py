@@ -51,7 +51,6 @@ class Traffic(Framework.TestCase):
         self.assertEqual(pathsResponse[0].path, "/jkufro/PyGithub")
         self.assertEqual(pathsResponse[0].title, "jkufro/PyGithub: Typed interactions with the GitHub API v3")
 
-
     def testGetViews(self):
         viewsResponse = self.repo.get_views_traffic()
         self.assertEqual(viewsResponse["count"], 93)
