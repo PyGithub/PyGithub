@@ -62,11 +62,11 @@ import os
 import re
 import sys
 import time
-import urllib
 from io import IOBase
 
 import requests
 import six
+from six.moves import urllib_parse
 
 from github import Consts
 from github.GithubException import (
@@ -77,11 +77,6 @@ from github.GithubException import (
     TwoFactorException,
     UnknownObjectException,
 )
-
-try:
-    import urlparse
-except ImportError:
-    from urllib import parse as urlparse
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -247,7 +242,7 @@ class Requester:
             self.__authorizationHeader = None
 
         self.__base_url = base_url
-        o = urlparse.urlparse(base_url)
+        o = urllib_parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
@@ -293,7 +288,7 @@ class Requester:
     def __customConnection(self, url):
         cnx = None
         if not url.startswith("/"):
-            o = urlparse.urlparse(url)
+            o = urllib_parse.urlparse(url)
             if o.hostname != self.__hostname or \
                (o.port and o.port != self.__port) or \
                (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
@@ -431,7 +426,7 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            o = urlparse.urlparse(responseHeaders['location'])
+            o = urllib_parse.urlparse(responseHeaders['location'])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
@@ -449,7 +444,7 @@ class Requester:
         if url.startswith("/"):
             url = self.__prefix + url
         else:
-            o = urlparse.urlparse(url)
+            o = urllib_parse.urlparse(url)
             assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
@@ -462,7 +457,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + urllib.urlencode(parameters)
+            return url + "?" + urllib_parse.urlencode(parameters)
 
     def __createConnection(self):
         kwds = {}

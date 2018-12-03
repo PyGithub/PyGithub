@@ -33,9 +33,8 @@
 
 from __future__ import absolute_import
 
-import urllib
-
 import six
+from six.moves import urllib_parse
 
 import github.GithubObject
 from github import Consts
@@ -118,7 +117,7 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     @property
     def _identity(self):
-        return urllib.quote(self.name)
+        return urllib_parse.quote(self.name)
 
     def _initAttributes(self):
         self._color = github.GithubObject.NotSet

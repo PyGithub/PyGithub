@@ -45,9 +45,9 @@
 from __future__ import absolute_import
 
 import datetime
-import urllib
 
 import six
+from six.moves import urllib_parse
 
 import github.GithubObject
 import github.IssueComment
@@ -442,7 +442,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if isinstance(label, github.Label.Label):
             label = label._identity
         else:
-            label = urllib.quote(label)
+            label = urllib_parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels/" + label

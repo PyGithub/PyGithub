@@ -84,10 +84,10 @@ from __future__ import absolute_import
 
 import datetime
 import sys
-import urllib
 from base64 import b64encode
 
 import six
+from six.moves import urllib_parse
 
 import github.AuthenticatedUser
 import github.Branch
@@ -1464,7 +1464,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents/" + urllib.quote(path),
+            self.url + "/contents/" + urllib_parse.quote(path),
             parameters=url_parameters
         )
         if isinstance(data, list):
@@ -1545,7 +1545,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents/" + urllib.quote(path),
+            self.url + "/contents/" + urllib_parse.quote(path),
             input=put_parameters
         )
 
@@ -1609,7 +1609,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents/" + urllib.quote(path),
+            self.url + "/contents/" + urllib_parse.quote(path),
             input=put_parameters
         )
 
@@ -1659,7 +1659,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents/" + urllib.quote(path),
+            self.url + "/contents/" + urllib_parse.quote(path),
             input=url_parameters
         )
 
@@ -1680,7 +1680,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents/" + urllib.quote(path),
+            self.url + "/contents/" + urllib_parse.quote(path),
             parameters=url_parameters
         )
 
@@ -2027,7 +2027,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, six.string_types), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/labels/" + urllib.quote(name)
+            self.url + "/labels/" + urllib_parse.quote(name)
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -2481,7 +2481,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(keyword, six.string_types), keyword
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword)
+            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib_parse.quote(keyword)
         )
         return [
             github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
