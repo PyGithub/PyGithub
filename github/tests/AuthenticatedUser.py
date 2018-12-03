@@ -168,13 +168,13 @@ class AuthenticatedUser(Framework.TestCase):
     def testCreateGist(self):
         gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")}, "Gist created by PyGithub")
         self.assertEqual(gist.description, "Gist created by PyGithub")
-        self.assertEqual(gist.files.keys(), ["foobar.txt"])
+        self.assertEqual(list(gist.files.keys()), ["foobar.txt"])
         self.assertEqual(gist.files["foobar.txt"].content, "File created by PyGithub")
 
     def testCreateGistWithoutDescription(self):
         gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")})
         self.assertEqual(gist.description, None)
-        self.assertEqual(gist.files.keys(), ["foobar.txt"])
+        self.assertEqual(list(gist.files.keys()), ["foobar.txt"])
         self.assertEqual(gist.files["foobar.txt"].content, "File created by PyGithub")
 
     def testCreateKey(self):
