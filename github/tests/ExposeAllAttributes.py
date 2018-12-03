@@ -28,6 +28,7 @@
 from __future__ import absolute_import, print_function
 
 from . import Framework
+from six import iteritems
 
 
 class ExposeAllAttributes(Framework.TestCase):
@@ -134,7 +135,7 @@ class ExposeAllAttributes(Framework.TestCase):
             # userKey,  # Security issue if put as-is in ReplayData
         ])
 
-        for className, attributesMissingInClass in sorted(missingAttributes.iteritems()):
+        for className, attributesMissingInClass in sorted(iteritems(missingAttributes)):
             for attrName, value in sorted(attributesMissingInClass.iteritems()):
                 print(className, attrName, "->", repr(value))
 
