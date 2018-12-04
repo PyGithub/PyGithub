@@ -45,7 +45,7 @@ class Clones(github.GithubObject.NonCompletableGithubObject):
     @property
     def timestamp(self):
         """
-        :type: string
+        :type: datetime.datetime
         """
         return self._timestamp.value
 
@@ -70,7 +70,7 @@ class Clones(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "timestamp" in attributes:  # pragma no branch
-            self._timestamp = self._makeStringAttribute(attributes["timestamp"])
+            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch

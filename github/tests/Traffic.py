@@ -29,6 +29,7 @@
 import Framework
 
 import github
+import datetime
 
 class Traffic(Framework.TestCase):
     def setUp(self):
@@ -58,7 +59,7 @@ class Traffic(Framework.TestCase):
         self.assertEqual(len(viewsResponse["views"]), 5)
         view_obj = viewsResponse["views"][0]
         self.assertEqual(view_obj.uniques, 4)
-        self.assertEqual(view_obj.timestamp, "2018-11-27T00:00:00Z")
+        self.assertEqual(view_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
         self.assertEqual(view_obj.count, 56)
 
     def testGetClones(self):
@@ -68,5 +69,5 @@ class Traffic(Framework.TestCase):
         self.assertEqual(len(clonesResponse["clones"]), 1)
         clone_obj = clonesResponse["clones"][0]
         self.assertEqual(clone_obj.uniques, 4)
-        self.assertEqual(clone_obj.timestamp, "2018-11-27T00:00:00Z")
+        self.assertEqual(clone_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
         self.assertEqual(clone_obj.count, 4)

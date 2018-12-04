@@ -1481,7 +1481,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_top_referrers(self):
         """
-        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`+
+        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`_
         :rtype: :class:`list` of :class:`github.Referrer.Referrer`
         """
         url_parameters = dict()
@@ -1497,7 +1497,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_top_paths(self):
         """
-        :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`+
+        :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`_
         :rtype: :class:`list` of :class:`github.Path.Path`
         """
         url_parameters = dict()
@@ -1517,7 +1517,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.View.View`
         """
-        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
@@ -1539,7 +1539,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clone.Clone`
         """
-        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per is "day" or per is "week")), "per must be day or week, day by default"
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
