@@ -136,7 +136,7 @@ class ExposeAllAttributes(Framework.TestCase):
         ])
 
         for className, attributesMissingInClass in sorted(iteritems(missingAttributes)):
-            for attrName, value in sorted(attributesMissingInClass.iteritems()):
+            for attrName, value in sorted(iteritems(attributesMissingInClass)):
                 print(className, attrName, "->", repr(value))
 
         self.assertEqual(sum(len(attrs) for attrs in missingAttributes.values()), 0)
