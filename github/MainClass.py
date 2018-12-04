@@ -648,7 +648,7 @@ class Github(object):
         )
         return attributes
 
-    def create_from_raw_data(self, klass, raw_data, headers={}):
+    def create_from_raw_data(self, klass, raw_data, headers=None):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
         and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
@@ -658,7 +658,7 @@ class Github(object):
         :param headers: dict
         :rtype: instance of class ``klass``
         """
-        return klass(self.__requester, headers, raw_data, completed=True)
+        return klass(self.__requester, headers or {}, raw_data, completed=True)
 
     def dump(self, obj, file, protocol=0):
         """

@@ -339,7 +339,10 @@ class Requester:
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestBlob(self, verb, url, parameters={}, headers={}, input=None, cnx=None):
+    def requestBlob(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
+        headers = headers or {}
+        parameters = parameters or {}
+
         def encode(local_path):
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
