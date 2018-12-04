@@ -1044,11 +1044,12 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return status == 200
 
-    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+    def mark_notifications_as_read(self, last_read_at=None):
         """
         :calls: `PUT /notifications <https://developer.github.com/v3/activity/notifications>`_
         :param last_read_at: datetime
         """
+        last_read_at = last_read_at or datetime.datetime.utcnow()
         assert isinstance(last_read_at, datetime.datetime)
         put_parameters = {
             "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
