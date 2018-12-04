@@ -525,7 +525,7 @@ class Repository(Framework.TestCase):
 
         contents = self.repo.get_contents("")
         self.assertTrue(isinstance(contents, list))
-        self.assertEquals(len(contents), 14)
+        self.assertEqual(len(contents), 14)
 
     def testGetContentsWithRef(self):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
