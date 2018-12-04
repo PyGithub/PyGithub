@@ -41,7 +41,7 @@ python2 = sys.hexversion < 0x03000000
 
 
 class Logging(Framework.BasicTestCase):
-    class MockHandler:
+    class MockHandler(object):
         def __init__(self):
             self.level = logging.DEBUG
             self.handled = None

@@ -81,7 +81,7 @@ from github.GithubException import (
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
-class RequestsResponse:
+class RequestsResponse(object):
     # mimic the httplib response object
     def __init__(self, r):
         self.status = r.status_code
@@ -149,7 +149,7 @@ class HTTPRequestsConnectionClass(object):
         return
 
 
-class Requester:
+class Requester(object):
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None

@@ -61,7 +61,7 @@ def readLine(file):
         return file.readline().strip()
 
 
-class FakeHttpResponse:
+class FakeHttpResponse(object):
     def __init__(self, status, headers, output):
         self.status = status
         self.__headers = headers
@@ -90,7 +90,7 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Bearer jwt_removed"
 
 
-class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingConnection(object):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
     def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
@@ -163,7 +163,7 @@ class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class u
         RecordingConnection.__init__(self, file, "https", *args, **kwds)
 
 
-class ReplayingConnection:
+class ReplayingConnection(object):
     def __init__(self, testCase, file, protocol, host, port, *args, **kwds):
         self.__testCase = testCase
         self.__file = file

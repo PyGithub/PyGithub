@@ -43,7 +43,7 @@ import six
 from six.moves.urllib_parse import parse_qs
 
 
-class PaginatedListBase:
+class PaginatedListBase(object):
     def __init__(self):
         self.__elements = list()
 
@@ -75,7 +75,7 @@ class PaginatedListBase:
         self.__elements += newElements
         return newElements
 
-    class _Slice:
+    class _Slice(object):
         def __init__(self, theList, theSlice):
             self.__list = theList
             self.__start = theSlice.start or 0

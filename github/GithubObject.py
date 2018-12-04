@@ -46,7 +46,7 @@ from github.GithubException import BadAttributeException
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
-class _NotSetType:
+class _NotSetType(object):
     def __repr__(self):
         return "NotSet"
 
@@ -54,12 +54,12 @@ class _NotSetType:
 NotSet = _NotSetType()
 
 
-class _ValuedAttribute:
+class _ValuedAttribute(object):
     def __init__(self, value):
         self.value = value
 
 
-class _BadAttribute:
+class _BadAttribute(object):
     def __init__(self, value, expectedType, exception=None):
         self.__value = value
         self.__expectedType = expectedType
