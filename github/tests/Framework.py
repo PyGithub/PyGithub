@@ -36,6 +36,7 @@
 #                                                                              #
 ################################################################################
 
+import ast
 import json
 import os
 import sys
@@ -172,7 +173,7 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__host, readLine(self.__file))
         self.__testCase.assertEqual(self.__port, readLine(self.__file))
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
-        self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
+        self.__testCase.assertEqual(headers, ast.literal_eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
         if isinstance(input, (str, unicode)):
             if input.startswith("{"):
@@ -195,7 +196,7 @@ class ReplayingConnection:
 
     def getresponse(self):
         status = int(readLine(self.__file))
-        headers = eval(readLine(self.__file))
+        headers = ast.literal_eval(readLine(self.__file))
         output = readLine(self.__file)
 
         return FakeHttpResponse(status, headers, output)
