@@ -31,9 +31,9 @@ class Project(Framework.TestCase):
         self.repo = self.g.get_user().get_repo('PyGithub')
 
     def testGetProject(self):
-        id = 1682941
-        proj = self.g.get_project(id)
-        self.assertEqual(proj.id, id)
+        proj_id = 1682941
+        proj = self.g.get_project(proj_id)
+        self.assertEqual(proj.id, proj_id)
         self.assertEqual(proj.name, 'TestProject')
         
     def testGetOrganizationProjects(self):
@@ -53,13 +53,13 @@ class Project(Framework.TestCase):
         
     # See https://developer.github.com/v3/projects/#get-a-project
     def testProjectAttributes(self):
-        id = 1682941
-        proj = self.g.get_project(id)
+        proj_id = 1682941
+        proj = self.g.get_project(proj_id)
         self.assertEqual(proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub")
         self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
         self.assertEqual(proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1")
         self.assertEqual(proj.columns_url, "https://api.github.com/projects/1682941/columns")
-        self.assertEqual(proj.id, id)
+        self.assertEqual(proj.id, proj_id)
         self.assertEqual(proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
         self.assertEqual(proj.name, 'TestProject')
         self.assertEqual(proj.body, "To be used for testing project access API for PyGithub.")
