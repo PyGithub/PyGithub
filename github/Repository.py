@@ -60,7 +60,12 @@
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
+# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
+# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
+# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
+# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
+# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -124,6 +129,10 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+import github.Referrer
+import github.Path
+import github.Clones
+import github.View
 
 import Consts
 
@@ -1470,17 +1479,93 @@ class Repository(github.GithubObject.CompletableGithubObject):
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
+    def get_top_referrers(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`_
+        :rtype: :class:`list` of :class:`github.Referrer.Referrer`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/referrers"
+        )
+        if isinstance(data, list):
+            return [
+                github.Referrer.Referrer(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+    def get_top_paths(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`_
+        :rtype: :class:`list` of :class:`github.Path.Path`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/paths"
+        )
+        if isinstance(data, list):
+            return [
+                github.Path.Path(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+    def get_views_traffic(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.View.View`
+        """
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/views",
+            parameters=url_parameters
+        )
+        if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
+            data["views"] = [
+                github.View.View(self._requester, headers, item, completed=True)
+                for item in data["views"]
+            ]
+            return data
+
+    def get_clones_traffic(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.Clone.Clone`
+        """
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/clones",
+            parameters=url_parameters
+        )
+        if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
+            data["clones"] = [
+                github.Clones.Clones(self._requester, headers, item, completed=True)
+                for item in data["clones"]
+            ]
+            return data
+
     def get_projects(self, state=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-        
+
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-            
+
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
@@ -2839,7 +2924,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
-        if "topics" in attributes: # pragma no branch
+        if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
