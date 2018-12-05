@@ -89,6 +89,7 @@ from SourceImport import *
 from Status import *
 from Tag import *
 from Team import *
+from Traffic import *
 from UserKey import *
 
 from PaginatedList import *
