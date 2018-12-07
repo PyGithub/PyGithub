@@ -16,12 +16,18 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -91,96 +97,6 @@ class Repository(Framework.TestCase):
         # test __repr__() based on this attributes
         self.assertEqual(self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")')
 
-    def testProtectBranch(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
-        self.assertEqual(branch.contexts, ["test"])
-
-    def testRemoveBranchProtection(self):
-        self.repo.protect_branch("master", False)
-        branch = self.repo.get_protected_branch("master")
-        self.assertFalse(branch.protected)
-        self.assertEqual(branch.enforcement_level, "off")
-        self.assertEqual(branch.contexts, [])
-
-    def testChangeBranchProtectionContexts(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
-        self.assertEqual(branch.contexts, ["test"])
-        self.repo.protect_branch("master", True, "everyone", ["test", "default"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertEqual(branch.contexts, ["default", "test"])
-        self.repo.protect_branch("master", True, "everyone", ["default"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertEqual(branch.contexts, ["default"])
-
-    def testRaiseErrorWithOutBranch(self):
-        raised = False
-        try:
-            self.repo.protect_branch("", True, "everyone", ["test"])
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 404)
-            self.assertEqual(
-                exception.data, {
-                    u'documentation_url': u'https://developer.github.com/v3/repos/#get-branch',
-                    u'message': u'Branch not found'
-                }
-            )
-            self.assertTrue(raised)
-
-    def testRaiseErrorWithBranchProtectionWithOutContext(self):
-        raised = False
-        try:
-            self.repo.protect_branch("master", True, "everyone")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 422)
-            self.assertEqual(
-                exception.data, {
-                    u'documentation_url': u'https://developer.github.com/v3',
-                    u'message': u'Invalid request.\n\n"contexts" wasn\'t supplied.'
-                }
-            )
-            self.assertTrue(raised)
-
-    def testRaiseErrorWithBranchProtectionWithInvalidEnforcementLevel(self):
-        raised = False
-        try:
-            self.repo.protect_branch("master", True, "", ["test"])
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 422)
-            self.assertEqual(
-                exception.data, {
-                    u'documentation_url':
-                    u'https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection',
-                    u'message': u'Validation Failed',
-                    u'errors': [
-                        {
-                            u'field': u'required_status_checks_enforcement_level',
-                            u'message': u"required_status_checks_enforcement_level enforcement level '%s' is not valid",
-                            u'code': u'custom',
-                            u'resource': u'ProtectedBranch'
-                        }
-                    ]
-                }
-            )
-            self.assertTrue(raised)
-
-    def testChangeBranchProtectionEnforcementLevel(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
-        self.repo.protect_branch("master", True, "non_admins", ["test"])
-        branch = self.repo.get_protected_branch("master")
-        self.assertEqual(branch.enforcement_level, "non_admins")
-
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
 
@@ -200,7 +116,7 @@ class Repository(Framework.TestCase):
         repo.delete()
 
     def testGetContributors(self):
-        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: c.login, ["jacquev6"])
+        self.assertListKeyEqual(self.repo.get_contributors(), lambda c: (c.login, c.contributions), [("jacquev6", 355)])
 
     def testCreateMilestone(self):
         milestone = self.repo.create_milestone("Milestone created by PyGithub", state="open", description="Description created by PyGithub", due_on=datetime.date(2012, 6, 15))
@@ -379,6 +295,19 @@ class Repository(Framework.TestCase):
         self.assertFalse(jacquev6.site_admin)
         self.repo.remove_from_collaborators(lyloa)
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
+
+    def testCollaboratorPermission(self):
+        self.assertEqual(self.repo.get_collaborator_permission('jacquev6'), 'admin')
+
+    def testCollaboratorPermissionNoPushAccess(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.repo.get_collaborator_permission('lyloa')
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data, {
+            u'documentation_url': u'https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level',
+            u'message': u'Must have push access to view collaborator permission.'
+            }
+        )
 
     def testCompare(self):
         comparison = self.repo.compare("v0.6", "v0.7")
@@ -571,6 +500,10 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
+    def testMarkNotificationsAsRead(self):
+        repo = self.g.get_user().get_repo("PyGithub")
+        repo.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 19, 43, 0))
+
     def testAssignees(self):
         lyloa = self.g.get_user("Lyloa")
         jacquev6 = self.g.get_user("jacquev6")
@@ -584,20 +517,20 @@ class Repository(Framework.TestCase):
 
     def testGetContents(self):
         self.assertEqual(len(self.repo.get_readme().content), 10212)
-        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md").content), 38121)
+        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md").content), 38121)
 
     def testGetContentDir(self):
 
-        contents = self.repo.get_contents("/")
+        contents = self.repo.get_contents("")
         self.assertTrue(isinstance(contents, list))
         self.assertEquals(len(contents), 14)
 
     def testGetContentsWithRef(self):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
-        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
 
     def testCreateFile(self):
-        newFile = '/doc/testCreateUpdateDeleteFile.md'
+        newFile = 'doc/testCreateUpdateDeleteFile.md'
         content = 'Hello world'
         self.repo.create_file(
             path=newFile, message='Create file for testCreateFile', content=content,
@@ -605,7 +538,7 @@ class Repository(Framework.TestCase):
             author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
 
     def testUpdateFile(self):
-        updateFile = '/doc/testCreateUpdateDeleteFile.md'
+        updateFile = 'doc/testCreateUpdateDeleteFile.md'
         content = 'Hello World'
         sha = self.repo.get_contents(updateFile).sha
         self.repo.update_file(
@@ -614,7 +547,7 @@ class Repository(Framework.TestCase):
             author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
 
     def testDeleteFile(self):
-        deleteFile = '/doc/testCreateUpdateDeleteFile.md'
+        deleteFile = 'doc/testCreateUpdateDeleteFile.md'
         sha = self.repo.get_contents(deleteFile).sha
         self.repo.delete_file(path=deleteFile, message='Delete file for testDeleteFile', sha=sha, branch="master")
 
@@ -641,14 +574,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(commit, None)
 
     def testMergeWithConflict(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             commit = self.repo.merge("branchForBase", "branchForHead")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 409)
-            self.assertEqual(exception.data, {"message": "Merge conflict"})
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 409)
+        self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(self.repo.get_issues_comments()[:40], lambda c: c.id, [5168757, 5181640, 5183010, 5186061, 5226090, 5449237, 5518272, 5547576, 5780183, 5781803, 5820199, 5820912, 5924198, 5965724, 5965812, 5965891, 5966555, 5966633, 5981084, 5981232, 5981409, 5981451, 5991965, 6019700, 6088432, 6293572, 6305625, 6357374, 6357422, 6447481, 6467193, 6467312, 6467642, 6481200, 6481392, 6556134, 6557261, 6568164, 6568181, 6568553])
@@ -664,14 +593,10 @@ class Repository(Framework.TestCase):
         self.repo.subscribe_to_hub("push", "http://requestb.in/1bc1sc61", "my_secret")
 
     def testBadSubscribePubSubHubbub(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.subscribe_to_hub("non-existing-event", "http://requestb.in/1bc1sc61")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 422)
-            self.assertEqual(exception.data, {"message": "Invalid event: \"non-existing-event\""})
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(raisedexp.exception.data, {"message": "Invalid event: \"non-existing-event\""})
 
     def testUnsubscribePubSubHubbub(self):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
@@ -720,6 +645,11 @@ class Repository(Framework.TestCase):
 
     def testReplaceTopics(self):
         self.repo.replace_topics(['github', 'testing'])
+
+    def testGetRepositoryWith301Redirect(self):
+        repo = self.g.get_repo("protoncoin/protoncoin")
+        self.assertEqual(repo.full_name, 'padima2/protoncoin')
+
 
 class LazyRepository(Framework.TestCase):
 

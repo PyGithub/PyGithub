@@ -12,8 +12,11 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Laurent Mazuel <lmazuel@microsoft.com>                        #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -77,6 +80,8 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "token private_token_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
+        elif headers["Authorization"].startswith("Bearer "):
+            headers["Authorization"] = "Bearer jwt_removed"
 
 
 class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
@@ -210,6 +215,7 @@ def ReplayingHttpsConnection(testCase, file, *args, **kwds):
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
+    jwtAuthMode = False
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -225,6 +231,7 @@ class BasicTestCase(unittest.TestCase):
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
+            self.jwt = GithubCredentials.jwt
             # @todo Remove client_id and client_secret from ReplayData (as we already remove login, password and oauth_token)
             # self.client_id = GithubCredentials.client_id
             # self.client_secret = GithubCredentials.client_secret
@@ -238,6 +245,7 @@ class BasicTestCase(unittest.TestCase):
             self.oauth_token = "oauth_token"
             self.client_id = "client_id"
             self.client_secret = "client_secret"
+            self.jwt = "jwt"
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -291,6 +299,8 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(self.oauth_token)
+        elif self.jwtAuthMode:
+            self.g = github.Github(jwt=self.jwt)
         else:
             self.g = github.Github(self.login, self.password)
 
@@ -301,3 +311,7 @@ def activateRecordMode():  # pragma no cover (Function useful only when recordin
 
 def activateTokenAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.tokenAuthMode = True
+
+
+def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
+    BasicTestCase.jwtAuthMode = True

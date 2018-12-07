@@ -15,6 +15,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Joel Koglin <JoelKoglin@gmail.com>                            #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
@@ -154,7 +155,12 @@ class PaginatedList(PaginatedListBase):
                 headers=self.__headers
             )
             if 'link' not in headers:
-                self.__totalCount = len(data)
+                if data and "total_count" in data:
+                    self.__totalCount = data["total_count"]
+                elif data:
+                    self.__totalCount = len(data)
+                else:
+                    self.__totalCount = 0
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
@@ -174,7 +180,7 @@ class PaginatedList(PaginatedListBase):
 
     @property
     def reversed(self):
-        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams)
+        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams, self.__headers, self.__list_item)
         r.__reverse()
         return r
 

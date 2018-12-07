@@ -12,10 +12,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +36,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+import datetime
 
 import github.GithubObject
 import github.PaginatedList
@@ -100,6 +104,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._company)
         return self._company.value
+
+    @property
+    def contributions(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._contributions)
+        return self._contributions.value
 
     @property
     def created_at(self):
@@ -326,6 +338,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._subscriptions_url.value
 
     @property
+    def suspended_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._suspended_at)
+        return self._suspended_at.value
+
+    @property
     def total_private_repos(self):
         """
         :type: integer
@@ -393,16 +413,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_gists(self):
+    def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user/gists <http://developer.github.com/v3/gists>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self._requester,
             self.url + "/gists",
-            None
+            url_parameters
         )
 
     def get_keys(self):
@@ -563,6 +588,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._blog = github.GithubObject.NotSet
         self._collaborators = github.GithubObject.NotSet
         self._company = github.GithubObject.NotSet
+        self._contributions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
@@ -591,6 +617,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._site_admin = github.GithubObject.NotSet
         self._starred_url = github.GithubObject.NotSet
         self._subscriptions_url = github.GithubObject.NotSet
+        self._suspended_at = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
@@ -607,6 +634,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
             self._company = self._makeStringAttribute(attributes["company"])
+        if "contributions" in attributes:  # pragma no branch
+            self._contributions = self._makeIntAttribute(attributes["contributions"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch
@@ -663,6 +692,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
             self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
+        if "suspended_at" in attributes:  # pragma no branch
+            self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "type" in attributes:  # pragma no branch

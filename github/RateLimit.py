@@ -30,6 +30,8 @@
 import github.GithubObject
 import github.Rate
 
+from deprecated import deprecated
+
 
 class RateLimit(github.GithubObject.NonCompletableGithubObject):
     """
@@ -37,18 +39,59 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"rate": self._rate.value})
+        return self.get__repr__({"core": self._core.value})
 
     @property
+    @deprecated(reason="""
+            The rate object is deprecated. If you're writing new API client code 
+            or updating existing code, you should use the core object instead of 
+            the rate object. The core object contains the same information that 
+            is present in the rate object.
+        """)
     def rate(self):
         """
+        (Deprecated) Rate limit for non-search-related API, use `core` instead
+
         :type: class:`github.Rate.Rate`
         """
-        return self._rate.value
+        return self._core.value
+
+    @property
+    def core(self):
+        """
+        Rate limit for the non-search-related API
+
+        :type: class:`github.Rate.Rate`
+        """
+        return self._core.value
+
+    @property
+    def search(self):
+        """
+        Rate limit for the Search API.
+
+        :type: class:`github.Rate.Rate`
+        """
+        return self._search.value
+
+    @property
+    def graphql(self):
+        """
+        (Experimental) Rate limit for GraphQL API, use with caution.
+
+        :type: class:`github.Rate.Rate`
+        """
+        return self._graphql.value
 
     def _initAttributes(self):
-        self._rate = github.GithubObject.NotSet
+        self._core = github.GithubObject.NotSet
+        self._search = github.GithubObject.NotSet
+        self._graphql = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "rate" in attributes:  # pragma no branch
-            self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
+        if "core" in attributes:  # pragma no branch
+            self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
+        if "search" in attributes:  # pragma no branch
+            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+        if "graphql" in attributes:  # pragma no branch
+            self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])

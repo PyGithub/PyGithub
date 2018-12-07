@@ -10,6 +10,7 @@
 # Copyright 2016 humbug <bah>                                                  #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -39,87 +40,66 @@ import Framework
 atMostPython2 = sys.hexversion < 0x03000000
 
 
-class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
+class Exceptions(Framework.TestCase):
     def testInvalidInput(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user().create_key("Bad key", "xxx")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 422)
-            self.assertEqual(
-                exception.data,
-                {
-                    "errors": [
-                        {
-                            "code": "custom",
-                            "field": "key",
-                            "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
-                            "resource": "PublicKey"
-                        }
-                    ],
-                    "message": "Validation Failed"
-                }
-            )
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(
+            raisedexp.exception.data, {
+                "errors": [
+                    {
+                        "code": "custom",
+                        "field": "key",
+                        "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
+                        "resource": "PublicKey"
+                    }
+                ],
+                "message": "Validation Failed"
+            }
+        )
 
     def testNonJsonDataReturnedByGithub(self):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user("jacquev6")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 503)
-            self.assertEqual(
-                exception.data,
-                {
-                    "data": "<html><body><h1>503 Service Unavailable</h1>No server is available to handle this request.</body></html>",
-                }
-            )
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 503)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "data": "<html><body><h1>503 Service Unavailable</h1>No server is available to handle this request.</body></html>",
+            }
+        )
 
     def testUnknownObject(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user().get_repo("Xxx")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 404)
-            self.assertEqual(exception.data, {"message": "Not Found"})
-            if atMostPython2:
-                self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
-            else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+        if atMostPython2:
+            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
+        else:
+            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
 
     def testUnknownUser(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user("ThisUserShouldReallyNotExist")
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 404)
-            self.assertEqual(exception.data, {"message": "Not Found"})
-            if atMostPython2:
-                self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
-            else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+        if atMostPython2:
+            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
+        else:
+            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
 
     def testBadAuthentication(self):
-        raised = False
-        try:
+        with self.assertRaises(github.GithubException) as raisedexp:
             github.Github("BadUser", "BadPassword").get_user().login
-        except github.GithubException, exception:
-            raised = True
-            self.assertEqual(exception.status, 401)
-            self.assertEqual(exception.data, {"message": "Bad credentials"})
-            if atMostPython2:
-                self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
-            else:
-                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
-        self.assertTrue(raised)
+        self.assertEqual(raisedexp.exception.status, 401)
+        self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
+        if atMostPython2:
+            self.assertEqual(str(raisedexp.exception), "401 {u'message': u'Bad credentials'}")
+        else:
+            self.assertEqual(str(raisedexp.exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
 
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
@@ -141,5 +121,14 @@ class SpecificExceptions(Framework.TestCase):
         def exceed():
             for i in range(100):
                 g.get_user("jacquev6")
+
+        self.assertRaises(github.RateLimitExceededException, exceed)
+
+    def testAuthenticatedRateLimitExceeded(self):
+
+        def exceed():
+            for i in range(100):
+                res = self.g.search_code("jacquev6")
+                res.get_page(0)
 
         self.assertRaises(github.RateLimitExceededException, exceed)

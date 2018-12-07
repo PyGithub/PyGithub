@@ -28,9 +28,11 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Dylan <djstein@ncsu.edu>                                      #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Maarten Fonville <maarten.fonville@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -109,7 +111,7 @@ class HTTPSRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
         return RequestsResponse(r)
 
     def close(self):
@@ -140,7 +142,7 @@ class HTTPRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
         return RequestsResponse(r)
 
     def close(self):
@@ -222,7 +224,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
+    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -234,6 +236,8 @@ class Requester:
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
+        elif jwt is not None:
+            self.__authorizationHeader = "Bearer " + jwt
         else:
             self.__authorizationHeader = None
 
@@ -298,11 +302,14 @@ class Requester:
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
-        elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
+        elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
-        elif status == 403 and output.get("message").lower().startswith("api rate limit exceeded"):
+        elif status == 403 and (
+            output.get("message").lower().startswith("api rate limit exceeded")
+            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
+        ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
@@ -349,7 +356,7 @@ class Requester:
                 mime_type = headers["Content-Type"]
             else:
                 guessed_type = mimetypes.guess_type(input)
-                mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
+                mime_type = guessed_type[0] if guessed_type[0] is not None else Consts.defaultMediaType
             f = open(local_path, 'rb')
             return mime_type, f
 
@@ -380,10 +387,10 @@ class Requester:
 
         status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
 
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
-        if "x-ratelimit-reset" in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
+        if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
+            self.rate_limiting = (int(responseHeaders[Consts.headerRateRemaining]), int(responseHeaders[Consts.headerRateLimit]))
+        if Consts.headerRateReset in responseHeaders:
+            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
@@ -420,7 +427,8 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
+            o = urlparse.urlparse(responseHeaders['location'])
+            return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
 
@@ -474,6 +482,8 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
+                elif requestHeaders["Authorization"].startswith("Bearer"):
+                    requestHeaders["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
                     requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))

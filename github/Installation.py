@@ -39,7 +39,9 @@ import github.Event
 import github.Authorization
 import github.Notification
 
-INTEGRATION_PREVIEW_HEADERS = {"Accept": "application/vnd.github.machine-man-preview+json"}
+import Consts
+
+INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 
 class Installation(github.GithubObject.NonCompletableGithubObject):

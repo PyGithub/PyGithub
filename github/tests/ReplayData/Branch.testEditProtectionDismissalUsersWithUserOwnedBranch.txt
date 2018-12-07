@@ -1,0 +1,11 @@
+https
+PUT
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection
+{'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
+{"restrictions": null, "required_pull_request_reviews": {"dismissal_restrictions": {"users": ["jacquev6"]}}, "required_status_checks": null, "enforce_admins": null}
+422
+[('status', '422 Unprocessable Entity'), ('x-ratelimit-remaining', '4994'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e0dc2dfc56971f4a36de1216356ea98b"'), ('date', 'Sun, 13 May 2018 10:42:14 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"documentation_url":"https://developer.github.com/v3/repos/branches/#update-branch-protection","message":"Validation Failed","errors":["Only organization repositories can have users and team restrictions"]}
+

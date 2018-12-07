@@ -15,7 +15,12 @@
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,6 +44,7 @@ from AuthenticatedUser import *
 from Authentication import *
 from Authorization import *
 from Branch import *
+from BranchProtection import *
 from Commit import *
 from CommitCombinedStatus import *
 from CommitComment import *
@@ -66,8 +72,10 @@ from Label import *
 from Milestone import *
 from NamedUser import *
 from Markdown import *
+from Notification import *
 from OrganizationHasInMembers import *
 from Organization import *
+from Project import *
 from PullRequest import *
 from PullRequestComment import *
 from PullRequestReview import *
@@ -75,10 +83,13 @@ from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *
+from RequiredPullRequestReviews import *
+from RequiredStatusChecks import *
 from SourceImport import *
 from Status import *
 from Tag import *
 from Team import *
+from Traffic import *
 from UserKey import *
 
 from PaginatedList import *
@@ -111,3 +122,5 @@ from Issue216 import *
 from Issue278 import *
 from Issue494 import *
 from Issue572 import *
+from Issue937 import *
+from Issue945 import *

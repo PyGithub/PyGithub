@@ -29,7 +29,7 @@
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                   #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
 # Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
@@ -41,18 +41,31 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
+# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
+# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
 # Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
+# Copyright 2018 Nicholas Buse <NicholasBuse@users.noreply.github.com>         #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
+# Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
+# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
+# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
+# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
+# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
+# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -95,6 +108,7 @@ import github.PullRequest
 import github.RepositoryKey
 import github.NamedUser
 import github.Milestone
+import github.Project
 import github.Comparison
 import github.CommitComment
 import github.GitCommit
@@ -115,6 +129,12 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+import github.Referrer
+import github.Path
+import github.Clones
+import github.View
+
+import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -772,13 +792,27 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator,
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty
         # there's a pending invitation for the given user.
         return github.Invitation.Invitation(self._requester, headers, data, completed=True) if \
             data is not None else None
+
+    def get_collaborator_permission(self, collaborator):
+        """
+        :calls: `GET /repos/:owner/:repo/collaborators/:username/permission <http://developer.github.com/v3/repos/collaborators>`_
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :rtype: string
+        """
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/collaborators/" + collaborator + "/permission",
+        )
+        return data["permission"]
 
     def compare(self, base, head):
         """
@@ -1071,7 +1105,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/labels",
             input=post_parameters,
-            headers={'Accept': 'application/vnd.github.symmetra-preview+json'}
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -1173,7 +1207,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if vcs_password is not github.GithubObject.NotSet:
             put_parameters["vcs_password"] = vcs_password
 
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -1223,9 +1257,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
-        assert allow_squash_merge is github.GithubObject.NotSet or (isinstance(allow_squash_merge, bool) and allow_squash_merge is True), allow_squash_merge
-        assert allow_merge_commit is github.GithubObject.NotSet or (isinstance(allow_merge_commit, bool) and allow_merge_commit is True), allow_merge_commit
-        assert allow_rebase_merge is github.GithubObject.NotSet or (isinstance(allow_rebase_merge, bool) and allow_rebase_merge is True), allow_rebase_merge
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         assert archived is github.GithubObject.NotSet or (isinstance(archived, bool) and archived is True), archived
         post_parameters = {
             "name": name,
@@ -1253,7 +1287,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if archived is not github.GithubObject.NotSet:
-            post_parameters["archived"] = archived 
+            post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -1304,19 +1338,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
-    def get_protected_branch(self, branch):
-        """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
-        :param branch: string
-        :rtype: :class:`github.Branch.Branch`
-        """
-        assert isinstance(branch, (str, unicode)), branch
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/branches/" + branch
-        )
-        return github.Branch.Branch(self._requester, headers, data, completed=True)
-
     def get_branches(self):
         """
         :calls: `GET /repos/:owner/:repo/branches <http://developer.github.com/v3/repos>`_
@@ -1329,16 +1350,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_collaborators(self):
+    def get_collaborators(self, affiliation=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/collaborators <http://developer.github.com/v3/repos/collaborators>`_
+        :param affiliation: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
+
+        url_parameters = dict()
+        allowed_affiliations = ['outside', 'direct', 'all']
+        if affiliation is not github.GithubObject.NotSet:
+            assert isinstance(affiliation, str), affiliation
+            assert affiliation in allowed_affiliations, \
+                'Affiliation can be one of ' + ', '.join(allowed_affiliations)
+            url_parameters['affiliation'] = affiliation
+
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/collaborators",
-            None
+            url_parameters
         )
 
     def get_comment(self, id):
@@ -1438,7 +1469,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             parameters=url_parameters
         )
         if isinstance(data, list):
@@ -1447,6 +1478,101 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def get_top_referrers(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`_
+        :rtype: :class:`list` of :class:`github.Referrer.Referrer`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/referrers"
+        )
+        if isinstance(data, list):
+            return [
+                github.Referrer.Referrer(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+    def get_top_paths(self):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`_
+        :rtype: :class:`list` of :class:`github.Path.Path`
+        """
+        url_parameters = dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/popular/paths"
+        )
+        if isinstance(data, list):
+            return [
+                github.Path.Path(self._requester, headers, item, completed=True)
+                for item in data
+            ]
+
+    def get_views_traffic(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/views <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.View.View`
+        """
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/views",
+            parameters=url_parameters
+        )
+        if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
+            data["views"] = [
+                github.View.View(self._requester, headers, item, completed=True)
+                for item in data["views"]
+            ]
+            return data
+
+    def get_clones_traffic(self, per=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
+        :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.Clone.Clone`
+        """
+        assert per is github.GithubObject.NotSet or (isinstance(per, (str, unicode)) and (per == "day" or per == "week")), "per must be day or week, day by default"
+        url_parameters = dict()
+        if per is not github.GithubObject.NotSet:
+            url_parameters["per"] = per
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/traffic/clones",
+            parameters=url_parameters
+        )
+        if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
+            data["clones"] = [
+                github.Clones.Clones(self._requester, headers, item, completed=True)
+                for item in data["clones"]
+            ]
+            return data
+
+    def get_projects(self, state=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#list-repository-projects>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        :param state: string
+        """
+
+        url_parameters = dict()
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            url_parameters,
+            {"Accept": Consts.mediaTypeProjectsPreview}
+        )
 
     def create_file(self, path, message, content,
                     branch=github.GithubObject.NotSet,
@@ -1500,7 +1626,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1564,7 +1690,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1614,7 +1740,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             input=url_parameters
         )
 
@@ -1635,7 +1761,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + urllib.quote(path),
+            self.url + "/contents/" + urllib.quote(path),
             parameters=url_parameters
         )
 
@@ -1842,7 +1968,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/issues <http://developer.github.com/v3/issues>`_
         :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
-        :param state: string
+        :param state: string. `open`, `closed`, or `all`. If this is not set the GitHub API default behavior will be used. At the moment this is to return only open issues. This might change anytime on GitHub API side and it could be clever to explicitly specify the state value.
         :param assignee: string or :class:`github.NamedUser.NamedUser` or "none" or "*"
         :param mentioned: :class:`github.NamedUser.NamedUser`
         :param labels: list of :class:`github.Label.Label`
@@ -1930,7 +2056,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/issues/events/" + str(id)
+            self.url + "/issues/events/" + str(id),
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
         return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
@@ -1943,7 +2070,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/issues/events",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
 
     def get_key(self, id):
@@ -2169,10 +2297,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_source_import(self):
         """
-        :calls: `GET /repos/:owner/:repo/import https://developer.github.com/v3/migration/source_imports/#get-import-progress`_
+        :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
         :rtype: :class:`github.SourceImport.SourceImport`
         """
-        import_header = {"Accept": "application/vnd.github.barred-rock-preview"}
+        import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/import",
@@ -2205,7 +2333,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/stargazers",
             None,
-            headers={'Accept': 'application/vnd.github.v3.star+json'}
+            headers={'Accept': Consts.mediaTypeStarringPreview}
         )
 
     def get_stats_contributors(self):
@@ -2344,7 +2472,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_latest_release(self):
         """
-        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :calls: `GET /repos/:owner/:repo/releases/latest <https://developer.github.com/v3/repos/releases/#get-the-latest-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -2373,7 +2501,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'}
+            headers={'Accept': Consts.mediaTypeTopicsPreview}
         )
         return data['names']
 
@@ -2441,6 +2569,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             for element in data["issues"]
         ]
 
+    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+        """
+        :calls: `PUT /repos/:owner/:repo/notifications <https://developer.github.com/v3/activity/notifications>`_
+        :param last_read_at: datetime
+        """
+        assert isinstance(last_read_at, datetime.datetime)
+        put_parameters = {
+            "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/notifications",
+            input=put_parameters
+        )
+
     def merge(self, base, head, commit_message=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/merges <http://developer.github.com/v3/repos/merging>`_
@@ -2468,37 +2612,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
-        """
-        :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
-        :param branch: string
-        :param enabled: boolean
-        :param enforcement_level: string
-        :param contexts: list of strings
-        :rtype: None
-        """
-
-        assert isinstance(branch, (str, unicode))
-        assert isinstance(enabled, bool)
-        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
-
-        post_parameters = {
-            "protection": {}
-        }
-        if enabled is not github.GithubObject.NotSet:
-            post_parameters["protection"]["enabled"] = enabled
-        if enforcement_level is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"] = {}
-            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
-        if contexts is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url + "/branches/" + branch,
-            input=post_parameters
-        )
-
     def replace_topics(self, topics):
         """
         :calls: `PUT /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
@@ -2511,7 +2624,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'},
+            headers={'Accept': Consts.mediaTypeTopicsPreview},
             input=post_parameters
         )
 
@@ -2811,7 +2924,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
-        if "topics" in attributes: # pragma no branch
+        if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])

@@ -25,8 +25,9 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.NamedUser
+
+import Consts
 
 
 class Reaction(github.GithubObject.CompletableGithubObject):
@@ -77,7 +78,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         self._requester.requestJsonAndCheck(
             "DELETE",
             self._parentUrl("") + "/reactions/" + str(self.id),
-            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+            headers={'Accept': Consts.mediaTypeReactionsPreview}
         )
 
     def _initAttributes(self):

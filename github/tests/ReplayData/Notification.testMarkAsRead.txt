@@ -1,0 +1,11 @@
+https
+PATCH
+api.github.com
+None
+/notifications/threads/397777914
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+205
+[('Server', 'GitHub.com'), ('Date', 'Thu, 18 Oct 2018 18:46:59 GMT'), ('Content-Type', 'text/plain;charset=utf-8'), ('Content-Length', '0'), ('Status', '205 Reset Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4983'), ('X-RateLimit-Reset', '1539890344'), ('X-OAuth-Scopes', 'admin:gpg_key, admin:public_key, admin:repo_hook, gist, notifications, repo, user, write:discussion'), ('X-Accepted-OAuth-Scopes', 'notifications, repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'B14A:4C25:2AC483C:58CB194:5BC8D523')]
+
+

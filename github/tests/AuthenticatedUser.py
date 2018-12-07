@@ -10,8 +10,9 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -186,6 +187,7 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetGists(self):
         self.assertListKeyEqual(self.user.get_gists(), lambda g: g.id, ["2793505", "2793179", "11cb445f8197e17d303d", "1942384", "dcb7de17e8a52b74541d"])
+        self.assertListKeyEqual(self.user.get_gists(since=datetime.datetime(2012, 3, 1, 23, 0, 0)), lambda g: g.id, ["2793505", "2793179", "11cb445f8197e17d303d"])
 
     def testGetStarredGists(self):
         self.assertListKeyEqual(self.user.get_starred_gists(), lambda g: g.id, ["1942384", "dcb7de17e8a52b74541d"])
@@ -216,7 +218,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertListKeyEqual(self.user.get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
 
     def testGetReposWithArguments(self):
-        self.assertListKeyEqual(self.user.get_repos("public", "full_name", "desc"), lambda r: r.name, ["ViDE", "QuadProgMm", "PyGithub", "DrawTurksHead", "DrawSyntax", "django", "developer.github.com", "C4Planner", "Boost.HierarchicalEnum", "acme-public-website"])
+        self.assertListKeyEqual(self.user.get_repos("all", "owner", "public", "full_name", "desc"), lambda r: r.name, ["ViDE", "QuadProgMm", "PyGithub", "DrawTurksHead", "DrawSyntax", "django", "developer.github.com", "C4Planner", "Boost.HierarchicalEnum", "acme-public-website"])
 
     def testCreateFork(self):
         repo = self.user.create_fork(self.g.get_user("nvie").get_repo("gitflow"))
@@ -240,6 +242,9 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetNotificationsWithOtherArguments(self):
         self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])
+
+    def testMarkNotificationsAsRead(self):
+        self.user.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 20, 01, 0))
 
     def testGetTeams(self):
         self.assertListKeyEqual(self.user.get_teams(), lambda t: t.name, ["Owners", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries"])

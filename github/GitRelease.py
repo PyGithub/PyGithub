@@ -8,9 +8,13 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
+# Copyright 2018 nurupo <nurupo.contributions@gmail.com>                       #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -33,7 +37,7 @@
 
 from os.path import basename
 import github.GithubObject
-import github.GitAuthor
+import github.NamedUser
 import github.GitReleaseAsset
 
 
@@ -104,7 +108,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     @property
     def author(self):
         """
-        :type: :class:`github.GitAuthor.GitAuthor`
+        :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._author)
         return self._author.value
@@ -281,7 +285,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
-            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:

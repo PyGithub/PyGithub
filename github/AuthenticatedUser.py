@@ -14,12 +14,13 @@
 # Copyright 2016 E. Dunham <github@edunham.net>                                #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -54,6 +55,8 @@ import github.Issue
 import github.Event
 import github.Authorization
 import github.Notification
+
+import Consts
 
 
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
@@ -446,7 +449,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         if client_secret is not github.GithubObject.NotSet:
             post_parameters["client_secret"] = client_secret
         if onetime_password is not None:
-            request_header = {'X-GitHub-OTP': onetime_password}  # pragma no cover (Should be covered)
+            request_header = {Consts.headerOTP: onetime_password}  # pragma no cover (Should be covered)
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
@@ -701,16 +704,21 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_gists(self):
+    def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists <http://developer.github.com/v3/gists>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self._requester,
             "/gists",
-            None
+            url_parameters
         )
 
     def get_issues(self, filter=github.GithubObject.NotSet, state=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
@@ -891,18 +899,26 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
+    def get_repos(self, visibility=github.GithubObject.NotSet, affiliation=github.GithubObject.NotSet, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """
-        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`_
+        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`
+        :param visibility: string
+        :param affiliation: string
         :param type: string
         :param sort: string
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
+        assert visibility is github.GithubObject.NotSet or isinstance(visibility, (str, unicode)), visibility
+        assert affiliation is github.GithubObject.NotSet or isinstance(affiliation, (str, unicode)), affiliation
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
         assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
         assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
+        if visibility is not github.GithubObject.NotSet:
+            url_parameters["visibility"] = visibility
+        if affiliation is not github.GithubObject.NotSet:
+            url_parameters["affiliation"] = affiliation
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
         if sort is not github.GithubObject.NotSet:
@@ -1028,6 +1044,22 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return status == 200
 
+    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+        """
+        :calls: `PUT /notifications <https://developer.github.com/v3/activity/notifications>`_
+        :param last_read_at: datetime
+        """
+        assert isinstance(last_read_at, datetime.datetime)
+        put_parameters = {
+            "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            "/notifications",
+            input=put_parameters
+        )
+
     def remove_from_emails(self, *emails):
         """
         :calls: `DELETE /user/emails <http://developer.github.com/v3/users/emails>`_
@@ -1104,7 +1136,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user/repository_invitations/" + str(invitation),
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input={}
         )
 

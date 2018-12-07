@@ -1,0 +1,44 @@
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/enforce_admins
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4994'), ('content-length', '330'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"2dada6dafd332016bcdf06e42487e520"'), ('date', 'Thu, 10 May 2012 13:56:55 GMT'), ('content-type', 'application/json; charset=utf-8')]
+
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/enforce_admins
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', 'W/"5ebb2cbbb268262fba4eade23df2ed85"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4975'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '935C:2DD6:186AD1F:1F9B1CD:5AF58E17'), ('date', 'Fri, 11 May 2018 12:35:41 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('x-runtime-rack', '0.035550'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1526042267')]
+{"url":"https://api.github.com/repos/jacquev6/PyGithub/branches/add-pr-review-request/protection/enforce_admins","enabled":false}
+
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/enforce_admins
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', 'W/"5ebb2cbbb268262fba4eade23df2ed85"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4975'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '935C:2DD6:186AD1F:1F9B1CD:5AF58E17'), ('date', 'Fri, 11 May 2018 12:35:51 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('x-runtime-rack', '0.035550'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1526042267')]
+''
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/integrations/protection/enforce_admins
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', 'W/"7e30c47ab395fea0aa2cb8f9c487c7be"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4998'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '92CC:2DD0:1360C19:194AF93:5AF58EA4'), ('date', 'Fri, 11 May 2018 12:38:01 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('x-runtime-rack', '0.038876'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1526045876')]
+{"url":"https://api.github.com/repos/jacquev6/PyGithub/branches/add-pr-review-request/protection/enforce_admins","enabled":true}
+

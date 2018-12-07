@@ -9,6 +9,9 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
@@ -70,6 +73,9 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.prerelease, False)
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
+        self.assertEqual(self.release.author.login, "edhollandAL")
+        self.assertEqual(self.release.author.id, 11922660)
+        self.assertEqual(self.release.author.type, "User")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
         self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
         self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))

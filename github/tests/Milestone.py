@@ -52,7 +52,7 @@ class Milestone(Framework.TestCase):
         self.assertEqual(self.milestone.creator.login, "jacquev6")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.milestone.__repr__(), 'Milestone(number=1)')
+        self.assertEqual(self.milestone.__repr__(), 'Milestone(title="Version 0.4", number=1)')
 
     def testEditWithMinimalParameters(self):
         self.milestone.edit("Title edited by PyGithub")
