@@ -798,6 +798,21 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def invitations(self):
+        """
+        :calls: `GET /orgs/:org/invitations <https://developer.github.com/v3/orgs/members>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/invitations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeOrganizationInvitationPreview
+            }
+        )
+
     def invite_user(self, user=github.GithubObject.NotSet, email=github.GithubObject.NotSet, role=github.GithubObject.NotSet, teams=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/invitations <http://developer.github.com/v3/orgs/members>`_
