@@ -41,6 +41,9 @@ import os
 import sys
 import traceback
 import unittest
+import urllib3
+import httpretty
+from requests.structures import CaseInsensitiveDict
 
 import github
 
@@ -165,6 +168,11 @@ class ReplayingConnection:
         self.__host = host
         self.__port = str(port)
 
+        if protocol == 'http':
+            self.__cnx = github.Requester.HTTPRequestsConnectionClass(host, port, *args, **kwds)
+        else:
+            self.__cnx = github.Requester.HTTPSRequestsConnectionClass(host, port, *args, **kwds)
+
     def request(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
         self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
@@ -185,6 +193,8 @@ class ReplayingConnection:
             # for non-string input (e.g. upload asset), let it pass.
             pass
 
+        self.__cnx.request(verb, url, input, headers)
+
     def __splitUrl(self, url):
         splitedUrl = url.split("?")
         if len(splitedUrl) == 1:
@@ -195,13 +205,32 @@ class ReplayingConnection:
 
     def getresponse(self):
         status = int(readLine(self.__file))
-        headers = eval(readLine(self.__file))
+        headers = CaseInsensitiveDict(eval(readLine(self.__file)))
         output = readLine(self.__file)
 
-        return FakeHttpResponse(status, headers, output)
+        # remove headers that interfere with the processing of the response body
+        headers.pop('status', None)
+        headers.pop('content-length', None)
+        headers.pop('transfer-encoding', None)
+        headers.pop('content-encoding', None)
+
+        httpretty.enable(allow_net_connect=False)
+        httpretty.register_uri(
+            self.__cnx.verb,
+            self.__protocol + '://' + self.__host + self.__cnx.url,
+            body=output,
+            status=status,
+            **headers
+        )
+
+        return self.__cnx.getresponse()
 
     def close(self):
         readLine(self.__file)
+
+        httpretty.disable()
+
+        self.__cnx.close()
 
 
 def ReplayingHttpConnection(testCase, file, *args, **kwds):
@@ -216,6 +245,7 @@ class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
     jwtAuthMode = False
+    retry = False
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -297,12 +327,23 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
+        retry_data = None
+        if self.retry:
+            # status codes returned on random github server errors
+            status_forcelist = (500, 502, 504)
+            retry_data = urllib3.Retry(
+                total=self.retry,
+                read=self.retry,
+                connect=self.retry,
+                status_forcelist=status_forcelist
+            )
+
         if self.tokenAuthMode:
-            self.g = github.Github(self.oauth_token)
+            self.g = github.Github(self.oauth_token, retry=retry_data)
         elif self.jwtAuthMode:
-            self.g = github.Github(jwt=self.jwt)
+            self.g = github.Github(jwt=self.jwt, retry=retry_data)
         else:
-            self.g = github.Github(self.login, self.password)
+            self.g = github.Github(self.login, self.password, retry=retry_data)
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
@@ -315,3 +356,7 @@ def activateTokenAuthMode():  # pragma no cover (Function useful only when recor
 
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.jwtAuthMode = True
+
+
+def enableRetry(retry):
+    BasicTestCase.retry = retry
