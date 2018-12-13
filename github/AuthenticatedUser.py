@@ -67,6 +67,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
+        self._completeIfNotSet(self._login)
         return self.get__repr__({"login": self._login.value})
 
     @property
