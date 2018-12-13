@@ -44,6 +44,7 @@ import unittest
 import urllib3
 import httpretty
 from requests.structures import CaseInsensitiveDict
+from urllib3.util import Url
 
 import github
 
@@ -166,7 +167,7 @@ class ReplayingConnection:
         self.__file = file
         self.__protocol = protocol
         self.__host = host
-        self.__port = str(port)
+        self.__port = port
 
         if protocol == 'http':
             self.__cnx = github.Requester.HTTPRequestsConnectionClass(host, port, *args, **kwds)
@@ -178,7 +179,7 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
         self.__testCase.assertEqual(verb, readLine(self.__file))
         self.__testCase.assertEqual(self.__host, readLine(self.__file))
-        self.__testCase.assertEqual(self.__port, readLine(self.__file))
+        self.__testCase.assertEqual(str(self.__port), readLine(self.__file))
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
@@ -208,22 +209,20 @@ class ReplayingConnection:
         headers = CaseInsensitiveDict(eval(readLine(self.__file)))
         output = readLine(self.__file)
 
-        # remove headers that interfere with the processing of the response body
-        headers.pop('status', None)
-        headers.pop('content-length', None)
-        headers.pop('transfer-encoding', None)
-        headers.pop('content-encoding', None)
+        url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=self.__cnx.url)
 
         httpretty.enable(allow_net_connect=False)
         httpretty.register_uri(
             self.__cnx.verb,
-            self.__protocol + '://' + self.__host + self.__cnx.url,
+            url.url,
             body=output,
-            status=status,
-            **headers
+            status=status
         )
 
-        return self.__cnx.getresponse()
+        response = self.__cnx.getresponse()
+        response.headers = headers
+
+        return response
 
     def close(self):
         readLine(self.__file)
