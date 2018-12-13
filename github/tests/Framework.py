@@ -169,10 +169,7 @@ class ReplayingConnection:
         self.__host = host
         self.__port = port
 
-        if protocol == 'http':
-            self.__cnx = github.Requester.HTTPRequestsConnectionClass(host, port, *args, **kwds)
-        else:
-            self.__cnx = github.Requester.HTTPSRequestsConnectionClass(host, port, *args, **kwds)
+        self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
@@ -211,15 +208,26 @@ class ReplayingConnection:
 
         url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=self.__cnx.url)
 
+        # make a copy of the headers and remove the ones that interfere with the response handling
+        adding_headers = CaseInsensitiveDict(headers)
+        adding_headers.pop('status', None)
+        adding_headers.pop('content-length', None)
+        adding_headers.pop('transfer-encoding', None)
+        adding_headers.pop('content-encoding', None)
+
         httpretty.enable(allow_net_connect=False)
         httpretty.register_uri(
             self.__cnx.verb,
             url.url,
             body=output,
-            status=status
+            status=status,
+            adding_headers=adding_headers
         )
 
+        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
         response = self.__cnx.getresponse()
+
+        # restore original headers to the response
         response.headers = headers
 
         return response
@@ -232,12 +240,18 @@ class ReplayingConnection:
         self.__cnx.close()
 
 
-def ReplayingHttpConnection(testCase, file, *args, **kwds):
-    return ReplayingConnection(testCase, file, "http", *args, **kwds)
+class ReplayingHttpConnection(ReplayingConnection):
+    _realConnection = github.Requester.HTTPRequestsConnectionClass
+
+    def __init__(self, testCase, file, *args, **kwds):
+        ReplayingConnection.__init__(self, testCase, file, "http", *args, **kwds)
 
 
-def ReplayingHttpsConnection(testCase, file, *args, **kwds):
-    return ReplayingConnection(testCase, file, "https", *args, **kwds)
+class ReplayingHttpsConnection(ReplayingConnection):
+    _realConnection = github.Requester.HTTPSRequestsConnectionClass
+
+    def __init__(self, testCase, file, *args, **kwds):
+        ReplayingConnection.__init__(self, testCase, file, "https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
