@@ -25,22 +25,35 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import urllib3
 
 import Framework
 
 import requests
 import datetime
 
+
 class Retry(Framework.TestCase):
     def setUp(self):
-        Framework.enableRetry(3)
+        # status codes returned on random github server errors
+        status_forcelist = (500, 502, 504)
+        retry = urllib3.Retry(
+            total=3,
+            read=3,
+            connect=3,
+            status_forcelist=status_forcelist
+        )
+
+        Framework.enableRetry(retry)
         Framework.TestCase.setUp(self)
 
-    def testRetry(self):
+    def testRaisesRetryErrorAfterMaxRetries(self):
         try:
             response = self.g.get_repo('PyGithub/PyGithub')
         except requests.exceptions.RetryError:
-            print('yay!')
+            return
+
+        assert True == False
 
     # def testGetPaths(self):
     #     pathsResponse = self.repo.get_top_paths()

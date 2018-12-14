@@ -103,6 +103,7 @@ from ExposeAllAttributes import *
 from BadAttributes import *
 from Equality import *
 from Search import *
+from Retry import *
 
 from Issue33 import *
 from Issue50 import *
@@ -124,5 +125,3 @@ from Issue494 import *
 from Issue572 import *
 from Issue937 import *
 from Issue945 import *
-
-from Retry import *
