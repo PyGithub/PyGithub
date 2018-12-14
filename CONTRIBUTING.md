@@ -53,7 +53,12 @@ def get_protected_branch(self):
 
 ## Automated tests
 
-You can run the tests through `python -m github.tests`.
+First you need to install the test dependencies:
+```bash
+pip install -r test-requirements.txt
+```
+
+Then you can run the tests through `python -m github.tests`.
 Run a specific test with `python -m github.tests TestCase` or `python -m github.tests TestCase.testMethod`.
 
 If you add a new test, for example `Issue139.testCompletion`, you must add an import in `github/tests/AllTests.py`.
