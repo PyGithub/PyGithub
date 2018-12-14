@@ -41,7 +41,6 @@ import os
 import sys
 import traceback
 import unittest
-import urllib3
 import httpretty
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url
@@ -194,8 +193,7 @@ class ReplayingConnection:
         expectedInput = readLine(self.__file)
         if isinstance(input, (str, unicode)):
             if input.startswith("{"):
-                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')),
-                                            json.loads(expectedInput))
+                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
             elif python2:  # @todo Test in all cases, including Python 3.4+
                 # In Python 3.4+, dicts are not output in the same order as in Python 2.7.
                 # So, form-data encoding is not deterministic and is difficult to test.
