@@ -26,11 +26,16 @@
 #                                                                              #
 ################################################################################
 import urllib3
+from httpretty import httpretty
 
 import Framework
 
 import requests
-import datetime
+
+from github import GithubException
+from github.Repository import Repository
+
+REPO_NAME = 'PyGithub/PyGithub'
 
 
 class Retry(Framework.TestCase):
@@ -47,38 +52,35 @@ class Retry(Framework.TestCase):
         Framework.enableRetry(retry)
         Framework.TestCase.setUp(self)
 
+    def testShouldNotRetryWhenStatusNotOnList(self):
+        try:
+            self.g.get_repo(REPO_NAME)
+        except GithubException:
+            self.assertEquals(len(httpretty.latest_requests), 1)
+
+    def testReturnsRepoAfter3Retries(self):
+        repository = self.g.get_repo(REPO_NAME)
+        self.assertEquals(len(httpretty.latest_requests), 4)
+        for request in httpretty.latest_requests:
+            self.assertEquals(request.path, '/repos/' + REPO_NAME)
+
+        self.assertIsInstance(repository, Repository)
+        self.assertEquals(repository.full_name, REPO_NAME)
+
+    def testReturnsRepoAfter1Retry(self):
+        repository = self.g.get_repo(REPO_NAME)
+        self.assertEquals(len(httpretty.latest_requests), 2)
+        for request in httpretty.latest_requests:
+            self.assertEquals(request.path, '/repos/' + REPO_NAME)
+
+        self.assertIsInstance(repository, Repository)
+        self.assertEquals(repository.full_name, REPO_NAME)
+
     def testRaisesRetryErrorAfterMaxRetries(self):
         try:
             response = self.g.get_repo('PyGithub/PyGithub')
+            self.fail("RetryError should have been raised")
         except requests.exceptions.RetryError:
-            return
-
-        assert True == False
-
-    # def testGetPaths(self):
-    #     pathsResponse = self.repo.get_top_paths()
-    #     self.assertEqual(len(pathsResponse), 10)
-    #     self.assertEqual(pathsResponse[0].uniques, 4)
-    #     self.assertEqual(pathsResponse[0].count, 23)
-    #     self.assertEqual(pathsResponse[0].path, "/jkufro/PyGithub")
-    #     self.assertEqual(pathsResponse[0].title, "jkufro/PyGithub: Typed interactions with the GitHub API v3")
-    #
-    # def testGetViews(self):
-    #     viewsResponse = self.repo.get_views_traffic()
-    #     self.assertEqual(viewsResponse["count"], 93)
-    #     self.assertEqual(viewsResponse["uniques"], 4)
-    #     self.assertEqual(len(viewsResponse["views"]), 5)
-    #     view_obj = viewsResponse["views"][0]
-    #     self.assertEqual(view_obj.uniques, 4)
-    #     self.assertEqual(view_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
-    #     self.assertEqual(view_obj.count, 56)
-    #
-    # def testGetClones(self):
-    #     clonesResponse = self.repo.get_clones_traffic()
-    #     self.assertEqual(clonesResponse["count"], 4)
-    #     self.assertEqual(clonesResponse["uniques"], 4)
-    #     self.assertEqual(len(clonesResponse["clones"]), 1)
-    #     clone_obj = clonesResponse["clones"][0]
-    #     self.assertEqual(clone_obj.uniques, 4)
-    #     self.assertEqual(clone_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
-    #     self.assertEqual(clone_obj.count, 4)
+            self.assertEquals(len(httpretty.latest_requests), 4)
+            for request in httpretty.latest_requests:
+                self.assertEquals(request.path, '/repos/PyGithub/PyGithub')
