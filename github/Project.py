@@ -30,6 +30,7 @@ import github.ProjectColumn
 
 import Consts
 
+
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here http://developer.github.com/v3/projects

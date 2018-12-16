@@ -35,7 +35,7 @@ class Project(Framework.TestCase):
         proj = self.g.get_project(id)
         self.assertEqual(proj.id, id)
         self.assertEqual(proj.name, 'TestProject')
-        
+
     def testGetOrganizationProjects(self):
         expectedProjects = ['Project1', 'Project2', 'Project3']
         org = self.g.get_organization('PyGithubTestOrg')
@@ -43,14 +43,14 @@ class Project(Framework.TestCase):
         for proj in org.get_projects("open"):
             projects.append(proj.name)
         self.assertEqual(projects, expectedProjects)
-        
+
     def testGetRepositoryProjects(self):
         expectedProjects = ['TestProject', 'TestProjectClosed']
         projects = []
         for proj in self.repo.get_projects("all"):
             projects.append(proj.name)
         self.assertEqual(projects, expectedProjects)
-        
+
     # See https://developer.github.com/v3/projects/#get-a-project
     def testProjectAttributes(self):
         id = 1682941
@@ -105,18 +105,18 @@ class Project(Framework.TestCase):
 
         pull_card = cards[0]
         pull = pull_card.get_content("PullRequest")
-        self.assertIsInstance(pull, github.PullRequest.PullRequest);
+        self.assertIsInstance(pull, github.PullRequest.PullRequest)
         self.assertEqual(pull.title, "Work in progress on support for GitHub projects API.")
 
         issue_card = cards[1]
         issue = issue_card.get_content()
-        self.assertIsInstance(issue, github.Issue.Issue);
+        self.assertIsInstance(issue, github.Issue.Issue)
         self.assertEqual(issue.title, "Test issue")
 
         note_card = cards[2]
         note_content = note_card.get_content()
         self.assertEqual(note_content, None)
-        
+
     def testGetAllProjectCards(self):
         expectedProjects = ['TestProject']
         expectedCards = 5
