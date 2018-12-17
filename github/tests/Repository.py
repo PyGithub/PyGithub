@@ -57,7 +57,9 @@ class Repository(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
+        print 'user: ', self.user, '/', self.user.id, '/', self.user.name
         self.repo = self.user.get_repo("PyGithub")
+        self.org = self.g.get_user().get_orgs()[0] if self.g.get_user().get_orgs() else self.g.get_organization("BeaverSoftware")
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
@@ -110,6 +112,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.master_branch, None)
         self.repo.edit("PyGithub", default_branch="master")
         self.assertEqual(self.repo.master_branch, "master")
+
+    def testTransfer(self):
+        if self.org:
+            self.repo.transfer(self.org.login())
+            self.assertEqual(self.repo.owner, self.org.login())
+            self.repo.transfer(self.user.login())
+            self.assertEqual(self.repo.owner, self.user.login())
+        else:
+            self.fail("No organisation set up")
 
     def testDelete(self):
         repo = self.g.get_user().get_repo("TestPyGithub")
