@@ -57,7 +57,6 @@ class Repository(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
-        print 'user: ', self.user, '/', self.user.id, '/', self.user.name
         self.repo = self.user.get_repo("PyGithub")
         self.org = self.g.get_user().get_orgs()[0] if self.g.get_user().get_orgs() else self.g.get_organization("BeaverSoftware")
 
