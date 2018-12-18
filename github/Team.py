@@ -18,10 +18,11 @@
 # Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Manu Hortet <manuhortet@gmail.com>                            #
-# Copyright 2018 Michał Górny <mgorny@gentoo.org>                            #
+# Copyright 2018 Michał Górny <mgorny@gentoo.org>                              #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jonas Maurus <jdelic@users.noreply.github.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,6 +48,7 @@ import github.PaginatedList
 import github.Repository
 import github.NamedUser
 import github.Organization
+from github import Consts
 
 
 class Team(github.GithubObject.CompletableGithubObject):
@@ -55,7 +57,7 @@ class Team(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"id": self._id.value, "name": self._name.value})
+        return self.get__repr__({"id": self._id.value, "name": self._name.value, "parent": self._parent.value})
 
     @property
     def id(self):
@@ -153,6 +155,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._privacy)
         return self._privacy.value
 
+    @property
+    def parent(self):
+        """
+        :type: :class:`github.Team.Team`
+        """
+        self._completeIfNotSet(self._parent)
+        return self._parent.value
+
     def add_to_members(self, member):
         """
         This API call is deprecated. Use `add_membership` instead.
@@ -232,7 +242,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, description=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
+    def edit(self, name, description=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet, parent_team_id=github.GithubObject.NotSet):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
@@ -245,6 +255,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
         assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
+        assert parent_team_id is github.GithubObject.NotSet or isinstance(parent_team_id, int), parent_team_id
         post_parameters = {
             "name": name,
         }
@@ -254,10 +265,13 @@ class Team(github.GithubObject.CompletableGithubObject):
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            input=post_parameters
+            input=post_parameters,
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
         )
         self._useAttributes(data)
 
@@ -373,6 +387,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._organization = github.GithubObject.NotSet
         self._privacy = github.GithubObject.NotSet
+        self._parent = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -399,3 +414,5 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "privacy" in attributes:  # pragma no branch
             self._privacy = self._makeStringAttribute(attributes["privacy"])
+        if "parent" in attributes:  # pragma no branch
+            self._parent = self._makeClassAttribute(github.Team.Team, attributes["parent"])

@@ -14,7 +14,7 @@
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
 # Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
@@ -22,6 +22,7 @@
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Jonas Maurus <jdelic@users.noreply.github.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -457,7 +458,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
+    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet, parent_team_id=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
@@ -470,6 +471,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
         assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
+        assert parent_team_id is github.GithubObject.NotSet or isinstance(parent_team_id, int), parent_team_id
         post_parameters = {
             "name": name,
         }
@@ -479,10 +481,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters['privacy'] = privacy
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters['parent_team_id'] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
-            input=post_parameters
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
+            input=post_parameters,
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -675,11 +680,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-        
+
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-            
+
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
@@ -687,7 +692,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview}
         )
-        
+
     def get_public_members(self):
         """
         :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/orgs/members>`_
@@ -782,7 +787,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/teams/" + str(id)
+            "/teams/" + str(id),
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -795,7 +801,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             github.Team.Team,
             self._requester,
             self.url + "/teams",
-            None
+            None,
+            {'Accept': Consts.mediaTypeNestedTeamsPreview},
         )
 
     def invite_user(self, user=github.GithubObject.NotSet, email=github.GithubObject.NotSet, role=github.GithubObject.NotSet, teams=github.GithubObject.NotSet):

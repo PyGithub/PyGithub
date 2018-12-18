@@ -10,6 +10,7 @@
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Jonas Maurus <jdelic@users.noreply.github.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -83,6 +84,9 @@ mediaTypeLabelDescriptionSearchPreview = "application/vnd.github.symmetra-previe
 
 # https://developer.github.com/changes/2018-01-10-lock-reason-api-preview/
 mediaTypeLockReasonPreview = "application/vnd.github.sailor-v-preview+json"
+
+# https://developer.github.com/changes/2017-08-30-preview-nested-teams
+mediaTypeNestedTeamsPreview = "application/vnd.github.hellcat-preview+json"
 
 # https://developer.github.com/changes/2018-01-25-organization-invitation-api-preview/
 mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview+json"
