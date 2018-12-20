@@ -290,7 +290,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/members",
-            url_parameters
+            url_parameters,
+            {"Accept": Consts.mediaTypeNestedTeamsPreview}
         )
 
     def get_repos(self):
@@ -303,6 +304,19 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/repos",
             None
+        )
+
+    def get_subteams(self):
+        """
+        :calls: `GET /teams/:team_id/teams <https://developer.github.com/v3/teams/#list-child-teams>`_
+        :return: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team,
+            self._requester,
+            self.url + "/teams",
+            None,
+            {"Accept": "application/vnd.github.hellcat-preview+json"}
         )
 
     def has_in_members(self, member):
@@ -327,7 +341,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/repos/" + repo._identity
+            self.url + "/repos/" + repo._identity,
+            headers={"Accept": "application/vnd.github.hellcat-preview+json"}
         )
         return status == 204
 

@@ -35,6 +35,7 @@
 ################################################################################
 
 import Framework
+from github.GithubObject import NotSet
 
 
 class Team(Framework.TestCase):
@@ -90,11 +91,15 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
-        self.team.edit("Name edited twice by PyGithub", "Description edited by PyGithub", "admin", "secret")
+        parent = self.org.create_team("Parent Team for Nesting")
+        self.team.edit("Name edited twice by PyGithub", "Description edited by PyGithub", "admin", "secret", parent.id)
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+        self.assertEqual(self.team.parent, parent)
+        self.team.edit(parent_team_id=NotSet)
+        parent.delete()
 
     def testDelete(self):
         self.team.delete()
