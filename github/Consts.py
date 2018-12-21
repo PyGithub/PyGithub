@@ -48,6 +48,7 @@ RES_LAST_MODIFIED = "last-modified"
 headerRateLimit = "x-ratelimit-limit"
 headerRateRemaining = "x-ratelimit-remaining"
 headerRateReset = "x-ratelimit-reset"
+headerOAuthScopes = "x-oauth-scopes"
 headerOTP = "X-GitHub-OTP"
 
 defaultMediaType = "application/octet-stream"
@@ -89,6 +90,9 @@ mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview
 
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
 mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
+
+# https://developer.github.com/changes/2018-05-24-user-migration-api/
+mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
 
 # https://developer.github.com/v3/search/#highlighting-code-search-results-1
 highLightSearchPreview = "application/vnd.github.v3.text-match+json"
