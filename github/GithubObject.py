@@ -170,10 +170,8 @@ class GithubObject(object):
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
-            elif len(s) == 25:
+            elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
-            elif len(s) == 29:
-                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000%z")
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
