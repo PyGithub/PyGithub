@@ -30,6 +30,7 @@ import github.ProjectCard
 
 import Consts
 
+
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here http://developer.github.com/v3/projects/columns
@@ -94,7 +95,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         """
         return self._url.value
 
-    def get_cards(self,archived_state=github.GithubObject.NotSet):
+    def get_cards(self, archived_state=github.GithubObject.NotSet):
         """
         :calls: `GET /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#list-project-cards>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
@@ -113,6 +114,37 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview}
         )
+
+    def create_card(self, note=github.GithubObject.NotSet,
+                    content_id=github.GithubObject.NotSet,
+                    content_type=github.GithubObject.NotSet):
+        """
+        calls: `POST https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
+        :param note: string
+        :param content_id: integer
+        :param content_type: string
+        """
+        post_parameters = {}
+        if isinstance(note, (str, unicode)):
+            assert content_id is github.GithubObject.NotSet, content_id
+            assert content_type is github.GithubObject.NotSet, content_type
+            post_parameters = {"note": note}
+        else:
+            assert note is github.GithubObject.NotSet, note
+            assert isinstance(content_id, int), content_id
+            assert isinstance(content_type, (str, unicode)), content_type
+            post_parameters = {"content_id": content_id,
+                               "content_type": content_type}
+
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/cards",
+            headers=import_header,
+            input=post_parameters
+        )
+        return github.ProjectCard.ProjectCard(self._requester, headers,
+                                              data, completed=True)
 
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet
