@@ -109,6 +109,9 @@ if __name__ == "__main__":
             "pyjwt",
             "Deprecated"
         ],
+        tests_require=[
+            "httpretty==0.9.6"
+        ],
         extras_require = {
             "integrations": ["cryptography"]
         }
