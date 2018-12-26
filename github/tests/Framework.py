@@ -218,6 +218,9 @@ class ReplayingConnection:
         output = readLine(self.__file)
         readLine(self.__file)
 
+        if atLeastPython3:
+            output = bytes(output, 'utf-8')
+
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
         adding_headers.pop('content-length', None)
