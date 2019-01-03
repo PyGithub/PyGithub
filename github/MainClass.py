@@ -388,7 +388,10 @@ class Github(object):
             github.Repository.Repository,
             self.__requester,
             "/search/repositories",
-            url_parameters
+            url_parameters,
+            headers={
+                "Accept": Consts.mediaTypeTopicsPreview
+            }
         )
 
     def search_users(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
