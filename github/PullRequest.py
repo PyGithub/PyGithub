@@ -42,6 +42,7 @@
 #                                                                              #
 ################################################################################
 
+import datetime
 import urllib
 import github.GithubObject
 import github.PaginatedList
