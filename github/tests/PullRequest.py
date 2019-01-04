@@ -131,6 +131,11 @@ class PullRequest(Framework.TestCase):
         comment = self.pull.get_issue_comment(8387331)
         self.assertEqual(comment.body, "Issue comment created by PyGithub")
 
+    def testGetReviewComments(self):
+        epoch = datetime.datetime(1970, 1, 1, 0, 0)
+        comments = self.pull.get_review_comments(since=epoch)
+        self.assertListKeyEqual(comments, lambda c: c.id, [238127783])
+
     def testReviewRequests(self):
         self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
         review_requests = self.pull.get_review_requests()
