@@ -72,6 +72,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.total_private_repos, 5)
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
+        self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.user.__repr__(), 'AuthenticatedUser(login="jacquev6")')
