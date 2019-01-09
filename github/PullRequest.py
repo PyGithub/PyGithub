@@ -428,7 +428,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
         assert isinstance(commit, github.Commit.Commit), commit
-        assert isinstance(body, str), body
+        assert isinstance(body, (str, unicode)), body
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
         post_parameters = {'commit_id': commit.sha, 'body': body}
