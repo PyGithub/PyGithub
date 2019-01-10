@@ -48,6 +48,7 @@ import github.PaginatedList
 import github.Repository
 import github.NamedUser
 import github.Organization
+import github.TeamMembership
 from github import Consts
 
 
@@ -183,7 +184,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /teams/:id/memberships/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.Nameduser.NamedUser`
         :param role: string
-        :rtype: None
+        :rtype: :class:`github.TeamMembership.TeamMembership`
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is github.GithubObject.NotSet or isinstance(
@@ -200,8 +201,10 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/memberships/" + member._identity,
-            input=put_parameters
+            input=put_parameters,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
+        return github.TeamMembership.TeamMembership(self._requester, headers, data, completed=True)
 
     def add_to_repos(self, repo):
         """
@@ -291,8 +294,22 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/members",
             url_parameters,
-            {"Accept": Consts.mediaTypeNestedTeamsPreview}
+            {"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
+
+    def get_membership(self, user):
+        """
+        :calls: `GET /teams/:team_id/memberships/:username <https://developer.github.com/v3/teams/members/#get-team-membership>`_
+        :param user: :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`github.TeamMembership.TeamMembership`
+        """
+        assert isinstance(user, github.NamedUser.NamedUser), user
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/teams/" + str(self._id.value) + "/memberships/" + user.name,
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
+            )
+        return github.TeamMembership.TeamMembership(self._requester, headers, data, completed=True)
 
     def get_repos(self):
         """
@@ -316,7 +333,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/teams",
             None,
-            {"Accept": "application/vnd.github.hellcat-preview+json"}
+            {"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
 
     def has_in_members(self, member):
@@ -342,7 +359,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/repos/" + repo._identity,
-            headers={"Accept": "application/vnd.github.hellcat-preview+json"}
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
         return status == 204
 
@@ -351,12 +368,15 @@ class Team(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /teams/:team_id/memberships/:username <https://developer.github.com/v3/teams/members/#remove-team-membership>`
         :param member:
         :return:
+        :rtype: tuple
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
-            self.url + "/memberships/" + member._identity
+            self.url + "/memberships/" + member._identity,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
+        return status == 204
 
     def remove_from_members(self, member):
         """
