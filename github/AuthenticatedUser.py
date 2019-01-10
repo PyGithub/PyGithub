@@ -239,6 +239,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def organizations_url(self):
         """
         :type: string
@@ -1206,6 +1214,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
         self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
@@ -1265,6 +1274,8 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._login = self._makeStringAttribute(attributes["login"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "organizations_url" in attributes:  # pragma no branch
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
