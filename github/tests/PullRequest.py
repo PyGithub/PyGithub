@@ -204,6 +204,17 @@ class PullRequest(Framework.TestCase):
         self.pull.set_labels(wip, refactoring)
         self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
 
+    def testAddAndRemoveAssignees(self):
+        user1 = "jayfk"
+        user2 = self.g.get_user("jzelinskie")
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        pr_issue = self.pull.as_issue()
+        pr_issue.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login,
+                                ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
+        pr_issue.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())
         status = self.pull.merge()
