@@ -737,6 +737,36 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
 
+    def add_to_assignees(self, *assignees):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignee: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
+    def remove_from_assignees(self, *assignees):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignees: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
