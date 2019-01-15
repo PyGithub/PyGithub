@@ -240,10 +240,11 @@ class Team(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             self.url
         )
+        return status == 204
 
     def edit(self, name, description=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet, parent_team_id=github.GithubObject.NotSet):
         """
