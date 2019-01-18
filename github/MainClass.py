@@ -772,16 +772,18 @@ class GithubIntegration(object):
         :param installation_id: int
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
-        body = None
+        body = {}
         if user_id:
-            body = json.dumps({"user_id": user_id})
-        response = requests.post("https://api.github.com/installations/{}/access_tokens".format(installation_id),
-                                 headers={
-                                     "Authorization": "Bearer {}".format(self.create_jwt()),
-                                     "Accept": Consts.mediaTypeIntegrationPreview,
-                                     "User-Agent": "PyGithub/Python"
-                                 },
-                                 body=body)
+            body = {"user_id": user_id}
+        response = requests.post(
+            "https://api.github.com/installations/{}/access_tokens".format(installation_id),
+            headers={
+                "Authorization": "Bearer {}".format(self.create_jwt()),
+                "Accept": Consts.mediaTypeIntegrationPreview,
+                "User-Agent": "PyGithub/Python"
+            },
+            json=body
+        )
         response_text = response.text
 
         if atLeastPython3:
