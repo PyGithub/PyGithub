@@ -7,7 +7,7 @@ None
 {"restrictions": {"teams": [], "users": ["jacquev6"]}, "required_pull_request_reviews": {"dismissal_restrictions": {"users": ["jacquev6"]}}, "required_status_checks": null, "enforce_admins": null}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e0dc2dfc56971f4a36de1216356ea98b"'), ('date', 'Sun, 13 May 2018 13:21:24 GMT'), ('content-type', 'application/json; charset=utf-8')]
-''
+{}
 
 https
 GET

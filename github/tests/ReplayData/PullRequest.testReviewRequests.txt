@@ -6,7 +6,7 @@ None
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
 {"reviewers":"sfdye","team_reviewers":"pygithub-owners"}
 201
-''
+{}
 
 
 https
@@ -39,7 +39,7 @@ None
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
 {"reviewers":"sfdye"}
 204
-''
+{}
 
 
 https

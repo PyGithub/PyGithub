@@ -121,3 +121,9 @@ class TwoFactorException(GithubException):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
     """
+
+
+class JSONParseError(ValueError):
+    """
+    Exception raised when the JSON returned from Github fails to parse correctly
+    """

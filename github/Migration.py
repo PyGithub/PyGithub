@@ -155,7 +155,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
                 "Accept": Consts.mediaTypeMigrationPreview
             }
         )
-        return data["data"]
+        return headers["location"]
 
     def delete(self):
         """

@@ -270,7 +270,13 @@ class Requester:
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def __check(self, status, responseHeaders, output):
-        output = self.__structuredFromJson(output)
+        try:
+            output = self.__structuredFromJson(output)
+        except ValueError as e:
+            if status >= 500:
+                output = {'data': output}
+                raise self.__createException(status, responseHeaders, output)
+            raise GithubException.JSONParseError(e)
         if status >= 400:
             raise self.__createException(status, responseHeaders, output)
         return responseHeaders, output
@@ -312,10 +318,7 @@ class Requester:
         else:
             if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
-            try:
-                return json.loads(data)
-            except ValueError, e:
-                return {'data': data}
+            return json.loads(data)
 
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         def encode(input):
