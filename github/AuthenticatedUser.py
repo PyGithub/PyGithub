@@ -1152,7 +1152,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /user/repository_invitations <https://developer.github.com/v3/repos/invitations/>`
         :param None
-        :rtype: None
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Invitation.Invitation`
         """
 
         return github.PaginatedList.PaginatedList(
