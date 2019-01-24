@@ -1148,6 +1148,20 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             input={}
         )
 
+    def get_invitations(self):
+        """
+        :calls: `GET /user/repository_invitations <https://developer.github.com/v3/repos/invitations/>`
+        :param None
+        :rtype: None
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Invitation.Invitation,
+            self._requester,
+            "/user/repository_invitations",
+            {}
+        )
+
     def create_migration(self, repos, lock_repositories=github.GithubObject.NotSet, exclude_attachments=github.GithubObject.NotSet):
         """
         :calls: `POST /user/migrations`_
