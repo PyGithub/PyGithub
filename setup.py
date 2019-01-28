@@ -44,7 +44,7 @@
 import setuptools
 import textwrap
 
-version = "1.43.4"
+version = "1.43.5"
 
 
 if __name__ == "__main__":

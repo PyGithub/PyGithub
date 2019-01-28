@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.5 (January 28, 2019)
+-----------------------------------
+
+* fix request got an unexpected keyword argument body (#1012) (ff789dcc)
+* add: create project column card route (#1003) (5f5c2764)
+* user.node_id missing (#1001) (10bacb48)
+* Add missing import to PullRequest (#1007) (b5122768)
+
 Version 1.43.4 (December 21, 2018)
 -----------------------------------
 
