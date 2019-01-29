@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.5 (January 29, 2019)
+-----------------------------------
+
+* Add project column create card (#1003) (5f5c2764)
+* Fix request got an unexpected keyword argument body (#1012) (ff789dcc)
+* Add missing import to PullRequest (#1007) (b5122768)
+
 Version 1.43.4 (December 21, 2018)
 -----------------------------------
 
