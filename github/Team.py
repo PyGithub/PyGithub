@@ -215,7 +215,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/repos/" + repo._identity
+            self.url + "/repos/" + repo._identity,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
 
     def set_repo_permission(self, repo, permission):
@@ -232,7 +233,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/repos/" + repo._identity,
-            input=put_parameters
+            input=put_parameters,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
 
     def delete(self):
@@ -242,7 +244,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         status, headers, data = self._requester.requestJson(
             "DELETE",
-            self.url
+            self.url,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
         return status == 204
 
@@ -321,7 +324,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository,
             self._requester,
             self.url + "/repos",
-            None
+            None,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
 
     def get_subteams(self):
@@ -403,7 +407,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/repos/" + repo._identity
+            self.url + "/repos/" + repo._identity,
+            headers={"Accept": Consts.mediaTypeNestedTeamsPreview},
         )
 
     @property
