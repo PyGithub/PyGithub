@@ -6,8 +6,7 @@ python:
   - "3.6"
 sudo: false
 script:
-  - PYTHON=`python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'`
-  if [[ ${PYTHON:0:1} == "3" ]]; then python -m lib2to3 -w -n tests; fi
+  if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
   - python setup.py test
 notifications:
   email: false
