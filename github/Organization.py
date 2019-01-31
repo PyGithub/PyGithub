@@ -169,6 +169,22 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._gravatar_id.value
 
     @property
+    def has_organization_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_organization_projects)
+        return self._has_organization_projects
+
+    @property
+    def has_repository_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_repository_projects)
+        return self._has_repository_projects
+
+    @property
     def html_url(self):
         """
         :type: string
@@ -955,6 +971,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._following = github.GithubObject.NotSet
         self._gravatar_id = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._has_organization_projects = github.GithubObject.NotSet
+        self._has_repository_projects = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
@@ -999,6 +1017,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._following = self._makeIntAttribute(attributes["following"])
         if "gravatar_id" in attributes:  # pragma no branch
             self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
+        if "has_organization_projects" in attributes:  # pragma no branch
+            self._has_organization_projects = self._makeBoolAttribute(attributes["has_organization_projects"])
+        if "has_repository_projects" in attributes:  # pragma no branch
+            self._has_repository_projects = self._makeBoolAttribute(attributes["has_repository_projects"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
