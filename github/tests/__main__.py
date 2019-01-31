@@ -31,24 +31,24 @@
 import sys
 import unittest
 
-import tests.Framework
-import tests.AllTests
+import github.tests.Framework
+import github.tests.AllTests
 
 
 def main(argv):
     if "--record" in argv:
-        tests.Framework.activateRecordMode()
+        github.tests.Framework.activateRecordMode()
         argv = [arg for arg in argv if arg != "--record"]
 
     if "--auth_with_token" in argv:
-        tests.Framework.activateTokenAuthMode()
+        github.tests.Framework.activateTokenAuthMode()
         argv = [arg for arg in argv if arg != "--auth_with_token"]
 
     if "--auth_with_jwt" in argv:
-        tests.Framework.activateJWTAuthMode()
+        github.tests.Framework.activateJWTAuthMode()
         argv = [arg for arg in argv if arg != "--auth_with_jwt"]
 
-    unittest.main(module=tests.AllTests, argv=argv)
+    unittest.main(module=github.tests.AllTests, argv=argv)
 
 
 if __name__ == "__main__":
