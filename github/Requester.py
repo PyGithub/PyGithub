@@ -97,7 +97,7 @@ class HTTPSRequestsConnectionClass(object):
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
         # Code to support retries
-        if retry != None:
+        if retry:
             self.retry = retry
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
             self.session.mount('https://', self.adapter)
@@ -128,7 +128,7 @@ class HTTPRequestsConnectionClass(object):
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
         # Code to support retries
-        if retry != None:
+        if retry:
             self.retry = retry
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
             self.session.mount('http://', self.adapter)
