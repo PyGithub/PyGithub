@@ -6,7 +6,7 @@ python:
   - "3.6"
 sudo: false
 script:
-  - python setup.py test
+  - python -m tests
 notifications:
   email: false
   webhooks: https://www.travisbuddy.com/

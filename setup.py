@@ -79,7 +79,7 @@ if __name__ == "__main__":
             =======================
 
             See http://pygithub.readthedocs.io/en/latest/"""),
-        packages=setuptools.find_packages(".", exclude=["github.tests"]),
+        packages=setuptools.find_packages(".", exclude=["tests"]),
         package_data={},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
@@ -96,7 +96,6 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.6",
             "Topic :: Software Development",
         ],
-        test_suite="github.tests.AllTests",
         use_2to3=True,
         python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
         install_requires=[
