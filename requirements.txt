@@ -1,4 +1,4 @@
-Deprecated
+deprecated
 pyjwt
 requests>=2.14.0
 six>=1.12.0
