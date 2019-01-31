@@ -80,7 +80,6 @@ if __name__ == "__main__":
 
             See http://pygithub.readthedocs.io/en/latest/"""),
         packages=setuptools.find_packages(".", exclude=["tests"]),
-        test_suite="tests",
         package_data={},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
