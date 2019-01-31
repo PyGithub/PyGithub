@@ -36,6 +36,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import print_function
 import json
 import os
 import sys
@@ -93,7 +94,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        print verb, url, input, headers,
+        print(verb, url, input, headers, end=' ')
         self.__cnx.request(verb, url, input, headers)
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
@@ -116,7 +117,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         res = self.__cnx.getresponse()
 
         status = res.status
-        print "=>", status
+        print("=>", status)
         headers = res.getheaders()
         output = res.read()
 
