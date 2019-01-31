@@ -1,5 +1,6 @@
-requests>=2.14.0
+Deprecated
 pyjwt
+requests>=2.14.0
+six>=1.12.0
 sphinx<1.8
 sphinx-rtd-theme<0.5
-Deprecated
