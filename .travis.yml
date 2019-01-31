@@ -6,7 +6,7 @@ python:
   - "3.6"
 sudo: false
 script:
-  if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
+  - if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
   - python setup.py test
 notifications:
   email: false
