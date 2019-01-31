@@ -79,13 +79,8 @@ if __name__ == "__main__":
             =======================
 
             See http://pygithub.readthedocs.io/en/latest/"""),
-        packages=[
-            "github",
-            "github.tests",
-        ],
-        package_data={
-            "github": ["tests/ReplayData/*.txt"]
-        },
+        packages=setuptools.find_packages(".", exclude=["github.tests"]),
+        package_data={},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
