@@ -105,9 +105,10 @@ if __name__ == "__main__":
         use_2to3=True,
         python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
         install_requires=[
-            "requests>=2.14.0",
+            "Deprecated",
             "pyjwt",
-            "Deprecated"
+            "requests>=2.14.0",
+            "six>=1.12.0"
         ],
         extras_require = {
             "integrations": ["cryptography"]
