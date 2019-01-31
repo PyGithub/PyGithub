@@ -6,6 +6,7 @@ python:
   - "3.6"
 sudo: false
 script:
+  - python -m lib2to3 tests
   - python setup.py test
 notifications:
   email: false
