@@ -174,7 +174,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._has_organization_projects)
-        return self._has_organization_projects
+        return self._has_organization_projects.value
 
     @property
     def has_repository_projects(self):
@@ -182,7 +182,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._has_repository_projects)
-        return self._has_repository_projects
+        return self._has_repository_projects.value
 
     @property
     def html_url(self):
