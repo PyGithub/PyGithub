@@ -38,6 +38,7 @@ from operator import itemgetter
 
 import GithubException
 import Consts
+import github
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -220,9 +221,13 @@ class GithubObject(object):
         '''
         :type: str
         '''
-        commits = self.repository.get_commits(path=self.path)
-        most_recent_commit = commits[0]
-        return most_recent_commit.commit.author.date
+        if isinstance(self, github.ContentFile.ContentFile):
+            commits = self.repository.get_commits(path=self.path)
+            most_recent_commit = commits[0]
+            date = most_recent_commit.commit.author.date
+        else:
+            date = self._headers.get(Consts.RES_LAST_MODIFIED)
+        return date
 
     def get__repr__(self, params):
         """
