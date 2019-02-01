@@ -220,7 +220,9 @@ class GithubObject(object):
         '''
         :type: str
         '''
-        return self._headers.get(Consts.RES_LAST_MODIFIED)
+        commits = self.repository.get_commits(path=self.path)
+        most_recent_commit = commits[0]
+        return most_recent_commit.commit.author.date
 
     def get__repr__(self, params):
         """
