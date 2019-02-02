@@ -2,7 +2,7 @@
 Organization
 ==========
 
-Get repository's in organizations
+Get repository's in organization
 
 .. code-block:: python
 
