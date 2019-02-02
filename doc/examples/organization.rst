@@ -31,7 +31,7 @@ Get all members of an organization without a role filter
            NamedUser(login="sfdye")
 
 
-Get all members of an organization with role filter
+Get members of an organization by certain role
 
 .. code-block:: python
 	
