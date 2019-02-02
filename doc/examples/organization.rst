@@ -16,6 +16,8 @@ Get repository's in organization
 
 
 Get all members of an organization without role filter
+
+
 .. code-block:: python
 	
 	>>>git = Github(access_token)
