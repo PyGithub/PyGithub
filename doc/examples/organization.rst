@@ -32,6 +32,7 @@ Get all members of an organization without a role filter
 
 
 Get all members of an organization with role filter
+
 .. code-block:: python
 	>>>git = Github(access_token)
 	>>>org = git.get_organization("PyGithub")
