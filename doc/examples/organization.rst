@@ -2,7 +2,7 @@
 Organization
 ==========
 
-Get repository's in organization
+Get repository's in an organization
 
 .. code-block:: python
 
@@ -15,7 +15,7 @@ Get repository's in organization
 	Repository(full_name="PyGithub/PyGithub")
 
 
-Get all members of an organization without a role filter
+Get all members of an organization. 
 
 
 .. code-block:: python
