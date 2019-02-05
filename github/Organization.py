@@ -314,7 +314,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(role, (str, unicode)), role
         assert isinstance(member, github.NamedUser.NamedUser), member
         put_parameters = {}
-        if role is not github.GithubObject.NotSet):
+        if role is not github.GithubObject.NotSet:
             put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
