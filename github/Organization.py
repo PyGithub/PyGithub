@@ -318,7 +318,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/memberships/" + member._identity, input=url_parameters
+            self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
     def add_to_public_members(self, public_member):
