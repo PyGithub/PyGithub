@@ -10,9 +10,9 @@ Get repository's in an organization
 	>>> org = git.get_organization("PyGithub")
 	>>> repository = org.get_repos()
 	>>> for repos in repository:
-	...	print(repos)
-	...
-	Repository(full_name="PyGithub/PyGithub")
+	   ...	print(repos)
+	   ...
+	   Repository(full_name="PyGithub/PyGithub")
 
 
 Get all members of an organization. 
