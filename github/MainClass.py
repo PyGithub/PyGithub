@@ -786,9 +786,6 @@ class GithubIntegration(object):
         )
         response_text = response.text
 
-        if atLeastPython3:
-            response_text = response_text.decode('utf-8')
-
         if response.status_code == 201:
             data = json.loads(response_text)
             return InstallationAuthorization.InstallationAuthorization(
