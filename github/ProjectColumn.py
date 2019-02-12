@@ -119,7 +119,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
                     content_id=github.GithubObject.NotSet,
                     content_type=github.GithubObject.NotSet):
         """
-        calls: `POST https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
+        :calls: `POST /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
         :param note: string
         :param content_id: integer
         :param content_type: string
