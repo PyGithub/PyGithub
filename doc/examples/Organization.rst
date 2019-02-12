@@ -25,7 +25,6 @@ Get all members of an organization.
 	>>> membership = org.get_members()
 	>>> for members in membership:
 	   ...	print(members)
-		
 	   ...	
 	   NamedUser(login="adamtheturtle")
 	   NamedUser(login="jacquev6")
@@ -42,7 +41,6 @@ Get members of an organization by certain role
 	>>> membership = org.get_members('Owner')
 	>>> for members in membership:
 	   ...	print(members)
-           
 	   ...
 	   NamedUser(login="adamtheturtle")
 	   NamedUser(login="jacquev6")
