@@ -22,8 +22,8 @@ Get all members of an organization.
 	
 	>>>	git = Github(access_token)
 	>>>	org = git.get_organization("PyGithub")
-	>>> membership = org.get_members()
-	>>> for members in membership:
+	>>> 	membership = org.get_members()
+	>>> 	for members in membership:
 			print(members)
 	   NamedUser(login="adamtheturtle")
 	   NamedUser(login="jacquev6")
