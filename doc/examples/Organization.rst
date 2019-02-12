@@ -10,8 +10,8 @@ Get repository's in an organization
 	>>> org = git.get_organization("PyGithub")
 	>>> repository = org.get_repos()
 	>>> for repos in repository:
-		print(repos)
-
+	...	print(repos)
+	...
 	Repository(full_name="PyGithub/PyGithub")
 
 
@@ -24,8 +24,9 @@ Get all members of an organization.
 	>>> org = git.get_organization("PyGithub")
 	>>> membership = org.get_members()
 	>>> for members in membership:
-		print(members)
+	   ...	print(members)
 		
+	   ...	
 	   NamedUser(login="adamtheturtle")
 	   NamedUser(login="jacquev6")
 	   NamedUser(login="JPWKU")
@@ -40,8 +41,9 @@ Get members of an organization by certain role
 	>>> org = git.get_organization("PyGithub")
 	>>> membership = org.get_members('Owner')
 	>>> for members in membership:
-		print(members)
-	
+	   ...	print(members)
+           
+	   ...
 	   NamedUser(login="adamtheturtle")
 	   NamedUser(login="jacquev6")
 	   NamedUser(login="JPWKU")
