@@ -109,7 +109,10 @@ if __name__ == "__main__":
             "pyjwt",
             "Deprecated"
         ],
-        extras_require = {
+        extras_require={
             "integrations": ["cryptography"]
-        }
+        },
+        tests_require=[
+            "cryptography"
+        ]
     )
