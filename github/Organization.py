@@ -313,12 +313,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(role, (str, unicode)), role
         assert isinstance(member, github.NamedUser.NamedUser), member
-        url_parameters = {
-            "role": role,
-        }
+        put_parameters = {}
+        if role is not github.GithubObject.NotSet:
+            put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/memberships/" + member._identity, parameters=url_parameters
+            self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
     def add_to_public_members(self, public_member):
