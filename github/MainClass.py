@@ -56,7 +56,7 @@ import sys
 import requests
 import jwt
 
-from Requester import Requester, json
+from Requester import Requester
 import AuthenticatedUser
 import NamedUser
 import Organization
@@ -784,30 +784,25 @@ class GithubIntegration(object):
             },
             json=body
         )
-        response_text = response.text
-
-        if atLeastPython3:
-            response_text = response_text.decode('utf-8')
 
         if response.status_code == 201:
-            data = json.loads(response_text)
             return InstallationAuthorization.InstallationAuthorization(
                 requester=None,  # not required, this is a NonCompletableGithubObject
                 headers={},  # not required, this is a NonCompletableGithubObject
-                attributes=data,
+                attributes=response.json(),
                 completed=True
             )
         elif response.status_code == 403:
             raise GithubException.BadCredentialsException(
                 status=response.status_code,
-                data=response_text
+                data=response.text
             )
         elif response.status_code == 404:
             raise GithubException.UnknownObjectException(
                 status=response.status_code,
-                data=response_text
+                data=response.text
             )
         raise GithubException.GithubException(
             status=response.status_code,
-            data=response_text
+            data=response.text
         )

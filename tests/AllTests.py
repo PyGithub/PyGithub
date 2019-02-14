@@ -92,6 +92,7 @@ from tests.Team import *
 from tests.Traffic import *
 from tests.UserKey import *
 from tests.Migration import *
+from tests.GithubIntegration import *
 
 from tests.PaginatedList import *
 from tests.Exceptions import *
