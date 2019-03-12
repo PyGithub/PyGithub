@@ -1141,6 +1141,29 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
+    def create_project(self, name, body=github.GithubObject.NotSet):
+        """
+        calls: `POST /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#create-a-repository-project>`_
+        :param name: string
+        :param body: string
+        """
+        assert isinstance(name, (str, unicode)), name
+        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
+        post_parameters = {
+            "name": name,
+            "body": body,
+        }
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        if body is not github.GithubObject.NotSet:
+            post_parameters['body'] = body
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/projects",
+            headers=import_header,
+            input=post_parameters
+        )
+        return github.Project.Project(self._requester, headers, data, completed=True)
+
     def create_pull(self, *args, **kwds):
         """
         :calls: `POST /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls>`_
@@ -1484,7 +1507,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/traffic/popular/referrers <https://developer.github.com/v3/repos/traffic/>`_
         :rtype: :class:`list` of :class:`github.Referrer.Referrer`
         """
-        url_parameters = dict()
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/traffic/popular/referrers"
@@ -1500,7 +1522,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/traffic/popular/paths <https://developer.github.com/v3/repos/traffic/>`_
         :rtype: :class:`list` of :class:`github.Path.Path`
         """
-        url_parameters = dict()
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/traffic/popular/paths"

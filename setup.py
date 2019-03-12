@@ -44,7 +44,7 @@
 import setuptools
 import textwrap
 
-version = "1.43.3"
+version = "1.43.5"
 
 
 if __name__ == "__main__":
@@ -109,10 +109,11 @@ if __name__ == "__main__":
             "pyjwt",
             "Deprecated"
         ],
-        tests_require=[
-            "httpretty==0.9.6"
-        ],
-        extras_require = {
+        extras_require={
             "integrations": ["cryptography"]
-        }
+        },
+        tests_require=[
+            "cryptography",
+            "httpretty==0.9.6"
+        ]
     )

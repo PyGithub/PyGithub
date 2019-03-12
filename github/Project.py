@@ -30,6 +30,7 @@ import github.ProjectColumn
 
 import Consts
 
+
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here http://developer.github.com/v3/projects
@@ -155,6 +156,22 @@ class Project(github.GithubObject.CompletableGithubObject):
             None,
             {"Accept": Consts.mediaTypeProjectsPreview}
         )
+
+    def create_column(self, name):
+        """
+        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        :param name: string
+        """
+        assert isinstance(name, (str, unicode)), name
+        post_parameters = {"name": name}
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/columns",
+            headers=import_header,
+            input=post_parameters
+        )
+        return github.ProjectColumn.ProjectColumn(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet

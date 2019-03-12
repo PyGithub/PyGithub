@@ -247,3 +247,11 @@ class Organization(Framework.TestCase):
             u'message': u'You must be an admin to create an invitation to an organization.'
             }
         )
+
+    def testCreateMigration(self):
+        self.org = self.g.get_organization("sample-test-organisation")
+        self.assertTrue(isinstance(self.org.create_migration(["sample-repo"]), github.Migration.Migration))
+
+    def testGetMigrations(self):
+        self.org = self.g.get_organization("sample-test-organisation")
+        self.assertEqual(self.org.get_migrations().totalCount, 2)
