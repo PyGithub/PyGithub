@@ -253,7 +253,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if files is not github.GithubObject.NotSet:
-            post_parameters["files"] = dict((key, None if value is None else value._identity) for key, value in files.iteritems())
+            post_parameters["files"] = {key: None if value is None else value._identity for key, value in files.iteritems()}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
