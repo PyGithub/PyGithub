@@ -1487,6 +1487,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(path, (str, unicode)), path
         assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        # Path of '/' should be the empty string.
+        if path == '/':
+            path = ''
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref

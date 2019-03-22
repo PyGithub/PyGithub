@@ -523,9 +523,13 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(self.repo.get_readme().content), 10212)
         self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md").content), 38121)
 
-    def testGetContentDir(self):
-
+    def testGetContentsDir(self):
         contents = self.repo.get_contents("")
+        self.assertTrue(isinstance(contents, list))
+        self.assertEquals(len(contents), 14)
+
+    def testGetContentsDirWithSlash(self):
+        contents = self.repo.get_contents("/")
         self.assertTrue(isinstance(contents, list))
         self.assertEquals(len(contents), 14)
 
