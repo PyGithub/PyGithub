@@ -895,6 +895,19 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_repo_from(self, full_name):
+        """
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
+        :param full_name: string
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(full_name, (str, unicode)), full_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/repos/" + full_name
+        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
+
     def get_repo(self, name):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
