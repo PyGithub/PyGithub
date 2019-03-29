@@ -2043,6 +2043,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def get_issue_comment(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/comments/:comment_id <https://developer.github.com/v3/issues/comments>`_
+        :param id: int
+        :rtype: :class:`github.IssueComment.IssueComment`
+        """
+        assert isinstance(id, int), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/issues/comments/" + str(id),
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+        )
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+
     def get_issues_comments(self, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/issues/comments <http://developer.github.com/v3/issues/comments>`_
