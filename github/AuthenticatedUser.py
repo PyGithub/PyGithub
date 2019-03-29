@@ -495,7 +495,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
+            "files": {key: value._identity for key, value in files.iteritems()},
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
