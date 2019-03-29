@@ -1802,7 +1802,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_contributors(self, anon=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/contributors <http://developer.github.com/v3/repos>`_
-        :param anon: bool
+        :param anon: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         url_parameters = dict()
