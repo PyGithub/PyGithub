@@ -495,7 +495,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
+            "files": {key: value._identity for key, value in files.iteritems()},
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
@@ -844,23 +844,30 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Notification.Notification(self._requester, headers, data, completed=True)
 
-    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
+    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet, since=github.GithubObject.NotSet, before=github.GithubObject.NotSet):
         """
         :calls: `GET /notifications <http://developer.github.com/v3/activity/notifications>`_
         :param all: bool
         :param participating: bool
+        :param since: datetime.datetime
+        :param before: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
         assert all is github.GithubObject.NotSet or isinstance(all, bool), all
         assert participating is github.GithubObject.NotSet or isinstance(participating, bool), participating
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert before is github.GithubObject.NotSet or isinstance(before, datetime.datetime), before
 
         params = dict()
         if all is not github.GithubObject.NotSet:
             params["all"] = all
         if participating is not github.GithubObject.NotSet:
             params["participating"] = participating
-        # TODO: implement parameter "since"
+        if since is not github.GithubObject.NotSet:
+            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if before is not github.GithubObject.NotSet:
+            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         return github.PaginatedList.PaginatedList(
             github.Notification.Notification,

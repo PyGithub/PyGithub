@@ -96,21 +96,24 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 2",
             "Programming Language :: Python :: 2.7",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.4",
             "Programming Language :: Python :: 3.5",
             "Programming Language :: Python :: 3.6",
+            "Programming Language :: Python :: 3.7",
             "Topic :: Software Development",
         ],
         test_suite="github.tests.AllTests",
         use_2to3=True,
-        python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
         install_requires=[
-            "Deprecated",
+            "deprecated",
             "pyjwt",
-            "requests>=2.14.0",
+            "requests>=2.14.0"
             "six>=1.12.0"
         ],
-        extras_require = {
+        extras_require={
             "integrations": ["cryptography"]
-        }
+        },
+        tests_require=[
+            "cryptography"
+        ]
     )

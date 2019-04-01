@@ -92,6 +92,7 @@ from Team import *
 from Traffic import *
 from UserKey import *
 from Migration import *
+from GithubIntegration import *
 
 from PaginatedList import *
 from Exceptions import *

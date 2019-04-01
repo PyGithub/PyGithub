@@ -418,7 +418,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def create_review(self, commit, body, event=github.GithubObject.NotSet, comments=github.GithubObject.NotSet):
+    def create_review(self, commit=github.GithubObject.NotSet, body=None, event=github.GithubObject.NotSet, comments=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
         :param commit: github.Commit.Commit
@@ -427,11 +427,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param comments: list
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
-        assert isinstance(commit, github.Commit.Commit), commit
+        assert commit is github.GithubObject.NotSet or isinstance(commit, github.Commit.Commit), commit
         assert isinstance(body, str), body
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
-        post_parameters = {'commit_id': commit.sha, 'body': body}
+        post_parameters = dict()
+        if commit is not github.GithubObject.NotSet:
+            post_parameters['commit_id'] = commit.sha
+        post_parameters['body'] = body
         post_parameters['event'] = 'COMMENT' if event == github.GithubObject.NotSet else event
         if comments is github.GithubObject.NotSet:
             post_parameters['comments'] = []
