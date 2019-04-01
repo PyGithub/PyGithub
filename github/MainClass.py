@@ -53,10 +53,10 @@ import urllib
 import pickle
 import time
 import sys
-from httplib import HTTPSConnection
+import requests
 import jwt
 
-from Requester import Requester, json
+from Requester import Requester
 import AuthenticatedUser
 import NamedUser
 import Organization
@@ -742,15 +742,18 @@ class GithubIntegration(object):
         self.integration_id = integration_id
         self.private_key = private_key
 
-    def create_jwt(self):
+    def create_jwt(self, expiration=60):
         """
-        Creates a signed JWT, valid for 60 seconds.
+        Creates a signed JWT, valid for 60 seconds by default.
+        The expiration can be extended beyond this, to a maximum of 600 seconds.
+
+        :param expiration: int
         :return:
         """
         now = int(time.time())
         payload = {
             "iat": now,
-            "exp": now + 60,
+            "exp": now + expiration,
             "iss": self.integration_id
         }
         encrypted = jwt.encode(
@@ -772,46 +775,37 @@ class GithubIntegration(object):
         :param installation_id: int
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
-        body = None
+        body = {}
         if user_id:
-            body = json.dumps({"user_id": user_id})
-        conn = HTTPSConnection("api.github.com")
-        conn.request(
-            method="POST",
-            url="/installations/{}/access_tokens".format(installation_id),
+            body = {"user_id": user_id}
+        response = requests.post(
+            "https://api.github.com/installations/{}/access_tokens".format(installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
                 "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python"
             },
-            body=body
+            json=body
         )
-        response = conn.getresponse()
-        response_text = response.read()
 
-        if atLeastPython3:
-            response_text = response_text.decode('utf-8')
-
-        conn.close()
-        if response.status == 201:
-            data = json.loads(response_text)
+        if response.status_code == 201:
             return InstallationAuthorization.InstallationAuthorization(
                 requester=None,  # not required, this is a NonCompletableGithubObject
                 headers={},  # not required, this is a NonCompletableGithubObject
-                attributes=data,
+                attributes=response.json(),
                 completed=True
             )
-        elif response.status == 403:
+        elif response.status_code == 403:
             raise GithubException.BadCredentialsException(
-                status=response.status,
-                data=response_text
+                status=response.status_code,
+                data=response.text
             )
-        elif response.status == 404:
+        elif response.status_code == 404:
             raise GithubException.UnknownObjectException(
-                status=response.status,
-                data=response_text
+                status=response.status_code,
+                data=response.text
             )
         raise GithubException.GithubException(
-            status=response.status,
-            data=response_text
+            status=response.status_code,
+            data=response.text
         )

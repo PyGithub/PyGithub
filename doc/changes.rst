@@ -4,6 +4,27 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.5 (January 29, 2019)
+-----------------------------------
+
+* Add project column create card (#1003) (5f5c2764)
+* Fix request got an unexpected keyword argument body (#1012) (ff789dcc)
+* Add missing import to PullRequest (#1007) (b5122768)
+
+Version 1.43.4 (December 21, 2018)
+-----------------------------------
+
+**New features**
+
+* Add Migration API (#899) (b4d895ed)
+* Add Traffic API (#977) (a433a2fe)
+* New in Project API: create repository project, create project column (#995) (1c0fd97d)
+
+**Bug Fixes & Improvements**
+
+* Change type of GitRelease.author to NamedUser (#969) (aca50a75)
+* Use total_count from data in PaginatedList (#963) (ec177610)
+
 Version 1.43.3 (October 31, 2018)
 -----------------------------------
 
@@ -17,7 +38,7 @@ Version 1.43.3 (October 31, 2018)
 * Adding ``suspended_at`` property to NamedUSer (#922) (c13b43ea)
 * Add since parameter for Gists (#914) (e18b1078)
 
-**Bug Fixes & improvements**
+**Bug Fixes & Improvements**
 
 * Fix missing parameters when reversing ``PaginatedList`` (#946) (60a684c5)
 * Fix unable to trigger ``RateLimitExceededException``. (#943) (972446d5)

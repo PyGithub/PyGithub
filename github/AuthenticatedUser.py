@@ -55,6 +55,7 @@ import github.Issue
 import github.Event
 import github.Authorization
 import github.Notification
+import github.Migration
 
 import Consts
 
@@ -236,6 +237,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._name)
         return self._name.value
+
+    @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def organizations_url(self):
@@ -486,7 +495,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
+            "files": {key: value._identity for key, value in files.iteritems()},
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
@@ -835,23 +844,30 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Notification.Notification(self._requester, headers, data, completed=True)
 
-    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
+    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet, since=github.GithubObject.NotSet, before=github.GithubObject.NotSet):
         """
         :calls: `GET /notifications <http://developer.github.com/v3/activity/notifications>`_
         :param all: bool
         :param participating: bool
+        :param since: datetime.datetime
+        :param before: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
         assert all is github.GithubObject.NotSet or isinstance(all, bool), all
         assert participating is github.GithubObject.NotSet or isinstance(participating, bool), participating
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert before is github.GithubObject.NotSet or isinstance(before, datetime.datetime), before
 
         params = dict()
         if all is not github.GithubObject.NotSet:
             params["all"] = all
         if participating is not github.GithubObject.NotSet:
             params["participating"] = participating
-        # TODO: implement parameter "since"
+        if since is not github.GithubObject.NotSet:
+            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if before is not github.GithubObject.NotSet:
+            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         return github.PaginatedList.PaginatedList(
             github.Notification.Notification,
@@ -1139,6 +1155,50 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             input={}
         )
 
+    def create_migration(self, repos, lock_repositories=github.GithubObject.NotSet, exclude_attachments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /user/migrations`_
+        :param repos: list or tuple of str
+        :param lock_repositories: bool
+        :param exclude_attachments: bool
+        :rtype: :class:`github.Migration.Migration`
+        """
+        assert isinstance(repos, (list, tuple)), repos
+        assert all(isinstance(repo, (str, unicode)) for repo in repos), repos
+        assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
+        assert exclude_attachments is github.GithubObject.NotSet or isinstance(exclude_attachments, bool), exclude_attachments
+        post_parameters = {
+            "repositories": repos
+        }
+        if lock_repositories is not github.GithubObject.NotSet:
+            post_parameters["lock_repositories"] = lock_repositories
+        if exclude_attachments is not github.GithubObject.NotSet:
+            post_parameters["exclude_attachments"] = exclude_attachments
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/user/migrations",
+            input=post_parameters,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+        return github.Migration.Migration(self._requester, headers, data, completed=True)
+
+    def get_migrations(self):
+        """
+        :calls: `GET /user/migrations`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Migration.Migration,
+            self._requester,
+            "/user/migrations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+
     def _initAttributes(self):
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
@@ -1161,6 +1221,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
         self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
@@ -1220,6 +1281,8 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._login = self._makeStringAttribute(attributes["login"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "organizations_url" in attributes:  # pragma no branch
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch

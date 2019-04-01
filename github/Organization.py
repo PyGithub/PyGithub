@@ -313,12 +313,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(role, (str, unicode)), role
         assert isinstance(member, github.NamedUser.NamedUser), member
-        url_parameters = {
-            "role": role,
-        }
+        put_parameters = {}
+        if role is not github.GithubObject.NotSet:
+            put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/memberships/" + member._identity, parameters=url_parameters
+            self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
     def add_to_public_members(self, public_member):
@@ -894,6 +894,50 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/public_members/" + public_member._identity
+        )
+
+    def create_migration(self, repos, lock_repositories=github.GithubObject.NotSet, exclude_attachments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /orgs/:org/migrations`_
+        :param repos: list or tuple of str
+        :param lock_repositories: bool
+        :param exclude_attachments: bool
+        :rtype: :class:`github.Migration.Migration`
+        """
+        assert isinstance(repos, (list, tuple)), repos
+        assert all(isinstance(repo, (str, unicode)) for repo in repos), repos
+        assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
+        assert exclude_attachments is github.GithubObject.NotSet or isinstance(exclude_attachments, bool), exclude_attachments
+        post_parameters = {
+            "repositories": repos
+        }
+        if lock_repositories is not github.GithubObject.NotSet:
+            post_parameters["lock_repositories"] = lock_repositories
+        if exclude_attachments is not github.GithubObject.NotSet:
+            post_parameters["exclude_attachments"] = exclude_attachments
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/orgs/" + self.login + "/migrations",
+            input=post_parameters,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+        return github.Migration.Migration(self._requester, headers, data, completed=True)
+
+    def get_migrations(self):
+        """
+        :calls: `GET /orgs/:org/migrations`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Migration.Migration,
+            self._requester,
+            "/orgs/" + self.login + "/migrations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
         )
 
     def _initAttributes(self):

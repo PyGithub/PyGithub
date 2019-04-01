@@ -111,6 +111,19 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._submitted_at)
         return self._submitted_at.value
 
+    def dismiss(self, message):
+        """
+        :calls: `PUT /repos/:owner/:repo/pulls/:number/reviews/:review_id/dismissals <https://developer.github.com/v3/pulls/reviews/>`_
+        :rtype: None
+        """
+        assert isinstance(message, (str, unicode)), message
+        post_parameters = {'message': message}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.pull_request_url + "/reviews/%s/dismissals" % self.id,
+            input=post_parameters
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet

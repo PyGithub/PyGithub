@@ -381,8 +381,8 @@ class Requester:
         if Consts.headerRateReset in responseHeaders:
             self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
 
-        if "x-oauth-scopes" in responseHeaders:
-            self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
+        if Consts.headerOAuthScopes in responseHeaders:
+            self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
 
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
