@@ -179,6 +179,46 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
+    def create_release(self, tag_name, draft=False, prerelease=False,
+                       body=github.GithubObject.NotSet,
+                       name=github.GithubObject.NotSet,
+                       target_commitish=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:owner/:repo/releases/ <https://developer.github.com/v3/repos/releases/#create-a-release>`_
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
+        assert name is github.GithubObject.NotSet                  \
+            or isinstance(tag_name, (str, unicode)),               \
+            'name must be a str/unicode object'
+        assert target_commitish is github.GithubObject.NotSet      \
+            or isinstance(target_commitish, (str, unicode)),       \
+            'target_commitish must be a str/unicode object'
+        assert body is github.GithubObject.NotSet                  \
+            or isinstance(body, (str, unicode)),                   \
+            'body must be a str/unicode object'
+        assert isinstance(tag_name, (str, unicode)), name
+        assert isinstance(draft, bool), draft
+        assert isinstance(prerelease, bool), prerelease
+        if name is github.GithubObject.NotSet:
+            name = self.tag_name
+        post_parameters = {
+            "tag_name": tag_name,
+            "name": name,
+            "body": body,
+            "draft": draft,
+            "prerelease": prerelease,
+        }
+        # Do not set target_commitish to self.target_commitish when ommited, just don't send it
+        # alltogether in that case, in order to match the Github API behaviour. Only send it when set.
+        if target_commitish is not github.GithubObject.NotSet:
+            post_parameters['target_commitish'] = target_commitish
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url,
+            input=post_parameters
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
     def update_release(self, name, message, draft=False, prerelease=False,
                        tag_name=github.GithubObject.NotSet,
                        target_commitish=github.GithubObject.NotSet):
