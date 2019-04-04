@@ -25,17 +25,18 @@
 import Framework
 import github
 
+
 class Project(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_user().get_repo('PyGithub')
 
     def testGetProject(self):
-        id = 1682941
-        proj = self.g.get_project(id)
-        self.assertEqual(proj.id, id)
+        pid = 1682941
+        proj = self.g.get_project(pid)
+        self.assertEqual(proj.id, pid)
         self.assertEqual(proj.name, 'TestProject')
-        
+
     def testGetOrganizationProjects(self):
         expectedProjects = ['Project1', 'Project2', 'Project3']
         org = self.g.get_organization('PyGithubTestOrg')
@@ -43,23 +44,23 @@ class Project(Framework.TestCase):
         for proj in org.get_projects("open"):
             projects.append(proj.name)
         self.assertEqual(projects, expectedProjects)
-        
+
     def testGetRepositoryProjects(self):
         expectedProjects = ['TestProject', 'TestProjectClosed']
         projects = []
         for proj in self.repo.get_projects("all"):
             projects.append(proj.name)
         self.assertEqual(projects, expectedProjects)
-        
+
     # See https://developer.github.com/v3/projects/#get-a-project
     def testProjectAttributes(self):
-        id = 1682941
-        proj = self.g.get_project(id)
+        pid = 1682941
+        proj = self.g.get_project(pid)
         self.assertEqual(proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub")
         self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
         self.assertEqual(proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1")
         self.assertEqual(proj.columns_url, "https://api.github.com/projects/1682941/columns")
-        self.assertEqual(proj.id, id)
+        self.assertEqual(proj.id, pid)
         self.assertEqual(proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
         self.assertEqual(proj.name, 'TestProject')
         self.assertEqual(proj.body, "To be used for testing project access API for PyGithub.")
@@ -105,18 +106,18 @@ class Project(Framework.TestCase):
 
         pull_card = cards[0]
         pull = pull_card.get_content("PullRequest")
-        self.assertIsInstance(pull, github.PullRequest.PullRequest);
+        self.assertIsInstance(pull, github.PullRequest.PullRequest)
         self.assertEqual(pull.title, "Work in progress on support for GitHub projects API.")
 
         issue_card = cards[1]
         issue = issue_card.get_content()
-        self.assertIsInstance(issue, github.Issue.Issue);
+        self.assertIsInstance(issue, github.Issue.Issue)
         self.assertEqual(issue.title, "Test issue")
 
         note_card = cards[2]
         note_content = note_card.get_content()
         self.assertEqual(note_content, None)
-        
+
     def testGetAllProjectCards(self):
         expectedProjects = ['TestProject']
         expectedCards = 5
@@ -129,3 +130,24 @@ class Project(Framework.TestCase):
                     cards += 1
         self.assertEqual(projects, expectedProjects)
         self.assertEqual(cards, expectedCards)
+
+    def testCreateColumn(self):
+        project = self.repo.create_project("Project created by PyGithub", "Project Body")
+        column = project.create_column("Project Column created by PyGithub",)
+        self.assertEqual(column.id, 3999333)
+
+    def testCreateCardWithNote(self):
+        project = self.repo.create_project("Project created by PyGithub",
+                                           "Project Body")
+        column = project.create_column("Project Column created by PyGithub",)
+        card1 = column.create_card(note="Project Card")
+        self.assertEqual(card1.id, 16039019)
+
+    def testCreateCardFromIssue(self):
+        project = self.repo.create_project("Project created by PyGithub",
+                                           "Project Body")
+        column = project.create_column("Project Column created by PyGithub",)
+        issue = self.repo.create_issue(title="Issue created by PyGithub")
+        card2 = column.create_card(content_id=issue.id,
+                                   content_type="Issue")
+        self.assertEqual(card2.id, 16039106)

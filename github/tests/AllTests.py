@@ -86,11 +86,12 @@ from RepositoryKey import *
 from RequiredPullRequestReviews import *
 from RequiredStatusChecks import *
 from SourceImport import *
-from Status import *
 from Tag import *
 from Team import *
 from Traffic import *
 from UserKey import *
+from Migration import *
+from GithubIntegration import *
 
 from PaginatedList import *
 from Exceptions import *

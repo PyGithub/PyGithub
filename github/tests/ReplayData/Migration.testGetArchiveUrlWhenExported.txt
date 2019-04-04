@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/user/migrations/25320/archive
+{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+302
+[('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 20:11:00 GMT'), ('Content-Type', 'text/html;charset=utf-8'), ('Content-Length', '470'), ('Status', '302 Found'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4976'), ('X-RateLimit-Reset', '1536871398'), ('location', 'https://github-cloud.s3.amazonaws.com/migration/25320/24575?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20180913%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180913T201100Z&X-Amz-Expires=300&X-Amz-Signature=a0aeb638facd0c78c1ed3ca86022eddbee91e5fe1bb48ee830f54b8b7b305026&X-Amz-SignedHeaders=host&actor_id=41840111&response-content-disposition=filename%3D608bceae-b790-11e8-8b43-4e3cb0dd56cc.tar.gz&response-content-type=application%2Fx-gzip'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.066845'), ('X-GitHub-Request-Id', '72DA:20F9:4DC6B3:C7706A:5B9AC453')]
+https://github-cloud.s3.amazonaws.com/migration/25320/24575?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20180913%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180913T201100Z&X-Amz-Expires=300&X-Amz-Signature=a0aeb638facd0c78c1ed3ca86022eddbee91e5fe1bb48ee830f54b8b7b305026&X-Amz-SignedHeaders=host&actor_id=41840111&response-content-disposition=filename%3D608bceae-b790-11e8-8b43-4e3cb0dd56cc.tar.gz&response-content-type=application%2Fx-gzip
+

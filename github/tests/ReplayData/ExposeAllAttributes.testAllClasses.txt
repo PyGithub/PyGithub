@@ -264,28 +264,6 @@ None
 
 https
 GET
-status.github.com
-None
-/api/status.json
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('status', '200 OK'), ('content-length', '55'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('date', 'Fri, 06 Sep 2013 15:05:40 GMT'), ('content-type', 'application/json;charset=utf-8')]
-{"status":"good","last_updated":"2013-09-06T15:05:34Z"}
-
-https
-GET
-status.github.com
-None
-/api/last-message.json
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('status', '200 OK'), ('content-length', '93'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('date', 'Fri, 06 Sep 2013 15:05:41 GMT'), ('content-type', 'application/json;charset=utf-8')]
-{"status":"good","body":"Everything operating normally.","created_on":"2013-09-01T15:41:46Z"}
-
-https
-GET
 api.github.com
 None
 /rate_limit
