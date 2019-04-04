@@ -86,7 +86,6 @@ from RepositoryKey import *
 from RequiredPullRequestReviews import *
 from RequiredStatusChecks import *
 from SourceImport import *
-from Status import *
 from Tag import *
 from Team import *
 from Traffic import *
