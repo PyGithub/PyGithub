@@ -113,6 +113,7 @@ if __name__ == "__main__":
             "integrations": ["cryptography"]
         },
         tests_require=[
-            "cryptography"
+            "cryptography",
+            "httpretty==0.9.6"
         ]
     )

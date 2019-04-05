@@ -104,6 +104,7 @@ from ExposeAllAttributes import *
 from BadAttributes import *
 from Equality import *
 from Search import *
+from Retry import *
 
 from Issue33 import *
 from Issue50 import *
