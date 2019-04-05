@@ -1799,17 +1799,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
             for attributes in data
         ]
 
-    def get_contributors(self):
+    def get_contributors(self, anon=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/contributors <http://developer.github.com/v3/repos>`_
+        :param anon: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
+        url_parameters = dict()
+        if anon is not github.GithubObject.NotSet:
+            url_parameters["anon"] = anon
+
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/contributors",
-            None
+            url_parameters
         )
+
 
     def get_download(self, id):
         """
