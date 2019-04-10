@@ -104,7 +104,7 @@ class GithubIntegration(unittest.TestCase):
         auth_obj = integration.get_access_token(664281)
         self.assertEqual(
             self.mock.args[0],
-            "https://api.github.com/installations/664281/access_tokens"
+            "https://api.github.com/app/installations/664281/access_tokens"
         )
         self.assertEqual(
             auth_obj.token, "v1.ce63424bc55028318325caac4f4c3a5378ca0038"

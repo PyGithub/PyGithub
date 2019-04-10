@@ -732,7 +732,7 @@ class GithubIntegration(object):
     def get_access_token(self, installation_id, user_id=None):
         """
         Get an access token for the given installation id.
-        POSTs https://api.github.com/installations/<installation_id>/access_tokens
+        POSTs https://api.github.com/app/installations/<installation_id>/access_tokens
         :param user_id: int
         :param installation_id: int
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
@@ -741,7 +741,7 @@ class GithubIntegration(object):
         if user_id:
             body = {"user_id": user_id}
         response = requests.post(
-            "https://api.github.com/installations/{}/access_tokens".format(installation_id),
+            "https://api.github.com/app/installations/{}/access_tokens".format(installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
                 "Accept": Consts.mediaTypeIntegrationPreview,
