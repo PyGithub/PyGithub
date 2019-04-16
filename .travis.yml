@@ -10,6 +10,7 @@ matrix:
 install:
   - pip install codecov
 script:
+  - if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
   - coverage run --source github/tests setup.py test
 after_success:
   - codecov
