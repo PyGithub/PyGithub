@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.7 (April 16, 2019)
+-----------------------------------
+
+* Exclude tests from PyPI distribution (#1031) (78d283b9)
+* Add codecov badge (#1090) (4c0b54c0)
+
 Version 1.43.6 (April 05, 2019)
 -----------------------------------
 **New features**
