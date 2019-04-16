@@ -49,6 +49,11 @@ class PullRequestReview(Framework.TestCase):
         # Test ability to get a single review
         self.pullreview = self.pull.get_review(28482091)
 
+    def testDismiss(self):
+        self.pullreview.dismiss("with prejudice")
+        pr = self.pull.get_review(28482091)
+        self.assertEqual(pr.state, "DISMISSED")
+
     def testAttributes(self):
         self.assertEqual(self.pullreview.id, 28482091)
         self.assertEqual(self.pullreview.user.login, "jzelinskie")

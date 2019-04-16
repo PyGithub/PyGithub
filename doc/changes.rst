@@ -4,6 +4,27 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.6 (April 05, 2019)
+-----------------------------------
+**New features**
+
+* Add support for Python 3.7 (#1028) (6faa00ac)
+* Adding HTTP retry functionality via urllib3 (#1002) (5ae7af55)
+* Add new dismiss() method on PullRequestReview (#1053) (8ef71b1b)
+* Add since and before to `get_notifications` (#1074) (7ee6c417)
+* Add url parameter to include anonymous contributors in `get_contributors` (#1075) (293846be)
+* Provide option to extend expiration of jwt token (#1068) (86a9d8e9)
+
+**Bug Fixes & Improvements**
+
+* Fix the default parameter for `PullRequest.create_review` (#1058) (118def30)
+* Fix `get_access_token` (#1042) (6a89eb64)
+* Fix `Organization.add_to_members` role passing (#1039) (480f91cf)
+
+**Deprecation**
+
+* Remove Status API (6efd6318)
+
 Version 1.43.5 (January 29, 2019)
 -----------------------------------
 

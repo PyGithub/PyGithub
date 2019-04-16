@@ -1,13 +1,18 @@
 language: python
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
-sudo: false
+matrix:
+  include:
+    - python: "3.7"
+      dist: xenial  # required for Python >= 3.7 (travis-ci/travis-ci#9069)
+install:
+  - pip install codecov
 script:
-  - if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
-  - python setup.py test
+  - coverage run --source github/tests setup.py test
+after_success:
+  - codecov
 notifications:
   email: false
   webhooks: https://www.travisbuddy.com/

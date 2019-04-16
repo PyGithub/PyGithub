@@ -41,6 +41,9 @@ import os
 import sys
 import traceback
 import unittest
+import httpretty
+from requests.structures import CaseInsensitiveDict
+from urllib3.util import Url
 
 import github
 
@@ -163,14 +166,28 @@ class ReplayingConnection:
         self.__file = file
         self.__protocol = protocol
         self.__host = host
-        self.__port = str(port)
+        self.__port = port
+        self.response_headers = CaseInsensitiveDict()
+
+        self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
+
+        httpretty.register_uri(
+            verb,
+            full_url.url,
+            body=self.__request_callback
+        )
+
+        self.__cnx.request(verb, url, input, headers)
+
+    def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
         self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
         self.__testCase.assertEqual(verb, readLine(self.__file))
         self.__testCase.assertEqual(self.__host, readLine(self.__file))
-        self.__testCase.assertEqual(self.__port, readLine(self.__file))
+        self.__testCase.assertEqual(str(self.__port), readLine(self.__file))
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
@@ -193,29 +210,58 @@ class ReplayingConnection:
         base, qs = splitedUrl
         return (base, sorted(qs.split("&")))
 
-    def getresponse(self):
+    def __request_callback(self, request, uri, response_headers):
+        self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
+
         status = int(readLine(self.__file))
-        headers = eval(readLine(self.__file))
+        self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
         output = readLine(self.__file)
-
-        return FakeHttpResponse(status, headers, output)
-
-    def close(self):
         readLine(self.__file)
 
+        if atLeastPython3:
+            output = bytes(output, 'utf-8')
 
-def ReplayingHttpConnection(testCase, file, *args, **kwds):
-    return ReplayingConnection(testCase, file, "http", *args, **kwds)
+        # make a copy of the headers and remove the ones that interfere with the response handling
+        adding_headers = CaseInsensitiveDict(self.response_headers)
+        adding_headers.pop('content-length', None)
+        adding_headers.pop('transfer-encoding', None)
+        adding_headers.pop('content-encoding', None)
+
+        response_headers.update(adding_headers)
+        return [status, response_headers, output]
+
+    def getresponse(self):
+        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
+        response = self.__cnx.getresponse()
+
+        # restore original headers to the response
+        response.headers = self.response_headers
+
+        return response
+
+    def close(self):
+        self.__cnx.close()
 
 
-def ReplayingHttpsConnection(testCase, file, *args, **kwds):
-    return ReplayingConnection(testCase, file, "https", *args, **kwds)
+class ReplayingHttpConnection(ReplayingConnection):
+    _realConnection = github.Requester.HTTPRequestsConnectionClass
+
+    def __init__(self, testCase, file, *args, **kwds):
+        ReplayingConnection.__init__(self, testCase, file, "http", *args, **kwds)
+
+
+class ReplayingHttpsConnection(ReplayingConnection):
+    _realConnection = github.Requester.HTTPSRequestsConnectionClass
+
+    def __init__(self, testCase, file, *args, **kwds):
+        ReplayingConnection.__init__(self, testCase, file, "https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
     jwtAuthMode = False
+    retry = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -247,8 +293,12 @@ class BasicTestCase(unittest.TestCase):
             self.client_secret = "client_secret"
             self.jwt = "jwt"
 
+            httpretty.enable(allow_net_connect=False)
+
     def tearDown(self):
         unittest.TestCase.tearDown(self)
+        httpretty.disable()
+        httpretty.reset()
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
 
@@ -298,11 +348,11 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
         if self.tokenAuthMode:
-            self.g = github.Github(self.oauth_token)
+            self.g = github.Github(self.oauth_token, retry=self.retry)
         elif self.jwtAuthMode:
-            self.g = github.Github(jwt=self.jwt)
+            self.g = github.Github(jwt=self.jwt, retry=self.retry)
         else:
-            self.g = github.Github(self.login, self.password)
+            self.g = github.Github(self.login, self.password, retry=self.retry)
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
@@ -315,3 +365,7 @@ def activateTokenAuthMode():  # pragma no cover (Function useful only when recor
 
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.jwtAuthMode = True
+
+
+def enableRetry(retry):
+    BasicTestCase.retry = retry
