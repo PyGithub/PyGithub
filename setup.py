@@ -79,13 +79,8 @@ if __name__ == "__main__":
             =======================
 
             See http://pygithub.readthedocs.io/en/latest/"""),
-        packages=[
-            "github",
-            "github.tests",
-        ],
-        package_data={
-            "github": ["tests/ReplayData/*.txt"]
-        },
+        packages=["github"],
+        package_data={},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
@@ -101,7 +96,7 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.7",
             "Topic :: Software Development",
         ],
-        test_suite="github.tests.AllTests",
+        test_suite="tests.AllTests",
         use_2to3=True,
         python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
         install_requires=[
