@@ -696,7 +696,7 @@ class GithubIntegration(object):
     Main class to obtain tokens for a GitHub integration.
     """
 
-    def __init__(self, base_url=DEFAULT_BASE_URL, integration_id, private_key):
+    def __init__(self, integration_id, private_key, base_url=DEFAULT_BASE_URL):
         """
         :param base_url: string
         :param integration_id: int
