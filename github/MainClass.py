@@ -696,13 +696,16 @@ class GithubIntegration(object):
     Main class to obtain tokens for a GitHub integration.
     """
 
-    def __init__(self, integration_id, private_key):
+    def __init__(self, base_url=DEFAULT_BASE_URL, integration_id, private_key):
         """
+        :param base_url: string
         :param integration_id: int
         :param private_key: string
         """
+        self.base_url = base_url
         self.integration_id = integration_id
         self.private_key = private_key
+        assert isinstance(base_url, (str, unicode)), base_url
 
     def create_jwt(self, expiration=60):
         """
@@ -741,7 +744,7 @@ class GithubIntegration(object):
         if user_id:
             body = {"user_id": user_id}
         response = requests.post(
-            "https://api.github.com/app/installations/{}/access_tokens".format(installation_id),
+            "{}/app/installations/{}/access_tokens".format(self.base_url, installation_id),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
                 "Accept": Consts.mediaTypeIntegrationPreview,
