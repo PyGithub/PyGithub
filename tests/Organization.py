@@ -255,3 +255,7 @@ class Organization(Framework.TestCase):
     def testGetMigrations(self):
         self.org = self.g.get_organization("sample-test-organisation")
         self.assertEqual(self.org.get_migrations().totalCount, 2)
+
+    def testListPendingInvitations(self):
+        self.org = self.g.get_organization("sample-test-organisation")
+        self.assertEqual(self.org.list_pending_invitations().totalCount, 3)
