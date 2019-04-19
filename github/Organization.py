@@ -719,6 +719,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def list_pending_invitations(self):
+        """
+        :calls: `GET /orgs/:org/invitations <https://developer.github.com/v3/orgs/members/>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/invitations",
+            None
+        )
+
+
     def remove_outside_collaborator(self, collaborator):
         """
         :calls: `DELETE /orgs/:org/outside_collaborators/:username <https://developer.github.com/v3/orgs/outside_collaborators>`_
