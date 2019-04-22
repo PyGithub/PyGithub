@@ -4,6 +4,54 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.7 (April 16, 2019)
+-----------------------------------
+
+* Exclude tests from PyPI distribution (#1031) (78d283b9)
+* Add codecov badge (#1090) (4c0b54c0)
+
+Version 1.43.6 (April 05, 2019)
+-----------------------------------
+**New features**
+
+* Add support for Python 3.7 (#1028) (6faa00ac)
+* Adding HTTP retry functionality via urllib3 (#1002) (5ae7af55)
+* Add new dismiss() method on PullRequestReview (#1053) (8ef71b1b)
+* Add since and before to `get_notifications` (#1074) (7ee6c417)
+* Add url parameter to include anonymous contributors in `get_contributors` (#1075) (293846be)
+* Provide option to extend expiration of jwt token (#1068) (86a9d8e9)
+
+**Bug Fixes & Improvements**
+
+* Fix the default parameter for `PullRequest.create_review` (#1058) (118def30)
+* Fix `get_access_token` (#1042) (6a89eb64)
+* Fix `Organization.add_to_members` role passing (#1039) (480f91cf)
+
+**Deprecation**
+
+* Remove Status API (6efd6318)
+
+Version 1.43.5 (January 29, 2019)
+-----------------------------------
+
+* Add project column create card (#1003) (5f5c2764)
+* Fix request got an unexpected keyword argument body (#1012) (ff789dcc)
+* Add missing import to PullRequest (#1007) (b5122768)
+
+Version 1.43.4 (December 21, 2018)
+-----------------------------------
+
+**New features**
+
+* Add Migration API (#899) (b4d895ed)
+* Add Traffic API (#977) (a433a2fe)
+* New in Project API: create repository project, create project column (#995) (1c0fd97d)
+
+**Bug Fixes & Improvements**
+
+* Change type of GitRelease.author to NamedUser (#969) (aca50a75)
+* Use total_count from data in PaginatedList (#963) (ec177610)
+
 Version 1.43.3 (October 31, 2018)
 -----------------------------------
 
@@ -17,7 +65,7 @@ Version 1.43.3 (October 31, 2018)
 * Adding ``suspended_at`` property to NamedUSer (#922) (c13b43ea)
 * Add since parameter for Gists (#914) (e18b1078)
 
-**Bug Fixes & improvements**
+**Bug Fixes & Improvements**
 
 * Fix missing parameters when reversing ``PaginatedList`` (#946) (60a684c5)
 * Fix unable to trigger ``RateLimitExceededException``. (#943) (972446d5)

@@ -1,0 +1,11 @@
+https
+DELETE
+api.github.com
+None
+/user/migrations/25320/archive
+{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 20:14:05 GMT'), ('Content-Type', 'application/octet-stream'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4971'), ('X-RateLimit-Reset', '1536871398'), ('X-GitHub-Media-Type', 'github.wyandotte-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.083770'), ('X-GitHub-Request-Id', 'F9FA:20FB:A7EA64:165BB04:5B9AC50C')]
+
+
