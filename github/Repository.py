@@ -2135,7 +2135,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/labels/" + urllib.quote(name)
+            self.url + "/labels/" + urllib.quote(name),
+            headers = {"Accept" : Consts.mediaTypeLabelDescriptionSearchPreview }
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -2148,7 +2149,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.Label.Label,
             self._requester,
             self.url + "/labels",
-            None
+            None,
+            {"Accept" : Consts.mediaTypeLabelDescriptionSearchPreview }
         )
 
     def get_languages(self):
