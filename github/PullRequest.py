@@ -751,7 +751,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def merge(self, commit_message=github.GithubObject.NotSet, commit_title=github.GithubObject.NotSet, merge_method=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
+    def merge(self, commit_message=github.GithubObject.NotSet, commit_title=github.GithubObject.NotSet, merge_method=github.GithubObject.NotSet, sha=github.GithubObject.NotSet, delete_branch=False):
         """
         :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
@@ -775,6 +775,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self.url + "/merge",
             input=post_parameters
         )
+        if delete_branch == True:
+            self.head.repo.get_git_ref( "heads/%s"%(self.head.ref) ).delete()
+
+
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
