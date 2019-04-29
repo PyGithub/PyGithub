@@ -121,3 +121,8 @@ class TwoFactorException(GithubException):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
     """
+
+class GitRefInUseException(GithubException):
+    """
+    Exception raised when attempting to delete a GitRef object that is still in use.
+    """
