@@ -143,6 +143,56 @@ class Project(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def delete(self):
+        """
+        :calls: `DELETE /projects/:project_id <http://developer.github.com/v3/projects>`_
+        :rtype: None
+        """
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url,
+            headers=import_header
+        )
+
+    def edit(self, name=None, description=github.GithubObject.NotSet, state=github.GithubObject.NotSet, organization_permission=github.GithubObject.NotSet, private=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /projects/:project_id <https://developer.github.com/v3/projects/#update-a-project>`_
+        :param name: string
+        :param description: string
+        :param state: string
+        :param organization_permission: string
+        :param private: bool
+        :rtype: None
+        """
+        if name is None:
+            name = self.name
+        assert isinstance(name, (str, unicode)), name
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert organization_permission is github.GithubObject.NotSet or isinstance(organization_permission, (str, unicode)), organization_permission
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        post_parameters = {
+            "name": name,
+        }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        if state is not github.GithubObject.NotSet:
+            post_parameters["state"] = state
+        if organization_permission is not github.GithubObject.NotSet:
+            post_parameters["organization_permission"] = organization_permission
+        if private is not github.GithubObject.NotSet:
+            post_parameters["private"] = private
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            headers=import_header,
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
+
     def get_columns(self):
         """
         :calls: `GET /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#list-project-columns>`_
