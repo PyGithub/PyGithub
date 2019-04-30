@@ -1392,7 +1392,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/collaborators",
-            url_parameters
+            url_parameters,
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
         )
 
     def get_comment(self, id):
@@ -2568,7 +2569,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/collaborators/" + collaborator
+            self.url + "/collaborators/" + collaborator,
+            headers={'Accept': Consts.mediaTypeNestedTeamsPreview},
         )
         return status == 204
 
