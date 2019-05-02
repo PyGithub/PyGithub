@@ -358,6 +358,32 @@ class Issue(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def lock(self, lock_reason):
+        """
+        :calls: `PUT /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :param lock_reason: string
+        :rtype: None
+        """
+        assert isinstance(lock_reason, (str, unicode)), lock_reason
+        put_parameters = dict()
+        put_parameters["lock_reason"] = lock_reason
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/lock",
+            input=put_parameters,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+        )
+
+    def unlock(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/lock"
+        )
+
     def get_comment(self, id):
         """
         :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
