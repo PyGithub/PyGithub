@@ -777,7 +777,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
 
 
-        if delete_branch == True:
+        if delete_branch:
 
             # Check for other pull requests referencing the same ref.
             # If found, abort.
