@@ -47,7 +47,9 @@ import github.PaginatedList
 import github.Repository
 import github.NamedUser
 import github.Organization
+import github.Project
 
+import Consts
 
 class Team(github.GithubObject.CompletableGithubObject):
     """
@@ -222,6 +224,39 @@ class Team(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
+    def add_to_projects(self, project):
+        """
+        :calls: `PUT /teams/:id/projects/:project_id <https://developer.github.com/v3/teams/#add-or-update-team-project>`_
+        :param project: :class:`github.Project.Project`
+        :rtype: None
+        """
+        assert isinstance(project, github.Project.Project), project
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/projects/" + str(project.id),
+            headers=import_header
+        )
+
+    def set_project_permission(self, project, permission):
+        """
+        :calls: `PUT /teams/:id/projects/:project_id <https://developer.github.com/v3/teams/#add-or-update-team-project>`_
+        :param project: :class:`github.Project.Project`
+        :param permission: string
+        :rtype: None
+        """
+        assert isinstance(project, github.Project.Project), project
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        put_parameters = {
+            "permission": permission,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/projects/" + str(project.id),
+            headers=import_header,
+            input=put_parameters
+        )
+
     def delete(self):
         """
         :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
@@ -291,6 +326,18 @@ class Team(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_projects(self):
+        """
+        :calls: `GET /teams/:id/projects <http://developer.github.com/v3/orgs/teams>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            None
+        )
+
     def has_in_members(self, member):
         """
         :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
@@ -354,6 +401,20 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo._identity
+        )
+
+    def remove_from_projects(self, project):
+        """
+        :calls: `DELETE /teams/:id/projects/:project_id <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: None
+        """
+        assert isinstance(project, github.Project.Project), project
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/projects/" + str(project.id),
+            headers=import_header
         )
 
     @property
