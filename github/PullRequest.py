@@ -782,7 +782,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             # Check for other pull requests referencing the same ref.
             # If found, abort.
             remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
-            if remaining_pulls > 0:
+            if remaining_pulls:
                 raise GithubException.GitRefInUseException(data="PRs referencing this branch remain.  Not deleting the branch")
 
             self.head.repo.get_git_ref( "heads/%s"%(self.head.ref) ).delete()
