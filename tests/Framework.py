@@ -128,7 +128,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         if atLeastPython3: # In Py3, return from "read" is bytes
             self.__writeLine(output)
         else:
-            self.__writeLine(str(output))
+            self.__writeLine(output.encode("utf-8"))
 
         return FakeHttpResponse(status, headers, output)
 
