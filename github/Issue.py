@@ -247,6 +247,22 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    @property
+    def locked(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
+
+    @property
+    def active_lock_reason(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
+
     def as_pull_request(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
@@ -357,6 +373,32 @@ class Issue(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         self._useAttributes(data)
+
+    def lock(self, lock_reason):
+        """
+        :calls: `PUT /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :param lock_reason: string
+        :rtype: None
+        """
+        assert isinstance(lock_reason, (str, unicode)), lock_reason
+        put_parameters = dict()
+        put_parameters["lock_reason"] = lock_reason
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/lock",
+            input=put_parameters,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+        )
+
+    def unlock(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/lock"
+        )
 
     def get_comment(self, id):
         """
@@ -521,6 +563,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "active_lock_reason" in attributes:  # pragma no branch
+            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
         if "assignees" in attributes:  # pragma no branch
@@ -552,6 +596,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
         if "labels_url" in attributes:  # pragma no branch
             self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+        if "locked" in attributes:  # pragma no branch
+            self._locked = self._makeBoolAttribute(attributes["locked"])
         if "milestone" in attributes:  # pragma no branch
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
         if "number" in attributes:  # pragma no branch

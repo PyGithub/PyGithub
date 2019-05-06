@@ -93,6 +93,12 @@ class Issue(Framework.TestCase):
         self.issue.edit(assignee=None)
         self.assertEqual(self.issue.assignee, None)
 
+    def testLock(self):
+        self.issue.lock("resolved")
+
+    def testUnlock(self):
+        self.issue.unlock()
+
     def testCreateComment(self):
         comment = self.issue.create_comment("Comment created by PyGithub")
         self.assertEqual(comment.id, 5808311)
