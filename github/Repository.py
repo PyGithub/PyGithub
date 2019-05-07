@@ -1476,15 +1476,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param ref: string
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-        return self.get_file_contents(path, ref)
-
-    def get_file_contents(self, path, ref=github.GithubObject.NotSet):
-        """
-        :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
-        :param path: string
-        :param ref: string
-        :rtype: :class:`github.ContentFile.ContentFile`
-        """
         assert isinstance(path, (str, unicode)), path
         assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
         url_parameters = dict()

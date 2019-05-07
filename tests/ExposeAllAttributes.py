@@ -68,7 +68,7 @@ class ExposeAllAttributes(Framework.TestCase):
         hookResponse = hook.last_response
         hookDescription = self.g.get_hooks()[0]
         comparison = repository.compare("master", "develop")
-        contentFile = repository.get_file_contents("README.rst")
+        contentFile = repository.get_contents("README.rst")
         permissions = repository.permissions
         event = repository.get_events()[0]
         notification = authenticatedUser.get_notification("8406712")
