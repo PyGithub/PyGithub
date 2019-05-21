@@ -1350,7 +1350,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_branch(self, branch):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/branches/#get-branch>`_
         :param branch: string
         :rtype: :class:`github.Branch.Branch`
         """
