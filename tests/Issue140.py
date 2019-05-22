@@ -4,9 +4,7 @@
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -27,37 +25,33 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+import Framework
+import github
 
 
-class Status(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents Statuses. The reference can be found here https://status.github.com/api
-    """
+class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/140
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.repo = self.g.get_repo("twitter/bootstrap")
 
-    def __repr__(self):
-        return self.get__repr__({"status": self._status.value})
+    def testGetDirContentsThenLazyCompletionOfFile(self):
+        contents = self.repo.get_dir_contents("js")
+        self.assertEqual(len(contents), 15)
+        n = 0
+        for content in contents:
+            if content.path == "js/bootstrap-affix.js":
+                self.assertEqual(len(content.content), 4722)  # Lazy completion
+                n += 1
+            elif content.path == "js/tests":
+                self.assertEqual(content.content, None)  # No completion at all
+                n += 1
+        self.assertEqual(n, 2)
 
-    @property
-    def status(self):
-        """
-        :type: string
-        """
-        return self._status.value
+    def testGetFileContents(self):
+        contents = self.repo.get_contents("js/bootstrap-affix.js")
+        self.assertEqual(contents.encoding, "base64")
+        self.assertEqual(contents.url, "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js")
+        self.assertEqual(len(contents.content), 4722)
 
-    @property
-    def last_updated(self):
-        """
-        :type: datetime.datetime
-        """
-        return self._last_updated.value
-
-    def _initAttributes(self):
-        self._status = github.GithubObject.NotSet
-        self._last_updated = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
-        if "status" in attributes:  # pragma no branch
-            self._status = self._makeStringAttribute(attributes["status"])
-        if "last_updated" in attributes:  # pragma no branch
-            self._last_updated = self._makeDatetimeAttribute(attributes["last_updated"])
+    def testGetDirContentsWithRef(self):
+        self.assertEqual(len(self.repo.get_dir_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")), 15)

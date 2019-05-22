@@ -1350,7 +1350,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_branch(self, branch):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/branches/#get-branch>`_
         :param branch: string
         :rtype: :class:`github.Branch.Branch`
         """
@@ -1470,15 +1470,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_contents(self, path, ref=github.GithubObject.NotSet):
-        """
-        :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
-        :param path: string
-        :param ref: string
-        :rtype: :class:`github.ContentFile.ContentFile`
-        """
-        return self.get_file_contents(path, ref)
-
-    def get_file_contents(self, path, ref=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
         :param path: string
@@ -1802,17 +1793,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
             for attributes in data
         ]
 
-    def get_contributors(self):
+    def get_contributors(self, anon=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/contributors <http://developer.github.com/v3/repos>`_
+        :param anon: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
+        url_parameters = dict()
+        if anon is not github.GithubObject.NotSet:
+            url_parameters["anon"] = anon
+
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/contributors",
-            None
+            url_parameters
         )
+
 
     def get_download(self, id):
         """

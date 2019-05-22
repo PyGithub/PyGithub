@@ -63,14 +63,12 @@ class ExposeAllAttributes(Framework.TestCase):
         pullRequestPart = pullRequest.base
         file = pullRequest.get_files()[0]
         commitComment = repository.get_comment(3630301)
-        status = self.g.get_api_status()
-        statusMessage = self.g.get_last_api_status_message()
         rateLimit = self.g.get_rate_limit()
         hook = repository.get_hooks()[0]
         hookResponse = hook.last_response
         hookDescription = self.g.get_hooks()[0]
         comparison = repository.compare("master", "develop")
-        contentFile = repository.get_file_contents("README.rst")
+        contentFile = repository.get_contents("README.rst")
         permissions = repository.permissions
         event = repository.get_events()[0]
         notification = authenticatedUser.get_notification("8406712")
@@ -125,8 +123,6 @@ class ExposeAllAttributes(Framework.TestCase):
             rateLimit,
             repository,
             # repositoryKey,  # Security issue if put as-is in ReplayData
-            status,
-            statusMessage,
             # tag,
             team,
             # userKey,  # Security issue if put as-is in ReplayData
