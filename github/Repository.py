@@ -1361,16 +1361,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
-    def get_branches(self):
+    def get_branches(self, protected=github.GithubObject.NotSet):
         """
-        :calls: `GET /repos/:owner/:repo/branches <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/:owner/:repo/branches <https://developer.github.com/v3/repos/branches/#list-branches>`_
+        :param protected: bool
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Branch.Branch`
         """
+
+        assert protected is github.GithubObject.NotSet or isinstance(protected, bool), protected
+        url_parameters = dict()
+        if protected is not github.GithubObject.NotSet:
+            url_parameters['protected'] = protected
         return github.PaginatedList.PaginatedList(
             github.Branch.Branch,
             self._requester,
             self.url + "/branches",
-            None
+            url_parameters
         )
 
     def get_collaborators(self, affiliation=github.GithubObject.NotSet):
