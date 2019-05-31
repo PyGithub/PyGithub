@@ -72,6 +72,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.public_gists, 0)
         self.assertEqual(self.org.public_repos, 27)
         self.assertEqual(self.org.total_private_repos, 7)
+        self.assertEqual(self.org.two_factor_requirement_enabled, True)
         self.assertEqual(self.org.type, "Organization")
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
 

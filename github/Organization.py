@@ -281,6 +281,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
+    def two_factor_status(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._two_factor_requirement_enabled)
+        return self._two_factor_requirement_enabled.value
+
+    @property
     def type(self):
         """
         :type: string
@@ -945,6 +953,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
+        self._two_factor_requirement_enabled = github.GithubObject.NotSet
         self._avatar_url = github.GithubObject.NotSet
         self._billing_email = github.GithubObject.NotSet
         self._blog = github.GithubObject.NotSet
@@ -1031,6 +1040,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
+        if "two_factor_requirement_enabled" in attributes:  # pragma no branch
+            self._two_factor_requirement_enabled = self._makeStringAttribute(attributes["two_factor_requirement_enabled"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
