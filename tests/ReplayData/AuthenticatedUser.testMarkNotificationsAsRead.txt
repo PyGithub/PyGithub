@@ -1,0 +1,11 @@
+https
+PUT
+api.github.com
+None
+/notifications
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{"last_read_at": "2018-10-18T18:20:01Z"}
+205
+[('Server', 'GitHub.com'), ('Date', 'Thu, 18 Oct 2018 18:41:54 GMT'), ('Content-Type', 'text/plain;charset=utf-8'), ('Content-Length', '0'), ('Status', '205 Reset Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4989'), ('X-RateLimit-Reset', '1539890344'), ('X-OAuth-Scopes', 'admin:gpg_key, admin:public_key, admin:repo_hook, gist, notifications, repo, user, write:discussion'), ('X-Accepted-OAuth-Scopes', 'notifications, repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'B236:4C25:2ABE5CA:58BE030:5BC8D3F2')]
+
+
