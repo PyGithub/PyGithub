@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2019 MarcoFalke <falke.marco@gmail.com>                            #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+
+from __future__ import absolute_import
+from . import Framework
+
+import datetime
+
+
+class PullRequestDraft(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+
+        self.repo = self.g.get_repo('flathub/flathub')
+        self.pullDraft = self.repo.get_pull(1091)
+        self.pullNoDraft = self.repo.get_pull(1092)
+
+    def testAttributesDraft(self):
+        self.assertEqual(self.pullDraft.mergeable_state, 'draft')
+        self.assertEqual(self.pullDraft.mergeable, True)
+        self.assertEqual(self.pullDraft.draft, None)
+
+        self.assertEqual(self.pullNoDraft.mergeable_state, 'clean')
+        self.assertEqual(self.pullNoDraft.mergeable, True)
+        self.assertEqual(self.pullNoDraft.draft, None)

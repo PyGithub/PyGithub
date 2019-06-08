@@ -79,6 +79,7 @@ from .Organization import *
 from .Project import *
 from .PullRequest import *
 from .PullRequestComment import *
+from .PullRequestDraft import *
 from .PullRequestReview import *
 from .PullRequestFile import *
 from .RateLimiting import *
