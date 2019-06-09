@@ -79,6 +79,54 @@ class GithubIntegration(unittest.TestCase):
         self.mock = Mock()
         sys.modules['requests'].post = self.mock
 
+        class GetMock(object):
+            def __init__(self):
+                self.args = tuple()
+                self.kwargs = dict()
+
+            @property
+            def status_code(self):
+                return 201
+
+            def json(self):
+                return json.loads(self.text)
+
+            @property
+            def text(self):
+                return (
+                    u'{"id":111111,"account":{"login":"foo","id":11111111,'
+                    u'"node_id":"foobar",'
+                    u'"avatar_url":"https://avatars3.githubusercontent.com/u/11111111?v=4",'
+                    u'"gravatar_id":"","url":"https://api.github.com/users/foo",'
+                    u'"html_url":"https://github.com/foo",'
+                    u'"followers_url":"https://api.github.com/users/foo/followers",'
+                    u'"following_url":"https://api.github.com/users/foo/following{/other_user}",'
+                    u'"gists_url":"https://api.github.com/users/foo/gists{/gist_id}",'
+                    u'"starred_url":"https://api.github.com/users/foo/starred{/owner}{/repo}",'
+                    u'"subscriptions_url":"https://api.github.com/users/foo/subscriptions",'
+                    u'"organizations_url":"https://api.github.com/users/foo/orgs",'
+                    u'"repos_url":"https://api.github.com/users/foo/repos",'
+                    u'"events_url":"https://api.github.com/users/foo/events{/privacy}",'
+                    u'"received_events_url":"https://api.github.com/users/foo/received_events",'
+                    u'"type":"Organization","site_admin":false},"repository_selection":"all",'
+                    u'"access_tokens_url":"https://api.github.com/app/installations/111111/access_tokens",'
+                    u'"repositories_url":"https://api.github.com/installation/repositories",'
+                    u'"html_url":"https://github.com/organizations/foo/settings/installations/111111",'
+                    u'"app_id":11111,"target_id":11111111,"target_type":"Organization",'
+                    u'"permissions":{"issues":"write","pull_requests":"write","statuses":"write","contents":"read",'
+                    u'"metadata":"read"},"events":["pull_request","release"],"created_at":"2019-04-17T16:10:37.000Z",'
+                    u'"updated_at":"2019-05-03T06:27:48.000Z","single_file_name":null}'
+                )
+
+            def __call__(self, *args, **kwargs):
+                self.args = args
+                self.kwargs = kwargs
+                return self
+
+        self.origin_request_get = sys.modules['requests'].get
+        self.get_mock = GetMock()
+        sys.modules['requests'].get = self.get_mock
+
     def testCreateJWT(self):
         from github import GithubIntegration
         integration = GithubIntegration(25216, private_key)
@@ -113,7 +161,17 @@ class GithubIntegration(unittest.TestCase):
             auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
         )
 
+    def test_get_installation(self):
+        from github import GithubIntegration
+        integr = GithubIntegration("11111", private_key)
+        inst = integr.get_installation("foo", "bar")
+        self.assertEqual(
+            inst.id.value,
+            111111
+        )
+
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)
         sys.modules['time'].time = self.origin_time
         sys.modules['requests'].post = self.origin_request_post
+        sys.modules['requests'].get = self.origin_request_get
