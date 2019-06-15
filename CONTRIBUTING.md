@@ -71,6 +71,9 @@ login = "my_login"
 password = "my_password"  # Can be left empty if not used
 oauth_token = "my_token"  # Can be left empty if not used
 jwt = "my_json_web_token"  # Can be left empty if not used
+
+login_netrc = "my_another_login"  # Can be left empty if not used
+password_netrc = "my_password_for_another_login"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.

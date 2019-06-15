@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/user
+{'User-Agent': 'PyGithub/Python'}
+None
+401
+[('Date', 'Sat, 15 Jun 2019 06:44:28 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '125'), ('Server', 'GitHub.com'), ('Status', '401 Unauthorized'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '55'), ('X-RateLimit-Reset', '1560582975'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'D8E5:055D:ED7582:11F6710:5D0493CC')]
+{"message":"Requires authentication","documentation_url":"https://developer.github.com/v3/users/#get-the-authenticated-user"}
+
