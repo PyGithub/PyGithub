@@ -2447,6 +2447,42 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/subscribers",
             None
         )
+    
+    def get_vulnerability_alert_status(self):
+        """
+        :calls `GET /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :rtype: bool
+        """
+        status, headers, data = self._requester.requestJson(
+            "GET",
+            self.url + "/vulnerability-alerts",
+            headers={"Accept": "application/vnd.github.dorian-preview+json"}
+        )
+        return status == 204
+
+    def enable_vulnerability_alerts(self):
+        """
+        :calls `GET /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :rtype bool
+        """
+        status, headers, data = self._requester.requestJson(
+            "PUT",
+            self.url + "/vulnerability-alerts",
+            headers={"Accept": "application/vnd.github.dorian-preview+json"}
+        )
+        return status == 204
+
+    def disable_vulnerability_alerts(self):
+        """
+        :calls DELETE` /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :rtype bool
+        """
+        status, headers, data = self._requester.requestJson(
+            "DELETE",
+            self.url + "/vulnerability-alerts",
+            headers={"Accept": "application/vnd.github.dorian-preview+json"}
+        )
+        return status == 204
 
     def get_tags(self):
         """
