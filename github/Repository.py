@@ -1810,7 +1810,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
-
     def get_download(self, id):
         """
         :calls: `GET /repos/:owner/:repo/downloads/:id <http://developer.github.com/v3/repos/downloads>`_
@@ -2447,7 +2446,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/subscribers",
             None
         )
-    
+
     def get_vulnerability_alert_status(self):
         """
         :calls `GET /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
