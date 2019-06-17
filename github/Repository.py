@@ -2449,7 +2449,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_vulnerability_alert_status(self):
         """
-        :calls `GET /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :calls `GET /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson(
@@ -2461,7 +2461,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def enable_vulnerability_alerts(self):
         """
-        :calls `PUT /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :calls `PUT /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`_
         :rtype bool
         """
         status, headers, data = self._requester.requestJson(
@@ -2473,7 +2473,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def disable_vulnerability_alerts(self):
         """
-        :calls DELETE` /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`-
+        :calls DELETE` /repos/:owner/:repo/vulnerability-alerts <https://developer.github.com/changes/2019-04-24-vulnerability-alerts/>`_
         :rtype bool
         """
         status, headers, data = self._requester.requestJson(
