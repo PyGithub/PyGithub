@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/teams/Members
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('x-ratelimit-limit', '5000'), ('content-length', '128'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"f93241eaf43847bcf38b352f25595e28"'), ('date', 'Tue, 18 Jun 2019 10:32:13 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"repos_count":1,"permission":"push","url":"https://api.github.com/teams/141496","name":"Members","id":141496,"members_count":1}
+
