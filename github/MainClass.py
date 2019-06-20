@@ -28,6 +28,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -775,3 +776,24 @@ class GithubIntegration(object):
             status=response.status_code,
             data=response.text
         )
+
+    def get_installation(self, owner, repo):
+        """
+        :calls: `GET /repos/:owner/:repo/installation <https://developer.github.com/v3/apps/#get-a-repository-installation>`_
+        :param owner: str
+        :param repo: str
+        :rtype: :class:`github.Installation.Installation`
+        """
+        headers = {
+            "Authorization": "Bearer {}".format(self.create_jwt()),
+            "Accept": Consts.mediaTypeIntegrationPreview,
+            "User-Agent": "PyGithub/Python",
+        }
+
+        response = requests.get(
+            "{}/repos/{}/{}/installation".format(DEFAULT_BASE_URL, owner, repo),
+            headers=headers
+        )
+        response_dict = response.json()
+        return Installation.Installation(None, headers, response_dict, True)
+
