@@ -179,6 +179,9 @@ class Organization(Framework.TestCase):
     def testGetRepos(self):
         self.assertListKeyEqual(self.org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"])
 
+    def testGetReposSorted(self):
+        self.assertListKeyEqual(self.org.get_repos(sort = "updated", direction = "desc"), lambda r: r.name, ["TestPyGithub", "FatherBeaver"])
+
     def testGetReposWithType(self):
         self.assertListKeyEqual(self.org.get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])
 
