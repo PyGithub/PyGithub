@@ -790,6 +790,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
+    def get_team_by_slug(self, slug):
+        """
+        :calls: `GET /orgs/:org/teams/:team_slug <https://developer.github.com/v3/teams>`_
+        :param slug: string
+        :rtype: :class:`github.Team.Team`
+        """
+        assert isinstance(slug, (str, unicode)), slug
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/teams/" + slug
+        )
+        return github.Team.Team(self._requester, headers, data, completed=True)
+
     def get_teams(self):
         """
         :calls: `GET /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_

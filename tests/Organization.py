@@ -188,6 +188,10 @@ class Organization(Framework.TestCase):
     def testGetTeams(self):
         self.assertListKeyEqual(self.org.get_teams(), lambda t: t.name, ["Members", "Owners"])
 
+    def testGetTeamBySlug(self):
+        team = self.org.get_team_by_slug("Members")
+        self.assertEqual(team.id, 141496)
+
     def testCreateHookWithMinimalParameters(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
         self.assertEqual(hook.id, 257967)
