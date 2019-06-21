@@ -165,7 +165,7 @@ class License(github.GithubObject.CompletableGithubObject):
 
 class RepositoryLicense(License):
     """
-    This class represents Licenses which is returned with Repository request.
+    This class represents License information which is returned with the Repository request.
     """
     def _completeIfNeeded(self):
         pass

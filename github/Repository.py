@@ -502,6 +502,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     @property
     def license(self):
+        """
+        :type: :class:`github.License.RepositoryLicense`
+        """
         self._completeIfNotSet(self._license)
         return self._license.value
 
