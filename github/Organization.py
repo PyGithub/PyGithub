@@ -311,7 +311,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param role: string
         :rtype: None
         """
-        assert isinstance(role, (str, unicode)), role
+        assert role is github.GithubObject.NotSet or isinstance(role, (str, unicode)), role
         assert isinstance(member, github.NamedUser.NamedUser), member
         put_parameters = {}
         if role is not github.GithubObject.NotSet:
@@ -679,11 +679,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-        
+
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-            
+
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
@@ -691,7 +691,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview}
         )
-        
+
     def get_public_members(self):
         """
         :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/orgs/members>`_
