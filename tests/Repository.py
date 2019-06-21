@@ -93,7 +93,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28))
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
-
+        self.assertEqual(self.repo.license.key, "lgpl-3.0")
+        self.assertEqual(self.repo.license.name, "GNU Lesser General Public License v3.0")
+        self.assertEqual(self.repo.license.spdx_id, "LGPL-3.0")
+        self.assertEqual(self.repo.license.url, "https://api.github.com/licenses/lgpl-3.0")
         # test __repr__() based on this attributes
         self.assertEqual(self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")')
 
