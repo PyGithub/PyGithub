@@ -3,6 +3,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Juhapekka Piiroinen <juhapekka.piiroinen@1337.fi>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -160,3 +161,11 @@ class License(github.GithubObject.CompletableGithubObject):
             self._conditions = self._makeListOfStringsAttribute(attributes["conditions"])
         if "limitations" in attributes:  # pragma no branch
             self._limitations = self._makeListOfStringsAttribute(attributes["limitations"])
+
+
+class RepositoryLicense(License):
+    """
+    This class represents Licenses which is returned with Repository request.
+    """
+    def _completeIfNeeded(self):
+        pass

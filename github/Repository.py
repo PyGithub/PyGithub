@@ -66,6 +66,7 @@
 # Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2019 Juhapekka Piiroinen <juhapekka.piiroinen@1337.fi>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -498,6 +499,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._languages_url)
         return self._languages_url.value
+
+    @property
+    def license(self):
+        self._completeIfNotSet(self._license)
+        return self._license.value
 
     @property
     def master_branch(self):
@@ -2763,6 +2769,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._labels_url = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
         self._languages_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
         self._master_branch = github.GithubObject.NotSet
         self._merges_url = github.GithubObject.NotSet
         self._milestones_url = github.GithubObject.NotSet
@@ -2919,6 +2926,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
+        if "license" in attributes:  # pragma no branch
+            self._license = self._makeClassAttribute(github.License.RepositoryLicense, attributes["license"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
