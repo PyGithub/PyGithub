@@ -150,3 +150,10 @@ class Release(Framework.TestCase):
         the_release.upload_asset(self.artifact_path,
                                  "unit test artifact",
                                  "application/zip")
+
+    def testUploadAssetWithName(self):
+        release_id = 1210837
+        repo = self.g.get_user().get_repo("PyGithub")
+        release = repo.get_release(release_id)
+        r = release.upload_asset(self.artifact_path, name="foobar.zip")
+        self.assertEqual(r.name, "foobar.zip")
