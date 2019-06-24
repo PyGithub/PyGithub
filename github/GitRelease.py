@@ -216,20 +216,24 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
-    def upload_asset(self, path, label="", content_type=""):
+    def upload_asset(self, path, label="", content_type=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
-        :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets?name=foo.zip <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
+        :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
         :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(path, (str, unicode)), path
         assert isinstance(label, (str, unicode)), label
+        assert name is github.GithubObject.NotSet or isinstance(name, (str, unicode)), name
 
         post_parameters = {
-            "name": basename(path),
             "label": label
         }
+        if name is github.GithubObject.NotSet:
+            post_parameters["name"] = basename(path)
+        else:
+            post_parameters["name"] = name
         headers = {}
-        if len(content_type) > 0:
+        if content_type is not github.GithubObject.NotSet:
             headers["Content-Type"] = content_type
         resp_headers, data = self._requester.requestBlobAndCheck(
             "POST",
