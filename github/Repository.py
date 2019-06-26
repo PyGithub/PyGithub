@@ -134,6 +134,7 @@ import github.Referrer
 import github.Path
 import github.Clones
 import github.View
+import github.License
 
 import Consts
 
@@ -503,7 +504,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def license(self):
         """
-        :type: :class:`github.License.RepositoryLicense`
+        :type: :class:`github.License.License`
         """
         self._completeIfNotSet(self._license)
         return self._license.value
@@ -2930,7 +2931,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "pushed_at" in attributes:  # pragma no branch
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
         if "license" in attributes:  # pragma no branch
-            self._license = self._makeClassAttribute(github.License.RepositoryLicense, attributes["license"])
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
