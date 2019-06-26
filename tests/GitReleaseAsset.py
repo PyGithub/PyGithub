@@ -26,7 +26,6 @@
 
 import datetime
 import Framework
-from pprint import pprint
 
 
 class ReleaseAsset(Framework.TestCase):

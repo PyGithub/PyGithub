@@ -32,9 +32,6 @@
 
 import Framework
 
-import github
-import datetime
-
 
 class ContentFile(Framework.TestCase):
     def setUp(self):

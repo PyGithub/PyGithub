@@ -30,8 +30,6 @@
 
 import Framework
 
-import datetime
-
 
 class Notification(Framework.TestCase):
     def setUp(self):

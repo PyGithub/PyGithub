@@ -22,8 +22,6 @@
 #                                                                              #
 ################################################################################
 
-import json
-
 import github.GithubObject
 
 # NOTE: There is currently no way to get cards "in triage" for a project.

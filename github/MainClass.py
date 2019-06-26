@@ -50,7 +50,6 @@
 
 import datetime
 
-import urllib
 import pickle
 import time
 import sys
@@ -61,12 +60,10 @@ import urllib3
 from Requester import Requester
 import AuthenticatedUser
 import NamedUser
-import Organization
 import Gist
 import github.PaginatedList
 import Repository
 import Installation
-import Legacy
 import License
 import Topic
 import github.GithubObject

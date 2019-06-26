@@ -23,7 +23,6 @@
 ################################################################################
 import Framework
 
-import github
 
 class Issue937(Framework.TestCase):
     def setUp(self):

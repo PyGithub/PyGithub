@@ -38,7 +38,6 @@ import os
 import zipfile
 import datetime
 import Framework
-from pprint import pprint
 
 
 class Release(Framework.TestCase):

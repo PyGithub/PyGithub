@@ -42,8 +42,6 @@ try:
 except ImportError:
     from urlparse import parse_qs
 
-import github.GithubObject
-
 
 class PaginatedListBase:
     def __init__(self):

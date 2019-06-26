@@ -26,13 +26,11 @@
 #                                                                              #
 ################################################################################
 
-import fnmatch
 import os
 import subprocess
-import itertools
 
 
-eightySharps = "################################################################################"
+eightySharps = "#"*80
 
 
 def generateLicenseSection(filename):

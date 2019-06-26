@@ -28,7 +28,6 @@
 
 import Framework
 
-import github
 import datetime
 
 class Traffic(Framework.TestCase):

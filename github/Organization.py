@@ -42,7 +42,6 @@
 ################################################################################
 
 import datetime
-import json
 
 import github.GithubObject
 import github.PaginatedList
