@@ -627,6 +627,19 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_issue_events(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:issue_number/events <http://developer.github.com/v3/issues/events>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.IssueEvent.IssueEvent,
+            self._requester,
+            self.issue_url + "/events",
+            None,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+        )
+
     def get_review(self, id):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/reviews/:id <https://developer.github.com/v3/pulls/reviews>`_
