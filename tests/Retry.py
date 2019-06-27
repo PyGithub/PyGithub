@@ -32,8 +32,7 @@ import Framework
 
 import requests
 
-from github import GithubException
-from github.Repository import Repository
+import github
 
 REPO_NAME = 'PyGithub/PyGithub'
 
@@ -53,10 +52,9 @@ class Retry(Framework.TestCase):
         Framework.TestCase.setUp(self)
 
     def testShouldNotRetryWhenStatusNotOnList(self):
-        try:
+        with self.assertRaises(github.GithubException):
             self.g.get_repo(REPO_NAME)
-        except GithubException:
-            self.assertEquals(len(httpretty.latest_requests), 1)
+        self.assertEquals(len(httpretty.latest_requests), 1)
 
     def testReturnsRepoAfter3Retries(self):
         repository = self.g.get_repo(REPO_NAME)
@@ -64,7 +62,7 @@ class Retry(Framework.TestCase):
         for request in httpretty.latest_requests:
             self.assertEquals(request.path, '/repos/' + REPO_NAME)
 
-        self.assertIsInstance(repository, Repository)
+        self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEquals(repository.full_name, REPO_NAME)
 
     def testReturnsRepoAfter1Retry(self):
@@ -73,7 +71,7 @@ class Retry(Framework.TestCase):
         for request in httpretty.latest_requests:
             self.assertEquals(request.path, '/repos/' + REPO_NAME)
 
-        self.assertIsInstance(repository, Repository)
+        self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEquals(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
