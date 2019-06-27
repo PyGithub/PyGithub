@@ -115,7 +115,7 @@ Create a new file in the repository
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> repo.create_file("test.txt", "test", "test", branch="test")
+    >>> repo.create_file("/test.txt", "test", "test", branch="test")
     {'content': ContentFile(path="test.txt"), 'commit': Commit(sha="5b584cf6d32d960bb7bee8ce94f161d939aec377")}
 
 Update a file in the repository
