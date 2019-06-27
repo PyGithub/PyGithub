@@ -253,6 +253,13 @@ class AuthenticatedUser(Framework.TestCase):
     def testAcceptInvitation(self):
         self.assertEqual(self.user.accept_invitation(4294886), None)
 
+    def testGetInvitations(self):
+        invitation = self.user.get_invitations()[0]
+        self.assertEqual(invitation.id, 17285388)
+        self.assertEqual(invitation.permissions, "write")
+        self.assertEqual(invitation.invitee.login, "foobar-test1")
+        self.assertEqual(invitation.inviter.login, "jacquev6")
+
     def testCreateMigration(self):
         self.assertTrue(isinstance(self.user.create_migration(["sample-repo"]), github.Migration.Migration))
 
