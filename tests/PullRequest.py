@@ -132,7 +132,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(comment.body, "Issue comment created by PyGithub")
 
     def testGetIssueEvents(self):
-        self.assertListKeyEqual(self.issue.get_issue_events(), lambda e: e.id, [15819975, 15820048])
+        self.assertListKeyEqual(self.pull.get_issue_events(), lambda e: e.id, [16349963, 16350729, 16350730, 16350731, 28469043, 98136335])
 
     def testGetReviewComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
