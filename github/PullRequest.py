@@ -56,6 +56,8 @@ import github.IssueComment
 import github.Commit
 import github.PullRequestReview
 
+import Consts
+
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
     """
