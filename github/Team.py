@@ -48,6 +48,7 @@ import github.Repository
 import github.NamedUser
 import github.Organization
 
+import Consts
 
 class Team(github.GithubObject.CompletableGithubObject):
     """
@@ -289,6 +290,21 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/repos",
             None
+        )
+
+    def invitations(self):
+        """
+        :calls: `GET /teams/:id/invitations <https://developer.github.com/v3/teams/members>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/invitations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeOrganizationInvitationPreview
+            }
         )
 
     def has_in_members(self, member):

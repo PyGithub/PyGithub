@@ -226,6 +226,22 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def invitation_teams_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._invitation_teams_url)
+        return self._invitation_teams_url.value
+
+    @property
+    def inviter(self):
+        """
+        :type: github.NamedUser.NamedUser
+        """
+        self._completeIfNotSet(self._inviter)
+        return self._inviter.value
+
+    @property
     def location(self):
         """
         :type: string
@@ -320,6 +336,13 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._repos_url)
         return self._repos_url.value
+    @property
+    def role(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._role)
+        return self._role.value
 
     @property
     def site_admin(self):
@@ -352,6 +375,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._suspended_at)
         return self._suspended_at.value
+
+    @property
+    def team_count(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._team_count)
+        return self._team_count.value
 
     @property
     def total_private_repos(self):
@@ -610,6 +641,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._hireable = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._invitation_teams_url = github.GithubObject.NotSet
+        self._inviter = github.GithubObject.NotSet
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -623,10 +656,12 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._public_repos = github.GithubObject.NotSet
         self._received_events_url = github.GithubObject.NotSet
         self._repos_url = github.GithubObject.NotSet
+        self._role = github.GithubObject.NotSet
         self._site_admin = github.GithubObject.NotSet
         self._starred_url = github.GithubObject.NotSet
         self._subscriptions_url = github.GithubObject.NotSet
         self._suspended_at = github.GithubObject.NotSet
+        self._team_count = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
@@ -671,6 +706,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "invitation_teams_url" in attributes:  # pragma no branch
+            self._invitation_teams_url = self._makeStringAttribute(attributes["invitation_teams_url"])
+        if "inviter" in attributes:  # pragma no branch
+            self._inviter = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["inviter"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
@@ -697,6 +736,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
+        if "role" in attributes: # pragma no branch
+            self._role = self._makeStringAttribute(attributes["role"])
         if "site_admin" in attributes:  # pragma no branch
             self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_url" in attributes:  # pragma no branch
@@ -705,6 +746,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "suspended_at" in attributes:  # pragma no branch
             self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
+        if "team_count" in attributes:
+            self._team_count = self._makeIntAttribute(attributes["team_count"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "type" in attributes:  # pragma no branch
