@@ -30,7 +30,7 @@ import os
 import subprocess
 
 
-eightySharps = "#"*80
+eightySharps = "#" * 80
 
 
 def generateLicenseSection(filename):

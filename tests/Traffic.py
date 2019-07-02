@@ -30,6 +30,7 @@ import Framework
 
 import datetime
 
+
 class Traffic(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
