@@ -87,6 +87,7 @@ class RequestsResponse:
     def read(self):
         return self.text
 
+
 class HTTPSRequestsConnectionClass(object):
     # mimic the httplib connection object
     def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
@@ -294,9 +295,9 @@ class Requester:
                (o.port and o.port != self.__port) or \
                (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
                 if o.scheme == 'http':
-                    cnx = self.__httpConnectionClass(o.hostname, o.port, retry = self.__retry)
+                    cnx = self.__httpConnectionClass(o.hostname, o.port, retry=self.__retry)
                 elif o.scheme == 'https':
-                    cnx = self.__httpsConnectionClass(o.hostname, o.port, retry = self.__retry)
+                    cnx = self.__httpsConnectionClass(o.hostname, o.port, retry=self.__retry)
         return cnx
 
     def __createException(self, status, headers, output):
@@ -307,8 +308,8 @@ class Requester:
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded")
-            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
+            output.get("message").lower().startswith("api rate limit exceeded") or
+            output.get("message").lower().endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
@@ -470,7 +471,7 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        self.__connection = self.__connectionClass(self.__hostname, self.__port, retry = self.__retry, **kwds)
+        self.__connection = self.__connectionClass(self.__hostname, self.__port, retry=self.__retry, **kwds)
 
         return self.__connection
 

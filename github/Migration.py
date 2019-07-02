@@ -39,6 +39,7 @@ import github.NamedUser
 
 import Consts
 
+
 class Migration(github.GithubObject.CompletableGithubObject):
     """
     This class represents Migrations. The reference can be found here http://developer.github.com/v3/migrations/

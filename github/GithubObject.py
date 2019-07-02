@@ -47,6 +47,8 @@ class _NotSetType:
         return "NotSet"
 
     value = None
+
+
 NotSet = _NotSetType()
 
 

@@ -39,6 +39,7 @@ import github.NamedUser
 
 import Consts
 
+
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequestComments. The reference can be found here http://developer.github.com/v3/pulls/comments/

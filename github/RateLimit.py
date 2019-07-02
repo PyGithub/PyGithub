@@ -43,9 +43,9 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
 
     @property
     @deprecated(reason="""
-            The rate object is deprecated. If you're writing new API client code 
-            or updating existing code, you should use the core object instead of 
-            the rate object. The core object contains the same information that 
+            The rate object is deprecated. If you're writing new API client code
+            or updating existing code, you should use the core object instead of
+            the rate object. The core object contains the same information that
             is present in the rate object.
         """)
     def rate(self):
