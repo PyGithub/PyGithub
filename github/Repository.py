@@ -1810,7 +1810,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
-
     def get_download(self, id):
         """
         :calls: `GET /repos/:owner/:repo/downloads/:id <http://developer.github.com/v3/repos/downloads>`_

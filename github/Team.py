@@ -50,6 +50,7 @@ import github.Organization
 
 import Consts
 
+
 class Team(github.GithubObject.CompletableGithubObject):
     """
     This class represents Teams. The reference can be found here http://developer.github.com/v3/orgs/teams/

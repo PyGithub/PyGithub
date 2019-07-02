@@ -42,6 +42,7 @@ import github.RequiredStatusChecks
 
 import Consts
 
+
 class Branch(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Branches. The reference can be found here https://developer.github.com/v3/repos/branches

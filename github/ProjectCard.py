@@ -29,6 +29,8 @@ import github.GithubObject
 #
 # See also https://developer.github.com/v4/object/projectcard for the next generation GitHub API,
 # which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
+
+
 class ProjectCard(github.GithubObject.CompletableGithubObject):
     """
     This class represents Project Cards. The reference can be found here https://developer.github.com/v3/projects/cards
@@ -115,9 +117,9 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
         :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
-        if self.content_url == None:
+        if self.content_url is None:
             return None
-            
+
         if content_type == "PullRequest":
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",

@@ -55,6 +55,7 @@ import github.NamedUser
 
 import Consts
 
+
 class Organization(github.GithubObject.CompletableGithubObject):
     """
     This class represents Organizations. The reference can be found here http://developer.github.com/v3/orgs/

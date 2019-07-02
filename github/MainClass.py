@@ -796,4 +796,3 @@ class GithubIntegration(object):
         )
         response_dict = response.json()
         return Installation.Installation(None, headers, response_dict, True)
-
