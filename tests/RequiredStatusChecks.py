@@ -24,8 +24,6 @@
 
 import Framework
 
-import github
-
 
 class RequiredStatusChecks(Framework.TestCase):
     def setUp(self):

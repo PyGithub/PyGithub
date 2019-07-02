@@ -24,8 +24,6 @@
 
 import Framework
 
-import github
-
 
 class RequiredPullRequestReviews(Framework.TestCase):
     def setUp(self):

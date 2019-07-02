@@ -75,10 +75,8 @@ class Retry(Framework.TestCase):
         self.assertEquals(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
-        try:
-            response = self.g.get_repo('PyGithub/PyGithub')
-            self.fail("RetryError should have been raised")
-        except requests.exceptions.RetryError:
-            self.assertEquals(len(httpretty.latest_requests), 4)
-            for request in httpretty.latest_requests:
-                self.assertEquals(request.path, '/repos/PyGithub/PyGithub')
+        with self.assertRaises(requests.exceptions.RetryError):
+            self.g.get_repo('PyGithub/PyGithub')
+        self.assertEquals(len(httpretty.latest_requests), 4)
+        for request in httpretty.latest_requests:
+            self.assertEquals(request.path, '/repos/PyGithub/PyGithub')

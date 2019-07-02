@@ -28,7 +28,6 @@
 ################################################################################
 
 import Framework
-import github
 
 
 class ConditionalRequestUpdate(Framework.TestCase):

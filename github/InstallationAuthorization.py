@@ -25,8 +25,6 @@
 #                                                                              #
 ################################################################################
 
-import datetime
-
 import github.GithubObject
 import github.PaginatedList
 import github.NamedUser

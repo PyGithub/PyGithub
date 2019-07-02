@@ -24,8 +24,6 @@
 
 import Framework
 
-import github
-
 
 class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issues/945
     def setUp(self):

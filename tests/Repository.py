@@ -583,7 +583,7 @@ class Repository(Framework.TestCase):
 
     def testMergeWithConflict(self):
         with self.assertRaises(github.GithubException) as raisedexp:
-            commit = self.repo.merge("branchForBase", "branchForHead")
+            self.repo.merge("branchForBase", "branchForHead")
         self.assertEqual(raisedexp.exception.status, 409)
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 

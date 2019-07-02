@@ -1,9 +1,9 @@
 import jwt
 import json
-import time
+import time # NOQA
 import sys
 import unittest
-import requests
+import requests # NOQA
 import datetime
 from github.GithubObject import GithubObject
 

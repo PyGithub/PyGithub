@@ -26,7 +26,6 @@
 ################################################################################
 
 import Framework
-import github
 
 
 # Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt

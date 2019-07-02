@@ -137,7 +137,7 @@ class PaginatedList(Framework.TestCase):
     def testCustomPerPageWithNoUrlParams(self):
         import CommitComment  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
         self.g.per_page = 100
-        paginated_list = PaginatedListImpl(
+        PaginatedListImpl(
             CommitComment.CommitComment,
             self.repo._requester,
             self.repo.url + "/comments",

@@ -22,8 +22,6 @@
 #                                                                              #
 ################################################################################
 
-import json
-
 import github.GithubObject
 import github.Project
 import github.ProjectCard
