@@ -114,18 +114,18 @@ class PaginatedList(Framework.TestCase):
 
     def testInterruptedIteration(self):
         # No asserts, but checks that only three pages are fetched
-        l = 0
+        count = 0
         for element in self.list:  # pragma no branch (exits only by break)
-            l += 1
-            if l == 75:
+            count += 1
+            if count == 75:
                 break
 
     def testInterruptedIterationInSlice(self):
         # No asserts, but checks that only three pages are fetched
-        l = 0
+        count = 0
         for element in self.list[:100]:  # pragma no branch (exits only by break)
-            l += 1
-            if l == 75:
+            count += 1
+            if count == 75:
                 break
 
     def testCustomPerPage(self):

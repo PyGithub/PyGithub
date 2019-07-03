@@ -33,6 +33,7 @@ import Framework
 
 import datetime
 
+
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
@@ -69,7 +70,7 @@ class IssueEvent(Framework.TestCase):
         self.event_added_to_project = repo.get_issues_event(1791766828)
         self.event_moved_columns_in_project = repo.get_issues_event(1791767766)
         self.event_removed_from_project = repo.get_issues_event(1791768212)
-        
+
         # From Issue 866
         self.event_converted_note_to_issue = repo.get_issues_event(1791769149)
 
@@ -666,4 +667,3 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
         # test __repr__() based on this attributes
         self.assertEqual(self.event_converted_note_to_issue.__repr__(), 'IssueEvent(id=1791769149)')
-

@@ -26,6 +26,7 @@ import Framework
 
 import github
 
+
 class Issue572(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)

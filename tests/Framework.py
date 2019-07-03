@@ -125,7 +125,7 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
 
         self.__writeLine(str(status))
         self.__writeLine(str(list(headers)))
-        if atLeastPython3: # In Py3, return from "read" is bytes
+        if atLeastPython3:  # In Py3, return from "read" is bytes
             self.__writeLine(output)
         else:
             self.__writeLine(output.encode("utf-8"))

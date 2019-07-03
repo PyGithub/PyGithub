@@ -306,8 +306,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(raisedexp.exception.data, {
             u'documentation_url': u'https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level',
             u'message': u'Must have push access to view collaborator permission.'
-            }
-        )
+        })
 
     def testCompare(self):
         comparison = self.repo.compare("v0.6", "v0.7")

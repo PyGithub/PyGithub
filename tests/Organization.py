@@ -180,7 +180,7 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(self.org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"])
 
     def testGetReposSorted(self):
-        self.assertListKeyEqual(self.org.get_repos(sort = "updated", direction = "desc"), lambda r: r.name, ["TestPyGithub", "FatherBeaver"])
+        self.assertListKeyEqual(self.org.get_repos(sort="updated", direction="desc"), lambda r: r.name, ["TestPyGithub", "FatherBeaver"])
 
     def testGetReposWithType(self):
         self.assertListKeyEqual(self.org.get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])
@@ -253,8 +253,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(raisedexp.exception.data, {
             u'documentation_url': u'https://developer.github.com/v3/orgs/members/#create-organization-invitation',
             u'message': u'You must be an admin to create an invitation to an organization.'
-            }
-        )
+        })
 
     def testCreateMigration(self):
         self.org = self.g.get_organization("sample-test-organisation")
