@@ -814,6 +814,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return data["permission"]
 
+    def get_pending_invitations(self):
+        """
+        :calls: `GET /repos/:owner/:repo/invitations <https://developer.github.com/v3/repos/invitations>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Invitation.Invitation`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Invitation.Invitation,
+            self._requester,
+            self.url + "/invitations",
+            None
+        )
+
+    def remove_invitation(self, invite_id):
+        """
+        :calls: `DELETE /repos/:owner/:repo/invitations/:invitation_id <https://developer.github.com/v3/repos/invitations>`_
+        :rtype: None
+        """
+        assert isinstance(invite_id, int), invite_id
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/invitations/" + str(invite_id)
+        )
+
     def compare(self, base, head):
         """
         :calls: `GET /repos/:owner/:repo/compare/:base...:head <http://developer.github.com/v3/repos/commits>`_

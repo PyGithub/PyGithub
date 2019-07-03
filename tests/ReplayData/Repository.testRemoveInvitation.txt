@@ -1,0 +1,11 @@
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/invitations/17285388
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4992'), ('x-github-media-type', 'github.v3; format=json'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('x-accepted-oauth-scopes', ''), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-oauth-scopes', 'public_repo, repo:status'), ('date', 'Tue, 02 Jul 2019 04:13:39 GMT'), ('x-frame-options', 'deny'), ('access-control-allow-origin', '*'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/octet-stream'), ('x-xss-protection', '1; mode=block'), ('x-ratelimit-reset', '1562044419')]
+
+

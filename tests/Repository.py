@@ -299,6 +299,15 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission('jacquev6'), 'admin')
 
+    def testGetPendingInvitations(self):
+        lyloa = self.g.get_user("Lyloa")
+        self.repo.add_to_collaborators(lyloa)
+        invitations = self.repo.get_pending_invitations()
+        self.assertListKeyEqual(invitations, lambda u: u.invitee.login, ["Lyloa"])
+
+    def testRemoveInvitation(self):
+        self.repo.remove_invitation(17285388)
+
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.get_collaborator_permission('lyloa')
