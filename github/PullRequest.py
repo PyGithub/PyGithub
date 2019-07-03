@@ -56,6 +56,8 @@ import github.IssueComment
 import github.Commit
 import github.PullRequestReview
 
+import Consts
+
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
     """
@@ -625,6 +627,19 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.issue_url + "/comments",
             None
+        )
+
+    def get_issue_events(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:issue_number/events <http://developer.github.com/v3/issues/events>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.IssueEvent.IssueEvent,
+            self._requester,
+            self.issue_url + "/events",
+            None,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
 
     def get_review(self, id):
