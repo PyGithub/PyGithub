@@ -658,6 +658,17 @@ class Repository(Framework.TestCase):
         repo = self.g.get_repo("protoncoin/protoncoin")
         self.assertEqual(repo.full_name, 'padima2/protoncoin')
 
+    def testGetStatusOfVulnerabilityAlerts(self):
+        self.assertTrue(self.repo.get_vulnerability_alert_status())
+
+    def testEnableVulnerabilityAlerts(self):
+        self.assertTrue(self.repo.enable_vulnerability_alerts())
+
+    
+    def testDisableVulnerabilityAlerts(self):
+        self.assertTrue(self.repo.disable_vulnerability_alerts())
+
+
 
 class LazyRepository(Framework.TestCase):
 
