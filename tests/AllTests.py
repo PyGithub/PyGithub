@@ -90,6 +90,7 @@ from Tag import *
 from Team import *
 from Traffic import *
 from UserKey import *
+from VulnerabilityAlerts import *
 from Migration import *
 from GithubIntegration import *
 
