@@ -35,6 +35,7 @@
 import sys
 import datetime
 from operator import itemgetter
+import six
 
 import GithubException
 import Consts
@@ -147,7 +148,7 @@ class GithubObject(object):
 
     @staticmethod
     def _makeStringAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, (str, unicode))
+        return GithubObject.__makeSimpleAttribute(value, six.string_types)
 
     @staticmethod
     def _makeIntAttribute(value):
@@ -177,14 +178,14 @@ class GithubObject(object):
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        return GithubObject.__makeTransformedAttribute(value, (str, unicode), parseDatetime)
+        return GithubObject.__makeTransformedAttribute(value, six.string_types, parseDatetime)
 
     def _makeClassAttribute(self, klass, value):
         return GithubObject.__makeTransformedAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
 
     @staticmethod
     def _makeListOfStringsAttribute(value):
-        return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
+        return GithubObject.__makeSimpleListAttribute(value, six.string_types)
 
     @staticmethod
     def _makeListOfIntsAttribute(value):
@@ -205,10 +206,10 @@ class GithubObject(object):
             return _BadAttribute(value, [dict])
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        if isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()):
+        if isinstance(value, dict) and all(isinstance(key, six.string_types) and isinstance(element, dict) for key, element in value.iteritems()):
             return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
         else:
-            return _BadAttribute(value, {(str, unicode): dict})
+            return _BadAttribute(value, {six.string_types: dict})
 
     @property
     def etag(self):
@@ -234,7 +235,7 @@ class GithubObject(object):
             else:
                 items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
-                isText = isinstance(v, (str, unicode))
+                isText = isinstance(v, six.string_types)
                 if isText and not atLeastPython3:
                     v = v.encode('utf-8')
                 yield '{k}="{v}"'.format(k=k, v=v) if isText else '{k}={v}'.format(k=k, v=v)
