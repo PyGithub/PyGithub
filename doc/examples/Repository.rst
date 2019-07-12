@@ -83,7 +83,7 @@ Get all of the contents of the repository recursively
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> contents = repo.get_contents("")
-    >>> while len(contents) > 1:
+    >>> while contents:
     ...     file_content = contents.pop(0)
     ...     if file_content.type == "dir":
     ...         contents.extend(repo.get_contents(file_content.path))
