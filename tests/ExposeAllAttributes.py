@@ -25,6 +25,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import print_function
+
 import Framework
 
 
@@ -130,7 +132,7 @@ class ExposeAllAttributes(Framework.TestCase):
 
         for className, attributesMissingInClass in sorted(missingAttributes.iteritems()):
             for attrName, value in sorted(attributesMissingInClass.iteritems()):
-                print className, attrName, "->", repr(value)
+                print(className, attrName, "->", repr(value))
 
         self.assertEqual(sum(len(attrs) for attrs in missingAttributes.values()), 0)
 
