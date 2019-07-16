@@ -2672,6 +2672,34 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
 
+    def enable_vulnerability_alert(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "vulnerability-alerts",
+            headers={'Accept': Consts.vulnerabilityAlertsPreview}
+        )
+
+    def disable_vulnerability_alert(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/vulnerability-alerts",
+            headers={'Accept': Consts.vulnerabilityAlertsPreview}
+        )
+
+    def enable_automated_security_fixes(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/automated-security-fixes",
+            headers={'Accept': Consts.automatedSecurityFixes}
+        )
+
+    def disable_automated_security_fixes(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/automated-security-fixes",
+            headers={'Accept': Consts.automatedSecurityFixes}
+        )
+
     def remove_from_collaborators(self, collaborator):
         """
         :calls: `DELETE /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
