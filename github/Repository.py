@@ -2673,32 +2673,52 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def enable_vulnerability_alert(self):
-        headers, data = self._requester.requestJsonAndCheck(
+        """
+        :calls: `PUT /repos/:owner/:repo/vulnerability-alerts <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
             "PUT",
-            self.url + "vulnerability-alerts",
+            self.url + "/vulnerability-alerts",
             headers={'Accept': Consts.vulnerabilityAlertsPreview}
         )
+        return status == 204
 
     def disable_vulnerability_alert(self):
-        headers, data = self._requester.requestJsonAndCheck(
+        """
+        :calls: `DELETE /repos/:owner/:repo/vulnerability-alerts <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
             "DELETE",
             self.url + "/vulnerability-alerts",
             headers={'Accept': Consts.vulnerabilityAlertsPreview}
         )
+        return status == 204
 
     def enable_automated_security_fixes(self):
-        headers, data = self._requester.requestJsonAndCheck(
+        """
+        :calls: `PUT /repos/:owner/:repo/automated-security-fixes <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
             "PUT",
             self.url + "/automated-security-fixes",
             headers={'Accept': Consts.automatedSecurityFixes}
         )
+        return status == 204
 
     def disable_automated_security_fixes(self):
-        headers, data = self._requester.requestJsonAndCheck(
+        """
+        :calls: `DELETE /repos/:owner/:repo/automated-security-fixes <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
             "DELETE",
             self.url + "/automated-security-fixes",
             headers={'Accept': Consts.automatedSecurityFixes}
         )
+        return status == 204
 
     def remove_from_collaborators(self, collaborator):
         """
