@@ -705,6 +705,9 @@ class LazyRepository(Framework.TestCase):
         lazy_repo = self.getLazyRepository()
         self.assertEqual(lazy_repo.disable_automated_security_fixes(), True)
 
-    def testDisableVulenrabilityAlert(self):
+    def testGetVulnerabilityAlert(self):
+        lazy_repo = self.getEagerRepository()
+        self.assertEqual(lazy_repo.get_vulnerability_alert(), True)
+
         lazy_repo = self.getLazyRepository()
         self.assertEqual(lazy_repo.disable_vulnerability_alert(), True)
