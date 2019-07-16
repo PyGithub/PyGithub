@@ -4,6 +4,27 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.8 (July 19, 2019)
+-----------------------------------
+
+* Add two factor attributes on organizations (#1132)
+* Add Repository methods for pending invitations (#1159)
+* Adds `get_issue_events` to `PullRequest` object (#1154)  
+* Add invitee and inviter to Invitation (#1156)
+* Adding support for pending team invitations (#993)
+* Do not import directly into Retry tests (#1155)
+* Allow name to be specified for upload_asset (#1151)
+* Add support for custom base_url in GithubIntegration class (#1093)
+* GithubIntegration: enable getting installation (#1135)
+* Add sorting capability to Organization.get_repos() (#1139)
+* Add new Organization.get_team_by_slug method (#1144)
+* Add description field when creating a new team (#1125)
+* Handle a path of / in Repository.get_contents() (#1070)
+* Merge `get_file_contents` with `get_contents`
+* Fix #1106 for GitHub Enterprise API (#1110)
+* Fix bug in recursive repository contents example (#1166)
+* Fix assertion in add_to_members (#1146)
+
 Version 1.43.7 (April 16, 2019)
 -----------------------------------
 
