@@ -693,7 +693,7 @@ class LazyRepository(Framework.TestCase):
         eager_repo = self.getEagerRepository()
         self.assertEqual(owner, eager_repo.owner)
 
-    def testEnableVulenrabilityAlert(self):
+    def testEnableVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
         self.assertEqual(lazy_repo.enable_vulnerability_alert(), True)
 
@@ -709,5 +709,6 @@ class LazyRepository(Framework.TestCase):
         lazy_repo = self.getEagerRepository()
         self.assertEqual(lazy_repo.get_vulnerability_alert(), True)
 
+    def testDisableVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
         self.assertEqual(lazy_repo.disable_vulnerability_alert(), True)
