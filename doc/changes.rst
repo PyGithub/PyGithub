@@ -4,6 +4,29 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.43.8 (July 20, 2019)
+-----------------------------------
+**New features**
+
+* Add two factor attributes on organizations (#1132) (a0731685)
+* Add Repository methods for pending invitations (#1159) (57af1e05)
+* Adds `get_issue_events` to `PullRequest` object (#1154) (acd515aa)
+* Add invitee and inviter to Invitation (#1156) (0f2beaca)
+* Adding support for pending team invitations (#993) (edab176b)
+* Add support for custom base_url in GithubIntegration class (#1093) (6cd0d644)
+* GithubIntegration: enable getting installation (#1135) (18187045)
+* Add sorting capability to Organization.get_repos() (#1139) (ef6f009d)
+* Add new Organization.get_team_by_slug method (#1144) (4349bca1)
+* Add description field when creating a new team (#1125) (4a37860b)
+* Handle a path of / in Repository.get_contents() (#1070) (102c8208)
+* Add issue lock/unlock (#1107) (ec7bbcf5)
+
+**Bug Fixes & Improvements**
+
+* Fix bug in recursive repository contents example (#1166) (8b6b4505)
+* Allow name to be specified for upload_asset (#1151) (8d2a6b53)
+* Fixes #1106 for GitHub Enterprise API (#1110) (54065792)
+
 Version 1.43.7 (April 16, 2019)
 -----------------------------------
 
