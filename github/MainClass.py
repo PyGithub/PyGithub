@@ -273,7 +273,7 @@ class Github(object):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser,
+            github.Organization.Organization,
             self.__requester,
             "/organizations",
             url_parameters
