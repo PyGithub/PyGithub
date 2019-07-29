@@ -447,7 +447,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self.url + "/reviews",
             input=post_parameters
         )
-        self._useAttributes(data)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
     def create_review_request(self, reviewers=github.GithubObject.NotSet, team_reviewers=github.GithubObject.NotSet):
