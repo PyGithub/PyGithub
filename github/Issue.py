@@ -452,7 +452,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             github.Label.Label,
             self._requester,
             self.url + "/labels",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
 
     def remove_from_assignees(self, *assignees):

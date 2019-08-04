@@ -698,7 +698,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             github.Label.Label,
             self._requester,
             self.issue_url + "/labels",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
         )
 
     def add_to_labels(self, *labels):

@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+import Consts
+
 import datetime
 
 import github.GithubObject
@@ -199,7 +201,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             github.Label.Label,
             self._requester,
             self.url + "/labels",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
+
         )
 
     @property
