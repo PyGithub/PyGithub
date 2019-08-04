@@ -1681,7 +1681,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#update-a-file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
-        :param content: string, Required. The updated file content, Base64 encoded.
+        :param content: string, Required. The updated file content, either base64 encoded, or ready to be encoded.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
         :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
