@@ -666,10 +666,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert (filter_ is github.GithubObject.NotSet or
-                isinstance(filter_, (str, six.text_type))), filter_
-        assert (role is github.GithubObject.NotSet or
-                isinstance(role, (str, six.text_type))), role
+        assert (filter_ is github.GithubObject.NotSet
+                or isinstance(filter_, (str, six.text_type))), filter_
+        assert (role is github.GithubObject.NotSet
+                or isinstance(role, (str, six.text_type))), role
 
         url_parameters = {}
         if filter_ is not github.GithubObject.NotSet:
@@ -720,8 +720,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param filter_: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert (filter_ is github.GithubObject.NotSet or
-                isinstance(filter_, (str, six.text_type))), filter_
+        assert (filter_ is github.GithubObject.NotSet
+                or isinstance(filter_, (str, six.text_type))), filter_
 
         url_parameters = {}
         if filter_ is not github.GithubObject.NotSet:
