@@ -80,10 +80,7 @@ class RequestsResponse:
         self.text = r.text
 
     def getheaders(self):
-        if atLeastPython3:
-            return list(self.headers.items())
-        else:
-            return six.iteritems(self.headers)
+        return six.iteritems(self.headers)
 
     def read(self):
         return self.text
@@ -231,10 +228,7 @@ class Requester:
 
         if password is not None:
             login = login_or_token
-            if atLeastPython3:
-                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
-            else:
-                self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
+            self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
@@ -323,8 +317,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
-            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
-                data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
+            if isinstance(data, bytes):
+                data = data.decode("utf-8")
             try:
                 return json.loads(data)
             except ValueError:
