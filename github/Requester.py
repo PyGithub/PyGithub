@@ -62,7 +62,6 @@ import re
 import requests
 import sys
 import time
-import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
 import six.moves.urllib.parse
 from io import IOBase
 
@@ -310,8 +309,8 @@ class Requester:
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded") or
-            output.get("message").lower().endswith("please wait a few minutes before you try again.")
+            output.get("message").lower().startswith("api rate limit exceeded")
+            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
