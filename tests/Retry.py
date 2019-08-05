@@ -25,10 +25,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import absolute_import
 import urllib3
 from httpretty import httpretty
 
-import Framework
+from . import Framework
 
 import requests
 
