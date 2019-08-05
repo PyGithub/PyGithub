@@ -10,7 +10,7 @@ matrix:
 install:
   - pip install codecov
 script:
-  - coverage run --source github/tests setup.py test
+  - coverage run --source github,tests setup.py test
 after_success:
   - codecov
 notifications:
