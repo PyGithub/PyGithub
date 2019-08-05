@@ -231,10 +231,7 @@ class GithubObject(object):
         Converts the object to a nicely printable string.
         """
         def format_params(params):
-            if atLeastPython3:
-                items = list(params.items())
-            else:
-                items = list(params.items())
+            items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 isText = isinstance(v, (str, six.text_type))
                 if isText and not atLeastPython3:
