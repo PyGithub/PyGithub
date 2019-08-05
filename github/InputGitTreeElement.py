@@ -28,7 +28,9 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
+import six
 
 
 class InputGitTreeElement(object):
@@ -45,11 +47,11 @@ class InputGitTreeElement(object):
         :param sha: string
         """
 
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(mode, (str, unicode)), mode
-        assert isinstance(type, (str, unicode)), type
-        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert isinstance(path, (str, six.text_type)), path
+        assert isinstance(mode, (str, six.text_type)), mode
+        assert isinstance(type, (str, six.text_type)), type
+        assert content is github.GithubObject.NotSet or isinstance(content, (str, six.text_type)), content
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, six.text_type)), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

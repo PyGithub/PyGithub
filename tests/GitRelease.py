@@ -34,10 +34,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import os
 import zipfile
 import datetime
-import Framework
+from . import Framework
 
 
 class Release(Framework.TestCase):
