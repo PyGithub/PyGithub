@@ -28,10 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import sys
 import unittest
-import Framework
-import AllTests
+from . import Framework
+from . import AllTests
 
 
 def main(argv):

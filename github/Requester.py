@@ -52,6 +52,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import base64
 import json
 import logging
@@ -61,12 +62,13 @@ import re
 import requests
 import sys
 import time
-import urllib
-import urlparse
+import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
+import six.moves.urllib.parse
 from io import IOBase
 
-import Consts
-import GithubException
+from . import Consts
+from . import GithubException
+import six
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -80,9 +82,9 @@ class RequestsResponse:
 
     def getheaders(self):
         if atLeastPython3:
-            return self.headers.items()
+            return list(self.headers.items())
         else:
-            return self.headers.iteritems()
+            return six.iteritems(self.headers)
 
     def read(self):
         return self.text
@@ -243,7 +245,7 @@ class Requester:
             self.__authorizationHeader = None
 
         self.__base_url = base_url
-        o = urlparse.urlparse(base_url)
+        o = six.moves.urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
@@ -290,7 +292,7 @@ class Requester:
     def __customConnection(self, url):
         cnx = None
         if not url.startswith("/"):
-            o = urlparse.urlparse(url)
+            o = six.moves.urllib.parse.urlparse(url)
             if o.hostname != self.__hostname or \
                (o.port and o.port != self.__port) or \
                (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
@@ -341,7 +343,7 @@ class Requester:
             eol = "\r\n"
 
             encoded_input = ""
-            for name, value in input.iteritems():
+            for name, value in six.iteritems(input):
                 encoded_input += "--" + boundary + eol
                 encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol
@@ -428,7 +430,7 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            o = urlparse.urlparse(responseHeaders['location'])
+            o = six.moves.urllib.parse.urlparse(responseHeaders['location'])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
@@ -446,7 +448,7 @@ class Requester:
         if url.startswith("/"):
             url = self.__prefix + url
         else:
-            o = urlparse.urlparse(url)
+            o = six.moves.urllib.parse.urlparse(url)
             assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
@@ -459,7 +461,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + urllib.urlencode(parameters)
+            return url + "?" + six.moves.urllib.parse.urlencode(parameters)
 
     def __createConnection(self):
         kwds = {}

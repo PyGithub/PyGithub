@@ -32,11 +32,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import datetime
 
-import Framework
+from . import Framework
 
-import Time
+from . import Time
 
 import github
 

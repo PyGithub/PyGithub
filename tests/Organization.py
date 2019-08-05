@@ -34,9 +34,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github
 
-import Framework
+from . import Framework
 
 import datetime
 

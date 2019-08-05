@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import jwt
 import json
 import time # NOQA

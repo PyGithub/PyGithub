@@ -31,11 +31,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github
 import sys
 import pickle
 
-import Framework
+from . import Framework
+from six.moves import range
 
 atMostPython2 = sys.hexversion < 0x03000000
 
