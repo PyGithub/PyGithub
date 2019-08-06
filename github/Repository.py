@@ -86,10 +86,10 @@
 ################################################################################
 
 from __future__ import absolute_import
-import sys
 import six.moves.urllib.parse
 import datetime
 from base64 import b64encode
+import collections
 
 import github.GithubObject
 import github.PaginatedList
@@ -137,8 +137,6 @@ import github.View
 
 from . import Consts
 import six
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -1648,14 +1646,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        if atLeastPython3:
-            if isinstance(content, str):
-                content = content.encode('utf-8')
-            content = b64encode(content).decode('utf-8')
-        else:
-            if isinstance(content, six.text_type):
-                content = content.encode('utf-8')
-            content = b64encode(content)
+        content = b64encode(bytearray(content, 'utf-8'))
+        if isinstance(content, bytes):
+            content = content.decode('utf-8')
         put_parameters = {'message': message, 'content': content}
 
         if branch is not github.GithubObject.NotSet:
@@ -1710,14 +1703,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        if atLeastPython3:
-            if isinstance(content, str):
-                content = content.encode('utf-8')
-            content = b64encode(content).decode('utf-8')
-        else:
-            if isinstance(content, six.text_type):
-                content = content.encode('utf-8')
-            content = b64encode(content)
+        content = b64encode(bytearray(content, 'utf-8'))
+        if isinstance(content, bytes):
+            content = content.decode('utf-8')
 
         put_parameters = {'message': message, 'content': content,
                           'sha': sha}
@@ -2716,11 +2704,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(callback, (str, six.text_type)), callback
         assert secret is github.GithubObject.NotSet or isinstance(secret, (str, six.text_type)), secret
 
-        post_parameters = {
-            "hub.mode": mode,
-            "hub.topic": "https://github.com/" + self.full_name + "/events/" + event,
-            "hub.callback": callback,
-        }
+        post_parameters = collections.OrderedDict()
+        post_parameters["hub.callback"] = callback
+        post_parameters["hub.topic"] = "https://github.com/" + self.full_name + "/events/" + event
+        post_parameters["hub.mode"] = mode
         if secret is not github.GithubObject.NotSet:
             post_parameters["hub.secret"] = secret
 

@@ -28,9 +28,6 @@
 
 from __future__ import absolute_import
 from . import Framework
-import sys
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class Search(Framework.TestCase):
@@ -78,10 +75,10 @@ class Search(Framework.TestCase):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
         self.assertListKeyEqual(files, lambda f: f.name, [u'Commit.setUp.txt', u'PullRequest.testGetFiles.txt', u'NamedUser.testGetEvents.txt', u'PullRequest.testCreateComment.txt', u'PullRequestFile.setUp.txt', u'Repository.testGetIssuesWithWildcards.txt', u'Repository.testGetIssuesWithArguments.txt', u'test_ebnf.cpp', u'test_abnf.cpp', u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
         self.assertEqual(files[0].repository.full_name, "jacquev6/PyGithub")
-        if atLeastPython3:
-            self.assertEqual(files[0].decoded_content[:30], b'https\nGET\napi.github.com\nNone\n')
-        else:
-            self.assertEqual(files[0].decoded_content[:30], "https\nGET\napi.github.com\nNone\n")
+        content = files[0].decoded_content
+        if isinstance(content, bytes):
+            content = content.decode('utf-8')
+        self.assertEqual(content[:30], 'https\nGET\napi.github.com\nNone\n')
 
     def testSearchHighlightingCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6", highlight=True)

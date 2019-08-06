@@ -33,13 +33,10 @@
 
 from __future__ import absolute_import
 import github
-import sys
 import pickle
 
 from . import Framework
 from six.moves import range
-
-atMostPython2 = sys.hexversion < 0x03000000
 
 
 class Exceptions(Framework.TestCase):
@@ -78,30 +75,21 @@ class Exceptions(Framework.TestCase):
             self.g.get_user().get_repo("Xxx")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
 
     def testUnknownUser(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user("ThisUserShouldReallyNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
 
     def testBadAuthentication(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             github.Github("BadUser", "BadPassword").get_user().login
         self.assertEqual(raisedexp.exception.status, 401)
         self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "401 {u'message': u'Bad credentials'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '401 {"message": "Bad credentials"}')
 
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
