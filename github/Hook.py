@@ -31,9 +31,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 
 import github.HookResponse
+import six
 
 
 class Hook(github.GithubObject.CompletableGithubObject):
@@ -153,11 +155,11 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :param active: bool
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, (str, six.text_type)), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert add_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_events), add_events
-        assert remove_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_events), remove_events
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in events), events
+        assert add_events is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in add_events), add_events
+        assert remove_events is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in remove_events), remove_events
         assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,

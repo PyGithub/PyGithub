@@ -25,7 +25,8 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+from . import Framework
 
 
 class Issue823(Framework.TestCase):

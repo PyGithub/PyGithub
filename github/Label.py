@@ -31,11 +31,13 @@
 #                                                                              #
 ################################################################################
 
-import urllib
+from __future__ import absolute_import
+import six.moves.urllib.parse
 
 import github.GithubObject
 
-import Consts
+from . import Consts
+import six
 
 
 class Label(github.GithubObject.CompletableGithubObject):
@@ -96,9 +98,9 @@ class Label(github.GithubObject.CompletableGithubObject):
         :param description: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(color, (str, unicode)), color
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(color, (str, six.text_type)), color
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
         post_parameters = {
             "name": name,
             "color": color,
@@ -115,7 +117,7 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     @property
     def _identity(self):
-        return urllib.quote(self.name)
+        return six.moves.urllib.parse.quote(self.name)
 
     def _initAttributes(self):
         self._color = github.GithubObject.NotSet

@@ -25,6 +25,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.PaginatedList
 
@@ -39,7 +40,7 @@ import github.Event
 import github.Authorization
 import github.Notification
 
-import Consts
+from . import Consts
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 

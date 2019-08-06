@@ -30,8 +30,7 @@
 #                                                                              #
 ################################################################################
 
-import Consts
-
+from __future__ import absolute_import
 import datetime
 
 import github.GithubObject
@@ -39,6 +38,9 @@ import github.PaginatedList
 
 import github.NamedUser
 import github.Label
+import six
+
+import Consts
 
 
 class Milestone(github.GithubObject.CompletableGithubObject):
@@ -172,9 +174,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :param due_on: date
         :rtype: None
         """
-        assert isinstance(title, (str, unicode)), title
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert isinstance(title, (str, six.text_type)), title
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, six.text_type)), state
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
         assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
         post_parameters = {
             "title": title,

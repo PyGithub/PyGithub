@@ -42,7 +42,8 @@
 #                                                                              #
 ################################################################################
 
-import urllib
+from __future__ import absolute_import
+import six.moves.urllib.parse
 import datetime
 import github.GithubObject
 import github.PaginatedList
@@ -56,7 +57,8 @@ import github.IssueComment
 import github.IssuePullRequest
 import github.Reaction
 
-import Consts
+from . import Consts
+import six
 
 
 class Issue(github.GithubObject.CompletableGithubObject):
@@ -280,7 +282,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, six.text_type)) for element in assignees), assignees
         post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -295,7 +297,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        assert all(isinstance(element, (github.Label.Label, str, six.text_type)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -309,7 +311,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, (str, six.text_type)), body
         post_parameters = {
             "body": body,
         }
@@ -342,20 +344,20 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, (str, unicode)) for element in assignees), assignees
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert title is github.GithubObject.NotSet or isinstance(title, (str, six.text_type)), title
+        assert body is github.GithubObject.NotSet or isinstance(body, (str, six.text_type)), body
+        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, six.text_type)), assignee
+        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, (str, six.text_type)) for element in assignees), assignees
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, six.text_type)), state
         assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in labels), labels
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
         if assignee is not github.GithubObject.NotSet:
-            if isinstance(assignee, (str, unicode)):
+            if isinstance(assignee, (str, six.text_type)):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ''
@@ -380,7 +382,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param lock_reason: string
         :rtype: None
         """
-        assert isinstance(lock_reason, (str, unicode)), lock_reason
+        assert isinstance(lock_reason, (str, six.text_type)), lock_reason
         put_parameters = dict()
         put_parameters["lock_reason"] = lock_reason
         headers, data = self._requester.requestJsonAndCheck(
@@ -406,7 +408,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id)
@@ -462,7 +464,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, six.text_type)) for element in assignees), assignees
         post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -477,11 +479,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert isinstance(label, (github.Label.Label, str, unicode)), label
+        assert isinstance(label, (github.Label.Label, str, six.text_type)), label
         if isinstance(label, github.Label.Label):
             label = label._identity
         else:
-            label = urllib.quote(label)
+            label = six.moves.urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels/" + label
@@ -493,7 +495,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label` or strings
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        assert all(isinstance(element, (github.Label.Label, str, six.text_type)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -520,7 +522,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert isinstance(reaction_type, (str, six.text_type)), "reaction type should be a string"
         assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
             "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 

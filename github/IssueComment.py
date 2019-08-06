@@ -33,10 +33,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.NamedUser
 
-import Consts
+from . import Consts
+import six
 
 
 class IssueComment(github.GithubObject.CompletableGithubObject):
@@ -127,7 +129,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: None
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, (str, six.text_type)), body
         post_parameters = {
             "body": body,
         }
@@ -159,7 +161,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert isinstance(reaction_type, (str, six.text_type)), "reaction type should be a string"
         assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
             "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 

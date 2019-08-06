@@ -8,10 +8,10 @@ matrix:
     - python: "3.7"
       dist: xenial  # required for Python >= 3.7 (travis-ci/travis-ci#9069)
 install:
-  - pip install codecov
+  - pip install codecov flake8
 script:
-  - if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then python -m lib2to3 -w -n tests; fi
-  - coverage run --source github/tests setup.py test
+  - flake8
+  - coverage run --source github,tests setup.py test
 after_success:
   - codecov
 notifications:
