@@ -40,7 +40,7 @@ import github.NamedUser
 import github.Label
 import six
 
-import Consts
+from . import Consts
 
 
 class Milestone(github.GithubObject.CompletableGithubObject):
