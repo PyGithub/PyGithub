@@ -122,7 +122,6 @@ import github.GitTag
 import github.Download
 import github.Permissions
 import github.Event
-import github.Legacy
 import github.SourceImport
 import github.StatsContributor
 import github.StatsCommitActivity
@@ -2597,6 +2596,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def _legacy_convert_issue(self, attributes):
+        convertedAttributes = {
+            "number": attributes["number"],
+            "url": "/repos" + six.moves.urllib.parse.urlparse(attributes["html_url"]).path,
+            "user": {"login": attributes["user"], "url": "/users/" + attributes["user"]},
+        }
+        if "labels" in attributes:  # pragma no branch
+            convertedAttributes["labels"] = [{"name": label} for label in attributes["labels"]]
+        for attr in ("title", "created_at", "comments", "body", "updated_at",
+                     "state"):
+            if attr in attributes:  # pragma no branch
+                convertedAttributes[attr] = attributes[attr]
+        return convertedAttributes
+
     def legacy_search_issues(self, state, keyword):
         """
         :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search/legacy>`_
@@ -2611,7 +2624,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + six.moves.urllib.parse.quote(keyword)
         )
         return [
-            github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
+            github.Issue.Issue(self._requester, headers, self._legacy_convert_issue(element), completed=False)
             for element in data["issues"]
         ]
 
