@@ -712,3 +712,54 @@ class LazyRepository(Framework.TestCase):
     def testDisableVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
         self.assertEqual(lazy_repo.disable_vulnerability_alert(), True)
+
+    def testDisableVulnerabilityAlertWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.disable_vulnerability_alert()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+
+    def testDisableAutomatedSecurityWhenVulnerabilityNotSet(self):
+        lazy_repo = self.getLazyRepository()
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.disable_automated_security_fixes()
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(raisedexp.exception.data, {
+            "message": "Vulnerability alerts must be enabled to configure"\
+                       "automated security fixes."})
+
+    def testDisableAutomatedSecurityWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.disable_automated_security_fixes ()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+
+    def testEnableVulnerabilityAlertWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.enable_vulnerability_alert()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+
+    def testEnableAutomatedSecurityFixesWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.enable_automated_security_fixes()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+
+    def testGetAutomatedSecurityFixesWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.get_automated_security_fixes()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
+
+    def testGetVulnerabilityAlertWhenNoRepo(self):
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.get_vulnerability_alert()
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
