@@ -55,29 +55,29 @@ class Retry(Framework.TestCase):
     def testShouldNotRetryWhenStatusNotOnList(self):
         with self.assertRaises(github.GithubException):
             self.g.get_repo(REPO_NAME)
-        self.assertEquals(len(httpretty.latest_requests), 1)
+        self.assertEqual(len(httpretty.latest_requests), 1)
 
     def testReturnsRepoAfter3Retries(self):
         repository = self.g.get_repo(REPO_NAME)
-        self.assertEquals(len(httpretty.latest_requests), 4)
+        self.assertEqual(len(httpretty.latest_requests), 4)
         for request in httpretty.latest_requests:
-            self.assertEquals(request.path, '/repos/' + REPO_NAME)
+            self.assertEqual(request.path, '/repos/' + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEquals(repository.full_name, REPO_NAME)
+        self.assertEqual(repository.full_name, REPO_NAME)
 
     def testReturnsRepoAfter1Retry(self):
         repository = self.g.get_repo(REPO_NAME)
-        self.assertEquals(len(httpretty.latest_requests), 2)
+        self.assertEqual(len(httpretty.latest_requests), 2)
         for request in httpretty.latest_requests:
-            self.assertEquals(request.path, '/repos/' + REPO_NAME)
+            self.assertEqual(request.path, '/repos/' + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEquals(repository.full_name, REPO_NAME)
+        self.assertEqual(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
         with self.assertRaises(requests.exceptions.RetryError):
             self.g.get_repo('PyGithub/PyGithub')
-        self.assertEquals(len(httpretty.latest_requests), 4)
+        self.assertEqual(len(httpretty.latest_requests), 4)
         for request in httpretty.latest_requests:
-            self.assertEquals(request.path, '/repos/PyGithub/PyGithub')
+            self.assertEqual(request.path, '/repos/PyGithub/PyGithub')
