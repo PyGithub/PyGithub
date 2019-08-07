@@ -205,7 +205,6 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             self.url + "/labels",
             None,
             headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
-
         )
 
     @property
