@@ -40,6 +40,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import datetime
 
 import github.GithubObject
@@ -57,7 +58,8 @@ import github.Authorization
 import github.Notification
 import github.Migration
 
-import Consts
+from . import Consts
+import six
 
 
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
@@ -372,7 +374,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param email: string
         :rtype: None
         """
-        assert all(isinstance(element, (str, unicode)) for element in emails), emails
+        assert all(isinstance(element, (str, six.text_type)) for element in emails), emails
         post_parameters = emails
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -440,12 +442,12 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param onetime_password: string
         :rtype: :class:`github.Authorization.Authorization`
         """
-        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, (str, unicode)), note
-        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
-        assert client_id is github.GithubObject.NotSet or isinstance(client_id, (str, unicode)), client_id
-        assert client_secret is github.GithubObject.NotSet or isinstance(client_secret, (str, unicode)), client_secret
-        assert onetime_password is None or isinstance(onetime_password, (str, unicode)), onetime_password
+        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in scopes), scopes
+        assert note is github.GithubObject.NotSet or isinstance(note, (str, six.text_type)), note
+        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, six.text_type)), note_url
+        assert client_id is github.GithubObject.NotSet or isinstance(client_id, (str, six.text_type)), client_id
+        assert client_secret is github.GithubObject.NotSet or isinstance(client_secret, (str, six.text_type)), client_secret
+        assert onetime_password is None or isinstance(onetime_password, (str, six.text_type)), onetime_password
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes
@@ -491,11 +493,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Gist.Gist`
         """
         assert isinstance(public, bool), public
-        assert all(isinstance(element, github.InputFileContent) for element in files.itervalues()), files
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert all(isinstance(element, github.InputFileContent) for element in six.itervalues(files)), files
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
         post_parameters = {
             "public": public,
-            "files": {key: value._identity for key, value in files.iteritems()},
+            "files": {key: value._identity for key, value in six.iteritems(files)},
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
@@ -513,8 +515,8 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param key: string
         :rtype: :class:`github.UserKey.UserKey`
         """
-        assert isinstance(title, (str, unicode)), title
-        assert isinstance(key, (str, unicode)), key
+        assert isinstance(title, (str, six.text_type)), title
+        assert isinstance(key, (str, six.text_type)), key
         post_parameters = {
             "title": title,
             "key": key,
@@ -550,17 +552,17 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param allow_rebase_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, unicode)), name
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
+        assert isinstance(name, (str, six.text_type)), name
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
+        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, six.text_type)), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
-        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
-        assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, six.text_type)), license_template
+        assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, six.text_type)), gitignore_template
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
         assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
@@ -612,13 +614,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param bio: string
         :rtype: None
         """
-        assert name is github.GithubObject.NotSet or isinstance(name, (str, unicode)), name
-        assert email is github.GithubObject.NotSet or isinstance(email, (str, unicode)), email
-        assert blog is github.GithubObject.NotSet or isinstance(blog, (str, unicode)), blog
-        assert company is github.GithubObject.NotSet or isinstance(company, (str, unicode)), company
-        assert location is github.GithubObject.NotSet or isinstance(location, (str, unicode)), location
+        assert name is github.GithubObject.NotSet or isinstance(name, (str, six.text_type)), name
+        assert email is github.GithubObject.NotSet or isinstance(email, (str, six.text_type)), email
+        assert blog is github.GithubObject.NotSet or isinstance(blog, (str, six.text_type)), blog
+        assert company is github.GithubObject.NotSet or isinstance(company, (str, six.text_type)), company
+        assert location is github.GithubObject.NotSet or isinstance(location, (str, six.text_type)), location
         assert hireable is github.GithubObject.NotSet or isinstance(hireable, bool), hireable
-        assert bio is github.GithubObject.NotSet or isinstance(bio, (str, unicode)), bio
+        assert bio is github.GithubObject.NotSet or isinstance(bio, (str, six.text_type)), bio
         post_parameters = dict()
         if name is not github.GithubObject.NotSet:
             post_parameters["name"] = name
@@ -647,7 +649,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Authorization.Authorization`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/authorizations/" + str(id)
@@ -742,11 +744,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, unicode)), filter
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, six.text_type)), filter
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, six.text_type)), state
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, six.text_type)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, six.text_type)), direction
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
@@ -780,11 +782,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, unicode)), filter
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, six.text_type)), filter
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, six.text_type)), state
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, six.text_type)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, six.text_type)), direction
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
@@ -812,7 +814,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.UserKey.UserKey`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/user/keys/" + str(id)
@@ -837,7 +839,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Notification.Notification`
         """
 
-        assert isinstance(id, (str, unicode)), id
+        assert isinstance(id, (str, six.text_type)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/notifications/threads/" + id
@@ -908,7 +910,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, (str, six.text_type)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name
@@ -925,11 +927,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert visibility is github.GithubObject.NotSet or isinstance(visibility, (str, unicode)), visibility
-        assert affiliation is github.GithubObject.NotSet or isinstance(affiliation, (str, unicode)), affiliation
-        assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert visibility is github.GithubObject.NotSet or isinstance(visibility, (str, six.text_type)), visibility
+        assert affiliation is github.GithubObject.NotSet or isinstance(affiliation, (str, six.text_type)), affiliation
+        assert type is github.GithubObject.NotSet or isinstance(type, (str, six.text_type)), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, six.text_type)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, six.text_type)), direction
         url_parameters = dict()
         if visibility is not github.GithubObject.NotSet:
             url_parameters["visibility"] = visibility
@@ -1082,7 +1084,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param email: string
         :rtype: None
         """
-        assert all(isinstance(element, (str, unicode)) for element in emails), emails
+        assert all(isinstance(element, (str, six.text_type)) for element in emails), emails
         post_parameters = emails
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -1176,7 +1178,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Migration.Migration`
         """
         assert isinstance(repos, (list, tuple)), repos
-        assert all(isinstance(repo, (str, unicode)) for repo in repos), repos
+        assert all(isinstance(repo, (str, six.text_type)) for repo in repos), repos
         assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
         assert exclude_attachments is github.GithubObject.NotSet or isinstance(exclude_attachments, bool), exclude_attachments
         post_parameters = {

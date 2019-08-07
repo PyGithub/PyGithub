@@ -41,6 +41,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.PaginatedList
 
@@ -48,7 +49,8 @@ import github.Repository
 import github.NamedUser
 import github.Organization
 
-import Consts
+from . import Consts
+import six
 
 
 class Team(github.GithubObject.CompletableGithubObject):
@@ -179,7 +181,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is github.GithubObject.NotSet or isinstance(
-            role, (str, unicode)), role
+            role, (str, six.text_type)), role
         if role is not github.GithubObject.NotSet:
             assert role in ['member', 'maintainer']
             put_parameters = {
@@ -243,10 +245,10 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param privacy: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
-        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
+        assert isinstance(name, (str, six.text_type)), name
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
+        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, six.text_type)), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, six.text_type)), privacy
         post_parameters = {
             "name": name,
         }
@@ -269,7 +271,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert role is github.GithubObject.NotSet or isinstance(role, (str, unicode)), role
+        assert role is github.GithubObject.NotSet or isinstance(role, (str, six.text_type)), role
         url_parameters = dict()
         if role is not github.GithubObject.NotSet:
             assert role in ['member', 'maintainer', 'all']

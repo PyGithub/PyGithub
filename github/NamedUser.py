@@ -37,6 +37,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import datetime
 
 import github.GithubObject
@@ -49,6 +50,7 @@ import github.Permissions
 import github.Plan
 import github.Organization
 import github.Event
+import six
 
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
@@ -536,7 +538,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, (str, six.text_type)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name
@@ -552,9 +554,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert type is github.GithubObject.NotSet or isinstance(type, (str, six.text_type)), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, six.text_type)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, six.text_type)), direction
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type

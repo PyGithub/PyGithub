@@ -29,7 +29,8 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+from . import Framework
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 
@@ -135,7 +136,7 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        import CommitComment  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
+        from . import CommitComment  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
         self.g.per_page = 100
         PaginatedListImpl(
             CommitComment.CommitComment,

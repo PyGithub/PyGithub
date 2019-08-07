@@ -32,12 +32,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.PaginatedList
 
 import github.NamedUser
 
-import Consts
+from . import Consts
+import six
 
 
 class Migration(github.GithubObject.CompletableGithubObject):
@@ -176,7 +178,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         :param repo_name: str
         :rtype: None
         """
-        assert isinstance(repo_name, (str, unicode)), repo_name
+        assert isinstance(repo_name, (str, six.text_type)), repo_name
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo_name + "/lock",

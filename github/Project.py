@@ -22,10 +22,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.ProjectColumn
 
-import Consts
+from . import Consts
+import six
 
 
 class Project(github.GithubObject.CompletableGithubObject):
@@ -159,7 +161,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
         :param name: string
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, (str, six.text_type)), name
         post_parameters = {"name": name}
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(

@@ -30,9 +30,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 
 import github.AuthorizationApplication
+import six
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):
@@ -135,11 +137,11 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
-        assert add_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_scopes), add_scopes
-        assert remove_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_scopes), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, (str, unicode)), note
-        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
+        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in scopes), scopes
+        assert add_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in add_scopes), add_scopes
+        assert remove_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in remove_scopes), remove_scopes
+        assert note is github.GithubObject.NotSet or isinstance(note, (str, six.text_type)), note
+        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, six.text_type)), note_url
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes

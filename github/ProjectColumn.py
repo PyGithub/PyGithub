@@ -22,11 +22,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
 import github.Project
 import github.ProjectCard
 
-import Consts
+from . import Consts
+import six
 
 
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
@@ -99,7 +101,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, unicode)), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, six.text_type)), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:
@@ -123,14 +125,14 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param content_type: string
         """
         post_parameters = {}
-        if isinstance(note, (str, unicode)):
+        if isinstance(note, (str, six.text_type)):
             assert content_id is github.GithubObject.NotSet, content_id
             assert content_type is github.GithubObject.NotSet, content_type
             post_parameters = {"note": note}
         else:
             assert note is github.GithubObject.NotSet, note
             assert isinstance(content_id, int), content_id
-            assert isinstance(content_type, (str, unicode)), content_type
+            assert isinstance(content_type, (str, six.text_type)), content_type
             post_parameters = {"content_id": content_id,
                                "content_type": content_type}
 

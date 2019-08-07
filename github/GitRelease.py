@@ -35,10 +35,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 from os.path import basename
 import github.GithubObject
 import github.NamedUser
 import github.GitReleaseAsset
+import six
 
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
@@ -187,13 +189,13 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert tag_name is github.GithubObject.NotSet              \
-            or isinstance(tag_name, (str, unicode)),               \
+            or isinstance(tag_name, (str, six.text_type)),               \
             'tag_name must be a str/unicode object'
         assert target_commitish is github.GithubObject.NotSet      \
-            or isinstance(target_commitish, (str, unicode)),       \
+            or isinstance(target_commitish, (str, six.text_type)),       \
             'target_commitish must be a str/unicode object'
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(message, (str, unicode)), message
+        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(message, (str, six.text_type)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         if tag_name is github.GithubObject.NotSet:
@@ -221,9 +223,9 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
         :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(label, (str, unicode)), label
-        assert name is github.GithubObject.NotSet or isinstance(name, (str, unicode)), name
+        assert isinstance(path, (str, six.text_type)), path
+        assert isinstance(label, (str, six.text_type)), label
+        assert name is github.GithubObject.NotSet or isinstance(name, (str, six.text_type)), name
 
         post_parameters = {
             "label": label

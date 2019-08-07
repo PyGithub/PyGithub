@@ -25,7 +25,8 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+from . import Framework
 
 
 # Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt

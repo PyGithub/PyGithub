@@ -28,7 +28,8 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from __future__ import absolute_import
+from . import Framework
 
 import github
 import datetime
@@ -40,7 +41,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.comments, 0)
         self.assertEqual(gist.created_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
         self.assertEqual(gist.description, "Github API")
-        self.assertEqual(gist.files.keys(), ["GithubAPI.lua"])
+        self.assertEqual(list(gist.files.keys()), ["GithubAPI.lua"])
         self.assertEqual(gist.files["GithubAPI.lua"].size, 21229)
         self.assertEqual(gist.files["GithubAPI.lua"].filename, "GithubAPI.lua")
         self.assertEqual(gist.files["GithubAPI.lua"].language, "Lua")
@@ -90,13 +91,13 @@ class Gist(Framework.TestCase):
         gist = self.g.get_gist("5339374")
         self.assertEqual(sorted(gist.files.keys()), ["bar.txt", "foo.txt"])
         gist.edit(files={"foo.txt": None})
-        self.assertEqual(gist.files.keys(), ["bar.txt"])
+        self.assertEqual(list(gist.files.keys()), ["bar.txt"])
 
     def testRenameFile(self):
         gist = self.g.get_gist("5339374")
-        self.assertEqual(gist.files.keys(), ["bar.txt"])
+        self.assertEqual(list(gist.files.keys()), ["bar.txt"])
         gist.edit(files={"bar.txt": github.InputFileContent(gist.files["bar.txt"].content, new_name="baz.txt")})
-        self.assertEqual(gist.files.keys(), ["baz.txt"])
+        self.assertEqual(list(gist.files.keys()), ["baz.txt"])
 
     def testCreateComment(self):
         gist = self.g.get_gist("2729810")

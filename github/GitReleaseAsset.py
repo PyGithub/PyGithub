@@ -25,7 +25,9 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import github.GithubObject
+import six
 
 
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
@@ -164,8 +166,8 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         Update asset metadata.
         :rtype: github.GitReleaseAsset.GitReleaseAsset
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(label, (str, unicode)), label
+        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(label, (str, six.text_type)), label
         post_parameters = {
             "name": name,
             "label": label

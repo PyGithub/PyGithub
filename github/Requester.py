@@ -52,6 +52,7 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import absolute_import
 import base64
 import json
 import logging
@@ -61,12 +62,12 @@ import re
 import requests
 import sys
 import time
-import urllib
-import urlparse
+import six.moves.urllib.parse
 from io import IOBase
 
-import Consts
-import GithubException
+from . import Consts
+from . import GithubException
+import six
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -79,10 +80,7 @@ class RequestsResponse:
         self.text = r.text
 
     def getheaders(self):
-        if atLeastPython3:
-            return self.headers.items()
-        else:
-            return self.headers.iteritems()
+        return six.iteritems(self.headers)
 
     def read(self):
         return self.text
@@ -230,10 +228,7 @@ class Requester:
 
         if password is not None:
             login = login_or_token
-            if atLeastPython3:
-                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
-            else:
-                self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
+            self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
@@ -243,7 +238,7 @@ class Requester:
             self.__authorizationHeader = None
 
         self.__base_url = base_url
-        o = urlparse.urlparse(base_url)
+        o = six.moves.urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
@@ -290,7 +285,7 @@ class Requester:
     def __customConnection(self, url):
         cnx = None
         if not url.startswith("/"):
-            o = urlparse.urlparse(url)
+            o = six.moves.urllib.parse.urlparse(url)
             if o.hostname != self.__hostname or \
                (o.port and o.port != self.__port) or \
                (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
@@ -308,8 +303,8 @@ class Requester:
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded") or
-            output.get("message").lower().endswith("please wait a few minutes before you try again.")
+            output.get("message").lower().startswith("api rate limit exceeded")
+            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
@@ -322,8 +317,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
-            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
-                data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
+            if isinstance(data, bytes):
+                data = data.decode("utf-8")
             try:
                 return json.loads(data)
             except ValueError:
@@ -341,7 +336,7 @@ class Requester:
             eol = "\r\n"
 
             encoded_input = ""
-            for name, value in input.iteritems():
+            for name, value in six.iteritems(input):
                 encoded_input += "--" + boundary + eol
                 encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol
@@ -428,7 +423,7 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and 'location' in responseHeaders:
-            o = urlparse.urlparse(responseHeaders['location'])
+            o = six.moves.urllib.parse.urlparse(responseHeaders['location'])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
@@ -446,7 +441,7 @@ class Requester:
         if url.startswith("/"):
             url = self.__prefix + url
         else:
-            o = urlparse.urlparse(url)
+            o = six.moves.urllib.parse.urlparse(url)
             assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
@@ -459,7 +454,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + urllib.urlencode(parameters)
+            return url + "?" + six.moves.urllib.parse.urlencode(parameters)
 
     def __createConnection(self):
         kwds = {}
