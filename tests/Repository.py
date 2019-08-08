@@ -693,3 +693,47 @@ class LazyRepository(Framework.TestCase):
         owner = lazy_repo.owner
         eager_repo = self.getEagerRepository()
         self.assertEqual(owner, eager_repo.owner)
+
+    def testEnableVulnerabilityAlert(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.enable_vulnerability_alert())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.enable_vulnerability_alert())
+
+    def testEnableAutomatedSecurityFixes(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.enable_automated_security_fixes())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.enable_automated_security_fixes())
+
+    def testDisableAutomatedSecurityFixes(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.disable_automated_security_fixes())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.disable_automated_security_fixes())
+
+    def testGetVulnerabilityAlert(self):
+        lazy_repo = self.getEagerRepository()
+        self.assertTrue(lazy_repo.get_vulnerability_alert())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.get_vulnerability_alert())
+
+    def testDisableVulnerabilityAlert(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.disable_vulnerability_alert())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.disable_vulnerability_alert())
+
+    def testChangeAutomateFixWhenNoVulnerabilityAlert(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertFalse(lazy_repo.enable_automated_security_fixes())
+        self.assertFalse(lazy_repo.disable_automated_security_fixes())
+
+    def testGetVulnerabilityAlertWhenTurnedOff(self):
+        lazy_repo = self.getEagerRepository()
+        self.assertFalse(lazy_repo.get_vulnerability_alert())

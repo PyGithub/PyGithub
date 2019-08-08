@@ -99,3 +99,9 @@ highLightSearchPreview = "application/vnd.github.v3.text-match+json"
 
 # https://developer.github.com/changes/2018-02-22-protected-branches-required-signatures/
 signaturesProtectedBranchesPreview = "application/vnd.github.zzzax-preview+json"
+
+# https://developer.github.com/changes/2019-04-24-vulnerability-alerts/
+vulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
+
+# https://developer.github.com/changes/2019-06-04-automated-security-fixes/
+automatedSecurityFixes = "application/vnd.github.london-preview+json"

@@ -2687,6 +2687,66 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
 
+    def get_vulnerability_alert(self):
+        """
+        :calls: `GET /repos/:owner/:repo/vulnerability-alerts <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "GET",
+            self.url + "/vulnerability-alerts",
+            headers={'Accept': Consts.vulnerabilityAlertsPreview}
+        )
+        return status == 204
+
+    def enable_vulnerability_alert(self):
+        """
+        :calls: `PUT /repos/:owner/:repo/vulnerability-alerts <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "PUT",
+            self.url + "/vulnerability-alerts",
+            headers={'Accept': Consts.vulnerabilityAlertsPreview}
+        )
+        return status == 204
+
+    def disable_vulnerability_alert(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/vulnerability-alerts <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url + "/vulnerability-alerts",
+            headers={'Accept': Consts.vulnerabilityAlertsPreview}
+        )
+        return status == 204
+
+    def enable_automated_security_fixes(self):
+        """
+        :calls: `PUT /repos/:owner/:repo/automated-security-fixes <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "PUT",
+            self.url + "/automated-security-fixes",
+            headers={'Accept': Consts.automatedSecurityFixes}
+        )
+        return status == 204
+
+    def disable_automated_security_fixes(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/automated-security-fixes <http://developer.github.com/v3/repos>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url + "/automated-security-fixes",
+            headers={'Accept': Consts.automatedSecurityFixes}
+        )
+        return status == 204
+
     def remove_from_collaborators(self, collaborator):
         """
         :calls: `DELETE /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
