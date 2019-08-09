@@ -50,6 +50,9 @@ class PullRequestReview(Framework.TestCase):
         # Test ability to get a single review
         self.pullreview = self.pull.get_review(28482091)
 
+    def testDoesNotModifyPullRequest(self):
+        self.assertEqual(self.pull.id, 111649703)
+
     def testDismiss(self):
         self.pullreview.dismiss("with prejudice")
         pr = self.pull.get_review(28482091)
