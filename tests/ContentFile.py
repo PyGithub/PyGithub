@@ -37,7 +37,9 @@ from . import Framework
 class ContentFile(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.file = self.g.get_user().get_repo("PyGithub").get_readme()
+        repo = self.g.get_user().get_repo("PyGithub")
+        self.file = repo.get_readme()
+        self.specialCharsFile = repo.get_contents("#testSpecialCharacters.txt")
 
     def testAttributes(self):
         self.assertEqual(self.file.type, "file")
@@ -52,3 +54,10 @@ class ContentFile(Framework.TestCase):
 
         # test __repr__() based on this attributes
         self.assertEqual(self.file.__repr__(), 'ContentFile(path="ReadMe.md")')
+
+    def testUrlQuoting(self):
+        self.assertEqual(self.specialCharsFile.name, "#testSpecialCharacters.txt")
+        self.assertEqual(self.specialCharsFile.path, "#testSpecialCharacters.txt")
+        self.assertEqual(self.specialCharsFile.url, "https://api.github.com/repos/jacquev6/PyGithub/contents/%23testSpecialCharacters.txt?ref=master")
+        self.assertEqual(len(self.specialCharsFile.content), 10212)
+        self.assertEqual(len(self.specialCharsFile.decoded_content), 7531)

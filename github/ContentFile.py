@@ -34,6 +34,7 @@
 from __future__ import absolute_import
 import base64
 import sys
+import six.moves.urllib.parse
 
 import github.GithubObject
 import github.Repository
@@ -209,5 +210,6 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+            self._url.value = self._url.value.replace(self._path.value, six.moves.urllib.parse.quote(self._path.value))
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
