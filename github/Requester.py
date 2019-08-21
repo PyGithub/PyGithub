@@ -282,7 +282,7 @@ class Requester:
                     print(Fore.RED + '\nRefresh your 2FA token!'+Style.RESET_ALL)
                     headers = headers if headers else {}
                     self.__otp = input('   Enter code with no spaces (ie, `123456`):')
-                    headers['x-github-otp'] = self.__otp
+                    headers['x-github-otp'] = str(self.__otp)
                     continue
             return result
         return None
@@ -348,7 +348,7 @@ class Requester:
         def encode(input):
             return "application/json", json.dumps(input)
         headers = headers if headers else {}
-        headers['x-github-otp'] = self.__otp
+        headers['x-github-otp'] = str(self.__otp)
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMultipart(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
