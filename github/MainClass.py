@@ -94,7 +94,7 @@ class Github(object):
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, jwt=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True, retry=None):
+    def __init__(self, login_or_token=None, password=None, jwt=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False, verify=True, retry=None, otp=None):
         """
         :param login_or_token: string
         :param password: string
@@ -118,7 +118,7 @@ class Github(object):
         assert user_agent is None or isinstance(user_agent, (str, six.text_type)), user_agent
         assert isinstance(api_preview, (bool))
         assert retry is None or isinstance(retry, (int)) or isinstance(retry, (urllib3.util.Retry))
-        self.__requester = Requester(login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry)
+        self.__requester = Requester(login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry, otp)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
