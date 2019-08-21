@@ -32,6 +32,11 @@ Alternatively if you are in Powershell:
 $env:GIT_NAME = "<your git username>"
 $env:GIT_PW = "<your git pw>"
 ```
+Alternatively in linux:
+```bash
+export GIT_NAME="<your git username>"
+export GIT_PW="<your git pw>"
+```
 
 ### Run
 ```bash
