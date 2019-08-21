@@ -63,6 +63,7 @@ import requests
 import sys
 import time
 import six.moves.urllib.parse
+from colorama import Fore, Style
 from io import IOBase
 
 from . import Consts
@@ -223,9 +224,8 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
+    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry, otp=None):
         self._initializeDebugFeature()
-
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')
@@ -236,6 +236,7 @@ class Requester:
             self.__authorizationHeader = "Bearer " + jwt
         else:
             self.__authorizationHeader = None
+        self.__otp = otp
 
         self.__base_url = base_url
         o = six.moves.urllib.parse.urlparse(base_url)
@@ -267,8 +268,25 @@ class Requester:
         self.__apiPreview = api_preview
         self.__verify = verify
 
-    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
+    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, inpt=None):
+        retry = 2
+        result = None
+        while retry > 0:
+            try:
+                result = self.__check(*self.requestJson(verb, url, parameters, headers, inpt, self.__customConnection(url)))
+            except Exception as ex:
+                retry = retry - 1
+                if not isinstance(ex, GithubException.TwoFactorException):
+                    raise ex
+                else:
+                    print(Fore.RED + '\nRefresh your 2FA token!'+Style.RESET_ALL)
+                    headers = headers if headers else {}
+                    self.__otp = input('   Enter code with no spaces (ie, `123456`):')
+                    headers['x-github-otp'] = self.__otp
+                    continue
+            return result
+        return None
+
 
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
@@ -300,6 +318,8 @@ class Requester:
             cls = GithubException.BadCredentialsException
         elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+        elif status == 401 and 'x-github-otp' in headers:
+            cls = GithubException.TwoFactorException
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
@@ -327,7 +347,8 @@ class Requester:
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         def encode(input):
             return "application/json", json.dumps(input)
-
+        headers = headers if headers else {}
+        headers['x-github-otp'] = self.__otp
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMultipart(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
@@ -434,6 +455,8 @@ class Requester:
             parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
+        if self.__otp:
+            requestHeaders["x-github-otp"] = self.__otp
 
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url
