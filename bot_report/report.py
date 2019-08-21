@@ -87,6 +87,23 @@ MICROSOFT_COMPANY_ALIASES = [
 MICROSOFT_PEOPLE = [
     'JonathanFingold',
     'BruceHaley',
+    'hibrenda',
+    "yochay",
+    "arturl",
+    "jitenkmicrosoft",
+    "tracyboehrer",
+    "gmajian",
+    "GasparAcevedoZainSouthworks",
+    "Zerryth",
+    "Kumar2608",
+    "compulim",
+    "awalia13",
+    "WashingtonKayaker",
+    "litofish",
+    "xieofxie",
+    "AutomationTeamVA",
+    "Bill7zz",
+    "gauravsaralMs",
 ]
 
 def filter_user(user, debug=False):
@@ -100,6 +117,12 @@ def filter_user(user, debug=False):
         if debug:
             print(f'User {user.name} filtered on email: {user.email}')
         return True
+    if user.login:
+        user = user.login.strip()
+        if user in MICROSOFT_PEOPLE:
+            if debug:
+                print(f'User {user.name} filtered on username: {user.login}')
+            return True
     return False
 
 def label_issue(issue):
@@ -172,6 +195,6 @@ for repo in REPOS:
 
     no_crt_label = [issue for issue in user_filtered_issues if not filter_customer_replied_label(issue)]
     print(f'   No "Customer Replied": Count: {len(no_crt_label)}')
-    for issue in no_cr_label:
+    for issue in no_crt_label:
         print(f'        {issue.id} : {issue.title}')
         print(f'             {issue.html_url}')
