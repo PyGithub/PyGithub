@@ -22,21 +22,38 @@ cd PyGithub
 pip install -e .
 ```
 ### Set your git creds
-To set your Git credentials, in the command line type:
-```bash
-set GIT_NAME=<your git username>
-set GIT_PW=<your git pw>
-```
-Alternatively if you are in Powershell:
-```bash
-$env:GIT_NAME = "<your git username>"
-$env:GIT_PW = "<your git pw>"
-```
-Alternatively in linux:
-```bash
-export GIT_NAME="<your git username>"
-export GIT_PW="<your git pw>"
-```
+To set your Git credentials, you can use personal access token (preferred) or 
+username password.
+
+- To use a personal token (**recommended**):
+
+    - Go to https://github.com/settings/tokens
+    - Click on "Generate new token"
+      - Give note like "SDK tool"
+      - Check the `repo` box (and all items underneath)
+      - Copy the token value (and store in safe place)
+     - On command line:
+              Windows: `set GIT_PERSONAL_TOKEN=<your token>`
+              Powershell: `$env:GIT_PERSONAL_TOKEN="<your token>"` (Note the quotes)
+              Linux: `export GIT_PERSONAL_TOKEN=<your token>`
+    
+- To use username and password, on the command line:
+    - Windows: 
+    ```bash
+    set GIT_NAME=<your git username>
+    set GIT_PW=<your git pw>
+    ```
+    - Powershell: 
+    ```bash
+    $env:GIT_NAME = "<your git username>" # (Note the quotes)
+    $env:GIT_PW = "<your git pw>"
+    ```
+
+    - Linux:
+    ```bash
+    export GIT_NAME=<your git username>
+    export GIT_PW=<your git pw>
+    ```
 
 ### Run
 ```bash

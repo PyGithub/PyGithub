@@ -21,24 +21,45 @@ from colorama import Fore, Style, init
 import datetime
 
 HOW_TO_SET_CREDS = """
-To set your Git credentials, in the command line type:
-  set GIT_NAME=<your git username> 
-  set GIT_PW=<your git pw>
+To set your Git credentials, you can use personal access token (preferred) or 
+username password.
 
-Alternatively if you are in Powershell:
-  $env:GIT_NAME = "<your git username>"
-  $env:GIT_PW = "<your git pw>"
+To use a personal token (preferred):
+    Go to https://github.com/settings/tokens
+    Click on "Generate new token"
+     - Give note like "SDK tool"
+     - Check the repo (and everything underneath)
+     - Copy the token value (and store in safe place).
+    On command line:
+      Windows: set GIT_PERSONAL_TOKEN=<your token>
+      Powershell: $env:GIT_PERSONAL_TOKEN="<your token>" (Note the quotes)
+      Linux: export GIT_PERSONAL_TOKEN=<your token>
+
+To use username and password, on the command line:
+  Windows: set GIT_NAME=<your git username> 
+           set GIT_PW=<your git pw>
+  Powershell: $env:GIT_NAME = "<your git username>" (Note the quotes)
+              $env:GIT_PW = "<your git pw>"
+  Linux: export GIT_NAME=<your git username> 
+         export GIT_PW=<your git pw>
 """
 init(convert=True)
 GIT_NAME = os.getenv('GIT_NAME')
 GIT_PW = os.getenv('GIT_PW')
+GIT_PERSONAL_TOKEN = os.getenv('GIT_PERSONAL_TOKEN')
+
 if not GIT_NAME or not GIT_PW:
-    print(Fore.RED + '\nYour GIT CREDENTIALS are not set!!\n' + Style.RESET_ALL)
-    print(HOW_TO_SET_CREDS)
-    sys.exit(2)
+    if not GIT_PERSONAL_TOKEN:
+        print(Fore.RED + '\nYour GIT CREDENTIALS are not set!!\n' + Style.RESET_ALL)
+        print(HOW_TO_SET_CREDS)
+        sys.exit(2)
 
 
 REPOS = [
+    'BotFramework-DirectLine-DotNet',
+    'BotFramework-Composer',
+    'BotFramework-Services',
+    'BotBuilder-V3',
     'BotFramework-sdk',
     'botbuilder-dotnet',
     'botbuilder-js',
@@ -51,10 +72,6 @@ REPOS = [
     'botframework-directlinejs',
     'botframework-cli',
     'azure/azure-cli',
-    'botframework-composer',
-    'botframework-services',
-    'botframework-directline-dotnet',
-    'botbuilder-v3',
 ]
 
 MICROSOFT_COMPANY_ALIASES = [
@@ -118,15 +135,21 @@ START_DATE = datetime.datetime(2019, 7, 1, 0, 0)
 
 print('Bot Framework SDK Github Report')
 print('===============================')
-print('Retrieving items from Github requires two-factor authentication.')
-print('Using your phones authenticator app, type in the latest code. ')
-print('(ie, https://www.microsoft.com/en-us/account/authenticator)')
-print(Fore.RED + 'You will need to refresh your token a few times during the run.' + Style.RESET_ALL)
-otp = input('   Enter code with no spaces (ie, `123456`):')
-print(Style.RESET_ALL)
-g = Github(GIT_NAME, GIT_PW, otp=otp)
+print('Note: Azure-cli commented out at the moment.')
+g = None
+if GIT_PERSONAL_TOKEN:
+    g = Github(GIT_PERSONAL_TOKEN)
+else:
+    print('Retrieving items from Github requires two-factor authentication.')
+    print('Using your phones authenticator app, type in the latest code. ')
+    print('(ie, https://www.microsoft.com/en-us/account/authenticator)')
+    print(Fore.RED + 'You will need to refresh your token a few times during the run.' + Style.RESET_ALL)
+    otp = input('   Enter code with no spaces (ie, `123456`):')
+    print(Style.RESET_ALL)
+    g = GitHub(GIT_NAME, GIT_PW, otp=otp)
+
 for repo in REPOS:
-    repo_name = repo if '/' in repo else f'Microsoft/{repo}'
+    repo_name = repo if '/' in repo else f'microsoft/{repo}'
     repo = g.get_repo(repo_name)
     open_issues = [issue for issue in repo.get_issues(state='open') \
         if issue.created_at >= START_DATE]
