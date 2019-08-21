@@ -71,7 +71,7 @@ REPOS = [
     'botbuilder-tools',
     'botframework-directlinejs',
     'botframework-cli',
-    'azure/azure-cli',
+    #'azure/azure-cli',
 ]
 
 MICROSOFT_COMPANY_ALIASES = [
@@ -104,6 +104,7 @@ MICROSOFT_PEOPLE = [
     "AutomationTeamVA",
     "Bill7zz",
     "gauravsaralMs",
+    "ZhaoqingCui",
 ]
 
 def filter_user(user, debug=False):
