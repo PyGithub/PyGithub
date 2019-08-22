@@ -154,8 +154,16 @@ def filter_customer_replied_label(issue):
     bs, cr, s, crt = label_issue(issue)
     return crt
 
-START_DATE = datetime.datetime(2019, 7, 1, 0, 0)
+def filter_stale_customer_issues(issue, days_old=60):
+    return not issue.created_at + datetime.timedelta(days=days_old) < datetime.datetime.now()
 
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
+
+START_DATE = datetime.datetime(2019, 7, 1, 0, 0)
 
 print('Bot Framework SDK Github Report')
 print('===============================')
@@ -199,3 +207,12 @@ for repo in REPOS:
     for issue in no_crt_label:
         print(f'        {issue.id} : {issue.title}')
         print(f'             {issue.html_url}')
+
+    stale_days = 60
+    stale_customer_issues = [issue for issue in user_filtered_issues if not filter_stale_customer_issues(issue, days_old=stale_days)]
+    print(f'   90-day stale : Customer issues older than {stale_days} days: {len(stale_customer_issues)}')
+    for issue in stale_customer_issues:
+        print(f'        {issue.id} : {issue.title}')
+        print(f'        {Fore.RED}{strfdelta(datetime.datetime.now() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
+        print(f'             {issue.html_url}')
+
