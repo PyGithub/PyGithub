@@ -5,12 +5,7 @@ report.py
 
 Generates report on Bot Framework issues.
 
-
-Install:
-  $ pip install -e .
-
-To Use:
-  python bot_report/sdk_reporting.py
+See README.md for details on installing/using.
 
 """
 import os
@@ -108,21 +103,8 @@ MICROSOFT_PEOPLE = [
 ]
 
 def filter_user(user, debug=False):
-    if user.company:
-        company = user.company.strip()
-        if company in MICROSOFT_COMPANY_ALIASES:
-            if debug:
-                print(f'User {user.name} filtered on company: {user.company}')
-            return True
-    if user.email and user.email.endswith('microsoft.com'):
-        if debug:
-            print(f'User {user.name} filtered on email: {user.email}')
-        return True
-    if user.login:
-        user = user.login.strip()
-        if user in MICROSOFT_PEOPLE:
-            if debug:
-                print(f'User {user.name} filtered on username: {user.login}')
+    for org in user.get_orgs():
+        if org.login == 'microsoft':
             return True
     return False
 
@@ -158,6 +140,7 @@ def filter_stale_customer_issues(issue, days_old=60):
     return not issue.created_at + datetime.timedelta(days=days_old) < datetime.datetime.now()
 
 def strfdelta(tdelta, fmt):
+    """Utility function.  Formats a `timedelta` into human readable string."""
     d = {"days": tdelta.days}
     d["hours"], rem = divmod(tdelta.seconds, 3600)
     d["minutes"], d["seconds"] = divmod(rem, 60)
@@ -183,7 +166,7 @@ else:
 for repo in REPOS:
     repo_name = repo if '/' in repo else f'microsoft/{repo}'
     repo = g.get_repo(repo_name)
-    open_issues = [issue for issue in repo.get_issues(state='open') \
+    open_issues = [issue for issue in repo.get_issues(state='open')\
         if issue.created_at >= START_DATE]
     print(f'Repo: {repo.full_name}:')
     print(f'   Total issues after {START_DATE} : {len(open_issues)}')
