@@ -170,7 +170,7 @@ else:
     print(Fore.RED + 'You will need to refresh your token a few times during the run.' + Style.RESET_ALL)
     otp = input('   Enter code with no spaces (ie, `123456`):')
     print(Style.RESET_ALL)
-    g = GitHub(GIT_NAME, GIT_PW, otp=otp)
+    g = Github(GIT_NAME, GIT_PW, otp=str(otp))
 
 for repo in REPOS:
     repo_name = repo if '/' in repo else f'microsoft/{repo}'
