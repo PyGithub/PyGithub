@@ -10,6 +10,7 @@ Currently performs the following (for all the repos we currently manage):
 - Issues that don't contain the **`Bot Services`** label.
 - Issues that don't contain the **`customer-reported`** label.
 - Issues that don't contain the  **`customer-replied-to`** label.
+- Issues that are endanger of not being closed within 90 days.
 
 
 ### Clone repo
@@ -30,8 +31,8 @@ username password.
     - Go to https://github.com/settings/tokens
     - Click on "Generate new token"
       - Give note like "SDK tool"
-      - Check the `repo` box (and all items underneath)
-      - Copy the token value (and store in safe place)
+      - Check the "`repo`" check box (and all items underneath)
+      - Copy the token value (don't worry you can regen if you forget it)
      - On command line:
               Windows: `set GIT_PERSONAL_TOKEN=<your token>`
               Powershell: `$env:GIT_PERSONAL_TOKEN="<your token>"` (Note the quotes)
@@ -66,38 +67,18 @@ Sample Output:
 PS D:\python\github\PyGithub\bot_report> python report.py
 Bot Framework SDK Github Report
 ===============================
-Retrieving items from Github requires two-factor authentication.
-Using your phones authenticator app, type in the latest code.   
-(ie, https://www.microsoft.com/en-us/account/authenticator)     
-You will need to refresh your token a few times during the run. 
-   Enter code with no spaces (ie, `123456`):597450
-
-Repo: microsoft/botframework-sdk:
-   Total issues after 2019-07-01 00:00:00 : 23
-   No "Bot Services": Count: 1
-        482345966 : Universal Bot Authentification in multple Channels (MS Teams, Web Bot, Bot Emulator)
-             https://github.com/microsoft/botframework-sdk/issues/5496
-   No "Customer Reported": Count: 1
-        482345966 : Universal Bot Authentification in multple Channels (MS Teams, Web Bot, Bot Emulator) 
-             https://github.com/microsoft/botframework-sdk/issues/5496
-   No "Customer Replied": Count: 2
-        482345966 : Universal Bot Authentification in multple Channels (MS Teams, Web Bot, Bot Emulator)
-             https://github.com/microsoft/botframework-sdk/issues/5496
-Repo: microsoft/botbuilder-dotnet:
-   Total issues after 2019-07-01 00:00:00 : 77
-   No "Bot Services": Count: 7
-        483155976 : cannot use safe JSON deserialization for Dialog State object
-             https://github.com/microsoft/botbuilder-dotnet/issues/2437
-        481374209 : TwilioHelper.GetMessageAttachments doesn't bounds check
-             https://github.com/microsoft/botbuilder-dotnet/issues/2416
-        479889798 : DialogManager RootDialog property setter has bad side effects
-             https://github.com/microsoft/botbuilder-dotnet/issues/2400
-        479494855 : [Adaptive] Break and Continue can be added to ForEach step
-             https://github.com/microsoft/botbuilder-dotnet/issues/2394
-        477877794 : [Adaptive][Expressions] Sort and Search should be supported in the next version
-             https://github.com/microsoft/botbuilder-dotnet/issues/2380
-        476816201 : add Support Adaptive Card Version function
-             https://github.com/microsoft/botbuilder-dotnet/issues/2370
-        472137078 : [Adaptive] [Expression] language requires quotes to represent string literals including empty strings
-             https://github.com/microsoft/botbuilder-dotnet/issues/2308
+Note: Azure-cli commented out at the moment.
+Repo: microsoft/BotFramework-DirectLine-DotNet:
+   Total issues after 2019-07-01 00:00:00 : 0
+   No "Bot Services": Count: 0
+   No "Customer Reported": Count: 0
+   No "Customer Replied": Count: 0
+   90-day stale : Customer issues older than 60 days: 0
+Repo: microsoft/BotFramework-Composer:
+   Total issues after 2019-07-01 00:00:00 : 76
+   No "Bot Services": Count: 0
+   No "Customer Reported": Count: 0
+   No "Customer Replied": Count: 0
+   90-day stale : Customer issues older than 60 days: 0
+...
 ```
