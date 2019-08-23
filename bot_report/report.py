@@ -67,20 +67,24 @@ REPOS = [
     'botframework-cli',
     'azure/azure-cli',
 ]
-
+BOT_SERVICES_LABEL = 'Bot Services'
+CUSTOMER_REPORTED_LABEL = 'customer-reported'
+SUPPORTABILITY_LABEL = 'supportability'
+CUSTOMER_REPLIED_TO_LABEL = 'customer-replied-to'
 def label_issue(issue):
+    #print(f'LABEL: {issue.login}')
     bot_service_label = False
     customer_reported = False
     supportability = False
     customer_replied_to = False
     for label in issue.labels:
-        if label.name == 'Bot Services':
+        if label.name == BOT_SERVICES_LABEL:
             bot_service_label = True
-        elif label.name == 'customer-reported':
+        elif label.name == CUSTOMER_REPORTED_LABEL:
             customer_reported = True
-        elif label.name == 'supportability':
+        elif label.name == SUPPORTABILITY_LABEL:
             supportability = True
-        elif label.name == 'customer-replied-to':
+        elif label.name == CUSTOMER_REPLIED_TO_LABEL:
             customer_replied_to = True
     return bot_service_label, customer_reported, supportability, customer_replied_to
 
@@ -122,10 +126,11 @@ def get_msorg_members(github, refresh_in_days=5):
     return [line.strip() for line in members]
 
 def filter_azure(repo, issue):
-    if repo == 'azure-cli':
+    if repo.lower() == 'azure/azure-cli':
         for label in issue.labels:
             if label.name == 'Bot Service':
-                return True
+                return False
+        return True
     return False
 
 def strfdelta(tdelta, fmt):
@@ -134,6 +139,19 @@ def strfdelta(tdelta, fmt):
     d["hours"], rem = divmod(tdelta.seconds, 3600)
     d["minutes"], d["seconds"] = divmod(rem, 60)
     return fmt.format(**d)
+
+def add_label(repo, issue, label_name):
+    """Add a label to an issue."""
+    try:
+        a_label = repo.get_label(name=label_name)
+        if label:
+            print(f'        Adding label {label_name}')
+            issue.add_to_labels(a_label)
+            return True
+    except Exception as ex:
+        print(f'ERROR: Could not find label {label_name} in repo {repo.name}.  You have to go add it!', file=sys.stderr)
+        raise ex
+
 
 START_DATE = datetime(2019, 7, 1, 0, 0)
 
@@ -157,32 +175,44 @@ for repo in REPOS:
     repo_name = repo if '/' in repo else f'microsoft/{repo}'
     repo = g.get_repo(repo_name)
 
-    # BUGBUG: repo.getissues should be fixed- accepts start and labels as parms
-    # but not working.
+    # Set state='closed' to find closed issues that weren't tagged properly
+    # Note: repo.get_issues() underlying library appears to have a bug where
+    # `start` and `labels` don't seem to work properly, so we do it manually here.
+    # Super inefficient on the wire!
     open_issues = [issue for issue in repo.get_issues(state='open')\
-        if issue.created_at >= START_DATE and filter_azure(repo, issue)]
+        if issue.created_at >= START_DATE and not filter_azure(repo_name, issue)]
     print(f'Repo: {repo.full_name}:')
     print(f'   Total issues after {START_DATE} : {len(open_issues)}')
 
     user_filtered_issues = [issue for issue in open_issues if not issue.user.login.strip() in MEMBERS and not issue.pull_request]
 
-    no_bs_label = [issue for issue in user_filtered_issues if not filter_bot_service_label(issue)]
-    print(f'   No "Bot Services": Count: {len(no_bs_label)}')
-    for issue in no_bs_label:
-        print(f'        {issue.id} : {issue.title}')
-        print(f'             {issue.html_url}')
+    if repo_name.lower() != 'azure/azure-cli':
+        no_bs_label = [issue for issue in user_filtered_issues if not filter_bot_service_label(issue)]
+        print(f'   No "Bot Services": Count: {len(no_bs_label)}')
+        for issue in no_bs_label:
+            print(f'        {issue.id} : {issue.title}')
+            print(f'             {issue.html_url}')
+            # Uncomment if you want to add labels.
+            # add_label(repo, issue, BOT_SERVICES_LABEL)
+
 
     no_cr_label = [issue for issue in user_filtered_issues if not filter_customer_reported_label(issue)]
     print(f'   No "Customer Reported": Count: {len(no_cr_label)}')
     for issue in no_cr_label:
         print(f'        {issue.id} : {issue.title}')
         print(f'             {issue.html_url}')
+        # Uncomment if you want to add labels.
+        # add_label(repo, issue, CUSTOMER_REPORTED_LABEL)
+
 
     no_crt_label = [issue for issue in user_filtered_issues if not filter_customer_replied_label(issue)]
     print(f'   No "Customer Replied": Count: {len(no_crt_label)}')
     for issue in no_crt_label:
         print(f'        {issue.id} : {issue.title}')
         print(f'             {issue.html_url}')
+        # Uncomment if you want to add labels.
+        # add_label(repo, issue, CUSTOMER_REPLIED_TO_LABEL)
+
 
     stale_days = 60
     stale_customer_issues = [issue for issue in user_filtered_issues if not filter_stale_customer_issues(issue, days_old=stale_days)]
