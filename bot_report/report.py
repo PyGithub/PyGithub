@@ -11,7 +11,7 @@ See README.md for details on installing/using.
 import os
 import sys
 import requests
-from github import Github
+from github import Github, Label, GithubObject
 from colorama import Fore, Style, init
 from datetime import datetime, timedelta
 
@@ -65,10 +65,10 @@ REPOS = [
     'botbuilder-tools',
     'botframework-directlinejs',
     'botframework-cli',
-    #'azure/azure-cli',
+    'azure/azure-cli',
 ]
 
-git def label_issue(issue):
+def label_issue(issue):
     bot_service_label = False
     customer_reported = False
     supportability = False
@@ -121,6 +121,13 @@ def get_msorg_members(github, refresh_in_days=5):
         members = member_file.readlines()
     return [line.strip() for line in members]
 
+def filter_azure(repo, issue):
+    if repo == 'azure-cli':
+        for label in issue.labels:
+            if label.name == 'Bot Service':
+                return True
+    return False
+
 def strfdelta(tdelta, fmt):
     """Utility function.  Formats a `timedelta` into human readable string."""
     d = {"days": tdelta.days}
@@ -132,7 +139,6 @@ START_DATE = datetime(2019, 7, 1, 0, 0)
 
 print('Bot Framework SDK Github Report')
 print('===============================')
-print('Note: Azure-cli commented out at the moment.')
 g = None
 if GIT_PERSONAL_TOKEN:
     g = Github(GIT_PERSONAL_TOKEN)
@@ -150,8 +156,11 @@ MEMBERS = get_msorg_members(g)
 for repo in REPOS:
     repo_name = repo if '/' in repo else f'microsoft/{repo}'
     repo = g.get_repo(repo_name)
+
+    # BUGBUG: repo.getissues should be fixed- accepts start and labels as parms
+    # but not working.
     open_issues = [issue for issue in repo.get_issues(state='open')\
-        if issue.created_at >= START_DATE]
+        if issue.created_at >= START_DATE and filter_azure(repo, issue)]
     print(f'Repo: {repo.full_name}:')
     print(f'   Total issues after {START_DATE} : {len(open_issues)}')
 
@@ -180,6 +189,6 @@ for repo in REPOS:
     print(f'   90-day stale : Customer issues older than {stale_days} days: {len(stale_customer_issues)}')
     for issue in stale_customer_issues:
         print(f'        {issue.id} : {issue.title}')
-        print(f'        {Fore.RED}{strfdelta(datetime.datetime.now() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
+        print(f'        {Fore.RED}{strfdelta(datetime.now() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
         print(f'             {issue.html_url}')
 
