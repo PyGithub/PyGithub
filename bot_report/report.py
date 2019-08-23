@@ -13,7 +13,7 @@ import sys
 import requests
 from github import Github
 from colorama import Fore, Style, init
-import datetime
+from datetime import datetime, timedelta
 
 HOW_TO_SET_CREDS = """
 To set your Git credentials, you can use personal access token (preferred) or 
@@ -49,7 +49,6 @@ if not GIT_NAME or not GIT_PW:
         print(HOW_TO_SET_CREDS)
         sys.exit(2)
 
-
 REPOS = [
     'BotFramework-DirectLine-DotNet',
     'BotFramework-Composer',
@@ -69,46 +68,7 @@ REPOS = [
     #'azure/azure-cli',
 ]
 
-MICROSOFT_COMPANY_ALIASES = [
-    'Microsoft',
-    'MS',
-    '@howdyai',
-    '@Microsoft',
-    'FUSE Labs - Microsoft',
-    'SOUTHWORKS',
-    '@microsoft',
-]
-
-MICROSOFT_PEOPLE = [
-    'JonathanFingold',
-    'BruceHaley',
-    'hibrenda',
-    "yochay",
-    "arturl",
-    "jitenkmicrosoft",
-    "tracyboehrer",
-    "gmajian",
-    "GasparAcevedoZainSouthworks",
-    "Zerryth",
-    "Kumar2608",
-    "compulim",
-    "awalia13",
-    "WashingtonKayaker",
-    "litofish",
-    "xieofxie",
-    "AutomationTeamVA",
-    "Bill7zz",
-    "gauravsaralMs",
-    "ZhaoqingCui",
-]
-
-def filter_user(user, debug=False):
-    for org in user.get_orgs():
-        if org.login == 'microsoft':
-            return True
-    return False
-
-def label_issue(issue):
+git def label_issue(issue):
     bot_service_label = False
     customer_reported = False
     supportability = False
@@ -137,7 +97,29 @@ def filter_customer_replied_label(issue):
     return crt
 
 def filter_stale_customer_issues(issue, days_old=60):
-    return not issue.created_at + datetime.timedelta(days=days_old) < datetime.datetime.now()
+    return not issue.created_at + timedelta(days=days_old) < datetime.now()
+
+def get_msorg_members(github, refresh_in_days=5):
+    """Get members of the Microsoft github organization.
+    This is cached in the `members.txt` file.
+    If it gets stale (over `refresh_in_days` old), then refresh it.
+    """
+
+    # See if we need to refresh the cache
+    members_fname = './members-do-not-check-in.txt'
+
+    member_updated = datetime.fromtimestamp(os.path.getmtime(members_fname))\
+        if os.path.exists(members_fname) else datetime.min
+    if datetime.now() - timedelta(days=refresh_in_days) > member_updated:
+        print('Your members cache is out of date.  Refreshing.. (Could take several minutes)')
+        ms_org = github.get_organization('microsoft')
+        members = ms_org.get_members()
+        with open(members_fname, 'w') as member_file:
+            for member in members:
+                member_file.write(f'{member.login}\n')
+    with open(members_fname, 'r') as member_file:
+        members = member_file.readlines()
+    return [line.strip() for line in members]
 
 def strfdelta(tdelta, fmt):
     """Utility function.  Formats a `timedelta` into human readable string."""
@@ -146,7 +128,7 @@ def strfdelta(tdelta, fmt):
     d["minutes"], d["seconds"] = divmod(rem, 60)
     return fmt.format(**d)
 
-START_DATE = datetime.datetime(2019, 7, 1, 0, 0)
+START_DATE = datetime(2019, 7, 1, 0, 0)
 
 print('Bot Framework SDK Github Report')
 print('===============================')
@@ -163,6 +145,8 @@ else:
     print(Style.RESET_ALL)
     g = Github(GIT_NAME, GIT_PW, otp=str(otp))
 
+MEMBERS = get_msorg_members(g)
+
 for repo in REPOS:
     repo_name = repo if '/' in repo else f'microsoft/{repo}'
     repo = g.get_repo(repo_name)
@@ -171,7 +155,7 @@ for repo in REPOS:
     print(f'Repo: {repo.full_name}:')
     print(f'   Total issues after {START_DATE} : {len(open_issues)}')
 
-    user_filtered_issues = [issue for issue in open_issues if not filter_user(issue.user) and not issue.pull_request]
+    user_filtered_issues = [issue for issue in open_issues if not issue.user.login.strip() in MEMBERS and not issue.pull_request]
 
     no_bs_label = [issue for issue in user_filtered_issues if not filter_bot_service_label(issue)]
     print(f'   No "Bot Services": Count: {len(no_bs_label)}')
