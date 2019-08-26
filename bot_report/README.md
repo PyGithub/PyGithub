@@ -20,7 +20,7 @@ git clone https://github.com/daveta/PyGithub.git
 ### Install local package
 ```bash
 cd PyGithub
-pip install -e .
+pip install -e . # Note the dot after the -e
 ```
 ### Set your git creds
 To set your Git credentials, you can use personal access token (preferred) or 
