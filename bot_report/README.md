@@ -26,7 +26,7 @@ pip install -e .
 To set your Git credentials, you can use personal access token (preferred) or 
 username password.
 
-- To use a personal token (**recommended**):
+- To use a personal access token (**highly recommended**):
 
     - Go to https://github.com/settings/tokens
     - Click on "Generate new token"
@@ -38,7 +38,7 @@ username password.
               Powershell: `$env:GIT_PERSONAL_TOKEN="<your token>"` (Note the quotes)
               Linux: `export GIT_PERSONAL_TOKEN=<your token>`
     
-- To use username and password, on the command line:
+- To use username and password, on the command line (not recommended):
     - Windows: 
     ```bash
     set GIT_NAME=<your git username>
@@ -61,6 +61,7 @@ username password.
 cd bot_report
 python report.py
 ```
+  >Note: The first time you run, the Microsoft organizations members will be cached on disk.  This will take **several** minutes.
 
 Sample Output:
 ```bash
