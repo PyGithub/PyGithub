@@ -67,13 +67,27 @@ REPOS = [
     'botframework-cli',
     'azure/azure-cli',
 ]
+MICROSFT_EMPLOYEES=[
+    'awalia13',
+    'kumar2608',
+    'bill7zz',
+    'washingtonkayaker',
+    'jonathanfingold',
+    'automationteamva',
+    'gasparacevedozainsouthworks',
+]
+
+DESCRIPTION_FILTER=[
+    '[adaptive]'
+]
+
 BOT_SERVICES_LABEL = 'Bot Services'
 CUSTOMER_REPORTED_LABEL = 'customer-reported'
 SUPPORTABILITY_LABEL = 'supportability'
 CUSTOMER_REPLIED_TO_LABEL = 'customer-replied-to'
 def label_issue(issue):
     #print(f'LABEL: {issue.login}')
-    bot_service_label = False
+    bot_service_label = False   
     customer_reported = False
     supportability = False
     customer_replied_to = False
@@ -182,43 +196,44 @@ for repo in REPOS:
     open_issues = [issue for issue in repo.get_issues(state='open')\
         if issue.created_at >= START_DATE and not filter_azure(repo_name, issue)]
     print(f'Repo: {repo.full_name}:')
-    print(f'   Total issues after {START_DATE} : {len(open_issues)}')
+    print(f'   Total open issues after {START_DATE} : {len(open_issues)}')
 
-    user_filtered_issues = [issue for issue in open_issues if not issue.user.login.strip() in MEMBERS and not issue.pull_request]
+    user_filtered_issues = [issue for issue in open_issues if (not issue.user.login.strip() in MEMBERS \
+        and not issue.user.login.strip().lower() in MICROSFT_EMPLOYEES)and not issue.pull_request]
 
     if repo_name.lower() != 'azure/azure-cli':
         no_bs_label = [issue for issue in user_filtered_issues if not filter_bot_service_label(issue)]
         print(f'   No "Bot Services": Count: {len(no_bs_label)}')
         for issue in no_bs_label:
-            print(f'        {issue.id} : {issue.title}')
+            print(f'        {issue.number} : {issue.title}')
             print(f'             {issue.html_url}')
             # Uncomment if you want to add labels.
             # add_label(repo, issue, BOT_SERVICES_LABEL)
+        no_cr_label = [issue for issue in user_filtered_issues if not filter_customer_reported_label(issue)]
+        print(f'   No "Customer Reported": Count: {len(no_cr_label)}')
+        for issue in no_cr_label:
+            print(f'        {issue.number} : {issue.title}')
+            print(f'             {issue.html_url}')
+            # Uncomment if you want to add labels.
+            # add_label(repo, issue, CUSTOMER_REPORTED_LABEL)
+        no_crt_label = [issue for issue in user_filtered_issues if not filter_customer_replied_label(issue)]
+        print(f'   No "Customer Replied": Count: {len(no_crt_label)}')
+        for issue in no_crt_label:
+            print(f'        {issue.number} : {issue.title}')
+            print(f'             {issue.html_url}')
+            # Uncomment if you want to add labels.
+            # add_label(repo, issue, CUSTOMER_REPLIED_TO_LABEL)
+        stale_days = 60
+        stale_customer_issues = [issue for issue in user_filtered_issues if not filter_stale_customer_issues(issue, days_old=stale_days)]
+        print(f'   90-day stale : Customer issues older than {stale_days} days: {len(stale_customer_issues)}')
+        for issue in stale_customer_issues:
+            print(f'        {issue.number} : {issue.title}')
+            print(f'        {Fore.RED}{strfdelta(datetime.now() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
+            print(f'             {issue.html_url}')
+    else:
+        for issue in user_filtered_issues:
+            print(f'        {issue.number} : {issue.title}')
+            print(f'             {issue.html_url}')
 
 
-    no_cr_label = [issue for issue in user_filtered_issues if not filter_customer_reported_label(issue)]
-    print(f'   No "Customer Reported": Count: {len(no_cr_label)}')
-    for issue in no_cr_label:
-        print(f'        {issue.id} : {issue.title}')
-        print(f'             {issue.html_url}')
-        # Uncomment if you want to add labels.
-        # add_label(repo, issue, CUSTOMER_REPORTED_LABEL)
-
-
-    no_crt_label = [issue for issue in user_filtered_issues if not filter_customer_replied_label(issue)]
-    print(f'   No "Customer Replied": Count: {len(no_crt_label)}')
-    for issue in no_crt_label:
-        print(f'        {issue.id} : {issue.title}')
-        print(f'             {issue.html_url}')
-        # Uncomment if you want to add labels.
-        # add_label(repo, issue, CUSTOMER_REPLIED_TO_LABEL)
-
-
-    stale_days = 60
-    stale_customer_issues = [issue for issue in user_filtered_issues if not filter_stale_customer_issues(issue, days_old=stale_days)]
-    print(f'   90-day stale : Customer issues older than {stale_days} days: {len(stale_customer_issues)}')
-    for issue in stale_customer_issues:
-        print(f'        {issue.id} : {issue.title}')
-        print(f'        {Fore.RED}{strfdelta(datetime.now() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
-        print(f'             {issue.html_url}')
 
