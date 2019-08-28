@@ -53,7 +53,6 @@ import datetime
 
 import pickle
 import time
-import sys
 import requests
 import jwt
 import urllib3
@@ -77,8 +76,6 @@ from . import Invitation
 
 from . import Consts
 import six
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
@@ -731,7 +728,7 @@ class GithubIntegration(object):
             algorithm="RS256"
         )
 
-        if atLeastPython3:
+        if isinstance(encrypted, bytes):
             encrypted = encrypted.decode('utf-8')
 
         return encrypted

@@ -60,7 +60,6 @@ import mimetypes
 import os
 import re
 import requests
-import sys
 import time
 import six.moves.urllib.parse
 from io import IOBase
@@ -68,8 +67,6 @@ from io import IOBase
 from . import Consts
 from . import GithubException
 import six
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class RequestsResponse:
@@ -458,8 +455,6 @@ class Requester:
 
     def __createConnection(self):
         kwds = {}
-        if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
-            kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         kwds["timeout"] = self.__timeout
         kwds["verify"] = self.__verify
 

@@ -33,15 +33,12 @@
 ################################################################################
 
 from __future__ import absolute_import
-import sys
 import datetime
 from operator import itemgetter
 
 from . import GithubException
 from . import Consts
 import six
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class _NotSetType:
@@ -233,13 +230,14 @@ class GithubObject(object):
         def format_params(params):
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
-                isText = isinstance(v, (str, six.text_type))
-                if isText and not atLeastPython3:
-                    v = v.encode('utf-8')
-                yield '{k}="{v}"'.format(k=k, v=v) if isText else '{k}={v}'.format(k=k, v=v)
-        return '{class_name}({params})'.format(
+                if isinstance(v, bytes):
+                    v = v.decode('utf-8')
+                if isinstance(v, six.text_type):
+                    v = u'"{v}"'.format(v=v)
+                yield u'{k}={v}'.format(k=k, v=v)
+        return u'{class_name}({params})'.format(
             class_name=self.__class__.__name__,
-            params=", ".join(list(format_params(params)))
+            params=u", ".join(list(format_params(params)))
         )
 
 

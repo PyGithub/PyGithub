@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+import json
+
 
 class GithubException(Exception):
     """
@@ -59,7 +61,7 @@ class GithubException(Exception):
         return self.__data
 
     def __str__(self):
-        return str(self.status) + " " + str(self.data)
+        return "{status} {data}".format(status=self.status, data=json.dumps(self.data))
 
 
 class BadCredentialsException(GithubException):
