@@ -727,7 +727,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :type: list of strings
         """
-        self._completeIfNotSet(self._topics)
+        if self._topics is github.GithubObject.NotSet:
+            self._topics = self._makeListOfStringsAttribute(self.get_topics())
         return self._topics.value
 
     @property
