@@ -104,6 +104,7 @@ if __name__ == "__main__":
             "pyjwt",
             "requests>=2.14.0",
             "colorama",
+            "six",
         ],
         extras_require={
             "integrations": ["cryptography"]
