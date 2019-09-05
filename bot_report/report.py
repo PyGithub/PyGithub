@@ -68,6 +68,11 @@ REPOS = [
     'botframework-cli',
     'azure/azure-cli',
 ]
+
+BYPASS_USERFILTER_REPOS = [
+    'botbuilder-tools',
+]
+
 MICROSFT_EMPLOYEES=[
     'awalia13',
     'kumar2608',
@@ -86,6 +91,14 @@ BOT_SERVICES_LABEL = 'Bot Services'
 CUSTOMER_REPORTED_LABEL = 'customer-reported'
 SUPPORTABILITY_LABEL = 'supportability'
 CUSTOMER_REPLIED_TO_LABEL = 'customer-replied-to'
+fileName = "report_" + datetime.now().strftime("%Y%m%d_%H%M%S") + ".txt"
+outputFile = open(fileName, mode="w", encoding="utf-8")
+
+def print_status(text):
+    print(u''+text)
+    if outputFile:
+        outputFile.write(text + "\n")
+            
 def label_issue(issue):
     #print(f'LABEL: {issue.login}')
     bot_service_label = False   
@@ -173,16 +186,16 @@ def add_label(repo, issue, label_name):
     try:
         a_label = repo.get_label(name=label_name)
         if label:
-            print(f'        Adding label {label_name}')
+            print_status(f'        Adding label {label_name}')
             issue.add_to_labels(a_label)
             return True
     except Exception as ex:
-        print(f'ERROR: Could not find label {label_name} in repo {repo.name}.  You have to go add it!', file=sys.stderr)
+        print_status(f'ERROR: Could not find label {label_name} in repo {repo.name}.  You have to go add it!', file=sys.stderr)
         raise ex
 
 def print_issue(issue):
-        print(f'        {issue.number} : {issue.title}')
-        print(f'             {issue.html_url}')
+        print_status(f'        {issue.number} : {issue.title}')
+        print_status(f'             {issue.html_url}')
         # Uncomment if you want to add labels.
         # add_label(repo, issue, BOT_SERVICES_LABEL)
 
@@ -192,10 +205,10 @@ def print_stale_issue(issue, employee_last_touch=True):
     assert(comment)
     last_touch_by_microsoft = comment.user.login.strip().lower() in MEMBERS
     if employee_last_touch == last_touch_by_microsoft:
-        print(f'         {issue.number} : {issue.title}')
-        print(f'            Issue Age: {Fore.RED}{strfdelta(datetime.utcnow() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
-        print(f'            Last Comment: {Fore.RED}{strfdelta(datetime.utcnow() - issue.last_comment, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
-        print(f'                 {issue.html_url}')
+        print_status(f'         {issue.number} : {issue.title}')
+        print_status(f'            Issue Age: {Fore.RED}{strfdelta(datetime.utcnow() - issue.created_at, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
+        print_status(f'            Last Comment: {Fore.RED}{strfdelta(datetime.utcnow() - issue.last_comment, "{days} days {hours}:{minutes}:{seconds}")}{Style.RESET_ALL}')
+        print_status(f'                 {issue.html_url}')
 
 def add_last_comment(issue, stale_days=10):
     """Takes an issue, adds the last comment time.
@@ -203,6 +216,8 @@ def add_last_comment(issue, stale_days=10):
     Returns a copy of the issue.
     """
     comments_paged = issue.get_comments()
+    if (comments_paged.totalCount == 0):
+       return None
     last_comment = ([msg for msg in comments_paged] or [None])[-1]
     assert(last_comment)
     if last_comment.created_at > (datetime.utcnow() - timedelta(days=stale_days)):
@@ -212,11 +227,11 @@ def add_last_comment(issue, stale_days=10):
     result.last_comment = last_comment.created_at
     return result
 
-
 START_DATE = datetime(2019, 7, 1, 0, 0)
 
-print('Bot Framework SDK Github Report')
-print('===============================')
+print_status('Bot Framework SDK Github Report')
+print_status('===============================')
+
 g = None
 if GIT_PERSONAL_TOKEN:
     g = Github(GIT_PERSONAL_TOKEN)
@@ -241,27 +256,30 @@ for repo in REPOS:
     # Super inefficient on the wire!
     open_issues = [issue for issue in repo.get_issues(state='open')\
         if issue.created_at >= START_DATE and not filter_azure(repo_name, issue)]
-    print(f'Repo: {repo.full_name}:')
-    print(f'   Total open issues after {START_DATE} : {len(open_issues)}')
+    print_status(f'Repo: {repo.full_name}:')
+    print_status(f'   Total open issues after {START_DATE} : {len(open_issues)}')
 
-    user_filtered_issues = [issue for issue in open_issues if (not issue.user.login.strip().lower() in MEMBERS and not issue.pull_request)]
+    if (repo.name in BYPASS_USERFILTER_REPOS):
+        user_filtered_issues = open_issues
+    else:
+        user_filtered_issues = [issue for issue in open_issues if (not issue.user.login.strip().lower() in MEMBERS and not issue.pull_request)]
 
     if repo_name.lower() != 'azure/azure-cli':
         no_bs_label = [issue for issue in user_filtered_issues if not filter_bot_service_label(issue)]
         if no_bs_label:
-            print(f'   No "Bot Services": Count: {len(no_bs_label)}')
+            print_status(f'   No "Bot Services": Count: {len(no_bs_label)}')
             for issue in no_bs_label:
                 print_issue(issue)
 
         no_cr_label = [issue for issue in user_filtered_issues if not filter_customer_reported_label(issue)]
         if no_cr_label:
-            print(f'   No "Customer Reported": Count: {len(no_cr_label)}')
+            print_status(f'   No "Customer Reported": Count: {len(no_cr_label)}')
             for issue in no_cr_label:
                 print_issue(issue)
 
         no_crt_label = [issue for issue in user_filtered_issues if not filter_customer_replied_label(issue)]
         if no_crt_label:
-            print(f'   No "Customer Replied": Count: {len(no_crt_label)}')
+            print_status(f'   No "Customer Replied": Count: {len(no_crt_label)}')
             for issue in no_crt_label:
                 print_issue(issue)
 
@@ -270,17 +288,18 @@ for repo in REPOS:
         stale_no_nones = [i for i in stale_customer_issues if i]
         stale_descending = sorted(stale_no_nones, key=lambda issue: issue.last_comment, reverse=False)
         if stale_descending:
-            print(f'   90-day stale : Customer issues not touched in more than {stale_days} days: Count: {len(stale_descending)}')
-            print(f'      Last touched by {Fore.GREEN}CUSTOMER{Style.RESET_ALL}:')
+            print_status(f'   90-day stale : Customer issues not touched in more than {stale_days} days: Count: {len(stale_descending)}')
+            print_status(f'      Last touched by {Fore.GREEN}CUSTOMER{Style.RESET_ALL}:')
             for issue in stale_descending:
                 print_stale_issue(issue, employee_last_touch=False)
-            print(f'      Last touched by {Fore.GREEN}MICROSOFT{Style.RESET_ALL}:')
+            print_status(f'      Last touched by {Fore.GREEN}MICROSOFT{Style.RESET_ALL}:')
             for issue in stale_descending:
                 print_stale_issue(issue, employee_last_touch=True)
     else:
         for issue in user_filtered_issues:
-            print(f'        {issue.number} : {issue.title}')
-            print(f'             {issue.html_url}')
+            print_status(f'        {issue.number} : {issue.title}')
+            print_status(f'             {issue.html_url}')
 
 
-
+outputFile.close()
+os.system("notepad " + fileName)
