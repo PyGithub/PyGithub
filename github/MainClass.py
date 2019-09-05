@@ -790,7 +790,7 @@ class GithubIntegration(object):
         }
 
         response = requests.get(
-            "{}/repos/{}/{}/installation".format(DEFAULT_BASE_URL, owner, repo),
+            "{}/repos/{}/{}/installation".format(self.base_url, owner, repo),
             headers=headers
         )
         response_dict = response.json()
