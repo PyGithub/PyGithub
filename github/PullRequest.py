@@ -94,6 +94,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._assignees.value
 
     @property
+    def author_association(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
     def base(self):
         """
         :type: :class:`github.PullRequestPart.PullRequestPart`
@@ -797,6 +805,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._additions = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
+        self._author_association = github.GithubObject.NotSet
         self._base = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._changed_files = github.GithubObject.NotSet
@@ -843,6 +852,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
             else:
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "base" in attributes:  # pragma no branch
             self._base = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["base"])
         if "body" in attributes:  # pragma no branch
