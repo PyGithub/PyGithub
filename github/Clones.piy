@@ -1,0 +1,16 @@
+from datetime import datetime
+from typing import (
+    Dict,
+    Union,
+)
+
+
+class Clones:
+    def _initAttributes(self) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Union[str, int]]) -> None: ...
+    @property
+    def count(self) -> int: ...
+    @property
+    def timestamp(self) -> datetime: ...
+    @property
+    def uniques(self) -> int: ...

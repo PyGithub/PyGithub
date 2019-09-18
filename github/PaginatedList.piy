@@ -1,0 +1,49 @@
+from github.ContentFile import ContentFile
+from github.GithubObject import GithubObject
+from github.Issue import Issue
+from github.NamedUser import NamedUser
+from github.Requester import Requester
+from typing import (
+    Any,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Union,
+)
+
+
+class PaginatedList:
+    def __init__(
+        self,
+        contentClass: Any,
+        requester: Requester,
+        firstUrl: str,
+        firstParams: Any,
+        headers: Optional[Dict[str, str]] = ...,
+        list_item: str = ...
+    ) -> None: ...
+    def _couldGrow(self) -> bool: ...
+    def _fetchNextPage(self) -> Any: ...
+    def _getLastPageUrl(self) -> Optional[str]: ...
+    def get_page(
+        self,
+        page: int
+    ) -> Union[List[NamedUser], List[ContentFile], List[Issue]]: ...
+    @property
+    def reversed(self) -> PaginatedList: ...
+    @property
+    def totalCount(self) -> int: ...
+
+
+class PaginatedListBase:
+    def __getitem__(self, index: Union[int, slice]) -> Any: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator[GithubObject]: ...
+    def _grow(self) -> Any: ...
+    def _isBiggerThan(self, index: int) -> bool: ...
+
+
+class PaginatedListBase._Slice:
+    def __init__(self, theList: PaginatedList, theSlice: slice) -> None: ...
+    def __iter__(self) -> Iterator[GithubObject]: ...

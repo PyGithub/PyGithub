@@ -1,0 +1,16 @@
+from typing import (
+    Dict,
+    Optional,
+    Union,
+)
+
+
+class HookResponse:
+    def _initAttributes(self) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Union[str, None, int]]) -> None: ...
+    @property
+    def code(self) -> int: ...
+    @property
+    def message(self) -> str: ...
+    @property
+    def status(self) -> str: ...
