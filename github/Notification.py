@@ -125,6 +125,20 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self.url,
         )
 
+    def get_pull_request(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.subject.url
+        )
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+
+    def get_issue(self):
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.subject.url
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._last_read_at = github.GithubObject.NotSet
