@@ -128,3 +128,5 @@ from .Issue572 import *
 from .Issue937 import *
 from .Issue945 import *
 from .Issue823 import *
+
+from .PullRequest1169 import *
