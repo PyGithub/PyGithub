@@ -1,10 +1,10 @@
+from github.License.License
 from github.Repository import Repository
 from typing import (
     Any,
     Dict,
     List,
     Optional,
-    Union,
 )
 
 
@@ -35,8 +35,10 @@ class ContentFile:
     @property
     def size(self) -> int: ...
     @property
-    def text_matches(self) -> List[Dict[str, Union[str, List[Dict[str, Union[str, List[int]]]]]]]: ...
+    def text_matches(self) -> List[Dict[str, Any]]: ...
     @property
     def type(self) -> str: ...
     @property
     def url(self) -> str: ...
+    @property
+    def license(self) -> License: ...
