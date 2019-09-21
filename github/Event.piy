@@ -1,11 +1,10 @@
 from datetime import datetime
+from github.Organization import Organization
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 from typing import (
     Any,
     Dict,
-    List,
-    Union,
 )
 
 
@@ -20,9 +19,9 @@ class Event:
     @property
     def id(self) -> str: ...
     @property
-    def org(self) -> None: ...
+    def org(self) -> Organization: ...
     @property
-    def payload(self) -> Dict[str, Union[str, int, List[Dict[str, Union[str, Dict[str, str], bool]]]]]: ...
+    def payload(self) -> Dict[str, Any]: ...
     @property
     def public(self) -> bool: ...
     @property
