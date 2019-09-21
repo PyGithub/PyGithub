@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import (
+    Any,
     Dict,
-    Union,
 )
 
 
 class Clones:
+    def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[str, int]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def count(self) -> int: ...
     @property
