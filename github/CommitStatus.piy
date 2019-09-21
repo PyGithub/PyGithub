@@ -1,16 +1,16 @@
 from datetime import datetime
 from github.NamedUser import NamedUser
 from typing import (
+    Any,
     Dict,
     Optional,
-    Union,
 )
 
 
 class CommitStatus:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[str, int, Dict[str, Union[str, int]], None]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def context(self) -> str: ...
     @property
