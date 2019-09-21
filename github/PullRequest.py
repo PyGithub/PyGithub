@@ -823,6 +823,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
+        :param commit_title: string
+        :param merge_method: string
+        :param sha: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
         assert commit_message is github.GithubObject.NotSet or isinstance(
