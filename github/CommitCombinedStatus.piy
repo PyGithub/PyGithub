@@ -1,19 +1,16 @@
 from github.CommitStatus import CommitStatus
 from github.Repository import Repository
 from typing import (
+    Any,
     Dict,
     List,
-    Union,
 )
 
 
 class CommitCombinedStatus:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(
-        self,
-        attributes: Dict[str, Union[str, List[Dict[str, Union[str, int]]], int, Dict[str, Union[int, str, Dict[str, Union[str, int]]]]]]
-    ) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def commit_url(self) -> str: ...
     @property
