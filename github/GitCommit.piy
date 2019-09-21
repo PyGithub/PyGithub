@@ -1,10 +1,9 @@
 from github.GitAuthor import GitAuthor
 from github.GitTree import GitTree
 from typing import (
+    Any,
     Dict,
     List,
-    Optional,
-    Union,
 )
 
 
@@ -13,10 +12,7 @@ class GitCommit:
     @property
     def _identity(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(
-        self,
-        attributes: Dict[str, Union[Dict[str, str], str, int, Dict[str, Union[bool, str, None]], List[Dict[str, str]]]]
-    ) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def author(self) -> GitAuthor: ...
     @property
