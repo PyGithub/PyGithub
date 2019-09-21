@@ -1,13 +1,14 @@
 from typing import (
+    Any,
     Dict,
     Optional,
-    Union,
 )
 
 
 class GistFile:
+    def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[str, int, None]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def content(self) -> str: ...
     @property
