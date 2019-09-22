@@ -2616,6 +2616,38 @@ class Repository(github.GithubObject.CompletableGithubObject):
             for element in data["issues"]
         ]
 
+    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet, since=github.GithubObject.NotSet, before=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repos/:owner/:repo/notifications <http://developer.github.com/v3/activity/notifications>`_
+        :param all: bool
+        :param participating: bool
+        :param since: datetime.datetime
+        :param before: datetime.datetime
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
+        """
+
+        assert all is github.GithubObject.NotSet or isinstance(all, bool), all
+        assert participating is github.GithubObject.NotSet or isinstance(participating, bool), participating
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert before is github.GithubObject.NotSet or isinstance(before, datetime.datetime), before
+
+        params = dict()
+        if all is not github.GithubObject.NotSet:
+            params["all"] = all
+        if participating is not github.GithubObject.NotSet:
+            params["participating"] = participating
+        if since is not github.GithubObject.NotSet:
+            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if before is not github.GithubObject.NotSet:
+            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        return github.PaginatedList.PaginatedList(
+            github.Notification.Notification,
+            self._requester,
+            self.url + "/notifications",
+            params
+        )
+
     def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
         """
         :calls: `PUT /repos/:owner/:repo/notifications <https://developer.github.com/v3/activity/notifications>`_
