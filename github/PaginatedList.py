@@ -39,10 +39,7 @@ import six
 #                                                                              #
 ################################################################################
 
-try:
-    from urllib.parse import parse_qs
-except ImportError:
-    from six.moves.urllib.parse import parse_qs
+from six.moves.urllib.parse import parse_qs
 
 
 class PaginatedListBase:
