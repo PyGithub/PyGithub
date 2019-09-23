@@ -283,8 +283,8 @@ class Github(object):
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(full_name_or_id, (str, six.text_type, int, int)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) or isinstance(full_name_or_id, int) else "/repos/"
+        assert isinstance(full_name_or_id, (str, six.text_type, int)), full_name_or_id
+        url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
             return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
