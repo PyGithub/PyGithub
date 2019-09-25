@@ -84,6 +84,7 @@ class GithubIntegration(unittest.TestCase):
             def __init__(self):
                 self.args = tuple()
                 self.kwargs = dict()
+                self.calls = []
 
             @property
             def status_code(self):
@@ -120,6 +121,7 @@ class GithubIntegration(unittest.TestCase):
                 )
 
             def __call__(self, *args, **kwargs):
+                self.calls.append((args, kwargs))
                 self.args = args
                 self.kwargs = kwargs
                 return self
@@ -167,9 +169,18 @@ class GithubIntegration(unittest.TestCase):
         integr = GithubIntegration("11111", private_key)
         inst = integr.get_installation("foo", "bar")
         self.assertEqual(
-            inst.id.value,
-            111111
-        )
+            self.get_mock.calls[0][0],
+            ('https://api.github.com/repos/foo/bar/installation',))
+        self.assertEqual(inst.id.value, 111111)
+
+    def test_get_installation_custom_base_url(self):
+        from github import GithubIntegration
+        integr = GithubIntegration("11111", private_key, base_url='https://corp.com/v3')
+        inst = integr.get_installation("foo", "bar")
+        self.assertEqual(
+            self.get_mock.calls[0][0],
+            ('https://corp.com/v3/repos/foo/bar/installation',))
+        self.assertEqual(inst.id.value, 111111)
 
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)
