@@ -1,8 +1,8 @@
 from github.GitTreeElement import GitTreeElement
 from typing import (
+    Any,
     Dict,
     List,
-    Union,
 )
 
 
@@ -13,7 +13,7 @@ class GitTree:
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[str, List[Dict[str, Union[str, int]]], List[Union[Dict[str, Union[str, int]], Dict[str, str]]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def sha(self) -> str: ...
