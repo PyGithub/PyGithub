@@ -1,6 +1,7 @@
 from github.GitAuthor import GitAuthor
 from github.GitObject import GitObject
 from typing import (
+    Any,
     Dict,
     Union,
 )
@@ -9,7 +10,7 @@ from typing import (
 class GitTag:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[str, Dict[str, str]]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def message(self) -> str: ...
     @property
