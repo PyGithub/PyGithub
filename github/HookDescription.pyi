@@ -1,18 +1,21 @@
 from typing import (
+    Any,
     Dict,
     List,
-    Union,
 )
 
 
 class HookDescription:
+    def __repr__(self) -> None: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[str, List[Union[str, int]], List[str], List[List[str]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def events(self) -> List[str]: ...
+    @property
+    def name(self) -> str: ...
     @property
     def schema(self) -> List[List[str]]: ...
     @property
