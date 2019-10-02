@@ -1,4 +1,4 @@
-from github.License.License
+from github.License import License
 from github.Repository import Repository
 from typing import (
     Any,

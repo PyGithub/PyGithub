@@ -60,7 +60,7 @@ class PullRequest:
         self,
         commit: Commit = ...,
         body: Union[_NotSetType, str] = ...,
-        event: Uniont[_NotSetType, str] = ...,
+        event: Union[_NotSetType, str] = ...,
         comments: Union[_NotSetType, str] = ...
     ) -> PullRequestReview: ...
     def create_review_comment(

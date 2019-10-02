@@ -1,5 +1,5 @@
 from typing import Dict, Union
-from github.GithubObject.NotSet import _NotSetType
+from github.GithubObject import _NotSetType
 
 
 class InputGitAuthor:

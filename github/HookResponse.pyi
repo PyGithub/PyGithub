@@ -1,5 +1,5 @@
 from typing import (
-    Ant,
+    Any,
     Dict,
 )
 
