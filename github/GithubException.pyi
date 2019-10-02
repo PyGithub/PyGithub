@@ -30,7 +30,7 @@ class GithubException:
     def __init__(
         self,
         status: Union[int, str],
-        data: Union[Dict[str, Union[str, List[Dict[str, str]]]], Dict[str, Union[str, List[str]]], Dict[str, str], str]
+        data: Any,
     ) -> None: ...
     def __str__(self) -> str: ...
     @property
