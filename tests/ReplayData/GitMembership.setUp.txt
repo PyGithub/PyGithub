@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/github
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4969'), ('content-length', '716'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d1b89d0f179a7977b3521babf470b71e"'), ('date', 'Sat, 26 May 2012 20:13:58 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"login":"github","id":1,"node_id":"MDEyOk9yZ2FuaXphdGlvbjE=","url":"https://api.github.com/orgs/github","repos_url":"https://api.github.com/orgs/github/repos","events_url":"https://api.github.com/orgs/github/events","hooks_url":"https://api.github.com/orgs/github/hooks","issues_url":"https://api.github.com/orgs/github/issues","members_url":"https://api.github.com/orgs/github/members{/member}","public_members_url":"https://api.github.com/orgs/github/public_members{/member}","avatar_url":"https://github.com/images/error/octocat_happy.gif","description":"A great organization","name":"github","company":"GitHub","blog":"https://github.com/blog","location":"San Francisco","email":"octocat@github.com","is_verified":true,"has_organization_projects":true,"has_repository_projects":true,"public_repos":2,"public_gists":1,"followers":20,"following":0,"html_url":"https://github.com/octocat","created_at":"2008-01-14T04:33:35Z","type":"Organization","total_private_repos":100,"owned_private_repos":100,"private_gists":81,"disk_usage":10000,"collaborators":8,"billing_email":"support@github.com","plan":{"name":"Medium","space":400,"private_repos":20},"default_repository_settings":"read","members_can_create_repositories":true,"two_factor_requirement_enabled":true,"members_allowed_repository_creation_type":"all"}
