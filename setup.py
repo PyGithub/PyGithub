@@ -102,7 +102,8 @@ if __name__ == "__main__":
         install_requires=[
             "deprecated",
             "pyjwt",
-            "requests>=2.14.0"
+            "requests>=2.14.0",
+            "six"
         ],
         extras_require={
             "integrations": ["cryptography"]
