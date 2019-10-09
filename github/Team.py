@@ -48,6 +48,7 @@ import github.PaginatedList
 import github.Repository
 import github.NamedUser
 import github.Organization
+import github.TeamDiscussion
 
 from . import Consts
 import six
@@ -264,6 +265,21 @@ class Team(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         self._useAttributes(data)
+
+    def get_discussions(self):
+        """
+        :calls: `GET /teams/:id/discussions <https://developer.github.com/v3/teams/discussions/#list-discussions>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TeamDiscussion.TeamDiscussion`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.TeamDiscussion.TeamDiscussion,
+            self._requester,
+            self.url + "/discussions",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeTeamDiscussionsPreview
+            }
+        )
 
     def get_members(self, role=github.GithubObject.NotSet):
         """
