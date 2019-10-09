@@ -40,7 +40,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import json
 import os
-import sys
 import traceback
 import unittest
 import httpretty
@@ -50,15 +49,12 @@ from urllib3.util import Url
 import github
 import six
 
-python2 = sys.hexversion < 0x03000000
-atLeastPython3 = sys.hexversion >= 0x03000000
 
-
-def readLine(file):
-    if atLeastPython3:
-        return file.readline().decode("utf-8").strip()
-    else:
-        return file.readline().strip()
+def readLine(file_):
+    line = file_.readline()
+    if isinstance(line, bytes):
+        line = line.decode('utf-8')
+    return line.strip()
 
 
 class FakeHttpResponse:
@@ -128,10 +124,9 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
 
         self.__writeLine(str(status))
         self.__writeLine(str(list(headers)))
-        if atLeastPython3:  # In Py3, return from "read" is bytes
-            self.__writeLine(output)
-        else:
-            self.__writeLine(output.encode("utf-8"))
+        if isinstance(output, bytes):
+            output = output.decode('utf-8')
+        self.__writeLine(output)
 
         return FakeHttpResponse(status, headers, output)
 
@@ -140,13 +135,9 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        if atLeastPython3:
-            try:  # Detect str/bytes
-                self.__file.write(line + b"\n")
-            except TypeError:
-                self.__file.write((line + "\n").encode('utf-8'))
-        else:
-            self.__file.write(line + "\n")
+        if isinstance(line, bytes):
+            line = line.decode('utf-8')
+        self.__file.write(line + '\n')
 
 
 class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
@@ -197,9 +188,7 @@ class ReplayingConnection:
         if isinstance(input, (str, six.text_type)):
             if input.startswith("{"):
                 self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
-            elif python2:  # @todo Test in all cases, including Python 3.4+
-                # In Python 3.4+, dicts are not output in the same order as in Python 2.7.
-                # So, form-data encoding is not deterministic and is difficult to test.
+            else:
                 self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
         else:
             # for non-string input (e.g. upload asset), let it pass.
@@ -218,11 +207,8 @@ class ReplayingConnection:
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = readLine(self.__file)
+        output = bytearray(readLine(self.__file), 'utf-8')
         readLine(self.__file)
-
-        if atLeastPython3:
-            output = bytes(output, 'utf-8')
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)

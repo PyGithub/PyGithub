@@ -130,6 +130,9 @@ from .Issue937 import Issue937
 from .Issue945 import Issue945
 from .Issue823 import Issue823
 
+from .PullRequest1168 import PullRequest1168
+from .PullRequest1169 import PullRequest1169
+
 
 __all__ = [
     AuthenticatedUser,
@@ -199,6 +202,8 @@ __all__ = [
     Persistence,
     Project,
     PullRequest,
+    PullRequest1168,
+    PullRequest1169,
     PullRequestComment,
     PullRequestReview,
     PullRequestFile,

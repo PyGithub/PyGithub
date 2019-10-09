@@ -2,8 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,13 +26,13 @@ from __future__ import absolute_import
 from . import Framework
 
 
-class Issue494(Framework.TestCase):
+class PullRequest1169(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("apache/brooklyn-server", lazy=True)
-        self.pull = self.repo.get_pull(465)
+        ferada_repo = self.g.get_repo("coleslaw-org/coleslaw", lazy=True)
+        self.pull = ferada_repo.get_pull(173)
 
-    def testRepr(self):
-        expected = u'PullRequest(title="Change SetHostnameCustomizer to check if ' \
-                   u'/etc/sysconfig/network exist…", number=465)'
-        self.assertEqual(self.pull.__repr__(), expected)
+    def testReviewApproveWithoutBody(self):
+        r = self.pull.create_review(event="APPROVE")
+        self.assertEqual(r.id, 261942907)
+        self.assertEqual(r.user.login, "Ferada")

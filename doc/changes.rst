@@ -27,6 +27,9 @@ Version 1.43.8 (July 20, 2019)
 * Allow name to be specified for upload_asset (#1151) (8d2a6b53)
 * Fixes #1106 for GitHub Enterprise API (#1110) (54065792)
 
+**Deprecation**
+* Repository.get_file_contents() no longer works use Repository.get_contents() instead 
+
 Version 1.43.7 (April 16, 2019)
 -----------------------------------
 

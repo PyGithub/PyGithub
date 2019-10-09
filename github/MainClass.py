@@ -53,7 +53,6 @@ import datetime
 
 import pickle
 import time
-import sys
 import requests
 import jwt
 import urllib3
@@ -76,8 +75,6 @@ from . import GithubException
 
 from . import Consts
 import six
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
@@ -285,8 +282,8 @@ class Github(object):
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(full_name_or_id, (str, six.text_type, int, int)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) or isinstance(full_name_or_id, int) else "/repos/"
+        assert isinstance(full_name_or_id, (str, six.text_type, int)), full_name_or_id
+        url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
             return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
@@ -730,7 +727,7 @@ class GithubIntegration(object):
             algorithm="RS256"
         )
 
-        if atLeastPython3:
+        if isinstance(encrypted, bytes):
             encrypted = encrypted.decode('utf-8')
 
         return encrypted
@@ -792,7 +789,7 @@ class GithubIntegration(object):
         }
 
         response = requests.get(
-            "{}/repos/{}/{}/installation".format(DEFAULT_BASE_URL, owner, repo),
+            "{}/repos/{}/{}/installation".format(self.base_url, owner, repo),
             headers=headers
         )
         response_dict = response.json()

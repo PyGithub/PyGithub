@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+import json
+
 
 class GithubException(Exception):
     """
@@ -59,7 +61,7 @@ class GithubException(Exception):
         return self.__data
 
     def __str__(self):
-        return str(self.status) + " " + str(self.data)
+        return "{status} {data}".format(status=self.status, data=json.dumps(self.data))
 
 
 class BadCredentialsException(GithubException):
@@ -120,4 +122,10 @@ class BadAttributeException(Exception):
 class TwoFactorException(GithubException):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
+    """
+
+
+class IncompletableObject(GithubException):
+    """
+    Exception raised when we can not request an object from Github because the data returned did not include a URL
     """

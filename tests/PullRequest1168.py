@@ -2,8 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,13 +26,19 @@ from __future__ import absolute_import
 from . import Framework
 
 
-class Issue494(Framework.TestCase):
+class PullRequest1168(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("apache/brooklyn-server", lazy=True)
-        self.pull = self.repo.get_pull(465)
+        self.notifications = self.g.get_repo("PyGithub/PyGithub").get_notifications(all=True)
 
-    def testRepr(self):
-        expected = u'PullRequest(title="Change SetHostnameCustomizer to check if ' \
-                   u'/etc/sysconfig/network exist…", number=465)'
-        self.assertEqual(self.pull.__repr__(), expected)
+    def testGetPullRequest(self):
+        p = self.notifications[0].get_pull_request()
+        self.assertEqual(p.id, 297582636)
+        self.assertEqual(p.number, 1171)
+        self.assertEqual(p.title, "Fix small issues for Python 3 compatibility.")
+
+    def testGetIssue(self):
+        i = self.notifications[0].get_issue()
+        self.assertEqual(i.id, 297582636)
+        self.assertEqual(i.number, 1171)
+        self.assertEqual(i.title, "Fix small issues for Python 3 compatibility.")

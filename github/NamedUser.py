@@ -624,6 +624,18 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.login
 
+    def get_organization_membership(self, org):
+        """
+        :calls: `GET /user/memberships/orgs/:org <https://developer.github.com/v3/orgs/members/#get-your-organization-membership>`_
+        :rtype: :class:`github.Membership.Membership`
+        """
+        assert isinstance(org, int)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/user/memberships/orgs/" + str(org)
+        )
+        return github.Membership.Membership(self._requester, headers, data, completed=True)
+
     def _initAttributes(self):
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
