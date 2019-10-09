@@ -26,7 +26,7 @@ from __future__ import absolute_import
 import github.GithubObject
 
 
-class Topic(github.GithubObject.CompletableGithubObject):
+class Topic(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents topics as used by https://github.com/topics. The object refereence can be found here https://developer.github.com/v3/search/#search-topics
     """
@@ -39,7 +39,6 @@ class Topic(github.GithubObject.CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
@@ -47,7 +46,6 @@ class Topic(github.GithubObject.CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._display_name)
         return self._display_name.value
 
     @property
@@ -55,7 +53,6 @@ class Topic(github.GithubObject.CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._short_description)
         return self._short_description.value
 
     @property
@@ -63,14 +60,69 @@ class Topic(github.GithubObject.CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def created_by(self):
+        """
+        :type: string
+        """
+        return self._created_by.value
+
+    @property
+    def released(self):
+        """
+        :type: string
+        """
+        return self._released.value
+
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._created_at.value
+
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._updated_at.value
+
+    @property
+    def featured(self):
+        """
+        :type: bool
+        """
+        return self._featured.value
+
+    @property
+    def curated(self):
+        """
+        :type: bool
+        """
+        return self._curated.value
+
+    @property
+    def score(self):
+        """
+        :type: float
+        """
+        return self._score.value
 
     def _initAttributes(self):
         self._name = github.GithubObject.NotSet
         self._display_name = github.GithubObject.NotSet
         self._short_description = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
+        self._created_by = github.GithubObject.NotSet
+        self._released = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._featured = github.GithubObject.NotSet
+        self._curated = github.GithubObject.NotSet
+        self._score = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "name" in attributes:  # pragma no branch
@@ -81,3 +133,17 @@ class Topic(github.GithubObject.CompletableGithubObject):
             self._short_description = self._makeStringAttribute(attributes["short_description"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "created_by" in attributes:  # pragma no branch
+            self._created_by = self._makeStringAttribute(attributes["created_by"])
+        if "released" in attributes:  # pragma no branch
+            self._released = self._makeStringAttribute(attributes["released"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "featured" in attributes:  # pragma no branch
+            self._featured = self._makeBoolAttribute(attributes["featured"])
+        if "curated" in attributes:  # pragma no branch
+            self._curated = self._makeBoolAttribute(attributes["curated"])
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

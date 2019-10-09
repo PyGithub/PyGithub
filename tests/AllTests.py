@@ -89,6 +89,7 @@ from .RequiredStatusChecks import *
 from .SourceImport import *
 from .Tag import *
 from .Team import *
+from .Topic import *
 from .Traffic import *
 from .UserKey import *
 from .Migration import *
