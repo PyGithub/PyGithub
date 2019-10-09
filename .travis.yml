@@ -10,7 +10,7 @@ matrix:
 install:
   - pip install codecov flake8
 script:
-  - flake8
+  - flake8 github tests
   - coverage run --source github,tests setup.py test
 after_success:
   - codecov
