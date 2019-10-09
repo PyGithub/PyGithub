@@ -93,7 +93,7 @@ from base64 import b64encode
 
 import github.GithubObject
 import github.PaginatedList
-
+import github.Invitation
 import github.Branch
 import github.IssueEvent
 import github.ContentFile

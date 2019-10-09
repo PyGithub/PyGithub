@@ -60,20 +60,19 @@ import urllib3
 
 from .Requester import Requester
 from . import AuthenticatedUser
-from . import NamedUser
-from . import Gist
+import github.NamedUser
+import github.Gist
 import github.PaginatedList
 from . import Repository
 from . import Installation
-from . import License
-from . import Topic
+import github.License
+import github.Topic
 import github.GithubObject
 from . import HookDescription
 from . import GitignoreTemplate
 from . import RateLimit
 from . import InstallationAuthorization
 from . import GithubException
-from . import Invitation
 
 from . import Consts
 import six
