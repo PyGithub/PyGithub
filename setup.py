@@ -110,6 +110,8 @@ if __name__ == "__main__":
         },
         tests_require=[
             "cryptography",
-            "httpretty==0.9.6"
+            "httpretty==0.9.6",
+            "mock==3.0.5",
+            "parameterized==0.7.0",
         ]
     )
