@@ -38,6 +38,7 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
+import io
 import json
 import os
 import traceback
@@ -86,12 +87,14 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Bearer jwt_removed"
 
 
-class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingConnection:
     def __init__(self, file, protocol, host, port, *args, **kwds):
+        # write operations make the assumption that the file is not in binary mode
+        assert isinstance(file, io.TextIOBase)
         self.__file = file
         self.__protocol = protocol
         self.__host = host
-        self.__port = str(port)
+        self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
@@ -111,8 +114,8 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__writeLine(self.__host)
         self.__writeLine(self.__port)
         self.__writeLine(url)
-        self.__writeLine(str(anonymous_headers))
-        self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
+        self.__writeLine(anonymous_headers)
+        self.__writeLine(six.text_type(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -122,10 +125,8 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         headers = res.getheaders()
         output = res.read()
 
-        self.__writeLine(str(status))
-        self.__writeLine(str(list(headers)))
-        if isinstance(output, bytes):
-            output = output.decode('utf-8')
+        self.__writeLine(status)
+        self.__writeLine(list(headers))
         self.__writeLine(output)
 
         return FakeHttpResponse(status, headers, output)
@@ -135,19 +136,17 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        if isinstance(line, bytes):
-            line = line.decode('utf-8')
-        self.__file.write(line + '\n')
+        self.__file.write(six.text_type(line) + u'\n')
 
 
-class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingHttpConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
-class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingHttpsConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
@@ -259,8 +258,8 @@ class BasicTestCase(unittest.TestCase):
         self.__file = None
         if self.recordMode:  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
+                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("w"), *args, **kwds),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("w"), *args, **kwds)
             )
             import GithubCredentials
             self.login = GithubCredentials.login
@@ -272,8 +271,8 @@ class BasicTestCase(unittest.TestCase):
             # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("rb"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("rb"), *args, **kwds)
+                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("r"), *args, **kwds),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("r"), *args, **kwds)
             )
             self.login = "login"
             self.password = "password"
@@ -299,7 +298,7 @@ class BasicTestCase(unittest.TestCase):
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = open(self.__fileName, mode)
+            self.__file = io.open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self):

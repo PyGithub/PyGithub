@@ -107,6 +107,8 @@ from .Equality import *
 from .Search import *
 from .Retry import *
 
+from .Connection import *
+
 from .Issue33 import *
 from .Issue50 import *
 from .Issue54 import *
