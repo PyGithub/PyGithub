@@ -94,7 +94,11 @@ class Connection(unittest.TestCase):
         recording_connection.getresponse()
         recording_connection.close()
 
-        self.assertEquals(file.getvalue(), protocol + expected_recording)
+        file_value_lines = file.getvalue().split("\n")
+        expected_recording_lines = (protocol + expected_recording).split("\n")
+        self.assertEquals(file_value_lines[:5], expected_recording_lines[:5])
+        self.assertEquals(eval(file_value_lines[5]), eval(expected_recording_lines[5]))  # dict literal, so keys not in guaranteed order
+        self.assertEquals(file_value_lines[6:], expected_recording_lines[6:])
 
         # rewind buffer and attempt to read from it
 
