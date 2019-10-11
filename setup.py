@@ -49,7 +49,7 @@ import setuptools
 
 version = "1.43.8"
 
-tests_require=[
+tests_require = [
     "cryptography",
     "httpretty==0.9.6",
     "parameterized==0.7.0",
