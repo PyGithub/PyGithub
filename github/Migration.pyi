@@ -2,6 +2,7 @@ from datetime import datetime
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 from typing import (
+    Any,
     Dict,
     List,
     Optional,
@@ -10,10 +11,11 @@ from typing import (
 
 
 class Migration:
+    def __repr__(self): str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[int, str, Dict[str, Union[str, int]], List[Dict[str, Union[int, str, Dict[str, Union[str, int]], None, Dict[str, bool]]]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def created_at(self) -> datetime: ...
