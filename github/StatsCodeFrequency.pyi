@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 
@@ -8,3 +9,5 @@ class StatsCodeFrequency:
     def additions(self) -> int: ...
     @property
     def deletions(self) -> int: ...
+    @property
+    def week(self) -> datetime: ...
