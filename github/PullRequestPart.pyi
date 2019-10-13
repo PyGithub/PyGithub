@@ -1,17 +1,18 @@
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 from typing import (
+    Any,
     Dict,
     Optional,
-    Union,
 )
 
 
 class PullRequestPart:
+    def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[str, Dict[str, Union[str, int]], Dict[str, Union[int, str, Dict[str, Union[str, int]], None, Dict[str, str]]], Dict[str, Union[str, int, Dict[str, Union[str, int]], None]], None]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def label(self) -> str: ...
