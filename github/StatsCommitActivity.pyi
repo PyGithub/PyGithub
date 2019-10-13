@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import (
+    Any,
     Dict,
     List,
-    Union,
 )
 
 
 class StatsCommitActivity:
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[List[int], int]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def days(self) -> List[int]: ...
     @property
