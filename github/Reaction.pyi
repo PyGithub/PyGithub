@@ -1,15 +1,15 @@
 from datetime import datetime
 from github.NamedUser import NamedUser
 from typing import (
+    Any,
     Dict,
-    Union,
 )
 
 
 class Reaction:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[int, str, Dict[str, Union[str, int]]]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def content(self) -> str: ...
     @property
