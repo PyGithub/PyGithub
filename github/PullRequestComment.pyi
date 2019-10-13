@@ -3,8 +3,8 @@ from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Reaction import Reaction
 from typing import (
+    Any,
     Dict,
-    Union,
 )
 
 
@@ -13,7 +13,7 @@ class PullRequestComment:
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[str, int, Dict[str, Union[str, int]], Dict[str, Dict[str, str]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def body(self) -> str: ...
@@ -31,6 +31,8 @@ class PullRequestComment:
     def html_url(self) -> str: ...
     @property
     def id(self) -> int: ...
+    @property
+    def in_reply_to_id(self) -> int: ...
     @property
     def original_commit_id(self) -> str: ...
     @property
