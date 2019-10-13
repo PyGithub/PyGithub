@@ -1,14 +1,15 @@
 from datetime import datetime
 from github.NamedUser import NamedUser
 from typing import (
+    Any,
     Dict,
-    Union,
 )
 
 
 class Stargazer:
+    def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[Dict[str, Union[str, int]], str]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def starred_at(self) -> datetime: ...
     @property
