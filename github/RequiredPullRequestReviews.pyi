@@ -1,10 +1,10 @@
 from github.NamedUser import NamedUser
 from github.Team import Team
 from typing import (
+    Any,
     Dict,
     List,
     Optional,
-    Union,
 )
 
 
@@ -13,7 +13,7 @@ class RequiredPullRequestReviews:
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[str, Dict[str, Union[str, List[Dict[str, Union[int, str, Dict[str, Union[str, int]]]]], List[Dict[str, Union[str, int]]]]], int, Dict[str, Union[str, List[Dict[str, Union[int, str, Dict[str, Union[str, int]]]]]]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def dismiss_stale_reviews(self) -> bool: ...
@@ -25,3 +25,5 @@ class RequiredPullRequestReviews:
     def require_code_owner_reviews(self) -> bool: ...
     @property
     def required_approving_review_count(self) -> int: ...
+    @property
+    def url(self) -> int: ...
