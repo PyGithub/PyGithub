@@ -1,10 +1,10 @@
 from datetime import datetime
 from github.NamedUser import NamedUser
 from typing import (
+    Any,
     Dict,
     List,
     Optional,
-    Union,
 )
 
 
@@ -12,7 +12,7 @@ class StatsContributor:
     def _initAttributes(self) -> None: ...
     def _useAttributes(
         self,
-        attributes: Dict[str, Union[int, List[Dict[str, int]], Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]]]
+        attributes: Dict[str, Any]
     ) -> None: ...
     @property
     def author(self) -> NamedUser: ...
