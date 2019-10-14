@@ -1,14 +1,14 @@
 from github.Commit import Commit
 from typing import (
+    Any,
     Dict,
-    Union,
 )
 
 
 class Tag:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: Dict[str, Union[str, Dict[str, str]]]) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def commit(self) -> Commit: ...
     @property
