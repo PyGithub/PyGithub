@@ -113,6 +113,7 @@ class Github(object):
         :param client_secret: string
         :param user_agent: string
         :param per_page: int
+        :param api_preview: bool
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         """
@@ -768,7 +769,7 @@ class GithubIntegration(object):
         The expiration can be extended beyond this, to a maximum of 600 seconds.
 
         :param expiration: int
-        :return:
+        :return string:
         """
         now = int(time.time())
         payload = {"iat": now, "exp": now + expiration, "iss": self.integration_id}
