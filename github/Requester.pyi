@@ -22,7 +22,7 @@ class HTTPRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: None = ...,
+        retry: Optional[Retry] = ...,
         **kwargs
     ) -> None: ...
     def close(self) -> None: ...
@@ -34,7 +34,7 @@ class HTTPSRequestsConnectionClass:
     def __init__(
         self,
         host: str,
-        port: None = ...,
+        port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Optional[Retry] = ...,
@@ -54,6 +54,63 @@ class HTTPSRequestsConnectionClass:
 class Requester:
     def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, str], data: str) -> None: ...
     def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None: ...
+    def __check(
+      self,
+      status: int,
+      responseHeader: Dict[str, Any],
+      output: str,
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]: ...
+    def __addParametersToUrl(
+      self,
+      url: str,
+      parameters: Dict[str, Any],
+    ) -> str
+    def __authenticate(
+      self,
+      url: str,
+      responseHeader: Dict[str, Any],
+      parameters: Dict[str, Any],
+    ) -> None: ...
+    def __customConnection(
+      self,
+      url: str,
+    ) -> Optional[ReplayingHttpsConnection]: ...
+    def __createConnection(self) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]: ...
+    def __createException(
+      self,
+      status: int,
+      headers: Dict[str, Any],
+      output: str,
+    ) -> Any: ...
+    def __log(
+      self,
+      verb: str,
+      url: str,
+      requestHeaders: Dict[str, str],
+      input: Optional[str],
+      status: Optioanl[int],
+      responseHeader: Dict[str, Any],
+      output: Optional[str],
+    ) -> None: ...
+    def __makeAbsoluteUrl(self, url: str) -> str: ...
+    def __structuredFromJson(self, data: str) -> Optional[Dict[str, Any]]: ...
+    def __requestEncode(
+        self,
+        verb: str,
+        url: str,
+        parameters: Dict[str, str] = ...,
+        headers: Dict[str, str] = ...,
+        input: Optional[str] = ...,
+        encode: Callable = ...
+    ) -> Tuple[int, Dict[str, Any], str]: ...
+    def __requestRaw(
+        self,
+        verb: str,
+        url: str,
+        parameters: Dict[str, str] = ...,
+        headers: Dict[str, str] = ...,
+        input: Optional[str] = ...,
+    ) -> Tuple[int, Dict[str, Any], str]: ...
     def __init__(
         self,
         login_or_token: Optional[str],
@@ -81,49 +138,49 @@ class Requester:
         headers: Dict[str, str] = ...,
         input: Optional[str] = ...,
         cnx: Optional[ReplayingHttpsConnection] = ...
-    ) -> Tuple[int, Dict[str, Union[str, int]], str]: ...
+    ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestBlobAndCheck(
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, str]] = ...,
-        headers: Optional[Dict[str, str]] = ...,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, Any]] = ...,
         input: Optional[str] = ...
-    ) -> Tuple[Dict[str, Union[str, int]], Dict[str, str]]: ...
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
     def requestJson(
         self,
         verb: str,
         url: str,
-        parameters: Optional[Union[Dict[str, bool], Dict[str, int], Dict[str, Union[str, int]], Dict[str, str]]] = ...,
-        headers: Optional[Dict[str, str]] = ...,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, Any]] = ...,
         input: Optional[Any] = ...,
-        cnx: None = ...
-    ) -> Union[Tuple[int, Dict[str, int], str], Tuple[int, Dict[str, Union[str, int]], str]]: ...
+        cnx: Optional[ReplayingHttpsConnection] = ...
+    ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestJsonAndCheck(
         self,
         verb: str,
         url: str,
-        parameters: Optional[Union[Dict[str, bool], Dict[str, int], Dict[str, Union[str, int]], Dict[str, str]]] = ...,
+        parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, str]] = ...,
         input: Optional[Any] = ...
-    ) -> Any: ...
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
     def requestMultipart(
         self,
         verb: str,
         url: str,
-        parameters: None = ...,
-        headers: None = ...,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
-        cnx: None = ...
-    ) -> Tuple[int, Dict[str, Union[str, int]], str]: ...
+        cnx: Optiona[ReplayingHttpsConnection] = ...
+    ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestMultipartAndCheck(
         self,
         verb: str,
         url: str,
-        parameters: None = ...,
-        headers: None = ...,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...
-    ) -> Tuple[Dict[str, Union[str, int]], None]: ...
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
     @classmethod
     def resetConnectionClasses(cls) -> None: ...
     @classmethod
