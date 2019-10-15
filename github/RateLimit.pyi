@@ -1,6 +1,5 @@
 from github.Rate import Rate
 from typing import Any, Dict
-from deprecated import deprecated
 
 
 class RateLimit:
@@ -12,7 +11,6 @@ class RateLimit:
     @property
     def graphql(self) -> Rate: ...
     @property
-    @deprecated
-    def rate(self) -> Rate
+    def rate(self) -> Rate: ...
     @property
     def search(self) -> Rate: ...

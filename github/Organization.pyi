@@ -8,8 +8,8 @@ from github.PaginatedList import PaginatedList
 from github.Plan import Plan
 from github.Repository import Repository
 from github.Team import Team
-from typing import 
-    Any
+from typing import (
+    Any,
     Dict,
     List,
     Optional,

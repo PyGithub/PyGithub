@@ -12,7 +12,7 @@ from typing import (
     Tuple,
     Union,
 )
-from urllib3.util.retry import Retry
+#from urllib3.util.retry import Retry
 
 
 class HTTPRequestsConnectionClass:
@@ -22,7 +22,7 @@ class HTTPRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Optional[Retry] = ...,
+        retry: Any = ...,
         **kwargs
     ) -> None: ...
     def close(self) -> None: ...
@@ -37,7 +37,7 @@ class HTTPSRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Optional[Retry] = ...,
+        retry: Any = ...,
         **kwargs
     ) -> None: ...
     def close(self) -> None: ...
@@ -64,7 +64,7 @@ class Requester:
       self,
       url: str,
       parameters: Dict[str, Any],
-    ) -> str
+    ) -> str: ...
     def __authenticate(
       self,
       url: str,
@@ -88,7 +88,7 @@ class Requester:
       url: str,
       requestHeaders: Dict[str, str],
       input: Optional[str],
-      status: Optioanl[int],
+      status: Optional[int],
       responseHeader: Dict[str, Any],
       output: Optional[str],
     ) -> None: ...
@@ -124,7 +124,7 @@ class Requester:
         per_page: int,
         api_preview: bool,
         verify: bool,
-        retry: Optional[Retry]
+        retry: Any
     ) -> None: ...
     def _initializeDebugFeature(self) -> None: ...
     def check_me(self, obj: GithubObject) -> None: ...
@@ -171,7 +171,7 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
-        cnx: Optiona[ReplayingHttpsConnection] = ...
+        cnx: Optional[ReplayingHttpsConnection] = ...
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestMultipartAndCheck(
         self,
