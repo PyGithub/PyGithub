@@ -148,9 +148,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
     
     def delete(self):
         """
-        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
-        :param note: string
-        :param column_id: integer
+        calls: `DELETE https://developer.github.com/v3/projects/columns/#delete-a-project-column>`_
         """
         
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
@@ -159,7 +157,6 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             self.url,
             headers=import_header,
         )
-        return headers, data
     
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet

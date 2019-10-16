@@ -174,7 +174,7 @@ class Project(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        calls: `DELETE https://developer.github.com/v3/projects/:project_id>`_
         :param name: string
         """
         
@@ -184,10 +184,9 @@ class Project(github.GithubObject.CompletableGithubObject):
             self.url,
             headers=import_header,
         )
-        return headers, data
     def delete_column(self, col_id):
         """
-        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        calls: `DELETE https://developer.github.com/v3/projects/columns/#delete-a-project-column>`_
         :param name: string
         """
         
@@ -198,7 +197,6 @@ class Project(github.GithubObject.CompletableGithubObject):
             self.url.replace(str(self.id),"columns/{}".format(col_id)),
             headers=import_header,
         )
-        return headers, data
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
         self._columns_url = github.GithubObject.NotSet
