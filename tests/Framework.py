@@ -42,9 +42,9 @@ import os
 import traceback
 import unittest
 
-import httpretty
+import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
+from urllib3.util import Url  # type: ignore
 
 import github
 
@@ -263,7 +263,7 @@ class BasicTestCase(unittest.TestCase):
                     self.__openFile("w"), *args, **kwds
                 ),
             )
-            import GithubCredentials
+            import GithubCredentials  # type: ignore
 
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password

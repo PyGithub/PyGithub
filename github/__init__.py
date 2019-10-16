@@ -49,7 +49,7 @@ from .GithubException import (
     RateLimitExceededException,
     TwoFactorException,
     UnknownObjectException,
-)
+)  # type: ignore
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
