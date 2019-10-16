@@ -172,6 +172,33 @@ class Project(github.GithubObject.CompletableGithubObject):
         )
         return github.ProjectColumn.ProjectColumn(self._requester, headers, data, completed=True)
 
+    def delete(self):
+        """
+        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        :param name: string
+        """
+        
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url,
+            headers=import_header,
+        )
+        return headers, data
+    def delete_column(self, col_id):
+        """
+        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        :param name: string
+        """
+        
+        assert isinstance(col_id, (int, six.text_type)), col_id
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url.replace(str(self.id),"columns/{}".format(col_id)),
+            headers=import_header,
+        )
+        return headers, data
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
         self._columns_url = github.GithubObject.NotSet

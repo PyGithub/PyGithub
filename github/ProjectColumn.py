@@ -145,7 +145,22 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         )
         return github.ProjectCard.ProjectCard(self._requester, headers,
                                               data, completed=True)
-
+    
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
+        :param note: string
+        :param column_id: integer
+        """
+        
+        import_header = {"Accept": Consts.mediaTypeProjectsPreview}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url,
+            headers=import_header,
+        )
+        return headers, data
+    
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
