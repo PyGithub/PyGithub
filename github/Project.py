@@ -195,7 +195,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url.replace(str(self.id),"columns/{}".format(col_id)),
+            self.url.replace(str(self.id), "columns/{}".format(col_id)),
             headers=import_header,
         )
 
