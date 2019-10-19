@@ -4,6 +4,41 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.44 (October 19, 2019)
+-----------------------------------
+**New features**
+* This version supports running under Python 3 directly, and the test suite
+  passes under both 2.7 and recent 3.x's.
+
+**Bug Fixes & Improvements**
+* Stop ignoring unused imports and remove them (#1250) (a0765083)
+* Bump httpretty to be a greater or equal to (#1262) (27092fb0)
+* Add close all issues example (#1256) (13e2c7c7)
+* Add six to install_requires (#1245) (a840a906)
+* Implemented user organization membership. Added test case. (#1237) (e50420f7)
+* Create DEPLOY.md (c9ed82b2)
+* Support non-default URLs in GithubIntegration (#1229) (e33858a3)
+* Cleanup try/except import in PaginatedList (#1228) (89c967bb)
+* Add an IncompletableObject exception (#1227) (f91cbac2)
+* Fix redundant int checks (#1226) (850da5af)
+* Jump from notifications to related PRs/issues. (#1168) (020fbebc)
+* Code review bodies are optional in some cases. (#1169) (b84d9b19)
+* Update changes.rst (#1223) (2df7269a)
+* Do not auto-close issues with high priority tag (ab27ba4d)
+* Fix bug in repository create new file example PyGithub#1210 (#1211) (74cd6856)
+* Remove more Python version specific code (#1193) (a0f01cf9)
+* Drop use of assertEquals (#1194) (7bac694a)
+* Fix PR review creation. (#1184) (e90cdab0)
+* Add support to vulnerability alert and automated security fixes APIs (#1195) (8abd50e2)
+* Delete Legacy submodule (#1192) (7ddb657d)
+* Remove some uses of atLeastPython3 (#1191) (cca8e3a5)
+* Run flake8 in Travis (#1163) (f93207b4)
+* Fix directories for coverage in Travis (#1190) (657f87b5)
+* Switch to using six (#1189) (dc2f2ad8)
+* Update Repository.update_file() docstring (#1186) (f1ae7200)
+* Correct return type of MainClass.get_organizations (#1179) (6e79d270)
+* Add cryptography to test-requirements.txt (#1165) (9b1c1e09)
+
 Version 1.43.8 (July 20, 2019)
 -----------------------------------
 **New features**
