@@ -7,10 +7,12 @@ Stable versions
 Version 1.44 (October 19, 2019)
 -----------------------------------
 **New features**
+
 * This version supports running under Python 3 directly, and the test suite
   passes under both 2.7 and recent 3.x's.
 
 **Bug Fixes & Improvements**
+
 * Stop ignoring unused imports and remove them (#1250) (a0765083)
 * Bump httpretty to be a greater or equal to (#1262) (27092fb0)
 * Add close all issues example (#1256) (13e2c7c7)
