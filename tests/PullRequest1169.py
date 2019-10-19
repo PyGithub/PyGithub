@@ -25,8 +25,6 @@
 from __future__ import absolute_import
 from . import Framework
 
-import datetime
-
 
 class PullRequest1169(Framework.TestCase):
     def setUp(self):

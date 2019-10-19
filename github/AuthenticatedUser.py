@@ -45,7 +45,7 @@ import datetime
 
 import github.GithubObject
 import github.PaginatedList
-
+import github.Invitation
 import github.Gist
 import github.Repository
 import github.NamedUser
