@@ -33,7 +33,6 @@
 
 from __future__ import absolute_import
 import base64
-import sys
 
 import github.GithubObject
 import github.Repository

@@ -93,7 +93,7 @@ import collections
 
 import github.GithubObject
 import github.PaginatedList
-
+import github.Invitation
 import github.Branch
 import github.IssueEvent
 import github.ContentFile

@@ -31,7 +31,6 @@ import github.PaginatedList
 
 import github.Gist
 import github.Repository
-import github.NamedUser
 import github.Plan
 import github.Organization
 import github.UserKey

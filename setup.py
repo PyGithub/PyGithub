@@ -47,11 +47,11 @@ import textwrap
 import setuptools
 
 
-version = "1.43.8"
+version = "1.44"
 
 tests_require = [
     "cryptography",
-    "httpretty==0.9.6",
+    "httpretty>=0.9.6",
     "parameterized==0.7.0",
 ]
 
