@@ -1,2 +1,2 @@
 cryptography
-httpretty==0.9.6
+httpretty>=0.9.6
