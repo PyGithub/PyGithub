@@ -28,7 +28,7 @@ import github.GithubObject
 import github.NamedUser
 
 
-class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
+class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     """
     This class represents TeamDiscussions. The reference can be found here https://developer.github.com/v3/teams/discussions/
     """
@@ -41,6 +41,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
+        self._completeIfNotSet(self._author)
         return self._author.value
 
     @property
@@ -48,6 +49,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
@@ -55,6 +57,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._body_html)
         return self._body_html.value
 
     @property
@@ -62,6 +65,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._body_version)
         return self._body_version.value
 
     @property
@@ -69,6 +73,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
+        self._completeIfNotSet(self._comments_count)
         return self._comments_count.value
 
     @property
@@ -76,6 +81,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
@@ -83,6 +89,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: datetime.datetime
         """
+        self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
@@ -90,6 +97,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
@@ -97,6 +105,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: datetime.datetime
         """
+        self._completeIfNotSet(self._last_edited_at)
         return self._last_edited_at.value
 
     @property
@@ -104,6 +113,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
     @property
@@ -111,6 +121,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
+        self._completeIfNotSet(self._number)
         return self._number.value
 
     @property
@@ -118,6 +129,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: bool
         """
+        self._completeIfNotSet(self._pinned)
         return self._pinned.value
 
     @property
@@ -125,6 +137,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: bool
         """
+        self._completeIfNotSet(self._private)
         return self._private.value
 
     @property
@@ -132,6 +145,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._team_url)
         return self._team_url.value
 
     @property
@@ -139,6 +153,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
@@ -146,6 +161,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: datetime.datetime
         """
+        self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
@@ -153,6 +169,7 @@ class TeamDiscussion(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._url)
         return self._url.value
 
     def _initAttributes(self):
