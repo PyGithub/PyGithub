@@ -183,7 +183,7 @@ class GithubObject(object):
                 return datetime.datetime.strptime(
                     s, "%Y-%m-%dT%H:%M:%S.000Z"
                 )  # pragma no cover (This branch was used only when creating a download)
-            elif len(s) == 29:
+            elif len(s) == 29 and s.count(' ') == 5:
                 return datetime.datetime.strptime(s, "%a, %d %b %Y %H:%M:%S %Z")
             elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
