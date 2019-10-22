@@ -26,11 +26,23 @@
 ################################################################################
 
 from __future__ import absolute_import
+
+import socket
 import unittest
 import github
 
 
+def is_github_reachable():
+    try:
+        socket.create_connection(("github.com", 443))
+        return True
+    except socket.error:
+        pass
+    return False
+
+
 class Issue142(unittest.TestCase):  # https://github.com/jacquev6/PyGithub/issues/142
+    @unittest.skipUnless(is_github_reachable(), "github not reachable")
     def testDecodeJson(self):
         # This test has to hit GitHub for real, because the record-replay framework looses types
         # and python3 does not behave like python2 for strings and bytes
