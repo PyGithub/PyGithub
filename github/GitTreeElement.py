@@ -11,6 +11,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Casper da Costa-Luis <casperdcl@users.noreply.github.com>     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,6 +41,13 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
+
+    @property
+    def last_modified_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._makeDatetimeAttribute(self.last_modified).value
 
     @property
     def mode(self):

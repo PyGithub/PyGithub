@@ -13,6 +13,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Casper da Costa-Luis <casperdcl@users.noreply.github.com>     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -182,6 +183,8 @@ class GithubObject(object):
                 return datetime.datetime.strptime(
                     s, "%Y-%m-%dT%H:%M:%S.000Z"
                 )  # pragma no cover (This branch was used only when creating a download)
+            elif len(s) == 29:
+                return datetime.datetime.strptime(s, "%a, %d %b %Y %H:%M:%S %Z")
             elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
                     1 if s[19] == "-" else -1
