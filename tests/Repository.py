@@ -548,7 +548,7 @@ class Repository(Framework.TestCase):
 
     def testCreateFile(self):
         newFile = 'doc/testCreateUpdateDeleteFile.md'
-        content = 'Hello world'
+        content = 'Hello world'.encode()
         self.repo.create_file(
             path=newFile, message='Create file for testCreateFile', content=content,
             branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
