@@ -1645,9 +1645,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(bytearray(content, 'utf-8'))
-        if isinstance(content, bytes):
-            content = content.decode('utf-8')
+        if not isinstance(content, bytes):
+            content = content.encode('utf-8')
+        content = b64encode(content).decode('utf-8')
         put_parameters = {'message': message, 'content': content}
 
         if branch is not github.GithubObject.NotSet:
@@ -1702,9 +1702,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(bytearray(content, 'utf-8'))
-        if isinstance(content, bytes):
-            content = content.decode('utf-8')
+        if not isinstance(content, bytes):
+            content = content.encode('utf-8')
+        content = b64encode(content).decode('utf-8')
 
         put_parameters = {'message': message, 'content': content,
                           'sha': sha}
