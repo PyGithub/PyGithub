@@ -108,6 +108,8 @@ from .Equality import Equality
 from .Search import Search
 from .Retry import Retry
 
+from .Connection import Connection
+
 from .Issue33 import Issue33
 from .Issue50 import Issue50
 from .Issue54 import Issue54
@@ -146,6 +148,7 @@ __all__ = [
     CommitComment,
     CommitStatus,
     ConditionalRequestUpdate,
+    Connection,
     ContentFile,
     Download,
     Enterprise,
