@@ -261,6 +261,13 @@ class GithubObject(object):
         """
         return self._headers.get(Consts.RES_LAST_MODIFIED)
 
+    @property
+    def last_modified_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._makeDatetimeAttribute(self.last_modified).value
+
     def get__repr__(self, params):
         """
         Converts the object to a nicely printable string.
