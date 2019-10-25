@@ -100,6 +100,9 @@ class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
         self.assertRaises(github.BadCredentialsException, lambda: github.Github("BadUser", "BadPassword").get_user().login)
 
+    def test2FARequired(self):
+        self.assertRaises(github.TwoFactorException, lambda: github.Github("2fauser", "password").get_user().login)
+
     def testUnknownObject(self):
         self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
 

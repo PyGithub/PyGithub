@@ -218,3 +218,13 @@ class PullRequest(Framework.TestCase):
 
     def testMergeWithCommitMessage(self):
         self.g.get_user().get_repo("PyGithub").get_pull(39).merge("Custom commit message created by PyGithub")
+
+    def testAddAndRemoveAssignees(self):
+        user1 = "jayfk"
+        user2 = self.g.get_user("jzelinskie")
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"])
+        self.pull.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login,
+                                ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
+        self.pull.remove_from_assignees(user1, user2)
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])

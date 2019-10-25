@@ -41,93 +41,190 @@
 ################################################################################
 
 from __future__ import absolute_import
-from .AuthenticatedUser import *
-from .Authentication import *
-from .Authorization import *
-from .Branch import *
-from .BranchProtection import *
-from .Commit import *
-from .CommitCombinedStatus import *
-from .CommitComment import *
-from .CommitStatus import *
-from .ContentFile import *
-from .Download import *
-from .Event import *
-from .Gist import *
-from .GistComment import *
-from .GitBlob import *
-from .GitCommit import *
-from .Github_ import *
-from .GitRef import *
-from .GitRelease import *
-from .GitReleaseAsset import *
-from .GitTag import *
-from .GitTree import *
-from .Hook import *
-from .Issue import *
-from .IssueComment import *
-from .Reaction import *
-from .IssueEvent import *
-from .License import *
-from .Label import *
-from .Milestone import *
-from .NamedUser import *
-from .Markdown import *
-from .Notification import *
-from .OrganizationHasInMembers import *
-from .Organization import *
-from .Project import *
-from .PullRequest import *
-from .PullRequestComment import *
-from .PullRequestReview import *
-from .PullRequestFile import *
-from .RateLimiting import *
-from .Repository import *
-from .RepositoryKey import *
-from .RequiredPullRequestReviews import *
-from .RequiredStatusChecks import *
-from .SourceImport import *
-from .Tag import *
-from .Team import *
-from .Traffic import *
-from .UserKey import *
-from .Migration import *
-from .GithubIntegration import *
 
-from .PaginatedList import *
-from .Exceptions import *
-from .Enterprise import *
-from .Logging_ import *
-from .RawData import *
-from .ConditionalRequestUpdate import *
-from .Persistence import *
-from .ExposeAllAttributes import *
-from .BadAttributes import *
-from .Equality import *
-from .Search import *
-from .Retry import *
+from .AuthenticatedUser import AuthenticatedUser
+from .Authentication import Authentication
+from .Authorization import Authorization
+from .Branch import Branch
+from .BranchProtection import BranchProtection
+from .Commit import Commit
+from .CommitCombinedStatus import CommitCombinedStatus
+from .CommitComment import CommitComment
+from .CommitStatus import CommitStatus
+from .ContentFile import ContentFile
+from .Download import Download
+from .Event import Event
+from .Gist import Gist
+from .GistComment import GistComment
+from .GitBlob import GitBlob
+from .GitCommit import GitCommit
+from .Github_ import Github
+from .GitRef import GitRef
+from .GitRelease import Release
+from .GitReleaseAsset import ReleaseAsset
+from .GitTag import GitTag
+from .GitTree import GitTree
+from .Hook import Hook
+from .Issue import Issue
+from .IssueComment import IssueComment
+from .Reaction import Reaction
+from .IssueEvent import IssueEvent
+from .License import License
+from .Label import Label
+from .Milestone import Milestone
+from .NamedUser import NamedUser
+from .Markdown import Markdown
+from .Notification import Notification
+from .OrganizationHasInMembers import OrganizationHasInMembers
+from .Organization import Organization
+from .Project import Project
+from .PullRequest import PullRequest
+from .PullRequestComment import PullRequestComment
+from .PullRequestReview import PullRequestReview
+from .PullRequestFile import PullRequestFile
+from .RateLimiting import RateLimiting
+from .Repository import LazyRepository, Repository
+from .RepositoryKey import RepositoryKey
+from .RequiredPullRequestReviews import RequiredPullRequestReviews
+from .RequiredStatusChecks import RequiredStatusChecks
+from .SourceImport import SourceImport
+from .Tag import Tag
+from .Team import Team
+from .Traffic import Traffic
+from .UserKey import UserKey
+from .Migration import Migration
+from .GithubIntegration import GithubIntegration
 
-from .Issue33 import *
-from .Issue50 import *
-from .Issue54 import *
-from .Issue80 import *
-from .Issue87 import *
-from .Issue131 import *
-from .Issue133 import *
-from .Issue134 import *
-from .Issue139 import *
-from .Issue140 import *
-from .Issue142 import *
-from .Issue158 import *
-from .Issue174 import *
-from .Issue214 import *
-from .Issue216 import *
-from .Issue278 import *
-from .Issue494 import *
-from .Issue572 import *
-from .Issue937 import *
-from .Issue945 import *
-from .Issue823 import *
+from .PaginatedList import PaginatedList
+from .Exceptions import Exceptions, SpecificExceptions
+from .Enterprise import Enterprise
+from .Logging_ import Logging
+from .RawData import RawData
+from .ConditionalRequestUpdate import ConditionalRequestUpdate
+from .Persistence import Persistence
+from .ExposeAllAttributes import ExposeAllAttributes
+from .BadAttributes import BadAttributes
+from .Equality import Equality
+from .Search import Search
+from .Retry import Retry
 
-from .PullRequest1168 import *
-from .PullRequest1169 import *
+from .Connection import Connection
+
+from .Issue33 import Issue33
+from .Issue50 import Issue50
+from .Issue54 import Issue54
+from .Issue80 import Issue80
+from .Issue87 import Issue87
+from .Issue131 import Issue131
+from .Issue133 import Issue133
+from .Issue134 import Issue134
+from .Issue139 import Issue139
+from .Issue140 import Issue140
+from .Issue142 import Issue142
+from .Issue158 import Issue158
+from .Issue174 import Issue174
+from .Issue214 import Issue214
+from .Issue216 import Issue216
+from .Issue278 import Issue278
+from .Issue494 import Issue494
+from .Issue572 import Issue572
+from .Issue937 import Issue937
+from .Issue945 import Issue945
+from .Issue823 import Issue823
+
+from .PullRequest1168 import PullRequest1168
+from .PullRequest1169 import PullRequest1169
+
+
+__all__ = [
+    AuthenticatedUser,
+    Authentication,
+    Authorization,
+    BadAttributes,
+    Branch,
+    BranchProtection,
+    Commit,
+    CommitCombinedStatus,
+    CommitComment,
+    CommitStatus,
+    ConditionalRequestUpdate,
+    Connection,
+    ContentFile,
+    Download,
+    Enterprise,
+    Equality,
+    Event,
+    Exceptions,
+    ExposeAllAttributes,
+    Gist,
+    GistComment,
+    GitBlob,
+    GitCommit,
+    Github,
+    GithubIntegration,
+    GitRef,
+    GitTag,
+    GitTree,
+    Hook,
+    Issue,
+    Issue33,
+    Issue50,
+    Issue54,
+    Issue80,
+    Issue87,
+    Issue131,
+    Issue133,
+    Issue134,
+    Issue139,
+    Issue140,
+    Issue142,
+    Issue158,
+    Issue174,
+    Issue214,
+    Issue216,
+    Issue278,
+    Issue494,
+    Issue572,
+    Issue823,
+    Issue937,
+    Issue945,
+    IssueComment,
+    IssueEvent,
+    LazyRepository,
+    Label,
+    License,
+    Logging,
+    Markdown,
+    Migration,
+    Milestone,
+    NamedUser,
+    Notification,
+    Organization,
+    OrganizationHasInMembers,
+    PaginatedList,
+    Persistence,
+    Project,
+    PullRequest,
+    PullRequest1168,
+    PullRequest1169,
+    PullRequestComment,
+    PullRequestReview,
+    PullRequestFile,
+    RateLimiting,
+    RawData,
+    Reaction,
+    Release,
+    ReleaseAsset,
+    Repository,
+    RepositoryKey,
+    RequiredPullRequestReviews,
+    RequiredStatusChecks,
+    Retry,
+    Search,
+    SpecificExceptions,
+    SourceImport,
+    Tag,
+    Team,
+    Traffic,
+    UserKey,
+]

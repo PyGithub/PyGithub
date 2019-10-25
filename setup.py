@@ -41,10 +41,22 @@
 #                                                                              #
 ################################################################################
 
-import setuptools
+import sys
 import textwrap
 
-version = "1.43.8"
+import setuptools
+
+
+version = "1.44"
+
+tests_require = [
+    "cryptography",
+    "httpretty>=0.9.6",
+    "parameterized==0.7.0",
+]
+
+if sys.version_info < (3, 3):
+    tests_require.append("mock==3.0.5")
 
 
 if __name__ == "__main__":
@@ -102,13 +114,11 @@ if __name__ == "__main__":
         install_requires=[
             "deprecated",
             "pyjwt",
-            "requests>=2.14.0"
+            "requests>=2.14.0",
+            "six"
         ],
         extras_require={
             "integrations": ["cryptography"]
         },
-        tests_require=[
-            "cryptography",
-            "httpretty==0.9.6"
-        ]
+        tests_require=tests_require
     )

@@ -296,7 +296,7 @@ class Requester:
         if status == 401 and output.get("message", "") == "Bad credentials":
             cls = GithubException.BadCredentialsException
         elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
-            cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+            cls = GithubException.TwoFactorException
         elif status == 403 and output.get("message", "").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (

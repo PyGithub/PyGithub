@@ -55,3 +55,20 @@ def enable_console_debug_logging():  # pragma no cover (Function useful only out
     logger = logging.getLogger("github")
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
+
+
+__all__ = [
+    BadAttributeException,
+    BadCredentialsException,
+    BadUserAgentException,
+    enable_console_debug_logging,
+    Github,
+    GithubException,
+    GithubIntegration,
+    InputFileContent,
+    InputGitAuthor,
+    InputGitTreeElement,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+]

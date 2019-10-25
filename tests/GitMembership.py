@@ -40,12 +40,8 @@
 #                                                                              #
 ################################################################################
 from __future__ import absolute_import
-import github
-import json
 
 from . import Framework
-
-import datetime
 
 
 class GitMembership(Framework.TestCase):
