@@ -49,6 +49,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import datetime
 
 import pickle
@@ -689,6 +690,62 @@ class Github(object):
         :return:
         """
         return Installation.Installation(self.__requester, headers={}, attributes={"id": id}, completed=True)
+
+    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_projects=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, is_template=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet, license_template=github.GithubObject.NotSet, allow_squash_merge=github.GithubObject.NotSet, allow_merge_commit=github.GithubObject.NotSet, allow_rebase_merge=github.GithubObject.NotSet):
+        """
+        :calls: `POST /user/repos <http://developer.github.com/v3/repos>`_
+        :param name: string
+        :param description: string
+        :param homepage: string
+        :param private: bool
+        :param has_issues: bool
+        :param has_projects: bool
+        :param has_wiki: bool
+        :param is_template: bool
+        :param auto_init: bool
+        :param gitignore_template: string
+        :param license_template: string
+        :param allow_squash_merge: bool
+        :param allow_merge_commit: bool
+        :param allow_rebase_merge: bool
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(name, (str, six.text_type)), name
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
+        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, six.text_type)), homepage
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
+        assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
+        assert is_template is github.GithubObject.NotSet or isinstance(is_template, bool), is_template
+        assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, six.text_type)), gitignore_template
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, six.text_type)), license_template
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
+
+        post_parameters = {
+            'name': name,
+        }
+
+        for key, value in (
+                ('description', description), ('homepage', homepage), ('private', private), ('has_issues', has_issues),
+                ('has_projects', has_projects), ('has_wiki', has_wiki), ('is_template', is_template),
+                ('auto_init', auto_init), ('gitignore_template', gitignore_template), ('license_template', license_template),
+                ('allow_squash_merge', allow_squash_merge), ('allow_merge_commit', allow_merge_commit), ('allow_rebase_merge', allow_rebase_merge),
+        ):
+            if value is not github.GithubObject.NotSet:
+                post_parameters[key] = value
+
+        url = '/user/repos'
+
+        headers, data = self.__requester.requestJsonAndCheck(
+            'POST',
+            url,
+            input=post_parameters
+        )
+        return github.Repository.Repository(self.__requester, headers, data, completed=True)
 
 
 class GithubIntegration(object):
