@@ -84,6 +84,7 @@ from .PullRequestReview import PullRequestReview
 from .PullRequestFile import PullRequestFile
 from .RateLimiting import RateLimiting
 from .Repository import LazyRepository, Repository
+from .RepositoryCreate import RepositoryCreate
 from .RepositoryKey import RepositoryKey
 from .RequiredPullRequestReviews import RequiredPullRequestReviews
 from .RequiredStatusChecks import RequiredStatusChecks
@@ -216,6 +217,7 @@ __all__ = [
     Release,
     ReleaseAsset,
     Repository,
+    RepositoryCreate,
     RepositoryKey,
     RequiredPullRequestReviews,
     RequiredStatusChecks,
