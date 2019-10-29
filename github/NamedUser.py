@@ -626,13 +626,16 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_organization_membership(self, org):
         """
-        :calls: `GET /user/memberships/orgs/:org <https://developer.github.com/v3/orgs/members/#get-your-organization-membership>`_
+        :calls: `GET /orgs/:org/memberships/:username <https://developer.github.com/v3/orgs/members/#get-organization-membership>`_
+        :param org: string or :class:`github.Organization.Organization`
         :rtype: :class:`github.Membership.Membership`
         """
-        assert isinstance(org, int)
+        assert isinstance(org, (str, six.text_type)) or isinstance(org, github.Organization.Organization), org
+        if isinstance(org, github.Organization.Organization):
+            org = org.login
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/user/memberships/orgs/" + str(org)
+            "/orgs/" + org + "/memberships/" + self.login
         )
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 

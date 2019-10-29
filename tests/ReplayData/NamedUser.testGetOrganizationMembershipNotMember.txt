@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/memberships/jacquev6
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+404
+[('status', '404 Not Found'), ('x-ratelimit-remaining', '4994'), ('x-github-media-type', 'github.v3; format=json'), ('content-security-policy', "default-src 'none'"), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('transfer-encoding', 'chunked'), ('x-github-request-id', 'A8C4:4363:18B898:1CC4F3:5DB80872'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-xss-protection', '1; mode=block'), ('content-encoding', 'gzip'), ('date', 'Tue, 29 Oct 2019 09:38:04 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/json; charset=utf-8'), ('x-accepted-oauth-scopes', 'admin:org, read:org, repo, user, write:org'), ('x-ratelimit-reset', '1572345425')]
+{"documentation_url": "https://developer.github.com/v3/orgs/members/#get-organization-membership", "message": "Not Found"}
