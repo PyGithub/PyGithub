@@ -35,6 +35,9 @@
 ################################################################################
 
 from __future__ import absolute_import
+
+from datetime import datetime
+
 from . import Framework
 
 
@@ -56,6 +59,29 @@ class Team(Framework.TestCase):
 
         # test __repr__() based on this attributes
         self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
+
+    def testDiscussions(self):
+        discussions = list(self.team.get_discussions())
+        self.assertEqual(len(discussions), 1)
+
+        d = discussions[0]
+        self.assertEqual(d.author.login, "jacquev6")
+        self.assertEqual(d.body, "BODY")
+        self.assertEqual(d.body_html, "<p>BODY</p>")
+        self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
+        self.assertEqual(d.comments_count, 0)
+        self.assertEqual(d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments")
+        self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(d.html_url, "https://github.com/orgs/BeaverSoftware/teams/Team/discussions/1")
+        self.assertEqual(d.last_edited_at, None)
+        self.assertEqual(d.node_id, "MDE0OlRlYW1EaXNjdXNzaW9uMzA=")
+        self.assertEqual(d.number, 1)
+        self.assertEqual(d.pinned, True)
+        self.assertEqual(d.private, False)
+        self.assertEqual(d.team_url, "https://api.github.com/teams/189850")
+        self.assertEqual(d.title, "TITLE")
+        self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")
