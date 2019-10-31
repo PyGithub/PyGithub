@@ -127,6 +127,17 @@ class NamedUser(Framework.TestCase):
     def testGetOrgs(self):
         self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 
+    def testGetOrganizationMembership(self):
+        o = self.user.get_orgs()
+        membership = self.user.get_organization_membership(o[0])
+        self.assertEqual(self.user.login, membership.user.login)
+        self.assertEqual(membership.state, "active")
+        self.assertEqual(membership.role, "member")
+
+    def testGetOrganizationMembershipNotMember(self):
+        from github import UnknownObjectException
+        self.assertRaises(UnknownObjectException, self.user.get_organization_membership, "BeaverSoftware")
+
     def testGetRepo(self):
         self.assertEqual(self.user.get_repo("PyGithub").description, "Python library implementing the full Github API v3")
 

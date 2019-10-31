@@ -45,7 +45,7 @@ import github.GithubObject
 
 class Membership(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Organizations. The reference can be found here http://developer.github.com/v3/orgs/
+    This class represents Membership of an organization. The reference can be found here http://developer.github.com/v3/orgs/
     """
 
     def __repr__(self):
@@ -94,7 +94,7 @@ class Membership(github.GithubObject.CompletableGithubObject):
     @property
     def user(self):
         """
-        :type: :class:`github.AuthenticatedUser.AuthenticatedUser`
+        :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
@@ -119,4 +119,4 @@ class Membership(github.GithubObject.CompletableGithubObject):
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.AuthenticatedUser.AuthenticatedUser, attributes["user"])
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
