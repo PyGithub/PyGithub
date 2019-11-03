@@ -1,4 +1,4 @@
-from github.AuthenticatedUser import AuthenticatedUser
+from github.NamedUser import NamedUser
 from github.Organization import Organization
 from typing import (
     Any,
@@ -19,4 +19,4 @@ class Membership:
     @property
     def organization(self) -> Organization: ...
     @property
-    def user(self) -> AuthenticatedUser: ...
+    def user(self) -> NamedUser: ...
