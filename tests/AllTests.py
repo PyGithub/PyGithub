@@ -90,6 +90,7 @@ from .RequiredStatusChecks import RequiredStatusChecks
 from .SourceImport import SourceImport
 from .Tag import Tag
 from .Team import Team
+from .Topic import Topic
 from .Traffic import Traffic
 from .UserKey import UserKey
 from .Migration import Migration
@@ -225,6 +226,7 @@ __all__ = [
     SourceImport,
     Tag,
     Team,
+    Topic,
     Traffic,
     UserKey,
 ]
