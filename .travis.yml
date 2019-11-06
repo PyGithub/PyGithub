@@ -7,6 +7,8 @@ matrix:
   include:
     - python: "3.7"
       dist: xenial  # required for Python >= 3.7 (travis-ci/travis-ci#9069)
+    - python: "3.8"
+      dist: xenial
 install:
   - pip install codecov flake8
 script:
