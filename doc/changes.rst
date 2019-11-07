@@ -4,6 +4,22 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.44.1 (November 07, 2019)
+-----------------------------------
+
+* Add Python 3.8 to classifiers list (#1280) (fec6034a)
+* Expand Topic class and add test coverage (#1252) (ac682742)
+* Add support for team discussions (#1246) (#1249) (ec3c8d7b)
+* Correct API for NamedUser.get_organization_membership (#1277) (077c80ba)
+* Correct header check for 2FA required (#1274) (6ad592b1)
+* Use replay framework for Issue142 test (#1271) (4d258d93)
+* Sync httpretty version requirement with setup.py (#1265) (99d38468)
+* Handle unicode strings when recording responses (#1253) (#1254) (faa1bbd6)
+* Add assignee removal/addition support to PRs (#1241) (a163ba15)
+* Check if the version is empty in manage.sh (#1268) (db294837)
+* Encode content for {create,update}_file (#1267) (bc225f9d)
+* Update changes.rst (#1263) (d7947d82)
+
 Version 1.44 (October 19, 2019)
 -----------------------------------
 **New features**
