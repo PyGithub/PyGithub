@@ -2243,7 +2243,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
-    def get_pulls(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, base=github.GithubObject.NotSet, head=github.GithubObject.NotSet):
+    def get_pulls(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, base=github.GithubObject.NotSet, head=github.GithubObject.NotSet, page_limit=None):
         """
         :calls: `GET /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls>`_
         :param state: string
@@ -2273,7 +2273,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.PullRequest.PullRequest,
             self._requester,
             self.url + "/pulls",
-            url_parameters
+            url_parameters,
+            page_limit=page_limit
         )
 
     def get_pulls_comments(self, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):

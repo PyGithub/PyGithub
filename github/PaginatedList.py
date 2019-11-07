@@ -74,6 +74,9 @@ class PaginatedListBase:
         self.__elements += newElements
         return newElements
 
+    def _get_elements(self):
+        return self.__elements
+
     class _Slice:
         def __init__(self, theList, theSlice):
             self.__list = theList
@@ -124,7 +127,7 @@ class PaginatedList(PaginatedListBase):
         some_other_repos = user.get_repos().get_page(3)
     """
 
-    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None, list_item="items"):
+    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None, list_item="items", page_limit=None):
         PaginatedListBase.__init__(self)
         self.__requester = requester
         self.__contentClass = contentClass
@@ -134,6 +137,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = firstParams or {}
         self.__headers = headers
         self.__list_item = list_item
+        self.__page_limit = page_limit
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
@@ -188,7 +192,13 @@ class PaginatedList(PaginatedListBase):
             self.__nextUrl = lastUrl
 
     def _couldGrow(self):
-        return self.__nextUrl is not None
+        has_page_limit = self.__page_limit is not None
+        if has_page_limit:
+            max_elements = self.__page_limit * self.__requester.per_page
+            max_elements_reached = max_elements <= len(self._get_elements())
+            return not max_elements_reached and self.__nextUrl is not None
+        else:
+            return self.__nextUrl is not None
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck(
