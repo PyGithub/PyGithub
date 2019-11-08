@@ -158,3 +158,8 @@ class PaginatedList(Framework.TestCase):
 
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
+
+    def testCanLimitPageRetrieval(self):
+        self.g.per_page = 30
+        issues = self.repo.get_issues(page_limit=2)
+        self.assertEqual(len(list(issues)), 60)
