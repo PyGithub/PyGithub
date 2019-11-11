@@ -1,6 +1,8 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
+set -e
+
 function publish {
     bump
     readme
@@ -8,7 +10,7 @@ function publish {
 }
 
 function check {
-    pep8 --ignore=E501 github scripts doc *.py || exit
+    flake8
 }
 
 function fix_headers {
@@ -56,8 +58,7 @@ function push {
 
     git tag -m "Version $version" v$version
 
-    git push origin master
-    git push --tags
+    git push --tags ${REMOTE:-origin} master
 }
 
 $1
