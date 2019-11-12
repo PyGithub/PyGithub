@@ -439,8 +439,6 @@ class Requester:
             url = self.__prefix + url
         else:
             o = six.moves.urllib.parse.urlparse(url)
-            assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
-            assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
             url = o.path
             if o.query != "":
