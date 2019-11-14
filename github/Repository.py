@@ -91,6 +91,8 @@ import datetime
 from base64 import b64encode
 import collections
 
+from deprecated import deprecated
+
 import github.GithubObject
 import github.PaginatedList
 import github.Invitation
@@ -1497,7 +1499,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
         :param path: string
         :param ref: string
-        :rtype: :class:`github.ContentFile.ContentFile`
+        :rtype: :class:`github.ContentFile.ContentFile` or a list of them
         """
         assert isinstance(path, (str, six.text_type)), path
         assert ref is github.GithubObject.NotSet or isinstance(ref, (str, six.text_type)), ref
@@ -1512,9 +1514,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/contents/" + six.moves.urllib.parse.quote(path),
             parameters=url_parameters
         )
+
+        # Handle 302 redirect response
+        if headers.get('status') == '302 Found' and headers.get('location'):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                headers['location'],
+                parameters=url_parameters
+            )
+
         if isinstance(data, list):
             return [
-                github.ContentFile.ContentFile(self._requester, headers, item, completed=False)
+                # Lazy completion only makes sense for files. See discussion
+                # here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+                github.ContentFile.ContentFile(self._requester, headers, item, completed=(item["type"] != "file"))
                 for item in data
             ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
@@ -1775,6 +1788,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return {'commit': github.Commit.Commit(self._requester, headers, data["commit"], completed=True),
                 'content': github.GithubObject.NotSet}
 
+    @deprecated(reason="""
+        Repository.get_dir_contents() is deprecated, use
+        Repository.get_contents() instead.
+        """)
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents>`_
@@ -1782,29 +1799,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param ref: string
         :rtype: list of :class:`github.ContentFile.ContentFile`
         """
-        assert isinstance(path, (str, six.text_type)), path
-        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, six.text_type)), ref
-        url_parameters = dict()
-        if ref is not github.GithubObject.NotSet:
-            url_parameters["ref"] = ref
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/contents/" + six.moves.urllib.parse.quote(path),
-            parameters=url_parameters
-        )
-
-        # Handle 302 redirect response
-        if headers.get('status') == '302 Found' and headers.get('location'):
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                headers['location'],
-                parameters=url_parameters
-            )
-
-        return [
-            github.ContentFile.ContentFile(self._requester, headers, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
-            for attributes in data
-        ]
+        return self.get_contents(path, ref=ref)
 
     def get_contributors(self, anon=github.GithubObject.NotSet):
         """
