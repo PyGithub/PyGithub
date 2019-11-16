@@ -340,10 +340,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             None
         )
 
-    def edit_user_push_restrictions(self, *users):
+    def add_user_push_restrictions(self, *users):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
-        :users: list of strings
+        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :users: list of strings (user names)
         """
         assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
 
@@ -353,15 +353,67 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             input=users
         )
 
-    def edit_team_push_restrictions(self, *teams):
+    def replace_user_push_restrictions(self, *users):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
-        :teams: list of strings
+        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :users: list of strings (user names)
+        """
+        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.protection_url + "/restrictions/users",
+            input=users
+        )
+
+    def remove_user_push_restrictions(self, *users):
+        """
+        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :users: list of strings (user names)
+        """
+        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.protection_url + "/restrictions/users",
+            input=users
+        )
+
+    def add_team_push_restrictions(self, *teams):
+        """
+        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :teams: list of strings (team slugs)
         """
         assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
+            self.protection_url + "/restrictions/teams",
+            input=teams
+        )
+
+    def replace_team_push_restrictions(self, *teams):
+        """
+        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :teams: list of strings (team slugs)
+        """
+        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.protection_url + "/restrictions/teams",
+            input=teams
+        )
+
+    def remove_team_push_restrictions(self, *teams):
+        """
+        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :teams: list of strings (team slugs)
+        """
+        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
             self.protection_url + "/restrictions/teams",
             input=teams
         )
