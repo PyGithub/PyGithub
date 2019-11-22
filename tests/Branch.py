@@ -170,12 +170,30 @@ class Branch(Framework.TestCase):
         self.protected_branch.set_admin_enforcement()
         self.assertTrue(self.protected_branch.get_admin_enforcement())
 
-    def testEditUserPushRestrictions(self):
-        self.organization_branch.edit_user_push_restrictions("sfdye")
+    def testAddUserPushRestrictions(self):
+        self.organization_branch.add_user_push_restrictions("sfdye")
         self.assertListKeyEqual(self.organization_branch.get_user_push_restrictions(), lambda u: u.login, ["jacquev6", "sfdye"])
 
-    def testEditTeamPushRestrictions(self):
-        self.organization_branch.edit_team_push_restrictions("pygithub-owners")
+    def testReplaceUserPushRestrictions(self):
+        self.assertListKeyEqual(self.organization_branch.get_user_push_restrictions(), lambda u: u.login, ["jacquev6"])
+        self.organization_branch.replace_user_push_restrictions("sfdye")
+        self.assertListKeyEqual(self.organization_branch.get_user_push_restrictions(), lambda u: u.login, ["sfdye"])
+
+    def testRemoveUserPushRestrictions(self):
+        self.organization_branch.remove_user_push_restrictions("jacquev6")
+        self.assertListKeyEqual(self.organization_branch.get_user_push_restrictions(), lambda u: u.login, ["sfdye"])
+
+    def testAddTeamPushRestrictions(self):
+        self.organization_branch.add_team_push_restrictions("pygithub-owners")
+        self.assertListKeyEqual(self.organization_branch.get_team_push_restrictions(), lambda t: t.slug, ["pygithub-owners"])
+
+    def testReplaceTeamPushRestrictions(self):
+        self.assertListKeyEqual(self.organization_branch.get_team_push_restrictions(), lambda t: t.slug, ["pygithub-owners"])
+        self.organization_branch.replace_team_push_restrictions("org-team")
+        self.assertListKeyEqual(self.organization_branch.get_team_push_restrictions(), lambda t: t.slug, ["org-team"])
+
+    def testRemoveTeamPushRestrictions(self):
+        self.organization_branch.remove_team_push_restrictions("org-team")
         self.assertListKeyEqual(self.organization_branch.get_team_push_restrictions(), lambda t: t.slug, ["pygithub-owners"])
 
     def testRemovePushRestrictions(self):
