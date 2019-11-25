@@ -35,7 +35,7 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.repo = self.g.get_repo("twitter/bootstrap")
 
     def testGetDirContentsThenLazyCompletionOfFile(self):
-        contents = self.repo.get_dir_contents("js")
+        contents = self.repo.get_contents("js")
         self.assertEqual(len(contents), 15)
         n = 0
         for content in contents:
@@ -54,4 +54,4 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.assertEqual(len(contents.content), 4722)
 
     def testGetDirContentsWithRef(self):
-        self.assertEqual(len(self.repo.get_dir_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")), 15)
+        self.assertEqual(len(self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")), 15)
