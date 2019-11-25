@@ -52,7 +52,7 @@ version = "1.44.1"
 tests_require = [
     "cryptography",
     "httpretty>=0.9.6",
-    "parameterized==0.7.0",
+    "parameterized>=0.7.0",
 ]
 
 if sys.version_info < (3, 3):
