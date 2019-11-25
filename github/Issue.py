@@ -16,13 +16,14 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Matt Babineau <babineaum@users.noreply.github.com>            #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,6 +54,7 @@ import github.GithubObject
 import github.IssueComment
 import github.IssueEvent
 import github.IssuePullRequest
+import github.TimelineEvent
 import github.Label
 import github.Milestone
 import github.NamedUser
@@ -606,6 +608,19 @@ class Issue(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+
+    def get_timeline(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number/timeline <https://developer.github.com/v3/issues/timeline/#list-events-for-an-issue>`_
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent.TimelineEvent`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.TimelineEvent.TimelineEvent,
+            self._requester,
+            self.url + "/timeline",
+            None,
+            headers={'Accept': Consts.issueTimelineEventsPreview}
+        )
 
     @property
     def _identity(self):

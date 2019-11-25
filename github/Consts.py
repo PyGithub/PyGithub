@@ -10,6 +10,7 @@
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -113,3 +114,6 @@ automatedSecurityFixes = "application/vnd.github.london-preview+json"
 
 # https://developer.github.com/changes/2019-05-29-update-branch-api/
 updateBranchPreview = "application/vnd.github.lydian-preview+json"
+
+# https://developer.github.com/changes/2016-05-23-timeline-preview-api/
+issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
