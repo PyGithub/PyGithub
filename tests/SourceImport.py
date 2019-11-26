@@ -50,3 +50,9 @@ class SourceImport(Framework.TestCase):
 
         self.assertEqual(self.source_import.__repr__(),
                          'SourceImport(vcs_url="https://bitbucket.org/hfuss/source-import-test", url="https://api.github.com/repos/brix4dayz/source-import-test/import", status="complete", repository_url="https://api.github.com/repos/brix4dayz/source-import-test")')
+
+    def testUpdate(self):
+        # The real test is that update() method passes the header
+        update_ret = self.source_import.update()
+        self.assertTrue(update_ret)
+        self.assertEqual(self.source_import.status, "complete")

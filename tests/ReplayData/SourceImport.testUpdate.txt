@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/brix4dayz/source-import-test/import
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.barred-rock-preview', 'User-Agent': 'PyGithub/Python', 'If-None-Match': '"8659af05bfc77665551bec8f8a6bb2ce"'}
+None
+200
+[('content-length', '533'), ('x-runtime-rack', '0.137115'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'repo'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"8659af05bfc77665551bec8f8a6bb2ce"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4987'), ('x-github-media-type', 'github.barred-rock-preview'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'D34D:2057:22D5E83:4403573:5A374787'), ('date', 'Mon, 18 Dec 2017 04:43:51 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1513572653')]
+{"vcs":"mercurial","use_lfs":"undecided","vcs_url":"https://bitbucket.org/hfuss/source-import-test","status":"complete","status_text":"Done","has_large_files":false,"large_files_size":0,"large_files_count":0,"authors_count":1,"url":"https://api.github.com/repos/brix4dayz/source-import-test/import","html_url":"https://github.com/brix4dayz/source-import-test/import","authors_url":"https://api.github.com/repos/brix4dayz/source-import-test/import/authors","repository_url":"https://api.github.com/repos/brix4dayz/source-import-test"}

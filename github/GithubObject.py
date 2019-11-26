@@ -279,7 +279,7 @@ class CompletableGithubObject(GithubObject):
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
 
-    def update(self):
+    def update(self, additional_headers=None):
         '''
         Check and update the object with conditional request
         :rtype: Boolean value indicating whether the object is changed
@@ -289,6 +289,8 @@ class CompletableGithubObject(GithubObject):
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
         if self.last_modified is not None:
             conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+        if additional_headers is not None:
+            conditionalRequestHeader.update(additional_headers)
 
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
