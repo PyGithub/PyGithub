@@ -1867,6 +1867,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def create_fork(self, organization=None):
+        """
+        :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks>`_
+        :rtype: :class:`github.Repository.Repository`
+        """
+        post_parameters = {
+        }
+        if organization is not None:
+            post_parameters["organization"] = organization
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/forks",
+            input=post_parameters,
+        )
+        return Repository(self._requester, headers, data, completed=True)
+
     def get_git_blob(self, sha):
         """
         :calls: `GET /repos/:owner/:repo/git/blobs/:sha <http://developer.github.com/v3/git/blobs>`_
