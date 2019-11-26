@@ -31,6 +31,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -40,11 +41,13 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "admin": self._admin.value,
-            "pull": self._pull.value,
-            "push": self._push.value
-        })
+        return self.get__repr__(
+            {
+                "admin": self._admin.value,
+                "pull": self._pull.value,
+                "push": self._push.value,
+            }
+        )
 
     @property
     def admin(self):

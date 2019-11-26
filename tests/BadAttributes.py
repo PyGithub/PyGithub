@@ -27,11 +27,13 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import datetime
 
-from . import Framework
 import github
 import six
+
+from . import Framework
 
 
 # Replay data is forged to simulate bad things returned by Github
@@ -54,8 +56,13 @@ class BadAttributes(Framework.TestCase):
             user.created_at
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, (str, six.text_type))
-        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ValueError)
-        self.assertEqual(raisedexp.exception.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
+        self.assertEqual(
+            raisedexp.exception.transformation_exception.__class__, ValueError
+        )
+        self.assertEqual(
+            raisedexp.exception.transformation_exception.args,
+            ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",),
+        )
 
     def testBadTransformedAttribute(self):
         user = self.g.get_user("klmitch")
@@ -87,7 +94,9 @@ class BadAttributes(Framework.TestCase):
         self.assertEqual(raisedexp.exception.actual_value, 42)
 
     def testBadTransformedAttributeInList(self):
-        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
+        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit(
+            "38d9082a898d0822b5ccdfd78f3a536e2efa6c26"
+        )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             commit.files
@@ -101,13 +110,163 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             gist.files
         self.assertEqual(raisedexp.exception.actual_value, {"test.py": 42})
-        self.assertEqual(raisedexp.exception.expected_type, {(str, six.text_type): dict})
+        self.assertEqual(
+            raisedexp.exception.expected_type, {(str, six.text_type): dict}
+        )
         self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testIssue195(self):
         hooks = self.g.get_hooks()
         # We can loop on all hooks as long as we don't access circleci's events attribute
-        self.assertListKeyEqual(hooks, lambda h: h.name, [u'activecollab', u'acunote', u'agilebench', u'agilezen', u'amazonsns', u'apiary', u'apoio', u'appharbor', u'apropos', u'asana', u'backlog', u'bamboo', u'basecamp', u'bcx', u'blimp', u'boxcar', u'buddycloud', u'bugherd', u'bugly', u'bugzilla', u'campfire', u'cia', u'circleci', u'codeclimate', u'codeportingcsharp2java', u'codeship', u'coffeedocinfo', u'conductor', u'coop', u'copperegg', u'cube', u'depending', u'deployhq', u'devaria', u'docker', u'ducksboard', u'email', u'firebase', u'fisheye', u'flowdock', u'fogbugz', u'freckle', u'friendfeed', u'gemini', u'gemnasium', u'geocommit', u'getlocalization', u'gitlive', u'grmble', u'grouptalent', u'grove', u'habitualist', u'hakiri', u'hall', u'harvest', u'hipchat', u'hostedgraphite', u'hubcap', u'hubci', u'humbug', u'icescrum', u'irc', u'irker', u'ironmq', u'ironworker', u'jabber', u'jaconda', u'jeapie', u'jenkins', u'jenkinsgit', u'jira', u'jqueryplugins', u'kanbanery', u'kickoff', u'leanto', u'lechat', u'lighthouse', u'lingohub', u'loggly', u'mantisbt', u'masterbranch', u'mqttpub', u'nma', u'nodejitsu', u'notifo', u'ontime', u'pachube', u'packagist', u'phraseapp', u'pivotaltracker', u'planbox', u'planio', u'prowl', u'puppetlinter', u'pushalot', u'pushover', u'pythonpackages', u'railsbp', u'railsbrakeman', u'rally', u'rapidpush', u'rationaljazzhub', u'rationalteamconcert', u'rdocinfo', u'readthedocs', u'redmine', u'rubyforge', u'scrumdo', u'shiningpanda', u'sifter', u'simperium', u'slatebox', u'snowyevening', u'socialcast', u'softlayermessaging', u'sourcemint', u'splendidbacon', u'sprintly', u'sqsqueue', u'stackmob', u'statusnet', u'talker', u'targetprocess', u'tddium', u'teamcity', u'tender', u'tenxer', u'testpilot', u'toggl', u'trac', u'trajectory', u'travis', u'trello', u'twilio', u'twitter', u'unfuddle', u'web', u'weblate', u'webtranslateit', u'yammer', u'youtrack', u'zendesk', u'zohoprojects'])
+        self.assertListKeyEqual(
+            hooks,
+            lambda h: h.name,
+            [
+                u"activecollab",
+                u"acunote",
+                u"agilebench",
+                u"agilezen",
+                u"amazonsns",
+                u"apiary",
+                u"apoio",
+                u"appharbor",
+                u"apropos",
+                u"asana",
+                u"backlog",
+                u"bamboo",
+                u"basecamp",
+                u"bcx",
+                u"blimp",
+                u"boxcar",
+                u"buddycloud",
+                u"bugherd",
+                u"bugly",
+                u"bugzilla",
+                u"campfire",
+                u"cia",
+                u"circleci",
+                u"codeclimate",
+                u"codeportingcsharp2java",
+                u"codeship",
+                u"coffeedocinfo",
+                u"conductor",
+                u"coop",
+                u"copperegg",
+                u"cube",
+                u"depending",
+                u"deployhq",
+                u"devaria",
+                u"docker",
+                u"ducksboard",
+                u"email",
+                u"firebase",
+                u"fisheye",
+                u"flowdock",
+                u"fogbugz",
+                u"freckle",
+                u"friendfeed",
+                u"gemini",
+                u"gemnasium",
+                u"geocommit",
+                u"getlocalization",
+                u"gitlive",
+                u"grmble",
+                u"grouptalent",
+                u"grove",
+                u"habitualist",
+                u"hakiri",
+                u"hall",
+                u"harvest",
+                u"hipchat",
+                u"hostedgraphite",
+                u"hubcap",
+                u"hubci",
+                u"humbug",
+                u"icescrum",
+                u"irc",
+                u"irker",
+                u"ironmq",
+                u"ironworker",
+                u"jabber",
+                u"jaconda",
+                u"jeapie",
+                u"jenkins",
+                u"jenkinsgit",
+                u"jira",
+                u"jqueryplugins",
+                u"kanbanery",
+                u"kickoff",
+                u"leanto",
+                u"lechat",
+                u"lighthouse",
+                u"lingohub",
+                u"loggly",
+                u"mantisbt",
+                u"masterbranch",
+                u"mqttpub",
+                u"nma",
+                u"nodejitsu",
+                u"notifo",
+                u"ontime",
+                u"pachube",
+                u"packagist",
+                u"phraseapp",
+                u"pivotaltracker",
+                u"planbox",
+                u"planio",
+                u"prowl",
+                u"puppetlinter",
+                u"pushalot",
+                u"pushover",
+                u"pythonpackages",
+                u"railsbp",
+                u"railsbrakeman",
+                u"rally",
+                u"rapidpush",
+                u"rationaljazzhub",
+                u"rationalteamconcert",
+                u"rdocinfo",
+                u"readthedocs",
+                u"redmine",
+                u"rubyforge",
+                u"scrumdo",
+                u"shiningpanda",
+                u"sifter",
+                u"simperium",
+                u"slatebox",
+                u"snowyevening",
+                u"socialcast",
+                u"softlayermessaging",
+                u"sourcemint",
+                u"splendidbacon",
+                u"sprintly",
+                u"sqsqueue",
+                u"stackmob",
+                u"statusnet",
+                u"talker",
+                u"targetprocess",
+                u"tddium",
+                u"teamcity",
+                u"tender",
+                u"tenxer",
+                u"testpilot",
+                u"toggl",
+                u"trac",
+                u"trajectory",
+                u"travis",
+                u"trello",
+                u"twilio",
+                u"twitter",
+                u"unfuddle",
+                u"web",
+                u"weblate",
+                u"webtranslateit",
+                u"yammer",
+                u"youtrack",
+                u"zendesk",
+                u"zohoprojects",
+            ],
+        )
         for hook in hooks:
             if hook.name != "circleci":
                 hook.events
@@ -116,6 +275,31 @@ class BadAttributes(Framework.TestCase):
             if hook.name == "circleci":
                 with self.assertRaises(github.BadAttributeException) as raisedexp:
                     hook.events
-        self.assertEqual(raisedexp.exception.actual_value, [["commit_comment", "create", "delete", "download", "follow", "fork", "fork_apply", "gist", "gollum", "issue_comment", "issues", "member", "public", "pull_request", "pull_request_review_comment", "push", "status", "team_add", "watch"]])
+        self.assertEqual(
+            raisedexp.exception.actual_value,
+            [
+                [
+                    "commit_comment",
+                    "create",
+                    "delete",
+                    "download",
+                    "follow",
+                    "fork",
+                    "fork_apply",
+                    "gist",
+                    "gollum",
+                    "issue_comment",
+                    "issues",
+                    "member",
+                    "public",
+                    "pull_request",
+                    "pull_request_review_comment",
+                    "push",
+                    "status",
+                    "team_add",
+                    "watch",
+                ]
+            ],
+        )
         self.assertEqual(raisedexp.exception.expected_type, [(str, six.text_type)])
         self.assertEqual(raisedexp.exception.transformation_exception, None)

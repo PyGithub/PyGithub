@@ -28,6 +28,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from . import Framework
 
 
@@ -37,10 +38,15 @@ class ConditionalRequestUpdate(Framework.TestCase):
         self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
 
     def testDidNotUpdate(self):
-        self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
+        self.assertFalse(
+            self.repo.update(), msg="The repo is not changed. But update() != False"
+        )
 
     def testDidUpdate(self):
-        self.assertTrue(self.repo.update(), msg="The repo should be changed by now. But update() != True")
+        self.assertTrue(
+            self.repo.update(),
+            msg="The repo should be changed by now. But update() != True",
+        )
 
     def testUpdateObjectWithoutEtag(self):
         r = self.g.get_repo("jacquev6/PyGithub", lazy=False)

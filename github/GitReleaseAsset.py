@@ -26,6 +26,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 import six
 
@@ -155,10 +156,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         Delete asset from the release.
         :rtype: bool
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
     def update_asset(self, name, label=""):
@@ -168,14 +166,9 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, (str, six.text_type)), name
         assert isinstance(label, (str, six.text_type)), label
-        post_parameters = {
-            "name": name,
-            "label": label
-        }
+        post_parameters = {"name": name, "label": label}
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         return GitReleaseAsset(self._requester, headers, data, completed=True)
 
@@ -203,7 +196,9 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "uploader" in attributes:  # pragma no branch
-            self._uploader = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["uploader"])
+            self._uploader = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["uploader"]
+            )
         if "content_type" in attributes:  # pragma no branch
             self._content_type = self._makeStringAttribute(attributes["content_type"])
         if "state" in attributes:  # pragma no branch
@@ -217,4 +212,6 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "browser_download_url" in attributes:  # pragma no branch
-            self._browser_download_url = self._makeStringAttribute(attributes["browser_download_url"])
+            self._browser_download_url = self._makeStringAttribute(
+                attributes["browser_download_url"]
+            )

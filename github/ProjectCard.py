@@ -23,6 +23,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 # NOTE: There is currently no way to get cards "in triage" for a project.
@@ -123,15 +124,13 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
 
         if content_type == "PullRequest":
             headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                self.content_url.replace("issues", "pulls")
+                "GET", self.content_url.replace("issues", "pulls")
             )
-            return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+            return github.PullRequest.PullRequest(
+                self._requester, headers, data, completed=True
+            )
         elif content_type is github.GithubObject.NotSet or content_type == "Issue":
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                self.content_url
-            )
+            headers, data = self._requester.requestJsonAndCheck("GET", self.content_url)
             return github.Issue.Issue(self._requester, headers, data, completed=True)
         else:
             assert False, "Unknown content type: %s" % content_type
@@ -158,7 +157,9 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["creator"]
+            )
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch

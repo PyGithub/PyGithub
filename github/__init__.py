@@ -38,10 +38,20 @@ All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
 
 from __future__ import absolute_import
+
 import logging
 
 from github.MainClass import Github, GithubIntegration
-from .GithubException import GithubException, BadCredentialsException, UnknownObjectException, BadUserAgentException, RateLimitExceededException, BadAttributeException, TwoFactorException
+
+from .GithubException import (
+    BadAttributeException,
+    BadCredentialsException,
+    BadUserAgentException,
+    GithubException,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+)
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement

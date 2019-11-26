@@ -23,12 +23,13 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
+import six
 
 from . import Consts
-import six
 
 
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
@@ -101,7 +102,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, six.text_type)), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(
+            archived_state, (str, six.text_type)
+        ), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:
@@ -112,12 +115,15 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/cards",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview}
+            {"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    def create_card(self, note=github.GithubObject.NotSet,
-                    content_id=github.GithubObject.NotSet,
-                    content_type=github.GithubObject.NotSet):
+    def create_card(
+        self,
+        note=github.GithubObject.NotSet,
+        content_id=github.GithubObject.NotSet,
+        content_type=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
         :param note: string
@@ -133,18 +139,15 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             assert note is github.GithubObject.NotSet, note
             assert isinstance(content_id, int), content_id
             assert isinstance(content_type, (str, six.text_type)), content_type
-            post_parameters = {"content_id": content_id,
-                               "content_type": content_type}
+            post_parameters = {"content_id": content_id, "content_type": content_type}
 
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/cards",
-            headers=import_header,
-            input=post_parameters
+            "POST", self.url + "/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(self._requester, headers,
-                                              data, completed=True)
+        return github.ProjectCard.ProjectCard(
+            self._requester, headers, data, completed=True
+        )
 
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet

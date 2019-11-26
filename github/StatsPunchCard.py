@@ -27,8 +27,8 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
+import github.GithubObject
 import github.NamedUser  # TODO remove unused
 
 

@@ -28,6 +28,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -37,7 +38,9 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"limit": self._limit.value, "remaining": self._remaining.value})
+        return self.get__repr__(
+            {"limit": self._limit.value, "remaining": self._remaining.value}
+        )
 
     @property
     def limit(self):

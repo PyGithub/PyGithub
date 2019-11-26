@@ -33,12 +33,13 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import datetime
 from operator import itemgetter
 
-from . import GithubException
-from . import Consts
 import six
+
+from . import Consts, GithubException
 
 
 class _NotSetType:
@@ -64,7 +65,9 @@ class _BadAttribute:
 
     @property
     def value(self):
-        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
+        raise GithubException.BadAttributeException(
+            self.__value, self.__expectedType, self.__exception
+        )
 
 
 class GithubObject(object):
@@ -72,9 +75,9 @@ class GithubObject(object):
     Base class for all classes representing objects returned by the API.
     """
 
-    '''
+    """
     A global debug flag to enable header validation by requester for all objects
-    '''
+    """
     CHECK_AFTER_INIT_FLAG = False
 
     @classmethod
@@ -116,7 +119,7 @@ class GithubObject(object):
 
     @staticmethod
     def _parentUrl(url):
-        return "/".join(url.split("/")[: -1])
+        return "/".join(url.split("/")[:-1])
 
     @staticmethod
     def __makeSimpleAttribute(value, type):
@@ -127,7 +130,9 @@ class GithubObject(object):
 
     @staticmethod
     def __makeSimpleListAttribute(value, type):
-        if isinstance(value, list) and all(isinstance(element, type) for element in value):
+        if isinstance(value, list) and all(
+            isinstance(element, type) for element in value
+        ):
             return _ValuedAttribute(value)
         else:
             return _BadAttribute(value, [type])
@@ -166,24 +171,38 @@ class GithubObject(object):
 
     @staticmethod
     def _makeTimestampAttribute(value):
-        return GithubObject.__makeTransformedAttribute(value, six.integer_types, datetime.datetime.utcfromtimestamp)
+        return GithubObject.__makeTransformedAttribute(
+            value, six.integer_types, datetime.datetime.utcfromtimestamp
+        )
 
     @staticmethod
     def _makeDatetimeAttribute(value):
         def parseDatetime(s):
-            if len(s) == 24:  # pragma no branch (This branch was used only when creating a download)
+            if (
+                len(s) == 24
+            ):  # pragma no branch (This branch was used only when creating a download)
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
+                return datetime.datetime.strptime(
+                    s, "%Y-%m-%dT%H:%M:%S.000Z"
+                )  # pragma no cover (This branch was used only when creating a download)
             elif len(s) >= 25:
-                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
+                    1 if s[19] == "-" else -1
+                ) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        return GithubObject.__makeTransformedAttribute(value, (str, six.text_type), parseDatetime)
+        return GithubObject.__makeTransformedAttribute(
+            value, (str, six.text_type), parseDatetime
+        )
 
     def _makeClassAttribute(self, klass, value):
-        return GithubObject.__makeTransformedAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
+        return GithubObject.__makeTransformedAttribute(
+            value,
+            dict,
+            lambda value: klass(self._requester, self._headers, value, completed=False),
+        )
 
     @staticmethod
     def _makeListOfStringsAttribute(value):
@@ -202,46 +221,66 @@ class GithubObject(object):
         return GithubObject.__makeSimpleListAttribute(value, list)
 
     def _makeListOfClassesAttribute(self, klass, value):
-        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
-            return _ValuedAttribute([klass(self._requester, self._headers, element, completed=False) for element in value])
+        if isinstance(value, list) and all(
+            isinstance(element, dict) for element in value
+        ):
+            return _ValuedAttribute(
+                [
+                    klass(self._requester, self._headers, element, completed=False)
+                    for element in value
+                ]
+            )
         else:
             return _BadAttribute(value, [dict])
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        if isinstance(value, dict) and all(isinstance(key, (str, six.text_type)) and isinstance(element, dict) for key, element in six.iteritems(value)):
-            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in six.iteritems(value)))
+        if isinstance(value, dict) and all(
+            isinstance(key, (str, six.text_type)) and isinstance(element, dict)
+            for key, element in six.iteritems(value)
+        ):
+            return _ValuedAttribute(
+                dict(
+                    (
+                        key,
+                        klass(self._requester, self._headers, element, completed=False),
+                    )
+                    for key, element in six.iteritems(value)
+                )
+            )
         else:
             return _BadAttribute(value, {(str, six.text_type): dict})
 
     @property
     def etag(self):
-        '''
+        """
         :type: str
-        '''
+        """
         return self._headers.get(Consts.RES_ETAG)
 
     @property
     def last_modified(self):
-        '''
+        """
         :type: str
-        '''
+        """
         return self._headers.get(Consts.RES_LAST_MODIFIED)
 
     def get__repr__(self, params):
         """
         Converts the object to a nicely printable string.
         """
+
         def format_params(params):
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):
-                    v = v.decode('utf-8')
+                    v = v.decode("utf-8")
                 if isinstance(v, six.text_type):
                     v = u'"{v}"'.format(v=v)
-                yield u'{k}={v}'.format(k=k, v=v)
-        return u'{class_name}({params})'.format(
+                yield u"{k}={v}".format(k=k, v=v)
+
+        return u"{class_name}({params})".format(
             class_name=self.__class__.__name__,
-            params=u", ".join(list(format_params(params)))
+            params=u", ".join(list(format_params(params))),
         )
 
 
@@ -271,19 +310,18 @@ class CompletableGithubObject(GithubObject):
 
     def __complete(self):
         if self._url.value is None:
-            raise GithubException.IncompletableObject(400, "Returned object contains no URL")
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self._url.value
-        )
+            raise GithubException.IncompletableObject(
+                400, "Returned object contains no URL"
+            )
+        headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
 
     def update(self, additional_headers=None):
-        '''
+        """
         Check and update the object with conditional request
         :rtype: Boolean value indicating whether the object is changed
-        '''
+        """
         conditionalRequestHeader = dict()
         if self.etag is not None:
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
@@ -293,14 +331,14 @@ class CompletableGithubObject(GithubObject):
             conditionalRequestHeader.update(additional_headers)
 
         status, responseHeaders, output = self._requester.requestJson(
-            "GET",
-            self._url.value,
-            headers=conditionalRequestHeader
+            "GET", self._url.value, headers=conditionalRequestHeader
         )
         if status == 304:
             return False
         else:
-            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            headers, data = self._requester._Requester__check(
+                status, responseHeaders, output
+            )
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True

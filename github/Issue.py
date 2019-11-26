@@ -43,22 +43,23 @@
 ################################################################################
 
 from __future__ import absolute_import
-import six.moves.urllib.parse
-import datetime
-import github.GithubObject
-import github.PaginatedList
 
-import github.Repository
-import github.IssueEvent
-import github.Label
-import github.NamedUser
-import github.Milestone
+import datetime
+
+import github.GithubObject
 import github.IssueComment
+import github.IssueEvent
 import github.IssuePullRequest
+import github.Label
+import github.Milestone
+import github.NamedUser
+import github.PaginatedList
 import github.Reaction
+import github.Repository
+import six
+import six.moves.urllib.parse
 
 from . import Consts
-import six
 
 
 class Issue(github.GithubObject.CompletableGithubObject):
@@ -67,7 +68,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"number": self._number.value, "title": self._title.value})
+        return self.get__repr__(
+            {"number": self._number.value, "title": self._title.value}
+        )
 
     @property
     def assignee(self):
@@ -206,7 +209,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:-2])
-            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
+            self._repository = github.GithubObject._ValuedAttribute(
+                github.Repository.Repository(
+                    self._requester, self._headers, {"url": repo_url}, completed=False
+                )
+            )
         return self._repository.value
 
     @property
@@ -271,10 +278,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PullRequest.PullRequest`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            "/pulls/".join(self.url.rsplit("/issues/", 1))
+            "GET", "/pulls/".join(self.url.rsplit("/issues/", 1))
         )
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        return github.PullRequest.PullRequest(
+            self._requester, headers, data, completed=True
+        )
 
     def add_to_assignees(self, *assignees):
         """
@@ -282,12 +290,20 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, six.text_type)) for element in assignees), assignees
-        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        assert all(
+            isinstance(element, (github.NamedUser.NamedUser, str, six.text_type))
+            for element in assignees
+        ), assignees
+        post_parameters = {
+            "assignees": [
+                assignee.login
+                if isinstance(assignee, github.NamedUser.NamedUser)
+                else assignee
+                for assignee in assignees
+            ]
+        }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/assignees",
-            input=post_parameters
+            "POST", self.url + "/assignees", input=post_parameters
         )
         self._useAttributes(data)
 
@@ -297,12 +313,16 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, six.text_type)) for element in labels), labels
-        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        assert all(
+            isinstance(element, (github.Label.Label, str, six.text_type))
+            for element in labels
+        ), labels
+        post_parameters = [
+            label.name if isinstance(label, github.Label.Label) else label
+            for label in labels
+        ]
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/labels",
-            input=post_parameters
+            "POST", self.url + "/labels", input=post_parameters
         )
 
     def create_comment(self, body):
@@ -316,11 +336,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/comments",
-            input=post_parameters
+            "POST", self.url + "/comments", input=post_parameters
         )
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        return github.IssueComment.IssueComment(
+            self._requester, headers, data, completed=True
+        )
 
     def delete_labels(self):
         """
@@ -328,11 +348,19 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/labels"
+            "DELETE", self.url + "/labels"
         )
 
-    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, assignees=github.GithubObject.NotSet):
+    def edit(
+        self,
+        title=github.GithubObject.NotSet,
+        body=github.GithubObject.NotSet,
+        assignee=github.GithubObject.NotSet,
+        state=github.GithubObject.NotSet,
+        milestone=github.GithubObject.NotSet,
+        labels=github.GithubObject.NotSet,
+        assignees=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
         :param title: string
@@ -344,13 +372,34 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, six.text_type)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, six.text_type)), body
-        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, six.text_type)), assignee
-        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, (str, six.text_type)) for element in assignees), assignees
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, six.text_type)), state
-        assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) for element in labels), labels
+        assert title is github.GithubObject.NotSet or isinstance(
+            title, (str, six.text_type)
+        ), title
+        assert body is github.GithubObject.NotSet or isinstance(
+            body, (str, six.text_type)
+        ), body
+        assert (
+            assignee is github.GithubObject.NotSet
+            or assignee is None
+            or isinstance(assignee, github.NamedUser.NamedUser)
+            or isinstance(assignee, (str, six.text_type))
+        ), assignee
+        assert assignees is github.GithubObject.NotSet or all(
+            isinstance(element, github.NamedUser.NamedUser)
+            or isinstance(element, (str, six.text_type))
+            for element in assignees
+        ), assignees
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, six.text_type)
+        ), state
+        assert (
+            milestone is github.GithubObject.NotSet
+            or milestone is None
+            or isinstance(milestone, github.Milestone.Milestone)
+        ), milestone
+        assert labels is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type)) for element in labels
+        ), labels
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -360,19 +409,22 @@ class Issue(github.GithubObject.CompletableGithubObject):
             if isinstance(assignee, (str, six.text_type)):
                 post_parameters["assignee"] = assignee
             else:
-                post_parameters["assignee"] = assignee._identity if assignee else ''
+                post_parameters["assignee"] = assignee._identity if assignee else ""
         if assignees is not github.GithubObject.NotSet:
-            post_parameters["assignees"] = [element._identity if isinstance(element, github.NamedUser.NamedUser) else element for element in assignees]
+            post_parameters["assignees"] = [
+                element._identity
+                if isinstance(element, github.NamedUser.NamedUser)
+                else element
+                for element in assignees
+            ]
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
         if milestone is not github.GithubObject.NotSet:
-            post_parameters["milestone"] = milestone._identity if milestone else ''
+            post_parameters["milestone"] = milestone._identity if milestone else ""
         if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = labels
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -389,7 +441,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/lock",
             input=put_parameters,
-            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
     def unlock(self):
@@ -398,8 +450,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/lock"
+            "DELETE", self.url + "/lock"
         )
 
     def get_comment(self, id):
@@ -410,10 +461,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, six.integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self._parentUrl(self.url) + "/comments/" + str(id)
+            "GET", self._parentUrl(self.url) + "/comments/" + str(id)
         )
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        return github.IssueComment.IssueComment(
+            self._requester, headers, data, completed=True
+        )
 
     def get_comments(self, since=github.GithubObject.NotSet):
         """
@@ -421,7 +473,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime
+        ), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -429,7 +483,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             github.IssueComment.IssueComment,
             self._requester,
             self.url + "/comments",
-            url_parameters
+            url_parameters,
         )
 
     def get_events(self):
@@ -442,7 +496,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/events",
             None,
-            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
     def get_labels(self):
@@ -451,10 +505,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label,
-            self._requester,
-            self.url + "/labels",
-            None
+            github.Label.Label, self._requester, self.url + "/labels", None
         )
 
     def remove_from_assignees(self, *assignees):
@@ -463,12 +514,20 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param assignee: :class:`github.NamedUser.NamedUser` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.NamedUser.NamedUser, str, six.text_type)) for element in assignees), assignees
-        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        assert all(
+            isinstance(element, (github.NamedUser.NamedUser, str, six.text_type))
+            for element in assignees
+        ), assignees
+        post_parameters = {
+            "assignees": [
+                assignee.login
+                if isinstance(assignee, github.NamedUser.NamedUser)
+                else assignee
+                for assignee in assignees
+            ]
+        }
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/assignees",
-            input=post_parameters
+            "DELETE", self.url + "/assignees", input=post_parameters
         )
         self._useAttributes(data)
 
@@ -484,8 +543,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         else:
             label = six.moves.urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/labels/" + label
+            "DELETE", self.url + "/labels/" + label
         )
 
     def set_labels(self, *labels):
@@ -494,12 +552,16 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label` or strings
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, six.text_type)) for element in labels), labels
-        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        assert all(
+            isinstance(element, (github.Label.Label, str, six.text_type))
+            for element in labels
+        ), labels
+        post_parameters = [
+            label.name if isinstance(label, github.Label.Label) else label
+            for label in labels
+        ]
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.url + "/labels",
-            input=post_parameters
+            "PUT", self.url + "/labels", input=post_parameters
         )
 
     def get_reactions(self):
@@ -512,7 +574,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/reactions",
             None,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
     def create_reaction(self, reaction_type):
@@ -521,9 +583,17 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, six.text_type)), "reaction type should be a string"
-        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
-            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+        assert isinstance(
+            reaction_type, (str, six.text_type)
+        ), "reaction type should be a string"
+        assert reaction_type in [
+            "+1",
+            "-1",
+            "laugh",
+            "confused",
+            "heart",
+            "hooray",
+        ], "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 
         post_parameters = {
             "content": reaction_type,
@@ -532,7 +602,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/reactions",
             input=post_parameters,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
@@ -566,22 +636,34 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "active_lock_reason" in attributes:  # pragma no branch
-            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
+            self._active_lock_reason = self._makeStringAttribute(
+                attributes["active_lock_reason"]
+            )
         if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+            self._assignee = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["assignee"]
+            )
         if "assignees" in attributes:  # pragma no branch
-            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
+            self._assignees = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["assignees"]
+            )
         elif "assignee" in attributes:
             if attributes["assignee"] is not None:
-                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
+                self._assignees = self._makeListOfClassesAttribute(
+                    github.NamedUser.NamedUser, [attributes["assignee"]]
+                )
             else:
-                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
+                self._assignees = self._makeListOfClassesAttribute(
+                    github.NamedUser.NamedUser, []
+                )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
             self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
-            self._closed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["closed_by"])
+            self._closed_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["closed_by"]
+            )
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch
@@ -595,19 +677,27 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels" in attributes:  # pragma no branch
-            self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
+            self._labels = self._makeListOfClassesAttribute(
+                github.Label.Label, attributes["labels"]
+            )
         if "labels_url" in attributes:  # pragma no branch
             self._labels_url = self._makeStringAttribute(attributes["labels_url"])
         if "locked" in attributes:  # pragma no branch
             self._locked = self._makeBoolAttribute(attributes["locked"])
         if "milestone" in attributes:  # pragma no branch
-            self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+            self._milestone = self._makeClassAttribute(
+                github.Milestone.Milestone, attributes["milestone"]
+            )
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "pull_request" in attributes:  # pragma no branch
-            self._pull_request = self._makeClassAttribute(github.IssuePullRequest.IssuePullRequest, attributes["pull_request"])
+            self._pull_request = self._makeClassAttribute(
+                github.IssuePullRequest.IssuePullRequest, attributes["pull_request"]
+            )
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"]
+            )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
@@ -617,4 +707,6 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"]
+            )

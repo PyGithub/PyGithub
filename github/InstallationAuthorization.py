@@ -26,9 +26,10 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
-import github.PaginatedList
 import github.NamedUser
+import github.PaginatedList
 
 
 class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
@@ -71,4 +72,6 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
         if "expires_at" in attributes:  # pragma no branch
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "on_behalf_of" in attributes:  # pragma no branch
-            self._on_behalf_of = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["on_behalf_of"])
+            self._on_behalf_of = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["on_behalf_of"]
+            )

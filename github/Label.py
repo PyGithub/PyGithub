@@ -32,12 +32,12 @@
 ################################################################################
 
 from __future__ import absolute_import
-import six.moves.urllib.parse
 
 import github.GithubObject
+import six
+import six.moves.urllib.parse
 
 from . import Consts
-import six
 
 
 class Label(github.GithubObject.CompletableGithubObject):
@@ -85,10 +85,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, name, color, description=github.GithubObject.NotSet):
         """
@@ -100,7 +97,9 @@ class Label(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, (str, six.text_type)), name
         assert isinstance(color, (str, six.text_type)), color
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, six.text_type)
+        ), description
         post_parameters = {
             "name": name,
             "color": color,
@@ -111,7 +110,7 @@ class Label(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             input=post_parameters,
-            headers={'Accept': Consts.mediaTypeLabelDescriptionSearchPreview}
+            headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
         self._useAttributes(data)
 
