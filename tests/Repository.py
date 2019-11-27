@@ -371,7 +371,7 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_forks(), lambda r: r.owner.login, ["abersager"])
 
     def testCreateFork(self):
-        self.assertEqual(self.repo.create_fork().full_name, "jacquev6/PyGithub")
+        self.assertEqual(self.repo.create_fork("jacquev6").full_name, "jacquev6/PyGithub")
 
     def testGetGitRefs(self):
         self.assertListKeyEqual(self.repo.get_git_refs(), lambda r: r.ref, ["refs/heads/develop", "refs/heads/master", "refs/heads/topic/DependencyGraph", "refs/heads/topic/RewriteWithGeneratedCode", "refs/tags/v0.1", "refs/tags/v0.2", "refs/tags/v0.3", "refs/tags/v0.4", "refs/tags/v0.5", "refs/tags/v0.6", "refs/tags/v0.7"])
