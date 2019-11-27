@@ -1867,13 +1867,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def create_fork(self, organization=None):
+    def create_fork(self, organization=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks>`_
+        :param organization: string or "none" or "*"
         :rtype: :class:`github.Repository.Repository`
         """
-        post_parameters = {
-        }
+        post_parameters = {}
         if organization is not None:
             post_parameters["organization"] = organization
         headers, data = self._requester.requestJsonAndCheck(
