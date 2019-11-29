@@ -2317,7 +2317,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
-            github.IssueComment.IssueComment,
+            github.PullRequestComment.PullRequestComment,
             self._requester,
             self.url + "/pulls/comments",
             url_parameters
