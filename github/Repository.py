@@ -2077,14 +2077,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param organization: string or "none" or "*"
         :rtype: :class:`github.Repository.Repository`
         """
-        assert organization is github.GithubObject.NotSet or isinstance(organization, (str, six.text_type)), organization
+        assert organization is github.GithubObject.NotSet or isinstance(
+            organization, (str, six.text_type)
+        ), organization
         post_parameters = {}
         if organization is not None:
             post_parameters["organization"] = organization
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/forks",
-            input=post_parameters,
+            "POST", self.url + "/forks", input=post_parameters,
         )
         return Repository(self._requester, headers, data, completed=True)
 

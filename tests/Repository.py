@@ -703,7 +703,9 @@ class Repository(Framework.TestCase):
         )
 
     def testCreateFork(self):
-        self.assertEqual(self.repo.create_fork("prtg-dev").full_name, "prtg-dev/PyGithub")
+        self.assertEqual(
+            self.repo.create_fork("prtg-dev").full_name, "prtg-dev/PyGithub"
+        )
 
     def testGetGitRefs(self):
         self.assertListKeyEqual(
