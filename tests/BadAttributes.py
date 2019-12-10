@@ -30,8 +30,9 @@ from __future__ import absolute_import
 
 import datetime
 
-import github
 import six
+
+import github
 
 from . import Framework
 

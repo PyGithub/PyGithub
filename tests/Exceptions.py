@@ -35,9 +35,10 @@ from __future__ import absolute_import
 
 import pickle
 
+from six.moves import range
+
 import github
 from github.GithubException import IncompletableObject
-from six.moves import range
 
 from . import Framework
 

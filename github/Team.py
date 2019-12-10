@@ -43,13 +43,14 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
 import github.Repository
 import github.TeamDiscussion
-import six
 
 from . import Consts
 

@@ -41,6 +41,8 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -50,7 +52,6 @@ import github.PaginatedList
 import github.Permissions
 import github.Plan
 import github.Repository
-import six
 
 
 class NamedUser(github.GithubObject.CompletableGithubObject):

@@ -91,6 +91,10 @@ import collections
 import datetime
 from base64 import b64encode
 
+import six
+import six.moves.urllib.parse
+from deprecated import deprecated
+
 import github.Branch
 import github.Clones
 import github.Commit
@@ -133,9 +137,6 @@ import github.StatsPunchCard
 import github.Tag
 import github.Team
 import github.View
-import six
-import six.moves.urllib.parse
-from deprecated import deprecated
 
 from . import Consts
 

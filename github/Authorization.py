@@ -32,9 +32,10 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.AuthorizationApplication
 import github.GithubObject
-import six
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):

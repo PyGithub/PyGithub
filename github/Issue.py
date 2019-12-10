@@ -46,6 +46,9 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+import six.moves.urllib.parse
+
 import github.GithubObject
 import github.IssueComment
 import github.IssueEvent
@@ -56,8 +59,6 @@ import github.NamedUser
 import github.PaginatedList
 import github.Reaction
 import github.Repository
-import six
-import six.moves.urllib.parse
 
 from . import Consts
 

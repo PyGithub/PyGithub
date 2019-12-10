@@ -39,10 +39,11 @@ from __future__ import absolute_import
 
 from os.path import basename
 
+import six
+
 import github.GithubObject
 import github.GitReleaseAsset
 import github.NamedUser
-import six
 
 
 class GitRelease(github.GithubObject.CompletableGithubObject):

@@ -44,11 +44,12 @@ import os
 import traceback
 import unittest
 
-import github
 import httpretty
 import six
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url
+
+import github
 
 
 def readLine(file_):

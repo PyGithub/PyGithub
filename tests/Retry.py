@@ -28,10 +28,11 @@
 
 from __future__ import absolute_import
 
-import github
 import requests
 import urllib3
 from httpretty import httpretty
+
+import github
 
 from . import Framework
 

@@ -35,9 +35,10 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.NamedUser
-import six
 
 from . import Consts
 

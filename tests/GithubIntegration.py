@@ -8,6 +8,7 @@ import unittest
 
 import jwt
 import requests  # NOQA
+
 from github.GithubObject import GithubObject
 
 private_key = """

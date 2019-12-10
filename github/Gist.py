@@ -35,13 +35,14 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
-import six
 
 
 class Gist(github.GithubObject.CompletableGithubObject):

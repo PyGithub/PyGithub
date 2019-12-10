@@ -27,8 +27,9 @@
 
 from __future__ import absolute_import
 
-import github.GithubObject
 import six
+
+import github.GithubObject
 
 
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):

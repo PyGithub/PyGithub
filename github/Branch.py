@@ -35,12 +35,13 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.BranchProtection
 import github.Commit
 import github.GithubObject
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
-import six
 
 from . import Consts
 

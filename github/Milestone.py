@@ -34,11 +34,12 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+
 import github.GithubObject
 import github.Label
 import github.NamedUser
 import github.PaginatedList
-import six
 
 
 class Milestone(github.GithubObject.CompletableGithubObject):

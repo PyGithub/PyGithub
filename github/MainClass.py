@@ -54,16 +54,17 @@ import datetime
 import pickle
 import time
 
+import jwt
+import requests
+import six
+import urllib3
+
 import github.Gist
 import github.GithubObject
 import github.License
 import github.NamedUser
 import github.PaginatedList
 import github.Topic
-import jwt
-import requests
-import six
-import urllib3
 
 from . import (
     AuthenticatedUser,

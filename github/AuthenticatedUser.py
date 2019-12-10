@@ -44,6 +44,8 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+
 import github.Authorization
 import github.Event
 import github.Gist
@@ -59,7 +61,6 @@ import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
-import six
 
 from . import Consts
 

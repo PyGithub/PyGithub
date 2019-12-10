@@ -33,9 +33,10 @@
 
 from __future__ import absolute_import
 
-import github.GithubObject
 import six
 import six.moves.urllib.parse
+
+import github.GithubObject
 
 from . import Consts
 

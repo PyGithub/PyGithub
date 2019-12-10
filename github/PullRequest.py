@@ -46,6 +46,9 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+import six.moves.urllib.parse
+
 import github.Commit
 import github.File
 import github.GithubObject
@@ -56,8 +59,6 @@ import github.PullRequestComment
 import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
-import six
-import six.moves.urllib.parse
 
 from . import Consts
 

@@ -45,6 +45,8 @@ from __future__ import absolute_import
 
 import datetime
 
+import six
+
 import github.Event
 import github.GithubObject
 import github.NamedUser
@@ -53,7 +55,6 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
-import six
 
 from . import Consts
 

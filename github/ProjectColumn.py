@@ -24,10 +24,11 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
-import six
 
 from . import Consts
 

@@ -33,9 +33,10 @@
 
 from __future__ import absolute_import
 
+import six
+
 import github.GithubObject
 import github.HookResponse
-import six
 
 
 class Hook(github.GithubObject.CompletableGithubObject):
