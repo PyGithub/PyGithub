@@ -27,9 +27,10 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
 
 import datetime
+
+from . import Framework
 
 
 class Traffic(Framework.TestCase):
@@ -51,7 +52,10 @@ class Traffic(Framework.TestCase):
         self.assertEqual(pathsResponse[0].uniques, 4)
         self.assertEqual(pathsResponse[0].count, 23)
         self.assertEqual(pathsResponse[0].path, "/jkufro/PyGithub")
-        self.assertEqual(pathsResponse[0].title, "jkufro/PyGithub: Typed interactions with the GitHub API v3")
+        self.assertEqual(
+            pathsResponse[0].title,
+            "jkufro/PyGithub: Typed interactions with the GitHub API v3",
+        )
 
     def testGetViews(self):
         viewsResponse = self.repo.get_views_traffic()

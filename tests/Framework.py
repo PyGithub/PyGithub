@@ -36,25 +36,25 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
 import io
 import json
 import os
 import traceback
 import unittest
-import httpretty
-from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
 
 import github
+import httpretty
 import six
+from requests.structures import CaseInsensitiveDict
+from urllib3.util import Url
 
 
 def readLine(file_):
     line = file_.readline()
     if isinstance(line, bytes):
-        line = line.decode('utf-8')
+        line = line.decode("utf-8")
     return line.strip()
 
 
@@ -98,7 +98,7 @@ class RecordingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        print(verb, url, input, headers, end=' ')
+        print(verb, url, input, headers, end=" ")
         self.__cnx.request(verb, url, input, headers)
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
@@ -115,7 +115,7 @@ class RecordingConnection:
         self.__writeLine(self.__port)
         self.__writeLine(url)
         self.__writeLine(anonymous_headers)
-        self.__writeLine(six.text_type(input).replace('\n', '').replace('\r', ''))
+        self.__writeLine(six.text_type(input).replace("\n", "").replace("\r", ""))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -136,7 +136,7 @@ class RecordingConnection:
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(six.text_type(line) + u'\n')
+        self.__file.write(six.text_type(line) + u"\n")
 
 
 class RecordingHttpConnection(RecordingConnection):
@@ -165,13 +165,11 @@ class ReplayingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
-
-        httpretty.register_uri(
-            verb,
-            full_url.url,
-            body=self.__request_callback
+        full_url = Url(
+            scheme=self.__protocol, host=self.__host, port=self.__port, path=url
         )
+
+        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
         self.__cnx.request(verb, url, input, headers)
 
@@ -181,14 +179,21 @@ class ReplayingConnection:
         self.__testCase.assertEqual(verb, readLine(self.__file))
         self.__testCase.assertEqual(self.__host, readLine(self.__file))
         self.__testCase.assertEqual(str(self.__port), readLine(self.__file))
-        self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
+        self.__testCase.assertEqual(
+            self.__splitUrl(url), self.__splitUrl(readLine(self.__file))
+        )
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
         if isinstance(input, (str, six.text_type)):
             if input.startswith("{"):
-                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
+                self.__testCase.assertEqual(
+                    json.loads(input.replace("\n", "").replace("\r", "")),
+                    json.loads(expectedInput),
+                )
             else:
-                self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+                self.__testCase.assertEqual(
+                    input.replace("\n", "").replace("\r", ""), expectedInput
+                )
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
@@ -202,18 +207,20 @@ class ReplayingConnection:
         return (base, sorted(qs.split("&")))
 
     def __request_callback(self, request, uri, response_headers):
-        self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
+        self.__readNextRequest(
+            self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers
+        )
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = bytearray(readLine(self.__file), 'utf-8')
+        output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
-        adding_headers.pop('content-length', None)
-        adding_headers.pop('transfer-encoding', None)
-        adding_headers.pop('content-encoding', None)
+        adding_headers.pop("content-length", None)
+        adding_headers.pop("transfer-encoding", None)
+        adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
         return [status, response_headers, output]
@@ -256,12 +263,19 @@ class BasicTestCase(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.__fileName = ""
         self.__file = None
-        if self.recordMode:  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
+        if (
+            self.recordMode
+        ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("w"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("w"), *args, **kwds)
+                lambda ignored, *args, **kwds: RecordingHttpConnection(
+                    self.__openFile("w"), *args, **kwds
+                ),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection(
+                    self.__openFile("w"), *args, **kwds
+                ),
             )
             import GithubCredentials
+
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
@@ -271,8 +285,12 @@ class BasicTestCase(unittest.TestCase):
             # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("r"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("r"), *args, **kwds)
+                lambda ignored, *args, **kwds: ReplayingHttpConnection(
+                    self, self.__openFile("r"), *args, **kwds
+                ),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection(
+                    self, self.__openFile("r"), *args, **kwds
+                ),
             )
             self.login = "login"
             self.password = "password"
@@ -292,9 +310,18 @@ class BasicTestCase(unittest.TestCase):
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
-            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(self.replayDataFolder, self.__class__.__name__ + "." + functionName + ".txt")
+            if (
+                functionName.startswith("test")
+                or functionName == "setUp"
+                or functionName == "tearDown"
+            ):
+                if (
+                    functionName != "test"
+                ):  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    fileName = os.path.join(
+                        self.replayDataFolder,
+                        self.__class__.__name__ + "." + functionName + ".txt",
+                    )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
@@ -303,7 +330,9 @@ class BasicTestCase(unittest.TestCase):
 
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
-            if not self.recordMode:  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
+            if (
+                not self.recordMode
+            ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
                 self.assertEqual(readLine(self.__file), "")
             self.__file.close()
 

@@ -33,13 +33,13 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
-import github.PaginatedList
 
+import github.GithubObject
 import github.NamedUser
+import github.PaginatedList
+import six
 
 from . import Consts
-import six
 
 
 class Migration(github.GithubObject.CompletableGithubObject):
@@ -137,11 +137,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url,
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            "GET", self.url, headers={"Accept": Consts.mediaTypeMigrationPreview}
         )
         self._useAttributes(data)
         return self.state
@@ -154,9 +150,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/archive",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
         return data["data"]
 
@@ -167,9 +161,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/archive",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
     def unlock_repo(self, repo_name):
@@ -182,9 +174,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo_name + "/lock",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
     def _initAttributes(self):
@@ -203,17 +193,25 @@ class Migration(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["owner"]
+            )
         if "guid" in attributes:
             self._guid = self._makeStringAttribute(attributes["guid"])
         if "state" in attributes:
             self._state = self._makeStringAttribute(attributes["state"])
         if "lock_repositories" in attributes:
-            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+            self._lock_repositories = self._makeBoolAttribute(
+                attributes["lock_repositories"]
+            )
         if "exclude_attachments" in attributes:
-            self._exclude_attachments = self._makeBoolAttribute(attributes["exclude_attachments"])
+            self._exclude_attachments = self._makeBoolAttribute(
+                attributes["exclude_attachments"]
+            )
         if "repositories" in attributes:
-            self._repositories = self._makeListOfClassesAttribute(github.Repository.Repository, attributes["repositories"])
+            self._repositories = self._makeListOfClassesAttribute(
+                github.Repository.Repository, attributes["repositories"]
+            )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "created_at" in attributes:

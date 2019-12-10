@@ -33,16 +33,16 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
-import github.PaginatedList
 
-import github.GitCommit
-import github.NamedUser
-import github.CommitStatus
 import github.CommitCombinedStatus
-import github.File
-import github.CommitStats
 import github.CommitComment
+import github.CommitStats
+import github.CommitStatus
+import github.File
+import github.GitCommit
+import github.GithubObject
+import github.NamedUser
+import github.PaginatedList
 import six
 
 
@@ -134,7 +134,13 @@ class Commit(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def create_comment(self, body, line=github.GithubObject.NotSet, path=github.GithubObject.NotSet, position=github.GithubObject.NotSet):
+    def create_comment(
+        self,
+        body,
+        line=github.GithubObject.NotSet,
+        path=github.GithubObject.NotSet,
+        position=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/repos/comments>`_
         :param body: string
@@ -144,9 +150,15 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(body, (str, six.text_type)), body
-        assert line is github.GithubObject.NotSet or isinstance(line, six.integer_types), line
-        assert path is github.GithubObject.NotSet or isinstance(path, (str, six.text_type)), path
-        assert position is github.GithubObject.NotSet or isinstance(position, six.integer_types), position
+        assert line is github.GithubObject.NotSet or isinstance(
+            line, six.integer_types
+        ), line
+        assert path is github.GithubObject.NotSet or isinstance(
+            path, (str, six.text_type)
+        ), path
+        assert position is github.GithubObject.NotSet or isinstance(
+            position, six.integer_types
+        ), position
         post_parameters = {
             "body": body,
         }
@@ -157,13 +169,19 @@ class Commit(github.GithubObject.CompletableGithubObject):
         if position is not github.GithubObject.NotSet:
             post_parameters["position"] = position
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/comments",
-            input=post_parameters
+            "POST", self.url + "/comments", input=post_parameters
         )
-        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
+        return github.CommitComment.CommitComment(
+            self._requester, headers, data, completed=True
+        )
 
-    def create_status(self, state, target_url=github.GithubObject.NotSet, description=github.GithubObject.NotSet, context=github.GithubObject.NotSet):
+    def create_status(
+        self,
+        state,
+        target_url=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+        context=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/:owner/:repo/statuses/:sha <http://developer.github.com/v3/repos/statuses>`_
         :param state: string
@@ -173,9 +191,15 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CommitStatus.CommitStatus`
         """
         assert isinstance(state, (str, six.text_type)), state
-        assert target_url is github.GithubObject.NotSet or isinstance(target_url, (str, six.text_type)), target_url
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, six.text_type)), description
-        assert context is github.GithubObject.NotSet or isinstance(context, (str, six.text_type)), context
+        assert target_url is github.GithubObject.NotSet or isinstance(
+            target_url, (str, six.text_type)
+        ), target_url
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, six.text_type)
+        ), description
+        assert context is github.GithubObject.NotSet or isinstance(
+            context, (str, six.text_type)
+        ), context
         post_parameters = {
             "state": state,
         }
@@ -188,9 +212,11 @@ class Commit(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
-            input=post_parameters
+            input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
+        return github.CommitStatus.CommitStatus(
+            self._requester, headers, data, completed=True
+        )
 
     def get_comments(self):
         """
@@ -201,7 +227,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             github.CommitComment.CommitComment,
             self._requester,
             self.url + "/comments",
-            None
+            None,
         )
 
     def get_statuses(self):
@@ -213,7 +239,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             github.CommitStatus.CommitStatus,
             self._requester,
             self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
-            None
+            None,
         )
 
     def get_combined_status(self):
@@ -221,11 +247,10 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/commits/:ref/status/ <http://developer.github.com/v3/repos/statuses>`_
         :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url + "/status"
+        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/status")
+        return github.CommitCombinedStatus.CommitCombinedStatus(
+            self._requester, headers, data, completed=True
         )
-        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
 
     @property
     def _identity(self):
@@ -245,22 +270,34 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["author"]
+            )
         if "comments_url" in attributes:  # pragma no branch
             self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
+            self._commit = self._makeClassAttribute(
+                github.GitCommit.GitCommit, attributes["commit"]
+            )
         if "committer" in attributes:  # pragma no branch
-            self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
+            self._committer = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["committer"]
+            )
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
+            self._files = self._makeListOfClassesAttribute(
+                github.File.File, attributes["files"]
+            )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch
-            self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
+            self._parents = self._makeListOfClassesAttribute(
+                Commit, attributes["parents"]
+            )
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
-            self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
+            self._stats = self._makeClassAttribute(
+                github.CommitStats.CommitStats, attributes["stats"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

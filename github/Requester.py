@@ -53,20 +53,21 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import base64
 import json
 import logging
 import mimetypes
 import os
 import re
-import requests
 import time
-import six.moves.urllib.parse
 from io import IOBase
 
-from . import Consts
-from . import GithubException
+import requests
 import six
+import six.moves.urllib.parse
+
+from . import Consts, GithubException
 
 
 class RequestsResponse:
@@ -85,7 +86,9 @@ class RequestsResponse:
 
 class HTTPSRequestsConnectionClass(object):
     # mimic the httplib connection object
-    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
+    def __init__(
+        self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
+    ):
         self.port = port if port else 443
         self.host = host
         self.protocol = "https"
@@ -96,7 +99,7 @@ class HTTPSRequestsConnectionClass(object):
         if retry:
             self.retry = retry
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount('https://', self.adapter)
+            self.session.mount("https://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -107,7 +110,14 @@ class HTTPSRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
+        r = verb(
+            url,
+            headers=self.headers,
+            data=self.input,
+            timeout=self.timeout,
+            verify=self.verify,
+            allow_redirects=False,
+        )
         return RequestsResponse(r)
 
     def close(self):
@@ -116,7 +126,9 @@ class HTTPSRequestsConnectionClass(object):
 
 class HTTPRequestsConnectionClass(object):
     # mimic the httplib connection object
-    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
+    def __init__(
+        self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
+    ):
         self.port = port if port else 80
         self.host = host
         self.protocol = "http"
@@ -127,7 +139,7 @@ class HTTPRequestsConnectionClass(object):
         if retry:
             self.retry = retry
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount('http://', self.adapter)
+            self.session.mount("http://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -138,7 +150,14 @@ class HTTPRequestsConnectionClass(object):
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
         url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
-        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
+        r = verb(
+            url,
+            headers=self.headers,
+            data=self.input,
+            timeout=self.timeout,
+            verify=self.verify,
+            allow_redirects=False,
+        )
         return RequestsResponse(r)
 
     def close(self):
@@ -190,7 +209,9 @@ class Requester:
         """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             new_frame = [requestHeader, None, None, None]
-            if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)
+            if (
+                self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1
+            ):  # pragma no branch (Should be covered)
                 self._frameBuffer.append(new_frame)
             else:
                 self._frameBuffer[0] = new_frame  # pragma no cover (Should be covered)
@@ -198,16 +219,22 @@ class Requester:
             self._frameCount = len(self._frameBuffer) - 1
 
     def DEBUG_ON_RESPONSE(self, statusCode, responseHeader, data):
-        '''
+        """
         Update current frame with response
         Current frame index will be attached to responseHeader
-        '''
+        """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
-            self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
+            self._frameBuffer[self._frameCount][1:4] = [
+                statusCode,
+                responseHeader,
+                data,
+            ]
             responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
     def check_me(self, obj):
-        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
+        if (
+            self.DEBUG_FLAG and self.ON_CHECK_ME is not None
+        ):  # pragma no branch (Flag always set in tests)
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]
@@ -220,12 +247,28 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
+    def __init__(
+        self,
+        login_or_token,
+        password,
+        jwt,
+        base_url,
+        timeout,
+        client_id,
+        client_secret,
+        user_agent,
+        per_page,
+        api_preview,
+        verify,
+        retry,
+    ):
         self._initializeDebugFeature()
 
         if password is not None:
             login = login_or_token
-            self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')
+            self.__authorizationHeader = "Basic " + base64.b64encode(
+                (login + ":" + password).encode("utf-8")
+            ).decode("utf-8").replace("\n", "")
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
@@ -258,20 +301,36 @@ class Requester:
         self.__clientId = client_id
         self.__clientSecret = client_secret
 
-        assert user_agent is not None, 'github now requires a user-agent. ' \
-            'See http://developer.github.com/v3/#user-agent-required'
+        assert user_agent is not None, (
+            "github now requires a user-agent. "
+            "See http://developer.github.com/v3/#user-agent-required"
+        )
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
         self.__verify = verify
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__check(
+            *self.requestJson(
+                verb, url, parameters, headers, input, self.__customConnection(url)
+            )
+        )
 
-    def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
+    def requestMultipartAndCheck(
+        self, verb, url, parameters=None, headers=None, input=None
+    ):
+        return self.__check(
+            *self.requestMultipart(
+                verb, url, parameters, headers, input, self.__customConnection(url)
+            )
+        )
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__check(
+            *self.requestBlob(
+                verb, url, parameters, headers, input, self.__customConnection(url)
+            )
+        )
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
@@ -283,25 +342,42 @@ class Requester:
         cnx = None
         if not url.startswith("/"):
             o = six.moves.urllib.parse.urlparse(url)
-            if o.hostname != self.__hostname or \
-               (o.port and o.port != self.__port) or \
-               (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
-                if o.scheme == 'http':
-                    cnx = self.__httpConnectionClass(o.hostname, o.port, retry=self.__retry)
-                elif o.scheme == 'https':
-                    cnx = self.__httpsConnectionClass(o.hostname, o.port, retry=self.__retry)
+            if (
+                o.hostname != self.__hostname
+                or (o.port and o.port != self.__port)
+                or (
+                    o.scheme != self.__scheme
+                    and not (o.scheme == "https" and self.__scheme == "http")
+                )
+            ):  # issue80
+                if o.scheme == "http":
+                    cnx = self.__httpConnectionClass(
+                        o.hostname, o.port, retry=self.__retry
+                    )
+                elif o.scheme == "https":
+                    cnx = self.__httpsConnectionClass(
+                        o.hostname, o.port, retry=self.__retry
+                    )
         return cnx
 
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
-        elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
+        elif (
+            status == 401
+            and Consts.headerOTP in headers
+            and re.match(r".*required.*", headers[Consts.headerOTP])
+        ):
             cls = GithubException.TwoFactorException
-        elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
+        elif status == 403 and output.get("message").startswith(
+            "Missing or invalid User Agent string"
+        ):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
             output.get("message").lower().startswith("api rate limit exceeded")
-            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
+            or output.get("message")
+            .lower()
+            .endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
@@ -319,15 +395,19 @@ class Requester:
             try:
                 return json.loads(data)
             except ValueError:
-                return {'data': data}
+                return {"data": data}
 
-    def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
+    def requestJson(
+        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+    ):
         def encode(input):
             return "application/json", json.dumps(input)
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
+    def requestMultipart(
+        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+    ):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -335,7 +415,9 @@ class Requester:
             encoded_input = ""
             for name, value in six.iteritems(input):
                 encoded_input += "--" + boundary + eol
-                encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
+                encoded_input += (
+                    'Content-Disposition: form-data; name="' + name + '"' + eol
+                )
                 encoded_input += eol
                 encoded_input += value + eol
             encoded_input += "--" + boundary + "--" + eol
@@ -349,15 +431,21 @@ class Requester:
                 mime_type = headers["Content-Type"]
             else:
                 guessed_type = mimetypes.guess_type(input)
-                mime_type = guessed_type[0] if guessed_type[0] is not None else Consts.defaultMediaType
-            f = open(local_path, 'rb')
+                mime_type = (
+                    guessed_type[0]
+                    if guessed_type[0] is not None
+                    else Consts.defaultMediaType
+                )
+            f = open(local_path, "rb")
             return mime_type, f
 
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
+    def __requestEncode(
+        self, cnx, verb, url, parameters, requestHeaders, input, encode
+    ):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -378,10 +466,18 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        status, responseHeaders, output = self.__requestRaw(
+            cnx, verb, url, requestHeaders, encoded_input
+        )
 
-        if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
-            self.rate_limiting = (int(responseHeaders[Consts.headerRateRemaining]), int(responseHeaders[Consts.headerRateLimit]))
+        if (
+            Consts.headerRateRemaining in responseHeaders
+            and Consts.headerRateLimit in responseHeaders
+        ):
+            self.rate_limiting = (
+                int(responseHeaders[Consts.headerRateRemaining]),
+                int(responseHeaders[Consts.headerRateLimit]),
+            )
         if Consts.headerRateReset in responseHeaders:
             self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
 
@@ -396,12 +492,7 @@ class Requester:
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        cnx.request(
-            verb,
-            url,
-            input,
-            requestHeaders
-        )
+        cnx.request(verb, url, input, requestHeaders)
         response = cnx.getresponse()
 
         status = response.status
@@ -415,12 +506,14 @@ class Requester:
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
-        if status == 202 and (verb == 'GET' or verb == 'HEAD'):  # only for requests that are considered 'safe' in RFC 2616
+        if status == 202 and (
+            verb == "GET" or verb == "HEAD"
+        ):  # only for requests that are considered 'safe' in RFC 2616
             time.sleep(Consts.PROCESSING_202_WAIT_TIME)
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
-        if status == 301 and 'location' in responseHeaders:
-            o = six.moves.urllib.parse.urlparse(responseHeaders['location'])
+        if status == 301 and "location" in responseHeaders:
+            o = six.moves.urllib.parse.urlparse(responseHeaders["location"])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
@@ -439,7 +532,11 @@ class Requester:
             url = self.__prefix + url
         else:
             o = six.moves.urllib.parse.urlparse(url)
-            assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
+            assert o.hostname in [
+                self.__hostname,
+                "uploads.github.com",
+                "status.github.com",
+            ], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
             url = o.path
@@ -461,7 +558,9 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        self.__connection = self.__connectionClass(self.__hostname, self.__port, retry=self.__retry, **kwds)
+        self.__connection = self.__connectionClass(
+            self.__hostname, self.__port, retry=self.__retry, **kwds
+        )
 
         return self.__connection
 
@@ -470,11 +569,26 @@ class Requester:
         if logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
                 if requestHeaders["Authorization"].startswith("Basic"):
-                    requestHeaders["Authorization"] = "Basic (login and password removed)"
+                    requestHeaders[
+                        "Authorization"
+                    ] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
                 elif requestHeaders["Authorization"].startswith("Bearer"):
                     requestHeaders["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", verb, self.__scheme, self.__hostname, url, requestHeaders, input, status, responseHeaders, output)
+                    requestHeaders[
+                        "Authorization"
+                    ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+            logger.debug(
+                "%s %s://%s%s %s %s ==> %i %s %s",
+                verb,
+                self.__scheme,
+                self.__hostname,
+                url,
+                requestHeaders,
+                input,
+                status,
+                responseHeaders,
+                output,
+            )

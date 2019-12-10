@@ -23,16 +23,28 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from . import Framework
 
 
 class RequiredStatusChecks(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.required_status_checks = self.g.get_user().get_repo("PyGithub").get_branch("integrations").get_required_status_checks()
+        self.required_status_checks = (
+            self.g.get_user()
+            .get_repo("PyGithub")
+            .get_branch("integrations")
+            .get_required_status_checks()
+        )
 
     def testAttributes(self):
         self.assertTrue(self.required_status_checks.strict)
         self.assertEqual(self.required_status_checks.contexts, ["foo/bar"])
-        self.assertEqual(self.required_status_checks.url, "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks")
-        self.assertEqual(self.required_status_checks.__repr__(), 'RequiredStatusChecks(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks", strict=True)')
+        self.assertEqual(
+            self.required_status_checks.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks",
+        )
+        self.assertEqual(
+            self.required_status_checks.__repr__(),
+            'RequiredStatusChecks(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks", strict=True)',
+        )

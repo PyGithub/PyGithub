@@ -29,10 +29,12 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
+
+import datetime
 
 import github
-import datetime
+
+from . import Framework
 
 
 class Gist(Framework.TestCase):
@@ -46,7 +48,10 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.files["GithubAPI.lua"].filename, "GithubAPI.lua")
         self.assertEqual(gist.files["GithubAPI.lua"].language, "Lua")
         self.assertEqual(gist.files["GithubAPI.lua"].content[:10], "-- GithubA")
-        self.assertEqual(gist.files["GithubAPI.lua"].raw_url, "https://gist.githubusercontent.com/jacquev6/6296732/raw/88aafa25fb28e17013054a117354a37f0d78963c/GithubAPI.lua")
+        self.assertEqual(
+            gist.files["GithubAPI.lua"].raw_url,
+            "https://gist.githubusercontent.com/jacquev6/6296732/raw/88aafa25fb28e17013054a117354a37f0d78963c/GithubAPI.lua",
+        )
         self.assertEqual(gist.forks, [])
         self.assertEqual(gist.git_pull_url, "https://gist.github.com/6296732.git")
         self.assertEqual(gist.git_push_url, "https://gist.github.com/6296732.git")
@@ -54,11 +59,18 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].change_status.additions, 793)
         self.assertEqual(gist.history[0].change_status.deletions, 0)
         self.assertEqual(gist.history[0].change_status.total, 793)
-        self.assertEqual(gist.history[0].committed_at, datetime.datetime(2013, 8, 21, 16, 12, 27))
-        self.assertEqual(gist.history[0].url, "https://api.github.com/gists/6296732/c464aecd7fea16684e935607eeea7ae4f8caa0e2")
+        self.assertEqual(
+            gist.history[0].committed_at, datetime.datetime(2013, 8, 21, 16, 12, 27)
+        )
+        self.assertEqual(
+            gist.history[0].url,
+            "https://api.github.com/gists/6296732/c464aecd7fea16684e935607eeea7ae4f8caa0e2",
+        )
         self.assertEqual(gist.history[0].user, None)
         self.assertEqual(gist.history[0].owner.login, "jacquev6")
-        self.assertEqual(gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2")
+        self.assertEqual(
+            gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2"
+        )
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.id, "6296732")
         self.assertTrue(gist.public)
@@ -82,7 +94,10 @@ class Gist(Framework.TestCase):
 
     def testEditWithAllParameters(self):
         gist = self.g.get_gist("2729810")
-        gist.edit("Description edited by PyGithub", {"barbaz.txt": github.InputFileContent("File also created by PyGithub")})
+        gist.edit(
+            "Description edited by PyGithub",
+            {"barbaz.txt": github.InputFileContent("File also created by PyGithub")},
+        )
         self.assertEqual(gist.description, "Description edited by PyGithub")
         self.assertEqual(gist.updated_at, datetime.datetime(2012, 5, 19, 7, 6, 10))
         self.assertEqual(set(gist.files.keys()), {"foobar.txt", "barbaz.txt"})
@@ -96,7 +111,13 @@ class Gist(Framework.TestCase):
     def testRenameFile(self):
         gist = self.g.get_gist("5339374")
         self.assertEqual(list(gist.files.keys()), ["bar.txt"])
-        gist.edit(files={"bar.txt": github.InputFileContent(gist.files["bar.txt"].content, new_name="baz.txt")})
+        gist.edit(
+            files={
+                "bar.txt": github.InputFileContent(
+                    gist.files["bar.txt"].content, new_name="baz.txt"
+                )
+            }
+        )
         self.assertEqual(list(gist.files.keys()), ["baz.txt"])
 
     def testCreateComment(self):

@@ -25,17 +25,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import absolute_import
+
+import github
+import requests
 import urllib3
 from httpretty import httpretty
 
 from . import Framework
 
-import requests
-
-import github
-
-REPO_NAME = 'PyGithub/PyGithub'
+REPO_NAME = "PyGithub/PyGithub"
 
 
 class Retry(Framework.TestCase):
@@ -43,10 +43,7 @@ class Retry(Framework.TestCase):
         # status codes returned on random github server errors
         status_forcelist = (500, 502, 504)
         retry = urllib3.Retry(
-            total=3,
-            read=3,
-            connect=3,
-            status_forcelist=status_forcelist
+            total=3, read=3, connect=3, status_forcelist=status_forcelist
         )
 
         Framework.enableRetry(retry)
@@ -61,7 +58,7 @@ class Retry(Framework.TestCase):
         repository = self.g.get_repo(REPO_NAME)
         self.assertEqual(len(httpretty.latest_requests), 4)
         for request in httpretty.latest_requests:
-            self.assertEqual(request.path, '/repos/' + REPO_NAME)
+            self.assertEqual(request.path, "/repos/" + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEqual(repository.full_name, REPO_NAME)
@@ -70,14 +67,14 @@ class Retry(Framework.TestCase):
         repository = self.g.get_repo(REPO_NAME)
         self.assertEqual(len(httpretty.latest_requests), 2)
         for request in httpretty.latest_requests:
-            self.assertEqual(request.path, '/repos/' + REPO_NAME)
+            self.assertEqual(request.path, "/repos/" + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEqual(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
         with self.assertRaises(requests.exceptions.RetryError):
-            self.g.get_repo('PyGithub/PyGithub')
+            self.g.get_repo("PyGithub/PyGithub")
         self.assertEqual(len(httpretty.latest_requests), 4)
         for request in httpretty.latest_requests:
-            self.assertEqual(request.path, '/repos/PyGithub/PyGithub')
+            self.assertEqual(request.path, "/repos/PyGithub/PyGithub")

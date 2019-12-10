@@ -35,9 +35,11 @@
 ################################################################################
 
 from __future__ import absolute_import
+
+import datetime
 import os
 import zipfile
-import datetime
+
 from . import Framework
 
 
@@ -66,21 +68,38 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.id, 1210814)
         self.assertEqual(self.release.tag_name, "v1.25.2")
         self.assertEqual(self.release.target_commitish, "master")
-        self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
+        self.assertEqual(
+            self.release.upload_url,
+            "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}",
+        )
         self.assertEqual(self.release.body, "Body")
         self.assertEqual(self.release.title, "Test")
         self.assertEqual(self.release.draft, False)
         self.assertEqual(self.release.prerelease, False)
-        self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
-        self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
+        self.assertEqual(
+            self.release.url,
+            "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814",
+        )
+        self.assertEqual(self.release.author._rawData["login"], "edhollandAL")
         self.assertEqual(self.release.author.login, "edhollandAL")
         self.assertEqual(self.release.author.id, 11922660)
         self.assertEqual(self.release.author.type, "User")
-        self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
+        self.assertEqual(
+            self.release.html_url,
+            "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2",
+        )
         self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
-        self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))
-        self.assertEqual(self.release.tarball_url, "https://api.github.com/repos/edhollandAL/PyGithub/tarball/v1.25.2")
-        self.assertEqual(self.release.zipball_url, "https://api.github.com/repos/edhollandAL/PyGithub/zipball/v1.25.2")
+        self.assertEqual(
+            self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51)
+        )
+        self.assertEqual(
+            self.release.tarball_url,
+            "https://api.github.com/repos/edhollandAL/PyGithub/tarball/v1.25.2",
+        )
+        self.assertEqual(
+            self.release.zipball_url,
+            "https://api.github.com/repos/edhollandAL/PyGithub/zipball/v1.25.2",
+        )
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
@@ -96,21 +115,31 @@ class Release(Framework.TestCase):
         self.assertEqual(new_release.title, "Updated Test")
 
     def testGetRelease(self):
-        release_by_id = self.g.get_user().get_repo("PyGithub").get_release('v1.25.2')
+        release_by_id = self.g.get_user().get_repo("PyGithub").get_release("v1.25.2")
         release_by_tag = self.g.get_user().get_repo("PyGithub").get_release(1210837)
         self.assertEqual(release_by_id, release_by_tag)
 
     def testCreateGitTagAndRelease(self):
         self.repo = self.g.get_user().get_repo("PyGithub")
-        self.release = self.repo.create_git_tag_and_release('v3.0.0', 'tag message', 'release title', 'release message', '5a05a5e58f682d315acd2447c87ac5b4d4fc55e8', 'commit')
+        self.release = self.repo.create_git_tag_and_release(
+            "v3.0.0",
+            "tag message",
+            "release title",
+            "release message",
+            "5a05a5e58f682d315acd2447c87ac5b4d4fc55e8",
+            "commit",
+        )
         self.assertEqual(self.release.tag_name, "v3.0.0")
         self.assertEqual(self.release.body, "release message")
         self.assertEqual(self.release.title, "release title")
-        self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
-        self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v3.0.0")
+        self.assertEqual(self.release.author._rawData["login"], "edhollandAL")
+        self.assertEqual(
+            self.release.html_url,
+            "https://github.com/edhollandAL/PyGithub/releases/tag/v3.0.0",
+        )
 
     def testGetLatestRelease(self):
-        self.repo = self.g.get_user().get_repo('PyGithub')
+        self.repo = self.g.get_user().get_repo("PyGithub")
         latest_release = self.repo.get_latest_release()
         self.assertEqual(latest_release.tag_name, "v1.25.2")
 
@@ -147,9 +176,9 @@ class Release(Framework.TestCase):
         the_release = the_repo.get_release(release_id)
         self.assertEqual(the_release.id, release_id)
 
-        the_release.upload_asset(self.artifact_path,
-                                 "unit test artifact",
-                                 "application/zip")
+        the_release.upload_asset(
+            self.artifact_path, "unit test artifact", "application/zip"
+        )
 
     def testUploadAssetWithName(self):
         release_id = 1210837

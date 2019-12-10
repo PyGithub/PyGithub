@@ -31,6 +31,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 import six
 
@@ -49,7 +50,9 @@ class InputGitAuthor(object):
 
         assert isinstance(name, (str, six.text_type)), name
         assert isinstance(email, (str, six.text_type)), email
-        assert date is github.GithubObject.NotSet or isinstance(date, (str, six.text_type)), date  # @todo Datetime?
+        assert date is github.GithubObject.NotSet or isinstance(
+            date, (str, six.text_type)
+        ), date  # @todo Datetime?
 
         self.__name = name
         self.__email = email

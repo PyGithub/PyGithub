@@ -34,15 +34,15 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
 import github.BranchProtection
 import github.Commit
+import github.GithubObject
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+import six
 
 from . import Consts
-import six
 
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
@@ -89,11 +89,15 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
+            self._commit = self._makeClassAttribute(
+                github.Commit.Commit, attributes["commit"]
+            )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "protection_url" in attributes:  # pragma no branch
-            self._protection_url = self._makeStringAttribute(attributes["protection_url"])
+            self._protection_url = self._makeStringAttribute(
+                attributes["protection_url"]
+            )
         if "protected" in attributes:  # pragma no branch
             self._protected = self._makeBoolAttribute(attributes["protected"])
 
@@ -104,11 +108,25 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.protection_url,
-            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews}
+            headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
         )
-        return github.BranchProtection.BranchProtection(self._requester, headers, data, completed=True)
+        return github.BranchProtection.BranchProtection(
+            self._requester, headers, data, completed=True
+        )
 
-    def edit_protection(self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet, enforce_admins=github.GithubObject.NotSet, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet, required_approving_review_count=github.GithubObject.NotSet, user_push_restrictions=github.GithubObject.NotSet, team_push_restrictions=github.GithubObject.NotSet):
+    def edit_protection(
+        self,
+        strict=github.GithubObject.NotSet,
+        contexts=github.GithubObject.NotSet,
+        enforce_admins=github.GithubObject.NotSet,
+        dismissal_users=github.GithubObject.NotSet,
+        dismissal_teams=github.GithubObject.NotSet,
+        dismiss_stale_reviews=github.GithubObject.NotSet,
+        require_code_owner_reviews=github.GithubObject.NotSet,
+        required_approving_review_count=github.GithubObject.NotSet,
+        user_push_restrictions=github.GithubObject.NotSet,
+        team_push_restrictions=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
         :strict: bool
@@ -127,21 +145,48 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         changing. Use edit_required_status_checks() to avoid this.
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in contexts), contexts
-        assert enforce_admins is github.GithubObject.NotSet or isinstance(enforce_admins, bool), enforce_admins
-        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in dismissal_users), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in dismissal_teams), dismissal_teams
-        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
-        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
-        assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
+        assert contexts is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in contexts
+        ), contexts
+        assert enforce_admins is github.GithubObject.NotSet or isinstance(
+            enforce_admins, bool
+        ), enforce_admins
+        assert dismissal_users is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in dismissal_users
+        ), dismissal_users
+        assert dismissal_teams is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in dismissal_teams
+        ), dismissal_teams
+        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
+            dismiss_stale_reviews, bool
+        ), dismiss_stale_reviews
+        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(
+            require_code_owner_reviews, bool
+        ), require_code_owner_reviews
+        assert (
+            required_approving_review_count is github.GithubObject.NotSet
+            or isinstance(required_approving_review_count, int)
+        ), required_approving_review_count
 
         post_parameters = {}
-        if strict is not github.GithubObject.NotSet or contexts is not github.GithubObject.NotSet:
+        if (
+            strict is not github.GithubObject.NotSet
+            or contexts is not github.GithubObject.NotSet
+        ):
             if strict is github.GithubObject.NotSet:
                 strict = False
             if contexts is github.GithubObject.NotSet:
                 contexts = []
-            post_parameters["required_status_checks"] = {"strict": strict, "contexts": contexts}
+            post_parameters["required_status_checks"] = {
+                "strict": strict,
+                "contexts": contexts,
+            }
         else:
             post_parameters["required_status_checks"] = None
 
@@ -150,36 +195,63 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         else:
             post_parameters["enforce_admins"] = None
 
-        if dismissal_users is not github.GithubObject.NotSet or dismissal_teams is not github.GithubObject.NotSet or dismiss_stale_reviews is not github.GithubObject.NotSet or require_code_owner_reviews is not github.GithubObject.NotSet or required_approving_review_count is not github.GithubObject.NotSet:
+        if (
+            dismissal_users is not github.GithubObject.NotSet
+            or dismissal_teams is not github.GithubObject.NotSet
+            or dismiss_stale_reviews is not github.GithubObject.NotSet
+            or require_code_owner_reviews is not github.GithubObject.NotSet
+            or required_approving_review_count is not github.GithubObject.NotSet
+        ):
             post_parameters["required_pull_request_reviews"] = {}
             if dismiss_stale_reviews is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"]["dismiss_stale_reviews"] = dismiss_stale_reviews
+                post_parameters["required_pull_request_reviews"][
+                    "dismiss_stale_reviews"
+                ] = dismiss_stale_reviews
             if require_code_owner_reviews is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"]["require_code_owner_reviews"] = require_code_owner_reviews
+                post_parameters["required_pull_request_reviews"][
+                    "require_code_owner_reviews"
+                ] = require_code_owner_reviews
             if required_approving_review_count is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"]["required_approving_review_count"] = required_approving_review_count
+                post_parameters["required_pull_request_reviews"][
+                    "required_approving_review_count"
+                ] = required_approving_review_count
             if dismissal_users is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"]["dismissal_restrictions"] = {"users": dismissal_users}
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ] = {"users": dismissal_users}
             if dismissal_teams is not github.GithubObject.NotSet:
-                if "dismissal_restrictions" not in post_parameters["required_pull_request_reviews"]:
-                    post_parameters["required_pull_request_reviews"]["dismissal_restrictions"] = {}
-                post_parameters["required_pull_request_reviews"]["dismissal_restrictions"]["teams"] = dismissal_teams
+                if (
+                    "dismissal_restrictions"
+                    not in post_parameters["required_pull_request_reviews"]
+                ):
+                    post_parameters["required_pull_request_reviews"][
+                        "dismissal_restrictions"
+                    ] = {}
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ]["teams"] = dismissal_teams
         else:
             post_parameters["required_pull_request_reviews"] = None
-        if user_push_restrictions is not github.GithubObject.NotSet or team_push_restrictions is not github.GithubObject.NotSet:
+        if (
+            user_push_restrictions is not github.GithubObject.NotSet
+            or team_push_restrictions is not github.GithubObject.NotSet
+        ):
             if user_push_restrictions is github.GithubObject.NotSet:
                 user_push_restrictions = []
             if team_push_restrictions is github.GithubObject.NotSet:
                 team_push_restrictions = []
-            post_parameters["restrictions"] = {"users": user_push_restrictions, "teams": team_push_restrictions}
+            post_parameters["restrictions"] = {
+                "users": user_push_restrictions,
+                "teams": team_push_restrictions,
+            }
         else:
             post_parameters["restrictions"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.protection_url,
-            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews},
-            input=post_parameters
+            headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
+            input=post_parameters,
         )
 
     def remove_protection(self):
@@ -187,8 +259,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url,
+            "DELETE", self.protection_url,
         )
 
     def get_required_status_checks(self):
@@ -197,19 +268,26 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :rtype: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.protection_url + "/required_status_checks"
+            "GET", self.protection_url + "/required_status_checks"
         )
-        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
+        return github.RequiredStatusChecks.RequiredStatusChecks(
+            self._requester, headers, data, completed=True
+        )
 
-    def edit_required_status_checks(self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
+    def edit_required_status_checks(
+        self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
         :strict: bool
         :contexts: list of strings
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in contexts), contexts
+        assert contexts is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in contexts
+        ), contexts
 
         post_parameters = {}
         if strict is not github.GithubObject.NotSet:
@@ -219,7 +297,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.protection_url + "/required_status_checks",
-            input=post_parameters
+            input=post_parameters,
         )
 
     def remove_required_status_checks(self):
@@ -227,8 +305,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/required_status_checks"
+            "DELETE", self.protection_url + "/required_status_checks"
         )
 
     def get_required_pull_request_reviews(self):
@@ -239,11 +316,20 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.protection_url + "/required_pull_request_reviews",
-            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews}
+            headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
         )
-        return github.RequiredPullRequestReviews.RequiredPullRequestReviews(self._requester, headers, data, completed=True)
+        return github.RequiredPullRequestReviews.RequiredPullRequestReviews(
+            self._requester, headers, data, completed=True
+        )
 
-    def edit_required_pull_request_reviews(self, dismissal_users=github.GithubObject.NotSet, dismissal_teams=github.GithubObject.NotSet, dismiss_stale_reviews=github.GithubObject.NotSet, require_code_owner_reviews=github.GithubObject.NotSet, required_approving_review_count=github.GithubObject.NotSet):
+    def edit_required_pull_request_reviews(
+        self,
+        dismissal_users=github.GithubObject.NotSet,
+        dismissal_teams=github.GithubObject.NotSet,
+        dismiss_stale_reviews=github.GithubObject.NotSet,
+        require_code_owner_reviews=github.GithubObject.NotSet,
+        required_approving_review_count=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
         :dismissal_users: list of strings
@@ -252,11 +338,26 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
-        assert dismissal_users is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in dismissal_users), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in dismissal_teams), dismissal_teams
-        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(dismiss_stale_reviews, bool), dismiss_stale_reviews
-        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(require_code_owner_reviews, bool), require_code_owner_reviews
-        assert required_approving_review_count is github.GithubObject.NotSet or isinstance(required_approving_review_count, int), required_approving_review_count
+        assert dismissal_users is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in dismissal_users
+        ), dismissal_users
+        assert dismissal_teams is github.GithubObject.NotSet or all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in dismissal_teams
+        ), dismissal_teams
+        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
+            dismiss_stale_reviews, bool
+        ), dismiss_stale_reviews
+        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(
+            require_code_owner_reviews, bool
+        ), require_code_owner_reviews
+        assert (
+            required_approving_review_count is github.GithubObject.NotSet
+            or isinstance(required_approving_review_count, int)
+        ), required_approving_review_count
 
         post_parameters = {}
         if dismissal_users is not github.GithubObject.NotSet:
@@ -270,12 +371,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         if require_code_owner_reviews is not github.GithubObject.NotSet:
             post_parameters["require_code_owner_reviews"] = require_code_owner_reviews
         if required_approving_review_count is not github.GithubObject.NotSet:
-            post_parameters["required_approving_review_count"] = required_approving_review_count
+            post_parameters[
+                "required_approving_review_count"
+            ] = required_approving_review_count
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.protection_url + "/required_pull_request_reviews",
-            headers={'Accept': Consts.mediaTypeRequireMultipleApprovingReviews},
-            input=post_parameters
+            headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
+            input=post_parameters,
         )
 
     def remove_required_pull_request_reviews(self):
@@ -283,8 +386,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/required_pull_request_reviews"
+            "DELETE", self.protection_url + "/required_pull_request_reviews"
         )
 
     def get_admin_enforcement(self):
@@ -293,8 +395,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :rtype: bool
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.protection_url + "/enforce_admins"
+            "GET", self.protection_url + "/enforce_admins"
         )
         return data["enabled"]
 
@@ -303,8 +404,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.protection_url + "/enforce_admins"
+            "POST", self.protection_url + "/enforce_admins"
         )
 
     def remove_admin_enforcement(self):
@@ -312,8 +412,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/enforce_admins"
+            "DELETE", self.protection_url + "/enforce_admins"
         )
 
     def get_user_push_restrictions(self):
@@ -325,7 +424,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             github.NamedUser.NamedUser,
             self._requester,
             self.protection_url + "/restrictions/users",
-            None
+            None,
         )
 
     def get_team_push_restrictions(self):
@@ -337,7 +436,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             github.Team.Team,
             self._requester,
             self.protection_url + "/restrictions/teams",
-            None
+            None,
         )
 
     def add_user_push_restrictions(self, *users):
@@ -345,12 +444,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in users
+        ), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.protection_url + "/restrictions/users",
-            input=users
+            "POST", self.protection_url + "/restrictions/users", input=users
         )
 
     def replace_user_push_restrictions(self, *users):
@@ -358,12 +459,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in users
+        ), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.protection_url + "/restrictions/users",
-            input=users
+            "PUT", self.protection_url + "/restrictions/users", input=users
         )
 
     def remove_user_push_restrictions(self, *users):
@@ -371,12 +474,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in users), users
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in users
+        ), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/restrictions/users",
-            input=users
+            "DELETE", self.protection_url + "/restrictions/users", input=users
         )
 
     def add_team_push_restrictions(self, *teams):
@@ -384,12 +489,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in teams
+        ), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.protection_url + "/restrictions/teams",
-            input=teams
+            "POST", self.protection_url + "/restrictions/teams", input=teams
         )
 
     def replace_team_push_restrictions(self, *teams):
@@ -397,12 +504,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in teams
+        ), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.protection_url + "/restrictions/teams",
-            input=teams
+            "PUT", self.protection_url + "/restrictions/teams", input=teams
         )
 
     def remove_team_push_restrictions(self, *teams):
@@ -410,12 +519,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(isinstance(element, (str, six.text_type)) or isinstance(element, (str, six.text_type)) for element in teams), teams
+        assert all(
+            isinstance(element, (str, six.text_type))
+            or isinstance(element, (str, six.text_type))
+            for element in teams
+        ), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/restrictions/teams",
-            input=teams
+            "DELETE", self.protection_url + "/restrictions/teams", input=teams
         )
 
     def remove_push_restrictions(self):
@@ -423,8 +534,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.protection_url + "/restrictions"
+            "DELETE", self.protection_url + "/restrictions"
         )
 
     def get_required_signatures(self):
@@ -434,7 +544,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.protection_url + "/required_signatures",
-            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+            headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
         return data["enabled"]
 
@@ -445,7 +555,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.protection_url + "/required_signatures",
-            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+            headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
 
     def remove_required_signatures(self):
@@ -455,5 +565,5 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.protection_url + "/required_signatures",
-            headers={'Accept': Consts.signaturesProtectedBranchesPreview}
+            headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )

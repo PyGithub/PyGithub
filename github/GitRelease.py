@@ -36,10 +36,12 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from os.path import basename
+
 import github.GithubObject
-import github.NamedUser
 import github.GitReleaseAsset
+import github.NamedUser
 import six
 
 
@@ -176,24 +178,27 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#delete-a-release>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def update_release(self, name, message, draft=False, prerelease=False,
-                       tag_name=github.GithubObject.NotSet,
-                       target_commitish=github.GithubObject.NotSet):
+    def update_release(
+        self,
+        name,
+        message,
+        draft=False,
+        prerelease=False,
+        tag_name=github.GithubObject.NotSet,
+        target_commitish=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#edit-a-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
-        assert tag_name is github.GithubObject.NotSet              \
-            or isinstance(tag_name, (str, six.text_type)),               \
-            'tag_name must be a str/unicode object'
-        assert target_commitish is github.GithubObject.NotSet      \
-            or isinstance(target_commitish, (str, six.text_type)),       \
-            'target_commitish must be a str/unicode object'
+        assert tag_name is github.GithubObject.NotSet or isinstance(
+            tag_name, (str, six.text_type)
+        ), "tag_name must be a str/unicode object"
+        assert target_commitish is github.GithubObject.NotSet or isinstance(
+            target_commitish, (str, six.text_type)
+        ), "target_commitish must be a str/unicode object"
         assert isinstance(name, (str, six.text_type)), name
         assert isinstance(message, (str, six.text_type)), message
         assert isinstance(draft, bool), draft
@@ -210,26 +215,32 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         # Do not set target_commitish to self.target_commitish when ommited, just don't send it
         # alltogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not github.GithubObject.NotSet:
-            post_parameters['target_commitish'] = target_commitish
+            post_parameters["target_commitish"] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
-        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+        return github.GitRelease.GitRelease(
+            self._requester, headers, data, completed=True
+        )
 
-    def upload_asset(self, path, label="", content_type=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
+    def upload_asset(
+        self,
+        path,
+        label="",
+        content_type=github.GithubObject.NotSet,
+        name=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
         :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(path, (str, six.text_type)), path
         assert isinstance(label, (str, six.text_type)), label
-        assert name is github.GithubObject.NotSet or isinstance(name, (str, six.text_type)), name
+        assert name is github.GithubObject.NotSet or isinstance(
+            name, (str, six.text_type)
+        ), name
 
-        post_parameters = {
-            "label": label
-        }
+        post_parameters = {"label": label}
         if name is github.GithubObject.NotSet:
             post_parameters["name"] = basename(path)
         else:
@@ -242,9 +253,11 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self.upload_url.split("{?")[0],
             parameters=post_parameters,
             headers=headers,
-            input=path
+            input=path,
         )
-        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+        return github.GitReleaseAsset.GitReleaseAsset(
+            self._requester, resp_headers, data, completed=True
+        )
 
     def get_assets(self):
         """
@@ -255,7 +268,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             github.GitReleaseAsset.GitReleaseAsset,
             self._requester,
             self.url + "/assets",
-            None
+            None,
         )
 
     def _initAttributes(self):
@@ -285,13 +298,17 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
         if "target_commitish" in attributes:
-            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+            self._target_commitish = self._makeStringAttribute(
+                attributes["target_commitish"]
+            )
         if "draft" in attributes:
             self._draft = self._makeBoolAttribute(attributes["draft"])
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["author"]
+            )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:
