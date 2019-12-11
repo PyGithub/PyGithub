@@ -169,6 +169,7 @@ class Requester:
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
     __persist = True
+    __logger = None
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -181,6 +182,14 @@ class Requester:
         cls.__persist = True
         cls.__httpConnectionClass = HTTPRequestsConnectionClass
         cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
+
+    @classmethod
+    def injectLogger(cls, logger):
+        cls.__logger = logger
+
+    @classmethod
+    def resetLogger(cls):
+        cls.__logger = None
 
     #############################################################
     # For Debug
@@ -565,8 +574,9 @@ class Requester:
         return self.__connection
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
-        logger = logging.getLogger(__name__)
-        if logger.isEnabledFor(logging.DEBUG):
+        if self.__logger is None:
+            self.__logger = logging.getLogger(__name__)
+        if self.__logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
                 if requestHeaders["Authorization"].startswith("Basic"):
                     requestHeaders[
@@ -580,7 +590,7 @@ class Requester:
                     requestHeaders[
                         "Authorization"
                     ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-            logger.debug(
+            self.__logger.debug(
                 "%s %s://%s%s %s %s ==> %i %s %s",
                 verb,
                 self.__scheme,
