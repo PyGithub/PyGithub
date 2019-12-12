@@ -108,3 +108,6 @@ vulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
 
 # https://developer.github.com/changes/2019-06-04-automated-security-fixes/
 automatedSecurityFixes = "application/vnd.github.london-preview+json"
+
+# https://developer.github.com/changes/2019-05-29-update-branch-api/
+updateBranchPreview = "application/vnd.github.lydian-preview+json"

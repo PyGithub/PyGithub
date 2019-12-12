@@ -835,7 +835,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/update-branch",
-            input=post_parameters
+            input=post_parameters,
+            headers={'Accept': Consts.updateBranchPreview}
         )
 
     def _initAttributes(self):

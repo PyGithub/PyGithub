@@ -230,4 +230,4 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
 
     def testUpdateBranch(self):
-        self.pull.update_branch("688208b1a5a074871d0e9376119556897439697d")
+        self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
