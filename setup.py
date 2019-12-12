@@ -46,7 +46,6 @@ import textwrap
 
 import setuptools
 
-
 version = "1.44.1"
 
 tests_require = [
@@ -67,7 +66,8 @@ if __name__ == "__main__":
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
         url="http://pygithub.readthedocs.io/en/latest/",
-        long_description=textwrap.dedent("""\
+        long_description=textwrap.dedent(
+            """\
             (Very short) Tutorial
             =====================
 
@@ -90,7 +90,8 @@ if __name__ == "__main__":
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""),
+            See http://pygithub.readthedocs.io/en/latest/"""
+        ),
         packages=["github"],
         package_data={},
         classifiers=[
@@ -111,14 +112,7 @@ if __name__ == "__main__":
         ],
         test_suite="tests.AllTests",
         python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
-        install_requires=[
-            "deprecated",
-            "pyjwt",
-            "requests>=2.14.0",
-            "six"
-        ],
-        extras_require={
-            "integrations": ["cryptography"]
-        },
-        tests_require=tests_require
+        install_requires=["deprecated", "pyjwt", "requests>=2.14.0", "six"],
+        extras_require={"integrations": ["cryptography"]},
+        tests_require=tests_require,
     )

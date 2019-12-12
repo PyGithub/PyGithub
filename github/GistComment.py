@@ -31,10 +31,11 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
-import github.NamedUser
 import six
+
+import github.GithubObject
+import github.NamedUser
 
 
 class GistComment(github.GithubObject.CompletableGithubObject):
@@ -98,10 +99,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /gists/:gist_id/comments/:id <http://developer.github.com/v3/gists/comments>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body):
         """
@@ -114,9 +112,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -140,4 +136,6 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"]
+            )

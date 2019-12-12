@@ -92,6 +92,7 @@ class BadAttributeException(Exception):
     """
     Exception raised when Github returns an attribute with the wrong type.
     """
+
     def __init__(self, actualValue, expectedType, transformationException):
         self.__actualValue = actualValue
         self.__expectedType = expectedType

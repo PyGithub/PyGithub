@@ -26,6 +26,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from . import Framework
 
 
@@ -50,8 +51,16 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
     def testGetFileContents(self):
         contents = self.repo.get_contents("js/bootstrap-affix.js")
         self.assertEqual(contents.encoding, "base64")
-        self.assertEqual(contents.url, "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js")
+        self.assertEqual(
+            contents.url,
+            "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js",
+        )
         self.assertEqual(len(contents.content), 4722)
 
     def testGetDirContentsWithRef(self):
-        self.assertEqual(len(self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")), 15)
+        self.assertEqual(
+            len(
+                self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")
+            ),
+            15,
+        )
