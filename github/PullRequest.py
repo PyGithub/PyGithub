@@ -892,7 +892,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def update_branch(self, expected_head_sha):
         """
-        :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>
+        :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>`_
         :param expected_head_sha: string
         :rtype: None
         """
