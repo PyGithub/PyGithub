@@ -228,3 +228,6 @@ class PullRequest(Framework.TestCase):
                                 ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
         self.pull.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+
+    def testUpdateBranch(self):
+        self.pull.update_branch("688208b1a5a074871d0e9376119556897439697d")
