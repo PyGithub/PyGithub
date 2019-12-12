@@ -27,6 +27,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -37,12 +38,14 @@ class Path(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "path": self._path.value,
-            "title": self._title.value,
-            "count": self._count.value,
-            "uniques": self._uniques.value
-        })
+        return self.get__repr__(
+            {
+                "path": self._path.value,
+                "title": self._title.value,
+                "count": self._count.value,
+                "uniques": self._uniques.value,
+            }
+        )
 
     @property
     def path(self):

@@ -58,7 +58,9 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.privacy, "closed")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
+        self.assertEqual(
+            self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)'
+        )
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())
@@ -70,9 +72,14 @@ class Team(Framework.TestCase):
         self.assertEqual(d.body_html, "<p>BODY</p>")
         self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
         self.assertEqual(d.comments_count, 0)
-        self.assertEqual(d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments")
+        self.assertEqual(
+            d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments"
+        )
         self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36))
-        self.assertEqual(d.html_url, "https://github.com/orgs/BeaverSoftware/teams/Team/discussions/1")
+        self.assertEqual(
+            d.html_url,
+            "https://github.com/orgs/BeaverSoftware/teams/Team/discussions/1",
+        )
         self.assertEqual(d.last_edited_at, None)
         self.assertEqual(d.node_id, "MDE0OlRlYW1EaXNjdXNzaW9uMzA=")
         self.assertEqual(d.number, 1)
@@ -88,7 +95,9 @@ class Team(Framework.TestCase):
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_to_members(user)
-        self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
+        self.assertListKeyEqual(
+            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+        )
         self.assertTrue(self.team.has_in_members(user))
         self.team.remove_from_members(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
@@ -106,7 +115,9 @@ class Team(Framework.TestCase):
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
         self.team.add_to_repos(repo)
-        self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, ["FatherBeaver"])
+        self.assertListKeyEqual(
+            self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
+        )
         self.assertTrue(self.team.has_in_repos(repo))
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
@@ -117,7 +128,12 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
-        self.team.edit("Name edited twice by PyGithub", "Description edited by PyGithub", "admin", "secret")
+        self.team.edit(
+            "Name edited twice by PyGithub",
+            "Description edited by PyGithub",
+            "admin",
+            "secret",
+        )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")

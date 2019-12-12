@@ -27,9 +27,9 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
 import github.CommitStatus
+import github.GithubObject
 import github.Repository
 
 
@@ -111,6 +111,10 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"]
+            )
         if "statuses" in attributes:  # pragma no branch
-            self._statuses = self._makeListOfClassesAttribute(github.CommitStatus.CommitStatus, attributes["statuses"])
+            self._statuses = self._makeListOfClassesAttribute(
+                github.CommitStatus.CommitStatus, attributes["statuses"]
+            )

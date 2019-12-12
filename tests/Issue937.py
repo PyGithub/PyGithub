@@ -17,11 +17,14 @@
 # FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
 # details.                                                                     #
 #                                                                              #
-# You should have received a copy of the GNU Lesser General Public License     #
-# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+
+
 #                                                                              #
 ################################################################################
 from __future__ import absolute_import
+
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 from . import Framework
 
 
@@ -32,7 +35,7 @@ class Issue937(Framework.TestCase):
         self.repo = self.user.get_repo("PyGithub")
 
     def testCollaboratorsAffiliation(self):
-        collaborators = self.repo.get_collaborators(affiliation='direct')
+        collaborators = self.repo.get_collaborators(affiliation="direct")
         self.assertListKeyEqual(collaborators, lambda u: u.login, ["hegde5"])
         with self.assertRaises(AssertionError):
-            self.repo.get_collaborators(affiliation='invalid_option')
+            self.repo.get_collaborators(affiliation="invalid_option")

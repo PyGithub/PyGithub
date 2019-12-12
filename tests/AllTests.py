@@ -45,20 +45,28 @@ from __future__ import absolute_import
 from .AuthenticatedUser import AuthenticatedUser
 from .Authentication import Authentication
 from .Authorization import Authorization
+from .BadAttributes import BadAttributes
 from .Branch import Branch
 from .BranchProtection import BranchProtection
 from .Commit import Commit
 from .CommitCombinedStatus import CommitCombinedStatus
 from .CommitComment import CommitComment
 from .CommitStatus import CommitStatus
+from .ConditionalRequestUpdate import ConditionalRequestUpdate
+from .Connection import Connection
 from .ContentFile import ContentFile
 from .Download import Download
+from .Enterprise import Enterprise
+from .Equality import Equality
 from .Event import Event
+from .Exceptions import Exceptions, SpecificExceptions
+from .ExposeAllAttributes import ExposeAllAttributes
 from .Gist import Gist
 from .GistComment import GistComment
 from .GitBlob import GitBlob
 from .GitCommit import GitCommit
 from .Github_ import Github
+from .GithubIntegration import GithubIntegration
 from .GitRef import GitRef
 from .GitRelease import Release
 from .GitReleaseAsset import ReleaseAsset
@@ -66,51 +74,6 @@ from .GitTag import GitTag
 from .GitTree import GitTree
 from .Hook import Hook
 from .Issue import Issue
-from .IssueComment import IssueComment
-from .Reaction import Reaction
-from .IssueEvent import IssueEvent
-from .License import License
-from .Label import Label
-from .Milestone import Milestone
-from .NamedUser import NamedUser
-from .Markdown import Markdown
-from .Notification import Notification
-from .OrganizationHasInMembers import OrganizationHasInMembers
-from .Organization import Organization
-from .Project import Project
-from .PullRequest import PullRequest
-from .PullRequestComment import PullRequestComment
-from .PullRequestReview import PullRequestReview
-from .PullRequestFile import PullRequestFile
-from .RateLimiting import RateLimiting
-from .Repository import LazyRepository, Repository
-from .RepositoryKey import RepositoryKey
-from .RequiredPullRequestReviews import RequiredPullRequestReviews
-from .RequiredStatusChecks import RequiredStatusChecks
-from .SourceImport import SourceImport
-from .Tag import Tag
-from .Team import Team
-from .Topic import Topic
-from .Traffic import Traffic
-from .UserKey import UserKey
-from .Migration import Migration
-from .GithubIntegration import GithubIntegration
-
-from .PaginatedList import PaginatedList
-from .Exceptions import Exceptions, SpecificExceptions
-from .Enterprise import Enterprise
-from .Logging_ import Logging
-from .RawData import RawData
-from .ConditionalRequestUpdate import ConditionalRequestUpdate
-from .Persistence import Persistence
-from .ExposeAllAttributes import ExposeAllAttributes
-from .BadAttributes import BadAttributes
-from .Equality import Equality
-from .Search import Search
-from .Retry import Retry
-
-from .Connection import Connection
-
 from .Issue33 import Issue33
 from .Issue50 import Issue50
 from .Issue54 import Issue54
@@ -129,13 +92,45 @@ from .Issue216 import Issue216
 from .Issue278 import Issue278
 from .Issue494 import Issue494
 from .Issue572 import Issue572
+from .Issue823 import Issue823
 from .Issue937 import Issue937
 from .Issue945 import Issue945
-from .Issue823 import Issue823
-
+from .IssueComment import IssueComment
+from .IssueEvent import IssueEvent
+from .Label import Label
+from .License import License
+from .Logging_ import Logging
+from .Markdown import Markdown
+from .Migration import Migration
+from .Milestone import Milestone
+from .NamedUser import NamedUser
+from .Notification import Notification
+from .Organization import Organization
+from .OrganizationHasInMembers import OrganizationHasInMembers
+from .PaginatedList import PaginatedList
+from .Persistence import Persistence
+from .Project import Project
+from .PullRequest import PullRequest
 from .PullRequest1168 import PullRequest1168
 from .PullRequest1169 import PullRequest1169
-
+from .PullRequestComment import PullRequestComment
+from .PullRequestFile import PullRequestFile
+from .PullRequestReview import PullRequestReview
+from .RateLimiting import RateLimiting
+from .RawData import RawData
+from .Reaction import Reaction
+from .Repository import LazyRepository, Repository
+from .RepositoryKey import RepositoryKey
+from .RequiredPullRequestReviews import RequiredPullRequestReviews
+from .RequiredStatusChecks import RequiredStatusChecks
+from .Retry import Retry
+from .Search import Search
+from .SourceImport import SourceImport
+from .Tag import Tag
+from .Team import Team
+from .Topic import Topic
+from .Traffic import Traffic
+from .UserKey import UserKey
 
 __all__ = [
     AuthenticatedUser,

@@ -29,9 +29,10 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
 
 import datetime
+
+from . import Framework
 
 
 class GistComment(Framework.TestCase):
@@ -41,19 +42,30 @@ class GistComment(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
-        self.assertEqual(self.comment.created_at, datetime.datetime(2012, 5, 19, 7, 7, 57))
+        self.assertEqual(
+            self.comment.created_at, datetime.datetime(2012, 5, 19, 7, 7, 57)
+        )
         self.assertEqual(self.comment.id, 323629)
-        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 7, 57))
-        self.assertEqual(self.comment.url, "https://api.github.com/gists/2729810/comments/323629")
+        self.assertEqual(
+            self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 7, 57)
+        )
+        self.assertEqual(
+            self.comment.url, "https://api.github.com/gists/2729810/comments/323629"
+        )
         self.assertEqual(self.comment.user.login, "jacquev6")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.comment.__repr__(), 'GistComment(user=NamedUser(login="jacquev6"), id=323629)')
+        self.assertEqual(
+            self.comment.__repr__(),
+            'GistComment(user=NamedUser(login="jacquev6"), id=323629)',
+        )
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")
-        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 12, 32))
+        self.assertEqual(
+            self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 12, 32)
+        )
 
     def testDelete(self):
         self.comment.delete()

@@ -27,11 +27,15 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
+
 import github
 
+from . import Framework
 
-class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/pull/134
+
+class Issue134(
+    Framework.BasicTestCase
+):  # https://github.com/jacquev6/PyGithub/pull/134
     def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
         g = github.Github(self.oauth_token)
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -40,10 +44,14 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
         g = github.Github(self.login, self.password)
-        self.assertListKeyEqual(g.get_user().get_authorizations(), lambda a: a.note, [None, None, 'cligh', None, None, 'GitHub Android App'])
+        self.assertListKeyEqual(
+            g.get_user().get_authorizations(),
+            lambda a: a.note,
+            [None, None, "cligh", None, None, "GitHub Android App"],
+        )
 
     def testGetOAuthScopesFromHeader(self):
         g = github.Github(self.oauth_token)
         self.assertEqual(g.oauth_scopes, None)
         g.get_user().name
-        self.assertEqual(g.oauth_scopes, ['repo', 'user', 'gist'])
+        self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])

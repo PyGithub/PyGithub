@@ -25,10 +25,11 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-from __future__ import print_function
-from . import Framework
+from __future__ import absolute_import, print_function
+
 import six
+
+from . import Framework
 
 
 class ExposeAllAttributes(Framework.TestCase):
@@ -47,7 +48,9 @@ class ExposeAllAttributes(Framework.TestCase):
         gistComment = gist.get_comment(4565)
         gistFile = gist.files[".gitignore"]
         gistHistoryState = gist.history[0]
-        gitCommit = repository.get_git_commit("be37b8a7f3a68631c32672dcd84d9eba27438ee6")
+        gitCommit = repository.get_git_commit(
+            "be37b8a7f3a68631c32672dcd84d9eba27438ee6"
+        )
         gitAuthor = gitCommit.author
         gitTree = repository.get_git_tree("6f7c2d8c66d78863f7b91792deaead619799a1ce")
         gitTreeElement = gitTree.tree[0]
@@ -77,61 +80,65 @@ class ExposeAllAttributes(Framework.TestCase):
         notification = authenticatedUser.get_notification("8406712")
         notificationSubject = notification.subject
 
-        missingAttributes = self.gatherMissingAttributes([
-            authenticatedUser,
-            # authorization,  # Security issue if put as-is in ReplayData
-            # authorizationApplication,  # Security issue if put as-is in ReplayData
-            branch,
-            commit,
-            commitComment,
-            commitStats,
-            commitStatus,
-            comparison,
-            contentFile,
-            # download,  # Deprecated: https://github.com/blog/1302-goodbye-uploads
-            event,
-            file,
-            gist,
-            gistComment,
-            gistFile,
-            gistHistoryState,
-            gitAuthor,
-            gitBlob,
-            gitCommit,
-            gitignoreTemplate,
-            gitObject,
-            gitRef,
-            # gitTag,
-            gitTree,
-            gitTreeElement,
-            hook,
-            hookDescription,
-            hookResponse,
-            issue,
-            issueComment,
-            issueEvent,
-            issuePullRequest,
-            label,
-            milestone,
-            namedUser,
-            notification,
-            notificationSubject,
-            organization,
-            permissions,
-            plan,
-            pullRequest,
-            pullRequestComment,
-            # pullRequestMergeStatus,  # Only obtained when merging a pull request through the API
-            pullRequestPart,
-            rateLimit,
-            repository,
-            # repositoryKey,  # Security issue if put as-is in ReplayData
-            # tag,
-            team,
-            # userKey,  # Security issue if put as-is in ReplayData
-        ])
+        missingAttributes = self.gatherMissingAttributes(
+            [
+                authenticatedUser,
+                # authorization,  # Security issue if put as-is in ReplayData
+                # authorizationApplication,  # Security issue if put as-is in ReplayData
+                branch,
+                commit,
+                commitComment,
+                commitStats,
+                commitStatus,
+                comparison,
+                contentFile,
+                # download,  # Deprecated: https://github.com/blog/1302-goodbye-uploads
+                event,
+                file,
+                gist,
+                gistComment,
+                gistFile,
+                gistHistoryState,
+                gitAuthor,
+                gitBlob,
+                gitCommit,
+                gitignoreTemplate,
+                gitObject,
+                gitRef,
+                # gitTag,
+                gitTree,
+                gitTreeElement,
+                hook,
+                hookDescription,
+                hookResponse,
+                issue,
+                issueComment,
+                issueEvent,
+                issuePullRequest,
+                label,
+                milestone,
+                namedUser,
+                notification,
+                notificationSubject,
+                organization,
+                permissions,
+                plan,
+                pullRequest,
+                pullRequestComment,
+                # pullRequestMergeStatus,  # Only obtained when merging a pull request through the API
+                pullRequestPart,
+                rateLimit,
+                repository,
+                # repositoryKey,  # Security issue if put as-is in ReplayData
+                # tag,
+                team,
+                # userKey,  # Security issue if put as-is in ReplayData
+            ]
+        )
 
-        for className, attributesMissingInClass in sorted(six.iteritems(missingAttributes)):
+        for className, attributesMissingInClass in sorted(
+            six.iteritems(missingAttributes)
+        ):
             for attrName, value in sorted(six.iteritems(attributesMissingInClass)):
                 print(className, attrName, "->", repr(value))
 

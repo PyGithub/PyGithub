@@ -26,60 +26,61 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
 
 import github.NamedUser
+
+from . import Framework
 
 
 class RawData(Framework.TestCase):
     jacquev6RawData = {
-        'disk_usage': 13812,
-        'private_gists': 5,
-        'public_repos': 21,
-        'subscriptions_url': 'https://api.github.com/users/jacquev6/subscriptions',
-        'gravatar_id': 'b68de5ae38616c296fa345d2b9df2225',
-        'hireable': False,
-        'id': 327146,
-        'followers_url': 'https://api.github.com/users/jacquev6/followers',
-        'following_url': 'https://api.github.com/users/jacquev6/following',
-        'collaborators': 1,
-        'total_private_repos': 4,
-        'blog': 'http://vincent-jacques.net',
-        'followers': 22,
-        'location': 'Paris, France',
-        'type': 'User',
-        'email': 'vincent@vincent-jacques.net',
-        'bio': '',
-        'gists_url': 'https://api.github.com/users/jacquev6/gists{/gist_id}',
-        'owned_private_repos': 4,
-        'company': 'Criteo',
-        'events_url': 'https://api.github.com/users/jacquev6/events{/privacy}',
-        'html_url': 'https://github.com/jacquev6',
-        'updated_at': '2013-03-12T22:13:32Z',
-        'plan': {
-            'collaborators': 1,
-            'name': 'micro',
-            'private_repos': 5,
-            'space': 614400,
+        "disk_usage": 13812,
+        "private_gists": 5,
+        "public_repos": 21,
+        "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+        "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+        "hireable": False,
+        "id": 327146,
+        "followers_url": "https://api.github.com/users/jacquev6/followers",
+        "following_url": "https://api.github.com/users/jacquev6/following",
+        "collaborators": 1,
+        "total_private_repos": 4,
+        "blog": "http://vincent-jacques.net",
+        "followers": 22,
+        "location": "Paris, France",
+        "type": "User",
+        "email": "vincent@vincent-jacques.net",
+        "bio": "",
+        "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+        "owned_private_repos": 4,
+        "company": "Criteo",
+        "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+        "html_url": "https://github.com/jacquev6",
+        "updated_at": "2013-03-12T22:13:32Z",
+        "plan": {
+            "collaborators": 1,
+            "name": "micro",
+            "private_repos": 5,
+            "space": 614400,
         },
-        'received_events_url': 'https://api.github.com/users/jacquev6/received_events',
-        'starred_url': 'https://api.github.com/users/jacquev6/starred{/owner}{/repo}',
-        'public_gists': 2,
-        'name': 'Vincent Jacques',
-        'organizations_url': 'https://api.github.com/users/jacquev6/orgs',
-        'url': 'https://api.github.com/users/jacquev6',
-        'created_at': '2010-07-09T06:10:06Z',
-        'avatar_url': 'https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png',
-        'repos_url': 'https://api.github.com/users/jacquev6/repos',
-        'following': 38,
-        'login': 'jacquev6',
+        "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+        "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+        "public_gists": 2,
+        "name": "Vincent Jacques",
+        "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+        "url": "https://api.github.com/users/jacquev6",
+        "created_at": "2010-07-09T06:10:06Z",
+        "avatar_url": "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+        "repos_url": "https://api.github.com/users/jacquev6/repos",
+        "following": 38,
+        "login": "jacquev6",
     }
 
     planRawData = {
-        'collaborators': 1,
-        'name': 'micro',
-        'private_repos': 5,
-        'space': 614400,
+        "collaborators": 1,
+        "name": "micro",
+        "private_repos": 5,
+        "space": 614400,
     }
 
     def testCompletedObject(self):
@@ -98,6 +99,8 @@ class RawData(Framework.TestCase):
         self.assertEqual(plan.raw_data, RawData.planRawData)
 
     def testCreateObjectFromRawData(self):
-        user = self.g.create_from_raw_data(github.NamedUser.NamedUser, RawData.jacquev6RawData)
+        user = self.g.create_from_raw_data(
+            github.NamedUser.NamedUser, RawData.jacquev6RawData
+        )
         self.assertEqual(user._CompletableGithubObject__completed, True)
         self.assertEqual(user.name, "Vincent Jacques")

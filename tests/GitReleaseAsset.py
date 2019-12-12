@@ -25,7 +25,9 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import datetime
+
 from . import Framework
 
 
@@ -34,6 +36,7 @@ class ReleaseAsset(Framework.TestCase):
     Test harness for functionality related to release assets (files attached to
     the github release).
     """
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         # Do not get self.release here as it causes bad data to be saved in --record mode
@@ -47,7 +50,10 @@ class ReleaseAsset(Framework.TestCase):
 
         asset = release.get_assets()[0]
         self.assertEqual(asset.id, 16)
-        self.assertEqual(asset.url, "https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")
+        self.assertEqual(
+            asset.url,
+            "https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16",
+        )
         self.assertEqual(asset.name, "Archive.zip")
         self.assertEqual(asset.label, "Installation msi & runbook zipped")
         self.assertEqual(asset.content_type, "application/zip")
@@ -56,9 +62,15 @@ class ReleaseAsset(Framework.TestCase):
         self.assertEqual(asset.download_count, 2)
         self.assertEqual(asset.created_at, datetime.datetime(2017, 2, 1, 22, 40, 58))
         self.assertEqual(asset.updated_at, datetime.datetime(2017, 2, 1, 22, 44, 58))
-        self.assertEqual(asset.browser_download_url, "https://github.com/edhollandAL/PyGithub/releases/download/v1.25.2/Asset.zip")
+        self.assertEqual(
+            asset.browser_download_url,
+            "https://github.com/edhollandAL/PyGithub/releases/download/v1.25.2/Asset.zip",
+        )
         self.assertEqual(asset.uploader.login, "PyGithub")
-        self.assertEqual(asset.__repr__(), 'GitReleaseAsset(url="https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")')
+        self.assertEqual(
+            asset.__repr__(),
+            'GitReleaseAsset(url="https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")',
+        )
 
     def testDelete(self):
         """

@@ -23,6 +23,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -130,7 +131,9 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
         if "display_name" in attributes:  # pragma no branch
             self._display_name = self._makeStringAttribute(attributes["display_name"])
         if "short_description" in attributes:  # pragma no branch
-            self._short_description = self._makeStringAttribute(attributes["short_description"])
+            self._short_description = self._makeStringAttribute(
+                attributes["short_description"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "created_by" in attributes:  # pragma no branch

@@ -1,2 +1,4 @@
 [flake8]
-ignore = E501,E266,W503
+max-line-length = 88
+select = C,E,F,W
+ignore = E203, E266, E501, W503

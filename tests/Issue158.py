@@ -26,12 +26,18 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
+
 import github
+
+from . import Framework
 
 
 class Issue158(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/158
     # Warning: I don't have a scret key, so the requests for this test are forged
     def testPaginationWithSecretKeyAuthentication(self):
         g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
-        self.assertListKeyEqual(g.get_organization("BeaverSoftware").get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])
+        self.assertListKeyEqual(
+            g.get_organization("BeaverSoftware").get_repos("public"),
+            lambda r: r.name,
+            ["FatherBeaver", "PyGithub"],
+        )

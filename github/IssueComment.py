@@ -34,11 +34,13 @@
 ################################################################################
 
 from __future__ import absolute_import
+
+import six
+
 import github.GithubObject
 import github.NamedUser
 
 from . import Consts
-import six
 
 
 class IssueComment(github.GithubObject.CompletableGithubObject):
@@ -118,10 +120,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body):
         """
@@ -134,9 +133,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -151,7 +148,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/reactions",
             None,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
     def create_reaction(self, reaction_type):
@@ -161,9 +158,17 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, six.text_type)), "reaction type should be a string"
-        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
-            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+        assert isinstance(
+            reaction_type, (str, six.text_type)
+        ), "reaction type should be a string"
+        assert reaction_type in [
+            "+1",
+            "-1",
+            "laugh",
+            "confused",
+            "heart",
+            "hooray",
+        ], "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 
         post_parameters = {
             "content": reaction_type,
@@ -172,7 +177,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/reactions",
             input=post_parameters,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
@@ -202,4 +207,6 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"]
+            )

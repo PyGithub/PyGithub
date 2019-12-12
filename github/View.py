@@ -27,6 +27,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -37,11 +38,13 @@ class View(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "timestamp": self._timestamp.value,
-            "count": self._count.value,
-            "uniques": self._uniques.value
-        })
+        return self.get__repr__(
+            {
+                "timestamp": self._timestamp.value,
+                "count": self._count.value,
+                "uniques": self._uniques.value,
+            }
+        )
 
     @property
     def timestamp(self):
