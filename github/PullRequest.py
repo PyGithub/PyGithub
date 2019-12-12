@@ -894,16 +894,17 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>`_
         :param expected_head_sha: string
-        :rtype: None
+        :rtype: bool
         """
         assert isinstance(expected_head_sha, (str, six.text_type)), expected_head_sha
         post_parameters = {"expected_head_sha": expected_head_sha}
-        self._requester.requestJsonAndCheck(
+        status, headers, data = self._requester.requestJson(
             "PUT",
             self.url + "/update-branch",
             input=post_parameters,
             headers={'Accept': Consts.updateBranchPreview}
         )
+        return status == 202
 
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
