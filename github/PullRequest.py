@@ -824,6 +824,20 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def update_branch(self, expected_head_sha):
+        """
+        :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>
+        :param expected_head_sha: string
+        :rtype: None
+        """
+        assert isinstance(expected_head_sha, str)
+        post_parameters = {"expected_head_sha": expected_head_sha}
+        self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/update-branch",
+            input=post_parameters
+        )
+
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
