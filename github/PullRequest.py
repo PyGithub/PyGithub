@@ -830,7 +830,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param expected_head_sha: string
         :rtype: None
         """
-        assert isinstance(expected_head_sha, str)
+        assert isinstance(expected_head_sha, (str, six.text_type)), expected_head_sha
         post_parameters = {"expected_head_sha": expected_head_sha}
         self._requester.requestJsonAndCheck(
             "PUT",
