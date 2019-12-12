@@ -378,4 +378,6 @@ class PullRequest(Framework.TestCase):
         )
 
     def testUpdateBranch(self):
-        self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
+        self.assertTrue(
+            self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
+        )

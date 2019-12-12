@@ -902,7 +902,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/update-branch",
             input=post_parameters,
-            headers={'Accept': Consts.updateBranchPreview}
+            headers={"Accept": Consts.updateBranchPreview},
         )
         return status == 202
 
