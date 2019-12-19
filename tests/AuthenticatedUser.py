@@ -741,3 +741,11 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetMigrations(self):
         self.assertEqual(self.user.get_migrations().totalCount, 46)
+
+    def testInstallations(self):
+        installations = self.user.get_installations()
+        self.assertEqual(installations[0].id, 123456)
+        self.assertEqual(installations[0].app_id, 10101)
+        self.assertEqual(installations[0].target_id, 3344556)
+        self.assertEqual(installations[0].target_type, "User")
+        self.assertEqual(installations.totalCount, 1)

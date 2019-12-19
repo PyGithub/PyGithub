@@ -164,7 +164,7 @@ class GithubIntegration(unittest.TestCase):
             self.get_mock.calls[0][0],
             ("https://api.github.com/repos/foo/bar/installation",),
         )
-        self.assertEqual(inst.id.value, 111111)
+        self.assertEqual(inst.id, 111111)
 
     def test_get_installation_custom_base_url(self):
         from github import GithubIntegration
@@ -175,7 +175,7 @@ class GithubIntegration(unittest.TestCase):
             self.get_mock.calls[0][0],
             ("https://corp.com/v3/repos/foo/bar/installation",),
         )
-        self.assertEqual(inst.id.value, 111111)
+        self.assertEqual(inst.id, 111111)
 
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)

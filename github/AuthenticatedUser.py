@@ -21,6 +21,7 @@
 # Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1106,6 +1107,20 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, "/user/subscriptions", None
+        )
+
+    def get_installations(self):
+        """
+        :calls: `GET /user/installations <http://developer.github.com/v3/apps>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Installation.Installation`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Installation.Installation,
+            self._requester,
+            "/user/installations",
+            None,
+            headers={"Accept": Consts.mediaTypeIntegrationPreview},
+            list_item="installations",
         )
 
     def has_in_following(self, following):
