@@ -92,7 +92,9 @@ mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview
 mediaTypeTeamDiscussionsPreview = "application/vnd.github.echo-preview+json"
 
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
-mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
+mediaTypeRequireMultipleApprovingReviews = (
+    "application/vnd.github.luke-cage-preview+json"
+)
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
@@ -108,3 +110,6 @@ vulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
 
 # https://developer.github.com/changes/2019-06-04-automated-security-fixes/
 automatedSecurityFixes = "application/vnd.github.london-preview+json"
+
+# https://developer.github.com/changes/2019-05-29-update-branch-api/
+updateBranchPreview = "application/vnd.github.lydian-preview+json"

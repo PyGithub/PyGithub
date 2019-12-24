@@ -48,14 +48,15 @@
 ################################################################################
 
 from __future__ import absolute_import
-from . import Framework
+
+import datetime
 
 import github
-import datetime
+
+from . import Framework
 
 
 class Migration(Framework.TestCase):
-
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
@@ -70,24 +71,37 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(len(self.migration.repositories), 1)
         self.assertEqual(self.migration.repositories[0].name, "sample-repo")
-        self.assertEqual(self.migration.url, "https://api.github.com/user/migrations/25320")
-        self.assertEqual(self.migration.created_at, datetime.datetime(2018, 9, 14, 1, 35, 35))
-        self.assertEqual(self.migration.updated_at, datetime.datetime(2018, 9, 14, 1, 35, 46))
+        self.assertEqual(
+            self.migration.url, "https://api.github.com/user/migrations/25320"
+        )
+        self.assertEqual(
+            self.migration.created_at, datetime.datetime(2018, 9, 14, 1, 35, 35)
+        )
+        self.assertEqual(
+            self.migration.updated_at, datetime.datetime(2018, 9, 14, 1, 35, 46)
+        )
 
     def testGetArchiveUrlWhenNotExported(self):
-        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
+        self.assertRaises(
+            github.UnknownObjectException, lambda: self.migration.get_archive_url()
+        )
 
     def testGetStatus(self):
         self.assertEqual(self.migration.get_status(), "exported")
 
     def testGetArchiveUrlWhenExported(self):
-        self.assertEqual(self.migration.get_archive_url(), "https://github-cloud.s3.amazonaws.com/migration/25320/24575?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20180913%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180913T201100Z&X-Amz-Expires=300&X-Amz-Signature=a0aeb638facd0c78c1ed3ca86022eddbee91e5fe1bb48ee830f54b8b7b305026&X-Amz-SignedHeaders=host&actor_id=41840111&response-content-disposition=filename%3D608bceae-b790-11e8-8b43-4e3cb0dd56cc.tar.gz&response-content-type=application%2Fx-gzip")
+        self.assertEqual(
+            self.migration.get_archive_url(),
+            "https://github-cloud.s3.amazonaws.com/migration/25320/24575?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20180913%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180913T201100Z&X-Amz-Expires=300&X-Amz-Signature=a0aeb638facd0c78c1ed3ca86022eddbee91e5fe1bb48ee830f54b8b7b305026&X-Amz-SignedHeaders=host&actor_id=41840111&response-content-disposition=filename%3D608bceae-b790-11e8-8b43-4e3cb0dd56cc.tar.gz&response-content-type=application%2Fx-gzip",
+        )
 
     def testDelete(self):
         self.assertEqual(self.migration.delete(), None)
 
     def testGetArchiveUrlWhenDeleted(self):
-        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
+        self.assertRaises(
+            github.UnknownObjectException, lambda: self.migration.get_archive_url()
+        )
 
     def testUnlockRepo(self):
         self.assertEqual(self.migration.unlock_repo("sample-repo"), None)

@@ -27,6 +27,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from . import Framework
 
 
@@ -40,32 +41,171 @@ class Search(Framework.TestCase):
 
     def testPaginateSearchUsers(self):
         users = self.g.search_users("", location="Berlin")
-        self.assertListKeyBegin(users, lambda u: u.login, [u'cloudhead', u'felixge', u'sferik', u'rkh', u'jezdez', u'janl', u'marijnh', u'nikic', u'igorw', u'froschi', u'svenfuchs', u'omz', u'chad', u'bergie', u'roidrage', u'pcalcado', u'durran', u'hukl', u'mttkay', u'aFarkas', u'ole', u'hagenburger', u'jberkel', u'naderman', u'joshk', u'pudo', u'robb', u'josephwilk', u'hanshuebner', u'txus', u'paulasmuth', u'splitbrain', u'langalex', u'bendiken', u'stefanw'])
+        self.assertListKeyBegin(
+            users,
+            lambda u: u.login,
+            [
+                u"cloudhead",
+                u"felixge",
+                u"sferik",
+                u"rkh",
+                u"jezdez",
+                u"janl",
+                u"marijnh",
+                u"nikic",
+                u"igorw",
+                u"froschi",
+                u"svenfuchs",
+                u"omz",
+                u"chad",
+                u"bergie",
+                u"roidrage",
+                u"pcalcado",
+                u"durran",
+                u"hukl",
+                u"mttkay",
+                u"aFarkas",
+                u"ole",
+                u"hagenburger",
+                u"jberkel",
+                u"naderman",
+                u"joshk",
+                u"pudo",
+                u"robb",
+                u"josephwilk",
+                u"hanshuebner",
+                u"txus",
+                u"paulasmuth",
+                u"splitbrain",
+                u"langalex",
+                u"bendiken",
+                u"stefanw",
+            ],
+        )
         self.assertEqual(users.totalCount, 6038)
 
     def testGetPageOnSearchUsers(self):
         users = self.g.search_users("", location="Berlin")
-        self.assertEqual([u.login for u in users.get_page(7)], [u'ursachec', u'bitboxer', u'fs111', u'michenriksen', u'witsch', u'booo', u'mortice', u'r0man', u'MikeBild', u'mhagger', u'bkw', u'fwbrasil', u'mschneider', u'lydiapintscher', u'asksven', u'iamtimm', u'sneak', u'kr1sp1n', u'Feh', u'GordonLesti', u'annismckenzie', u'eskimoblood', u'tsujigiri', u'riethmayer', u'lauritzthamsen', u'scotchi', u'peritor', u'toto', u'hwaxxer', u'lukaszklis'])
+        self.assertEqual(
+            [u.login for u in users.get_page(7)],
+            [
+                u"ursachec",
+                u"bitboxer",
+                u"fs111",
+                u"michenriksen",
+                u"witsch",
+                u"booo",
+                u"mortice",
+                u"r0man",
+                u"MikeBild",
+                u"mhagger",
+                u"bkw",
+                u"fwbrasil",
+                u"mschneider",
+                u"lydiapintscher",
+                u"asksven",
+                u"iamtimm",
+                u"sneak",
+                u"kr1sp1n",
+                u"Feh",
+                u"GordonLesti",
+                u"annismckenzie",
+                u"eskimoblood",
+                u"tsujigiri",
+                u"riethmayer",
+                u"lauritzthamsen",
+                u"scotchi",
+                u"peritor",
+                u"toto",
+                u"hwaxxer",
+                u"lukaszklis",
+            ],
+        )
 
     def testSearchRepos(self):
-        repos = self.g.search_repositories("github", sort="stars", order="desc", language="Python")
-        self.assertListKeyBegin(repos, lambda r: r.full_name, [u'kennethreitz/legit', u'RuudBurger/CouchPotatoV1', u'gelstudios/gitfiti', u'gpjt/webgl-lessons', u'jacquev6/PyGithub', u'aaasen/github_globe', u'hmason/gitmarks', u'dnerdy/factory_boy', u'binaryage/drydrop', u'bgreenlee/sublime-github', u'karan/HackerNewsAPI', u'mfenniak/pyPdf', u'skazhy/github-decorator', u'llvmpy/llvmpy', u'lexrupy/gmate', u'ask/python-github2', u'audreyr/cookiecutter-pypackage', u'tabo/django-treebeard', u'dbr/tvdb_api', u'jchris/couchapp', u'joeyespo/grip', u'nigelsmall/py2neo', u'ask/chishop', u'sigmavirus24/github3.py', u'jsmits/github-cli', u'lincolnloop/django-layout', u'amccloud/django-project-skel', u'Stiivi/brewery', u'webpy/webpy.github.com', u'dustin/py-github', u'logsol/Github-Auto-Deploy', u'cloudkick/libcloud', u'berkerpeksag/github-badge', u'bitprophet/ssh', u'azavea/OpenTreeMap'])
+        repos = self.g.search_repositories(
+            "github", sort="stars", order="desc", language="Python"
+        )
+        self.assertListKeyBegin(
+            repos,
+            lambda r: r.full_name,
+            [
+                u"kennethreitz/legit",
+                u"RuudBurger/CouchPotatoV1",
+                u"gelstudios/gitfiti",
+                u"gpjt/webgl-lessons",
+                u"jacquev6/PyGithub",
+                u"aaasen/github_globe",
+                u"hmason/gitmarks",
+                u"dnerdy/factory_boy",
+                u"binaryage/drydrop",
+                u"bgreenlee/sublime-github",
+                u"karan/HackerNewsAPI",
+                u"mfenniak/pyPdf",
+                u"skazhy/github-decorator",
+                u"llvmpy/llvmpy",
+                u"lexrupy/gmate",
+                u"ask/python-github2",
+                u"audreyr/cookiecutter-pypackage",
+                u"tabo/django-treebeard",
+                u"dbr/tvdb_api",
+                u"jchris/couchapp",
+                u"joeyespo/grip",
+                u"nigelsmall/py2neo",
+                u"ask/chishop",
+                u"sigmavirus24/github3.py",
+                u"jsmits/github-cli",
+                u"lincolnloop/django-layout",
+                u"amccloud/django-project-skel",
+                u"Stiivi/brewery",
+                u"webpy/webpy.github.com",
+                u"dustin/py-github",
+                u"logsol/Github-Auto-Deploy",
+                u"cloudkick/libcloud",
+                u"berkerpeksag/github-badge",
+                u"bitprophet/ssh",
+                u"azavea/OpenTreeMap",
+            ],
+        )
 
     def testSearchReposWithNoResults(self):
         repos = self.g.search_repositories("doesnotexist")
         self.assertEqual(repos.totalCount, 0)
 
     def testSearchIssues(self):
-        issues = self.g.search_issues("compile", sort="comments", order="desc", language="C++")
-        self.assertListKeyBegin(issues, lambda i: i.id, [12068673, 23250111, 14371957, 9423897, 24277400, 2408877, 11338741, 13980502, 27697165, 23102422])
+        issues = self.g.search_issues(
+            "compile", sort="comments", order="desc", language="C++"
+        )
+        self.assertListKeyBegin(
+            issues,
+            lambda i: i.id,
+            [
+                12068673,
+                23250111,
+                14371957,
+                9423897,
+                24277400,
+                2408877,
+                11338741,
+                13980502,
+                27697165,
+                23102422,
+            ],
+        )
 
     def testPaginateSearchCommits(self):
-        commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
+        commits = self.g.search_commits(
+            query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2"
+        )
         self.assertEqual(commits.totalCount, 3)
 
     def testSearchTopics(self):
         topics = self.g.search_topics("python", repositories=">950")
-        self.assertListKeyBegin(topics, lambda r: r.name, [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"])
+        self.assertListKeyBegin(
+            topics,
+            lambda r: r.name,
+            [u"python", u"django", u"flask", u"ruby", u"scikit-learn", u"wagtail"],
+        )
 
     def testPaginateSearchTopics(self):
         repos = self.g.search_topics("python", repositories=">950")
@@ -73,23 +213,48 @@ class Search(Framework.TestCase):
 
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
-        self.assertListKeyEqual(files, lambda f: f.name, [u'Commit.setUp.txt', u'PullRequest.testGetFiles.txt', u'NamedUser.testGetEvents.txt', u'PullRequest.testCreateComment.txt', u'PullRequestFile.setUp.txt', u'Repository.testGetIssuesWithWildcards.txt', u'Repository.testGetIssuesWithArguments.txt', u'test_ebnf.cpp', u'test_abnf.cpp', u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.name,
+            [
+                u"Commit.setUp.txt",
+                u"PullRequest.testGetFiles.txt",
+                u"NamedUser.testGetEvents.txt",
+                u"PullRequest.testCreateComment.txt",
+                u"PullRequestFile.setUp.txt",
+                u"Repository.testGetIssuesWithWildcards.txt",
+                u"Repository.testGetIssuesWithArguments.txt",
+                u"test_ebnf.cpp",
+                u"test_abnf.cpp",
+                u"PullRequestFile.py",
+                u"SystemCalls.py",
+                u"tests.py",
+                u"LexerTestCase.py",
+                u"ParserTestCase.py",
+            ],
+        )
         self.assertEqual(files[0].repository.full_name, "jacquev6/PyGithub")
         content = files[0].decoded_content
         if isinstance(content, bytes):
-            content = content.decode('utf-8')
-        self.assertEqual(content[:30], 'https\nGET\napi.github.com\nNone\n')
+            content = content.decode("utf-8")
+        self.assertEqual(content[:30], "https\nGET\napi.github.com\nNone\n")
 
     def testSearchHighlightingCode(self):
-        files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6", highlight=True)
+        files = self.g.search_code(
+            "toto", sort="indexed", order="asc", user="jacquev6", highlight=True
+        )
         self.assertTrue(files[0].text_matches)
 
     def testUrlquotingOfQualifiers(self):
         # Example taken from #236
-        issues = self.g.search_issues("repo:saltstack/salt-api type:Issues", updated=">2014-03-04T18:28:11Z")
+        issues = self.g.search_issues(
+            "repo:saltstack/salt-api type:Issues", updated=">2014-03-04T18:28:11Z"
+        )
         self.assertEqual(issues[0].id, 29138794)
 
     def testUrlquotingOfQuery(self):
         # Example taken from #236
-        issues = self.g.search_issues("repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z")
+        issues = self.g.search_issues(
+            "repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z"
+        )
         self.assertEqual(issues[0].id, 29138794)

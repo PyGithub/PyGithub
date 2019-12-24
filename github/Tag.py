@@ -32,9 +32,9 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
 import github.Commit
+import github.GithubObject
 
 
 class Tag(github.GithubObject.NonCompletableGithubObject):
@@ -43,10 +43,9 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "name": self._name.value,
-            "commit": self._commit.value
-        })
+        return self.get__repr__(
+            {"name": self._name.value, "commit": self._commit.value}
+        )
 
     @property
     def commit(self):
@@ -84,7 +83,9 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
+            self._commit = self._makeClassAttribute(
+                github.Commit.Commit, attributes["commit"]
+            )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "tarball_url" in attributes:  # pragma no branch

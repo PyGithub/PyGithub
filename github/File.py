@@ -33,6 +33,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 import github.GithubObject
 
 
@@ -42,7 +43,9 @@ class File(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"sha": self._sha.value, "filename": self._filename.value})
+        return self.get__repr__(
+            {"sha": self._sha.value, "filename": self._filename.value}
+        )
 
     @property
     def additions(self):
@@ -150,7 +153,9 @@ class File(github.GithubObject.NonCompletableGithubObject):
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
         if "previous_filename" in attributes:  # pragma no branch
-            self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
+            self._previous_filename = self._makeStringAttribute(
+                attributes["previous_filename"]
+            )
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch

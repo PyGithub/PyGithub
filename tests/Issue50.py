@@ -28,6 +28,7 @@
 ################################################################################
 
 from __future__ import absolute_import
+
 from . import Framework
 
 
@@ -47,7 +48,20 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
         self.assertEqual(label.name, self.labelName)
 
     def testGetLabels(self):
-        self.assertListKeyEqual(self.repo.get_labels(), lambda l: l.name, ["Refactoring", "Public interface", "Functionalities", "Project management", "Bug", "Question", "RequestedByUser", self.labelName])
+        self.assertListKeyEqual(
+            self.repo.get_labels(),
+            lambda l: l.name,
+            [
+                "Refactoring",
+                "Public interface",
+                "Functionalities",
+                "Project management",
+                "Bug",
+                "Question",
+                "RequestedByUser",
+                self.labelName,
+            ],
+        )
 
     def testAddLabelToIssue(self):
         self.issue.add_to_labels(self.repo.get_label(self.labelName))
@@ -56,18 +70,37 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
         self.issue.remove_from_labels(self.repo.get_label(self.labelName))
 
     def testSetIssueLabels(self):
-        self.issue.set_labels(self.repo.get_label("Bug"), self.repo.get_label("RequestedByUser"), self.repo.get_label(self.labelName))
+        self.issue.set_labels(
+            self.repo.get_label("Bug"),
+            self.repo.get_label("RequestedByUser"),
+            self.repo.get_label(self.labelName),
+        )
 
     def testIssueLabels(self):
-        self.assertListKeyEqual(self.issue.labels, lambda l: l.name, ["Bug", self.labelName, "RequestedByUser"])
+        self.assertListKeyEqual(
+            self.issue.labels,
+            lambda l: l.name,
+            ["Bug", self.labelName, "RequestedByUser"],
+        )
 
     def testIssueGetLabels(self):
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", self.labelName, "RequestedByUser"])
+        self.assertListKeyEqual(
+            self.issue.get_labels(),
+            lambda l: l.name,
+            ["Bug", self.labelName, "RequestedByUser"],
+        )
 
     def testGetIssuesWithLabel(self):
-        self.assertListKeyEqual(self.repo.get_issues(labels=[self.repo.get_label(self.labelName)]), lambda i: i.number, [52, 50])
+        self.assertListKeyEqual(
+            self.repo.get_issues(labels=[self.repo.get_label(self.labelName)]),
+            lambda i: i.number,
+            [52, 50],
+        )
 
     def testCreateIssueWithLabel(self):
-        issue = self.repo.create_issue("Issue created by PyGithub to test issue #50", labels=[self.repo.get_label(self.labelName)])
+        issue = self.repo.create_issue(
+            "Issue created by PyGithub to test issue #50",
+            labels=[self.repo.get_label(self.labelName)],
+        )
         self.assertListKeyEqual(issue.labels, lambda l: l.name, [self.labelName])
         self.assertEqual(issue.number, 52)
