@@ -104,7 +104,6 @@ class Github(object):
         client_secret=None,
         user_agent="PyGithub/Python",
         per_page=DEFAULT_PER_PAGE,
-        api_preview=False,
         verify=True,
         retry=None,
     ):
@@ -137,7 +136,6 @@ class Github(object):
         assert user_agent is None or isinstance(
             user_agent, (str, six.text_type)
         ), user_agent
-        assert isinstance(api_preview, (bool))
         assert (
             retry is None
             or isinstance(retry, (int))
@@ -153,7 +151,6 @@ class Github(object):
             client_secret,
             user_agent,
             per_page,
-            api_preview,
             verify,
             retry,
         )

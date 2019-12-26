@@ -267,7 +267,6 @@ class Requester:
         client_secret,
         user_agent,
         per_page,
-        api_preview,
         verify,
         retry,
     ):
@@ -315,7 +314,6 @@ class Requester:
             "See http://developer.github.com/v3/#user-agent-required"
         )
         self.__userAgent = user_agent
-        self.__apiPreview = api_preview
         self.__verify = verify
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
@@ -463,8 +461,6 @@ class Requester:
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
-        if self.__apiPreview:
-            requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
