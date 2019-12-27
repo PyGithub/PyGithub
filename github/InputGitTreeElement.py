@@ -53,7 +53,7 @@ class InputGitTreeElement(object):
         :param mode: string
         :param type: string
         :param content: string
-        :param sha: string
+        :param sha: string or None
         """
 
         assert isinstance(path, (str, six.text_type)), path
@@ -62,8 +62,10 @@ class InputGitTreeElement(object):
         assert content is github.GithubObject.NotSet or isinstance(
             content, (str, six.text_type)
         ), content
-        assert sha is github.GithubObject.NotSet or isinstance(
-            sha, (str, six.text_type)
+        assert (
+            sha is github.GithubObject.NotSet
+            or sha is None
+            or isinstance(sha, (str, six.text_type))
         ), sha
         self.__path = path
         self.__mode = mode

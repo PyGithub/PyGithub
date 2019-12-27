@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/git/trees
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{"tree": [{"path": "Baz.bar", "type": "blob", "mode": "100644", "sha": null}]}
+201
+[('date', 'Fri, 27 Dec 2019 00:51:47 GMT'), ('content-type', 'application/json; charset=utf-8'), ('content-length', '401'), ('server', 'GitHub.com'), ('status', '201 Created'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4996'), ('x-ratelimit-reset', '1577411349'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('etag', '"92c715dcb38b27913fafb5f0b0033832"'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-accepted-oauth-scopes', ''), ('location', 'https://api.github.com/repos/jacquev6/PyGithub/git/trees/9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('access-control-allow-origin', '*'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-frame-options', 'deny'), ('x-content-type-options', 'nosniff'), ('x-xss-protection', '1; mode=block'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-security-policy', "default-src 'none'"), ('x-github-request-id', 'CDCA:2D1A:67EE9D:75F15E:5E0555A3')]
+{"sha":"9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f","url":"https://api.github.com/repos/jacquev6/PyGithub/git/trees/9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f","tree":[{"path":"README.md","mode":"100644","type":"blob","sha":"54f3a4bf0a60f29d7c4798b590f92ffd56dd6d21","size":12,"url":"https://api.github.com/repos/jacquev6/PyGithub/git/blobs/54f3a4bf0a60f29d7c4798b590f92ffd56dd6d21"}],"truncated":false}

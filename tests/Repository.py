@@ -283,6 +283,19 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(tree.sha, "fae707821159639589bf94f3fb0a7154ec5d441b")
 
+    def testCreateGitTreeWithNullSha(self):
+        tree = self.repo.create_git_tree(
+            [
+                github.InputGitTreeElement(
+                    "Baz.bar",
+                    "100644",
+                    "blob",
+                    sha=None,
+                )
+            ]
+        )
+        self.assertEqual(tree.sha, "9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f")
+
     def testCreateGitCommit(self):
         tree = self.repo.get_git_tree("107139a922f33bab6fbeb9f9eb8787e7f19e0528")
         commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [])
