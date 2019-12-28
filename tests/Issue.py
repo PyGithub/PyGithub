@@ -11,8 +11,9 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Matt Babineau <babineaum@users.noreply.github.com>            #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -263,3 +264,36 @@ class Issue(Framework.TestCase):
 
         self.assertEqual(reaction.id, 16917472)
         self.assertEqual(reaction.content, "hooray")
+
+    def testGetTimeline(self):
+        expected_events = {'referenced', 'cross-referenced', 'locked', 'unlocked', 'closed', 'assigned', 'commented', 'subscribed', 'labeled'}
+        events = self.issue.get_timeline()
+
+        first = events[0]
+        self.assertEqual(15819975, first.id)
+        self.assertEqual("MDE1OlN1YnNjcmliZWRFdmVudDE1ODE5OTc1", first.node_id)
+        self.assertEqual("https://api.github.com/repos/PyGithub/PyGithub/issues/events/15819975", first.url)
+        self.assertEqual("jacquev6", first.actor.login)
+        self.assertEqual(327146, first.actor.id)
+        self.assertEqual("subscribed", first.event)
+        self.assertIsNone(first.commit_id)
+        self.assertIsNone(first.commit_url)
+
+        for event in events:
+            self.assertIn(event.event, expected_events)
+            self.assertIsNotNone(event.created_at)
+            self.assertIsNotNone(event.actor)
+
+            if event.event == "cross-referenced":
+                # cross-referenced events don't include an event id or node_id
+                self.assertIsNotNone(event.source)
+                self.assertEqual(event.source.type, 'issue')
+            else:
+                self.assertIsNotNone(event.id)
+                self.assertIsNotNone(event.node_id)
+
+                if event.event == 'commented':
+                    self.assertIsNotNone(event.body)
+                else:
+                    self.assertIsNone(event.source)
+                    self.assertIsNotNone(event.actor)
