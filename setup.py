@@ -46,7 +46,7 @@ import textwrap
 
 import setuptools
 
-version = "1.44.1"
+version = "1.45"
 
 tests_require = [
     "cryptography",

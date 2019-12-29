@@ -4,6 +4,41 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.45 (December 29, 2019)
+-----------------------------------
+**Important**
+
+* This is the last release of PyGithub that will support Python 2.
+
+**Breaking Changes**
+
+* Branch.edit_{user,team}_push_restrictions() have been removed
+* The new API is:
+  - Branch.add_{user,team}_push_restrictions() to add new members
+  - Branch.replace_{user,team}_push_restrictions() to replace all members
+  - Branch.remove_{user,team}_push_restrictions() to remove members
+* The api_preview parameter to Github() has been removed.
+
+**Bug Fixes & Improvements**
+
+* Allow sha=None for InputGitTreeElement (#1327) (60464f65)
+* Support github timeline events. (#1302) (732fd26a)
+* Update link to GitHub Enterprise in README (#1324) (e1537f79)
+* Cleanup travis config (#1322) (8189a538)
+* Add support for update branch  (#1317) (baddb719)
+* Refactor Logging tests (#1315) (b0ef1909)
+* Fix rtd build (b797cac0)
+* Add .git-blame-ignore-revs (573c674b)
+* Apply black to whole codebase (#1303) (6ceb9e9a)
+* Fix class used returning pull request comments (#1307) (f8e33620)
+* Support for create_fork (#1306) (2ad51f35)
+* Use Repository.get_contents() in tests (#1301) (e40768e0)
+* Allow GithubObject.update() to be passed headers (#1300) (989b635e)
+* Correct URL for assignees on PRs (#1296) (3170cafc)
+* Use inclusive ordered comparison for 'parameterized' requirement (#1281) (fb19d2f2)
+* Deprecate Repository.get_dir_contents() (#1285) (21e89ff1)
+* Apply some polish to manage.sh (#1284) (3a723252)
+
 Version 1.44.1 (November 07, 2019)
 -----------------------------------
 
