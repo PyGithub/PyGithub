@@ -54,13 +54,13 @@ import github.GithubObject
 import github.IssueComment
 import github.IssueEvent
 import github.IssuePullRequest
-import github.TimelineEvent
 import github.Label
 import github.Milestone
 import github.NamedUser
 import github.PaginatedList
 import github.Reaction
 import github.Repository
+import github.TimelineEvent
 
 from . import Consts
 
@@ -619,7 +619,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/timeline",
             None,
-            headers={'Accept': Consts.issueTimelineEventsPreview}
+            headers={"Accept": Consts.issueTimelineEventsPreview},
         )
 
     @property

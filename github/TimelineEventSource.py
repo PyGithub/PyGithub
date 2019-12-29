@@ -23,8 +23,8 @@
 ################################################################################
 
 from __future__ import absolute_import
-import github.GithubObject
 
+import github.GithubObject
 import github.Issue
 
 
@@ -58,4 +58,6 @@ class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch
-            self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
+            self._issue = self._makeClassAttribute(
+                github.Issue.Issue, attributes["issue"]
+            )

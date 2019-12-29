@@ -266,13 +266,26 @@ class Issue(Framework.TestCase):
         self.assertEqual(reaction.content, "hooray")
 
     def testGetTimeline(self):
-        expected_events = {'referenced', 'cross-referenced', 'locked', 'unlocked', 'closed', 'assigned', 'commented', 'subscribed', 'labeled'}
+        expected_events = {
+            "referenced",
+            "cross-referenced",
+            "locked",
+            "unlocked",
+            "closed",
+            "assigned",
+            "commented",
+            "subscribed",
+            "labeled",
+        }
         events = self.issue.get_timeline()
 
         first = events[0]
         self.assertEqual(15819975, first.id)
         self.assertEqual("MDE1OlN1YnNjcmliZWRFdmVudDE1ODE5OTc1", first.node_id)
-        self.assertEqual("https://api.github.com/repos/PyGithub/PyGithub/issues/events/15819975", first.url)
+        self.assertEqual(
+            "https://api.github.com/repos/PyGithub/PyGithub/issues/events/15819975",
+            first.url,
+        )
         self.assertEqual("jacquev6", first.actor.login)
         self.assertEqual(327146, first.actor.id)
         self.assertEqual("subscribed", first.event)
@@ -287,12 +300,12 @@ class Issue(Framework.TestCase):
             if event.event == "cross-referenced":
                 # cross-referenced events don't include an event id or node_id
                 self.assertIsNotNone(event.source)
-                self.assertEqual(event.source.type, 'issue')
+                self.assertEqual(event.source.type, "issue")
             else:
                 self.assertIsNotNone(event.id)
                 self.assertIsNotNone(event.node_id)
 
-                if event.event == 'commented':
+                if event.event == "commented":
                     self.assertIsNotNone(event.body)
                 else:
                     self.assertIsNone(event.source)
