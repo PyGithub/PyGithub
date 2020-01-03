@@ -2089,6 +2089,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return Repository(self._requester, headers, data, completed=True)
 
+    def transfer(self, new_owner, team_ids=[]):
+        """
+        :calls: `POST /repos/:owner/:repo/transfer <https://developer.github.com/v3/repos/#transfer-a-repository>`_
+        :param new_owner: string or "none" or "*"
+        :rtype: :class:`github.Repository.Repository`
+        """
+        post_parameters = {}
+        if new_owner is not None:
+            post_parameters["new_owner"] = new_owner
+        post_parameters["team_ids"] = team_ids
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.url + "/transfer", input=post_parameters,
+        )
+        return Repository(self._requester, headers, data, completed=True)
+
     def get_git_blob(self, sha):
         """
         :calls: `GET /repos/:owner/:repo/git/blobs/:sha <http://developer.github.com/v3/git/blobs>`_
