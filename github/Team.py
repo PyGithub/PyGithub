@@ -155,6 +155,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._privacy)
         return self._privacy.value
 
+    @property
+    def parent(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._parent)
+        return self._parent.value
+
     def add_to_members(self, member):
         """
         This API call is deprecated. Use `add_membership` instead.
@@ -262,6 +270,18 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
+
+    def get_teams(self):
+        """
+        :calls: `GET /teams/:id/teams <https://developer.github.com/enterprise/2.17/v3/teams/#list-child-teams>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team,
+            self._requester,
+            self.url + '/teams',
+            None,
+        )
 
     def get_discussions(self):
         """
@@ -393,6 +413,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._organization = github.GithubObject.NotSet
         self._privacy = github.GithubObject.NotSet
+        self._parent = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -423,3 +444,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             )
         if "privacy" in attributes:  # pragma no branch
             self._privacy = self._makeStringAttribute(attributes["privacy"])
+        if attributes.get("parent") is not None:  # pragma no branch
+            self._parent = self._makeClassAttribute(
+                github.Team.Team, attributes["parent"]
+            )

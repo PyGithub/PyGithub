@@ -55,6 +55,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
+        self.assertEqual(self.team.parent, None)
 
         # test __repr__() based on this attributes
         self.assertEqual(
@@ -137,6 +138,17 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+
+    def testGetTeams(self):
+        nested_teams = self.team.get_teams()
+        self.assertListKeyEqual(
+            nested_teams,
+            lambda t: t.name,
+            ['DummyTeam1', 'DummyTeam2', 'DummyTeam3']
+        )
+        parent = nested_teams[0].parent
+        self.assertEqual(self.team.name, parent.name)
+        self.assertEqual(self.team.id, parent.id)
 
     def testDelete(self):
         self.team.delete()
