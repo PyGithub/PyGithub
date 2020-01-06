@@ -26,11 +26,7 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import datetime
-
-import six
 
 import github
 
@@ -46,7 +42,7 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.name
         self.assertEqual(raisedexp.exception.actual_value, 42)
-        self.assertEqual(raisedexp.exception.expected_type, (str, six.text_type))
+        self.assertEqual(raisedexp.exception.expected_type, str)
         self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadAttributeTransformation(self):
@@ -56,7 +52,7 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.created_at
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
-        self.assertEqual(raisedexp.exception.expected_type, (str, six.text_type))
+        self.assertEqual(raisedexp.exception.expected_type, str)
         self.assertEqual(
             raisedexp.exception.transformation_exception.__class__, ValueError
         )
@@ -72,7 +68,7 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.updated_at
         self.assertEqual(raisedexp.exception.actual_value, 42)
-        self.assertEqual(raisedexp.exception.expected_type, (str, six.text_type))
+        self.assertEqual(raisedexp.exception.expected_type, str)
         self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadSimpleAttributeInList(self):
@@ -82,7 +78,7 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             hook.events
         self.assertEqual(raisedexp.exception.actual_value, ["push", 42])
-        self.assertEqual(raisedexp.exception.expected_type, [(str, six.text_type)])
+        self.assertEqual(raisedexp.exception.expected_type, [str])
         self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testBadAttributeInClassAttribute(self):
@@ -111,9 +107,7 @@ class BadAttributes(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             gist.files
         self.assertEqual(raisedexp.exception.actual_value, {"test.py": 42})
-        self.assertEqual(
-            raisedexp.exception.expected_type, {(str, six.text_type): dict}
-        )
+        self.assertEqual(raisedexp.exception.expected_type, {str: dict})
         self.assertEqual(raisedexp.exception.transformation_exception, None)
 
     def testIssue195(self):
@@ -302,5 +296,5 @@ class BadAttributes(Framework.TestCase):
                 ]
             ],
         )
-        self.assertEqual(raisedexp.exception.expected_type, [(str, six.text_type)])
+        self.assertEqual(raisedexp.exception.expected_type, [str])
         self.assertEqual(raisedexp.exception.transformation_exception, None)

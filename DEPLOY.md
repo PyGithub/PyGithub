@@ -13,6 +13,6 @@ Next version number? (previous: 'XXX')
 
 3. Now the push will be on hold until you press Enter. Manually inpect the changelog (`doc/changes.rst`) to make changes if necessary. Once you are sure, go back and press Enter. 
 
-4. Once the travis job (Python2.7) is done, the new version should be uploaded to PyPI. 
+4. Once the travis job (Python 3.5) is done, the new version should be uploaded to PyPI.
 
 5. Update the Github [release](https://github.com/PyGithub/PyGithub/releases) page with the same release note from `doc/changes.rst`. (needed for some web spiders for changelog parsing)

@@ -22,22 +22,16 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
 
 import itertools
 import unittest
 from io import StringIO
+from unittest.mock import Mock
 
 import httpretty
 from parameterized import parameterized
 
 from . import Framework
-
-try:
-    from unittest.mock import Mock
-except ImportError:
-    from mock import Mock
-
 
 PARAMETERS = itertools.product(
     [

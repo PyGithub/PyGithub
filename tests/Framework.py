@@ -36,8 +36,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import, print_function
-
 import io
 import json
 import os
@@ -45,7 +43,6 @@ import traceback
 import unittest
 
 import httpretty
-import six
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url
 
@@ -99,7 +96,6 @@ class RecordingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        print(verb, url, input, headers, end=" ")
         self.__cnx.request(verb, url, input, headers)
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
@@ -116,7 +112,7 @@ class RecordingConnection:
         self.__writeLine(self.__port)
         self.__writeLine(url)
         self.__writeLine(anonymous_headers)
-        self.__writeLine(six.text_type(input).replace("\n", "").replace("\r", ""))
+        self.__writeLine(str(input).replace("\n", "").replace("\r", ""))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -137,7 +133,7 @@ class RecordingConnection:
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(six.text_type(line) + u"\n")
+        self.__file.write(str(line) + u"\n")
 
 
 class RecordingHttpConnection(RecordingConnection):
@@ -185,7 +181,7 @@ class ReplayingConnection:
         )
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
-        if isinstance(input, (str, six.text_type)):
+        if isinstance(input, str):
             if input.startswith("{"):
                 self.__testCase.assertEqual(
                     json.loads(input.replace("\n", "").replace("\r", "")),

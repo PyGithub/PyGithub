@@ -91,8 +91,6 @@ Please check your code with [pep8 Python style guide checker](http://pypi.python
 
 ## Build documentation locally
 
-Note: only Python 2 is supported as of now
-
 ```
 pip install -r requirements.txt
 sphinx-build doc build

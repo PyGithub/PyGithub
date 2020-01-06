@@ -29,8 +29,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github.CommitStats
 import github.Gist
 import github.GithubObject

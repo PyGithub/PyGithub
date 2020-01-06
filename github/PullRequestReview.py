@@ -26,10 +26,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GithubObject
 import github.NamedUser
 
@@ -119,7 +115,7 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/pulls/:number/reviews/:review_id/dismissals <https://developer.github.com/v3/pulls/reviews/>`_
         :rtype: None
         """
-        assert isinstance(message, (str, six.text_type)), message
+        assert isinstance(message, str), message
         post_parameters = {"message": message}
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",

@@ -30,10 +30,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.AuthorizationApplication
 import github.GithubObject
 
@@ -143,19 +139,17 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert scopes is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type)) for element in scopes
+            isinstance(element, str) for element in scopes
         ), scopes
         assert add_scopes is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type)) for element in add_scopes
+            isinstance(element, str) for element in add_scopes
         ), add_scopes
         assert remove_scopes is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type)) for element in remove_scopes
+            isinstance(element, str) for element in remove_scopes
         ), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(
-            note, (str, six.text_type)
-        ), note
+        assert note is github.GithubObject.NotSet or isinstance(note, str), note
         assert note_url is github.GithubObject.NotSet or isinstance(
-            note_url, (str, six.text_type)
+            note_url, str
         ), note_url
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:

@@ -25,10 +25,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import, print_function
-
-import six
-
 from . import Framework
 
 
@@ -136,10 +132,8 @@ class ExposeAllAttributes(Framework.TestCase):
             ]
         )
 
-        for className, attributesMissingInClass in sorted(
-            six.iteritems(missingAttributes)
-        ):
-            for attrName, value in sorted(six.iteritems(attributesMissingInClass)):
+        for className, attributesMissingInClass in sorted(missingAttributes.items()):
+            for attrName, value in sorted(attributesMissingInClass.items()):
                 print(className, attrName, "->", repr(value))
 
         self.assertEqual(sum(len(attrs) for attrs in missingAttributes.values()), 0)

@@ -25,8 +25,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github.Authorization
 import github.Event
 import github.Gist

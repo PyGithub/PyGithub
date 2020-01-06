@@ -18,17 +18,8 @@ function fix_headers {
 }
 
 function test {
-    test2
-    test3
-}
-
-function test2 {
     coverage run --branch --include=github/*.py --omit=github/tests/*.py setup.py test --quiet || exit
     coverage report --show-missing || exit
-}
-
-function test3 {
-    python3 setup.py test --quiet || exit
 }
 
 function bump {

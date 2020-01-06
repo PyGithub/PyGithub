@@ -28,10 +28,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GithubObject
 
 
@@ -56,16 +52,16 @@ class InputGitTreeElement(object):
         :param sha: string or None
         """
 
-        assert isinstance(path, (str, six.text_type)), path
-        assert isinstance(mode, (str, six.text_type)), mode
-        assert isinstance(type, (str, six.text_type)), type
+        assert isinstance(path, str), path
+        assert isinstance(mode, str), mode
+        assert isinstance(type, str), type
         assert content is github.GithubObject.NotSet or isinstance(
-            content, (str, six.text_type)
+            content, str
         ), content
         assert (
             sha is github.GithubObject.NotSet
             or sha is None
-            or isinstance(sha, (str, six.text_type))
+            or isinstance(sha, str)
         ), sha
         self.__path = path
         self.__mode = mode

@@ -27,8 +27,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 from deprecated import deprecated
 
 import github.GithubObject

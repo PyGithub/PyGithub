@@ -52,8 +52,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import base64
 import json
 import logging
@@ -61,11 +59,10 @@ import mimetypes
 import os
 import re
 import time
+import urllib
 from io import IOBase
 
 import requests
-import six
-import six.moves.urllib.parse
 
 from . import Consts, GithubException
 
@@ -78,7 +75,7 @@ class RequestsResponse:
         self.text = r.text
 
     def getheaders(self):
-        return six.iteritems(self.headers)
+        return self.headers.items()
 
     def read(self):
         return self.text
@@ -286,7 +283,7 @@ class Requester:
             self.__authorizationHeader = None
 
         self.__base_url = base_url
-        o = six.moves.urllib.parse.urlparse(base_url)
+        o = urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
@@ -348,7 +345,7 @@ class Requester:
     def __customConnection(self, url):
         cnx = None
         if not url.startswith("/"):
-            o = six.moves.urllib.parse.urlparse(url)
+            o = urllib.parse.urlparse(url)
             if (
                 o.hostname != self.__hostname
                 or (o.port and o.port != self.__port)
@@ -420,7 +417,7 @@ class Requester:
             eol = "\r\n"
 
             encoded_input = ""
-            for name, value in six.iteritems(input):
+            for name, value in input.items():
                 encoded_input += "--" + boundary + eol
                 encoded_input += (
                     'Content-Disposition: form-data; name="' + name + '"' + eol
@@ -518,7 +515,7 @@ class Requester:
             return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
         if status == 301 and "location" in responseHeaders:
-            o = six.moves.urllib.parse.urlparse(responseHeaders["location"])
+            o = urllib.parse.urlparse(responseHeaders["location"])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
@@ -536,7 +533,7 @@ class Requester:
         if url.startswith("/"):
             url = self.__prefix + url
         else:
-            o = six.moves.urllib.parse.urlparse(url)
+            o = urllib.parse.urlparse(url)
             assert o.hostname in [
                 self.__hostname,
                 "uploads.github.com",
@@ -553,7 +550,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + six.moves.urllib.parse.urlencode(parameters)
+            return url + "?" + urllib.parse.urlencode(parameters)
 
     def __createConnection(self):
         kwds = {}

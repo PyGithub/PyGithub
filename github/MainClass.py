@@ -48,15 +48,12 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import datetime
 import pickle
 import time
 
 import jwt
 import requests
-import six
 import urllib3
 
 import github.Gist
@@ -120,22 +117,14 @@ class Github(object):
         :param retry: int or urllib3.util.retry.Retry object
         """
 
-        assert login_or_token is None or isinstance(
-            login_or_token, (str, six.text_type)
-        ), login_or_token
-        assert password is None or isinstance(password, (str, six.text_type)), password
-        assert jwt is None or isinstance(jwt, (str, six.text_type)), jwt
-        assert isinstance(base_url, (str, six.text_type)), base_url
-        assert isinstance(timeout, six.integer_types), timeout
-        assert client_id is None or isinstance(
-            client_id, (str, six.text_type)
-        ), client_id
-        assert client_secret is None or isinstance(
-            client_secret, (str, six.text_type)
-        ), client_secret
-        assert user_agent is None or isinstance(
-            user_agent, (str, six.text_type)
-        ), user_agent
+        assert login_or_token is None or isinstance(login_or_token, str), login_or_token
+        assert password is None or isinstance(password, str), password
+        assert jwt is None or isinstance(jwt, str), jwt
+        assert isinstance(base_url, str), base_url
+        assert isinstance(timeout, int), timeout
+        assert client_id is None or isinstance(client_id, str), client_id
+        assert client_secret is None or isinstance(client_secret, str), client_secret
+        assert user_agent is None or isinstance(user_agent, str), user_agent
         assert (
             retry is None
             or isinstance(retry, (int))
@@ -230,7 +219,7 @@ class Github(object):
         :rtype: :class:`github.License.License`
         """
 
-        assert isinstance(key, (str, six.text_type)), key
+        assert isinstance(key, str), key
         headers, data = self.__requester.requestJsonAndCheck("GET", "/licenses/" + key)
         return github.License.License(self.__requester, headers, data, completed=True)
 
@@ -252,9 +241,7 @@ class Github(object):
         :param login: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
-        assert login is github.GithubObject.NotSet or isinstance(
-            login, (str, six.text_type)
-        ), login
+        assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser(
                 self.__requester, {}, {"url": "/user"}, completed=False
@@ -273,9 +260,7 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, six.integer_types
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, int), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -289,7 +274,7 @@ class Github(object):
         :param login: string
         :rtype: :class:`github.Organization.Organization`
         """
-        assert isinstance(login, (str, six.text_type)), login
+        assert isinstance(login, str), login
         headers, data = self.__requester.requestJsonAndCheck("GET", "/orgs/" + login)
         return github.Organization.Organization(
             self.__requester, headers, data, completed=True
@@ -301,9 +286,7 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, six.integer_types
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, int), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -319,7 +302,7 @@ class Github(object):
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(full_name_or_id, (str, six.text_type, int)), full_name_or_id
+        assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
@@ -340,9 +323,7 @@ class Github(object):
         :param visibility: string ('all','public')
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, six.integer_types
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, int), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -375,7 +356,7 @@ class Github(object):
         :param id: string
         :rtype: :class:`github.Gist.Gist`
         """
-        assert isinstance(id, (str, six.text_type)), id
+        assert isinstance(id, str), id
         headers, data = self.__requester.requestJsonAndCheck("GET", "/gists/" + id)
         return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
@@ -410,7 +391,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
         if (
             sort is not github.GithubObject.NotSet
@@ -455,7 +436,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             assert sort in ("followers", "repositories", "joined"), sort
@@ -496,7 +477,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             assert sort in ("comments", "created", "updated"), sort
@@ -536,7 +517,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ContentFile.ContentFile`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
         if (
             sort is not github.GithubObject.NotSet
@@ -584,7 +565,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
         if (
             sort is not github.GithubObject.NotSet
@@ -622,7 +603,7 @@ class Github(object):
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Topic.Topic`
         """
-        assert isinstance(query, (str, six.text_type)), query
+        assert isinstance(query, str), query
         url_parameters = dict()
 
         query_chunks = []
@@ -650,7 +631,7 @@ class Github(object):
         :param context: :class:`github.Repository.Repository`
         :rtype: string
         """
-        assert isinstance(text, (str, six.text_type)), text
+        assert isinstance(text, str), text
         assert context is github.GithubObject.NotSet or isinstance(
             context, github.Repository.Repository
         ), context
@@ -669,7 +650,7 @@ class Github(object):
         :param name: string
         :rtype: :class:`github.HookDescription.HookDescription`
         """
-        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(name, str), name
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET", "/hooks/" + name
         )
@@ -705,7 +686,7 @@ class Github(object):
         :calls: `GET /gitignore/templates/:name <http://developer.github.com/v3/gitignore>`_
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
-        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(name, str), name
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET", "/gitignore/templates/" + name
         )
@@ -779,7 +760,7 @@ class GithubIntegration(object):
         self.base_url = base_url
         self.integration_id = integration_id
         self.private_key = private_key
-        assert isinstance(base_url, (str, six.text_type)), base_url
+        assert isinstance(base_url, str), base_url
 
     def create_jwt(self, expiration=60):
         """

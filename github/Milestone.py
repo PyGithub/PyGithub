@@ -30,11 +30,7 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import datetime
-
-import six
 
 import github.GithubObject
 import github.Label
@@ -178,12 +174,10 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :param due_on: date
         :rtype: None
         """
-        assert isinstance(title, (str, six.text_type)), title
-        assert state is github.GithubObject.NotSet or isinstance(
-            state, (str, six.text_type)
-        ), state
+        assert isinstance(title, str), title
+        assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert description is github.GithubObject.NotSet or isinstance(
-            description, (str, six.text_type)
+            description, str
         ), description
         assert due_on is github.GithubObject.NotSet or isinstance(
             due_on, datetime.date

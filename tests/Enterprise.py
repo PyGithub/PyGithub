@@ -27,8 +27,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github
 
 from . import Framework
@@ -90,9 +88,7 @@ class Enterprise(Framework.BasicTestCase):
             ],
         )
 
-    def testUnknownUrlScheme(
-        self,
-    ):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
+    def testUnknownUrlScheme(self):
         with self.assertRaises(AssertionError) as raisedexp:
             github.Github(
                 self.login, self.password, base_url="foobar://my.enterprise.com"

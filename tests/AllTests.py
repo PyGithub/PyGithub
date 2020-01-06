@@ -40,7 +40,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
 
 from .AuthenticatedUser import AuthenticatedUser
 from .Authentication import Authentication
