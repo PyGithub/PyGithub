@@ -2092,7 +2092,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def transfer(self, new_owner, team_ids=[]):
         """
         :calls: `POST /repos/:owner/:repo/transfer <https://developer.github.com/v3/repos/#transfer-a-repository>`_
-        :param new_owner: string or "none" or "*"
+        :param new_owner: string or "none" or "*". Required.
+        :param team_ids: list. Optional. Works only under organizations.
         :rtype: :class:`github.Repository.Repository`
         """
         post_parameters = {}
