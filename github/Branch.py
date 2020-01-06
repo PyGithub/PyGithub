@@ -33,10 +33,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.BranchProtection
 import github.Commit
 import github.GithubObject
@@ -147,21 +143,17 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
         assert contexts is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in contexts
+            isinstance(element, str) or isinstance(element, str) for element in contexts
         ), contexts
         assert enforce_admins is github.GithubObject.NotSet or isinstance(
             enforce_admins, bool
         ), enforce_admins
         assert dismissal_users is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
+            isinstance(element, str) or isinstance(element, str)
             for element in dismissal_users
         ), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
+            isinstance(element, str) or isinstance(element, str)
             for element in dismissal_teams
         ), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
@@ -285,9 +277,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
         assert contexts is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in contexts
+            isinstance(element, str) or isinstance(element, str) for element in contexts
         ), contexts
 
         post_parameters = {}
@@ -340,13 +330,11 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_approving_review_count: int
         """
         assert dismissal_users is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
+            isinstance(element, str) or isinstance(element, str)
             for element in dismissal_users
         ), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
+            isinstance(element, str) or isinstance(element, str)
             for element in dismissal_teams
         ), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
@@ -446,9 +434,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :users: list of strings (user names)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in users
+            isinstance(element, str) or isinstance(element, str) for element in users
         ), users
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -461,9 +447,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :users: list of strings (user names)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in users
+            isinstance(element, str) or isinstance(element, str) for element in users
         ), users
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -476,9 +460,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :users: list of strings (user names)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in users
+            isinstance(element, str) or isinstance(element, str) for element in users
         ), users
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -491,9 +473,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :teams: list of strings (team slugs)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in teams
+            isinstance(element, str) or isinstance(element, str) for element in teams
         ), teams
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -506,9 +486,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :teams: list of strings (team slugs)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in teams
+            isinstance(element, str) or isinstance(element, str) for element in teams
         ), teams
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -521,9 +499,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :teams: list of strings (team slugs)
         """
         assert all(
-            isinstance(element, (str, six.text_type))
-            or isinstance(element, (str, six.text_type))
-            for element in teams
+            isinstance(element, str) or isinstance(element, str) for element in teams
         ), teams
 
         headers, data = self._requester.requestJsonAndCheck(

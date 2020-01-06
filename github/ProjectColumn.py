@@ -22,10 +22,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GithubObject
 import github.Project
 import github.ProjectCard
@@ -104,7 +100,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param archived_state: string
         """
         assert archived_state is github.GithubObject.NotSet or isinstance(
-            archived_state, (str, six.text_type)
+            archived_state, str
         ), archived_state
 
         url_parameters = dict()
@@ -132,14 +128,14 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param content_type: string
         """
         post_parameters = {}
-        if isinstance(note, (str, six.text_type)):
+        if isinstance(note, str):
             assert content_id is github.GithubObject.NotSet, content_id
             assert content_type is github.GithubObject.NotSet, content_type
             post_parameters = {"note": note}
         else:
             assert note is github.GithubObject.NotSet, note
             assert isinstance(content_id, int), content_id
-            assert isinstance(content_type, (str, six.text_type)), content_type
+            assert isinstance(content_type, str), content_type
             post_parameters = {"content_id": content_id, "content_type": content_type}
 
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}

@@ -26,8 +26,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import, print_function
-
 import os
 import subprocess
 
@@ -63,9 +61,7 @@ def generateLicenseSection(filename):
 
 def listContributors(filename):
     contributors = set()
-    for line in subprocess.check_output(
-        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]
-    ).split("\n"):
+    for line in subprocess.check_output(["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]).split("\n"):
         year = line[0:4]
         name = line[11:]
         contributors.add((year, name))
@@ -109,11 +105,7 @@ class PythonHeader:
 
         if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
-            if (
-                "import " not in bodyLines[0]
-                and bodyLines[0] != '"""'
-                and not bodyLines[0].startswith("##########")
-            ):
+            if "import " not in bodyLines[0] and bodyLines[0] != '"""' and not bodyLines[0].startswith("##########"):
                 newLines.append("")
         newLines += bodyLines
 
@@ -137,7 +129,7 @@ class StandardHeader:
 
 
 def findHeadersAndFiles():
-    for root, dirs, files in os.walk(".", topdown=True):
+    for root, dirs, files in os.walk('.', topdown=True):
         if ".git" in dirs:
             dirs.remove(".git")
         if "developer.github.com" in dirs:

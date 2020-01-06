@@ -37,10 +37,7 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-from six.moves.urllib.parse import parse_qs
+from urllib.parse import parse_qs
 
 
 class PaginatedListBase:
@@ -49,7 +46,7 @@ class PaginatedListBase:
 
     def __getitem__(self, index):
         assert isinstance(index, (int, slice))
-        if isinstance(index, six.integer_types):
+        if isinstance(index, int):
             self.__fetchToIndex(index)
             return self.__elements[index]
         else:

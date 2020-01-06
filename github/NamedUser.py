@@ -37,11 +37,7 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import datetime
-
-import six
 
 import github.Event
 import github.Gist
@@ -521,7 +517,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET", "/repos/" + self.login + "/" + name
         )
@@ -542,14 +538,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert type is github.GithubObject.NotSet or isinstance(
-            type, (str, six.text_type)
-        ), type
-        assert sort is github.GithubObject.NotSet or isinstance(
-            sort, (str, six.text_type)
-        ), sort
+        assert type is github.GithubObject.NotSet or isinstance(type, str), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
-            direction, (str, six.text_type)
+            direction, str
         ), direction
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
@@ -617,7 +609,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :param org: string or :class:`github.Organization.Organization`
         :rtype: :class:`github.Membership.Membership`
         """
-        assert isinstance(org, (str, six.text_type)) or isinstance(
+        assert isinstance(org, str) or isinstance(
             org, github.Organization.Organization
         ), org
         if isinstance(org, github.Organization.Organization):

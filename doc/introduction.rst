@@ -1,7 +1,7 @@
 Introduction
 ============
 
-PyGithub is a Python (2 and 3) library to use the `Github API v3 <http://developer.github.com/v3>`__.
+PyGithub is a Python library to use the `Github API v3 <http://developer.github.com/v3>`__.
 With it, you can manage your `Github <http://github.com>`__ resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
 Should you have any question, any remark, or if you find a bug,

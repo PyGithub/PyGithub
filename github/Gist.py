@@ -33,10 +33,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
@@ -211,7 +207,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
-        assert isinstance(body, (str, six.text_type)), body
+        assert isinstance(body, str), body
         post_parameters = {
             "body": body,
         }
@@ -247,11 +243,11 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert description is github.GithubObject.NotSet or isinstance(
-            description, (str, six.text_type)
+            description, str
         ), description
         assert files is github.GithubObject.NotSet or all(
             element is None or isinstance(element, github.InputFileContent)
-            for element in six.itervalues(files)
+            for element in files.values()
         ), files
         post_parameters = dict()
         if description is not github.GithubObject.NotSet:
@@ -259,7 +255,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if files is not github.GithubObject.NotSet:
             post_parameters["files"] = {
                 key: None if value is None else value._identity
-                for key, value in six.iteritems(files)
+                for key, value in files.items()
             }
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
@@ -272,7 +268,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
-        assert isinstance(id, six.integer_types), id
+        assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url + "/comments/" + str(id)
         )

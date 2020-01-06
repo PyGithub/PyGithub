@@ -22,8 +22,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github.GithubObject
 
 # NOTE: There is currently no way to get cards "in triage" for a project.

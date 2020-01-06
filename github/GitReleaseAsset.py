@@ -25,10 +25,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GithubObject
 
 
@@ -165,8 +161,8 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         Update asset metadata.
         :rtype: github.GitReleaseAsset.GitReleaseAsset
         """
-        assert isinstance(name, (str, six.text_type)), name
-        assert isinstance(label, (str, six.text_type)), label
+        assert isinstance(name, str), name
+        assert isinstance(label, str), label
         post_parameters = {"name": name, "label": label}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters

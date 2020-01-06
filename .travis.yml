@@ -1,6 +1,5 @@
 language: python
 python:
-  - "2.7"
   - "3.5"
   - "3.6"
   - "3.7"
@@ -26,4 +25,4 @@ deploy:
   on:
     tags: true
     repo: PyGithub/PyGithub
-    python: "2.7"
+    python: "3.5"

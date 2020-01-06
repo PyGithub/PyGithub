@@ -31,8 +31,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github.Commit
 import github.GithubObject
 

@@ -26,8 +26,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import requests
 import urllib3
 from httpretty import httpretty

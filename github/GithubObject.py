@@ -32,12 +32,8 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import datetime
 from operator import itemgetter
-
-import six
 
 from . import Consts, GithubException
 
@@ -151,11 +147,11 @@ class GithubObject(object):
 
     @staticmethod
     def _makeStringAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, (str, six.text_type))
+        return GithubObject.__makeSimpleAttribute(value, str)
 
     @staticmethod
     def _makeIntAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, six.integer_types)
+        return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
     def _makeFloatAttribute(value):
@@ -172,7 +168,7 @@ class GithubObject(object):
     @staticmethod
     def _makeTimestampAttribute(value):
         return GithubObject.__makeTransformedAttribute(
-            value, six.integer_types, datetime.datetime.utcfromtimestamp
+            value, int, datetime.datetime.utcfromtimestamp
         )
 
     @staticmethod
@@ -193,9 +189,7 @@ class GithubObject(object):
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        return GithubObject.__makeTransformedAttribute(
-            value, (str, six.text_type), parseDatetime
-        )
+        return GithubObject.__makeTransformedAttribute(value, str, parseDatetime)
 
     def _makeClassAttribute(self, klass, value):
         return GithubObject.__makeTransformedAttribute(
@@ -206,7 +200,7 @@ class GithubObject(object):
 
     @staticmethod
     def _makeListOfStringsAttribute(value):
-        return GithubObject.__makeSimpleListAttribute(value, (str, six.text_type))
+        return GithubObject.__makeSimpleListAttribute(value, str)
 
     @staticmethod
     def _makeListOfIntsAttribute(value):
@@ -235,8 +229,8 @@ class GithubObject(object):
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
         if isinstance(value, dict) and all(
-            isinstance(key, (str, six.text_type)) and isinstance(element, dict)
-            for key, element in six.iteritems(value)
+            isinstance(key, str) and isinstance(element, dict)
+            for key, element in value.items()
         ):
             return _ValuedAttribute(
                 dict(
@@ -244,11 +238,11 @@ class GithubObject(object):
                         key,
                         klass(self._requester, self._headers, element, completed=False),
                     )
-                    for key, element in six.iteritems(value)
+                    for key, element in value.items()
                 )
             )
         else:
-            return _BadAttribute(value, {(str, six.text_type): dict})
+            return _BadAttribute(value, {str: dict})
 
     @property
     def etag(self):
@@ -274,13 +268,13 @@ class GithubObject(object):
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):
                     v = v.decode("utf-8")
-                if isinstance(v, six.text_type):
-                    v = u'"{v}"'.format(v=v)
+                if isinstance(v, str):
+                    v = '"{v}"'.format(v=v)
                 yield u"{k}={v}".format(k=k, v=v)
 
-        return u"{class_name}({params})".format(
+        return "{class_name}({params})".format(
             class_name=self.__class__.__name__,
-            params=u", ".join(list(format_params(params))),
+            params=", ".join(list(format_params(params))),
         )
 
 

@@ -41,10 +41,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
-import six
-
 import github.GithubObject
 import github.NamedUser
 import github.Organization
@@ -181,9 +177,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        assert role is github.GithubObject.NotSet or isinstance(
-            role, (str, six.text_type)
-        ), role
+        assert role is github.GithubObject.NotSet or isinstance(role, str), role
         if role is not github.GithubObject.NotSet:
             assert role in ["member", "maintainer"]
             put_parameters = {
@@ -245,15 +239,15 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param privacy: string
         :rtype: None
         """
-        assert isinstance(name, (str, six.text_type)), name
+        assert isinstance(name, str), name
         assert description is github.GithubObject.NotSet or isinstance(
-            description, (str, six.text_type)
+            description, str
         ), description
         assert permission is github.GithubObject.NotSet or isinstance(
-            permission, (str, six.text_type)
+            permission, str
         ), permission
         assert privacy is github.GithubObject.NotSet or isinstance(
-            privacy, (str, six.text_type)
+            privacy, str
         ), privacy
         post_parameters = {
             "name": name,
@@ -288,9 +282,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert role is github.GithubObject.NotSet or isinstance(
-            role, (str, six.text_type)
-        ), role
+        assert role is github.GithubObject.NotSet or isinstance(role, str), role
         url_parameters = dict()
         if role is not github.GithubObject.NotSet:
             assert role in ["member", "maintainer", "all"]

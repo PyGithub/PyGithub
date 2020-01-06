@@ -41,21 +41,11 @@
 #                                                                              #
 ################################################################################
 
-import sys
 import textwrap
 
 import setuptools
 
 version = "1.45"
-
-tests_require = [
-    "cryptography",
-    "httpretty>=0.9.6",
-    "parameterized>=0.7.0",
-]
-
-if sys.version_info < (3, 3):
-    tests_require.append("mock==3.0.5")
 
 
 if __name__ == "__main__":
@@ -101,8 +91,6 @@ if __name__ == "__main__":
             "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
             "Operating System :: OS Independent",
             "Programming Language :: Python",
-            "Programming Language :: Python :: 2",
-            "Programming Language :: Python :: 2.7",
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.5",
             "Programming Language :: Python :: 3.6",
@@ -111,8 +99,8 @@ if __name__ == "__main__":
             "Topic :: Software Development",
         ],
         test_suite="tests.AllTests",
-        python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
-        install_requires=["deprecated", "pyjwt", "requests>=2.14.0", "six"],
+        python_requires=">=3.5",
+        install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
         extras_require={"integrations": ["cryptography"]},
-        tests_require=tests_require,
+        tests_require=["cryptography", "httpretty>=0.9.6", "parameterized>=0.7.0"],
     )
