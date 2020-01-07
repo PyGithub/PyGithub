@@ -72,6 +72,13 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return self._protected.value
 
     @property
+    def protection(self):
+        """
+        :type: dict
+        """
+        return self._protection
+
+    @property
     def protection_url(self):
         """
         :type: string
@@ -83,6 +90,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._protection_url = github.GithubObject.NotSet
         self._protected = github.GithubObject.NotSet
+        self._protection = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
@@ -97,6 +105,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             )
         if "protected" in attributes:  # pragma no branch
             self._protected = self._makeBoolAttribute(attributes["protected"])
+        if "protection" in attributes:  # pragma no branch
+            self._protection = self._makeDictAttribute(attributes["protection"])
 
     def get_protection(self):
         """
@@ -196,6 +206,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             or required_approving_review_count is not github.GithubObject.NotSet
         ):
             post_parameters["required_pull_request_reviews"] = {}
+            if self._rawData.get("is_organization", False):
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ] = {}
             if dismiss_stale_reviews is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"][
                     "dismiss_stale_reviews"
@@ -211,15 +225,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             if dismissal_users is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
-                ] = {"users": dismissal_users}
+                ]["users"] = dismissal_users
             if dismissal_teams is not github.GithubObject.NotSet:
-                if (
-                    "dismissal_restrictions"
-                    not in post_parameters["required_pull_request_reviews"]
-                ):
-                    post_parameters["required_pull_request_reviews"][
-                        "dismissal_restrictions"
-                    ] = {}
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["teams"] = dismissal_teams
