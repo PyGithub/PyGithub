@@ -51,9 +51,8 @@ class Release(Framework.TestCase):
         with open(self.content_path, "w") as zip_content:
             zip_content.write("Pedro for president.")
 
-        artifact = zipfile.ZipFile(self.artifact_path, "w")
-        artifact.write(self.content_path)
-        artifact.close()
+        with zipfile.ZipFile(self.artifact_path, "w") as artifact:
+            artifact.write(self.content_path)
 
     def tearDown(self):
         if os.path.exists(self.content_path):
