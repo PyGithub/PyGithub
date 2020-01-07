@@ -2096,10 +2096,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param team_ids: list. Optional. Works only under organizations.
         :rtype: :class:`github.Repository.Repository`
         """
-        post_parameters = {}
-        if new_owner is not None:
-            post_parameters["new_owner"] = new_owner
-        post_parameters["team_ids"] = team_ids
+        assert new_owner is not None
+        assert isinstance(team_ids, list)
+        post_parameters = {"new_owner": new_owner, 'team_ids': team_ids}
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/transfer", input=post_parameters,
         )
