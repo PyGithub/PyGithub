@@ -123,6 +123,18 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
         )
 
+    def get_review_comments(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:pull_number/reviews/:review_id/comments <https://developer.github.com/v3/pulls/reviews/#get-comments-for-a-single-review>`_
+        """
+        url_parameters = dict()
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestComment.PullRequestComment,
+            self._requester,
+            self.pull_request_url + "/reviews/" + str(self.id) + "/comments",
+            url_parameters,
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
