@@ -273,7 +273,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_teams(self):
         """
-        :calls: `GET /teams/:id/teams <https://developer.github.com/enterprise/2.17/v3/teams/#list-child-teams>`_
+        :calls: `GET /teams/:id/teams <https://developer.github.com/v3/teams/#list-child-teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
@@ -444,7 +444,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             )
         if "privacy" in attributes:  # pragma no branch
             self._privacy = self._makeStringAttribute(attributes["privacy"])
-        if attributes.get("parent") is not None:  # pragma no branch
+        if "parent" in attributes:  # pragma no branch
             self._parent = self._makeClassAttribute(
                 github.Team.Team, attributes["parent"]
             )
