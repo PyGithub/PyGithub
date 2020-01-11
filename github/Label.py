@@ -99,7 +99,7 @@ class Label(github.GithubObject.CompletableGithubObject):
             description, str
         ), description
         post_parameters = {
-            "name": name,
+            "new_name": name,
             "color": color,
         }
         if description is not github.GithubObject.NotSet:
