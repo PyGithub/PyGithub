@@ -1215,7 +1215,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_invitations(self):
         """
-        :calls: `GET /user/repository_invitations`_
+        :calls: `GET /user/repository_invitations <https://developer.github.com/v3/repos/invitations/>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Invitation.Invitation`
         """
         return github.PaginatedList.PaginatedList(
@@ -1232,7 +1232,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         exclude_attachments=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /user/migrations`_
+        :calls: `POST /user/migrations <https://developer.github.com/v3/migrations/users>`_
         :param repos: list or tuple of str
         :param lock_repositories: bool
         :param exclude_attachments: bool
@@ -1263,7 +1263,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_migrations(self):
         """
-        :calls: `GET /user/migrations`_
+        :calls: `GET /user/migrations <https://developer.github.com/v3/migrations/users>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
         """
         return github.PaginatedList.PaginatedList(
