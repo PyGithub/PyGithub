@@ -156,7 +156,7 @@ class Project(github.GithubObject.CompletableGithubObject):
 
     def create_column(self, name):
         """
-        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        calls: `POST /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
         :param name: string
         """
         assert isinstance(name, str), name

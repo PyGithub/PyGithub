@@ -1039,7 +1039,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         exclude_attachments=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/:org/migrations`_
+        :calls: `POST /orgs/:org/migrations <https://developer.github.com/v3/migrations/users>`_
         :param repos: list or tuple of str
         :param lock_repositories: bool
         :param exclude_attachments: bool
@@ -1070,7 +1070,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_migrations(self):
         """
-        :calls: `GET /orgs/:org/migrations`_
+        :calls: `GET /orgs/:org/migrations <https://developer.github.com/v3/migrations/users>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
         """
         return github.PaginatedList.PaginatedList(

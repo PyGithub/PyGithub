@@ -139,7 +139,7 @@ Delete a file in the repository
     {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
 
 Get the top 10 referrers over the last 14 days
--------------------------------
+----------------------------------------------
 
 .. code-block:: python
 
@@ -154,7 +154,7 @@ Get the top 10 referrers over the last 14 days
     ]
 
 Get the top 10 popular contents over the last 14 days
--------------------------------
+-----------------------------------------------------
 
 .. code-block:: python
 
@@ -175,7 +175,7 @@ Get the top 10 popular contents over the last 14 days
     ]
 
 Get number of clones and breakdown for the last 14 days
--------------------------------
+-------------------------------------------------------
 
 .. code-block:: python
 
@@ -206,7 +206,7 @@ Get number of clones and breakdown for the last 14 days
     }
 
 Get number of views and breakdown for the last 14 days
--------------------------------
+------------------------------------------------------
 
 .. code-block:: python
 
@@ -236,8 +236,6 @@ Get number of views and breakdown for the last 14 days
       ]
     }
 
-=======
-======
 Mark the notifications of the repository as read
 ------------------------------------------------
 
