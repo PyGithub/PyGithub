@@ -115,23 +115,25 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
     def get_content(self, content_type=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
+        :param content_type: string, optional
         :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
+        assert content_type is github.GithubObject.NotSet or isinstance(
+            content_type, str
+        ), content_type
         if self.content_url is None:
             return None
 
         if content_type == "PullRequest":
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET", self.content_url.replace("issues", "pulls")
-            )
-            return github.PullRequest.PullRequest(
-                self._requester, headers, data, completed=True
-            )
+            url = self.content_url.replace("issues", "pulls")
+            retclass = github.PullRequest.PullRequest
         elif content_type is github.GithubObject.NotSet or content_type == "Issue":
-            headers, data = self._requester.requestJsonAndCheck("GET", self.content_url)
-            return github.Issue.Issue(self._requester, headers, data, completed=True)
+            url = self.content_url
+            retclass = github.Issue.Issue
         else:
-            assert False, "Unknown content type: %s" % content_type
+            raise ValueError("Unknown content type: %s" % content_type)
+        headers, data = self._requester.requestJsonAndCheck("GET", url)
+        return retclass(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet
