@@ -127,6 +127,7 @@ class Project(Framework.TestCase):
         self.assertEqual(
             pull.title, "Work in progress on support for GitHub projects API."
         )
+        self.assertRaises(ValueError, pull_card.get_content, "foo")
 
         issue_card = cards[1]
         issue = issue_card.get_content()
