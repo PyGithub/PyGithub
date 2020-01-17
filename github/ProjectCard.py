@@ -24,6 +24,8 @@
 
 import github.GithubObject
 
+from . import Consts
+
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 #
@@ -134,6 +136,31 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
             raise ValueError("Unknown content type: %s" % content_type)
         headers, data = self._requester.requestJsonAndCheck("GET", url)
         return retclass(self._requester, headers, data, completed=True)
+
+    def move(self, position, column):
+        """
+        :calls: `POST /projects/columns/cards/:card_id/moves <https://developer.github.com/v3/projects/cards>`_
+        :param position: string
+        :param column: :class:`github.ProjectColumn.ProjectColumn` or int
+        :rtype: bool
+        """
+        assert isinstance(position, str), position
+        assert isinstance(column, github.ProjectColumn.ProjectColumn) or isinstance(
+            column, int
+        ), column
+        post_parameters = {
+            "position": position,
+            "column": column.id
+            if isinstance(column, github.ProjectColumn.ProjectColumn)
+            else column,
+        }
+        status, _, _ = self._requester.requestJson(
+            "POST",
+            self.url + "/moves",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 201
 
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet

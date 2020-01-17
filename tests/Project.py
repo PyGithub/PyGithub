@@ -138,6 +138,13 @@ class Project(Framework.TestCase):
         note_content = note_card.get_content()
         self.assertEqual(note_content, None)
 
+    def testProjectCardMove(self):
+        proj = self.g.get_project(1682941)
+        cols = proj.get_columns()
+        card = cols[1].get_cards()[0]
+        self.assertTrue(card.move("top", cols[2].id))
+        self.assertTrue(card.move("bottom", cols[1]))
+
     def testGetAllProjectCards(self):
         expectedProjects = ["TestProject"]
         expectedCards = 5
