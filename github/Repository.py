@@ -1262,15 +1262,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_project(self, name, body=github.GithubObject.NotSet):
         """
-        calls: `POST /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#create-a-repository-project>`_
+        :calls: `POST /repos/:owner/:repo/projects <https://developer.github.com/v3/projects/#create-a-repository-project>`_
         :param name: string
         :param body: string
+        :rtype: :class:`github.Project.Project`
         """
         assert isinstance(name, str), name
         assert body is github.GithubObject.NotSet or isinstance(body, str), body
         post_parameters = {
             "name": name,
-            "body": body,
         }
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         if body is not github.GithubObject.NotSet:
