@@ -70,6 +70,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.plan.name, "free")
         self.assertEqual(self.org.plan.private_repos, 3)
         self.assertEqual(self.org.plan.space, 1)
+        self.assertEqual(self.org.plan.filled_seats, 3)
+        self.assertEqual(self.org.plan.seats, 0)
         self.assertEqual(self.org.private_gists, 0)
         self.assertEqual(self.org.public_gists, 0)
         self.assertEqual(self.org.public_repos, 27)
