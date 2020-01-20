@@ -69,11 +69,27 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         """
         return self._space.value
 
+    @property
+    def filled_seats(self):
+        """
+        :type: integer
+        """
+        return self._filled_seats.value
+
+    @property
+    def seats(self):
+        """
+        :type: integer
+        """
+        return self._seats.value
+
     def _initAttributes(self):
         self._collaborators = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._private_repos = github.GithubObject.NotSet
         self._space = github.GithubObject.NotSet
+        self._filled_seats = github.GithubObject.NotSet
+        self._seats = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
@@ -84,3 +100,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
             self._private_repos = self._makeIntAttribute(attributes["private_repos"])
         if "space" in attributes:  # pragma no branch
             self._space = self._makeIntAttribute(attributes["space"])
+        if "seats" in attributes:  # pragma no branch
+            self._seats = self._makeIntAttribute(attributes["seats"])
+        if "filled_seats" in attributes:  # pragma no branch
+            self._filled_seats = self._makeIntAttribute(attributes["filled_seats"])
