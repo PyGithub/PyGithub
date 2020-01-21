@@ -31,7 +31,7 @@ from . import Framework
 
 class Topic(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.topics = list(self.g.search_topics("python"))
 
     def testAllFields(self):

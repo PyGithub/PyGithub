@@ -42,7 +42,7 @@ from . import Framework
 
 class Team(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.org = self.g.get_organization("BeaverSoftware")
         self.team = self.org.get_team(189850)
 

@@ -30,7 +30,7 @@ from . import Framework
 
 class Issue174(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_repo("twitter/bootstrap")
 
     def testGetDirContentsWhithHttpRedirect(self):

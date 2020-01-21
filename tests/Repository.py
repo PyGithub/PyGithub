@@ -56,7 +56,7 @@ from . import Framework
 
 class Repository(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
 
@@ -1608,7 +1608,7 @@ class Repository(Framework.TestCase):
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.repository_name = "%s/%s" % (self.user.login, "PyGithub")
 

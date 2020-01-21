@@ -35,7 +35,7 @@ from . import Framework
 
 class ContentFile(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.file = self.g.get_user().get_repo("PyGithub").get_readme()
 
     def testAttributes(self):

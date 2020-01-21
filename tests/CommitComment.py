@@ -36,7 +36,7 @@ from . import Framework
 
 class CommitComment(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.comment = self.g.get_user().get_repo("PyGithub").get_comment(1361949)
 
     def testAttributes(self):

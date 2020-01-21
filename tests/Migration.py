@@ -56,7 +56,7 @@ from . import Framework
 
 class Migration(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.migration = self.user.get_migrations()[0]
 

@@ -30,7 +30,7 @@ from . import Framework
 
 class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/139
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user().get_repo("PyGithub").get_issue(139).user
 
     def testCompletion(self):

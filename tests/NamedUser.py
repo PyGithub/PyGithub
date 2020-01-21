@@ -38,7 +38,7 @@ from . import Framework
 
 class NamedUser(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user("jacquev6")
 
     def testAttributesOfOtherUser(self):

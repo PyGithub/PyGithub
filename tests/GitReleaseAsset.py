@@ -36,7 +36,7 @@ class ReleaseAsset(Framework.TestCase):
     """
 
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         # Do not get self.release here as it causes bad data to be saved in --record mode
 
     def testAttributes(self):

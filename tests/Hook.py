@@ -36,7 +36,7 @@ from . import Framework
 
 class Hook(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.hook = self.g.get_user().get_repo("PyGithub").get_hook(257993)
 
     def testAttributes(self):

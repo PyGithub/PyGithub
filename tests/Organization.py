@@ -43,7 +43,7 @@ from . import Framework
 
 class Organization(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.org = self.g.get_organization("BeaverSoftware")
 
     def testAttributes(self):

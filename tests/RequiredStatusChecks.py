@@ -27,7 +27,7 @@ from . import Framework
 
 class RequiredStatusChecks(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.required_status_checks = (
             self.g.get_user()
             .get_repo("PyGithub")

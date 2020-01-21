@@ -36,7 +36,7 @@ from . import Framework
 
 class PullRequestComment(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.comment = (
             self.g.get_user().get_repo("PyGithub").get_pull(31).get_comment(886298)
         )

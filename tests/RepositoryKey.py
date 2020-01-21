@@ -38,7 +38,7 @@ from . import Framework
 
 class RepositoryKey(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         # When recording test, be sure to create a deploy key for yourself on
         # Github and update it here.
         self.key = self.g.get_user("lra").get_repo("mackup").get_key(21870881)

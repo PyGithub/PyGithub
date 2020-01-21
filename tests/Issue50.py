@@ -32,7 +32,7 @@ from . import Framework
 
 class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/50
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.issue = self.repo.get_issue(50)
         self.labelName = "Label with spaces and strange characters (&*#$)"

@@ -27,7 +27,7 @@ from . import Framework
 
 class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issues/945
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
         self.list_with_headers = self.repo.get_stargazers_with_dates()

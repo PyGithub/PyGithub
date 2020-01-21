@@ -27,7 +27,7 @@ from . import Framework
 
 class BranchProtection(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.branch_protection = (
             self.g.get_user()
             .get_repo("PyGithub")
