@@ -35,7 +35,7 @@ from . import Framework
 
 class Download(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.download = self.g.get_user().get_repo("PyGithub").get_download(242550)
 
     def testAttributes(self):

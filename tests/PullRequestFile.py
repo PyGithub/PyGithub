@@ -33,7 +33,7 @@ from . import Framework
 
 class PullRequestFile(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.file = self.g.get_user().get_repo("PyGithub").get_pull(31).get_files()[0]
 
     def testAttributes(self):

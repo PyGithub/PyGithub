@@ -36,7 +36,7 @@ from . import Framework
 
 class IssueEvent(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
 
         # From Issue #30

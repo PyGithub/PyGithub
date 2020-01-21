@@ -33,7 +33,7 @@ from . import Framework
 
 class Notification(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.notification = self.g.get_user().get_notifications()[0]
 
     def testMarkAsRead(self):

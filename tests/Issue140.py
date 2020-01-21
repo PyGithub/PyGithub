@@ -30,7 +30,7 @@ from . import Framework
 
 class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/140
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_repo("twitter/bootstrap")
 
     def testGetDirContentsThenLazyCompletionOfFile(self):

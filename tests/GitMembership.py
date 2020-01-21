@@ -45,7 +45,7 @@ from . import Framework
 
 class GitMembership(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.org = self.g.get_organization("github")
 
     def tearDown(self):

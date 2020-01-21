@@ -34,7 +34,7 @@ from . import Framework
 
 class Issue54(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("TestRepo")
 
     def testConversion(self):

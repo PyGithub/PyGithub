@@ -32,7 +32,7 @@ from . import Framework
 
 class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
 
     def testDidNotUpdate(self):

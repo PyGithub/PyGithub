@@ -32,7 +32,7 @@ from . import Framework
 
 class Issue87(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/87
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
 
     def testCreateIssueWithPercentInTitle(self):

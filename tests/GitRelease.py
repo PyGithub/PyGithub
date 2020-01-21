@@ -43,7 +43,7 @@ from . import Framework
 
 class Release(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         # Do not get self.release here as it casues bad data to be saved in --record mode
         self.content_path = "content.txt"
         self.artifact_path = "archive.zip"

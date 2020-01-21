@@ -37,7 +37,7 @@ from . import Framework
 
 class CommitStatus(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.statuses = list(
             self.g.get_user()
             .get_repo("PyGithub")

@@ -38,7 +38,7 @@ from . import Framework
 
 class PullRequest(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 

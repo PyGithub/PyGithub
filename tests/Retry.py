@@ -46,7 +46,7 @@ class Retry(Framework.TestCase):
         )
 
         Framework.enableRetry(retry)
-        Framework.TestCase.setUp(self)
+        super().setUp()
 
     def testShouldNotRetryWhenStatusNotOnList(self):
         with self.assertRaises(github.GithubException):

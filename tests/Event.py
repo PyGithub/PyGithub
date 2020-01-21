@@ -35,7 +35,7 @@ from . import Framework
 
 class Event(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.event = self.g.get_user("jacquev6").get_events()[0]
 
     def testAttributes(self):

@@ -36,7 +36,7 @@ from . import Framework
 
 class PaginatedList(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
 

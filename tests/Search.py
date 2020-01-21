@@ -31,7 +31,7 @@ from . import Framework
 
 class Search(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
 
     def testSearchUsers(self):
         users = self.g.search_users("vincent", sort="followers", order="desc")

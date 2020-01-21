@@ -33,7 +33,7 @@ from . import Framework
 
 class CommitCombinedStatus(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.combined_status = (
             self.g.get_repo("edx/edx-platform", lazy=True)
             .get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659")

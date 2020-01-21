@@ -34,7 +34,7 @@ from . import Framework
 
 class UserKey(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.key = self.g.get_user().get_key(2626650)
 
     def testAttributes(self):

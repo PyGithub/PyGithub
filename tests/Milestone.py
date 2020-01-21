@@ -35,7 +35,7 @@ from . import Framework
 
 class Milestone(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.milestone = self.g.get_user().get_repo("PyGithub").get_milestone(1)
 
     def testAttributes(self):

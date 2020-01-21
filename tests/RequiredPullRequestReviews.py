@@ -27,7 +27,7 @@ from . import Framework
 
 class RequiredPullRequestReviews(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.required_pull_request_reviews = (
             self.g.get_user()
             .get_repo("PyGithub")

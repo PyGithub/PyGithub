@@ -35,7 +35,7 @@ from . import Framework
 
 class GistComment(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.comment = self.g.get_gist("2729810").get_comment(323629)
 
     def testAttributes(self):

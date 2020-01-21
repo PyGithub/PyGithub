@@ -41,7 +41,7 @@ from . import Framework
 
 class AuthenticatedUser(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
 
     def testAttributes(self):

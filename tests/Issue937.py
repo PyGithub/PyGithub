@@ -26,7 +26,7 @@ from . import Framework
 
 class Issue937(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
 

@@ -36,7 +36,7 @@ from . import Framework
 
 class GitCommit(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.commit = (
             self.g.get_user()
             .get_repo("PyGithub")

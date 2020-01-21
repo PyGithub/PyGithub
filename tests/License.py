@@ -27,7 +27,7 @@ from . import Framework
 
 class License(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.license = self.g.get_license("mit")
 
     def testAttributes(self):

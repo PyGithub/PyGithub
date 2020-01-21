@@ -29,7 +29,7 @@ from . import Framework
 
 class Project(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
 
     def testGetProject(self):

@@ -34,7 +34,7 @@ from . import Framework
 
 class Authorization(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.authorization = self.g.get_user().get_authorization(372259)
 
     def testAttributes(self):
