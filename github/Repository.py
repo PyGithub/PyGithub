@@ -954,7 +954,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
     ):
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(
-            tag, release_name, release_message, draft, prerelease
+            tag,
+            release_name,
+            release_message,
+            draft,
+            prerelease,
+            target_commitish=object,
         )
 
     def create_git_release(
