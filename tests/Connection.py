@@ -95,11 +95,11 @@ class Connection(unittest.TestCase):
         # validate contents of buffer
         file_value_lines = file.getvalue().split("\n")
         expected_recording_lines = (protocol + expected_recording).split("\n")
-        self.assertEquals(file_value_lines[:5], expected_recording_lines[:5])
-        self.assertEquals(
+        self.assertEqual(file_value_lines[:5], expected_recording_lines[:5])
+        self.assertEqual(
             eval(file_value_lines[5]), eval(expected_recording_lines[5])
         )  # dict literal, so keys not in guaranteed order
-        self.assertEquals(file_value_lines[6:], expected_recording_lines[6:])
+        self.assertEqual(file_value_lines[6:], expected_recording_lines[6:])
 
         # required for replay to work as expected
         httpretty.enable(allow_net_connect=False)
