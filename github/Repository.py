@@ -2215,7 +2215,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             mentioned, github.NamedUser.NamedUser
         ), mentioned
         assert labels is github.GithubObject.NotSet or all(
-            isinstance(element, github.Label.Label) for element in labels
+            isinstance(element, github.Label.Label) or isinstance(element, str)
+            for element in labels
         ), labels
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
@@ -2245,7 +2246,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if mentioned is not github.GithubObject.NotSet:
             url_parameters["mentioned"] = mentioned._identity
         if labels is not github.GithubObject.NotSet:
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            url_parameters["labels"] = ",".join(
+                [
+                    label.name if isinstance(label, github.Label.Label) else label
+                    for label in labels
+                ]
+            )
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
         if direction is not github.GithubObject.NotSet:

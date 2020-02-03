@@ -820,6 +820,9 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(
             self.repo.get_issues(mentioned=otherUser), lambda i: i.id, [4793162]
         )
+        self.assertListKeyEqual(
+            self.repo.get_issues(labels=[bug.name]), lambda i: i.id, [4780155]
+        )
 
     def testGetIssuesWithWildcards(self):
         self.assertListKeyEqual(
