@@ -405,6 +405,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     def create_review_comment_reply(self, comment_id, body):
         """
         :calls: `POST /repos/:owner/:repo/pulls/:pull_number/comments/:comment_id/replies <http://developer.github.com/v3/pulls/comments>`_
+        :param comment_id: int
         :param body: string
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
