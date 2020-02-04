@@ -2097,7 +2097,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert new_owner is not None
-        assert isinstance(team_ids, list)
+        assert isinstance(new_owner, str), new_owner
+        assert all(isinstance(element, int) for element in team_ids), team_ids
         post_parameters = {"new_owner": new_owner, 'team_ids': team_ids}
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/transfer", input=post_parameters,
