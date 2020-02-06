@@ -283,6 +283,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._default_branch.value
 
     @property
+    def delete_branch_on_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self.delete_branch_on_merge)
+        return self.delete_branch_on_merge.value
+
+    @property
     def description(self):
         """
         :type: string
@@ -1399,6 +1407,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
+        delete_branch_on_merge=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
         """
@@ -1415,6 +1424,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
+        :param delete_branch_on_merge: bool
         :param archived: bool. Unarchiving repositories is currently not supported through API (https://developer.github.com/v3/repos/#edit)
         :rtype: None
         """
@@ -1454,6 +1464,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
+        assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
+            delete_branch_on_merge, bool
+        ), delete_branch_on_merge
         assert archived is github.GithubObject.NotSet or (
             isinstance(archived, bool) and archived is True
         ), archived
@@ -1482,6 +1495,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if delete_branch_on_merge is not github.GithubObject.NotSet:
+            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
@@ -3115,6 +3130,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._contributors_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._default_branch = github.GithubObject.NotSet
+        self._delete_branch_on_merge = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._downloads_url = github.GithubObject.NotSet
         self._events_url = github.GithubObject.NotSet
@@ -3223,6 +3239,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "default_branch" in attributes:  # pragma no branch
             self._default_branch = self._makeStringAttribute(
                 attributes["default_branch"]
+            )
+        if "delete_branch_on_merge" in attributes:  # pragma no branch
+            self._delete_branch_on_merge = self._makeBoolAttribute(
+                attributes["delete_branch_on_merge"]
             )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])

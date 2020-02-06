@@ -344,6 +344,7 @@ class AuthenticatedUser(Framework.TestCase):
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
+            delete_branch_on_merge=False,
         )
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 

@@ -126,6 +126,7 @@ class Repository(Framework.TestCase):
             allow_squash_merge=True,
             allow_merge_commit=True,
             allow_rebase_merge=True,
+            delete_branch_on_merge=True,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
