@@ -111,11 +111,11 @@ class Invitation(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "repository" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(
+            self._repository = self._makeClassAttribute(
                 github.Repository.Repository, attributes["repository"]
             )
         if "created_at" in attributes:  # pragma no branch
-            self._closed_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "invitee" in attributes:  # pragma no branch
             self._invitee = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["invitee"]
