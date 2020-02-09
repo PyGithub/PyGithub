@@ -2052,7 +2052,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             organization, str
         ), organization
         post_parameters = {}
-        if organization is not None:
+        if organization is not github.GithubObject.NotSet:
             post_parameters["organization"] = organization
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/forks", input=post_parameters,
