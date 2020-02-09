@@ -711,8 +711,19 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetInvitations(self):
         invitation = self.user.get_invitations()[0]
+        self.assertEqual(repr(invitation), "Invitation(id=17285388)")
         self.assertEqual(invitation.id, 17285388)
         self.assertEqual(invitation.permissions, "write")
+        created_at = datetime.datetime(2019, 6, 27, 11, 47)
+        self.assertEqual(invitation.created_at, created_at)
+        self.assertEqual(
+            invitation.url,
+            "https://api.github.com/user/repository_invitations/17285388",
+        )
+        self.assertEqual(
+            invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations"
+        )
+        self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
 
