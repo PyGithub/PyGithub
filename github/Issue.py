@@ -364,7 +364,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser` or None
-        :param assignees: list (of string or :class:`github.NamedUser.NamedUser`)
+        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string

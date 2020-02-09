@@ -1120,7 +1120,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser`
-        :param assignees: list (of string or :class:`github.NamedUser.NamedUser`)
+        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param milestone: :class:`github.Milestone.Milestone`
         :param labels: list of :class:`github.Label.Label`
         :rtype: :class:`github.Issue.Issue`
@@ -2192,7 +2192,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param state: string. `open`, `closed`, or `all`. If this is not set the GitHub API default behavior will be used. At the moment this is to return only open issues. This might change anytime on GitHub API side and it could be clever to explicitly specify the state value.
         :param assignee: string or :class:`github.NamedUser.NamedUser` or "none" or "*"
         :param mentioned: :class:`github.NamedUser.NamedUser`
-        :param labels: list of :class:`github.Label.Label`
+        :param labels: list of string or :class:`github.Label.Label`
         :param sort: string
         :param direction: string
         :param since: datetime.datetime
@@ -2215,7 +2215,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             mentioned, github.NamedUser.NamedUser
         ), mentioned
         assert labels is github.GithubObject.NotSet or all(
-            isinstance(element, github.Label.Label) for element in labels
+            isinstance(element, github.Label.Label) or isinstance(element, str)
+            for element in labels
         ), labels
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
@@ -2245,7 +2246,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if mentioned is not github.GithubObject.NotSet:
             url_parameters["mentioned"] = mentioned._identity
         if labels is not github.GithubObject.NotSet:
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            url_parameters["labels"] = ",".join(
+                [
+                    label.name if isinstance(label, github.Label.Label) else label
+                    for label in labels
+                ]
+            )
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
         if direction is not github.GithubObject.NotSet:

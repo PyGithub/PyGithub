@@ -793,6 +793,9 @@ class Repository(Framework.TestCase):
             self.repo.get_issues(labels=[bug]), lambda i: i.id, [4780155]
         )
         self.assertListKeyEqual(
+            self.repo.get_issues(labels=[bug.name]), lambda i: i.id, [4780155]
+        )
+        self.assertListKeyEqual(
             self.repo.get_issues(assignee=user, sort="comments", direction="asc"),
             lambda i: i.id,
             [
