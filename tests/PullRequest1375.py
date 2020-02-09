@@ -31,10 +31,16 @@ class PullRequest1375(Framework.TestCase):
         self.pr = self.g.get_repo("rsn491/PyGithub").get_pulls()[0]
 
     def testCreateReviewCommentReply(self):
-        comment_id = 373866377
-        reply_body = 'Comment reply created by PyGithub'
+        comment_id = 373866377 # id of pull request comment without replies
+        first_reply_body = 'Comment reply created by PyGithub'
+        second_reply_body = 'Second comment reply created by PyGithub'
 
-        reply = self.pr.create_review_comment_reply(comment_id, reply_body)
+        first_reply = self.pr.create_review_comment_reply(comment_id, first_reply_body)
+        second_reply = self.pr.create_review_comment_reply(first_reply.id, second_reply_body)
 
-        self.assertEqual(reply.in_reply_to_id, comment_id)
-        self.assertEqual(reply.body, reply_body)
+        # ensure both first and second reply have `in_reply_to_id` attr set to top comment
+        self.assertEqual(first_reply.in_reply_to_id, comment_id)
+        self.assertEqual(second_reply.in_reply_to_id, comment_id)
+
+        self.assertEqual(first_reply.body, first_reply_body)
+        self.assertEqual(second_reply.body, second_reply_body)
