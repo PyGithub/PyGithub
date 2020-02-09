@@ -31,7 +31,7 @@ class PullRequest1375(Framework.TestCase):
         self.pr = self.g.get_repo("rsn491/PyGithub").get_pulls()[0]
 
     def testCreateReviewCommentReply(self):
-        comment_id = 373866377 # id of pull request comment without replies
+        comment_id = 373866377  # id of pull request comment without replies
         first_reply_body = 'Comment reply created by PyGithub'
         second_reply_body = 'Second comment reply created by PyGithub'
 
