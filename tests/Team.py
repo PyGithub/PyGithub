@@ -142,9 +142,7 @@ class Team(Framework.TestCase):
     def testGetTeams(self):
         nested_teams = self.team.get_teams()
         self.assertListKeyEqual(
-            nested_teams,
-            lambda t: t.name,
-            ['DummyTeam1', 'DummyTeam2', 'DummyTeam3']
+            nested_teams, lambda t: t.name, ["DummyTeam1", "DummyTeam2", "DummyTeam3"]
         )
         parent = nested_teams[0].parent
         self.assertEqual(self.team.name, parent.name)
