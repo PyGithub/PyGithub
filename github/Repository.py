@@ -287,8 +287,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :type: bool
         """
-        self._completeIfNotSet(self.delete_branch_on_merge)
-        return self.delete_branch_on_merge.value
+        self._completeIfNotSet(self._delete_branch_on_merge)
+        return self._delete_branch_on_merge.value
 
     @property
     def description(self):
