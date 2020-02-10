@@ -45,3 +45,4 @@
 /doc/doctrees/
 .vscode*
 .venv
+.tox/
