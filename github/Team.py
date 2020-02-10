@@ -277,10 +277,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
-            github.Team.Team,
-            self._requester,
-            self.url + '/teams',
-            None,
+            github.Team.Team, self._requester, self.url + "/teams", None,
         )
 
     def get_discussions(self):
