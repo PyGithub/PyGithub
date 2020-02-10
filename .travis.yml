@@ -18,8 +18,6 @@ after_success:
   - codecov
 notifications:
   email: false
-  webhooks: https://www.travisbuddy.com/
-  on_success: never
 deploy:
   provider: pypi
   skip_existing: true
