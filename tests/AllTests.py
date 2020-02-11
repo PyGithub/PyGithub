@@ -40,6 +40,7 @@
 #                                                                              #
 ################################################################################
 
+import unittest
 
 from .AuthenticatedUser import AuthenticatedUser
 from .Authentication import Authentication
@@ -224,3 +225,7 @@ __all__ = [
     Traffic,
     UserKey,
 ]
+
+
+if __name__ == '__main__':
+    unittest.main()
