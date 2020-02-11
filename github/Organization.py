@@ -408,6 +408,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
+        delete_branch_on_merge=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
@@ -426,6 +427,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
+        :param delete_branch_on_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -471,6 +473,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
+        assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
+            delete_branch_on_merge, bool
+        ), delete_branch_on_merge
         post_parameters = {
             "name": name,
         }
@@ -502,6 +507,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if delete_branch_on_merge is not github.GithubObject.NotSet:
+            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/repos", input=post_parameters
         )

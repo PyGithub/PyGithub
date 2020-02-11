@@ -126,12 +126,15 @@ class Repository(Framework.TestCase):
             allow_squash_merge=True,
             allow_merge_commit=True,
             allow_rebase_merge=True,
+            delete_branch_on_merge=True,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
         self.assertEqual(
             self.repo.description, "Python library implementing the full Github API v3"
         )
+        # FIXME assertions should be performed on all changed parameters
+        self.assertTrue(self.repo.delete_branch_on_merge)
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
