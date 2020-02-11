@@ -451,6 +451,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_template(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_template)
+        return self._is_template.value
+
+    @property
     def issue_comment_url(self):
         """
         :type: string
@@ -3157,6 +3165,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._hooks_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._is_template = github.GithubObject.NotSet
         self._issue_comment_url = github.GithubObject.NotSet
         self._issue_events_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
@@ -3292,6 +3301,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_template" in attributes:  # pragma no branch
+            self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
             self._issue_comment_url = self._makeStringAttribute(
                 attributes["issue_comment_url"]
