@@ -4,6 +4,28 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.46 (February 11, 2020)
+-----------------------------------
+**Important**
+
+Python 2 support has been removed. If you still require Python 2, use 1.45.
+
+**Bug Fixes & Improvements**
+
+* Add repo edit support for delete_branch_on_merge (#1381) (9564cd4d)
+* Fix mistake in Repository.create_fork() (#1383) (ad040baf)
+* Correct two attributes in Invitation (#1382) (882fe087)
+* Search repo issues by string label (#1379) (4ae1a1e5)
+* Correct Repository.create_git_tag_and_release() (#1362) (ead565ad)
+* exposed seats and filled_seats for Github Organization Plan (#1360) (06a300ae)
+* Repository.create_project() body is optional (#1359) (0e09983d)
+* Implement move action for ProjectCard (#1356) (b11add41)
+* Tidy up ProjectCard.get_content() (#1355) (dd80a6c0)
+* Added nested teams and parent (#1348) (eacabb2f)
+* Correct parameter for Label.edit (#1350) (16e5f989)
+* doc: example of Pull Request creation (#1344) (d5ad09ae)
+* Fix PyPI wheel deployment (#1330) (4561930b)
+
 Version 1.45 (December 29, 2019)
 -----------------------------------
 **Important**
