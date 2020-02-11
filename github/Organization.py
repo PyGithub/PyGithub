@@ -357,6 +357,47 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_repo_from_template(
+            self,
+            name,
+            repo,
+            description=github.GithubObject.NotSet,
+            private=github.GithubObject.NotSet,
+    ):
+        """self.name
+        :calls: `POST /repos/:owner/:name/generate <http://developer.github.com/v3/repos>`_
+        :param name: string
+        :param repo :class:`github.Repository.Repository`
+        :param description: string
+        :param private: bool
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(name, str), name
+        assert isinstance(repo, github.Repository.Repository), repo
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        assert private is github.GithubObject.NotSet or isinstance(
+            private, bool
+        ), private
+        post_parameters = {
+            "name": name,
+            "owner": self.login,
+        }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        if private is not github.GithubObject.NotSet:
+            post_parameters["private"] = private
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/repos/" + repo.owner.login + "/" + repo.name + "/generate",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeTemplatesPreview},
+        )
+        return github.Repository.Repository(
+            self._requester, headers, data, completed=True
+        )
+
     def create_hook(
         self,
         name,
