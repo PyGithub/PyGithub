@@ -11,7 +11,7 @@ matrix:
       env: TOXENV=py38
     - env: TOXENV=flake8
 install:
-  - pip install tox codecov
+  - pip install tox
 script:
   - tox
 after_success:
