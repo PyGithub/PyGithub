@@ -37,7 +37,11 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__(
-            {"limit": self._limit.value, "remaining": self._remaining.value}
+            {
+                "limit": self._limit.value,
+                "remaining": self._remaining.value,
+                "reset": self._reset.value,
+            }
         )
 
     @property
