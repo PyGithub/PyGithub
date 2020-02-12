@@ -513,7 +513,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param private: bool
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(repo, github.Repository.Repository), repo
+        assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
