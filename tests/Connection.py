@@ -62,7 +62,7 @@ PARAMETERS = itertools.product(
 class RecordingMockConnection(Framework.RecordingConnection):
     def __init__(self, file, protocol, host, port, realConnection):
         self._realConnection = realConnection
-        Framework.RecordingConnection.__init__(self, file, protocol, host, port)
+        super().__init__(file, protocol, host, port)
 
 
 class Connection(unittest.TestCase):

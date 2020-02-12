@@ -44,6 +44,7 @@ class Persistence(Framework.TestCase):
 
     def tearDown(self):
         self.dumpedRepo.close()
+        super().tearDown()
 
     def testLoad(self):
         loadedRepo = self.g.load(self.dumpedRepo)

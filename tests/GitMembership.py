@@ -50,7 +50,7 @@ class GitMembership(Framework.TestCase):
 
     def tearDown(self):
         self.org = None
-        Framework.TestCase.tearDown(self)
+        super().tearDown()
 
     def testGetMembership(self):
         octocat = self.g.get_user("octocat")

@@ -131,7 +131,7 @@ class PaginatedList(PaginatedListBase):
         headers=None,
         list_item="items",
     ):
-        PaginatedListBase.__init__(self)
+        super().__init__()
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
