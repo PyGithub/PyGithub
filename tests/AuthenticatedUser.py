@@ -663,6 +663,22 @@ class AuthenticatedUser(Framework.TestCase):
         repo = self.user.create_fork(self.g.get_user("nvie").get_repo("gitflow"))
         self.assertEqual(repo.source.full_name, "nvie/gitflow")
 
+    def testCreateRepoFromTemplate(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        repo = self.user.create_repo_from_template("hello-world-docker-action-new", template_repo)
+        self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/hello-world-docker-action-new")
+        self.assertEqual(repo.is_template, False)
+
+    def testCreateRepoFromTemplateWithAllArguments(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        description = "My repo from template"
+        private = True
+        repo = self.user.create_repo_from_template("hello-world-docker-action-new", template_repo, description=description, private=private)
+        self.assertEqual(repo.description, description)
+        self.assertEqual(repo.private, private)
+
     def testGetNotification(self):
         notification = self.user.get_notification("8406712")
         self.assertEqual(notification.id, "8406712")

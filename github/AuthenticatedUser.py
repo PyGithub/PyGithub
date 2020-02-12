@@ -509,7 +509,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             private=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/:owner/:name/generate <http://developer.github.com/v3/repos>`_
+        :calls: `POST  /repos/:template_owner/:template_repo/generate <https://developer.github.com/v3/repos/#create-repository-using-a-repository-template>`
         :param name: string
         :param repo :class:`github.Repository.Repository`
         :param description: string
