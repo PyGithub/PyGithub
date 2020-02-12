@@ -70,12 +70,13 @@ class Logging(Framework.BasicTestCase):
             self.output = output
 
     def setUp(self):
+        super().setUp()
         self.logger = self.MockLogger()
         github.Requester.Requester.injectLogger(self.logger)
-        Framework.BasicTestCase.setUp(self)
 
     def tearDown(self):
         github.Requester.Requester.resetLogger()
+        super().tearDown()
 
     def assertLogging(self, verb, url, requestHeaders, responseHeaders, output):
         self.assertEqual(self.logger.verb, verb)

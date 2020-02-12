@@ -118,7 +118,6 @@ class RecordingConnection:
         res = self.__cnx.getresponse()
 
         status = res.status
-        print("=>", status)
         headers = res.getheaders()
         output = res.read()
 
@@ -140,14 +139,14 @@ class RecordingHttpConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
-        RecordingConnection.__init__(self, file, "http", *args, **kwds)
+        super().__init__(file, "http", *args, **kwds)
 
 
 class RecordingHttpsConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
-        RecordingConnection.__init__(self, file, "https", *args, **kwds)
+        super().__init__(file, "https", *args, **kwds)
 
 
 class ReplayingConnection:
@@ -239,14 +238,14 @@ class ReplayingHttpConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, testCase, file, *args, **kwds):
-        ReplayingConnection.__init__(self, testCase, file, "http", *args, **kwds)
+        super().__init__(testCase, file, "http", *args, **kwds)
 
 
 class ReplayingHttpsConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, testCase, file, *args, **kwds):
-        ReplayingConnection.__init__(self, testCase, file, "https", *args, **kwds)
+        super().__init__(testCase, file, "https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
@@ -257,7 +256,7 @@ class BasicTestCase(unittest.TestCase):
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
         self.__fileName = ""
         self.__file = None
         if (
@@ -299,7 +298,7 @@ class BasicTestCase(unittest.TestCase):
             httpretty.enable(allow_net_connect=False)
 
     def tearDown(self):
-        unittest.TestCase.tearDown(self)
+        super().tearDown()
         httpretty.disable()
         httpretty.reset()
         self.__closeReplayFileIfNeeded()
@@ -354,7 +353,7 @@ class TestCase(BasicTestCase):
         return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
 
     def setUp(self):
-        BasicTestCase.setUp(self)
+        super().setUp()
 
         # Set up frame debugging
         github.GithubObject.GithubObject.setCheckAfterInitFlag(True)

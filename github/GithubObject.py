@@ -285,7 +285,7 @@ class NonCompletableGithubObject(GithubObject):
 
 class CompletableGithubObject(GithubObject):
     def __init__(self, requester, headers, attributes, completed):
-        GithubObject.__init__(self, requester, headers, attributes, completed)
+        super().__init__(requester, headers, attributes, completed)
         self.__completed = completed
 
     def __eq__(self, other):
