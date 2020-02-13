@@ -370,7 +370,7 @@ class Organization(Framework.TestCase):
         private = True
         repo = self.org.create_repo_from_template("hello-world-docker-action-new", template_repo, description=description, private=private)
         self.assertEqual(repo.description, description)
-        self.assertEqual(repo.private, private)
+        self.assertTrue(repo.private)
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:

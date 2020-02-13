@@ -89,7 +89,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
-        self.assertEqual(self.repo.is_template, None)
+        self.assertIs(self.repo.is_template, None)
         self.assertEqual(self.repo.language, "Python")
         self.assertEqual(self.repo.master_branch, None)
         self.assertEqual(self.repo.name, "PyGithub")
