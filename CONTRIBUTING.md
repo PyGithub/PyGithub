@@ -34,13 +34,13 @@ tox -e format
 
 ## Pre-commit plugin
 
-To forget about coding style and let pre-commit fix your flake8/isort/black issue.
+To forget about coding style and let [pre-commit](https://pre-commit.com/#installation) fix your flake8/isort/black issue.
 
 ```
 pre-commit install
 ```
 
-That's it! 
+That's it!
 
 ## Adding missing attributes for a GithubObject
 
