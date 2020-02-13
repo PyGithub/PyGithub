@@ -136,6 +136,6 @@ while i < len(lines):
     i += 1
     newLines.append(line)
 
-with open(fileName, "wb") as f:
+with open(fileName, "w") as f:
     for line in newLines:
         f.write(line + "\n")
