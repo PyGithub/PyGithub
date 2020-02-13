@@ -23,7 +23,7 @@ Pull Requests should clearly describe two things:
 
 Ideally, changes should be made in logical commits and tests added to improve the project's coverage of the GitHub API.
 
-## Coding conventions
+## Coding style
 
 PyGithub adopts the black coding style and uses isort to sort imports.
 
@@ -31,6 +31,16 @@ To manually format the code:
 ```
 tox -e format
 ```
+
+## Pre-commit plugin
+
+To forget about coding style and let [pre-commit](https://pre-commit.com/#installation) fix your flake8/isort/black issue.
+
+```
+pre-commit install
+```
+
+That's it!
 
 ## Adding missing attributes for a GithubObject
 
