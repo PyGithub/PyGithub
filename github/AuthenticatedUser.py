@@ -534,7 +534,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "/repos/" + repo.owner.login + "/" + repo.name + "/generate",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeTemplatesPreview},
-            )
+        )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
         )
