@@ -138,4 +138,4 @@ while i < len(lines):
 
 with open(fileName, "wb") as f:
     for line in newLines:
-        f.write((line + "\n").encode())
+        f.write(line + "\n")
