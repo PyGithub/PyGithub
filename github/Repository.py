@@ -2379,8 +2379,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/labels/" + urllib.parse.quote(name)
+            "GET", self.url + "/labels/" + urllib.parse.quote(name),
+            headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview}
         )
+
+        # headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview}
         return github.Label.Label(self._requester, headers, data, completed=True)
 
     def get_labels(self):
@@ -2389,7 +2392,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, self.url + "/labels", None
+            github.Label.Label, self._requester,
+            self.url + "/labels", None, 
+            headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview}
         )
 
     def get_languages(self):

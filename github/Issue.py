@@ -496,7 +496,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, self.url + "/labels", None
+            github.Label.Label, self._requester,
+            self.url + "/labels", None,
+            headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview}
         )
 
     def remove_from_assignees(self, *assignees):
