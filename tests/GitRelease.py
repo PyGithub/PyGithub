@@ -60,6 +60,7 @@ class Release(Framework.TestCase):
             os.remove(self.content_path)
         if os.path.exists(self.artifact_path):
             os.remove(self.artifact_path)
+        super().tearDown()
 
     def testAttributes(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]

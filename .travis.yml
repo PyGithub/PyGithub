@@ -1,14 +1,21 @@
 language: python
-python:
-  - "3.5"
-  - "3.6"
-  - "3.7"
-  - "3.8"
+matrix:
+  include:
+    - python: 3.5
+      env: TOXENV=py35
+    - python: 3.6
+      env: TOXENV=py36
+    - python: 3.7
+      env: TOXENV=py37
+    - python: 3.8
+      env: TOXENV=py38
+    - env: TOXENV=flake8
+    - env: TOXENV=isort
+    - env: TOXENV=black
 install:
-  - pip install codecov flake8
+  - pip install tox
 script:
-  - flake8
-  - coverage run --source github,tests setup.py test
+  - tox
 after_success:
   - codecov
 notifications:

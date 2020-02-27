@@ -134,7 +134,14 @@ class Repository(Framework.TestCase):
         self.assertEqual(
             self.repo.description, "Python library implementing the full Github API v3"
         )
-        # FIXME assertions should be performed on all changed parameters
+        self.assertFalse(self.repo.archived)
+        self.assertTrue(self.repo.has_issues)
+        self.assertFalse(self.repo.has_projects)
+        self.assertFalse(self.repo.has_wiki)
+        self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.allow_squash_merge)
+        self.assertTrue(self.repo.allow_merge_commit)
+        self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
 
     def testEditWithDefaultBranch(self):

@@ -41,7 +41,7 @@ class GithubException(Exception):
     """
 
     def __init__(self, status, data):
-        Exception.__init__(self)
+        super().__init__()
         self.__status = status
         self.__data = data
         self.args = [status, data]

@@ -201,9 +201,21 @@ class NamedUser(Framework.TestCase):
     def testGetOrganizationMembership(self):
         o = self.user.get_orgs()
         membership = self.user.get_organization_membership(o[0])
+        self.assertEqual(
+            repr(membership),
+            'Membership(url="https://api.github.com/orgs/BeaverSoftware/memberships/jacquev6")',
+        )
         self.assertEqual(self.user.login, membership.user.login)
         self.assertEqual(membership.state, "active")
         self.assertEqual(membership.role, "member")
+        self.assertEqual(
+            membership.url,
+            "https://api.github.com/orgs/BeaverSoftware/memberships/jacquev6",
+        )
+        self.assertEqual(membership.organization.login, "BeaverSoftware")
+        self.assertEqual(
+            membership.organization_url, "https://api.github.com/orgs/BeaverSoftware"
+        )
 
     def testGetOrganizationMembershipNotMember(self):
         from github import UnknownObjectException
