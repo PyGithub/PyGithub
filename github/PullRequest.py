@@ -411,11 +411,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(comment_id, int), comment_id
         assert isinstance(body, str), body
-        post_parameters = {
-            "body": body
-        }
+        post_parameters = {"body": body}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/comments/" + str(comment_id) + "/replies", input=post_parameters
+            "POST",
+            self.url + "/comments/" + str(comment_id) + "/replies",
+            input=post_parameters,
         )
         return github.PullRequestComment.PullRequestComment(
             self._requester, headers, data, completed=True
