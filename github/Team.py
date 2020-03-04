@@ -210,6 +210,19 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT", self.url + "/repos/" + repo._identity
         )
 
+    def get_repo_permission(self, repo):
+        """
+        :calls: `GET /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(repo, github.Repository.Repository), repo
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/repos/" + repo._identity,
+            headers={"Accept": Consts.teamRepositoryPermissions},
+        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
+
     def set_repo_permission(self, repo, permission):
         """
         :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
