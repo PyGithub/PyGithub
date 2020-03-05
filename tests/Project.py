@@ -145,6 +145,12 @@ class Project(Framework.TestCase):
         self.assertTrue(card.move("top", cols[2].id))
         self.assertTrue(card.move("bottom", cols[1]))
 
+    def testProjectCardDelete(self):
+        proj = self.g.get_project(1682941)
+        cols = proj.get_columns()
+        card = cols[1].get_cards()[0]
+        self.assertTrue(card.delete())
+
     def testGetAllProjectCards(self):
         expectedProjects = ["TestProject"]
         expectedCards = 5
