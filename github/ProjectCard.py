@@ -162,6 +162,16 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/cards/:card_id <https://developer.github.com/v3/projects/cards>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet
         self._column_url = github.GithubObject.NotSet
