@@ -1301,6 +1301,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param issue: :class:`github.Issue.Issue`
         :param base: string
         :param head: string
+        :param draft: bool
         :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
@@ -1310,7 +1311,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return self.__create_pull_2(*args, **kwds)
 
     def __create_pull_1(
-        self, title, body, base, head, maintainer_can_modify=github.GithubObject.NotSet
+        self,
+        title,
+        body,
+        base,
+        head,
+        maintainer_can_modify=github.GithubObject.NotSet,
+        draft=False,
     ):
         assert isinstance(title, str), title
         assert isinstance(body, str), body
@@ -1319,6 +1326,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(
             maintainer_can_modify, bool
         ), maintainer_can_modify
+        assert isinstance(draft, bool), draft
         if maintainer_can_modify is not github.GithubObject.NotSet:
             return self.__create_pull(
                 title=title,
@@ -1326,9 +1334,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 base=base,
                 head=head,
                 maintainer_can_modify=maintainer_can_modify,
+                draft=draft,
             )
         else:
-            return self.__create_pull(title=title, body=body, base=base, head=head)
+            return self.__create_pull(
+                title=title, body=body, base=base, head=head, draft=draft
+            )
 
     def __create_pull_2(self, issue, base, head):
         assert isinstance(issue, github.Issue.Issue), issue
@@ -1338,8 +1349,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __create_pull(self, **kwds):
         post_parameters = kwds
+        import_header = {"Accept": Consts.draftPullRequestPreview}
+
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/pulls", input=post_parameters
+            "POST", self.url + "/pulls", input=post_parameters, headers=import_header
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
