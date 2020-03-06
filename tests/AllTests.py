@@ -65,6 +65,7 @@ from .GitBlob import GitBlob
 from .GitCommit import GitCommit
 from .Github_ import Github
 from .GithubIntegration import GithubIntegration
+from .GitMembership import GitMembership
 from .GitRef import GitRef
 from .GitRelease import Release
 from .GitReleaseAsset import ReleaseAsset
@@ -155,6 +156,7 @@ __all__ = [
     GistComment,
     GitBlob,
     GitCommit,
+    GitMembership,
     Github,
     GithubIntegration,
     GitRef,
