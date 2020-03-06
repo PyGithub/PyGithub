@@ -98,7 +98,6 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.8",
             "Topic :: Software Development",
         ],
-        test_suite="tests.AllTests",
         python_requires=">=3.5",
         install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
         extras_require={"integrations": ["cryptography"]},
