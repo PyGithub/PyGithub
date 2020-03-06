@@ -111,6 +111,7 @@ from .Project import Project
 from .PullRequest import PullRequest
 from .PullRequest1168 import PullRequest1168
 from .PullRequest1169 import PullRequest1169
+from .PullRequest1375 import PullRequest1375
 from .PullRequestComment import PullRequestComment
 from .PullRequestFile import PullRequestFile
 from .PullRequestReview import PullRequestReview
@@ -201,6 +202,7 @@ __all__ = [
     PullRequest,
     PullRequest1168,
     PullRequest1169,
+    PullRequest1375,
     PullRequestComment,
     PullRequestReview,
     PullRequestFile,

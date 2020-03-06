@@ -402,6 +402,25 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_review_comment_reply(self, comment_id, body):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:pull_number/comments/:comment_id/replies <http://developer.github.com/v3/pulls/comments>`_
+        :param comment_id: int
+        :param body: string
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
+        assert isinstance(comment_id, int), comment_id
+        assert isinstance(body, str), body
+        post_parameters = {"body": body}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/comments/" + str(comment_id) + "/replies",
+            input=post_parameters,
+        )
+        return github.PullRequestComment.PullRequestComment(
+            self._requester, headers, data, completed=True
+        )
+
     def create_issue_comment(self, body):
         """
         :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
