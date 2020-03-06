@@ -48,13 +48,10 @@ class GitMembership(Framework.TestCase):
         super().setUp()
         self.org = self.g.get_organization("github")
 
-    def tearDown(self):
-        self.org = None
-        super().tearDown()
-
     def testGetMembership(self):
-        octocat = self.g.get_user("octocat")
+        octocat = self.g.get_user()
+        self.assertEqual(octocat.login, "octocat")
         membership_data = octocat.get_organization_membership(self.org.id)
-        self.assertEqual("octocat", membership_data.user.login)
-        self.assertEqual("admin", membership_data.role)
-        self.assertEqual("github", membership_data.organization.login)
+        self.assertEqual(membership_data.user.login, "octocat")
+        self.assertEqual(membership_data.role, "admin")
+        self.assertEqual(membership_data.organization.login, "github")
