@@ -889,14 +889,18 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def update_branch(self, expected_head_sha):
+    def update_branch(self, expected_head_sha=github.GithubObject.NotSet):
         """
         :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>`_
         :param expected_head_sha: string
         :rtype: bool
         """
-        assert isinstance(expected_head_sha, str), expected_head_sha
-        post_parameters = {"expected_head_sha": expected_head_sha}
+        assert expected_head_sha is github.GithubObject.NotSet or isinstance(
+            expected_head_sha, str
+        ), expected_head_sha
+        post_parameters = {}
+        if expected_head_sha is not github.GithubObject.NotSet:
+            post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
             self.url + "/update-branch",
