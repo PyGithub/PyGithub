@@ -114,11 +114,15 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
+        self.assertIsNone(self.team.get_repo_permission(repo))
         self.team.add_to_repos(repo)
         self.assertListKeyEqual(
             self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
         )
         self.assertTrue(self.team.has_in_repos(repo))
+        self.assertIsInstance(
+            self.team.get_repo_permission(repo), github.Permissions.Permissions
+        )
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
