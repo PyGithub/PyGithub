@@ -98,6 +98,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.Deployment
 import github.Download
 import github.Event
 import github.GitBlob
@@ -1717,6 +1718,114 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_deployments(
+        self,
+        sha=github.GithubObject.NotSet,
+        ref=github.GithubObject.NotSet,
+        task=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
+        :param: sha: string
+        :param: ref: string
+        :param: task: string
+        :param: environment: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Deployment.Deployment`
+        """
+        assert sha is github.GithubObject.NotSet or isinstance(sha, str), sha
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        assert task is github.GithubObject.NotSet or isinstance(task, str), task
+        assert environment is github.GithubObject.NotSet or isinstance(
+            environment, str
+        ), environment
+        parameters = {}
+        if sha is not github.GithubObject.NotSet:
+            parameters["sha"] = sha
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
+        if task is not github.GithubObject.NotSet:
+            parameters["task"] = task
+        if environment is not github.GithubObject.NotSet:
+            parameters["environment"] = environment
+        return github.PaginatedList.PaginatedList(
+            github.Deployment.Deployment,
+            self._requester,
+            self.url + "/deployments",
+            parameters,
+        )
+
+    def get_deployment(self, id_):
+        """
+        :calls: `GET /repos/:owner/:repo/deployments/:deployment_id <https://developer.github.com/v3/repos/deployments/>`_
+        :param: id_: int
+        :rtype: :class:`github.Deployment.Deployment`
+        """
+        assert isinstance(id_, int), id_
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/deployments/" + str(id_)
+        )
+        return github.Deployment.Deployment(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_deployment(
+        self,
+        ref,
+        task=github.GithubObject.NotSet,
+        auto_merge=github.GithubObject.NotSet,
+        required_contexts=github.GithubObject.NotSet,
+        payload=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
+        :param: ref: string
+        :param: auto_merge: bool
+        :param: required_contexts: list of statuses
+        :param: payload: json
+        :param: environment: string
+        :param: description: string
+        :rtype: :class:`github.Deployment.Deployment`
+        """
+        assert isinstance(ref, str), ref
+        assert task is github.GithubObject.NotSet or isinstance(task, str), task
+        assert auto_merge is github.GithubObject.NotSet or isinstance(
+            auto_merge, bool
+        ), auto_merge
+        assert required_contexts is github.GithubObject.NotSet or isinstance(
+            required_contexts, list
+        ), required_contexts  # need to do better checking here
+        assert payload is github.GithubObject.NotSet or isinstance(
+            payload, str
+        ), payload  # How to assert it's JSON?
+        assert environment is github.GithubObject.NotSet or isinstance(
+            environment, str
+        ), environment
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        post_parameters = {"ref": ref}
+        if task is not github.GithubObject.NotSet:
+            post_parameters["task"] = task
+        if auto_merge is not github.GithubObject.NotSet:
+            post_parameters["auto_merge"] = auto_merge
+        if required_contexts is not github.GithubObject.NotSet:
+            post_parameters["required_contexts"] = required_contexts
+        if payload is not github.GithubObject.NotSet:
+            post_parameters["payload"] = payload
+        if environment is not github.GithubObject.NotSet:
+            post_parameters["environment"] = environment
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.url + "/deployments", input=post_parameters,
+        )
+        return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
         )
 
