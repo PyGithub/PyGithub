@@ -2,13 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,27 +22,21 @@
 #                                                                              #
 ################################################################################
 
-import sys
-import unittest
-
-from . import AllTests, Framework
+from . import Framework
 
 
-def main(argv):
-    if "--record" in argv:
+def pytest_addoption(parser):
+    parser.addoption("--record", action="store_true", help="record mode")
+    parser.addoption(
+        "--auth_with_token", action="store_true", help="auth using a token"
+    )
+    parser.addoption("--auth_with_jwt", action="store_true", help="auth using JWT")
+
+
+def pytest_configure(config):
+    if config.getoption("record"):
         Framework.activateRecordMode()
-        argv = [arg for arg in argv if arg != "--record"]
-
-    if "--auth_with_token" in argv:
+    if config.getoption("auth_with_token"):
         Framework.activateTokenAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_token"]
-
-    if "--auth_with_jwt" in argv:
+    if config.getoption("auth_with_jwt"):
         Framework.activateJWTAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_jwt"]
-
-    unittest.main(module=AllTests, argv=argv)
-
-
-if __name__ == "__main__":
-    main(sys.argv)
