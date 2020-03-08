@@ -187,3 +187,23 @@ class Project(Framework.TestCase):
         issue = self.repo.create_issue(title="Issue created by PyGithub")
         card2 = column.create_card(content_id=issue.id, content_type="Issue")
         self.assertEqual(card2.id, 16039106)
+
+    def testEditCardWithoutParameters(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit()
+
+    def testEditCardNote(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit(note="Edited Card")
+        self.assertEqual(card.note, "Edited Card")
+
+    def testEditCardArchived(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit(archived=True)
+        self.assertEqual(card.archived, True)
