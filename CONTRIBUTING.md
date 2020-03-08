@@ -104,7 +104,7 @@ pip install --editable path/to/project
 
 You may also want to investigate `tox` to run tests:
 
-``
+```
 pip install tox
 tox -epy36,flake8,black,isort
 ```
@@ -114,4 +114,10 @@ tox -epy36,flake8,black,isort
 ```
 pip install -r requirements.txt
 sphinx-build doc build
+```
+
+If you use tox:
+
+```
+tox -edocs
 ```
