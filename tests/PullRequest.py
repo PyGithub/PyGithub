@@ -133,6 +133,7 @@ class PullRequest(Framework.TestCase):
             self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
+        self.assertEqual(self.pull.draft, None)
 
         # test __repr__() based on this attributes
         self.assertEqual(

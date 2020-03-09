@@ -182,6 +182,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._diff_url.value
 
     @property
+    def draft(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
+
+    @property
     def head(self):
         """
         :type: :class:`github.PullRequestPart.PullRequestPart`
@@ -924,6 +932,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
+        self._draft = github.GithubObject.NotSet
         self._head = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -991,6 +1000,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
+        if "draft" in attributes:  # pragma no branch
+            self._draft = self._makeBoolAttribute(attributes["draft"])
         if "head" in attributes:  # pragma no branch
             self._head = self._makeClassAttribute(
                 github.PullRequestPart.PullRequestPart, attributes["head"]
