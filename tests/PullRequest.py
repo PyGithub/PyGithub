@@ -365,16 +365,19 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
         )
+        url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees,
             lambda a: a.login,
             ["jacquev6", "stuglaser", "jayfk", "jzelinskie"],
         )
+        self.assertEqual(self.pull.url, url)
         self.pull.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
         )
+        self.assertEqual(self.pull.url, url)
 
     def testUpdateBranch(self):
         self.assertTrue(
