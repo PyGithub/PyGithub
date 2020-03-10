@@ -331,6 +331,10 @@ class AuthenticatedUser(Framework.TestCase):
         repo = self.user.create_repo(name="TestPyGithub")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
+    def testCreateProject(self):
+        project = self.user.create_project(name="TestPyGithub", body="This is the body")
+        self.assertEqual(project.url, "https://api.github.com/projects/4084610")
+
     def testCreateRepositoryWithAllArguments(self):
         repo = self.user.create_repo(
             name="TestPyGithub",
