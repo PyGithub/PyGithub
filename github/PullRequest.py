@@ -872,7 +872,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
     def remove_from_assignees(self, *assignees):
         """
@@ -895,7 +896,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
     def update_branch(self, expected_head_sha=github.GithubObject.NotSet):
         """
