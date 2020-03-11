@@ -49,6 +49,8 @@ import github.Permissions
 import github.Plan
 import github.Repository
 
+from . import Consts
+
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
@@ -479,6 +481,22 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization, self._requester, self.url + "/orgs", None
+        )
+
+    def get_projects(self, state="open"):
+        """
+        :calls: `GET /users/:user/projects <https://developer.github.com/v3/projects/#list-user-projects>`_
+        :param state: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
+        """
+        assert isinstance(state, str), state
+        url_parameters = {"state": state}
+        return github.PaginatedList.PaginatedList(
+            github.Project.Project,
+            self._requester,
+            self.url + "/projects",
+            url_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_public_events(self):
