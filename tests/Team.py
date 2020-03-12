@@ -37,8 +37,6 @@
 
 from datetime import datetime
 
-import github
-
 from . import Framework
 
 
@@ -122,9 +120,8 @@ class Team(Framework.TestCase):
             self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
         )
         self.assertTrue(self.team.has_in_repos(repo))
-        self.assertIsInstance(
-            self.team.get_repo_permission(repo), github.Permissions.Permissions
-        )
+        permissions = self.team.get_repo_permission(repo)
+        self.assertTrue(permissions.pull)
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
