@@ -77,11 +77,10 @@ First you need to install the test dependencies:
 pip install -r test-requirements.txt
 ```
 
-Then you can run the tests through `python -m tests`.
-Run a specific test with `python -m tests TestCase` or `python -m tests TestCase.testMethod`.
+Then you can run the tests through `pytest`.
+Run a specific test with `pytest tests/tests_filename.py` or `pytest tests/tests_filename.py -k testMethod` or `pytest -k TestClass.testMethod`.
 
-If you add a new test, for example `Issue139.testCompletion`, you must add an import in `tests/AllTests.py`.
-Then, you have to run `python -m tests Issue139.testCompletion --record` to create the `tests/ReplayData/*.txt` files needed for your new test.
+If you add a new test, for example `Issue139.testCompletion`, you have to run `pytest -k Issue139.testCompletion --record` to create the `tests/ReplayData/*.txt` files needed for your new test.
 Check them and commit them as well.
 You will need a `GithubCredentials.py` file at the root of the project with the following contents:
 
@@ -93,9 +92,9 @@ jwt = "my_json_web_token"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `python -m tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. (Also note that if you record your test data with `--auth_with_token` then you also need to be in token authentication mode when running the test. A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.)
+You can use `pytest Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. (Also note that if you record your test data with `--auth_with_token` then you also need to be in token authentication mode when running the test. A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.)
 
-Similarly, you can use `python -m tests Issue139.testCompletion --record --auth_with_jwt` to use the `jwt` field specified in `GithubCredentials.py` to access endpoints that require JWT.
+Similarly, you can use `pytest Issue139.testCompletion --record --auth_with_jwt` to use the `jwt` field specified in `GithubCredentials.py` to access endpoints that require JWT.
 
 To run manual tests with external scripts that use the PyGithub package, you can install your development version with:
 
@@ -103,9 +102,22 @@ To run manual tests with external scripts that use the PyGithub package, you can
 pip install --editable path/to/project
 ```
 
+You may also want to investigate `tox` to run tests:
+
+```
+pip install tox
+tox -epy36,flake8,black,isort
+```
+
 ## Build documentation locally
 
 ```
 pip install -r requirements.txt
 sphinx-build doc build
+```
+
+If you use tox:
+
+```
+tox -edocs
 ```

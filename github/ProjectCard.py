@@ -162,6 +162,42 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/cards/:card_id <https://developer.github.com/v3/projects/cards>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
+    def edit(
+        self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet
+    ):
+        """
+        :calls: `PATCH /projects/columns/cards/:card_id <http://developer.github.com/v3/projects/cards>`_
+        :param note: string
+        :param archived: bool
+        :rtype: None
+        """
+        assert note is github.GithubObject.NotSet or isinstance(note, str), note
+        assert archived is github.GithubObject.NotSet or isinstance(
+            archived, bool
+        ), archived
+        patch_parameters = dict()
+        if note is not github.GithubObject.NotSet:
+            patch_parameters["note"] = note
+        if archived is not github.GithubObject.NotSet:
+            patch_parameters["archived"] = archived
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        self._useAttributes(data)
+
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet
         self._column_url = github.GithubObject.NotSet

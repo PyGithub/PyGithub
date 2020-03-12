@@ -583,6 +583,27 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
+    def create_project(self, name, body=github.GithubObject.NotSet):
+        """
+        :calls: `POST /user/projects <https://developer.github.com/v3/projects/#create-a-user-project>`_
+        :param name: string
+        :param body: string
+        :rtype: :class:`github.Project.Project`
+        """
+        assert isinstance(name, str), name
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        post_parameters = {
+            "name": name,
+            "body": body,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/user/projects",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return github.Project.Project(self._requester, headers, data, completed=True)
+
     def create_repo(
         self,
         name,

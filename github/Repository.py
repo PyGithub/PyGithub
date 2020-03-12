@@ -98,6 +98,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.Deployment
 import github.Download
 import github.Event
 import github.GitBlob
@@ -968,6 +969,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         draft=False,
         prerelease=False,
     ):
+        """
+        Convenience function that calls :meth:`Repository.create_git_tag` and
+        :meth:`Repository.create_git_release`.
+        """
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(
             tag,
@@ -1309,6 +1314,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param issue: :class:`github.Issue.Issue`
         :param base: string
         :param head: string
+        :param draft: bool
         :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
@@ -1318,7 +1324,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return self.__create_pull_2(*args, **kwds)
 
     def __create_pull_1(
-        self, title, body, base, head, maintainer_can_modify=github.GithubObject.NotSet
+        self,
+        title,
+        body,
+        base,
+        head,
+        maintainer_can_modify=github.GithubObject.NotSet,
+        draft=False,
     ):
         assert isinstance(title, str), title
         assert isinstance(body, str), body
@@ -1327,6 +1339,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(
             maintainer_can_modify, bool
         ), maintainer_can_modify
+        assert isinstance(draft, bool), draft
         if maintainer_can_modify is not github.GithubObject.NotSet:
             return self.__create_pull(
                 title=title,
@@ -1334,9 +1347,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 base=base,
                 head=head,
                 maintainer_can_modify=maintainer_can_modify,
+                draft=draft,
             )
         else:
-            return self.__create_pull(title=title, body=body, base=base, head=head)
+            return self.__create_pull(
+                title=title, body=body, base=base, head=head, draft=draft
+            )
 
     def __create_pull_2(self, issue, base, head):
         assert isinstance(issue, github.Issue.Issue), issue
@@ -1346,8 +1362,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __create_pull(self, **kwds):
         post_parameters = kwds
+        import_header = {"Accept": Consts.draftPullRequestPreview}
+
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/pulls", input=post_parameters
+            "POST", self.url + "/pulls", input=post_parameters, headers=import_header
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
@@ -1712,6 +1730,114 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for item in data
             ]
         return github.ContentFile.ContentFile(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_deployments(
+        self,
+        sha=github.GithubObject.NotSet,
+        ref=github.GithubObject.NotSet,
+        task=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
+        :param: sha: string
+        :param: ref: string
+        :param: task: string
+        :param: environment: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Deployment.Deployment`
+        """
+        assert sha is github.GithubObject.NotSet or isinstance(sha, str), sha
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        assert task is github.GithubObject.NotSet or isinstance(task, str), task
+        assert environment is github.GithubObject.NotSet or isinstance(
+            environment, str
+        ), environment
+        parameters = {}
+        if sha is not github.GithubObject.NotSet:
+            parameters["sha"] = sha
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
+        if task is not github.GithubObject.NotSet:
+            parameters["task"] = task
+        if environment is not github.GithubObject.NotSet:
+            parameters["environment"] = environment
+        return github.PaginatedList.PaginatedList(
+            github.Deployment.Deployment,
+            self._requester,
+            self.url + "/deployments",
+            parameters,
+        )
+
+    def get_deployment(self, id_):
+        """
+        :calls: `GET /repos/:owner/:repo/deployments/:deployment_id <https://developer.github.com/v3/repos/deployments/>`_
+        :param: id_: int
+        :rtype: :class:`github.Deployment.Deployment`
+        """
+        assert isinstance(id_, int), id_
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/deployments/" + str(id_)
+        )
+        return github.Deployment.Deployment(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_deployment(
+        self,
+        ref,
+        task=github.GithubObject.NotSet,
+        auto_merge=github.GithubObject.NotSet,
+        required_contexts=github.GithubObject.NotSet,
+        payload=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
+        :param: ref: string
+        :param: auto_merge: bool
+        :param: required_contexts: list of statuses
+        :param: payload: json
+        :param: environment: string
+        :param: description: string
+        :rtype: :class:`github.Deployment.Deployment`
+        """
+        assert isinstance(ref, str), ref
+        assert task is github.GithubObject.NotSet or isinstance(task, str), task
+        assert auto_merge is github.GithubObject.NotSet or isinstance(
+            auto_merge, bool
+        ), auto_merge
+        assert required_contexts is github.GithubObject.NotSet or isinstance(
+            required_contexts, list
+        ), required_contexts  # need to do better checking here
+        assert payload is github.GithubObject.NotSet or isinstance(
+            payload, str
+        ), payload  # How to assert it's JSON?
+        assert environment is github.GithubObject.NotSet or isinstance(
+            environment, str
+        ), environment
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        post_parameters = {"ref": ref}
+        if task is not github.GithubObject.NotSet:
+            post_parameters["task"] = task
+        if auto_merge is not github.GithubObject.NotSet:
+            post_parameters["auto_merge"] = auto_merge
+        if required_contexts is not github.GithubObject.NotSet:
+            post_parameters["required_contexts"] = required_contexts
+        if payload is not github.GithubObject.NotSet:
+            post_parameters["payload"] = payload
+        if environment is not github.GithubObject.NotSet:
+            post_parameters["environment"] = environment
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.url + "/deployments", input=post_parameters,
+        )
+        return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
         )
 

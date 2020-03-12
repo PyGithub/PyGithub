@@ -182,6 +182,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._diff_url.value
 
     @property
+    def draft(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
+
+    @property
     def head(self):
         """
         :type: :class:`github.PullRequestPart.PullRequestPart`
@@ -397,6 +405,25 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/comments", input=post_parameters
+        )
+        return github.PullRequestComment.PullRequestComment(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_review_comment_reply(self, comment_id, body):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:pull_number/comments/:comment_id/replies <http://developer.github.com/v3/pulls/comments>`_
+        :param comment_id: int
+        :param body: string
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
+        assert isinstance(comment_id, int), comment_id
+        assert isinstance(body, str), body
+        post_parameters = {"body": body}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/comments/" + str(comment_id) + "/replies",
+            input=post_parameters,
         )
         return github.PullRequestComment.PullRequestComment(
             self._requester, headers, data, completed=True
@@ -845,7 +872,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
     def remove_from_assignees(self, *assignees):
         """
@@ -868,16 +896,21 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
-    def update_branch(self, expected_head_sha):
+    def update_branch(self, expected_head_sha=github.GithubObject.NotSet):
         """
         :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>`_
         :param expected_head_sha: string
         :rtype: bool
         """
-        assert isinstance(expected_head_sha, str), expected_head_sha
-        post_parameters = {"expected_head_sha": expected_head_sha}
+        assert expected_head_sha is github.GithubObject.NotSet or isinstance(
+            expected_head_sha, str
+        ), expected_head_sha
+        post_parameters = {}
+        if expected_head_sha is not github.GithubObject.NotSet:
+            post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
             self.url + "/update-branch",
@@ -901,6 +934,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
+        self._draft = github.GithubObject.NotSet
         self._head = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -968,6 +1002,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
+        if "draft" in attributes:  # pragma no branch
+            self._draft = self._makeBoolAttribute(attributes["draft"])
         if "head" in attributes:  # pragma no branch
             self._head = self._makeClassAttribute(
                 github.PullRequestPart.PullRequestPart, attributes["head"]

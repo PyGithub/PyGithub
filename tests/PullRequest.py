@@ -133,6 +133,7 @@ class PullRequest(Framework.TestCase):
             self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
+        self.assertEqual(self.pull.draft, None)
 
         # test __repr__() based on this attributes
         self.assertEqual(
@@ -364,18 +365,22 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
         )
+        url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees,
             lambda a: a.login,
             ["jacquev6", "stuglaser", "jayfk", "jzelinskie"],
         )
+        self.assertEqual(self.pull.url, url)
         self.pull.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
         )
+        self.assertEqual(self.pull.url, url)
 
     def testUpdateBranch(self):
         self.assertTrue(
             self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
         )
+        self.assertTrue(self.pull.update_branch())

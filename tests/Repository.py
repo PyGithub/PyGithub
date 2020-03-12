@@ -1193,6 +1193,16 @@ class Repository(Framework.TestCase):
             43929,
         )
 
+    def testCreateDeployment(self):
+        deployment = self.repo.create_deployment(
+            "8f039d9c4ebd6f24b4bb04634ed062375c11b751"
+        )
+        self.assertEqual(deployment.id, 201741959)
+
+    def testGetDeployments(self):
+        deployments = self.repo.get_deployments()
+        self.assertListKeyEqual(deployments, lambda d: d.id, [201741959])
+
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = "Hello world".encode()

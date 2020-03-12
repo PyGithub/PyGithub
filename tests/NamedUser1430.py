@@ -2,13 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,27 +22,15 @@
 #                                                                              #
 ################################################################################
 
-import sys
-import unittest
-
-from . import AllTests, Framework
+from . import Framework
 
 
-def main(argv):
-    if "--record" in argv:
-        Framework.activateRecordMode()
-        argv = [arg for arg in argv if arg != "--record"]
+class NamedUser1430(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = self.g.get_user("ahhda")
 
-    if "--auth_with_token" in argv:
-        Framework.activateTokenAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_token"]
-
-    if "--auth_with_jwt" in argv:
-        Framework.activateJWTAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_jwt"]
-
-    unittest.main(module=AllTests, argv=argv)
-
-
-if __name__ == "__main__":
-    main(sys.argv)
+    def testGetProjects(self):
+        self.assertListKeyBegin(
+            self.user.get_projects(state="all"), lambda e: e.id, [4083095],
+        )
