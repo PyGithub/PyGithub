@@ -157,4 +157,4 @@ class Commit(Framework.TestCase):
             .get_repo("PyGithub")
             .get_commit("e44d11d565c022496544dd6ed1f19a8d718c2b0c")
         )
-        self.assertListKeyEqual(commit.get_pulls(), lambda c: c.id, [385799287])
+        self.assertListKeyEqual(commit.get_pulls(), lambda c: c.number, [1431])
