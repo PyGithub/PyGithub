@@ -47,6 +47,7 @@ import github.Organization
 import github.PaginatedList
 import github.Repository
 import github.TeamDiscussion
+from github.GithubException import UnknownObjectException
 
 from . import Consts
 
@@ -209,6 +210,29 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.url + "/repos/" + repo._identity
         )
+
+    def get_repo_permission(self, repo):
+        """
+        :calls: `GET /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: string or :class:`github.Repository.Repository`
+        :rtype: None or :class:`github.Permissions.Permissions`
+        """
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str
+        ), repo
+        if isinstance(repo, github.Repository.Repository):
+            repo = repo._identity
+        try:
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/repos/" + repo,
+                headers={"Accept": Consts.teamRepositoryPermissions},
+            )
+            return github.Permissions.Permissions(
+                self._requester, headers, data["permissions"], completed=True
+            )
+        except UnknownObjectException:
+            return None
 
     def set_repo_permission(self, repo, permission):
         """
