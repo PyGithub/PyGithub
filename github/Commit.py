@@ -245,6 +245,19 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_pulls(self):
+        """
+        :calls: `GET /repos/:owner/:repo/commits/:sha/pulls <https://developer.github.com/v3/repos/commits/#list-pull-requests-associated-with-commit>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.PullRequest.PullRequest,
+            self._requester,
+            self.url + "/pulls",
+            None,
+            headers={"Accept": "application/vnd.github.groot-preview+json"},
+        )
+
     @property
     def _identity(self):
         return self.sha

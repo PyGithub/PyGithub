@@ -150,3 +150,11 @@ class Commit(Framework.TestCase):
             status.target_url, "https://github.com/jacquev6/PyGithub/issues/67"
         )
         self.assertEqual(status.description, "Status successfuly created by PyGithub")
+
+    def testGetPulls(self):
+        commit = (
+            self.g.get_user()
+            .get_repo("PyGithub")
+            .get_commit("e44d11d565c022496544dd6ed1f19a8d718c2b0c")
+        )
+        self.assertListKeyEqual(commit.get_pulls(), lambda c: c.number, [1431])
