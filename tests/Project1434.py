@@ -35,7 +35,9 @@ class Project1434(Framework.TestCase):
 
     def testEditWithoutParameters(self):
         project = self.g.get_project(4101939)
+        old_name = project.name
         project.edit()
+        self.assertEqual(project.name, old_name)
 
     def testEditWithAllParameters(self):
         project = self.g.get_project(4101939)
