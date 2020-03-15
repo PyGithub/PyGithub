@@ -101,5 +101,5 @@ if __name__ == "__main__":
         python_requires=">=3.5",
         install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
         extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=0.9.6", "parameterized>=0.7.0"],
+        tests_require=["cryptography", "httpretty>=0.9.6"],
     )
