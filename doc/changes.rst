@@ -4,6 +4,35 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.47 (March 15, 2020)
+-----------------------------------
+**Bug Fixes & Improvements**
+
+* Add support to edit and delete a project (#1434) (f11f7395)
+* Add method for fetching pull requests associated with a commit (#1433) (0c55381b)
+* Add "get_repo_permission" to Team class (#1416) (219bde53)
+* Add list projects support, update tests (#1431) (e44d11d5)
+* Don't transform completely in PullRequest.*assignees (#1428) (b1c35499)
+* Add create_project support, add tests (#1429) (bf62f752)
+* Add draft attribute, update test (bd285248)
+* Docstring for Repository.create_git_tag_and_release (#1425) (bfeacded)
+* Create a tox docs environment (#1426) (b30c09aa)
+* Add Deployments API (#1424) (3d93ee1c)
+* Add support for editing project cards (#1418) (425280ce)
+* Add draft flag parameter, update tests (bd0211eb)
+* Switch to using pytest (#1423) (c822dd1c)
+* Fix GitMembership with a hammer (#1420) (f2939eb7)
+* Add support to reply to a Pull request comment (#1374) (1c82573d)
+* PullRequest.update_branch(): allow expected_head_sha to be empty (#1412) (806130e9)
+* Implement ProjectCard.delete() (#1417) (aeb27b78)
+* Add pre-commit plugin for black/isort/flake8 (#1398) (08b1c474)
+* Add tox (#1388) (125536fe)
+* Open file in text mode in scripts/add_attribute.py (#1396) (0396a493)
+* Silence most ResourceWarnings (#1393) (dd31a706)
+* Assert more attributes in Membership (#1391) (d6dee016)
+* Assert on changed Repository attributes (#1390) (6e3ceb19)
+* Add reset to the repr for Rate (#1389) (0829af81)
+
 Version 1.46 (February 11, 2020)
 -----------------------------------
 **Important**
