@@ -120,3 +120,6 @@ issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
 
 # https://developer.github.com/changes/2019-02-14-draft-pull-requests/
 draftPullRequestPreview = "application/vnd.github.shadow-cat-preview+json"
+
+# https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
+teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
