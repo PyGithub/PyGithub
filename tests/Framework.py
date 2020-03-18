@@ -150,8 +150,7 @@ class RecordingHttpsConnection(RecordingConnection):
 
 
 class ReplayingConnection:
-    def __init__(self, testCase, file, protocol, host, port, *args, **kwds):
-        self.__testCase = testCase
+    def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
         self.__host = host
@@ -171,25 +170,19 @@ class ReplayingConnection:
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
-        self.__testCase.assertEqual(verb, readLine(self.__file))
-        self.__testCase.assertEqual(self.__host, readLine(self.__file))
-        self.__testCase.assertEqual(str(self.__port), readLine(self.__file))
-        self.__testCase.assertEqual(
-            self.__splitUrl(url), self.__splitUrl(readLine(self.__file))
-        )
-        self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
+        assert self.__protocol == readLine(self.__file)
+        assert verb == readLine(self.__file)
+        assert self.__host == readLine(self.__file)
+        assert str(self.__port) == readLine(self.__file)
+        assert self.__splitUrl(url) == self.__splitUrl(readLine(self.__file))
+        assert headers == eval(readLine(self.__file))
         expectedInput = readLine(self.__file)
         if isinstance(input, str):
+            trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                self.__testCase.assertEqual(
-                    json.loads(input.replace("\n", "").replace("\r", "")),
-                    json.loads(expectedInput),
-                )
+                assert json.loads(trInput) == json.loads(expectedInput)
             else:
-                self.__testCase.assertEqual(
-                    input.replace("\n", "").replace("\r", ""), expectedInput
-                )
+                assert trInput == expectedInput
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
@@ -198,7 +191,7 @@ class ReplayingConnection:
         splitedUrl = url.split("?")
         if len(splitedUrl) == 1:
             return splitedUrl
-        self.__testCase.assertEqual(len(splitedUrl), 2)
+        assert len(splitedUrl) == 2
         base, qs = splitedUrl
         return (base, sorted(qs.split("&")))
 
@@ -237,15 +230,15 @@ class ReplayingConnection:
 class ReplayingHttpConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, testCase, file, *args, **kwds):
-        super().__init__(testCase, file, "http", *args, **kwds)
+    def __init__(self, file, *args, **kwds):
+        super().__init__(file, "http", *args, **kwds)
 
 
 class ReplayingHttpsConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, testCase, file, *args, **kwds):
-        super().__init__(testCase, file, "https", *args, **kwds)
+    def __init__(self, file, *args, **kwds):
+        super().__init__(file, "https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
@@ -282,10 +275,10 @@ class BasicTestCase(unittest.TestCase):
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
-                    self, self.__openFile("r"), *args, **kwds
+                    self.__openFile("r"), *args, **kwds
                 ),
                 lambda ignored, *args, **kwds: ReplayingHttpsConnection(
-                    self, self.__openFile("r"), *args, **kwds
+                    self.__openFile("r"), *args, **kwds
                 ),
             )
             self.login = "login"
