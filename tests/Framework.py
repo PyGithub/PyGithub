@@ -178,12 +178,11 @@ class ReplayingConnection:
         assert headers == eval(readLine(self.__file))
         expectedInput = readLine(self.__file)
         if isinstance(input, str):
+            trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                assert json.loads(
-                    input.replace("\n", "").replace("\r", "")
-                ) == json.loads(expectedInput)
+                assert json.loads(trInput) == json.loads(expectedInput)
             else:
-                assert input.replace("\n", "").replace("\r", "") == expectedInput
+                assert trInput == expectedInput
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
