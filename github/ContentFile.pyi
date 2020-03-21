@@ -1,12 +1,7 @@
+from typing import Any, Dict, List, Optional
+
 from github.License import License
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-)
-
 
 class ContentFile:
     def __repr__(self) -> str: ...

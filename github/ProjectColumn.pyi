@@ -1,13 +1,9 @@
 from datetime import datetime
+from typing import Any, Dict, Union
+
 from github.GithubObject import _NotSetType
 from github.PaginatedList import PaginatedList
 from github.ProjectCard import ProjectCard
-from typing import (
-    Any,
-    Dict,
-    Union,
-)
-
 
 class ProjectColumn:
     def __repr__(self) -> str: ...
@@ -19,13 +15,12 @@ class ProjectColumn:
         self,
         note: Union[_NotSetType, str] = ...,
         content_id: Union[int, _NotSetType] = ...,
-        content_type: Union[_NotSetType, str] = ...
+        content_type: Union[_NotSetType, str] = ...,
     ) -> ProjectCard: ...
     @property
     def created_at(self) -> datetime: ...
     def get_cards(
-        self,
-        archived_state: Union[_NotSetType, str] = ...
+        self, archived_state: Union[_NotSetType, str] = ...
     ) -> PaginatedList: ...
     @property
     def id(self) -> int: ...

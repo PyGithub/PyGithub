@@ -1,13 +1,9 @@
 from datetime import datetime
+from typing import Any, Dict, Optional
+
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Reaction import Reaction
-from typing import (
-    Any,
-    Dict,
-    Optional,
-)
-
 
 class CommitComment:
     def __repr__(self) -> str: ...

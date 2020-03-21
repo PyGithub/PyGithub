@@ -1,6 +1,5 @@
 from typing import List
 
-
 class StatsPunchCard:
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: List[List[int]]) -> None: ...

@@ -1,18 +1,12 @@
+from typing import Any, Dict
+
 from github.NamedUser import NamedUser
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-)
-
 
 class Invitation:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(
-        self,
-        attributes: Dict[str, Any]
-    ) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def created_at(self) -> str: ...
     @property

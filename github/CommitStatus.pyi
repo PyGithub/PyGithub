@@ -1,11 +1,7 @@
 from datetime import datetime
-from github.NamedUser import NamedUser
-from typing import (
-    Any,
-    Dict,
-    Optional,
-)
+from typing import Any, Dict, Optional
 
+from github.NamedUser import NamedUser
 
 class CommitStatus:
     def __repr__(self) -> str: ...

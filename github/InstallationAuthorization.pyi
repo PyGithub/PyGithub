@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 from github.NamedUser import NamedUser
 
-
 class InstallationAuthorization:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...

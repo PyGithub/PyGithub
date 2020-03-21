@@ -1,15 +1,10 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from github.CommitStats import CommitStats
 from github.Gist import Gist
 from github.GistFile import GistFile
 from github.NamedUser import NamedUser
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-)
-
 
 class GistHistoryState:
     def _initAttributes(self) -> None: ...

@@ -1,8 +1,4 @@
-from typing import (
-    Dict,
-    List,
-)
-
+from typing import Dict, List
 
 class StatsParticipation:
     def _initAttributes(self) -> None: ...

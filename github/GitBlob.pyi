@@ -1,8 +1,4 @@
-from typing import (
-    Any,
-    Dict,
-)
-
+from typing import Any, Dict
 
 class GitBlob:
     def __repr__(self) -> str: ...

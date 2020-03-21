@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 from github.GistComment import GistComment
 from github.GistFile import GistFile
 from github.GistHistoryState import GistHistoryState
@@ -6,14 +8,6 @@ from github.GithubObject import _NotSetType
 from github.InputFileContent import InputFileContent
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-)
-
 
 class Gist:
     def __repr__(self) -> str: ...
@@ -35,7 +29,7 @@ class Gist:
     def edit(
         self,
         description: Union[_NotSetType, str] = ...,
-        files: Union[_NotSetType, Dict[str, Optional[InputFileContent]]] = ...
+        files: Union[_NotSetType, Dict[str, Optional[InputFileContent]]] = ...,
     ) -> None: ...
     @property
     def files(self) -> Dict[str, GistFile]: ...

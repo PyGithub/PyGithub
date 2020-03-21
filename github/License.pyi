@@ -1,9 +1,4 @@
-from typing import (
-    Any,
-    Dict,
-    List,
-)
-
+from typing import Any, Dict, List
 
 class License:
     def __repr__(self) -> str: ...

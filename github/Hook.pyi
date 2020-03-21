@@ -1,13 +1,8 @@
 from datetime import datetime
+from typing import Any, Dict, List, Union
+
 from github.GithubObject import _NotSetType
 from github.HookResponse import HookResponse
-from typing import (
-    Any,
-    Dict,
-    List,
-    Union,
-)
-
 
 class Hook:
     def __repr__(self) -> str: ...
@@ -27,7 +22,7 @@ class Hook:
         events: Union[_NotSetType, List[str]] = ...,
         add_events: Union[_NotSetType, List[str]] = ...,
         remove_events: Union[_NotSetType, List[str]] = ...,
-        active: Union[bool, _NotSetType] = ...
+        active: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     @property
     def events(self) -> List[str]: ...

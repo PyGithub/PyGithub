@@ -1,6 +1,5 @@
 from typing import Dict
 
-
 class GitObject:
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, str]) -> None: ...

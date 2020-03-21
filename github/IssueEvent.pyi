@@ -1,14 +1,9 @@
+from typing import Any, Dict, Optional, Union
+
 from github.Issue import Issue
 from github.Label import Label
 from github.Milestone import Milestone
 from github.NamedUser import NamedUser
-from typing import (
-    Any,
-    Dict,
-    Optional,
-    Union,
-)
-
 
 class IssueEvent:
     def __repr__(self) -> str: ...

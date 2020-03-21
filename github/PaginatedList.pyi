@@ -1,17 +1,10 @@
+from typing import Any, Dict, Iterator, List, Optional, Union
+
 from github.ContentFile import ContentFile
 from github.GithubObject import GithubObject
 from github.Issue import Issue
 from github.NamedUser import NamedUser
 from github.Requester import Requester
-from typing import (
-    Any,
-    Dict,
-    Iterator,
-    List,
-    Optional,
-    Union,
-)
-
 
 class PaginatedList:
     def __init__(
@@ -21,22 +14,18 @@ class PaginatedList:
         firstUrl: str,
         firstParams: Any,
         headers: Optional[Dict[str, str]] = ...,
-        list_item: str = ...
+        list_item: str = ...,
     ) -> None: ...
     def __reverse(self) -> None: ...
     def __parseLinkHeader(self, headers: Dict[str, str]) -> None: ...
     def _couldGrow(self) -> bool: ...
     def _fetchNextPage(self) -> Any: ...
     def _getLastPageUrl(self) -> Optional[str]: ...
-    def get_page(
-        self,
-        page: int
-    ) -> List[Any]: ...
+    def get_page(self, page: int) -> List[Any]: ...
     @property
     def reversed(self) -> PaginatedList: ...
     @property
     def totalCount(self) -> int: ...
-
 
 class PaginatedListBase:
     def __getitem__(self, index: Union[int, slice]) -> Any: ...

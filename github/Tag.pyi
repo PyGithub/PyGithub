@@ -1,9 +1,6 @@
-from github.Commit import Commit
-from typing import (
-    Any,
-    Dict,
-)
+from typing import Any, Dict
 
+from github.Commit import Commit
 
 class Tag:
     def __repr__(self) -> str: ...

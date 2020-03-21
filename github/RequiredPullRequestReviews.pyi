@@ -1,20 +1,12 @@
+from typing import Any, Dict, List, Optional
+
 from github.NamedUser import NamedUser
 from github.Team import Team
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-)
-
 
 class RequiredPullRequestReviews:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(
-        self,
-        attributes: Dict[str, Any]
-    ) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def dismiss_stale_reviews(self) -> bool: ...
     @property

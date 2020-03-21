@@ -1,9 +1,5 @@
 from datetime import datetime
-from typing import (
-    Any,
-    Dict,
-)
-
+from typing import Any, Dict
 
 class View:
     def __repr__(self) -> str: ...

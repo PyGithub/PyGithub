@@ -1,15 +1,10 @@
 from datetime import datetime
+from typing import Any, Dict, Optional, Union
+
 from github.GithubObject import _NotSetType
 from github.Issue import Issue
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
-from typing import (
-    Any,
-    Dict,
-    Optional,
-    Union,
-)
-
 
 class ProjectCard:
     def _repr__(self) -> str: ...
@@ -26,8 +21,7 @@ class ProjectCard:
     @property
     def creator(self) -> NamedUser: ...
     def get_content(
-        self,
-        content_type: Union[_NotSetType, str] = ...
+        self, content_type: Union[_NotSetType, str] = ...
     ) -> Optional[Union[PullRequest, Issue]]: ...
     @property
     def id(self) -> int: ...

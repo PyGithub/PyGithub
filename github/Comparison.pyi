@@ -1,11 +1,7 @@
+from typing import Any, Dict, List
+
 from github.Commit import Commit
 from github.File import File
-from typing import (
-    Any,
-    Dict,
-    List,
-)
-
 
 class Comparison:
     def _initAttributes(self) -> None: ...

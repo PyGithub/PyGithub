@@ -1,12 +1,9 @@
 from datetime import datetime
+from typing import Any, Dict
+
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.ProjectColumn import ProjectColumn
-from typing import (
-    Any,
-    Dict,
-)
-
 
 class Project:
     def __repr__(self) -> str: ...

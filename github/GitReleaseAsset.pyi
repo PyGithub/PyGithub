@@ -1,11 +1,7 @@
 from datetime import datetime
-from github.NamedUser import NamedUser
-from typing import (
-    Any,
-    Dict,
-    Union,
-)
+from typing import Any, Dict, Union
 
+from github.NamedUser import NamedUser
 
 class GitReleaseAsset:
     def __repr__(self) -> str: ...

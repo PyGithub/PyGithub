@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 
-
 class StatsCodeFrequency:
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: List[int]) -> None: ...

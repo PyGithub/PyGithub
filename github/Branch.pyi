@@ -1,16 +1,11 @@
+from typing import Any, Dict, List, Union
+
 from github.BranchProtection import BranchProtection
 from github.Commit import Commit
 from github.GithubObject import _NotSetType
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
 from github.RequiredStatusChecks import RequiredStatusChecks
-from typing import (
-    Any,
-    Dict,
-    List,
-    Union,
-)
-
 
 class Branch:
     def __repr__(self) -> str: ...
@@ -30,7 +25,7 @@ class Branch:
         require_code_owner_reviews: Union[bool, _NotSetType] = ...,
         required_approving_review_count: Union[int, _NotSetType] = ...,
         user_push_restrictions: Union[_NotSetType, List[str]] = ...,
-        team_push_restrictions: Union[_NotSetType, List[str]] = ...
+        team_push_restrictions: Union[_NotSetType, List[str]] = ...,
     ) -> None: ...
     def edit_required_pull_request_reviews(
         self,
@@ -38,9 +33,13 @@ class Branch:
         dismissal_teams: Union[_NotSetType, List[str]] = ...,
         dismiss_stale_reviews: Union[bool, _NotSetType] = ...,
         require_code_owner_reviews: Union[_NotSetType, bool] = ...,
-        required_approving_review_count: Union[int, _NotSetType] = ...
+        required_approving_review_count: Union[int, _NotSetType] = ...,
     ) -> None: ...
-    def edit_required_status_checks(self, strict: Union[_NotSetType, bool] = ..., contexts: Union[List[str], _NotSetType] = ...) -> None: ...
+    def edit_required_status_checks(
+        self,
+        strict: Union[_NotSetType, bool] = ...,
+        contexts: Union[List[str], _NotSetType] = ...,
+    ) -> None: ...
     def edit_team_push_restrictions(self, *teams: str) -> None: ...
     def edit_user_push_restrictions(self, *users: str) -> None: ...
     def get_admin_enforcement(self) -> bool: ...

@@ -1,10 +1,7 @@
 from datetime import datetime
-from github.NamedUser import NamedUser
-from typing import (
-    Any,
-    Dict,
-)
+from typing import Any, Dict
 
+from github.NamedUser import NamedUser
 
 class Reaction:
     def __repr__(self) -> str: ...

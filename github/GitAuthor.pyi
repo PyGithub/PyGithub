@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Dict
 
-
 class GitAuthor:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...

@@ -1,6 +1,5 @@
 from typing import Any, Dict
 
-
 class Permissions:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...

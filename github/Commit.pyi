@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Union
+
 from github.CommitCombinedStatus import CommitCombinedStatus
 from github.CommitComment import CommitComment
 from github.CommitStats import CommitStats
@@ -7,13 +9,6 @@ from github.GitCommit import GitCommit
 from github.GithubObject import _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
-from typing import (
-    Any,
-    Dict,
-    List,
-    Union,
-)
-
 
 class Commit:
     def __repr__(self) -> str: ...
@@ -34,14 +29,14 @@ class Commit:
         body: str,
         line: Union[int, _NotSetType] = ...,
         path: Union[_NotSetType, str] = ...,
-        position: Union[int, _NotSetType] = ...
+        position: Union[int, _NotSetType] = ...,
     ) -> CommitComment: ...
     def create_status(
         self,
         state: str,
         target_url: Union[_NotSetType, str] = ...,
         description: Union[_NotSetType, str] = ...,
-        context: Union[_NotSetType, str] = ...
+        context: Union[_NotSetType, str] = ...,
     ) -> CommitStatus: ...
     @property
     def files(self) -> List[File]: ...

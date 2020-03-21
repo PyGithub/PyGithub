@@ -1,10 +1,7 @@
+from typing import Any, Dict
+
 from github.GithubObject import _ValuedAttribute
 from github.PaginatedList import PaginatedList
-from typing import (
-    Any,
-    Dict,
-)
-
 
 class Installation:
     def _initAttributes(self) -> None: ...

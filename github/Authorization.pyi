@@ -1,14 +1,8 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 from github.AuthorizationApplication import AuthorizationApplication
 from github.GithubObject import _NotSetType
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-)
-
 
 class Authorization:
     def __repr__(self) -> str: ...
@@ -25,7 +19,7 @@ class Authorization:
         add_scopes: Union[_NotSetType, List[str]] = ...,
         remove_scopes: Union[_NotSetType, List[str]] = ...,
         note: Union[_NotSetType, str] = ...,
-        note_url: Union[_NotSetType, str] = ...
+        note_url: Union[_NotSetType, str] = ...,
     ) -> None: ...
     @property
     def id(self) -> int: ...

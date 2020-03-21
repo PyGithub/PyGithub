@@ -1,14 +1,10 @@
 from datetime import datetime
+from typing import Any, Dict, Optional
+
 from github.Issue import Issue
 from github.NotificationSubject import NotificationSubject
 from github.PullRequest import PullRequest
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-    Optional,
-)
-
 
 class Notification:
     def _initAttributes(self) -> None: ...

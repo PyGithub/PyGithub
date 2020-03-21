@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 from github.GithubObject import _NotSetType
 from github.IssueComment import IssueComment
 from github.IssuePullRequest import IssuePullRequest
@@ -9,14 +11,6 @@ from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Reaction import Reaction
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-)
-
 
 class Issue:
     def __repr__(self) -> str: ...
@@ -56,14 +50,13 @@ class Issue:
         state: Union[str, _NotSetType] = ...,
         milestone: Optional[Union[Milestone, _NotSetType]] = ...,
         labels: Union[_NotSetType, List[str]] = ...,
-        assignees: Union[_NotSetType, List[str]] = ...
+        assignees: Union[_NotSetType, List[str]] = ...,
     ) -> None: ...
     @property
     def events_url(self) -> str: ...
     def get_comment(self, id: int) -> IssueComment: ...
     def get_comments(
-        self,
-        since: Union[_NotSetType, datetime] = ...
+        self, since: Union[_NotSetType, datetime] = ...
     ) -> PaginatedList: ...
     def get_events(self) -> PaginatedList: ...
     def get_labels(self) -> PaginatedList: ...

@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict
 
-
 class Rate:
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...

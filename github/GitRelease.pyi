@@ -1,14 +1,10 @@
 from datetime import datetime
-from github.GitReleaseAsset import GitReleaseAsset
+from typing import Any, Dict, Union
+
 from github.GithubObject import _NotSetType
+from github.GitReleaseAsset import GitReleaseAsset
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
-from typing import (
-    Any,
-    Dict,
-    Union,
-)
-
 
 class GitRelease:
     def __repr__(self) -> str: ...
@@ -47,14 +43,14 @@ class GitRelease:
         draft: bool = ...,
         prerelease: bool = ...,
         tag_name: Union[str, _NotSetType] = ...,
-        target_commitish: Union[str, _NotSetType] = ...
+        target_commitish: Union[str, _NotSetType] = ...,
     ) -> GitRelease: ...
     def upload_asset(
         self,
         path: str,
         label: str = ...,
         content_type: Union[_NotSetType, str] = ...,
-        name: Union[_NotSetType, str] = ...
+        name: Union[_NotSetType, str] = ...,
     ) -> GitReleaseAsset: ...
     @property
     def upload_url(self) -> str: ...

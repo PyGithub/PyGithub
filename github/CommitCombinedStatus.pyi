@@ -1,11 +1,7 @@
+from typing import Any, Dict, List
+
 from github.CommitStatus import CommitStatus
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-    List,
-)
-
 
 class CommitCombinedStatus:
     def __repr__(self) -> str: ...

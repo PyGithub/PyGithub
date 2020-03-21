@@ -1,11 +1,6 @@
-from github.GithubObject import _NotSetType
-from typing import (
-    Any,
-    Dict,
-    Optional,
-    Union,
-)
+from typing import Any, Dict, Optional, Union
 
+from github.GithubObject import _NotSetType
 
 class Label:
     def __repr__(self) -> str: ...
@@ -18,7 +13,9 @@ class Label:
     def delete(self) -> None: ...
     @property
     def description(self) -> Optional[str]: ...
-    def edit(self, name: str, color: str, description: Union[str, _NotSetType] = ...) -> None: ...
+    def edit(
+        self, name: str, color: str, description: Union[str, _NotSetType] = ...
+    ) -> None: ...
     @property
     def name(self) -> str: ...
     @property

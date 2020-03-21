@@ -1,22 +1,14 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 from github.NamedUser import NamedUser
 from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-)
-
 
 class Migration:
-    def __repr__(self): str: ...
+    def __repr__(self):
+        str: ...
     def _initAttributes(self) -> None: ...
-    def _useAttributes(
-        self,
-        attributes: Dict[str, Any]
-    ) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
     def created_at(self) -> datetime: ...
     def delete(self) -> None: ...

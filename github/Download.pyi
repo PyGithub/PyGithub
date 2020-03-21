@@ -1,10 +1,5 @@
 from datetime import datetime
-from typing import (
-    Any,
-    Dict,
-    Optional,
-)
-
+from typing import Any, Dict, Optional
 
 class Download:
     def __repr__(self) -> str: ...

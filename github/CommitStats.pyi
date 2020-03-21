@@ -1,6 +1,5 @@
 from typing import Dict
 
-
 class CommitStats:
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, int]) -> None: ...

@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 from github.Commit import Commit
 from github.GithubObject import _NotSetType
 from github.Issue import Issue
@@ -11,15 +13,6 @@ from github.PullRequestComment import PullRequestComment
 from github.PullRequestMergeStatus import PullRequestMergeStatus
 from github.PullRequestPart import PullRequestPart
 from github.PullRequestReview import PullRequestReview
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-    Union,
-)
-
 
 class PullRequest:
     def _initAttributes(self) -> None: ...
@@ -50,11 +43,7 @@ class PullRequest:
     @property
     def commits_url(self) -> str: ...
     def create_comment(
-        self,
-        body: str,
-        commit_id: Commit,
-        path: str,
-        position: int
+        self, body: str, commit_id: Commit, path: str, position: int
     ) -> PullRequestComment: ...
     def create_issue_comment(self, body: str) -> IssueComment: ...
     def create_review(
@@ -62,20 +51,24 @@ class PullRequest:
         commit: Commit = ...,
         body: Union[_NotSetType, str] = ...,
         event: Union[_NotSetType, str] = ...,
-        comments: Union[_NotSetType, str] = ...
+        comments: Union[_NotSetType, str] = ...,
     ) -> PullRequestReview: ...
     def create_review_comment(
-        self,
-        body: str,
-        commit_id: Commit,
-        path: str,
-        position: int
+        self, body: str, commit_id: Commit, path: str, position: int
     ) -> PullRequestComment: ...
-    def create_review_request(self, reviewers: Union[_NotSetType, str] = ..., team_reviewers: Union[_NotSetType, str] = ...) -> None: ...
+    def create_review_request(
+        self,
+        reviewers: Union[_NotSetType, str] = ...,
+        team_reviewers: Union[_NotSetType, str] = ...,
+    ) -> None: ...
     @property
     def created_at(self) -> datetime: ...
     def delete_labels(self) -> None: ...
-    def delete_review_request(self, reviewers: Union[_NotSetType, str] = ..., team_reviewers: Union[_NotSetType, str] = ...) -> None: ...
+    def delete_review_request(
+        self,
+        reviewers: Union[_NotSetType, str] = ...,
+        team_reviewers: Union[_NotSetType, str] = ...,
+    ) -> None: ...
     @property
     def deletions(self) -> int: ...
     @property
@@ -85,7 +78,7 @@ class PullRequest:
         title: Union[str, _NotSetType] = ...,
         body: Union[str, _NotSetType] = ...,
         state: Union[str, _NotSetType] = ...,
-        base: Union[_NotSetType, str] = ...
+        base: Union[_NotSetType, str] = ...,
     ) -> None: ...
     def get_comment(self, id: int) -> PullRequestComment: ...
     def get_comments(self) -> PaginatedList: ...
@@ -98,8 +91,7 @@ class PullRequest:
     def get_review(self, id: int) -> PullRequestReview: ...
     def get_review_comment(self, id: int) -> PullRequestComment: ...
     def get_review_comments(
-        self,
-        since: Union[_NotSetType, datetime] = ...
+        self, since: Union[_NotSetType, datetime] = ...
     ) -> PaginatedList: ...
     def get_single_review_comments(self, id: int) -> PaginatedList: ...
     def get_review_requests(self) -> Tuple[PaginatedList, PaginatedList]: ...
@@ -120,7 +112,7 @@ class PullRequest:
         commit_message: Union[str, _NotSetType] = ...,
         commit_title: Union[str, _NotSetType] = ...,
         merge_method: Union[str, _NotSetType] = ...,
-        sha: Union[str, _NotSetType] = ...
+        sha: Union[str, _NotSetType] = ...,
     ) -> PullRequestMergeStatus: ...
     @property
     def merge_commit_sha(self) -> str: ...

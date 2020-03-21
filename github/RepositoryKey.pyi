@@ -1,9 +1,5 @@
 from datetime import datetime
-from typing import (
-    Any,
-    Dict,
-)
-
+from typing import Any, Dict
 
 class RepositoryKey:
     def __repr__(self) -> str: ...

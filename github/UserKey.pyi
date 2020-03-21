@@ -1,8 +1,4 @@
-from typing import (
-    Any,
-    Dict,
-)
-
+from typing import Any, Dict
 
 class UserKey:
     def __repr__(self) -> str: ...

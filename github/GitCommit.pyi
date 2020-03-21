@@ -1,11 +1,7 @@
+from typing import Any, Dict, List
+
 from github.GitAuthor import GitAuthor
 from github.GitTree import GitTree
-from typing import (
-    Any,
-    Dict,
-    List,
-)
-
 
 class GitCommit:
     def __repr__(self) -> str: ...

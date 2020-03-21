@@ -1,17 +1,9 @@
-from datetime import (
-    date,
-    datetime,
-)
+from datetime import date, datetime
+from typing import Any, Dict, Optional, Union
+
 from github.GithubObject import _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
-from typing import (
-    Any,
-    Dict,
-    Optional,
-    Union,
-)
-
 
 class Milestone:
     def __repr__(self) -> str: ...
@@ -22,7 +14,8 @@ class Milestone:
     @property
     def closed_issues(self) -> int: ...
     @property
-    def created_at(self): datetime: ...
+    def created_at(self):
+        datetime: ...
     @property
     def creator(self) -> NamedUser: ...
     def delete(self) -> None: ...
@@ -35,7 +28,7 @@ class Milestone:
         title: str,
         state: Union[_NotSetType, str] = ...,
         description: Union[_NotSetType, str] = ...,
-        due_on: Union[date, _NotSetType] = ...
+        due_on: Union[date, _NotSetType] = ...,
     ) -> None: ...
     def get_labels(self) -> PaginatedList: ...
     @property

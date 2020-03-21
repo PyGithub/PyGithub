@@ -1,11 +1,7 @@
+from typing import Any, Dict, Union
+
 from github.GitAuthor import GitAuthor
 from github.GitObject import GitObject
-from typing import (
-    Any,
-    Dict,
-    Union,
-)
-
 
 class GitTag:
     def __repr__(self) -> str: ...

@@ -41,7 +41,7 @@ import logging
 
 from github.MainClass import Github, GithubIntegration
 
-from .GithubException import (
+from .GithubException import (  # type: ignore
     BadAttributeException,
     BadCredentialsException,
     BadUserAgentException,
@@ -49,7 +49,7 @@ from .GithubException import (
     RateLimitExceededException,
     TwoFactorException,
     UnknownObjectException,
-)  # type: ignore
+)
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement

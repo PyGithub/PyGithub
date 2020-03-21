@@ -1,12 +1,9 @@
 from datetime import datetime
-from github.Organization import Organization
-from github.NamedUser import NamedUser
-from github.Repository import Repository
-from typing import (
-    Any,
-    Dict,
-)
+from typing import Any, Dict
 
+from github.NamedUser import NamedUser
+from github.Organization import Organization
+from github.Repository import Repository
 
 class Event:
     def __repr__(self) -> str: ...

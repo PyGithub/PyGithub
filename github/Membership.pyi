@@ -1,10 +1,7 @@
+from typing import Any, Dict
+
 from github.NamedUser import NamedUser
 from github.Organization import Organization
-from typing import (
-    Any,
-    Dict,
-)
-
 
 class Membership:
     def __repr__(self) -> str: ...

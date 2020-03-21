@@ -1,6 +1,6 @@
-from github.Rate import Rate
 from typing import Any, Dict
 
+from github.Rate import Rate
 
 class RateLimit:
     def __repr__(self) -> str: ...

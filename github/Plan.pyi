@@ -1,9 +1,4 @@
-from typing import (
-    Any,
-    Dict,
-    Union,
-)
-
+from typing import Any, Dict, Union
 
 class Plan:
     def __repr__(self) -> str: ...
