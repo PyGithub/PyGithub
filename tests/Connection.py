@@ -28,7 +28,6 @@ from io import StringIO
 from unittest.mock import Mock
 
 import httpretty
-
 import pytest
 
 from . import Framework
