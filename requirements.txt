@@ -3,3 +3,4 @@ pyjwt
 sphinx
 sphinx-rtd-theme<0.5
 Deprecated
+mypy==0.770

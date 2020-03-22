@@ -43,7 +43,7 @@
 
 import textwrap
 
-import setuptools
+import setuptools  # type: ignore
 
 version = "1.47"
 

@@ -27,9 +27,9 @@ import itertools
 from io import StringIO
 from unittest.mock import Mock
 
-import httpretty
+import httpretty  # type: ignore
 
-import pytest
+import pytest  # type: ignore
 
 from . import Framework
 
