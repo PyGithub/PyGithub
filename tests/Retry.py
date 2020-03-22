@@ -27,8 +27,8 @@
 ################################################################################
 
 import requests
-import urllib3
-from httpretty import httpretty
+import urllib3  # type: ignore
+from httpretty import httpretty  # type: ignore
 
 import github
 
