@@ -126,6 +126,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param note: string
         :param content_id: integer
         :param content_type: string
+        :rtype :class:`github.ProjectCard.ProjectCard`:
         """
         post_parameters = {}
         if isinstance(note, str):

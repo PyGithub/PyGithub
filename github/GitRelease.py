@@ -188,6 +188,12 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     ):
         """
         :calls: `PATCH /repos/:owner/:repo/releases/:release_id <https://developer.github.com/v3/repos/releases/#edit-a-release>`_
+        :param name: string
+        :param message: string
+        :param draft: bool
+        :param prerelease: bool
+        :param tag_name: string
+        :param target_commitish: string
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert tag_name is github.GithubObject.NotSet or isinstance(
@@ -229,6 +235,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     ):
         """
         :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
+        :param path: string
+        :param label: string
+        :param content_type: string
+        :param name: string
         :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(path, str), path

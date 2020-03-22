@@ -964,6 +964,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
         :meth:`Repository.create_git_release`.
+        :param tag: string
+        :param tag_message: string
+        :param release_name: string
+        :param release_message: string
+        :param object: string
+        :param type: string
+        :param tagger: :class:github.InputGitAuthor.InputGitAuthor
+        :param draft: bool
+        :param prerelease: bool
+        :rtype: :class:`github.GitRelease.GitRelease`
         """
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(
@@ -2992,7 +3002,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param state: "open" or "closed"
         :param keyword: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        :rtype: List of :class:`github.Issue.Issue`
         """
         assert state in ["open", "closed"], state
         assert isinstance(keyword, str), keyword

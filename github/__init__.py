@@ -41,7 +41,7 @@ import logging
 
 from github.MainClass import Github, GithubIntegration
 
-from .GithubException import (
+from .GithubException import (  # type: ignore
     BadAttributeException,
     BadCredentialsException,
     BadUserAgentException,
