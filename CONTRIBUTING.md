@@ -29,7 +29,7 @@ PyGithub adopts the black coding style and uses isort to sort imports.
 
 To manually format the code:
 ```
-tox -e format
+tox -e lint
 ```
 
 ## Pre-commit plugin
@@ -106,7 +106,7 @@ You may also want to investigate `tox` to run tests:
 
 ```
 pip install tox
-tox -epy36,flake8,black,isort
+tox -epy36
 ```
 
 ## Build documentation locally
