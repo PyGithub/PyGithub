@@ -22,8 +22,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import absolute_import
-
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource

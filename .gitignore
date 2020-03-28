@@ -46,3 +46,4 @@
 .vscode*
 .venv
 .tox/
+.mypy_cache/
