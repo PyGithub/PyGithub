@@ -150,7 +150,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         ), column
         post_parameters = {
             "position": position,
-            "column": column.id
+            "column_id": column.id
             if isinstance(column, github.ProjectColumn.ProjectColumn)
             else column,
         }
