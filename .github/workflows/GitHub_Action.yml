@@ -1,10 +1,10 @@
-name: lint_python
+name: GitHub_Action
 on:
   pull_request:
   push:
   #  branches: [master]
 jobs:
-  lint_python:
+  GitHub_Action:
     runs-on: ubuntu-latest
     strategy:
       matrix:
