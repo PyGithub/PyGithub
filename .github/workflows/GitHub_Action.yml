@@ -20,6 +20,6 @@ jobs:
       - run: codespell --quiet-level=2 || true  # --ignore-words-list="" --skip=""
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: isort --recursive .
-      - run: pip install -r requirements.txt
+      - run: pip install httpretty -r requirements.txt
       - run: mypy --ignore-missing-imports .
-      - run: pytest . || true
+      - run: pytest .
