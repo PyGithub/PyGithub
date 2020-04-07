@@ -17,7 +17,7 @@ jobs:
         run: |
           pip install black
           black --check .
-      - run: codespell --ignore-words-list="bloaded,nto,pullrequests,thi,tim,wan" --quiet-level=2 --skip="./tests/*" || true
+      - run: codespell --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan" --quiet-level=2 --skip="./tests/*" || true
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: isort --recursive .
       - run: pip install httpretty -r requirements.txt
