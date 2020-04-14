@@ -351,6 +351,21 @@ class Github(object):
         )
         return github.Project.Project(self.__requester, headers, data, completed=True)
 
+    def get_project_column(self, id):
+        """
+        :calls: `GET /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#get-a-project-column>`_
+        :rtype: :class:`github.ProjectColumn.ProjectColumn`
+        :param id: integer
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/projects/columns/%d" % id,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return github.ProjectColumn.ProjectColumn(
+            self.__requester, headers, data, completed=True
+        )
+
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_
