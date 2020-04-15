@@ -1,0 +1,16 @@
+name: check
+on:
+  pull_request:
+  push:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - run: pip install tox -r requirements.txt -r test-requirements.txt
+      - run: tox -elint
+      - run: pytest --cov=github
