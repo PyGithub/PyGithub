@@ -215,8 +215,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
-        # Do not set target_commitish to self.target_commitish when ommited, just don't send it
-        # alltogether in that case, in order to match the Github API behaviour. Only send it when set.
+        # Do not set target_commitish to self.target_commitish when omitted, just don't send it
+        # altogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not github.GithubObject.NotSet:
             post_parameters["target_commitish"] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(

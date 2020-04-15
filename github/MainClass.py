@@ -706,7 +706,7 @@ class Github(object):
     def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
-        and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
+        and optionally headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
@@ -718,7 +718,7 @@ class Github(object):
     def dump(self, obj, file, protocol=0):
         """
         Dumps (pickles) a PyGithub object to a file-like object.
-        Some effort is made to not pickle sensitive informations like the Github credentials used in the :class:`Github` instance.
+        Some effort is made to not pickle sensitive information like the Github credentials used in the :class:`Github` instance.
         But NO EFFORT is made to remove sensitive information from the object's attributes.
 
         :param obj: the object to pickle

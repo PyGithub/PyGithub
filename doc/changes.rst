@@ -555,7 +555,7 @@ Version 1.27.1 (August 12, 2016)
 * fix python3 compatibility issue for using json/base64 (5b7f0bb)
 * remove not covered API from readme (9c6f881)
 * change replay data for update file test case (46895df)
-* fix python3 compatability error in test case (00777db)
+* fix python3 compatibility error in test case (00777db)
 * Add repo content create/update/delete testcase (4aaeb9e)
 * add MAINTAINERS file (a16b55b)
 * travis: disable email (6347157)
@@ -649,7 +649,7 @@ Version 1.25.1 (September 28th, 2014)
 * `Implement <https://github.com/jacquev6/PyGithub/issues/196>`__ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`__ for asking
 * In case bad data is returned by Github API v3, `raise <https://github.com/jacquev6/PyGithub/issues/195>`__ an exception only when the user accesses the faulty attribute, not when constructing the object containing this attribute. Thank you `klmitch <https://github.com/klmitch>`__ for asking
 * `Fix <https://github.com/jacquev6/PyGithub/issues/199>`__ parameter public/private of ``Repository.edit``. Thank you `daireobroin449 <https://github.com/daireobroin449>`__ for reporting the issue
-* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corrensponding APIs are not documented anymore
+* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corresponding APIs are not documented anymore
 
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`__ (September 8th, 2013) (AKFish's edition)
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -759,7 +759,7 @@ Version 1.12.1 (February 20th, 2013)
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`__ (December 25th, 2012) (Christmas 2012 edition)
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-* Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`__ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
+* Major improvement: support Python 3! PyGithub is automatically tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`__ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
 * Add a shortcut function :meth:`github.MainClass.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`__ for the contribution
 * :meth:`github.MainClass.Github.get_gitignore_templates` and :meth:`github.MainClass.Github.get_gitignore_template` for APIs ``/gitignore/templates``
 * Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`__ for the contribution
