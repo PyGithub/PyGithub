@@ -1364,10 +1364,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __create_pull(self, **kwds):
         post_parameters = kwds
-        import_header = {"Accept": Consts.draftPullRequestPreview}
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/pulls", input=post_parameters, headers=import_header
+            "POST", self.url + "/pulls", input=post_parameters
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
