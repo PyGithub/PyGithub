@@ -104,7 +104,6 @@ class PaginatedList(PaginatedListBase):
     If you want to know the total number of items in the list::
 
         print(user.get_repos().totalCount)
-        print(len(user.get_repos()))
 
     You can also index them or take slices::
 
