@@ -16,3 +16,11 @@ repos:
     rev: 3.7.9
     hooks:
       - id: flake8
+  - repo: https://github.com/codespell-project/codespell
+    rev: v1.16.0
+    hooks:
+      - id: codespell
+        exclude: tests/
+        args:
+          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan"
+          - --quiet-level=2

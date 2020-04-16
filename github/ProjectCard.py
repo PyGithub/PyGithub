@@ -112,7 +112,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     # Note that the content_url for any card will be an "issue" URL, from
-    # which you can retrieve either an Issue or a PullRequest. Unforunately
+    # which you can retrieve either an Issue or a PullRequest. Unfortunately
     # the API doesn't make it clear which you are dealing with.
     def get_content(self, content_type=github.GithubObject.NotSet):
         """
