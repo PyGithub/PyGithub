@@ -1209,7 +1209,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "default_repository_permission" in attributes:  # pragma no branch
-            self._default_repository_permission = self._makeStringAttribute(attributes["default_repository_permission"])
+            self._default_repository_permission = self._makeStringAttribute(
+                attributes["default_repository_permission"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "disk_usage" in attributes:  # pragma no branch
@@ -1225,9 +1227,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "gravatar_id" in attributes:  # pragma no branch
             self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
         if "has_organization_projects" in attributes:  # pragma no branch
-            self._has_organization_projects = self._makeBoolAttribute(attributes["has_organization_projects"])
+            self._has_organization_projects = self._makeBoolAttribute(
+                attributes["has_organization_projects"]
+            )
         if "has_repository_projects" in attributes:  # pragma no branch
-            self._has_repository_projects = self._makeBoolAttribute(attributes["has_repository_projects"])
+            self._has_repository_projects = self._makeBoolAttribute(
+                attributes["has_repository_projects"]
+            )
         if "hooks_url" in attributes:  # pragma no branch
             self._hooks_url = self._makeStringAttribute(attributes["hooks_url"])
         if "html_url" in attributes:  # pragma no branch
@@ -1241,7 +1247,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         if "members_can_create_repositories" in attributes:  # pragma no branch
-            self._members_can_create_repositories = self._makeBoolAttribute(attributes["members_can_create_repositories"])
+            self._members_can_create_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_repositories"]
+            )
         if "members_url" in attributes:  # pragma no branch
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch

@@ -64,10 +64,14 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.gravatar_id, None)
         self.assertTrue(self.org.has_organization_projects)
         self.assertTrue(self.org.has_repository_projects)
-        self.assertEqual(self.org.hooks_url, "https://api.github.com/orgs/BeaverSoftware/hooks")
+        self.assertEqual(
+            self.org.hooks_url, "https://api.github.com/orgs/BeaverSoftware/hooks"
+        )
         self.assertEqual(self.org.html_url, "https://github.com/BeaverSoftware")
         self.assertEqual(self.org.id, 1)
-        self.assertEqual(self.org.issues_url, "https://api.github.com/orgs/BeaverSoftware/issues")
+        self.assertEqual(
+            self.org.issues_url, "https://api.github.com/orgs/BeaverSoftware/issues"
+        )
         self.assertEqual(self.org.location, "Paris, France")
         self.assertEqual(self.org.login, "BeaverSoftware")
         self.assertFalse(self.org.members_can_create_repositories)

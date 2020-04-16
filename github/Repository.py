@@ -3414,7 +3414,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 attributes["delete_branch_on_merge"]
             )
         if "deployments_url" in attributes:  # pragma no branch
-            self._deployments_url = self._makeStringAttribute(attributes["deployments_url"])
+            self._deployments_url = self._makeStringAttribute(
+                attributes["deployments_url"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "downloads_url" in attributes:  # pragma no branch
