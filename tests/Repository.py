@@ -1632,6 +1632,16 @@ class Repository(Framework.TestCase):
         repo = self.g.get_repo("protoncoin/protoncoin")
         self.assertEqual(repo.full_name, "padima2/protoncoin")
 
+    def testGetMatchingRefs(self):
+        refs = self.g.get_repo("FlorentClarret/PyGithub").get_git_matching_refs("tags")
+        self.assertEqual(85, refs.totalCount)
+        self.assertEqual("refs/tags/v0.1", refs[0].ref)
+        self.assertEqual("refs/tags/v0.2", refs[1].ref)
+        self.assertEqual("refs/tags/v0.3", refs[2].ref)
+        self.assertEqual("refs/tags/v0.4", refs[3].ref)
+        self.assertEqual("refs/tags/v0.5", refs[4].ref)
+        self.assertEqual("refs/tags/v0.6", refs[5].ref)
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):

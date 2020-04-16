@@ -2260,6 +2260,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.GitRef.GitRef, self._requester, self.url + "/git/refs", None
         )
 
+    def get_git_matching_refs(self, ref):
+        """
+        :calls: `GET /repos/:owner/:repo/git/matching-refs/:ref <https://developer.github.com/v3/git/refs/#list-matching-references>`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRef.GitRef`
+        """
+        assert isinstance(ref, str), ref
+        return github.PaginatedList.PaginatedList(
+            github.GitRef.GitRef,
+            self._requester,
+            self.url + "/git/matching-refs/" + ref,
+            None,
+        )
+
     def get_git_tag(self, sha):
         """
         :calls: `GET /repos/:owner/:repo/git/tags/:sha <http://developer.github.com/v3/git/tags>`_
