@@ -227,21 +227,26 @@ class Organization(Framework.TestCase):
         self.assertFalse(self.org.has_in_members(lyloa))
 
     def testGetRepos(self):
+        repos = self.org.get_repos()
         self.assertListKeyEqual(
-            self.org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+            repos, lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
         )
+        self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, False])
+        self.assertListKeyEqual(repos, lambda r: r.has_wiki, [True, True])
 
     def testGetReposSorted(self):
+        repos = self.org.get_repos(sort="updated", direction="desc")
         self.assertListKeyEqual(
-            self.org.get_repos(sort="updated", direction="desc"),
-            lambda r: r.name,
-            ["TestPyGithub", "FatherBeaver"],
+            repos, lambda r: r.name, ["TestPyGithub", "FatherBeaver"],
+        )
+        self.assertListKeyEqual(
+            repos, lambda r: r.has_pages, [False, True],
         )
 
     def testGetReposWithType(self):
-        self.assertListKeyEqual(
-            self.org.get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"]
-        )
+        repos = self.org.get_repos("public")
+        self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "PyGithub"])
+        self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
     def testGetEvents(self):
         self.assertListKeyEqual(
@@ -302,6 +307,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
         )
+        self.assertTrue(repo.has_wiki)
+        self.assertTrue(repo.has_pages)
 
     def testCreateRepoWithAllArguments(self):
         team = self.org.get_team(141496)
@@ -323,6 +330,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
         )
+        self.assertFalse(repo.has_wiki)
+        self.assertFalse(repo.has_pages)
 
     def testCreateRepositoryWithAutoInit(self):
         repo = self.org.create_repo(
@@ -331,6 +340,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
         )
+        self.assertTrue(repo.has_pages)
+        self.assertTrue(repo.has_wiki)
 
     def testCreateFork(self):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
@@ -338,6 +349,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub"
         )
+        self.assertFalse(repo.has_wiki)
+        self.assertFalse(repo.has_pages)
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
