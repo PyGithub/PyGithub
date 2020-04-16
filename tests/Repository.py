@@ -76,6 +76,11 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.git_url, "git://github.com/jacquev6/PyGithub.git")
         self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.has_issues)
+        self.assertEqual(self.repo.deployments_url, "https://api.github.com/repos/jacquev6/PyGithub/deployments")
+        self.assertFalse(self.repo.has_pages)
+        self.assertEqual(self.repo.releases_url, "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}")
+
+        self.assertFalse(self.repo.has_pages)
         self.assertFalse(self.repo.has_wiki)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")

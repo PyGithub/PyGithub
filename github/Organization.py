@@ -112,6 +112,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def default_repository_permission(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._default_repository_permission)
+        return self._default_repository_permission.value
+
+    @property
     def description(self):
         """
         :type: string
@@ -168,6 +176,30 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._gravatar_id.value
 
     @property
+    def has_organization_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_organization_projects)
+        return self._has_organization_projects.value
+
+    @property
+    def has_repository_projects(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_repository_projects)
+        return self._has_repository_projects.value
+
+    @property
+    def hooks_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._hooks_url)
+        return self._hooks_url.value
+
+    @property
     def html_url(self):
         """
         :type: string
@@ -184,6 +216,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def issues_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._issues_url)
+        return self._issues_url.value
+
+    @property
     def location(self):
         """
         :type: string
@@ -198,6 +238,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._login)
         return self._login.value
+
+    @property
+    def members_can_create_repositories(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._members_can_create_repositories)
+        return self._members_can_create_repositories.value
 
     @property
     def members_url(self):
@@ -1109,6 +1157,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
+        self._default_repository_permission = github.GithubObject.NotSet
+        self._has_organization_projects = github.GithubObject.NotSet
+        self._has_repository_projects = github.GithubObject.NotSet
+        self._hooks_url = github.GithubObject.NotSet
+        self._issues_url = github.GithubObject.NotSet
+        self._members_can_create_repositories = github.GithubObject.NotSet
         self._two_factor_requirement_enabled = github.GithubObject.NotSet
         self._avatar_url = github.GithubObject.NotSet
         self._billing_email = github.GithubObject.NotSet
@@ -1154,6 +1208,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._company = self._makeStringAttribute(attributes["company"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "default_repository_permission" in attributes:  # pragma no branch
+            self._default_repository_permission = self._makeStringAttribute(attributes["default_repository_permission"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "disk_usage" in attributes:  # pragma no branch
@@ -1168,14 +1224,24 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._following = self._makeIntAttribute(attributes["following"])
         if "gravatar_id" in attributes:  # pragma no branch
             self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
+        if "has_organization_projects" in attributes:  # pragma no branch
+            self._has_organization_projects = self._makeBoolAttribute(attributes["has_organization_projects"])
+        if "has_repository_projects" in attributes:  # pragma no branch
+            self._has_repository_projects = self._makeBoolAttribute(attributes["has_repository_projects"])
+        if "hooks_url" in attributes:  # pragma no branch
+            self._hooks_url = self._makeStringAttribute(attributes["hooks_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "issues_url" in attributes:  # pragma no branch
+            self._issues_url = self._makeStringAttribute(attributes["issues_url"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        if "members_can_create_repositories" in attributes:  # pragma no branch
+            self._members_can_create_repositories = self._makeBoolAttribute(attributes["members_can_create_repositories"])
         if "members_url" in attributes:  # pragma no branch
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
