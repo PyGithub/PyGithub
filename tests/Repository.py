@@ -418,6 +418,12 @@ class Repository(Framework.TestCase):
             source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test"
         )
 
+    def testCreateRepositoryDispatch(self):
+        with_payload = self.repo.create_repository_dispatch("type", {"foo": "bar"})
+        self.assertTrue(with_payload)
+        without_payload = self.repo.create_repository_dispatch("type")
+        self.assertTrue(without_payload)
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
