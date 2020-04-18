@@ -1307,9 +1307,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /user/memberships/orgs/:org <https://developer.github.com/v3/orgs/members/#get-your-organization-membership>`_
         :rtype: :class:`github.Membership.Membership`
         """
-        assert isinstance(org, int)
+        assert isinstance(org, str)
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", "/user/memberships/orgs/" + str(org)
+            "GET", "/user/memberships/orgs/" + org
         )
         return github.Membership.Membership(
             self._requester, headers, data, completed=True
