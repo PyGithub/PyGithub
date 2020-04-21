@@ -292,6 +292,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._delete_branch_on_merge.value
 
     @property
+    def deployments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._deployments_url)
+        return self._deployments_url.value
+
+    @property
     def description(self):
         """
         :type: string
@@ -402,6 +410,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_issues)
         return self._has_issues.value
+
+    @property
+    def has_pages(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_pages)
+        return self._has_pages.value
 
     @property
     def has_projects(self):
@@ -634,6 +650,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._pushed_at)
         return self._pushed_at.value
+
+    @property
+    def releases_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._releases_url)
+        return self._releases_url.value
 
     @property
     def size(self):
@@ -3273,6 +3297,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._default_branch = github.GithubObject.NotSet
         self._delete_branch_on_merge = github.GithubObject.NotSet
+        self._deployments_url = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._downloads_url = github.GithubObject.NotSet
         self._events_url = github.GithubObject.NotSet
@@ -3287,6 +3312,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._git_url = github.GithubObject.NotSet
         self._has_downloads = github.GithubObject.NotSet
         self._has_issues = github.GithubObject.NotSet
+        self._has_pages = github.GithubObject.NotSet
         self._has_projects = github.GithubObject.NotSet
         self._has_wiki = github.GithubObject.NotSet
         self._homepage = github.GithubObject.NotSet
@@ -3316,6 +3342,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._private = github.GithubObject.NotSet
         self._pulls_url = github.GithubObject.NotSet
         self._pushed_at = github.GithubObject.NotSet
+        self._releases_url = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
@@ -3386,6 +3413,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._delete_branch_on_merge = self._makeBoolAttribute(
                 attributes["delete_branch_on_merge"]
             )
+        if "deployments_url" in attributes:  # pragma no branch
+            self._deployments_url = self._makeStringAttribute(
+                attributes["deployments_url"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "downloads_url" in attributes:  # pragma no branch
@@ -3416,6 +3447,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
         if "has_issues" in attributes:  # pragma no branch
             self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
+        if "has_pages" in attributes:  # pragma no branch
+            self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
         if "has_wiki" in attributes:  # pragma no branch
@@ -3490,6 +3523,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
+        if "releases_url" in attributes:  # pragma no branch
+            self._releases_url = self._makeStringAttribute(attributes["releases_url"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
