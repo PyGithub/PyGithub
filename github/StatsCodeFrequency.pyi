@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import List
 
-class StatsCodeFrequency:
+from github.GithubObject import NonCompletableGithubObject
+
+class StatsCodeFrequency(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: List[int]) -> None: ...
     @property

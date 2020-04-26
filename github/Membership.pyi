@@ -1,9 +1,10 @@
 from typing import Any, Dict
 
+from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Organization import Organization
 
-class Membership:
+class Membership(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from github.Commit import Commit
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.Label import Label
@@ -14,7 +14,7 @@ from github.PullRequestMergeStatus import PullRequestMergeStatus
 from github.PullRequestPart import PullRequestPart
 from github.PullRequestReview import PullRequestReview
 
-class PullRequest:
+class PullRequest(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     def add_to_labels(self, *labels: Union[Label, str]) -> None: ...

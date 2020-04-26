@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict, List
 
-class StatsCommitActivity:
+from github.GithubObject import NonCompletableGithubObject
+
+class StatsCommitActivity(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property

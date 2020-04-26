@@ -8,22 +8,6 @@ from github.Organization import Organization
 from github.PullRequestReview import PullRequestReview
 from github.Requester import Requester
 
-class CompletableGithubObject:
-    def __eq__(self, other: Any) -> bool: ...
-    def __init__(
-        self,
-        requester: Requester,
-        headers: Dict[str, Union[str, int]],
-        attributes: Dict[str, Any],
-        completed: bool,
-    ) -> None: ...
-    def __ne__(self, other: Any) -> bool: ...
-    def _completeIfNeeded(self) -> None: ...
-    def _completeIfNotSet(
-        self, value: Union[_ValuedAttribute, _BadAttribute, _NotSetType]
-    ) -> None: ...
-    def update(self) -> bool: ...
-
 class GithubObject:
     def __init__(
         self,
@@ -107,8 +91,24 @@ class GithubObject:
     @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None: ...
 
-class NonCompletableGithubObject:
+class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self) -> None: ...
+
+class CompletableGithubObject(GithubObject):
+    def __eq__(self, other: Any) -> bool: ...
+    def __init__(
+        self,
+        requester: Requester,
+        headers: Dict[str, Union[str, int]],
+        attributes: Dict[str, Any],
+        completed: bool,
+    ) -> None: ...
+    def __ne__(self, other: Any) -> bool: ...
+    def _completeIfNeeded(self) -> None: ...
+    def _completeIfNotSet(
+        self, value: Union[_ValuedAttribute, _BadAttribute, _NotSetType]
+    ) -> None: ...
+    def update(self) -> bool: ...
 
 class _BadAttribute:
     def __init__(

@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict
 
-class RepositoryKey:
+from github.GithubObject import CompletableGithubObject
+
+class RepositoryKey(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

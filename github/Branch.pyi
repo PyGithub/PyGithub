@@ -2,12 +2,12 @@ from typing import Any, Dict, List, Union
 
 from github.BranchProtection import BranchProtection
 from github.Commit import Commit
-from github.GithubObject import _NotSetType
+from github.GithubObject import NonCompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
 from github.RequiredStatusChecks import RequiredStatusChecks
 
-class Branch:
+class Branch(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

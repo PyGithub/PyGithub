@@ -11,7 +11,7 @@ from github.ContentFile import ContentFile
 from github.Download import Download
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitRef import GitRef
 from github.GitRelease import GitRelease
 from github.GitReleaseAsset import GitReleaseAsset
@@ -41,7 +41,7 @@ from github.StatsParticipation import StatsParticipation
 from github.StatsPunchCard import StatsPunchCard
 from github.View import View
 
-class Repository:
+class Repository(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _hub(
         self, mode: str, event: str, callback: str, secret: Union[str, _NotSetType]

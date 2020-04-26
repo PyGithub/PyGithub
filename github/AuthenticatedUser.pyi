@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from github.Authorization import Authorization
 from github.Gist import Gist
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.InputFileContent import InputFileContent
 from github.Invitation import Invitation
 from github.Label import Label
@@ -17,7 +17,7 @@ from github.Plan import Plan
 from github.Repository import Repository
 from github.UserKey import UserKey
 
-class AuthenticatedUser:
+class AuthenticatedUser(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

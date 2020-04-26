@@ -1,6 +1,8 @@
 from typing import Any, Dict, Optional
 
-class SourceImport:
+from github.GithubObject import CompletableGithubObject
+
+class SourceImport(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

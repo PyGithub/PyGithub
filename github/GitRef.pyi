@@ -1,9 +1,9 @@
 from typing import Any, Dict, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitObject import GitObject
 
-class GitRef:
+class GitRef(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Hook import Hook
 from github.Label import Label
 from github.Migration import Migration
@@ -11,7 +11,7 @@ from github.Plan import Plan
 from github.Repository import Repository
 from github.Team import Team
 
-class Organization:
+class Organization(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 
-class License:
+from github.GithubObject import CompletableGithubObject
+
+class License(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

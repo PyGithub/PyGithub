@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Dict
 
-class GitAuthor:
+from github.GithubObject import NonCompletableGithubObject
+
+class GitAuthor(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, str]) -> None: ...

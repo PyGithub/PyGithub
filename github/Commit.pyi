@@ -6,11 +6,11 @@ from github.CommitStats import CommitStats
 from github.CommitStatus import CommitStatus
 from github.File import File
 from github.GitCommit import GitCommit
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
-class Commit:
+class Commit(CompletableGithubObject):
     def __repr__(self) -> str: ...
     @property
     def _identity(self) -> str: ...

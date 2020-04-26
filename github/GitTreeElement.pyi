@@ -1,6 +1,8 @@
 from typing import Any, Dict, Optional
 
-class GitTreeElement:
+from github.GithubObject import NonCompletableGithubObject
+
+class GitTreeElement(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

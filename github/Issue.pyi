@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.IssueComment import IssueComment
 from github.IssuePullRequest import IssuePullRequest
 from github.Label import Label
@@ -12,7 +12,7 @@ from github.PullRequest import PullRequest
 from github.Reaction import Reaction
 from github.Repository import Repository
 
-class Issue:
+class Issue(CompletableGithubObject):
     def __repr__(self) -> str: ...
     @property
     def _identity(self) -> int: ...

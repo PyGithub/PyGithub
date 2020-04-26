@@ -1,11 +1,11 @@
 from datetime import date, datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
-class Milestone:
+class Milestone(CompletableGithubObject):
     def __repr__(self) -> str: ...
     @property
     def _identity(self) -> int: ...

@@ -1,6 +1,8 @@
 from typing import Any, Dict
 
-class IssuePullRequest:
+from github.GithubObject import NonCompletableGithubObject
+
+class IssuePullRequest(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property

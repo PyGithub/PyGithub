@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Membership import Membership
 from github.PaginatedList import PaginatedList
 from github.Permissions import Permissions
 from github.Plan import Plan
 from github.Repository import Repository
 
-class NamedUser:
+class NamedUser(CompletableGithubObject):
     def __eq__(self, other: Any) -> bool: ...
     def __hash__(self) -> int: ...
     def __repr__(self) -> str: ...

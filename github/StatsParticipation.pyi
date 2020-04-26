@@ -1,6 +1,8 @@
 from typing import Dict, List
 
-class StatsParticipation:
+from github.GithubObject import NonCompletableGithubObject
+
+class StatsParticipation(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, List[int]]) -> None: ...
     @property

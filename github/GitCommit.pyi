@@ -1,9 +1,10 @@
 from typing import Any, Dict, List
 
 from github.GitAuthor import GitAuthor
+from github.GithubObject import CompletableGithubObject
 from github.GitTree import GitTree
 
-class GitCommit:
+class GitCommit(CompletableGithubObject):
     def __repr__(self) -> str: ...
     @property
     def _identity(self) -> str: ...

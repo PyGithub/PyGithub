@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from github.GithubObject import CompletableGithubObject
 from github.Issue import Issue
 from github.NotificationSubject import NotificationSubject
 from github.PullRequest import PullRequest
 from github.Repository import Repository
 
-class Notification:
+class Notification(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property

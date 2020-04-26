@@ -1,6 +1,8 @@
 from typing import Dict
 
-class GitObject:
+from github.GithubObject import NonCompletableGithubObject
+
+class GitObject(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, str]) -> None: ...
     @property

@@ -4,12 +4,12 @@ from typing import Any, Dict, List, Optional, Union
 from github.GistComment import GistComment
 from github.GistFile import GistFile
 from github.GistHistoryState import GistHistoryState
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.InputFileContent import InputFileContent
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
-class Gist:
+class Gist(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

@@ -1,10 +1,11 @@
 from typing import Any, Dict
 
+from github.GithubObject import CompletableGithubObject
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
 from github.RequiredStatusChecks import RequiredStatusChecks
 
-class BranchProtection:
+class BranchProtection(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

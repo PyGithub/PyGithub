@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 from github.ProjectCard import ProjectCard
 
-class ProjectColumn:
+class ProjectColumn(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

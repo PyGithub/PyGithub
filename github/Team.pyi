@@ -1,12 +1,12 @@
 from typing import Any, Dict, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
 from github.Organization import Organization
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
-class Team:
+class Team(CompletableGithubObject):
     def __repr__(self) -> str: ...
     @property
     def _identity(self) -> int: ...

@@ -1,6 +1,8 @@
 from typing import Any, Dict
 
-class Permissions:
+from github.GithubObject import NonCompletableGithubObject
+
+class Permissions(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

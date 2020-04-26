@@ -1,9 +1,9 @@
 from typing import Any, Dict
 
-from github.GithubObject import _ValuedAttribute
+from github.GithubObject import _ValuedAttribute, NonCompletableGithubObject
 from github.PaginatedList import PaginatedList
 
-class Installation:
+class Installation(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
