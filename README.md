@@ -1,7 +1,7 @@
 # PyGitHub
 
 [![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
-[![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
+![check](https://github.com/PyGithub/PyGithub/workflows/check/badge.svg)
 [![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://pygithub.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
 [![Slack](https://img.shields.io/badge/Slack%20channel-%20%20-blue.svg)](https://join.slack.com/t/pygithub-project/shared_invite/zt-duj89xtx-uKFZtgAg209o6Vweqm8xeQ)
