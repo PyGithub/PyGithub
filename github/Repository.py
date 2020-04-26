@@ -1397,6 +1397,27 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_repository_dispatch(
+        self, event_type, client_payload=github.GithubObject.NotSet
+    ):
+        """
+        :calls: POST /repos/:owner/:repo/dispatches <https://developer.github.com/v3/repos/#create-a-repository-dispatch-event>
+        :param event_type: string
+        :param client_payload: dict
+        :rtype: bool
+        """
+        assert isinstance(event_type, str), event_type
+        assert client_payload is github.GithubObject.NotSet or isinstance(
+            client_payload, dict
+        ), client_payload
+        post_parameters = {"event_type": event_type}
+        if client_payload is not github.GithubObject.NotSet:
+            post_parameters["client_payload"] = client_payload
+        status, headers, data = self._requester.requestJson(
+            "POST", self.url + "/dispatches", input=post_parameters
+        )
+        return status == 204
+
     def create_source_import(
         self,
         vcs,
