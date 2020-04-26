@@ -513,3 +513,10 @@ class Github(Framework.TestCase):
             self.g.get_license("mit").description,
             "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
         )
+
+    def testGetEvents(self):
+        self.assertListKeyBegin(
+            self.g.get_events(),
+            lambda e: e.type,
+            ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
+        )

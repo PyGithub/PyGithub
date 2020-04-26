@@ -56,6 +56,7 @@ import jwt
 import requests
 import urllib3
 
+import github.Event
 import github.Gist
 import github.GithubObject
 import github.License
@@ -234,6 +235,16 @@ class Github(object):
 
         return github.PaginatedList.PaginatedList(
             github.License.License, self.__requester, "/licenses", url_parameters
+        )
+
+    def get_events(self):
+        """
+        :calls: `GET /events <https://developer.github.com/v3/activity/events/#list-public-events>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Event.Event, self.__requester, "/events", None
         )
 
     def get_user(self, login=github.GithubObject.NotSet):
