@@ -10,9 +10,13 @@ jobs:
         python-version: [3.5, 3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
         with:
           python-version: "${{ matrix.python-version }}"
-      - run: pip install tox -r requirements.txt -r test-requirements.txt
-      - run: tox -elint
-      - run: pytest --cov=github
+      - name: "Install dependencies"
+        run: |
+          pip install --upgrade pip
+          pip install tox tox-gh-actions
+      - name: Test with tox
+        run: tox
