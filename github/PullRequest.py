@@ -365,6 +365,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    @property
+    def maintainer_can_modify(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._maintainer_can_modify)
+        return self._maintainer_can_modify.value
+
     def as_issue(self):
         """
         :calls: `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
@@ -542,6 +550,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         body=github.GithubObject.NotSet,
         state=github.GithubObject.NotSet,
         base=github.GithubObject.NotSet,
+        maintainer_can_modify=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
@@ -549,12 +558,16 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param body: string
         :param state: string
         :param base: string
+        :param maintainer_can_modify: bool
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, str), title
         assert body is github.GithubObject.NotSet or isinstance(body, str), body
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert base is github.GithubObject.NotSet or isinstance(base, str), base
+        assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(
+            maintainer_can_modify, bool
+        ), maintainer_can_modify
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -564,6 +577,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["state"] = state
         if base is not github.GithubObject.NotSet:
             post_parameters["base"] = base
+        if maintainer_can_modify is not github.GithubObject.NotSet:
+            post_parameters["maintainer_can_modify"] = maintainer_can_modify
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
@@ -943,6 +958,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._issue_url = github.GithubObject.NotSet
         self._labels = github.GithubObject.NotSet
+        self._maintainer_can_modify = github.GithubObject.NotSet
         self._merge_commit_sha = github.GithubObject.NotSet
         self._mergeable = github.GithubObject.NotSet
         self._mergeable_state = github.GithubObject.NotSet
@@ -1020,6 +1036,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(
                 github.Label.Label, attributes["labels"]
+            )
+        if "maintainer_can_modify" in attributes:  # pragma no branch
+            self._maintainer_can_modify = self._makeBoolAttribute(
+                attributes["maintainer_can_modify"]
             )
         if "merge_commit_sha" in attributes:  # pragma no branch
             self._merge_commit_sha = self._makeStringAttribute(

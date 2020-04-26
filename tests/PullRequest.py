@@ -48,6 +48,9 @@ class PullRequest(Framework.TestCase):
         self.pullIssue256Conflict = marco_repo.get_pull(3)
         self.pullIssue256Uncached = marco_repo.get_pull(4)
 
+        flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
+        self.pullMaintainerCanModify = flo_repo.get_pull(2)
+
     def testAttributesIssue256(self):
         self.assertEqual(
             self.pullIssue256Closed.closed_at,
@@ -134,6 +137,7 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
         self.assertEqual(self.pull.draft, None)
+        self.assertEqual(self.pull.maintainer_can_modify, None)
 
         # test __repr__() based on this attributes
         self.assertEqual(
@@ -196,10 +200,18 @@ class PullRequest(Framework.TestCase):
         self.pull.edit()
 
     def testEditWithAllArguments(self):
-        self.pull.edit("Title edited by PyGithub", "Body edited by PyGithub", "open")
-        self.assertEqual(self.pull.title, "Title edited by PyGithub")
-        self.assertEqual(self.pull.body, "Body edited by PyGithub")
-        self.assertEqual(self.pull.state, "open")
+        self.pullMaintainerCanModify.edit(
+            "Title edited by PyGithub",
+            "Body edited by PyGithub",
+            "open",
+            "master",
+            True,
+        )
+        self.assertEqual(self.pullMaintainerCanModify.title, "Title edited by PyGithub")
+        self.assertEqual(self.pullMaintainerCanModify.body, "Body edited by PyGithub")
+        self.assertEqual(self.pullMaintainerCanModify.state, "open")
+        self.assertEqual(self.pullMaintainerCanModify.base.ref, "master")
+        self.assertTrue(self.pullMaintainerCanModify.maintainer_can_modify)
 
     def testGetCommits(self):
         self.assertListKeyEqual(
