@@ -62,7 +62,6 @@ Get all of the contents of the root directory of the repository
     ...
     ContentFile(path=".github")
     ContentFile(path=".gitignore")
-    ContentFile(path=".travis.yml")
     ContentFile(path="CONTRIBUTING.md")
     ContentFile(path="COPYING")
     ContentFile(path="COPYING.LESSER")
@@ -91,7 +90,6 @@ Get all of the contents of the repository recursively
     ...         print(file_content)
     ...
     ContentFile(path=".gitignore")
-    ContentFile(path=".travis.yml")
     ContentFile(path="CONTRIBUTING.md")
     ...
     ContentFile(path="github/tests/ReplayData/Team.testRepoPermission.txt")
