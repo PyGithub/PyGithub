@@ -36,6 +36,22 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
+__all__ = [
+    "BadAttributeException",
+    "BadCredentialsException",
+    "BadUserAgentException",
+    "enable_console_debug_logging",
+    "Github",
+    "GithubException",
+    "GithubIntegration",
+    "IncompletableObject",
+    "InputFileContent",
+    "InputGitAuthor",
+    "InputGitTreeElement",
+    "RateLimitExceededException",
+    "TwoFactorException",
+    "UnknownObjectException",
+]
 
 import logging
 
@@ -64,21 +80,3 @@ def enable_console_debug_logging():  # pragma no cover (Function useful only out
     logger = logging.getLogger("github")
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
-
-
-__all__ = [
-    BadAttributeException,
-    BadCredentialsException,
-    BadUserAgentException,
-    enable_console_debug_logging,
-    Github,
-    GithubException,
-    GithubIntegration,
-    IncompletableObject,
-    InputFileContent,
-    InputGitAuthor,
-    InputGitTreeElement,
-    RateLimitExceededException,
-    TwoFactorException,
-    UnknownObjectException,
-]
