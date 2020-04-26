@@ -1,6 +1,6 @@
 ## Upload a new version to PyPI
 
-Travis-ci will push tagged commits to PyPI. Here are the steps:
+Github workflow (`.github/workflows/python-publish`) will push tagged commits to PyPI. Here are the steps:
 
 1. Run `manage.py` 
 
@@ -9,10 +9,11 @@ Travis-ci will push tagged commits to PyPI. Here are the steps:
 Next version number? (previous: 'XXX')
 ```
 
-2. Give the new version number based on previous version (see semantic release)
+2. Give the new version number based on previous version (Use semantic versioning)
 
-3. Now the push will be on hold until you press Enter. Manually inpect the changelog (`doc/changes.rst`) to make changes if necessary. Once you are sure, go back and press Enter. 
+3. Create a new Github [release](https://github.com/PyGithub/PyGithub/releases) from the tag that'sjust committed, with the same release note from `doc/changes.rst`. This step is the hook that will trigger the workflow. (also needed for some web spiders for changelog parsing)
+ 
+4. Now the push will be on hold until you press Enter. Manually inspect the changelog (`doc/changes.rst`) to make changes if necessary. Once you are sure, go back and press Enter. 
 
-4. Once the travis job (Python 3.5) is done, the new version should be uploaded to PyPI.
+5. Once the `python-publish` workflow completes, a new version will appear on [PyPI](https://pypi.org/project/PyGithub/#history) shortly.
 
-5. Update the Github [release](https://github.com/PyGithub/PyGithub/releases) page with the same release note from `doc/changes.rst`. (needed for some web spiders for changelog parsing)
