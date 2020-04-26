@@ -4,6 +4,31 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.50 (April 26, 2020)
+-----------------------------------
+**New features**
+
+* PyGithub now supports type checking thanks to (#1231) (91433fe9)
+* Slack is now the main channel of communication rather than Gitter (6a6e7c26)
+* Ability to retrieve public events (#1481) (5cf9950b)
+* Add and handle the maintainer_can_modify attribute in PullRequest (#1465) (e0997b43)
+* List matching references (#1471) (d3bc6a5c)
+* Add create_repository_dispatch (#1449) (edcbdfda)
+* Add some Organization and Repository attributes. (#1468) (3ab97d61)
+* Add create project method (801ea385)
+
+**Bug Fixes & Improvements**
+
+* Drop use of shadow-cat for draft PRs (#1469) (84bb69ab)
+* AuthenticatedUser.get_organization_membership() should be str (#1473) (38b34db5)
+* Drop documentation for len() of PaginatedList (#1470) (70462598)
+* Fix param name of projectcard's move function (#1451) (bafc4efc)
+* Correct typos found with codespell (#1467) (83bef0f7)
+* Export IncompletableObject in the github namespace (#1450) (0ebdbb26)
+* Add GitHub Action workflow for checks (#1464) (f1401c15)
+* Drop unneeded ignore rule for flake8 (#1454) (b4ca9177)
+* Use pytest to parametrize tests (#1438) (d2e9bd69)
+
 Version 1.47 (March 15, 2020)
 -----------------------------------
 **Bug Fixes & Improvements**
