@@ -406,11 +406,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def create_hook(
-        self,
-        name,
-        config,
-        events=github.GithubObject.NotSet,
-        active=github.GithubObject.NotSet,
+            self,
+            name,
+            config,
+            events=github.GithubObject.NotSet,
+            active=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:owner/hooks <http://developer.github.com/v3/orgs/hooks>`_
@@ -460,23 +460,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.Project.Project(self._requester, headers, data, completed=True)
 
     def create_repo(
-        self,
-        name,
-        description=github.GithubObject.NotSet,
-        homepage=github.GithubObject.NotSet,
-        private=github.GithubObject.NotSet,
-        has_issues=github.GithubObject.NotSet,
-        has_wiki=github.GithubObject.NotSet,
-        has_downloads=github.GithubObject.NotSet,
-        has_projects=github.GithubObject.NotSet,
-        team_id=github.GithubObject.NotSet,
-        auto_init=github.GithubObject.NotSet,
-        license_template=github.GithubObject.NotSet,
-        gitignore_template=github.GithubObject.NotSet,
-        allow_squash_merge=github.GithubObject.NotSet,
-        allow_merge_commit=github.GithubObject.NotSet,
-        allow_rebase_merge=github.GithubObject.NotSet,
-        delete_branch_on_merge=github.GithubObject.NotSet,
+            self,
+            name,
+            description=github.GithubObject.NotSet,
+            homepage=github.GithubObject.NotSet,
+            private=github.GithubObject.NotSet,
+            has_issues=github.GithubObject.NotSet,
+            has_wiki=github.GithubObject.NotSet,
+            has_downloads=github.GithubObject.NotSet,
+            has_projects=github.GithubObject.NotSet,
+            team_id=github.GithubObject.NotSet,
+            auto_init=github.GithubObject.NotSet,
+            license_template=github.GithubObject.NotSet,
+            gitignore_template=github.GithubObject.NotSet,
+            allow_squash_merge=github.GithubObject.NotSet,
+            allow_merge_commit=github.GithubObject.NotSet,
+            allow_rebase_merge=github.GithubObject.NotSet,
+            delete_branch_on_merge=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
@@ -584,13 +584,49 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_repo_from_template(
+            self,
+            owner,
+            name,
+            template_repo,
+            description=github.GithubObject.NotSet,
+            private=github.GithubObject.NotSet
+    ):
+        # :calls: `POST / repos /:template_owner /: template_repo / generate < https: // developer.github.com / v3 / repos /  # create-repository-using-a-repository-template>`_
+        assert isinstance(name, str), name
+        assert isinstance(owner, str), owner
+        assert isinstance(template_repo, str), template_repo
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        assert private is github.GithubObject.NotSet or isinstance(
+            private, bool
+        ), private
+        post_parameters = {
+            "name": name,
+            "owner": owner,
+        }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        if private is not github.GithubObject.NotSet:
+            post_parameters["private"] = private
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", "/repos/" + owner + "/" + template_repo + "/generate", input=post_parameters,
+            headers={"Accept": Consts.mediaTypeTemplatesPreview},
+        )
+       
+        return github.Repository.Repository(
+            self._requester, headers, data, completed=True
+        )
+
     def create_team(
-        self,
-        name,
-        repo_names=github.GithubObject.NotSet,
-        permission=github.GithubObject.NotSet,
-        privacy=github.GithubObject.NotSet,
-        description=github.GithubObject.NotSet,
+            self,
+            name,
+            repo_names=github.GithubObject.NotSet,
+            permission=github.GithubObject.NotSet,
+            privacy=github.GithubObject.NotSet,
+            description=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
@@ -644,14 +680,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def edit(
-        self,
-        billing_email=github.GithubObject.NotSet,
-        blog=github.GithubObject.NotSet,
-        company=github.GithubObject.NotSet,
-        description=github.GithubObject.NotSet,
-        email=github.GithubObject.NotSet,
-        location=github.GithubObject.NotSet,
-        name=github.GithubObject.NotSet,
+            self,
+            billing_email=github.GithubObject.NotSet,
+            blog=github.GithubObject.NotSet,
+            company=github.GithubObject.NotSet,
+            description=github.GithubObject.NotSet,
+            email=github.GithubObject.NotSet,
+            location=github.GithubObject.NotSet,
+            name=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /orgs/:org <http://developer.github.com/v3/orgs>`_
@@ -700,12 +736,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     def edit_hook(
-        self,
-        id,
-        name,
-        config,
-        events=github.GithubObject.NotSet,
-        active=github.GithubObject.NotSet,
+            self,
+            id,
+            name,
+            config,
+            events=github.GithubObject.NotSet,
+            active=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
@@ -767,13 +803,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def get_issues(
-        self,
-        filter=github.GithubObject.NotSet,
-        state=github.GithubObject.NotSet,
-        labels=github.GithubObject.NotSet,
-        sort=github.GithubObject.NotSet,
-        direction=github.GithubObject.NotSet,
-        since=github.GithubObject.NotSet,
+            self,
+            filter=github.GithubObject.NotSet,
+            state=github.GithubObject.NotSet,
+            labels=github.GithubObject.NotSet,
+            sort=github.GithubObject.NotSet,
+            direction=github.GithubObject.NotSet,
+            since=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /orgs/:org/issues <http://developer.github.com/v3/issues>`_
@@ -816,7 +852,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def get_members(
-        self, filter_=github.GithubObject.NotSet, role=github.GithubObject.NotSet
+            self, filter_=github.GithubObject.NotSet, role=github.GithubObject.NotSet
     ):
         """
         :calls: `GET /orgs/:org/members <http://developer.github.com/v3/orgs/members>`_
@@ -929,10 +965,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def get_repos(
-        self,
-        type=github.GithubObject.NotSet,
-        sort=github.GithubObject.NotSet,
-        direction=github.GithubObject.NotSet,
+            self,
+            type=github.GithubObject.NotSet,
+            sort=github.GithubObject.NotSet,
+            direction=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /orgs/:org/repos <http://developer.github.com/v3/repos>`_
@@ -1006,11 +1042,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def invite_user(
-        self,
-        user=github.GithubObject.NotSet,
-        email=github.GithubObject.NotSet,
-        role=github.GithubObject.NotSet,
-        teams=github.GithubObject.NotSet,
+            self,
+            user=github.GithubObject.NotSet,
+            email=github.GithubObject.NotSet,
+            role=github.GithubObject.NotSet,
+            teams=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/invitations <http://developer.github.com/v3/orgs/members>`_
@@ -1025,7 +1061,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         ), user
         assert email is github.GithubObject.NotSet or isinstance(email, str), email
         assert (email is github.GithubObject.NotSet) ^ (
-            user is github.GithubObject.NotSet
+                user is github.GithubObject.NotSet
         ), "specify only one of email or user"
         parameters = {}
         if user is not github.GithubObject.NotSet:
@@ -1108,10 +1144,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def create_migration(
-        self,
-        repos,
-        lock_repositories=github.GithubObject.NotSet,
-        exclude_attachments=github.GithubObject.NotSet,
+            self,
+            repos,
+            lock_repositories=github.GithubObject.NotSet,
+            exclude_attachments=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/migrations <https://developer.github.com/v3/migrations/users>`_

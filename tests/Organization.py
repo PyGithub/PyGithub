@@ -343,6 +343,24 @@ class Organization(Framework.TestCase):
         self.assertTrue(repo.has_pages)
         self.assertTrue(repo.has_wiki)
 
+    def testCreateRepoFromTemplate(self):
+        template_repo = self.g.get_repo("actions/hello-world-javascript-action")
+
+        repo = self.org.create_repo_from_template(self.login, "hello-world-from-template", template_repo.name)
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/hello-world-from-template")
+        self.assertEqual(repo.is_template, False)
+
+    def testCreateRepoFromTemplateWithAllArguments(self):
+        template_repo = self.g.get_repo("actions/hello-world-javascript-action")
+
+        description = "Repo created from template hello-world-javascript-action"
+        private = True
+        repo = self.org.create_repo_from_template(self.login, "hello-world-from-template", template_repo.name,
+                                                  description=description, private=private)
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/hello-world-from-template")
+        self.assertEqual(repo.description, description)
+        self.assertEqual(repo.private, private)
+
     def testCreateFork(self):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
         repo = self.org.create_fork(pygithub)

@@ -62,6 +62,14 @@ class Organization:
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
+    def create_repo_from_template(
+        self,
+        owner: str,
+        name: str,
+        template_repo: str,
+        description: Union[str, _NotSetType] = ...,
+        private: Union[bool, _NotSetType] = ...,
+    ) -> Repository: ...
     def create_team(
         self,
         name: str,

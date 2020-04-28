@@ -120,3 +120,7 @@ issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
 
 # https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
 teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
+
+# https://developer.github.com/v3/repos/#create-an-organization-repository
+ #Create a repository using a template
+mediaTypeTemplatesPreview = "application/vnd.github.baptiste-preview+json"
