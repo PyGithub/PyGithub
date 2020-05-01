@@ -128,7 +128,6 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param content_type: string
         :rtype :class:`github.ProjectCard.ProjectCard`:
         """
-        post_parameters = {}
         if isinstance(note, str):
             assert content_id is github.GithubObject.NotSet, content_id
             assert content_type is github.GithubObject.NotSet, content_type
