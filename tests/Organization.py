@@ -348,7 +348,6 @@ class Organization(Framework.TestCase):
 
         repo = self.org.create_repo_from_template(self.login, "hello-world-from-template", template_repo.name)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/hello-world-from-template")
-        self.assertEqual(repo.is_template, False)
 
     def testCreateRepoFromTemplateWithAllArguments(self):
         template_repo = self.g.get_repo("actions/hello-world-javascript-action")
