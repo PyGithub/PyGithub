@@ -83,7 +83,7 @@ if __name__ == "__main__":
             See http://pygithub.readthedocs.io/en/latest/"""
         ),
         packages=["github"],
-        package_data={},
+        package_data={"github": ["py.typed", "*.pyi"]},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",

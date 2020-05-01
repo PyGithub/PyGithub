@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from github.AuthorizationApplication import AuthorizationApplication
-from github.GithubObject import _NotSetType
+from github.GithubObject import CompletableGithubObject, _NotSetType
 
-class Authorization:
+class Authorization(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

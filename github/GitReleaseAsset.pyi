@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
+from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 
-class GitReleaseAsset:
+class GitReleaseAsset(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

@@ -2,8 +2,9 @@ from typing import Any, Dict, List
 
 from github.Commit import Commit
 from github.File import File
+from github.GithubObject import CompletableGithubObject
 
-class Comparison:
+class Comparison(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property

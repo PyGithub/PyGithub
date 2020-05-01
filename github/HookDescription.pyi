@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 
-class HookDescription:
+from github.GithubObject import NonCompletableGithubObject
+
+class HookDescription(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

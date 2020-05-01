@@ -1,6 +1,8 @@
 from typing import Dict
 
-class CommitStats:
+from github.GithubObject import NonCompletableGithubObject
+
+class CommitStats(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, int]) -> None: ...
     @property

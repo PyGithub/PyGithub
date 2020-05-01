@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
+from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-class Migration:
+class Migration(CompletableGithubObject):
     def __repr__(self):
         str: ...
     def _initAttributes(self) -> None: ...

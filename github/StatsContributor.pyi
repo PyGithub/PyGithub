@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 
-class StatsContributor:
+class StatsContributor(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     @property
@@ -12,7 +13,7 @@ class StatsContributor:
     def total(self) -> int: ...
     @property
     def weeks(self) -> List[Week]: ...
-    class Week:
+    class Week(NonCompletableGithubObject):
         def _initAttributes(self) -> None: ...
         def _useAttributes(self, attributes: Dict[str, int]) -> None: ...
         @property

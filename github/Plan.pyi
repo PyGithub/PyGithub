@@ -1,6 +1,8 @@
 from typing import Any, Dict, Union
 
-class Plan:
+from github.GithubObject import NonCompletableGithubObject
+
+class Plan(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

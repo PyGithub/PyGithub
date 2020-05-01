@@ -1,9 +1,10 @@
 from typing import Any, Dict, List
 
 from github.CommitStatus import CommitStatus
+from github.GithubObject import NonCompletableGithubObject
 from github.Repository import Repository
 
-class CommitCombinedStatus:
+class CommitCombinedStatus(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

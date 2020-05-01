@@ -1,6 +1,8 @@
 from typing import List
 
-class StatsPunchCard:
+from github.GithubObject import NonCompletableGithubObject
+
+class StatsPunchCard(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: List[List[int]]) -> None: ...
     def get(self, day: int, hour: int) -> int: ...

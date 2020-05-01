@@ -1,6 +1,8 @@
 from typing import Any, Dict
 
-class File:
+from github.GithubObject import NonCompletableGithubObject
+
+class File(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

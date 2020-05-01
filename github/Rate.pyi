@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict
 
-class Rate:
+from github.GithubObject import NonCompletableGithubObject
+
+class Rate(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
