@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.51 (May 03, 2020)
+-----------------------------------
+
+* Type stubs are now packaged with the build (#1489) (6eba4506)
+* Travis CI is now dropped in favor of Github workflow (#1488) (d6e77ba1)
+* Get the project column by id (#1466) (63855409)
+
 Version 1.50 (April 26, 2020)
 -----------------------------------
 **New features**
