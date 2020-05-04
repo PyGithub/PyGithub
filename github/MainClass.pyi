@@ -1,13 +1,13 @@
 from datetime import datetime
 from io import BytesIO
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import _NotSetType
+from github.GithubObject import GithubObject, _NotSetType
 from github.GitignoreTemplate import GitignoreTemplate
 from github.HookDescription import HookDescription
 from github.Installation import Installation
@@ -23,6 +23,8 @@ from github.Repository import Repository
 from github.Topic import Topic
 
 # from urllib3.util.retry import Retry
+
+TGithubObject = TypeVar('TGithubObject', bound=GithubObject)
 
 class Github:
     def __init__(
@@ -46,11 +48,11 @@ class Github:
     def __set_per_page(self, value: int) -> None: ...
     def create_from_raw_data(
         self,
-        klass: Union[Type[Repository], Type[NamedUser]],
+        klass: Type[TGithubObject],
         raw_data: Dict[str, Any],
         headers: Dict[str, Union[str, int]] = ...,
-    ) -> Union[Repository, NamedUser]: ...
-    def dump(self, obj: Repository, file: BytesIO, protocol: int = ...) -> None: ...
+    ) -> TGithubObject: ...
+    def dump(self, obj: GithubObject, file: BytesIO, protocol: int = ...) -> None: ...
     def get_emojis(self) -> Dict[str, str]: ...
     def get_events(self) -> PaginatedList[Event]: ...
     def get_gist(self, id: str) -> Gist: ...
