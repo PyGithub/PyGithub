@@ -135,6 +135,7 @@ import github.StatsPunchCard
 import github.Tag
 import github.Team
 import github.View
+import github.Workflow
 
 from . import Consts
 
@@ -2999,6 +3000,29 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser, self._requester, self.url + "/watchers", None
         )
+
+    def get_workflows(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/workflows <https://developer.github.com/v3/actions/workflows>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Workflow.Workflow`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Workflow.Workflow,
+            self._requester,
+            self.url + "/actions/workflows",
+            None,
+        )
+
+    def get_workflow(self, id_or_name):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id <https://developer.github.com/v3/actions/workflows>`_
+        :rtype: :class:`github.Workflow.Workflow`
+        """
+        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/workflows/" + id_or_name
+        )
+        return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def has_in_assignees(self, assignee):
         """
