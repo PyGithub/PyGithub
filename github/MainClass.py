@@ -51,6 +51,7 @@
 import datetime
 import pickle
 import time
+import warnings
 
 import jwt
 import requests
@@ -132,6 +133,12 @@ class Github(object):
             or isinstance(retry, (int))
             or isinstance(retry, (urllib3.util.Retry))
         )
+        if client_id is not None or client_secret is not None:
+            warnings.warn(
+                "client_id and client_secret are deprecated and will be removed in a future release, switch to token authentication",
+                FutureWarning,
+                stacklevel=2,
+            )
         self.__requester = Requester(
             login_or_token,
             password,
