@@ -28,33 +28,38 @@ from . import Framework
 class ProjectColumn(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.project_column = self.g.get_project_column(8700460)
+        self.get_project_column = self.g.get_project_column(8700460)
+        self.move_project_column = self.g.get_project_column(8748065)
 
     def testGetProjectColumn(self):
-        self.assertEqual(self.project_column.id, 8700460)
-        self.assertEqual(self.project_column.name, "c1")
+        self.assertEqual(self.get_project_column.id, 8700460)
+        self.assertEqual(self.get_project_column.name, "c1")
         self.assertEqual(
-            self.project_column.cards_url,
+            self.get_project_column.cards_url,
             "https://api.github.com/projects/columns/8700460/cards",
         )
         self.assertEqual(
-            self.project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw"
+            self.get_project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw"
         )
         self.assertEqual(
-            self.project_column.project_url, "https://api.github.com/projects/4294766"
+            self.get_project_column.project_url,
+            "https://api.github.com/projects/4294766",
         )
         self.assertEqual(
-            self.project_column.url, "https://api.github.com/projects/columns/8700460"
+            self.get_project_column.url,
+            "https://api.github.com/projects/columns/8700460",
         )
         self.assertEqual(
-            self.project_column.created_at, datetime.datetime(2020, 4, 13, 20, 29, 53)
+            self.get_project_column.created_at,
+            datetime.datetime(2020, 4, 13, 20, 29, 53),
         )
         self.assertEqual(
-            self.project_column.updated_at, datetime.datetime(2020, 4, 14, 18, 9, 38)
+            self.get_project_column.updated_at,
+            datetime.datetime(2020, 4, 14, 18, 9, 38),
         )
 
     def testGetAllCards(self):
-        cards = self.project_column.get_cards(archived_state="all")
+        cards = self.get_project_column.get_cards(archived_state="all")
         self.assertEqual(cards.totalCount, 3)
         self.assertEqual(cards[0].id, 36285184)
         self.assertEqual(cards[0].note, "Note3")
@@ -64,13 +69,13 @@ class ProjectColumn(Framework.TestCase):
         self.assertEqual(cards[2].note, "Note1")
 
     def testGetArchivedCards(self):
-        cards = self.project_column.get_cards(archived_state="archived")
+        cards = self.get_project_column.get_cards(archived_state="archived")
         self.assertEqual(cards.totalCount, 1)
         self.assertEqual(cards[0].id, 36281516)
         self.assertEqual(cards[0].note, "Note1")
 
     def testGetNotArchivedCards(self):
-        cards = self.project_column.get_cards(archived_state="not_archived")
+        cards = self.get_project_column.get_cards(archived_state="not_archived")
         self.assertEqual(cards.totalCount, 2)
         self.assertEqual(cards[0].id, 36285184)
         self.assertEqual(cards[0].note, "Note3")
@@ -78,7 +83,7 @@ class ProjectColumn(Framework.TestCase):
         self.assertEqual(cards[1].note, "Note2")
 
     def testGetCards(self):
-        cards = self.project_column.get_cards()
+        cards = self.get_project_column.get_cards()
         self.assertEqual(cards.totalCount, 2)
         self.assertEqual(cards[0].id, 36285184)
         self.assertEqual(cards[0].note, "Note3")
@@ -86,6 +91,24 @@ class ProjectColumn(Framework.TestCase):
         self.assertEqual(cards[1].note, "Note2")
 
     def testCreateCard(self):
-        new_card = self.project_column.create_card(note="NewCard")
+        new_card = self.get_project_column.create_card(note="NewCard")
         self.assertEqual(new_card.id, 36290228)
         self.assertEqual(new_card.note, "NewCard")
+
+    def testDelete(self):
+        project_column = self.g.get_project_column(8747987)
+        self.assertTrue(project_column.delete())
+
+    def testEdit(self):
+        self.move_project_column.edit("newTestColumn")
+        self.assertEqual(self.move_project_column.id, 8748065)
+        self.assertEqual(self.move_project_column.name, "newTestColumn")
+
+    def testMoveFirst(self):
+        self.assertTrue(self.move_project_column.move(position="first"))
+
+    def testMoveLast(self):
+        self.assertTrue(self.move_project_column.move(position="last"))
+
+    def testMoveAfter(self):
+        self.assertTrue(self.move_project_column.move(position="after:8700460"))
