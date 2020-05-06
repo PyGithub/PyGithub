@@ -125,6 +125,15 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self._repositories_url.value
 
     @property
+    def organization_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._organization_url)
+        return self._organization_url.value
+
+
+    @property
     def slug(self):
         """
         :type: string
@@ -234,19 +243,49 @@ class Team(github.GithubObject.CompletableGithubObject):
         except UnknownObjectException:
             return None
 
+    @deprecated(
+        reason="""
+        Team.set_repo_permission() is deprecated, use
+        Team.update_team_repository() instead.
+        """
+    )
     def set_repo_permission(self, repo, permission):
         """
-        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        This API call is deprecated. Use `update_team_repository` instead:
+        https://developer.github.com/v3/teams/#add-or-update-team-repository-legacy
+
+        :calls: `PUT /teams/:id/repos/:org/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository-legacy>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
         """
+
         assert isinstance(repo, github.Repository.Repository), repo
         put_parameters = {
             "permission": permission,
         }
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.url + "/repos/" + repo._identity, input=put_parameters
+        )
+
+    def update_team_repository(self, repo, permission):
+        """
+        :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository>`_
+        :param repo: :class:`github.Repository.Repository`
+        :param permission: string
+        :rtype: None
+        """
+
+        # TODO Add support for Content-Length: 0 when no parameters are added
+        # Original note from the docs:
+        # Note that, if you choose not to pass any parameters, you'll need to set Content-Length to zero when calling out to this endpoint. For more information, see "HTTP verbs."
+
+        assert isinstance(repo, github.Repository.Repository), repo
+        put_parameters = {
+            "permission": permission,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", self.organization_url + "/teams/" + str(self.id)  + "/repos/" + repo._identity, input=put_parameters
         )
 
     def delete(self):
@@ -427,6 +466,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
+        self._organization_url = github.GithubObject.NotSet
         self._permission = github.GithubObject.NotSet
         self._repos_count = github.GithubObject.NotSet
         self._repositories_url = github.GithubObject.NotSet
@@ -447,6 +487,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "organization" in attributes and "url" in attributes["organization"]:  # pragma no branch
+            self._organization_url = self._makeStringAttribute(attributes["organization"]["url"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch
