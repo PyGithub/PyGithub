@@ -238,8 +238,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     @deprecated(
         reason="""
-        Team.set_repo_permission() is deprecated, use
-        Team.update_team_repository() instead.
+        Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )
     def set_repo_permission(self, repo, permission):
