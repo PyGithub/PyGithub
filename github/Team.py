@@ -42,6 +42,7 @@
 ################################################################################
 
 from deprecated import deprecated
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
@@ -269,7 +270,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         # Note that, if you choose not to pass any parameters, you'll need to set Content-Length to zero when calling out to this endpoint. For more information, see "HTTP verbs."
 
         assert repo is isinstance(repo, github.Repository.Repository) or isinstance(
-            repo, str), repo
+            repo, str
+        ), repo
         repo_url_param = repo
         if repo is github.Repository.Repository:
             repo_url_param = repo._identity
@@ -277,7 +279,13 @@ class Team(github.GithubObject.CompletableGithubObject):
             "permission": permission,
         }
         status, _, _ = self._requester.requestJson(
-            "PUT", self.organization.url + "/teams/" + str(self.id)  + "/repos/" + repo_url_param, input=put_parameters
+            "PUT",
+            self.organization.url
+            + "/teams/"
+            + str(self.id)
+            + "/repos/"
+            + repo_url_param,
+            input=put_parameters,
         )
         return status == 204
 
