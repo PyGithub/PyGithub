@@ -262,7 +262,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
-        :rtype: None
+        :rtype: bool
         """
 
         # TODO Add support for Content-Length: 0 when no parameters are added
@@ -273,9 +273,10 @@ class Team(github.GithubObject.CompletableGithubObject):
         put_parameters = {
             "permission": permission,
         }
-        headers, data = self._requester.requestJsonAndCheck(
+        status, _, _ = self._requester.requestJson(
             "PUT", self.organization.url + "/teams/" + str(self.id)  + "/repos/" + repo._identity, input=put_parameters
         )
+        return status == 204
 
     def delete(self):
         """
