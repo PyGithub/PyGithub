@@ -252,10 +252,7 @@ class Team(github.GithubObject.CompletableGithubObject):
     )
     def set_repo_permission(self, repo, permission):
         """
-        This API call is deprecated. Use `update_team_repository` instead:
-        https://developer.github.com/v3/teams/#add-or-update-team-repository-legacy
-
-        :calls: `PUT /teams/:id/repos/:org/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository-legacy>`_
+        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
