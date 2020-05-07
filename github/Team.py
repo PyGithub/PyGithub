@@ -260,7 +260,7 @@ class Team(github.GithubObject.CompletableGithubObject):
     def update_team_repository(self, repo, permission):
         """
         :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository>`_
-        :param repo: :class:`github.Repository.Repository`
+        :param repo: string or :class:`github.Repository.Repository`
         :param permission: string
         :rtype: bool
         """
@@ -268,12 +268,16 @@ class Team(github.GithubObject.CompletableGithubObject):
         # Original note from the docs:
         # Note that, if you choose not to pass any parameters, you'll need to set Content-Length to zero when calling out to this endpoint. For more information, see "HTTP verbs."
 
-        assert isinstance(repo, github.Repository.Repository), repo
+        assert repo is isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str), repo
+        repo_url_param = repo
+        if repo is github.Repository.Repository:
+            repo_url_param = repo._identity
         put_parameters = {
             "permission": permission,
         }
         status, _, _ = self._requester.requestJson(
-            "PUT", self.organization.url + "/teams/" + str(self.id)  + "/repos/" + repo._identity, input=put_parameters
+            "PUT", self.organization.url + "/teams/" + str(self.id)  + "/repos/" + repo_url_param, input=put_parameters
         )
         return status == 204
 
