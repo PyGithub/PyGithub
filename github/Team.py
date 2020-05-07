@@ -269,7 +269,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         ), repo
         assert isinstance(permission, str), permission
         repo_url_param = repo
-        if repo is github.Repository.Repository:
+        if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         put_parameters = {
             "permission": permission,
