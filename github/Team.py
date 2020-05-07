@@ -41,6 +41,7 @@
 #                                                                              #
 ################################################################################
 
+from deprecated import deprecated
 import github.GithubObject
 import github.NamedUser
 import github.Organization
