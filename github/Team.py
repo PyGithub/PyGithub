@@ -264,7 +264,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :rtype: bool
         """
-        assert repo is isinstance(repo, github.Repository.Repository) or isinstance(
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
             repo, str
         ), repo
         assert isinstance(permission, str), permission
@@ -278,7 +278,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.organization.url
             + "/teams/"
-            + str(self.id)
+            + self.slug
             + "/repos/"
             + repo_url_param,
             input=put_parameters,
