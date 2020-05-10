@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+import warnings
+
 import github
 
 from . import Framework
@@ -52,12 +54,15 @@ class Authentication(Framework.BasicTestCase):
 
     # Warning: I don't have a secret key, so the requests for this test are forged
     def testSecretKeyAuthentication(self):
+        # Ignore the warning since client_{id,secret} are deprecated
+        warnings.filterwarnings("ignore", category=FutureWarning)
         g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
         self.assertListKeyEqual(
             g.get_organization("BeaverSoftware").get_repos("public"),
             lambda r: r.name,
             ["FatherBeaver", "PyGithub"],
         )
+        warnings.resetwarnings()
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
