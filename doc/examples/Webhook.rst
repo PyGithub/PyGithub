@@ -1,8 +1,8 @@
 Webhook
-==========
+=======
 
 Creating and Listening to Webhooks with PyGithub and Pyramid
-------------------------------------
+------------------------------------------------------------
 
 To receive a continuous stream of events, one can set up a wsgiref app using Pyramid to handle
 incoming POST requests.
@@ -100,7 +100,7 @@ on working with Webhooks. A list of all applicable event types for Webhooks can 
 
 Outputs from a server configured as above:
 
-.. code-block:: python
+.. code-block:: console
 
     x.y.w.z - - [15/Oct/2018 23:49:19] "POST /webhook HTTP/1.1" 200 15
     Pinged! Webhook created with id <redacted id>!
