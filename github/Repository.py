@@ -3011,6 +3011,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/actions/workflows",
             None,
+            list_item="workflows",
         )
 
     def get_workflow(self, id_or_name):
