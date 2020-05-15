@@ -17,7 +17,7 @@ class HTTPRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        **kwargs
+        **kwargs: Dict[str, str]
     ) -> None: ...
     def close(self) -> None: ...
     def getresponse(self) -> RequestsResponse: ...
@@ -33,7 +33,7 @@ class HTTPSRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        **kwargs
+        **kwargs: Dict[str, str]
     ) -> None: ...
     def close(self) -> None: ...
     def getresponse(self) -> RequestsResponse: ...
@@ -83,7 +83,7 @@ class Requester:
         parameters: Dict[str, str] = ...,
         headers: Dict[str, str] = ...,
         input: Optional[str] = ...,
-        encode: Callable = ...,
+        encode: Callable[[str], str] = ...,
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def __requestRaw(
         self,
