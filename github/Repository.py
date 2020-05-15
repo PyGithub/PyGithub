@@ -759,14 +759,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._teams_url.value
 
     @property
-    def topics(self):
-        """
-        :type: list of strings
-        """
-        self._completeIfNotSet(self._topics)
-        return self._topics.value
-
-    @property
     def trees_url(self):
         """
         :type: string
@@ -3413,7 +3405,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._svn_url = github.GithubObject.NotSet
         self._tags_url = github.GithubObject.NotSet
         self._teams_url = github.GithubObject.NotSet
-        self._topics = github.GithubObject.NotSet
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -3619,8 +3610,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
-        if "topics" in attributes:  # pragma no branch
-            self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

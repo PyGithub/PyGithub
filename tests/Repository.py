@@ -105,7 +105,6 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.source, None)
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
-        self.assertEqual(self.repo.topics, None)
         self.assertEqual(
             self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28)
         )
