@@ -981,6 +981,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
         :meth:`Repository.create_git_release`.
+
         :param tag: string
         :param tag_message: string
         :param release_name: string
