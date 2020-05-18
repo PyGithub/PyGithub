@@ -154,6 +154,9 @@ class GithubIntegration(unittest.TestCase):
         self.assertEqual(
             auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
         )
+        self.assertEqual(
+            repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
+        )
 
     def test_get_installation(self):
         from github import GithubIntegration

@@ -47,9 +47,7 @@ class Tag(Framework.TestCase):
         self.assertEqual(
             self.tag.zipball_url, "https://github.com/jacquev6/PyGithub/zipball/v0.3"
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.tag.__repr__(),
+            repr(self.tag),
             'Tag(name="v0.3", commit=Commit(sha="636e6112deb72277b3bffcc3303cd7e8a7431a5d"))',
         )

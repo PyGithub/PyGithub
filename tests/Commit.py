@@ -84,11 +84,8 @@ class Commit(Framework.TestCase):
         self.assertEqual(
             self.commit.commit.tree.sha, "4c6bd50994f0f9823f898b1c6c964ad7d4fa11ab"
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.commit.__repr__(),
-            'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
+            repr(self.commit), 'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
     def testGetComments(self):

@@ -50,7 +50,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
             is present in the rate object.
         """
     )
-    def rate(self):
+    def rate(self):  # pragma: no cover
         """
         (Deprecated) Rate limit for non-search-related API, use `core` instead
 

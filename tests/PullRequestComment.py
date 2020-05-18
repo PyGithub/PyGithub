@@ -68,10 +68,8 @@ class PullRequestComment(Framework.TestCase):
             self.comment.html_url,
             "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.comment.__repr__(),
+            repr(self.comment),
             'PullRequestComment(user=NamedUser(login="jacquev6"), id=886298)',
         )
 
