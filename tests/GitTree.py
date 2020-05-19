@@ -71,8 +71,10 @@ class GitTree(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad",
         )
 
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.tree.__repr__(),
-            'GitTree(sha="f492784d8ca837779650d1fb406a1a3587a764ad")',
+            repr(self.tree), 'GitTree(sha="f492784d8ca837779650d1fb406a1a3587a764ad")',
+        )
+        self.assertEqual(
+            repr(self.tree.tree[0]),
+            'GitTreeElement(sha="8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd", path=".gitignore")',
         )

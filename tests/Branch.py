@@ -55,10 +55,8 @@ class Branch(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
         )
         self.assertFalse(self.branch.protected)
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.branch.__repr__(), 'Branch(name="topic/RewriteWithGeneratedCode")'
+            repr(self.branch), 'Branch(name="topic/RewriteWithGeneratedCode")'
         )
 
     def testEditProtection(self):

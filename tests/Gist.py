@@ -80,9 +80,10 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.git_push_url, "https://gist.github.com/6296732.git")
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.url, "https://api.github.com/gists/6296732")
-
-        # test __repr__() based on this attributes
-        self.assertEqual(gist.__repr__(), 'Gist(id="6296732")')
+        self.assertEqual(repr(gist), 'Gist(id="6296732")')
+        self.assertEqual(
+            repr(gist.files["GithubAPI.lua"]), 'GistFile(filename="GithubAPI.lua")'
+        )
 
     def testEditWithoutParameters(self):
         gist = self.g.get_gist("2729810")

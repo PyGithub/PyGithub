@@ -60,9 +60,6 @@ class GitBlob(Framework.TestCase):
             self.blob.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/blobs/53bce9fa919b4544e67275089b3ec5b44be20667",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.blob.__repr__(),
-            'GitBlob(sha="53bce9fa919b4544e67275089b3ec5b44be20667")',
+            repr(self.blob), 'GitBlob(sha="53bce9fa919b4544e67275089b3ec5b44be20667")',
         )

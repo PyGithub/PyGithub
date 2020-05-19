@@ -56,10 +56,8 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.parent, None)
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)'
+            repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
         )
 
     def testDiscussions(self):
@@ -89,6 +87,7 @@ class Team(Framework.TestCase):
         self.assertEqual(d.title, "TITLE")
         self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36))
         self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
+        self.assertEqual(repr(d), 'TeamDiscussion(title="TITLE", number=1)')
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")

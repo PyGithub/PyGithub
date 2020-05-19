@@ -77,9 +77,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.user.__repr__(), 'AuthenticatedUser(login="jacquev6")')
+        self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
 
     def testEditWithoutArguments(self):
         self.user.edit()
@@ -677,6 +675,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(notification.url, None)
         self.assertEqual(notification.subject.url, None)
         self.assertEqual(notification.subject.latest_comment_url, None)
+        self.assertEqual(
+            repr(notification),
+            'Notification(subject=NotificationSubject(title="Feature/coveralls"), id="8406712")',
+        )
+        self.assertEqual(
+            repr(notification.subject), 'NotificationSubject(title="Feature/coveralls")'
+        )
 
     def testGetNotifications(self):
         self.assertListKeyEqual(

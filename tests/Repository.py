@@ -112,10 +112,9 @@ class Repository(Framework.TestCase):
             self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub"
         )
         self.assertEqual(self.repo.watchers, 15)
-
-        # test __repr__() based on this attributes
+        self.assertEqual(repr(self.repo), 'Repository(full_name="jacquev6/PyGithub")')
         self.assertEqual(
-            self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")'
+            repr(self.repo.permissions), "Permissions(push=True, pull=True, admin=True)"
         )
 
     def testEditWithoutArguments(self):
@@ -1075,8 +1074,9 @@ class Repository(Framework.TestCase):
 
     def testGetStargazersWithDates(self):
         repo = self.g.get_user("danvk").get_repo("comparea")
+        stargazers = repo.get_stargazers_with_dates()
         self.assertListKeyEqual(
-            repo.get_stargazers_with_dates(),
+            stargazers,
             lambda stargazer: (stargazer.starred_at, stargazer.user.login),
             [
                 (datetime.datetime(2014, 8, 13, 19, 22, 5), u"sAlexander"),
@@ -1087,6 +1087,7 @@ class Repository(Framework.TestCase):
                 (datetime.datetime(2015, 5, 9, 19, 14, 45), u"JoePython1"),
             ],
         )
+        self.assertEqual(repr(stargazers[0]), 'Stargazer(user="sAlexander")')
 
     def testGetSubscribers(self):
         self.assertListKeyEqual(
@@ -1225,17 +1226,17 @@ class Repository(Framework.TestCase):
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = "Hello world".encode()
+        author = github.InputGitAuthor(
+            "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
+        )
+        self.assertEqual(repr(author), 'InputGitAuthor(name="Enix Yu")')
         self.repo.create_file(
             path=newFile,
             message="Create file for testCreateFile",
             content=content,
             branch="master",
-            committer=github.InputGitAuthor(
-                "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
-            ),
-            author=github.InputGitAuthor(
-                "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
-            ),
+            committer=author,
+            author=author,
         )
 
     def testUpdateFile(self):

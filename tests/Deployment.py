@@ -60,3 +60,7 @@ class Deployment(Framework.TestCase):
             self.deployment.repository_url,
             "https://api.github.com/repos/jacquev6/PyGithub",
         )
+        self.assertEqual(
+            repr(self.deployment),
+            'Deployment(url="https://api.github.com/repos/jacquev6/PyGithub/deployments/201741959", id=201741959)',
+        )

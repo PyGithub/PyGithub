@@ -138,11 +138,12 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.user.login, "jacquev6")
         self.assertEqual(self.pull.draft, None)
         self.assertEqual(self.pull.maintainer_can_modify, None)
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.pull.__repr__(),
-            'PullRequest(title="Title edited by PyGithub", number=31)',
+            repr(self.pull), 'PullRequest(title="Title edited by PyGithub", number=31)',
+        )
+        self.assertEqual(
+            repr(self.pull.base),
+            'PullRequestPart(sha="ed866fc43833802ab553e5ff8581c81bb00dd433")',
         )
 
     def testCreateComment(self):
@@ -365,6 +366,10 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(status.merged)
         self.assertEqual(status.message, "Pull Request successfully merged")
         self.assertTrue(self.pull.is_merged())
+        self.assertEqual(
+            repr(status),
+            'PullRequestMergeStatus(sha="688208b1a5a074871d0e9376119556897439697d", merged=True)',
+        )
 
     def testMergeWithCommitMessage(self):
         self.g.get_user().get_repo("PyGithub").get_pull(39).merge(

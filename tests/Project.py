@@ -37,6 +37,7 @@ class Project(Framework.TestCase):
         proj = self.g.get_project(pid)
         self.assertEqual(proj.id, pid)
         self.assertEqual(proj.name, "TestProject")
+        self.assertEqual(repr(proj), 'Project(name="TestProject")')
 
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
@@ -93,6 +94,7 @@ class Project(Framework.TestCase):
         )
         self.assertEqual(col.created_at.year, 2018)
         self.assertTrue(col.updated_at >= col.created_at)
+        self.assertEqual(repr(col), 'ProjectColumn(name="To Do")')
 
     # See https://developer.github.com/v3/projects/cards/#get-a-project-card
     def testProjectCardAttributes(self):
@@ -115,6 +117,7 @@ class Project(Framework.TestCase):
         self.assertEqual(card.created_at.year, 2018)
         self.assertTrue(card.updated_at >= card.created_at)
         self.assertFalse(card.archived)
+        self.assertEqual(repr(card), "ProjectCard(id=11780055)")
 
     def testGetProjectCardContent(self):
         proj = self.g.get_project(1682941)

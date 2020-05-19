@@ -99,9 +99,7 @@ class Release(Framework.TestCase):
             self.release.zipball_url,
             "https://api.github.com/repos/edhollandAL/PyGithub/zipball/v1.25.2",
         )
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
+        self.assertEqual(repr(self.release), 'GitRelease(title="Test")')
 
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
