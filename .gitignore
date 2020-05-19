@@ -39,6 +39,7 @@
 /MANIFEST
 /PyGithub.egg-info/
 /.coverage
+/coverage.xml
 /.idea
 /developer.github.com/
 /gh-pages/
