@@ -55,6 +55,7 @@ class RepositoryKey(Framework.TestCase):
         )
         self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
+        self.assertTrue(self.key.read_only)
         self.assertEqual(
             repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
         )
