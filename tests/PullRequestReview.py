@@ -76,7 +76,7 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(
             self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59)
         )
-        self.assertIn(self.created_pullreview, self.pullreviews)
+        self.assertIn(self.created_pullreview.id, [r.id for r in self.pullreviews])
         self.assertEqual(
             repr(self.pullreview),
             'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)',
