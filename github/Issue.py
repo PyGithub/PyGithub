@@ -612,6 +612,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self.number
 
     def _initAttributes(self):
+        self._active_lock_reason = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
@@ -625,6 +626,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._labels = github.GithubObject.NotSet
         self._labels_url = github.GithubObject.NotSet
+        self._locked = github.GithubObject.NotSet
         self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._pull_request = github.GithubObject.NotSet

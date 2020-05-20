@@ -80,6 +80,8 @@ class Issue(Framework.TestCase):
         self.assertEqual(
             self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28"
         )
+        self.assertFalse(self.issue.locked)
+        self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
         self.assertEqual(
