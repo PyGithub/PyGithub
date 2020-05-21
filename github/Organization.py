@@ -477,6 +477,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        visibility=github.GithubObject.NotSet
     ):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
@@ -496,6 +497,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param visibility: string
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -544,6 +546,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert visibility is github.GithubObject.NotSet or isinstance(
+            visibility, str
+        ), visibility
         post_parameters = {
             "name": name,
         }
@@ -577,9 +582,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if visibility is not github.GithubObject.NotSet:
+            post_parameters["visibility"] = visibility
+
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/repos", input=post_parameters
+            "POST", self.url + "/repos", input=post_parameters, headers={"Accept": Consts.repositoryVisibilityPreview} if visibility is not github.GithubObject.NotSet else None,
         )
+
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
         )

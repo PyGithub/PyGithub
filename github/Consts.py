@@ -120,3 +120,6 @@ issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
 
 # https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
 teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
+
+# https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
+repositoryVisibilityPreview = "application/vnd.github.nebula-preview+json"
