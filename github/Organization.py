@@ -477,7 +477,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
-        visibility=github.GithubObject.NotSet
+        visibility=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
@@ -586,7 +586,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["visibility"] = visibility
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/repos", input=post_parameters, headers={"Accept": Consts.repositoryVisibilityPreview} if visibility is not github.GithubObject.NotSet else None,
+            "POST",
+            self.url + "/repos",
+            input=post_parameters,
+            headers={"Accept": Consts.repositoryVisibilityPreview}
+            if visibility is not github.GithubObject.NotSet
+            else None,
         )
 
         return github.Repository.Repository(
