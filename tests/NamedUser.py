@@ -248,21 +248,21 @@ class NamedUser(Framework.TestCase):
             ],
         )
 
-    def testGetReposWithType(self):
+    def testGetReposWithAllArgs(self):
         self.assertListKeyEqual(
-            self.user.get_repos("owner"),
+            self.user.get_repos(type="owner", sort="created", direction="asc"),
             lambda r: r.name,
             [
-                "django",
-                "PyGithub",
-                "developer.github.com",
-                "acme-public-website",
-                "C4Planner",
                 "DrawTurksHead",
-                "DrawSyntax",
-                "QuadProgMm",
-                "Boost.HierarchicalEnum",
-                "ViDE",
+                "vincent-jacques.net",
+                "IpMap",
+                "MockMockMock",
+                "ActionTree",
+                "InteractiveCommandLine",
+                "RecursiveDocument",
+                "MarblesCollide",
+                "jacquev6.github.io",
+                "LowVoltage",
             ],
         )
 
