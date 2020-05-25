@@ -546,12 +546,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
-        assert visibility is github.GithubObject.NotSet or isinstance(
-            visibility, str
+        assert visibility is github.GithubObject.NotSet or (
+            isinstance(visibility, str)
+            and visibility in ["internal", "public", "private"]
         ), visibility
         post_parameters = {
             "name": name,
         }
+        post_headers = dict()
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if homepage is not github.GithubObject.NotSet:
@@ -583,15 +585,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if visibility is not github.GithubObject.NotSet:
+            post_headers["Accept"] = Consts.repositoryVisibilityPreview
             post_parameters["visibility"] = visibility
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/repos",
-            input=post_parameters,
-            headers={"Accept": Consts.repositoryVisibilityPreview}
-            if visibility is not github.GithubObject.NotSet
-            else None,
+            "POST", self.url + "/repos", input=post_parameters, headers=post_headers
         )
 
         return github.Repository.Repository(

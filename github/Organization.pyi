@@ -64,6 +64,8 @@ class Organization(CompletableGithubObject):
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
+        delete_branch_on_merge: Union[bool, _NotSetType] = ...,
+        visibility: Union[str, _NotSetType] = ...,
     ) -> Repository: ...
     def create_team(
         self,
