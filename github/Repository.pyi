@@ -504,7 +504,7 @@ class Repository(CompletableGithubObject):
         self,
         path: str,
         message: str,
-        content: str,
+        content: Union[bytes, str],
         sha: str,
         branch: Union[_NotSetType, str] = ...,
         committer: Union[_NotSetType, InputGitAuthor] = ...,
