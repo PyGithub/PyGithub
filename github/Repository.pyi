@@ -298,7 +298,7 @@ class Repository(CompletableGithubObject):
         state: Union[str, _NotSetType] = ...,
         assignee: Union[NamedUser, str, _NotSetType] = ...,
         mentioned: Union[_NotSetType, NamedUser] = ...,
-        labels: Union[List[Label], _NotSetType] = ...,
+        labels: Union[List[str], List[Label], _NotSetType] = ...,
         sort: Union[str, _NotSetType] = ...,
         direction: Union[str, _NotSetType] = ...,
         since: Union[_NotSetType, datetime] = ...,
