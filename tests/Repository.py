@@ -254,6 +254,21 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
 
+    def testUpdateGitRef(self):
+        parentCommit = self.repo.get_commit("4303c5b90e2216d927155e9609436ccb8984c495")
+        dummyCommit = self.repo.create_git_commit(
+            message="New commit to change ref to",
+            tree=parentCommit.commit.tree,
+            parents=[parentCommit.commit],
+        )
+
+        ref = self.repo.update_git_ref(
+            "refs/heads/BranchCreatedByPyGithub", dummyCommit.sha,
+        )
+        self.assertEqual(
+            ref.object.sha, dummyCommit.sha,
+        )
+
     def testCreateGitBlob(self):
         blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
         self.assertEqual(blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8")

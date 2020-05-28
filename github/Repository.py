@@ -966,7 +966,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
-    def change_git_ref(self, ref, sha, force=False):
+    def update_git_ref(self, ref, sha, force=False):
         """
         :calls: `PATCH /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs>`_
         :param ref: string
@@ -976,10 +976,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(ref, str), ref
         assert isinstance(sha, str), sha
-        patch_parameters = {
-            "sha": sha,
-            "force": force
-        }
+        assert isinstance(force, bool), sha
+        patch_parameters = {"sha": sha, "force": force}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url + "/git/refs/" + ref, input=patch_parameters
         )
