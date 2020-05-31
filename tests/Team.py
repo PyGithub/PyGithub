@@ -111,9 +111,8 @@ class Team(Framework.TestCase):
         self.team.set_repo_permission(repo, "admin")
 
     def testUpdateTeamRepository(self):
-        repo = self.org.get_repo("test-repo")
-        res = self.team.update_team_repository(repo, "admin")
-        self.assertTrue(res)
+        repo = self.org.get_repo("FatherBeaver")
+        self.assertTrue(self.team.update_team_repository(repo, "admin"))
 
     def testRepos(self):
         repo = self.org.get_repo("FatherBeaver")
