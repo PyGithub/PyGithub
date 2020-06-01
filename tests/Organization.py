@@ -36,8 +36,6 @@
 
 import datetime
 
-import pytest  # type: ignore
-
 import github
 
 from . import Framework
@@ -335,7 +333,7 @@ class Organization(Framework.TestCase):
         self.assertFalse(repo.has_pages)
 
     def testCreateRepoWithInvalidVisibility(self):
-        with pytest.raises(AssertionError):
+        with self.assertRaises(AssertionError):
             self.org.create_repo(name="TestPyGithub", visibility="invalid")
 
     def testCreateRepositoryWithAutoInit(self):
