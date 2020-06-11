@@ -329,6 +329,16 @@ class Requester:
             )
         )
 
+    def requestMultipartBinaryAndCheck(
+        self, verb, url, parameters=None, headers=None, input=None
+    ):
+        status, responseHeaders, output = self.requestMultipart(
+            verb, url, parameters, headers, input, self.__customConnection(url)
+        )
+        if status >= 400:
+            raise self.__createException(status, responseHeaders, output)
+        return responseHeaders, output
+
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
             *self.requestBlob(
