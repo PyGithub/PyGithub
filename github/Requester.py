@@ -543,6 +543,16 @@ class Requester:
             o = urllib.parse.urlparse(responseHeaders["location"])
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
+        if status == 302 and "location" in responseHeaders:
+            o = urllib.parse.urlparse(responseHeaders["location"])
+            if cnx.host == o.netloc:
+                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+            else:
+                # potentially insecure so allow only special cases
+                if o.netloc in ["pipelines.actions.githubusercontent.com"]:
+                    response = requests.get(o.geturl())
+                    return response.status_code, response.headers, response.content
+
         return status, responseHeaders, output
 
     def __authenticate(self, url, requestHeaders, parameters):
