@@ -1939,7 +1939,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
-        :rtype: None or list of :class:`github.Clone.Clone`
+        :rtype: None or list of :class:`github.Clones.Clones`
         """
         assert per is github.GithubObject.NotSet or (
             isinstance(per, str) and (per == "day" or per == "week")
