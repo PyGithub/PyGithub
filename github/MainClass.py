@@ -115,7 +115,6 @@ class Github(object):
         :param client_secret: string
         :param user_agent: string
         :param per_page: int
-        :param api_preview: bool
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         """
