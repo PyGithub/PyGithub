@@ -126,6 +126,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param note: string
         :param content_id: integer
         :param content_type: string
+
         :rtype :class:`github.ProjectCard.ProjectCard`:
         """
         if isinstance(note, str):
@@ -150,6 +151,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         """
         :calls: `POST POST /projects/columns/:column_id/moves <https://developer.github.com/v3/projects/columns/#move-a-project-column>`_
         :param position: string
+
         :rtype: bool
         """
         assert isinstance(position, str), position
@@ -164,7 +166,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#delete-a-project-column`_
+        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#delete-a-project-column>`_
         :rtype: bool
         """
         status, _, _ = self._requester.requestJson(
