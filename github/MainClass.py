@@ -253,7 +253,7 @@ class Github(object):
             github.Event.Event, self.__requester, "/events", None
         )
 
-    def get_user(self, login=github.GithubObject.NotSet):
+    def get_user(self, login="{0}".format(github.GithubObject.NotSet)):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
         :param login: string
