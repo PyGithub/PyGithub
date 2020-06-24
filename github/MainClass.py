@@ -253,7 +253,7 @@ class Github(object):
             github.Event.Event, self.__requester, "/events", None
         )
 
-    def get_user(self, login="{0}".format(github.GithubObject.NotSet)):
+    def get_user(self, login=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
         :param login: string
@@ -266,7 +266,7 @@ class Github(object):
             )
         else:
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET", "/users/" + login
+                "GET", "/users/" + "{}".format(login)
             )
             return github.NamedUser.NamedUser(
                 self.__requester, headers, data, completed=True
