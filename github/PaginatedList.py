@@ -41,8 +41,9 @@ from urllib.parse import parse_qs
 
 
 class PaginatedListBase:
-    def __init__(self):
+    def __init__(self, store=True):
         self.__elements = list()
+        self.__store = store
 
     def __getitem__(self, index):
         assert isinstance(index, (int, slice))
@@ -69,7 +70,8 @@ class PaginatedListBase:
 
     def _grow(self):
         newElements = self._fetchNextPage()
-        self.__elements += newElements
+        if self.__store:
+            self.__elements += newElements
         return newElements
 
     class _Slice:
@@ -129,8 +131,9 @@ class PaginatedList(PaginatedListBase):
         firstParams,
         headers=None,
         list_item="items",
+        store=True,
     ):
-        super().__init__()
+        super().__init__(store)
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl

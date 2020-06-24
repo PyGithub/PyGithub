@@ -102,6 +102,7 @@ class Github:
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
         highlight: bool = ...,
+        store: bool = ...,
         **qualifiers: Dict[str, Any]
     ) -> PaginatedList[ContentFile]: ...
     def search_commits(
@@ -109,6 +110,7 @@ class Github:
         query: str,
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
+        store: bool = ...,
         **qualifiers: Dict[str, Any]
     ) -> PaginatedList[Commit]: ...
     def search_issues(

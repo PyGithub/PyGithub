@@ -540,6 +540,7 @@ class Github(object):
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
         highlight=False,
+        store=True,
         **qualifiers
     ):
         """
@@ -548,6 +549,7 @@ class Github(object):
         :param sort: string ('indexed')
         :param order: string ('asc', 'desc')
         :param highlight: boolean (True, False)
+        :param store: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ContentFile.ContentFile`
         """
@@ -582,6 +584,7 @@ class Github(object):
             "/search/code",
             url_parameters,
             headers=headers,
+            store=store,
         )
 
     def search_commits(
@@ -589,6 +592,7 @@ class Github(object):
         query,
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
+        store=True,
         **qualifiers
     ):
         """
@@ -596,6 +600,7 @@ class Github(object):
         :param query: string
         :param sort: string ('author-date', 'committer-date')
         :param order: string ('asc', 'desc')
+        :param store: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
@@ -628,6 +633,7 @@ class Github(object):
             "/search/commits",
             url_parameters,
             headers={"Accept": Consts.mediaTypeCommitSearchPreview},
+            store=store,
         )
 
     def search_topics(self, query, **qualifiers):
