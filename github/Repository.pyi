@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, overload
 
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Branch import Branch
@@ -179,9 +179,12 @@ class Repository(CompletableGithubObject):
         due_on: Union[date, _NotSetType] = ...,
     ) -> Milestone: ...
     def create_project(self, name: str, body: str = ...) -> Project: ...
-    def create_pull(self, *args, **kwds) -> PullRequest: ...
+    @overload
+    def create_pull(self, title: str, body: str, base: str, head: str, maintainer_can_modify: Union[bool, _NotSetType], draft: bool, issue: _NotSetType) -> PullRequest: ...
+    @overload
+    def create_pull(self, title: _NotSetType, body: _NotSetType, base: str, head: str, maintainer_can_modify: _NotSetType, draft: bool, issue: Issue) -> PullRequest: ...
     def create_repository_dispatch(
-        self, event_type: str, client_payload: dict
+        self, event_type: str, client_payload: Dict[str, str]
     ) -> bool: ...
     def create_source_import(
         self,
