@@ -23,6 +23,7 @@
 ################################################################################
 
 import github.GithubObject
+import github.WorkflowRun
 
 
 class Workflow(github.GithubObject.CompletableGithubObject):
@@ -104,6 +105,57 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
+
+    def get_runs(
+        self,
+        actor=github.GithubObject.NotSet,
+        branch=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id/runs <https://developer.github.com/v3/actions/workflow-runs>`_
+        :param actor: :class:`github.NamedUser.NamedUser` or string
+        :param branch: :class:`github.Branch.Branch` or string
+        :param event: string
+        :param status: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert (
+            actor is github.GithubObject.NotSet
+            or isinstance(actor, github.NamedUser.NamedUser)
+            or isinstance(actor, str)
+        ), actor
+        assert (
+            branch is github.GithubObject.NotSet
+            or isinstance(branch, github.Branch.Branch)
+            or isinstance(branch, str)
+        ), branch
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        url_parameters = dict()
+        if actor is not github.GithubObject.NotSet:
+            url_parameters["actor"] = (
+                actor._identity
+                if isinstance(actor, github.NamedUser.NamedUser)
+                else actor
+            )
+        if branch is not github.GithubObject.NotSet:
+            url_parameters["branch"] = (
+                branch.name if isinstance(branch, github.Branch.Branch) else branch
+            )
+        if event is not github.GithubObject.NotSet:
+            url_parameters["event"] = event
+        if status is not github.GithubObject.NotSet:
+            url_parameters["status"] = status
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowRun.WorkflowRun,
+            self._requester,
+            self.url + "/runs",
+            url_parameters,
+            None,
+            list_item="workflow_runs",
+        )
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
