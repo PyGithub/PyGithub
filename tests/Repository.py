@@ -966,6 +966,13 @@ class Repository(Framework.TestCase):
             workflows, lambda w: w.name, ["check", "Publish to PyPI"]
         )
 
+    def testGetWorkflowRuns(self):
+        self.assertListKeyEqual(
+            self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(),
+            lambda r: r.id,
+            [110932306, 110932159, 110932072, 110286191, 110278769],
+        )
+
     def testGetSourceImport(self):
         import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
         source_import = import_repo.get_source_import()

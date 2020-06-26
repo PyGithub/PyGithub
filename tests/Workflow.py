@@ -56,3 +56,28 @@ class Workflow(Framework.TestCase):
             self.workflow.badge_url,
             "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg",
         )
+
+    def testGetRunsWithNoArguments(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(),
+            lambda r: r.id,
+            [109950033, 109168419, 108934155, 108817672],
+        )
+
+    def testGetRunsWithObjects(self):
+        sfdye = self.g.get_user("sfdye")
+        master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
+        self.assertListKeyEqual(
+            self.workflow.get_runs(
+                actor=sfdye, branch=master, event="push", status="completed"
+            ),
+            lambda r: r.id,
+            [100957683, 94845611, 93946842, 92714488],
+        )
+
+    def testGetRunsWithStrings(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(actor="s-t-e-v-e-n-k", branch="master"),
+            lambda r: r.id,
+            [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
+        )
