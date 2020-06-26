@@ -118,6 +118,7 @@ class Repository(Framework.TestCase):
         )
 
     def testEditWithoutArguments(self):
+        self.assertTrue(False)
         self.repo.edit("PyGithub")
 
     def testEditWithAllArguments(self):
