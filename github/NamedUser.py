@@ -794,7 +794,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
                 attributes["total_private_repos"]
             )
         if "twitter_username" in attributes:  # pragma no branch
-            self._twitter_username = self._makeStringAttribute(attributes["twitter_username"])
+            self._twitter_username = self._makeStringAttribute(
+                attributes["twitter_username"]
+            )
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
