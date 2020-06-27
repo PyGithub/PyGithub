@@ -2,7 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
