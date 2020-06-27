@@ -23,6 +23,7 @@
 #                                                                              #
 ################################################################################
 
+import github.DeploymentStatus
 import github.GithubObject
 
 
@@ -148,20 +149,6 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/statuses",
             None,
-        )
-
-    def get_status(self, id_):
-        """
-        :calls: `GET /repos/:owner/deployments/:deployment_id/statuses/:status_id  <https://developer.github.com/v3/repos/deployments/#get-a-deployment-status>`_
-        :param id_: int
-        :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
-        """
-        assert isinstance(id_, str), id_
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/statuses/" + str(id_)
-        )
-        return github.DeploymentStatus.DeploymentStatus(
-            self._requester, headers, data, completed=True
         )
 
     def create_status(
