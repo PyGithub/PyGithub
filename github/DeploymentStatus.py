@@ -141,11 +141,11 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._node_id = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "url" in attributes:  # pgrama no branch
+        if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "id" in attributes:  # pgrama no branch
+        if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
-        if "node_id" in attributes:  # pgrama no branch
+        if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
