@@ -30,6 +30,9 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
     This class represents Deployment Statuses. The reference can be found here https://developer.github.com/v3/repos/deployments/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "url": self._url.value})
+
     @property
     def created_at(self):
         """
