@@ -3,6 +3,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -136,6 +137,64 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
+
+    def get_statuses(self):
+        """
+        :calls: `GET /repos/:owner/deployments/:deployment_id/statuses <https://developer.github.com/v3/repos/deployments/#list-deployment-statuses>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.DeploymentStatus.DeploymentStatus`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.DeploymentStatus.DeploymentStatus,
+            self._requester,
+            self.url + "/statuses",
+            None,
+        )
+
+    def get_status(self, id_):
+        """
+        :calls: `GET /repos/:owner/deployments/:deployment_id/statuses/:status_id  <https://developer.github.com/v3/repos/deployments/#get-a-deployment-status>`_
+        :param id_: int
+        :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
+        """
+        assert isinstance(id_, str), id_
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/statuses/" + str(id_)
+        )
+        return github.DeploymentStatus.DeploymentStatus(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_status(
+        self,
+        state,
+        target_url=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/:owner/:repo/deployments/:deployment_id/statuses <https://developer.github.com/v3/repos/deployments/#create-a-deployment-status>`_
+        :param: state: string
+        :param: target_url: string
+        :param: description: string
+        :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
+        """
+        assert isinstance(state, str), state
+        assert target_url is github.GithubObject.NotSet or isinstance(
+            target_url, str
+        ), target_url
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), target_url
+        post_parameters = {"state": state}
+        if target_url is not github.GithubObject.NotSet:
+            post_parameters["target_url"] = target_url
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.url + "/statuses", input=post_parameters,
+        )
+        return github.DeploymentStatus.DeploymentStatus(
+            self._requester, headers, data, completed=True
+        )
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
