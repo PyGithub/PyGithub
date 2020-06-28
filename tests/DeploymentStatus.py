@@ -30,13 +30,12 @@ from . import Framework
 class DeploymentStatus(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        statuses = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_deployment(242997115)
-            .get_statuses()
+        self.deployment = (
+            self.g.get_user().get_repo("PyGithub").get_deployment(242997115)
         )
-        self.status = next(s for s in statuses if s.id == 344110026)
+        self.status = next(
+            s for s in self.deployment.get_statuses() if s.id == 344110026
+        )
 
     def testAttributes(self):
         self.assertEqual(self.status.id, 344110026)
@@ -66,4 +65,12 @@ class DeploymentStatus(Framework.TestCase):
         self.assertEqual(
             repr(self.status),
             'DeploymentStatus(url="https://api.github.com/repos/colbygallup/PyGithub/deployments/242997115/statuses/344110026", id=344110026)',
+        )
+
+    def testCreate(self):
+        newStatus = self.deployment.create_status("success")
+        self.assertEqual(newStatus.state, "success")
+        self.assertEqual(
+            newStatus.repository_url,
+            "https://api.github.com/repos/colbygallup/PyGithub",
         )
