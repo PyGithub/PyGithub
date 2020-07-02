@@ -74,3 +74,11 @@ class DeploymentStatus(Framework.TestCase):
             newStatus.repository_url,
             "https://api.github.com/repos/colbygallup/PyGithub",
         )
+
+    def testGetStatuses(self):
+        statuses = self.deployment.get_statuses()
+        self.assertListKeyEqual(
+            statuses,
+            lambda s: s.id,
+            [346100235, 344427441, 344110026, 344109923, 344107728],
+        )
