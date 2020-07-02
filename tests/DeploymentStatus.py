@@ -33,9 +33,7 @@ class DeploymentStatus(Framework.TestCase):
         self.deployment = (
             self.g.get_user().get_repo("PyGithub").get_deployment(242997115)
         )
-        self.status = next(
-            s for s in self.deployment.get_statuses() if s.id == 344110026
-        )
+        self.status = self.deployment.get_status(344110026)
 
     def testAttributes(self):
         self.assertEqual(self.status.id, 344110026)

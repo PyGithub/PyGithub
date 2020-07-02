@@ -120,3 +120,6 @@ issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
 
 # https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
 teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
+
+# https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/
+deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
