@@ -1,13 +1,23 @@
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject
+from github.DeploymentStatus import DeploymentStatus
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
 
 class Deployment(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
+    def get_statuses(self) -> PaginatedList[DeploymentStatus]: ...
+    def get_status(self, id_: int) -> DeploymentStatus: ...
+    def create_status(
+        self,
+        state: str,
+        target_url: Union[str, _NotSetType] = ...,
+        description: Union[str, _NotSetType] = ...,
+    ) -> DeploymentStatus: ...
     @property
     def id(self) -> int: ...
     @property
