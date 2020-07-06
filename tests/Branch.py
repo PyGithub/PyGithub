@@ -287,6 +287,35 @@ class Branch(Framework.TestCase):
             ["pygithub-owners"],
         )
 
+    def testAddAppPushRestrictions(self):
+        self.organization_branch.add_app_push_restrictions("pygithub-app")
+        self.assertListKeyEqual(
+            self.organization_branch.get_app_push_restrictions(),
+            lambda t: t.slug,
+            ["pygithub-app"],
+        )
+
+    def testReplaceAppPushRestrictions(self):
+        self.assertListKeyEqual(
+            self.organization_branch.get_app_push_restrictions(),
+            lambda t: t.slug,
+            ["pygithub-app"],
+        )
+        self.organization_branch.replace_app_push_restrictions("org-app")
+        self.assertListKeyEqual(
+            self.organization_branch.get_app_push_restrictions(),
+            lambda t: t.slug,
+            ["org-app"],
+        )
+
+    def testRemoveAppPushRestrictions(self):
+        self.organization_branch.remove_team_push_restrictions("org-team")
+        self.assertListKeyEqual(
+            self.organization_branch.get_team_push_restrictions(),
+            lambda t: t.slug,
+            ["pygithub-app"],
+        )
+
     def testRemovePushRestrictions(self):
         self.organization_branch.remove_push_restrictions()
         with self.assertRaises(github.GithubException) as raisedexp:

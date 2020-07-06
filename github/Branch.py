@@ -123,6 +123,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_approving_review_count=github.GithubObject.NotSet,
         user_push_restrictions=github.GithubObject.NotSet,
         team_push_restrictions=github.GithubObject.NotSet,
+        app_push_restrictions=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
@@ -136,6 +137,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_approving_review_count: int
         :user_push_restrictions: list of strings
         :team_push_restrictions: list of strings
+        :app_push_restrictions: list of strings
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -226,14 +228,18 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         if (
             user_push_restrictions is not github.GithubObject.NotSet
             or team_push_restrictions is not github.GithubObject.NotSet
+            or app_push_restrictions is not github.GithubObject.NotSet
         ):
             if user_push_restrictions is github.GithubObject.NotSet:
                 user_push_restrictions = []
             if team_push_restrictions is github.GithubObject.NotSet:
                 team_push_restrictions = []
+            if app_push_restrictions is github.GithubObject.NotSet:
+                app_push_restrictions = []
             post_parameters["restrictions"] = {
                 "users": user_push_restrictions,
                 "teams": team_push_restrictions,
+                "apps": app_push_restrictions,
             }
         else:
             post_parameters["restrictions"] = None
@@ -425,6 +431,18 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
+    def get_app_push_restrictions(self):
+        """
+        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/restrictions/apps <https://developer.github.com/v3/repos/branches>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team,
+            self._requester,
+            self.protection_url + "/restrictions/apps",
+            None,
+        )
+
     def add_user_push_restrictions(self, *users):
         """
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
@@ -489,6 +507,39 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.protection_url + "/restrictions/teams", input=teams
+        )
+
+    def add_app_push_restrictions(self, *apps):
+        """
+        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/apps <https://developer.github.com/v3/repos/branches>`_
+        :apps: list of strings (app slugs)
+        """
+        assert all(isinstance(element, str) for element in apps), apps
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.protection_url + "/restrictions/apps", input=apps
+        )
+
+    def replace_app_push_restrictions(self, *apps):
+        """
+        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/apps <https://developer.github.com/v3/repos/branches>`_
+        :apps: list of strings (app slugs)
+        """
+        assert all(isinstance(element, str) for element in apps), apps
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", self.protection_url + "/restrictions/apps", input=apps
+        )
+
+    def remove_app_push_restrictions(self, *apps):
+        """
+        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/apps <https://developer.github.com/v3/repos/branches>`_
+        :apps: list of strings (app slugs)
+        """
+        assert all(isinstance(element, str) for element in apps), apps
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", self.protection_url + "/restrictions/apps", input=apps
         )
 
     def remove_push_restrictions(self):
