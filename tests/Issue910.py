@@ -28,12 +28,13 @@
 #                                                                              #
 ################################################################################
 
-from contextlib import contextmanager
 import os
+from contextlib import contextmanager
 from textwrap import dedent
 
-import Framework
 import github
+
+from . import Framework
 
 
 class NetrcManager(object):
@@ -64,7 +65,7 @@ class NetrcManager(object):
                 """
             ).format(self.host, login, password)
 
-            with open(self.path, 'w') as f:
+            with open(self.path, "w") as f:
                 f.write(content)
             try:
                 yield
@@ -72,16 +73,16 @@ class NetrcManager(object):
                 os.remove(self.path)
 
 
-class Issue910(Framework.BasicTestCase):
+class Issue910(Framework.TestCase):
     def setUp(self):
-        Framework.BasicTestCase.setUp(self)
+        super().setUp()
         self.netrc = NetrcManager()
 
     # No auth
     def testNoAuthWithoutNetrc(self):
         g = github.Github()
         with self.netrc.remove():
-            # This should fail with '401 Requires authentication'
+            # This should fail with "401 Requires authentication"
             with self.assertRaises(github.GithubException):
                 self.assertEqual(g.get_user().login, "tmshn")
 

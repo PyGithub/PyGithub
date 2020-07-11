@@ -68,8 +68,8 @@ from . import Consts, GithubException
 
 
 def no_overwriting_netrc_auth(req):
-    # Use .netrc only if 'Authorization' header is absent.
-    if 'Authorization' in req.headers:
+    # Use .netrc only if "Authorization" header is absent.
+    if "Authorization" in req.headers:
         return req
     netrc = requests.utils.get_netrc_auth(req.url)
     if not netrc:
