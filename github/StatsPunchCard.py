@@ -27,8 +27,7 @@
 ################################################################################
 
 import github.GithubObject
-
-import github.NamedUser
+import github.NamedUser  # TODO remove unused
 
 
 class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
@@ -39,6 +38,7 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     def get(self, day, hour):
         """
         Get a specific element
+
         :param day: int
         :param hour: int
         :rtype: int

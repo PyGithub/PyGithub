@@ -36,11 +36,13 @@ class Clones(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "timestamp": self._timestamp.value,
-            "count": self._count.value,
-            "uniques": self._uniques.value
-        })
+        return self.get__repr__(
+            {
+                "timestamp": self._timestamp.value,
+                "count": self._count.value,
+                "uniques": self._uniques.value,
+            }
+        )
 
     @property
     def timestamp(self):

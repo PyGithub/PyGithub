@@ -35,7 +35,7 @@
 import github.GithubObject
 import github.NamedUser
 
-import Consts
+from . import Consts
 
 
 class CommitComment(github.GithubObject.CompletableGithubObject):
@@ -139,10 +139,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/comments/:id <http://developer.github.com/v3/repos/comments>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body):
         """
@@ -150,14 +147,12 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: None
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, str), body
         post_parameters = {
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -172,7 +167,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/reactions",
             None,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
     def create_reaction(self, reaction_type):
@@ -182,9 +177,15 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
-        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
-            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+        assert isinstance(reaction_type, str), "reaction type should be a string"
+        assert reaction_type in [
+            "+1",
+            "-1",
+            "laugh",
+            "confused",
+            "heart",
+            "hooray",
+        ], "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
 
         post_parameters = {
             "content": reaction_type,
@@ -193,7 +194,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/reactions",
             input=post_parameters,
-            headers={'Accept': Consts.mediaTypeReactionsPreview}
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
@@ -232,4 +233,6 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"]
+            )

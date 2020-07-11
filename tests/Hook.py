@@ -29,14 +29,14 @@
 #                                                                              #
 ################################################################################
 
-import Framework
-
 import datetime
+
+from . import Framework
 
 
 class Hook(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.hook = self.g.get_user().get_repo("PyGithub").get_hook(257993)
 
     def testAttributes(self):
@@ -49,13 +49,26 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.last_response.message, "OK")
         self.assertEqual(self.hook.last_response.code, 200)
         self.assertEqual(self.hook.name, "web")
-        self.assertEqual(self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47))
-        self.assertEqual(self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993")
-        self.assertEqual(self.hook.test_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests")
-        self.assertEqual(self.hook.ping_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings")
+        self.assertEqual(
+            self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47)
+        )
+        self.assertEqual(
+            self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"
+        )
+        self.assertEqual(
+            self.hook.test_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests",
+        )
+        self.assertEqual(
+            self.hook.ping_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings",
+        )
 
-        # test __repr__() based on this attributes
-        self.assertEqual(self.hook.__repr__(), 'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)')
+        self.assertEqual(
+            repr(self.hook),
+            'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)',
+        )
+        self.assertEqual(repr(self.hook.last_response), 'HookResponse(status="ok")')
 
     def testEditWithMinimalParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com/hook"})

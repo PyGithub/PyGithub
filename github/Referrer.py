@@ -36,11 +36,13 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "referrer": self._referrer.value,
-            "count": self._count.value,
-            "uniques": self._uniques.value
-        })
+        return self.get__repr__(
+            {
+                "referrer": self._referrer.value,
+                "count": self._count.value,
+                "uniques": self._uniques.value,
+            }
+        )
 
     @property
     def referrer(self):

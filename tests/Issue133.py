@@ -25,12 +25,12 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from . import Framework
 
 
 class Issue133(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
 
     def testGetPageWithoutInitialArguments(self):

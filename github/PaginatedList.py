@@ -37,12 +37,7 @@
 #                                                                              #
 ################################################################################
 
-try:
-    from urllib.parse import parse_qs
-except ImportError:
-    from urlparse import parse_qs
-
-import github.GithubObject
+from urllib.parse import parse_qs
 
 
 class PaginatedListBase:
@@ -51,7 +46,7 @@ class PaginatedListBase:
 
     def __getitem__(self, index):
         assert isinstance(index, (int, slice))
-        if isinstance(index, (int, long)):
+        if isinstance(index, int):
             self.__fetchToIndex(index)
             return self.__elements[index]
         else:
@@ -109,7 +104,6 @@ class PaginatedList(PaginatedListBase):
     If you want to know the total number of items in the list::
 
         print(user.get_repos().totalCount)
-        print(len(user.get_repos()))
 
     You can also index them or take slices::
 
@@ -127,8 +121,16 @@ class PaginatedList(PaginatedListBase):
         some_other_repos = user.get_repos().get_page(3)
     """
 
-    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None, list_item="items"):
-        PaginatedListBase.__init__(self)
+    def __init__(
+        self,
+        contentClass,
+        requester,
+        firstUrl,
+        firstParams,
+        headers=None,
+        list_item="items",
+    ):
+        super().__init__()
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
@@ -149,12 +151,9 @@ class PaginatedList(PaginatedListBase):
             # set per_page = 1 so the totalCount is just the number of pages
             params.update({"per_page": 1})
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET",
-                self.__firstUrl,
-                parameters=params,
-                headers=self.__headers
+                "GET", self.__firstUrl, parameters=params, headers=self.__headers
             )
-            if 'link' not in headers:
+            if "link" not in headers:
                 if data and "total_count" in data:
                     self.__totalCount = data["total_count"]
                 elif data:
@@ -164,15 +163,12 @@ class PaginatedList(PaginatedListBase):
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
-                self.__totalCount = int(parse_qs(lastUrl)['page'][0])
+                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
         return self.__totalCount
 
     def _getLastPageUrl(self):
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            self.__firstUrl,
-            parameters=self.__nextParams,
-            headers=self.__headers
+            "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers
         )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
@@ -180,7 +176,14 @@ class PaginatedList(PaginatedListBase):
 
     @property
     def reversed(self):
-        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams, self.__headers, self.__list_item)
+        r = PaginatedList(
+            self.__contentClass,
+            self.__requester,
+            self.__firstUrl,
+            self.__firstParams,
+            self.__headers,
+            self.__list_item,
+        )
         r.__reverse()
         return r
 
@@ -195,10 +198,7 @@ class PaginatedList(PaginatedListBase):
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            self.__nextUrl,
-            parameters=self.__nextParams,
-            headers=self.__headers
+            "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
         data = data if data else []
 
@@ -213,12 +213,13 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         if self.__list_item in data:
-            self.__totalCount = data.get('total_count')
+            self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
 
         content = [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data if element is not None
+            for element in data
+            if element is not None
         ]
         if self._reversed:
             return content[::-1]
@@ -242,14 +243,11 @@ class PaginatedList(PaginatedListBase):
         if self.__requester.per_page != 30:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            self.__firstUrl,
-            parameters=params,
-            headers=self.__headers
+            "GET", self.__firstUrl, parameters=params, headers=self.__headers
         )
 
         if self.__list_item in data:
-            self.__totalCount = data.get('total_count')
+            self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
 
         return [

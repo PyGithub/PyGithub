@@ -27,12 +27,12 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from . import Framework
 
 
 class Issue33(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/33
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
 
     def testOpenIssues(self):

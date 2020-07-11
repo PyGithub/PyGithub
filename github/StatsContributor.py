@@ -27,7 +27,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.NamedUser
 
 
@@ -38,7 +37,7 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
 
     class Week(github.GithubObject.NonCompletableGithubObject):
         """
-        This class represents weekly statistics of a contibutor.
+        This class represents weekly statistics of a contributor.
         """
 
         @property
@@ -113,8 +112,12 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["author"]
+            )
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch
-            self._weeks = self._makeListOfClassesAttribute(self.Week, attributes["weeks"])
+            self._weeks = self._makeListOfClassesAttribute(
+                self.Week, attributes["weeks"]
+            )

@@ -32,7 +32,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.HookResponse
 
 
@@ -137,12 +136,17 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
+    def edit(
+        self,
+        name,
+        config,
+        events=github.GithubObject.NotSet,
+        add_events=github.GithubObject.NotSet,
+        remove_events=github.GithubObject.NotSet,
+        active=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
         :param name: string
@@ -153,11 +157,17 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :param active: bool
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert add_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_events), add_events
-        assert remove_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_events), remove_events
+        assert events is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in events
+        ), events
+        assert add_events is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in add_events
+        ), add_events
+        assert remove_events is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in remove_events
+        ), remove_events
         assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,
@@ -172,9 +182,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -183,20 +191,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/hooks/:id/tests <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/tests"
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", self.url + "/tests")
 
     def ping(self):
         """
         :calls: `POST /repos/:owner/:repo/hooks/:id/pings <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/pings"
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", self.url + "/pings")
 
     def _initAttributes(self):
         self._active = github.GithubObject.NotSet
@@ -223,7 +225,9 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "last_response" in attributes:  # pragma no branch
-            self._last_response = self._makeClassAttribute(github.HookResponse.HookResponse, attributes["last_response"])
+            self._last_response = self._makeClassAttribute(
+                github.HookResponse.HookResponse, attributes["last_response"]
+            )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "test_url" in attributes:  # pragma no branch

@@ -30,9 +30,8 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
 import github.AuthorizationApplication
+import github.GithubObject
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):
@@ -120,12 +119,16 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /authorizations/:id <http://developer.github.com/v3/oauth>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, scopes=github.GithubObject.NotSet, add_scopes=github.GithubObject.NotSet, remove_scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet):
+    def edit(
+        self,
+        scopes=github.GithubObject.NotSet,
+        add_scopes=github.GithubObject.NotSet,
+        remove_scopes=github.GithubObject.NotSet,
+        note=github.GithubObject.NotSet,
+        note_url=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /authorizations/:id <http://developer.github.com/v3/oauth>`_
         :param scopes: list of string
@@ -135,11 +138,19 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
-        assert add_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_scopes), add_scopes
-        assert remove_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_scopes), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, (str, unicode)), note
-        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
+        assert scopes is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in scopes
+        ), scopes
+        assert add_scopes is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in add_scopes
+        ), add_scopes
+        assert remove_scopes is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in remove_scopes
+        ), remove_scopes
+        assert note is github.GithubObject.NotSet or isinstance(note, str), note
+        assert note_url is github.GithubObject.NotSet or isinstance(
+            note_url, str
+        ), note_url
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes
@@ -152,9 +163,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         if note_url is not github.GithubObject.NotSet:
             post_parameters["note_url"] = note_url
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -171,7 +180,10 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
-            self._app = self._makeClassAttribute(github.AuthorizationApplication.AuthorizationApplication, attributes["app"])
+            self._app = self._makeClassAttribute(
+                github.AuthorizationApplication.AuthorizationApplication,
+                attributes["app"],
+            )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch

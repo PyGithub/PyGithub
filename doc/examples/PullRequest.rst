@@ -1,6 +1,24 @@
 PullRequest
 ===========
 
+Create a new Pull Request
+-------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> body = '''
+    >>> SUMMARY
+    >>> Change HTTP library used to send requests
+    >>>
+    >>> TESTS
+    >>>   - [x] Send 'GET' request
+    >>>   - [x] Send 'POST' request with/without body
+    >>> '''
+    >>> pr = repo.create_pull(title="Use 'requests' instead of 'httplib'", body=body, head="develop", base="master")
+    >>> pr
+    PullRequest(title="Use 'requests' instead of 'httplib'", number=664)
+
 Get Pull Request by Number
 ---------------------------
 

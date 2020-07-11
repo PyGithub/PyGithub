@@ -36,26 +36,24 @@
 #                                                                              #
 ################################################################################
 
+import io
 import json
 import os
-import sys
 import traceback
 import unittest
-import httpretty
+
+import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
+from urllib3.util import Url  # type: ignore
 
 import github
 
-python2 = sys.hexversion < 0x03000000
-atLeastPython3 = sys.hexversion >= 0x03000000
 
-
-def readLine(file):
-    if atLeastPython3:
-        return file.readline().decode("utf-8").strip()
-    else:
-        return file.readline().strip()
+def readLine(file_):
+    line = file_.readline()
+    if isinstance(line, bytes):
+        line = line.decode("utf-8")
+    return line.strip()
 
 
 class FakeHttpResponse:
@@ -87,16 +85,17 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Bearer jwt_removed"
 
 
-class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingConnection:
     def __init__(self, file, protocol, host, port, *args, **kwds):
+        # write operations make the assumption that the file is not in binary mode
+        assert isinstance(file, io.TextIOBase)
         self.__file = file
         self.__protocol = protocol
         self.__host = host
-        self.__port = str(port)
+        self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
@@ -112,23 +111,19 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__writeLine(self.__host)
         self.__writeLine(self.__port)
         self.__writeLine(url)
-        self.__writeLine(str(anonymous_headers))
-        self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
+        self.__writeLine(anonymous_headers)
+        self.__writeLine(str(input).replace("\n", "").replace("\r", ""))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
 
         status = res.status
-        print "=>", status
         headers = res.getheaders()
         output = res.read()
 
-        self.__writeLine(str(status))
-        self.__writeLine(str(list(headers)))
-        if atLeastPython3: # In Py3, return from "read" is bytes
-            self.__writeLine(output)
-        else:
-            self.__writeLine(output.encode("utf-8"))
+        self.__writeLine(status)
+        self.__writeLine(list(headers))
+        self.__writeLine(output)
 
         return FakeHttpResponse(status, headers, output)
 
@@ -137,32 +132,25 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        if atLeastPython3:
-            try:  # Detect str/bytes
-                self.__file.write(line + b"\n")
-            except TypeError:
-                self.__file.write((line + "\n").encode('utf-8'))
-        else:
-            self.__file.write(line + "\n")
+        self.__file.write(str(line) + u"\n")
 
 
-class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingHttpConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
-        RecordingConnection.__init__(self, file, "http", *args, **kwds)
+        super().__init__(file, "http", *args, **kwds)
 
 
-class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+class RecordingHttpsConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
     def __init__(self, file, *args, **kwds):
-        RecordingConnection.__init__(self, file, "https", *args, **kwds)
+        super().__init__(file, "https", *args, **kwds)
 
 
 class ReplayingConnection:
-    def __init__(self, testCase, file, protocol, host, port, *args, **kwds):
-        self.__testCase = testCase
+    def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
         self.__host = host
@@ -172,32 +160,29 @@ class ReplayingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
-
-        httpretty.register_uri(
-            verb,
-            full_url.url,
-            body=self.__request_callback
+        full_url = Url(
+            scheme=self.__protocol, host=self.__host, port=self.__port, path=url
         )
+
+        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
         self.__cnx.request(verb, url, input, headers)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
-        self.__testCase.assertEqual(verb, readLine(self.__file))
-        self.__testCase.assertEqual(self.__host, readLine(self.__file))
-        self.__testCase.assertEqual(str(self.__port), readLine(self.__file))
-        self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
-        self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
+        assert self.__protocol == readLine(self.__file)
+        assert verb == readLine(self.__file)
+        assert self.__host == readLine(self.__file)
+        assert str(self.__port) == readLine(self.__file)
+        assert self.__splitUrl(url) == self.__splitUrl(readLine(self.__file))
+        assert headers == eval(readLine(self.__file))
         expectedInput = readLine(self.__file)
-        if isinstance(input, (str, unicode)):
+        if isinstance(input, str):
+            trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
-            elif python2:  # @todo Test in all cases, including Python 3.4+
-                # In Python 3.4+, dicts are not output in the same order as in Python 2.7.
-                # So, form-data encoding is not deterministic and is difficult to test.
-                self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+                assert json.loads(trInput) == json.loads(expectedInput)
+            else:
+                assert trInput == expectedInput
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
@@ -206,26 +191,25 @@ class ReplayingConnection:
         splitedUrl = url.split("?")
         if len(splitedUrl) == 1:
             return splitedUrl
-        self.__testCase.assertEqual(len(splitedUrl), 2)
+        assert len(splitedUrl) == 2
         base, qs = splitedUrl
         return (base, sorted(qs.split("&")))
 
     def __request_callback(self, request, uri, response_headers):
-        self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
+        self.__readNextRequest(
+            self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers
+        )
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = readLine(self.__file)
+        output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
-
-        if atLeastPython3:
-            output = bytes(output, 'utf-8')
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
-        adding_headers.pop('content-length', None)
-        adding_headers.pop('transfer-encoding', None)
-        adding_headers.pop('content-encoding', None)
+        adding_headers.pop("content-length", None)
+        adding_headers.pop("transfer-encoding", None)
+        adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
         return [status, response_headers, output]
@@ -246,15 +230,15 @@ class ReplayingConnection:
 class ReplayingHttpConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, testCase, file, *args, **kwds):
-        ReplayingConnection.__init__(self, testCase, file, "http", *args, **kwds)
+    def __init__(self, file, *args, **kwds):
+        super().__init__(file, "http", *args, **kwds)
 
 
 class ReplayingHttpsConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, testCase, file, *args, **kwds):
-        ReplayingConnection.__init__(self, testCase, file, "https", *args, **kwds)
+    def __init__(self, file, *args, **kwds):
+        super().__init__(file, "https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
@@ -265,15 +249,22 @@ class BasicTestCase(unittest.TestCase):
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
         self.__fileName = ""
         self.__file = None
-        if self.recordMode:  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
+        if (
+            self.recordMode
+        ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
+                lambda ignored, *args, **kwds: RecordingHttpConnection(
+                    self.__openFile("w"), *args, **kwds
+                ),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection(
+                    self.__openFile("w"), *args, **kwds
+                ),
             )
-            import GithubCredentials
+            import GithubCredentials  # type: ignore
+
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
@@ -285,8 +276,12 @@ class BasicTestCase(unittest.TestCase):
             self.password_netrc = GithubCredentials.password_netrc
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("rb"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("rb"), *args, **kwds)
+                lambda ignored, *args, **kwds: ReplayingHttpConnection(
+                    self.__openFile("r"), *args, **kwds
+                ),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection(
+                    self.__openFile("r"), *args, **kwds
+                ),
             )
             self.login = "login"
             self.password = "password"
@@ -300,7 +295,7 @@ class BasicTestCase(unittest.TestCase):
             httpretty.enable(allow_net_connect=False)
 
     def tearDown(self):
-        unittest.TestCase.tearDown(self)
+        super().tearDown()
         httpretty.disable()
         httpretty.reset()
         self.__closeReplayFileIfNeeded()
@@ -308,18 +303,29 @@ class BasicTestCase(unittest.TestCase):
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
-            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(self.replayDataFolder, self.__class__.__name__ + "." + functionName + ".txt")
+            if (
+                functionName.startswith("test")
+                or functionName == "setUp"
+                or functionName == "tearDown"
+            ):
+                if (
+                    functionName != "test"
+                ):  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    fileName = os.path.join(
+                        self.replayDataFolder,
+                        self.__class__.__name__ + "." + functionName + ".txt",
+                    )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = open(self.__fileName, mode)
+            self.__file = io.open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
-            if not self.recordMode:  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
+            if (
+                not self.recordMode
+            ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
                 self.assertEqual(readLine(self.__file), "")
             self.__file.close()
 
@@ -344,7 +350,7 @@ class TestCase(BasicTestCase):
         return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
 
     def setUp(self):
-        BasicTestCase.setUp(self)
+        super().setUp()
 
         # Set up frame debugging
         github.GithubObject.GithubObject.setCheckAfterInitFlag(True)

@@ -25,14 +25,13 @@
 #                                                                              #
 ################################################################################
 
-import Framework
-import github
+from . import Framework
 
 
 # Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt
 class Issue216(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
 

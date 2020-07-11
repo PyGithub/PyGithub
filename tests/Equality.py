@@ -25,7 +25,7 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from . import Framework
 
 
 class Equality(Framework.TestCase):

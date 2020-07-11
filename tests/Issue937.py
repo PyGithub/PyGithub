@@ -21,18 +21,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-import Framework
+from . import Framework
 
-import github
 
 class Issue937(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
 
     def testCollaboratorsAffiliation(self):
-        collaborators = self.repo.get_collaborators(affiliation='direct')
+        collaborators = self.repo.get_collaborators(affiliation="direct")
         self.assertListKeyEqual(collaborators, lambda u: u.login, ["hegde5"])
         with self.assertRaises(AssertionError):
-            self.repo.get_collaborators(affiliation='invalid_option')
+            self.repo.get_collaborators(affiliation="invalid_option")

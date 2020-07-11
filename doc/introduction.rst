@@ -1,7 +1,7 @@
 Introduction
 ============
 
-PyGithub is a Python (2 and 3) library to use the `Github API v3 <http://developer.github.com/v3>`__.
+PyGithub is a Python library to use the `Github API v3 <http://developer.github.com/v3>`__.
 With it, you can manage your `Github <http://github.com>`__ resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
 Should you have any question, any remark, or if you find a bug,
@@ -68,7 +68,7 @@ Projects using PyGithub
 * `Tratihubis <http://pypi.python.org/pypi/tratihubis/>`__ converts Trac tickets to Github issues
 * https://github.com/fga-gpp-mds/2018.1-Cardinals - website that shows metrics for any public repository (issues, commits, pull requests etc)
 * https://github.com/CMB/cligh
-* https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
+* https://github.com/natduca/quickopen uses PyGithub to automatically create issues
 * https://gist.github.com/3433798
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github

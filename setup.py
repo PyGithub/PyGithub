@@ -41,10 +41,11 @@
 #                                                                              #
 ################################################################################
 
-import setuptools
 import textwrap
 
-version = "1.43.7"
+import setuptools
+
+version = "1.51"
 
 
 if __name__ == "__main__":
@@ -55,7 +56,8 @@ if __name__ == "__main__":
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
         url="http://pygithub.readthedocs.io/en/latest/",
-        long_description=textwrap.dedent("""\
+        long_description=textwrap.dedent(
+            """\
             (Very short) Tutorial
             =====================
 
@@ -78,9 +80,10 @@ if __name__ == "__main__":
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""),
+            See http://pygithub.readthedocs.io/en/latest/"""
+        ),
         packages=["github"],
-        package_data={},
+        package_data={"github": ["py.typed", "*.pyi"]},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
@@ -88,27 +91,15 @@ if __name__ == "__main__":
             "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
             "Operating System :: OS Independent",
             "Programming Language :: Python",
-            "Programming Language :: Python :: 2",
-            "Programming Language :: Python :: 2.7",
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.5",
             "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
             "Topic :: Software Development",
         ],
-        test_suite="tests.AllTests",
-        use_2to3=True,
-        python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
-        install_requires=[
-            "deprecated",
-            "pyjwt",
-            "requests>=2.14.0"
-        ],
-        extras_require={
-            "integrations": ["cryptography"]
-        },
-        tests_require=[
-            "cryptography",
-            "httpretty==0.9.6"
-        ]
+        python_requires=">=3.5",
+        install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
+        extras_require={"integrations": ["cryptography"]},
+        tests_require=["cryptography", "httpretty>=0.9.6"],
     )

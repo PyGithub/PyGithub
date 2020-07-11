@@ -87,10 +87,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /user/keys/:id <http://developer.github.com/v3/users/keys>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet

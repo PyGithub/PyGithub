@@ -31,7 +31,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.GitObject
 
 
@@ -72,10 +71,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, sha, force=github.GithubObject.NotSet):
         """
@@ -84,7 +80,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :param force: bool
         :rtype: None
         """
-        assert isinstance(sha, (str, unicode)), sha
+        assert isinstance(sha, str), sha
         assert force is github.GithubObject.NotSet or isinstance(force, bool), force
         post_parameters = {
             "sha": sha,
@@ -92,27 +88,9 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         if force is not github.GithubObject.NotSet:
             post_parameters["force"] = force
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
-
-    def get_statuses(self):
-        """
-        https://developer.github.com/v3/repos/statuses/#list-statuses-for-a-specific-ref
-        :calls: `GET /repos/:owner/:repo/commits/:ref/statuses`
-        :return:
-        """
-        pass
-
-    def get_status(self):
-        """
-        https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-ref
-        :calls: `GET /repos/:owner/:repo/commits/:ref/status`
-        :return:
-        """
-        pass
 
     def _initAttributes(self):
         self._object = github.GithubObject.NotSet
@@ -121,7 +99,9 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
+            self._object = self._makeClassAttribute(
+                github.GitObject.GitObject, attributes["object"]
+            )
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch

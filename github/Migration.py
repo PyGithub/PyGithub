@@ -33,11 +33,11 @@
 ################################################################################
 
 import github.GithubObject
+import github.NamedUser
 import github.PaginatedList
 
-import github.NamedUser
+from . import Consts
 
-import Consts
 
 class Migration(github.GithubObject.CompletableGithubObject):
     """
@@ -130,58 +130,48 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def get_status(self):
         """
-        :calls: `GET /user/migrations/:migration_id`_
+        :calls: `GET /user/migrations/:migration_id <https://developer.github.com/v3/migrations/users>`_
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            self.url,
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            "GET", self.url, headers={"Accept": Consts.mediaTypeMigrationPreview}
         )
         self._useAttributes(data)
         return self.state
 
     def get_archive_url(self):
         """
-        :calls: `GET /user/migrations/:migration_id/archive`_
+        :calls: `GET /user/migrations/:migration_id/archive <https://developer.github.com/v3/migrations/users>`_
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/archive",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
         return data["data"]
 
     def delete(self):
         """
-        :calls: `DELETE /user/migrations/:migration_id/archive`_
+        :calls: `DELETE /user/migrations/:migration_id/archive <https://developer.github.com/v3/migrations/users>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/archive",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
     def unlock_repo(self, repo_name):
         """
-        :calls: `DELETE /user/migrations/:migration_id/repos/:repo_name/lock`_
+        :calls: `DELETE /user/migrations/:migration_id/repos/:repo_name/lock <https://developer.github.com/v3/migrations/users>`_
         :param repo_name: str
         :rtype: None
         """
-        assert isinstance(repo_name, (str, unicode)), repo_name
+        assert isinstance(repo_name, str), repo_name
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo_name + "/lock",
-            headers={
-                "Accept": Consts.mediaTypeMigrationPreview
-            }
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
     def _initAttributes(self):
@@ -200,17 +190,25 @@ class Migration(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["owner"]
+            )
         if "guid" in attributes:
             self._guid = self._makeStringAttribute(attributes["guid"])
         if "state" in attributes:
             self._state = self._makeStringAttribute(attributes["state"])
         if "lock_repositories" in attributes:
-            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+            self._lock_repositories = self._makeBoolAttribute(
+                attributes["lock_repositories"]
+            )
         if "exclude_attachments" in attributes:
-            self._exclude_attachments = self._makeBoolAttribute(attributes["exclude_attachments"])
+            self._exclude_attachments = self._makeBoolAttribute(
+                attributes["exclude_attachments"]
+            )
         if "repositories" in attributes:
-            self._repositories = self._makeListOfClassesAttribute(github.Repository.Repository, attributes["repositories"])
+            self._repositories = self._makeListOfClassesAttribute(
+                github.Repository.Repository, attributes["repositories"]
+            )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "created_at" in attributes:

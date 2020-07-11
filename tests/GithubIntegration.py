@@ -1,12 +1,13 @@
-import jwt
-import json
-import time
-import sys
-import unittest
-import requests
 import datetime
-from github.GithubObject import GithubObject
+import json
+import sys
+import time  # NOQA
+import unittest
 
+import jwt
+import requests  # NOQA
+
+from github.GithubObject import GithubObject
 
 private_key = """
 -----BEGIN RSA PRIVATE KEY-----
@@ -37,7 +38,6 @@ e2JtSXoAtYr6qE9maQIDAQAB
 
 
 class GithubIntegration(unittest.TestCase):
-
     def setUp(self):
         # This flag ask requester to do some checking,
         # for debug and test purpose. But
@@ -48,8 +48,8 @@ class GithubIntegration(unittest.TestCase):
         self.origin_check_after_init_flag = GithubObject.CHECK_AFTER_INIT_FLAG
         GithubObject.setCheckAfterInitFlag(False)
 
-        self.origin_time = sys.modules['time'].time
-        sys.modules['time'].time = lambda: 1550055331.7435968
+        self.origin_time = sys.modules["time"].time
+        sys.modules["time"].time = lambda: 1550055331.7435968
 
         class Mock(object):
             def __init__(self):
@@ -75,45 +75,113 @@ class GithubIntegration(unittest.TestCase):
                 self.kwargs = kwargs
                 return self
 
-        self.origin_request_post = sys.modules['requests'].post
+        self.origin_request_post = sys.modules["requests"].post
         self.mock = Mock()
-        sys.modules['requests'].post = self.mock
+        sys.modules["requests"].post = self.mock
+
+        class GetMock(object):
+            def __init__(self):
+                self.args = tuple()
+                self.kwargs = dict()
+                self.calls = []
+
+            @property
+            def status_code(self):
+                return 201
+
+            def json(self):
+                return json.loads(self.text)
+
+            @property
+            def text(self):
+                return (
+                    u'{"id":111111,"account":{"login":"foo","id":11111111,'
+                    u'"node_id":"foobar",'
+                    u'"avatar_url":"https://avatars3.githubusercontent.com/u/11111111?v=4",'
+                    u'"gravatar_id":"","url":"https://api.github.com/users/foo",'
+                    u'"html_url":"https://github.com/foo",'
+                    u'"followers_url":"https://api.github.com/users/foo/followers",'
+                    u'"following_url":"https://api.github.com/users/foo/following{/other_user}",'
+                    u'"gists_url":"https://api.github.com/users/foo/gists{/gist_id}",'
+                    u'"starred_url":"https://api.github.com/users/foo/starred{/owner}{/repo}",'
+                    u'"subscriptions_url":"https://api.github.com/users/foo/subscriptions",'
+                    u'"organizations_url":"https://api.github.com/users/foo/orgs",'
+                    u'"repos_url":"https://api.github.com/users/foo/repos",'
+                    u'"events_url":"https://api.github.com/users/foo/events{/privacy}",'
+                    u'"received_events_url":"https://api.github.com/users/foo/received_events",'
+                    u'"type":"Organization","site_admin":false},"repository_selection":"all",'
+                    u'"access_tokens_url":"https://api.github.com/app/installations/111111/access_tokens",'
+                    u'"repositories_url":"https://api.github.com/installation/repositories",'
+                    u'"html_url":"https://github.com/organizations/foo/settings/installations/111111",'
+                    u'"app_id":11111,"target_id":11111111,"target_type":"Organization",'
+                    u'"permissions":{"issues":"write","pull_requests":"write","statuses":"write","contents":"read",'
+                    u'"metadata":"read"},"events":["pull_request","release"],"created_at":"2019-04-17T16:10:37.000Z",'
+                    u'"updated_at":"2019-05-03T06:27:48.000Z","single_file_name":null}'
+                )
+
+            def __call__(self, *args, **kwargs):
+                self.calls.append((args, kwargs))
+                self.args = args
+                self.kwargs = kwargs
+                return self
+
+        self.origin_request_get = sys.modules["requests"].get
+        self.get_mock = GetMock()
+        sys.modules["requests"].get = self.get_mock
 
     def testCreateJWT(self):
         from github import GithubIntegration
+
         integration = GithubIntegration(25216, private_key)
         token = integration.create_jwt()
         payload = jwt.decode(
-            token,
-            key=public_key,
-            algorithm="RS256",
-            options={'verify_exp': False},
+            token, key=public_key, algorithms=["RS256"], options={"verify_exp": False},
         )
         self.assertDictEqual(
-            payload,
-            {
-                'iat': 1550055331,
-                'exp': 1550055391,
-                'iss': 25216
-            }
+            payload, {"iat": 1550055331, "exp": 1550055391, "iss": 25216}
         )
 
     def testGetAccessToken(self):
         from github import GithubIntegration
+
         integration = GithubIntegration(25216, private_key)
         auth_obj = integration.get_access_token(664281)
         self.assertEqual(
             self.mock.args[0],
-            "https://api.github.com/app/installations/664281/access_tokens"
+            "https://api.github.com/app/installations/664281/access_tokens",
         )
-        self.assertEqual(
-            auth_obj.token, "v1.ce63424bc55028318325caac4f4c3a5378ca0038"
-        )
+        self.assertEqual(auth_obj.token, "v1.ce63424bc55028318325caac4f4c3a5378ca0038")
         self.assertEqual(
             auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
         )
+        self.assertEqual(
+            repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
+        )
+
+    def test_get_installation(self):
+        from github import GithubIntegration
+
+        integr = GithubIntegration("11111", private_key)
+        inst = integr.get_installation("foo", "bar")
+        self.assertEqual(
+            self.get_mock.calls[0][0],
+            ("https://api.github.com/repos/foo/bar/installation",),
+        )
+        self.assertEqual(inst.id.value, 111111)
+
+    def test_get_installation_custom_base_url(self):
+        from github import GithubIntegration
+
+        integr = GithubIntegration("11111", private_key, base_url="https://corp.com/v3")
+        inst = integr.get_installation("foo", "bar")
+        self.assertEqual(
+            self.get_mock.calls[0][0],
+            ("https://corp.com/v3/repos/foo/bar/installation",),
+        )
+        self.assertEqual(inst.id.value, 111111)
 
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)
-        sys.modules['time'].time = self.origin_time
-        sys.modules['requests'].post = self.origin_request_post
+        sys.modules["time"].time = self.origin_time
+        sys.modules["requests"].post = self.origin_request_post
+        sys.modules["requests"].get = self.origin_request_get

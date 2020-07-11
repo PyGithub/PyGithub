@@ -1,0 +1,21 @@
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/stats/code_frequency
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+202
+[('status', '202 Accepted'), ('x-ratelimit-remaining', '4963'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:3448:429A284:528030EA'), ('content-length', '2'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('access-control-allow-credentials', 'true'), ('date', 'Mon, 11 Nov 2013 01:20:42 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384134844')]
+{}
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/stats/code_frequency
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4977'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:7848:2D63900:52803017'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '1844'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('etag', '"2a409951d08a22751ef211c1db5b468b"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 01:17:11 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384134844')]
+[[1329004800,3853,-2098],[1329609600,3005,-2120],[1330214400,2969,-1502],[1330819200,252,-26],[1331424000,4823,-4569],[1332028800,1846,-56],[1332633600,130,-57],[1333238400,0,0],[1333843200,0,0],[1334448000,31,-11],[1335052800,0,0],[1335657600,23632,-7111],[1336262400,29431,-30239],[1336867200,1280,-397],[1337472000,3016,-2064],[1338076800,33188,-30815],[1338681600,2531,-545],[1339286400,6,0],[1339891200,18,-8],[1340496000,721,-272],[1341100800,0,0],[1341705600,353,-217],[1342310400,0,0],[1342915200,725,-609],[1343520000,423,-423],[1344124800,0,0],[1344729600,0,0],[1345334400,63,-16],[1345939200,0,0],[1346544000,2968,-162],[1347148800,1580,-16319],[1347753600,11688,-11278],[1348358400,248,-189],[1348963200,3,-3],[1349568000,6,-11],[1350172800,0,0],[1350777600,0,0],[1351382400,599,-230],[1351987200,14,-3],[1352592000,1,-1],[1353196800,1788,-1765],[1353801600,1251,-1221],[1354406400,0,0],[1355011200,0,0],[1355616000,146,-7],[1356220800,3557,-2799],[1356825600,0,0],[1357430400,0,0],[1358035200,0,0],[1358640000,0,0],[1359244800,83,-12],[1359849600,603,-292],[1360454400,327,-240],[1361059200,147,-74],[1361664000,0,0],[1362268800,52,-7],[1362873600,877,-444],[1363478400,5290,-1029],[1364083200,563,-287],[1364688000,0,0],[1365292800,68,-4],[1365897600,0,0],[1366502400,847,-758],[1367107200,0,0],[1367712000,0,0],[1368316800,433,-32],[1368921600,0,0],[1369526400,42,-12],[1370131200,17,-17],[1370736000,0,0],[1371340800,215,-5],[1371945600,17,-1],[1372550400,0,0],[1373155200,3062,-1701],[1373760000,765,-1178],[1374364800,0,0],[1374969600,127,-12],[1375574400,51,-4],[1376179200,0,0],[1376784000,1982,-1166],[1377388800,0,0],[1377993600,3045,-659],[1378598400,2183,-2373],[1379203200,0,0],[1379808000,0,0],[1380412800,0,0],[1381017600,0,0],[1381622400,0,0],[1382227200,158,-225],[1382832000,0,0],[1383436800,0,0],[1384041600,0,0]]

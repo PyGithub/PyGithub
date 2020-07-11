@@ -25,21 +25,19 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.PaginatedList
-
-import github.Gist
-import github.Repository
-import github.NamedUser
-import github.Plan
-import github.Organization
-import github.UserKey
-import github.Issue
-import github.Event
 import github.Authorization
+import github.Event
+import github.Gist
+import github.GithubObject
+import github.Issue
 import github.Notification
+import github.Organization
+import github.PaginatedList
+import github.Plan
+import github.Repository
+import github.UserKey
 
-import Consts
+from . import Consts
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
@@ -69,7 +67,7 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
             firstUrl="/installation/repositories",
             firstParams=url_parameters,
             headers=INTEGRATION_PREVIEW_HEADERS,
-            list_item='repositories'
+            list_item="repositories",
         )
 
     def _initAttributes(self):

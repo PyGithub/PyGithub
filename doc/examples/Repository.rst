@@ -62,7 +62,6 @@ Get all of the contents of the root directory of the repository
     ...
     ContentFile(path=".github")
     ContentFile(path=".gitignore")
-    ContentFile(path=".travis.yml")
     ContentFile(path="CONTRIBUTING.md")
     ContentFile(path="COPYING")
     ContentFile(path="COPYING.LESSER")
@@ -83,7 +82,7 @@ Get all of the contents of the repository recursively
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> contents = repo.get_contents("")
-    >>> while len(contents) > 1:
+    >>> while contents:
     ...     file_content = contents.pop(0)
     ...     if file_content.type == "dir":
     ...         contents.extend(repo.get_contents(file_content.path))
@@ -91,7 +90,6 @@ Get all of the contents of the repository recursively
     ...         print(file_content)
     ...
     ContentFile(path=".gitignore")
-    ContentFile(path=".travis.yml")
     ContentFile(path="CONTRIBUTING.md")
     ...
     ContentFile(path="github/tests/ReplayData/Team.testRepoPermission.txt")
@@ -139,7 +137,7 @@ Delete a file in the repository
     {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
 
 Get the top 10 referrers over the last 14 days
--------------------------------
+----------------------------------------------
 
 .. code-block:: python
 
@@ -154,7 +152,7 @@ Get the top 10 referrers over the last 14 days
     ]
 
 Get the top 10 popular contents over the last 14 days
--------------------------------
+-----------------------------------------------------
 
 .. code-block:: python
 
@@ -175,7 +173,7 @@ Get the top 10 popular contents over the last 14 days
     ]
 
 Get number of clones and breakdown for the last 14 days
--------------------------------
+-------------------------------------------------------
 
 .. code-block:: python
 
@@ -206,7 +204,7 @@ Get number of clones and breakdown for the last 14 days
     }
 
 Get number of views and breakdown for the last 14 days
--------------------------------
+------------------------------------------------------
 
 .. code-block:: python
 
@@ -236,8 +234,6 @@ Get number of views and breakdown for the last 14 days
       ]
     }
 
-=======
-======
 Mark the notifications of the repository as read
 ------------------------------------------------
 

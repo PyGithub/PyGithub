@@ -10,6 +10,7 @@
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -49,7 +50,7 @@ headerRateLimit = "x-ratelimit-limit"
 headerRateRemaining = "x-ratelimit-remaining"
 headerRateReset = "x-ratelimit-reset"
 headerOAuthScopes = "x-oauth-scopes"
-headerOTP = "X-GitHub-OTP"
+headerOTP = "x-github-otp"
 
 defaultMediaType = "application/octet-stream"
 
@@ -88,8 +89,13 @@ mediaTypeLockReasonPreview = "application/vnd.github.sailor-v-preview+json"
 # https://developer.github.com/changes/2018-01-25-organization-invitation-api-preview/
 mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview+json"
 
+# https://developer.github.com/changes/2018-02-07-team-discussions-api
+mediaTypeTeamDiscussionsPreview = "application/vnd.github.echo-preview+json"
+
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
-mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
+mediaTypeRequireMultipleApprovingReviews = (
+    "application/vnd.github.luke-cage-preview+json"
+)
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
@@ -99,3 +105,21 @@ highLightSearchPreview = "application/vnd.github.v3.text-match+json"
 
 # https://developer.github.com/changes/2018-02-22-protected-branches-required-signatures/
 signaturesProtectedBranchesPreview = "application/vnd.github.zzzax-preview+json"
+
+# https://developer.github.com/changes/2019-04-24-vulnerability-alerts/
+vulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
+
+# https://developer.github.com/changes/2019-06-04-automated-security-fixes/
+automatedSecurityFixes = "application/vnd.github.london-preview+json"
+
+# https://developer.github.com/changes/2019-05-29-update-branch-api/
+updateBranchPreview = "application/vnd.github.lydian-preview+json"
+
+# https://developer.github.com/changes/2016-05-23-timeline-preview-api/
+issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
+
+# https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
+teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
+
+# https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/
+deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"

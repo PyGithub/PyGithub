@@ -42,11 +42,14 @@
 ################################################################################
 
 import github.GithubObject
-import github.PaginatedList
-
-import github.Repository
 import github.NamedUser
 import github.Organization
+import github.PaginatedList
+import github.Repository
+import github.TeamDiscussion
+from github.GithubException import UnknownObjectException
+
+from . import Consts
 
 
 class Team(github.GithubObject.CompletableGithubObject):
@@ -153,6 +156,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._privacy)
         return self._privacy.value
 
+    @property
+    def parent(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._parent)
+        return self._parent.value
+
     def add_to_members(self, member):
         """
         This API call is deprecated. Use `add_membership` instead.
@@ -164,8 +175,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.url + "/members/" + member._identity
+            "PUT", self.url + "/members/" + member._identity
         )
 
     def add_membership(self, member, role=github.GithubObject.NotSet):
@@ -176,10 +186,9 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        assert role is github.GithubObject.NotSet or isinstance(
-            role, (str, unicode)), role
+        assert role is github.GithubObject.NotSet or isinstance(role, str), role
         if role is not github.GithubObject.NotSet:
-            assert role in ['member', 'maintainer']
+            assert role in ["member", "maintainer"]
             put_parameters = {
                 "role": role,
             }
@@ -188,9 +197,7 @@ class Team(github.GithubObject.CompletableGithubObject):
                 "role": "member",
             }
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.url + "/memberships/" + member._identity,
-            input=put_parameters
+            "PUT", self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
     def add_to_repos(self, repo):
@@ -201,9 +208,31 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.url + "/repos/" + repo._identity
+            "PUT", self.url + "/repos/" + repo._identity
         )
+
+    def get_repo_permission(self, repo):
+        """
+        :calls: `GET /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: string or :class:`github.Repository.Repository`
+        :rtype: None or :class:`github.Permissions.Permissions`
+        """
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str
+        ), repo
+        if isinstance(repo, github.Repository.Repository):
+            repo = repo._identity
+        try:
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/repos/" + repo,
+                headers={"Accept": Consts.teamRepositoryPermissions},
+            )
+            return github.Permissions.Permissions(
+                self._requester, headers, data["permissions"], completed=True
+            )
+        except UnknownObjectException:
+            return None
 
     def set_repo_permission(self, repo, permission):
         """
@@ -217,9 +246,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "permission": permission,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT",
-            self.url + "/repos/" + repo._identity,
-            input=put_parameters
+            "PUT", self.url + "/repos/" + repo._identity, input=put_parameters
         )
 
     def delete(self):
@@ -227,12 +254,15 @@ class Team(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, name, description=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
+    def edit(
+        self,
+        name,
+        description=github.GithubObject.NotSet,
+        permission=github.GithubObject.NotSet,
+        privacy=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
@@ -241,10 +271,16 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param privacy: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
-        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
+        assert isinstance(name, str), name
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        assert permission is github.GithubObject.NotSet or isinstance(
+            permission, str
+        ), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(
+            privacy, str
+        ), privacy
         post_parameters = {
             "name": name,
         }
@@ -255,11 +291,31 @@ class Team(github.GithubObject.CompletableGithubObject):
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
+
+    def get_teams(self):
+        """
+        :calls: `GET /teams/:id/teams <https://developer.github.com/v3/teams/#list-child-teams>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team, self._requester, self.url + "/teams", None,
+        )
+
+    def get_discussions(self):
+        """
+        :calls: `GET /teams/:id/discussions <https://developer.github.com/v3/teams/discussions/#list-discussions>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TeamDiscussion.TeamDiscussion`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.TeamDiscussion.TeamDiscussion,
+            self._requester,
+            self.url + "/discussions",
+            None,
+            headers={"Accept": Consts.mediaTypeTeamDiscussionsPreview},
+        )
 
     def get_members(self, role=github.GithubObject.NotSet):
         """
@@ -267,16 +323,16 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert role is github.GithubObject.NotSet or isinstance(role, (str, unicode)), role
+        assert role is github.GithubObject.NotSet or isinstance(role, str), role
         url_parameters = dict()
         if role is not github.GithubObject.NotSet:
-            assert role in ['member', 'maintainer', 'all']
+            assert role in ["member", "maintainer", "all"]
             url_parameters["role"] = role
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/members",
-            url_parameters
+            url_parameters,
         )
 
     def get_repos(self):
@@ -285,10 +341,20 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
-            github.Repository.Repository,
+            github.Repository.Repository, self._requester, self.url + "/repos", None
+        )
+
+    def invitations(self):
+        """
+        :calls: `GET /teams/:id/invitations <https://developer.github.com/v3/teams/members>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/repos",
-            None
+            self.url + "/invitations",
+            None,
+            headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
         )
 
     def has_in_members(self, member):
@@ -299,8 +365,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
-            "GET",
-            self.url + "/members/" + member._identity
+            "GET", self.url + "/members/" + member._identity
         )
         return status == 204
 
@@ -312,8 +377,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(repo, github.Repository.Repository), repo
         status, headers, data = self._requester.requestJson(
-            "GET",
-            self.url + "/repos/" + repo._identity
+            "GET", self.url + "/repos/" + repo._identity
         )
         return status == 204
 
@@ -325,8 +389,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/memberships/" + member._identity
+            "DELETE", self.url + "/memberships/" + member._identity
         )
 
     def remove_from_members(self, member):
@@ -340,8 +403,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/members/" + member._identity
+            "DELETE", self.url + "/members/" + member._identity
         )
 
     def remove_from_repos(self, repo):
@@ -352,8 +414,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url + "/repos/" + repo._identity
+            "DELETE", self.url + "/repos/" + repo._identity
         )
 
     @property
@@ -373,6 +434,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._organization = github.GithubObject.NotSet
         self._privacy = github.GithubObject.NotSet
+        self._parent = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -390,12 +452,20 @@ class Team(github.GithubObject.CompletableGithubObject):
         if "repos_count" in attributes:  # pragma no branch
             self._repos_count = self._makeIntAttribute(attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
-            self._repositories_url = self._makeStringAttribute(attributes["repositories_url"])
+            self._repositories_url = self._makeStringAttribute(
+                attributes["repositories_url"]
+            )
         if "slug" in attributes:  # pragma no branch
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "organization" in attributes:  # pragma no branch
-            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+            self._organization = self._makeClassAttribute(
+                github.Organization.Organization, attributes["organization"]
+            )
         if "privacy" in attributes:  # pragma no branch
             self._privacy = self._makeStringAttribute(attributes["privacy"])
+        if "parent" in attributes:  # pragma no branch
+            self._parent = self._makeClassAttribute(
+                github.Team.Team, attributes["parent"]
+            )

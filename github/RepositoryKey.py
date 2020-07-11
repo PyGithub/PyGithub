@@ -107,10 +107,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _initAttributes(self):
         self._created_at = github.GithubObject.NotSet

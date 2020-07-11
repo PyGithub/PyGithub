@@ -1,0 +1,21 @@
+https
+GET
+api.github.com
+None
+/projects/columns/8700460
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Tue, 14 Apr 2020 18:17:57 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4971'), ('X-RateLimit-Reset', '1586891696'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"71d35582bd4b20a516cb5f77785e78f7"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'E8EE:6E5A:25E489C:2CBBC06:5E95FE55')]
+{"url":"https://api.github.com/projects/columns/8700460","project_url":"https://api.github.com/projects/4294766","cards_url":"https://api.github.com/projects/columns/8700460/cards","id":8700460,"node_id":"MDEzOlByb2plY3RDb2x1bW44NzAwNDYw","name":"c1","created_at":"2020-04-13T20:29:53Z","updated_at":"2020-04-14T18:09:38Z"}
+
+https
+GET
+api.github.com
+None
+/projects/columns/8748065
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Thu, 16 Apr 2020 05:51:15 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4949'), ('X-RateLimit-Reset', '1587018429'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"300ff83801042bc987edec9dded63773"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'D59E:FA92:18965F9:1CB2924:5E97F252')]
+{"url":"https://api.github.com/projects/columns/8748065","project_url":"https://api.github.com/projects/4294766","cards_url":"https://api.github.com/projects/columns/8748065/cards","id":8748065,"node_id":"MDEzOlByb2plY3RDb2x1bW44NzQ4MDY1","name":"newTestColumn","created_at":"2020-04-16T05:42:37Z","updated_at":"2020-04-16T05:44:21Z"}

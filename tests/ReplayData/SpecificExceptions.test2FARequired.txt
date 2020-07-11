@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/user
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+401
+[('date', 'Fri, 25 Oct 2019 07:56:02 GMT'), ('content-type', 'application/json; charset=utf-8'), ('content-length', '160'), ('server', 'GitHub.com'), ('status', '401 Unauthorized'), ('x-github-otp', 'required; app'), ('x-github-media-type', 'github.v3; format=json'), ('x-ratelimit-limit', '60'), ('x-ratelimit-remaining', '58'), ('x-ratelimit-reset', '1571993689'), ('access-control-expose-headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('access-control-allow-origin', '*'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-frame-options', 'deny'), ('x-content-type-options', 'nosniff'), ('x-xss-protection', '1; mode=block'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-security-policy', "default-src 'none'"), ('x-github-request-id', 'B376:7075:202D9C:250D5E:5DB2AA92')]
+{"message":"Must specify two-factor authentication OTP code.", "documentation_url": "https://developer.github.com/v3/auth#working-with-two-factor-authentication"}

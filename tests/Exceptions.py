@@ -31,13 +31,11 @@
 #                                                                              #
 ################################################################################
 
-import github
-import sys
 import pickle
 
-import Framework
+import github
 
-atMostPython2 = sys.hexversion < 0x03000000
+from . import Framework
 
 
 class Exceptions(Framework.TestCase):
@@ -46,17 +44,18 @@ class Exceptions(Framework.TestCase):
             self.g.get_user().create_key("Bad key", "xxx")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
-            raisedexp.exception.data, {
+            raisedexp.exception.data,
+            {
                 "errors": [
                     {
                         "code": "custom",
                         "field": "key",
                         "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
-                        "resource": "PublicKey"
+                        "resource": "PublicKey",
                     }
                 ],
-                "message": "Validation Failed"
-            }
+                "message": "Validation Failed",
+            },
         )
 
     def testNonJsonDataReturnedByGithub(self):
@@ -68,7 +67,7 @@ class Exceptions(Framework.TestCase):
             raisedexp.exception.data,
             {
                 "data": "<html><body><h1>503 Service Unavailable</h1>No server is available to handle this request.</body></html>",
-            }
+            },
         )
 
     def testUnknownObject(self):
@@ -76,44 +75,51 @@ class Exceptions(Framework.TestCase):
             self.g.get_user().get_repo("Xxx")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
 
     def testUnknownUser(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user("ThisUserShouldReallyNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "404 {u'message': u'Not Found'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
 
     def testBadAuthentication(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             github.Github("BadUser", "BadPassword").get_user().login
         self.assertEqual(raisedexp.exception.status, 401)
         self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
-        if atMostPython2:
-            self.assertEqual(str(raisedexp.exception), "401 {u'message': u'Bad credentials'}")
-        else:
-            self.assertEqual(str(raisedexp.exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
+        self.assertEqual(str(raisedexp.exception), '401 {"message": "Bad credentials"}')
 
     def testExceptionPickling(self):
-        pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
+        pickle.loads(pickle.dumps(github.GithubException("foo", "bar")))
 
 
 class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
-        self.assertRaises(github.BadCredentialsException, lambda: github.Github("BadUser", "BadPassword").get_user().login)
+        self.assertRaises(
+            github.BadCredentialsException,
+            lambda: github.Github("BadUser", "BadPassword").get_user().login,
+        )
+
+    def test2FARequired(self):
+        self.assertRaises(
+            github.TwoFactorException,
+            lambda: github.Github("2fauser", "password").get_user().login,
+        )
 
     def testUnknownObject(self):
-        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
+        self.assertRaises(
+            github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx")
+        )
 
     def testBadUserAgent(self):
-        self.assertRaises(github.BadUserAgentException, lambda: github.Github(self.login, self.password, user_agent="").get_user().name)
+        self.assertRaises(
+            github.BadUserAgentException,
+            lambda: github.Github(self.login, self.password, user_agent="")
+            .get_user()
+            .name,
+        )
 
     def testRateLimitExceeded(self):
         g = github.Github()
@@ -125,10 +131,14 @@ class SpecificExceptions(Framework.TestCase):
         self.assertRaises(github.RateLimitExceededException, exceed)
 
     def testAuthenticatedRateLimitExceeded(self):
-
         def exceed():
             for i in range(100):
                 res = self.g.search_code("jacquev6")
                 res.get_page(0)
 
         self.assertRaises(github.RateLimitExceededException, exceed)
+
+    def testIncompletableObject(self):
+        github.UserKey.UserKey.setCheckAfterInitFlag(False)
+        obj = github.UserKey.UserKey(None, {}, {}, False)
+        self.assertRaises(github.IncompletableObject, obj._completeIfNeeded)

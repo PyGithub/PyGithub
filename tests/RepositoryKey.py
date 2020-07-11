@@ -31,28 +31,34 @@
 #                                                                              #
 ################################################################################
 
-import Framework
-
 import datetime
+
+from . import Framework
 
 
 class RepositoryKey(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         # When recording test, be sure to create a deploy key for yourself on
         # Github and update it here.
         self.key = self.g.get_user("lra").get_repo("mackup").get_key(21870881)
 
     def testAttributes(self):
         self.assertEqual(self.key.id, 21870881)
-        self.assertEqual(self.key.key, "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB")
+        self.assertEqual(
+            self.key.key,
+            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB",
+        )
         self.assertEqual(self.key.title, "PyGithub Test Key")
-        self.assertEqual(self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881")
+        self.assertEqual(
+            self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881"
+        )
         self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.key.__repr__(), 'RepositoryKey(title="PyGithub Test Key", id=21870881)')
+        self.assertTrue(self.key.read_only)
+        self.assertEqual(
+            repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
+        )
 
     def testDelete(self):
         self.key.delete()

@@ -32,13 +32,9 @@
 ################################################################################
 
 import base64
-import sys
 
 import github.GithubObject
 import github.Repository
-
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
@@ -59,12 +55,11 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
 
     @property
     def decoded_content(self):
+        """
+        :type: bytes
+        """
         assert self.encoding == "base64", "unsupported encoding: %s" % self.encoding
-        if atLeastPython3:
-            content = bytearray(self.content, "utf-8")  # pragma no cover (covered by tests with Python 3.2)
-        else:
-            content = self.content
-        return base64.b64decode(content)
+        return base64.b64decode(bytearray(self.content, "utf-8"))
 
     @property
     def download_url(self):
@@ -129,8 +124,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
-            repo_url = "/".join(self.url.split("/")[:6])  # pragma no cover (Should be covered)
-            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))  # pragma no cover (Should be covered)
+            repo_url = "/".join(
+                self.url.split("/")[:6]
+            )  # pragma no cover (Should be covered)
+            self._repository = github.GithubObject._ValuedAttribute(
+                github.Repository.Repository(
+                    self._requester, self._headers, {"url": repo_url}, completed=False
+                )
+            )  # pragma no cover (Should be covered)
         return self._repository.value
 
     @property
@@ -200,13 +201,17 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "license" in attributes:  # pragma no branch
-            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
+            self._license = self._makeClassAttribute(
+                github.License.License, attributes["license"]
+            )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"]
+            )
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
@@ -216,4 +221,6 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "text_matches" in attributes:  # pragma no branch
-            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
+            self._text_matches = self._makeListOfDictsAttribute(
+                attributes["text_matches"]
+            )

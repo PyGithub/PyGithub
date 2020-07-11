@@ -45,9 +45,11 @@ class InputGitAuthor(object):
         :param date: string
         """
 
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(email, (str, unicode)), email
-        assert date is github.GithubObject.NotSet or isinstance(date, (str, unicode)), date  # @todo Datetime?
+        assert isinstance(name, str), name
+        assert isinstance(email, str), email
+        assert date is github.GithubObject.NotSet or isinstance(
+            date, str
+        ), date  # @todo Datetime?
 
         self.__name = name
         self.__email = email

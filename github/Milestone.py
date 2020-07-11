@@ -33,10 +33,9 @@
 import datetime
 
 import github.GithubObject
-import github.PaginatedList
-
-import github.NamedUser
 import github.Label
+import github.NamedUser
+import github.PaginatedList
 
 
 class Milestone(github.GithubObject.CompletableGithubObject):
@@ -45,7 +44,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"number": self._number.value, "title": self._title.value})
+        return self.get__repr__(
+            {"number": self._number.value, "title": self._title.value}
+        )
 
     @property
     def closed_issues(self):
@@ -156,12 +157,15 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            self.url
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
+    def edit(
+        self,
+        title,
+        state=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+        due_on=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :param title: string
@@ -170,10 +174,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :param due_on: date
         :rtype: None
         """
-        assert isinstance(title, (str, unicode)), title
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert isinstance(title, str), title
+        assert state is github.GithubObject.NotSet or isinstance(state, str), state
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        assert due_on is github.GithubObject.NotSet or isinstance(
+            due_on, datetime.date
+        ), due_on
         post_parameters = {
             "title": title,
         }
@@ -184,9 +192,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url,
-            input=post_parameters
+            "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
@@ -196,10 +202,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label,
-            self._requester,
-            self.url + "/labels",
-            None
+            github.Label.Label, self._requester, self.url + "/labels", None
         )
 
     @property
@@ -227,7 +230,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["creator"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "due_on" in attributes:  # pragma no branch

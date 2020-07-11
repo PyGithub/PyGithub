@@ -26,13 +26,10 @@
 #                                                                              #
 ################################################################################
 
-import fnmatch
 import os
 import subprocess
-import itertools
 
-
-eightySharps = "################################################################################"
+eightySharps = "#" * 80
 
 
 def generateLicenseSection(filename):
@@ -64,7 +61,9 @@ def generateLicenseSection(filename):
 
 def listContributors(filename):
     contributors = set()
-    for line in subprocess.check_output(["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]).split("\n"):
+    for line in subprocess.check_output(
+        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]
+    ).split("\n"):
         year = line[0:4]
         name = line[11:]
         contributors.add((year, name))
@@ -108,7 +107,11 @@ class PythonHeader:
 
         if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
-            if "import " not in bodyLines[0] and bodyLines[0] != '"""' and not bodyLines[0].startswith("##########"):
+            if (
+                "import " not in bodyLines[0]
+                and bodyLines[0] != '"""'
+                and not bodyLines[0].startswith("##########")
+            ):
                 newLines.append("")
         newLines += bodyLines
 
@@ -132,7 +135,7 @@ class StandardHeader:
 
 
 def findHeadersAndFiles():
-    for root, dirs, files in os.walk('.', topdown=True):
+    for root, dirs, files in os.walk(".", topdown=True):
         if ".git" in dirs:
             dirs.remove(".git")
         if "developer.github.com" in dirs:
@@ -155,17 +158,17 @@ def findHeadersAndFiles():
             elif fullname.endswith(".pyc"):
                 pass
             else:
-                print "Don't know what to do with", filename
+                print("Don't know what to do with", filename)
 
 
 def main():
     for header, filename in findHeadersAndFiles():
-        print "Analyzing", filename
+        print("Analyzing", filename)
         with open(filename) as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
-            print " => actually modifying", filename
+            print(" => actually modifying", filename)
             with open(filename, "w") as f:
                 for line in newLines:
                     f.write(line + "\n")

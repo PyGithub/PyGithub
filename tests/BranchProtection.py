@@ -22,16 +22,29 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from . import Framework
 
 
 class BranchProtection(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
-        self.branch_protection = self.g.get_user().get_repo("PyGithub").get_branch("integrations").get_protection()
+        super().setUp()
+        self.branch_protection = (
+            self.g.get_user()
+            .get_repo("PyGithub")
+            .get_branch("integrations")
+            .get_protection()
+        )
 
     def testAttributes(self):
         self.assertTrue(self.branch_protection.required_status_checks.strict)
-        self.assertEqual(self.branch_protection.required_status_checks.contexts, ["foo/bar"])
-        self.assertEqual(self.branch_protection.url, "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection")
-        self.assertEqual(self.branch_protection.__repr__(), 'BranchProtection(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection")')
+        self.assertEqual(
+            self.branch_protection.required_status_checks.contexts, ["foo/bar"]
+        )
+        self.assertEqual(
+            self.branch_protection.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection",
+        )
+        self.assertEqual(
+            self.branch_protection.__repr__(),
+            'BranchProtection(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection")',
+        )

@@ -32,7 +32,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.Issue
 import github.NamedUser
 
@@ -174,14 +173,6 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._rename.value
 
     @property
-    def rename(self):
-        """
-        :type: dict
-        """
-        self._completeIfNotSet(self._rename)
-        return self._rename.value
-
-    @property
     def dismissed_review(self):
         """
         :type: dict
@@ -219,7 +210,9 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
+            self._actor = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["actor"]
+            )
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "created_at" in attributes:  # pragma no branch
@@ -229,7 +222,9 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue" in attributes:  # pragma no branch
-            self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
+            self._issue = self._makeClassAttribute(
+                github.Issue.Issue, attributes["issue"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "node_id" in attributes:  # pragma no branch
@@ -237,20 +232,34 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         if "commit_url" in attributes:  # pragma no branch
             self._commit_url = self._makeStringAttribute(attributes["commit_url"])
         if "label" in attributes:  # pragma no branch
-            self._label = self._makeClassAttribute(github.Label.Label, attributes["label"])
+            self._label = self._makeClassAttribute(
+                github.Label.Label, attributes["label"]
+            )
         if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+            self._assignee = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["assignee"]
+            )
         if "assigner" in attributes:  # pragma no branch
-            self._assigner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assigner"])
+            self._assigner = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["assigner"]
+            )
         if "review_requester" in attributes:  # pragma no branch
-            self._review_requester = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["review_requester"])
+            self._review_requester = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["review_requester"]
+            )
         if "requested_reviewer" in attributes:  # pragma no branch
-            self._requested_reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["requested_reviewer"])
+            self._requested_reviewer = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["requested_reviewer"]
+            )
         if "milestone" in attributes:  # pragma no branch
-            self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+            self._milestone = self._makeClassAttribute(
+                github.Milestone.Milestone, attributes["milestone"]
+            )
         if "rename" in attributes:  # pragma no branch
             self._rename = self._makeDictAttribute(attributes["rename"])
         if "dismissed_review" in attributes:  # pragma no branch
-            self._dismissed_review = self._makeDictAttribute(attributes["dismissed_review"])
+            self._dismissed_review = self._makeDictAttribute(
+                attributes["dismissed_review"]
+            )
         if "lock_reason" in attributes:  # pragma no branch
             self._lock_reason = self._makeStringAttribute(attributes["lock_reason"])

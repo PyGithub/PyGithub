@@ -30,20 +30,46 @@
 ################################################################################
 
 """
-The primary class you will instanciate is :class:`github.MainClass.Github`.
+The primary class you will instantiate is :class:`github.MainClass.Github`.
 From its ``get_``, ``create_`` methods, you will obtain instances of all Github objects
 like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository`.
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
+__all__ = [
+    "BadAttributeException",
+    "BadCredentialsException",
+    "BadUserAgentException",
+    "enable_console_debug_logging",
+    "Github",
+    "GithubException",
+    "GithubIntegration",
+    "IncompletableObject",
+    "InputFileContent",
+    "InputGitAuthor",
+    "InputGitTreeElement",
+    "RateLimitExceededException",
+    "TwoFactorException",
+    "UnknownObjectException",
+]
 
 import logging
 
 from github.MainClass import Github, GithubIntegration
-from GithubException import GithubException, BadCredentialsException, UnknownObjectException, BadUserAgentException, RateLimitExceededException, BadAttributeException, TwoFactorException
-from InputFileContent import InputFileContent
-from InputGitAuthor import InputGitAuthor
-from InputGitTreeElement import InputGitTreeElement
+
+from .GithubException import (
+    BadAttributeException,
+    BadCredentialsException,
+    BadUserAgentException,
+    GithubException,
+    IncompletableObject,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+)
+from .InputFileContent import InputFileContent
+from .InputGitAuthor import InputGitAuthor
+from .InputGitTreeElement import InputGitTreeElement
 
 
 def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)

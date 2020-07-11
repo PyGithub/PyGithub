@@ -30,8 +30,6 @@
 import github.GithubObject
 import github.Rate
 
-from deprecated import deprecated
-
 
 class RateLimit(github.GithubObject.NonCompletableGithubObject):
     """
@@ -40,21 +38,6 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"core": self._core.value})
-
-    @property
-    @deprecated(reason="""
-            The rate object is deprecated. If you're writing new API client code 
-            or updating existing code, you should use the core object instead of 
-            the rate object. The core object contains the same information that 
-            is present in the rate object.
-        """)
-    def rate(self):
-        """
-        (Deprecated) Rate limit for non-search-related API, use `core` instead
-
-        :type: class:`github.Rate.Rate`
-        """
-        return self._core.value
 
     @property
     def core(self):
@@ -92,6 +75,10 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
         if "search" in attributes:  # pragma no branch
-            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+            self._search = self._makeClassAttribute(
+                github.Rate.Rate, attributes["search"]
+            )
         if "graphql" in attributes:  # pragma no branch
-            self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
+            self._graphql = self._makeClassAttribute(
+                github.Rate.Rate, attributes["graphql"]
+            )

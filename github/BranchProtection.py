@@ -23,7 +23,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
@@ -80,7 +79,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             github.NamedUser.NamedUser,
             self._requester,
             self._user_push_restrictions,
-            None
+            None,
         )
 
     def get_team_push_restrictions(self):
@@ -90,10 +89,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if self._team_push_restrictions is github.GithubObject.NotSet:
             return None
         return github.PaginatedList.PaginatedList(
-            github.Team.Team,
-            self._requester,
-            self._team_push_restrictions,
-            None
+            github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
     def _initAttributes(self):
@@ -108,11 +104,19 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch
-            self._required_status_checks = self._makeClassAttribute(github.RequiredStatusChecks.RequiredStatusChecks, attributes["required_status_checks"])
+            self._required_status_checks = self._makeClassAttribute(
+                github.RequiredStatusChecks.RequiredStatusChecks,
+                attributes["required_status_checks"],
+            )
         if "enforce_admins" in attributes:  # pragma no branch
-            self._enforce_admins = self._makeBoolAttribute(attributes["enforce_admins"]["enabled"])
+            self._enforce_admins = self._makeBoolAttribute(
+                attributes["enforce_admins"]["enabled"]
+            )
         if "required_pull_request_reviews" in attributes:  # pragma no branch
-            self._required_pull_request_reviews = self._makeClassAttribute(github.RequiredPullRequestReviews.RequiredPullRequestReviews, attributes["required_pull_request_reviews"])
+            self._required_pull_request_reviews = self._makeClassAttribute(
+                github.RequiredPullRequestReviews.RequiredPullRequestReviews,
+                attributes["required_pull_request_reviews"],
+            )
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]

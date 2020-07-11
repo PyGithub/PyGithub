@@ -34,12 +34,15 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+
+from datetime import datetime
+
+from . import Framework
 
 
 class Team(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.org = self.g.get_organization("BeaverSoftware")
         self.team = self.org.get_team(189850)
 
@@ -52,16 +55,48 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
+        self.assertEqual(self.team.parent, None)
+        self.assertEqual(
+            repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
+        )
 
-        # test __repr__() based on this attributes
-        self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
+    def testDiscussions(self):
+        discussions = list(self.team.get_discussions())
+        self.assertEqual(len(discussions), 1)
+
+        d = discussions[0]
+        self.assertEqual(d.author.login, "jacquev6")
+        self.assertEqual(d.body, "BODY")
+        self.assertEqual(d.body_html, "<p>BODY</p>")
+        self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
+        self.assertEqual(d.comments_count, 0)
+        self.assertEqual(
+            d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments"
+        )
+        self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(
+            d.html_url,
+            "https://github.com/orgs/BeaverSoftware/teams/Team/discussions/1",
+        )
+        self.assertEqual(d.last_edited_at, None)
+        self.assertEqual(d.node_id, "MDE0OlRlYW1EaXNjdXNzaW9uMzA=")
+        self.assertEqual(d.number, 1)
+        self.assertEqual(d.pinned, True)
+        self.assertEqual(d.private, False)
+        self.assertEqual(d.team_url, "https://api.github.com/teams/189850")
+        self.assertEqual(d.title, "TITLE")
+        self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
+        self.assertEqual(repr(d), 'TeamDiscussion(title="TITLE", number=1)')
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_to_members(user)
-        self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
+        self.assertListKeyEqual(
+            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+        )
         self.assertTrue(self.team.has_in_members(user))
         self.team.remove_from_members(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
@@ -78,9 +113,14 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
+        self.assertIsNone(self.team.get_repo_permission(repo))
         self.team.add_to_repos(repo)
-        self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, ["FatherBeaver"])
+        self.assertListKeyEqual(
+            self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
+        )
         self.assertTrue(self.team.has_in_repos(repo))
+        permissions = self.team.get_repo_permission(repo)
+        self.assertTrue(permissions.pull)
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
@@ -90,11 +130,25 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
-        self.team.edit("Name edited twice by PyGithub", "Description edited by PyGithub", "admin", "secret")
+        self.team.edit(
+            "Name edited twice by PyGithub",
+            "Description edited by PyGithub",
+            "admin",
+            "secret",
+        )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+
+    def testGetTeams(self):
+        nested_teams = self.team.get_teams()
+        self.assertListKeyEqual(
+            nested_teams, lambda t: t.name, ["DummyTeam1", "DummyTeam2", "DummyTeam3"]
+        )
+        parent = nested_teams[0].parent
+        self.assertEqual(self.team.name, parent.name)
+        self.assertEqual(self.team.id, parent.id)
 
     def testDelete(self):
         self.team.delete()

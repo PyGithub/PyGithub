@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/rate_limit
+{'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Thu, 24 Oct 2019 14:28:35 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '58'), ('X-RateLimit-Reset', '1571930854'), ('Cache-Control', 'no-cache'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('Vary', 'Accept-Encoding'), ('X-GitHub-Request-Id', '67AD:4CF3:4699F:76E9A:5DB1B513')]
+{"resources":{"core":{"limit":60,"remaining":58,"reset":1571930854},"search":{"limit":10,"remaining":10,"reset":1571927375},"graphql":{"limit":0,"remaining":0,"reset":1571930915},"integration_manifest":{"limit":5000,"remaining":5000,"reset":1571930915}},"rate":{"limit":60,"remaining":58,"reset":1571930854}}
+

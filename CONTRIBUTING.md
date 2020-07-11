@@ -23,6 +23,25 @@ Pull Requests should clearly describe two things:
 
 Ideally, changes should be made in logical commits and tests added to improve the project's coverage of the GitHub API.
 
+## Coding style
+
+PyGithub adopts the black coding style and uses isort to sort imports.
+
+To manually format the code:
+```
+tox -e lint
+```
+
+## Pre-commit plugin
+
+To forget about coding style and let [pre-commit](https://pre-commit.com/#installation) fix your flake8/isort/black issue.
+
+```
+pre-commit install
+```
+
+That's it!
+
 ## Adding missing attributes for a GithubObject
 
 ```bash
@@ -58,11 +77,10 @@ First you need to install the test dependencies:
 pip install -r test-requirements.txt
 ```
 
-Then you can run the tests through `python -m tests`.
-Run a specific test with `python -m tests TestCase` or `python -m tests TestCase.testMethod`.
+Then you can run the tests through `pytest`.
+Run a specific test with `pytest tests/tests_filename.py` or `pytest tests/tests_filename.py -k testMethod` or `pytest -k TestClass.testMethod`.
 
-If you add a new test, for example `Issue139.testCompletion`, you must add an import in `tests/AllTests.py`.
-Then, you have to run `python -m tests Issue139.testCompletion --record` to create the `tests/ReplayData/*.txt` files needed for your new test.
+If you add a new test, for example `Issue139.testCompletion`, you have to run `pytest -k Issue139.testCompletion --record` to create the `tests/ReplayData/*.txt` files needed for your new test.
 Check them and commit them as well.
 You will need a `GithubCredentials.py` file at the root of the project with the following contents:
 
@@ -77,9 +95,9 @@ password_netrc = "my_password_for_another_login"  # Can be left empty if not use
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `python -m tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. (Also note that if you record your test data with `--auth_with_token` then you also need to be in token authentication mode when running the test. A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.)
+You can use `pytest Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used. (Also note that if you record your test data with `--auth_with_token` then you also need to be in token authentication mode when running the test. A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.)
 
-Similarly, you can use `python -m tests Issue139.testCompletion --record --auth_with_jwt` to use the `jwt` field specified in `GithubCredentials.py` to access endpoints that require JWT.
+Similarly, you can use `pytest Issue139.testCompletion --record --auth_with_jwt` to use the `jwt` field specified in `GithubCredentials.py` to access endpoints that require JWT.
 
 To run manual tests with external scripts that use the PyGithub package, you can install your development version with:
 
@@ -87,16 +105,22 @@ To run manual tests with external scripts that use the PyGithub package, you can
 pip install --editable path/to/project
 ```
 
-## Coding conventions
+You may also want to investigate `tox` to run tests:
 
-PyGithub follows [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/) except for line length.
-Please check your code with [pep8 Python style guide checker](http://pypi.python.org/pypi/pep8), by running `pep8 --ignore=E501 github`.
+```
+pip install tox
+tox -epy36
+```
 
 ## Build documentation locally
-
-Note: only Python 2 is supported as of now
 
 ```
 pip install -r requirements.txt
 sphinx-build doc build
+```
+
+If you use tox:
+
+```
+tox -edocs
 ```

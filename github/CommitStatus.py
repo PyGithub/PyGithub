@@ -33,7 +33,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.NamedUser
 
 
@@ -43,11 +42,13 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({
-            "id": self._id.value,
-            "state": self._state.value,
-            "context": self._context.value
-        })
+        return self.get__repr__(
+            {
+                "id": self._id.value,
+                "state": self._state.value,
+                "context": self._context.value,
+            }
+        )
 
     @property
     def created_at(self):
@@ -127,7 +128,9 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["creator"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch

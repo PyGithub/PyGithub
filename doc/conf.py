@@ -28,16 +28,16 @@
 #                                                                              #
 ################################################################################
 
-import sys
-import os
-import glob
 import datetime
+import glob
+import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('..'))
-from setup import version as setupVersion
+sys.path.insert(0, os.path.abspath(".."))
+from setup import version as setupVersion  # noqa: E402, isort:skip
 
 # -- General configuration -----------------------------------------------------
 
@@ -46,23 +46,23 @@ from setup import version as setupVersion
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.mathjax']
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.mathjax"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'PyGithub'
-copyright = u'%d, Vincent Jacques' % datetime.date.today().year
+project = u"PyGithub"
+copyright = u"%d, Vincent Jacques" % datetime.date.today().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -102,7 +102,7 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -112,7 +112,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -141,7 +141,7 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -185,7 +185,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PyGithubdoc'
+htmlhelp_basename = "PyGithubdoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -204,8 +204,7 @@ htmlhelp_basename = 'PyGithubdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'PyGithub.tex', u'PyGithub Documentation',
-     u'Vincent Jacques', 'manual'),
+    ("index", "PyGithub.tex", u"PyGithub Documentation", u"Vincent Jacques", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -233,10 +232,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'pygithub', u'PyGithub Documentation',
-     [u'Vincent Jacques'], 1)
-]
+man_pages = [("index", "pygithub", u"PyGithub Documentation", [u"Vincent Jacques"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -248,9 +244,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'PyGithub', u'PyGithub Documentation',
-     u'Vincent Jacques', 'PyGithub', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        "index",
+        "PyGithub",
+        u"PyGithub Documentation",
+        u"Vincent Jacques",
+        "PyGithub",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -269,7 +271,8 @@ autoclass_content = "both"
 githubClasses = [
     fileName[10:-3]
     for fileName in sorted(glob.glob("../github/*.py"))
-    if fileName not in [
+    if fileName
+    not in [
         "../github/GithubException.py",
         "../github/GithubObject.py",
         "../github/InputFileContent.py",
@@ -280,7 +283,8 @@ githubClasses = [
         "../github/PaginatedList.py",
         "../github/Requester.py",
         "../github/Consts.py",
-        "../github/__init__.py"]
+        "../github/__init__.py",
+    ]
 ]
 
 with open("github_objects.rst", "w") as f:
@@ -316,7 +320,22 @@ for githubClass in githubClasses + ["MainClass"]:
             if line.startswith("    def "):
                 if not isProperty:
                     method = line.split("(")[0][8:]
-                    if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
+                    if method in [
+                        "_initAttributes",
+                        "_useAttributes",
+                        "__init__",
+                        "__create_pull_1",
+                        "__create_pull_2",
+                        "__create_pull",
+                        "_hub",
+                        "__get_FIX_REPO_GET_GIT_REF",
+                        "__set_FIX_REPO_GET_GIT_REF",
+                        "__get_per_page",
+                        "__set_per_page",
+                        "create_from_raw_data",
+                        "dump",
+                        "load",
+                    ]:
                         method = None
                 isProperty = False
             if line.startswith("        :calls: `"):
@@ -343,5 +362,7 @@ with open("apis.rst", "w") as apis:
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
-                apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
+                apis.write(
+                    "  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n"
+                )
         apis.write("\n")

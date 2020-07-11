@@ -25,23 +25,23 @@
 #                                                                              #
 ################################################################################
 
-import Framework
+from . import Framework
 
 
 class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
         self.repo = self.g.get_user("openmicroscopy").get_repo("ome-documentation")
 
     def testGetPullWithOrgHeadUser(self):
         user = self.repo.get_pull(204).head.user
-        self.assertEqual(user.login, 'imcf')
-        self.assertEqual(user.type, 'Organization')
-        self.assertEqual(user.__class__.__name__, 'NamedUser')  # Should be Organization
+        self.assertEqual(user.login, "imcf")
+        self.assertEqual(user.type, "Organization")
+        self.assertEqual(user.__class__.__name__, "NamedUser")  # Should be Organization
 
     def testGetPullsWithOrgHeadUser(self):
-        for pull in self.repo.get_pulls('closed'):
+        for pull in self.repo.get_pulls("closed"):
             if pull.number == 204:
                 user = pull.head.user
                 self.assertEqual(user, None)

@@ -39,9 +39,12 @@
 /MANIFEST
 /PyGithub.egg-info/
 /.coverage
+/coverage.xml
 /.idea
 /developer.github.com/
 /gh-pages/
 /doc/doctrees/
 .vscode*
 .venv
+.tox/
+.mypy_cache/

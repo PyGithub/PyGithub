@@ -24,8 +24,6 @@
 #                                                                              #
 ################################################################################
 
-import urllib
-
 import github.GithubObject
 
 
@@ -62,6 +60,22 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def invitee(self):
+        """
+        :type: NamedUser
+        """
+        self._completeIfNotSet(self._invitee)
+        return self._invitee.value
+
+    @property
+    def inviter(self):
+        """
+        :type: NamedUser
+        """
+        self._completeIfNotSet(self._inviter)
+        return self._inviter.value
+
+    @property
     def url(self):
         """
         :type: string
@@ -89,15 +103,27 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._permissions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
+        self._invitee = github.GithubObject.NotSet
+        self._inviter = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "repository" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"]
+            )
         if "created_at" in attributes:  # pragma no branch
-            self._closed_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "invitee" in attributes:  # pragma no branch
+            self._invitee = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["invitee"]
+            )
+        if "inviter" in attributes:  # pragma no branch
+            self._inviter = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["inviter"]
+            )
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
 

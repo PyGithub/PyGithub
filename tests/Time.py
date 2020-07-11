@@ -20,7 +20,8 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timedelta, tzinfo
+from datetime import timedelta, tzinfo
+
 
 class UTCtzinfo(tzinfo):
     def utcoffset(self, dt):
@@ -31,4 +32,3 @@ class UTCtzinfo(tzinfo):
 
     def dst(self, dt):
         return timedelta(0)
-

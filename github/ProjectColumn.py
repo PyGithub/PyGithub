@@ -22,13 +22,11 @@
 #                                                                              #
 ################################################################################
 
-import json
-
 import github.GithubObject
 import github.Project
 import github.ProjectCard
 
-import Consts
+from . import Consts
 
 
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
@@ -101,7 +99,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, (str, unicode)), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(
+            archived_state, str
+        ), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:
@@ -112,39 +112,85 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/cards",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview}
+            {"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    def create_card(self, note=github.GithubObject.NotSet,
-                    content_id=github.GithubObject.NotSet,
-                    content_type=github.GithubObject.NotSet):
+    def create_card(
+        self,
+        note=github.GithubObject.NotSet,
+        content_id=github.GithubObject.NotSet,
+        content_type=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /projects/columns/:column_id/cards <https://developer.github.com/v3/projects/cards/#create-a-project-card>`_
         :param note: string
         :param content_id: integer
         :param content_type: string
+
+        :rtype :class:`github.ProjectCard.ProjectCard`:
         """
-        post_parameters = {}
-        if isinstance(note, (str, unicode)):
+        if isinstance(note, str):
             assert content_id is github.GithubObject.NotSet, content_id
             assert content_type is github.GithubObject.NotSet, content_type
             post_parameters = {"note": note}
         else:
             assert note is github.GithubObject.NotSet, note
             assert isinstance(content_id, int), content_id
-            assert isinstance(content_type, (str, unicode)), content_type
-            post_parameters = {"content_id": content_id,
-                               "content_type": content_type}
+            assert isinstance(content_type, str), content_type
+            post_parameters = {"content_id": content_id, "content_type": content_type}
 
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/cards",
-            headers=import_header,
-            input=post_parameters
+            "POST", self.url + "/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(self._requester, headers,
-                                              data, completed=True)
+        return github.ProjectCard.ProjectCard(
+            self._requester, headers, data, completed=True
+        )
+
+    def move(self, position):
+        """
+        :calls: `POST POST /projects/columns/:column_id/moves <https://developer.github.com/v3/projects/columns/#move-a-project-column>`_
+        :param position: string
+
+        :rtype: bool
+        """
+        assert isinstance(position, str), position
+        post_parameters = {"position": position}
+        status, _, _ = self._requester.requestJson(
+            "POST",
+            self.url + "/moves",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 201
+
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#delete-a-project-column>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
+    def edit(self, name):
+        """
+        :calls: `PATCH /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#update-a-project-column>`_
+        :param name: string
+        :rtype: None
+        """
+        assert isinstance(name, str), name
+        patch_parameters = {"name": name}
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+
+        self._useAttributes(data)
 
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet
@@ -173,4 +219,3 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-

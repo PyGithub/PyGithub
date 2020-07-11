@@ -36,20 +36,31 @@ class InputGitTreeElement(object):
     This class represents InputGitTreeElements
     """
 
-    def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
+    def __init__(
+        self,
+        path,
+        mode,
+        type,
+        content=github.GithubObject.NotSet,
+        sha=github.GithubObject.NotSet,
+    ):
         """
         :param path: string
         :param mode: string
         :param type: string
         :param content: string
-        :param sha: string
+        :param sha: string or None
         """
 
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(mode, (str, unicode)), mode
-        assert isinstance(type, (str, unicode)), type
-        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert isinstance(path, str), path
+        assert isinstance(mode, str), mode
+        assert isinstance(type, str), type
+        assert content is github.GithubObject.NotSet or isinstance(
+            content, str
+        ), content
+        assert (
+            sha is github.GithubObject.NotSet or sha is None or isinstance(sha, str)
+        ), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

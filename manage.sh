@@ -1,6 +1,8 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
+set -e
+
 function publish {
     bump
     readme
@@ -8,31 +10,21 @@ function publish {
 }
 
 function check {
-    pep8 --ignore=E501 github scripts doc *.py || exit
+    flake8
 }
 
 function fix_headers {
     python scripts/fix_headers.py
 }
 
-function test {
-    test2
-    test3
-}
-
-function test2 {
-    coverage run --branch --include=github/*.py --omit=github/tests/*.py setup.py test --quiet || exit
-    coverage report --show-missing || exit
-}
-
-function test3 {
-    python3 setup.py test --quiet || exit
-}
-
 function bump {
     previousVersion=$( grep '^version =' setup.py | sed 's/version = \"\(.*\)\"/\1/' )
     echo "Next version number? (previous: '$previousVersion')"
     read version
+    if [ -z "$version" ]; then
+        echo "empty version string"
+        exit 1
+    fi
     sed -i -b "s/version = .*/version = \"$version\"/" setup.py
 }
 
@@ -52,8 +44,7 @@ function push {
 
     git tag -m "Version $version" v$version
 
-    git push origin master
-    git push --tags
+    git push --tags ${REMOTE:-origin} master
 }
 
 $1

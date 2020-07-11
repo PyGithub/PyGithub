@@ -23,7 +23,6 @@
 ################################################################################
 
 import github.GithubObject
-
 import github.NamedUser
 import github.Team
 
@@ -34,7 +33,13 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"url": self._url.value, "dismiss_stale_reviews": self._dismiss_stale_reviews.value, "require_code_owner_reviews": self._require_code_owner_reviews.value})
+        return self.get__repr__(
+            {
+                "url": self._url.value,
+                "dismiss_stale_reviews": self._dismiss_stale_reviews.value,
+                "require_code_owner_reviews": self._require_code_owner_reviews.value,
+            }
+        )
 
     @property
     def dismiss_stale_reviews(self):
@@ -94,14 +99,25 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "dismissal_restrictions" in attributes:  # pragma no branch
             if "users" in attributes["dismissal_restrictions"]:
-                self._users = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["dismissal_restrictions"]["users"])
+                self._users = self._makeListOfClassesAttribute(
+                    github.NamedUser.NamedUser,
+                    attributes["dismissal_restrictions"]["users"],
+                )
             if "teams" in attributes["dismissal_restrictions"]:  # pragma no branch
-                self._teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["dismissal_restrictions"]["teams"])
+                self._teams = self._makeListOfClassesAttribute(
+                    github.Team.Team, attributes["dismissal_restrictions"]["teams"]
+                )
         if "dismiss_stale_reviews" in attributes:  # pragma no branch
-            self._dismiss_stale_reviews = self._makeBoolAttribute(attributes["dismiss_stale_reviews"])
+            self._dismiss_stale_reviews = self._makeBoolAttribute(
+                attributes["dismiss_stale_reviews"]
+            )
         if "require_code_owner_reviews" in attributes:  # pragma no branch
-            self._require_code_owner_reviews = self._makeBoolAttribute(attributes["require_code_owner_reviews"])
+            self._require_code_owner_reviews = self._makeBoolAttribute(
+                attributes["require_code_owner_reviews"]
+            )
         if "required_approving_review_count" in attributes:  # pragma no branch
-            self._required_approving_review_count = self._makeIntAttribute(attributes["required_approving_review_count"])
+            self._required_approving_review_count = self._makeIntAttribute(
+                attributes["required_approving_review_count"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

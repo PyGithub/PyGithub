@@ -56,3 +56,13 @@ Create issue with milestone
     >>> milestone = repo.create_milestone("New Issue Milestone")
     >>> repo.create_issue(title="This is a new issue", milestone=milestone)
 	Issue(title="This is a new issue", number=XXX)
+
+Close all issues
+-----------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> open_issues = repo.get_issues(state='open')
+    >>> for issue in open_issues:
+    ...     issue.edit(state='closed')
