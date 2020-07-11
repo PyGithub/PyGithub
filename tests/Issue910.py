@@ -29,6 +29,7 @@
 ################################################################################
 
 import os
+import warnings
 from contextlib import contextmanager
 from textwrap import dedent
 
@@ -77,6 +78,12 @@ class Issue910(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.netrc = NetrcManager()
+        # Ignore the warning since client_{id,secret} are deprecated
+        warnings.filterwarnings("ignore", category=FutureWarning)
+
+    def tearDown(self):
+        super().tearDown()
+        warnings.resetwarnings()
 
     # No auth
     def testNoAuthWithoutNetrc(self):
@@ -113,6 +120,25 @@ class Issue910(Framework.TestCase):
         g = github.Github(self.oauth_token)
         with self.netrc.override(self.login_netrc, self.password_netrc):
             self.assertEqual(g.get_user().login, "tmshn-bot")
+
+    # Client ID+Secret auhtentication
+    def testClientIdClientSecretWithoutNetrc(self):
+        # g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
+        g = github.Github(client_id="redacted_id", client_secret="redacted_secret")
+        with self.netrc.remove():
+            # This should fail with "401 Requires authentication"
+            # because client_id/secret themselves are not tied to any user
+            with self.assertRaises(github.GithubException):
+                g.get_user().login
+
+    def testClientIdClientSecretWithNetrc(self):
+        # g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
+        g = github.Github(client_id="redacted_id", client_secret="redacted_secret")
+        with self.netrc.override(self.login_netrc, self.password_netrc):
+            # This should fail with "401 Requires authentication"
+            # because client_id/secret themselves are not tied to any user
+            with self.assertRaises(github.GithubException):
+                g.get_user().login
 
     # TODO: JWT authentication
     # TODO: Client-id/secret authentication
