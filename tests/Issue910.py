@@ -84,7 +84,7 @@ class Issue910(Framework.TestCase):
         with self.netrc.remove():
             # This should fail with "401 Requires authentication"
             with self.assertRaises(github.GithubException):
-                self.assertEqual(g.get_user().login, "tmshn")
+                g.get_user().login
 
     def testNoAuthWithNetrc(self):
         g = github.Github()
