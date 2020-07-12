@@ -140,5 +140,19 @@ class Issue910(Framework.TestCase):
             with self.assertRaises(github.GithubException):
                 g.get_user().login
 
-    # TODO: JWT authentication
-    # TODO: Client-id/secret authentication
+    # JWT authentication
+    def testJwtWithoutNetrc(self):
+        g = github.Github(jwt=self.jwt)
+        with self.netrc.remove():
+            # This should fail with "401 Bad credentials"
+            # because jwt should cannot be used to call apis directry (instead expected to obtain token)
+            with self.assertRaises(github.GithubException):
+                g.get_user().login
+
+    def testJwtWithNetrc(self):
+        g = github.Github(jwt=self.jwt)
+        with self.netrc.override(self.login_netrc, self.password_netrc):
+            # This should fail with "401 Bad credentials"
+            # because jwt should cannot be used to call apis directry (instead expected to obtain token)
+            with self.assertRaises(github.GithubException):
+                g.get_user().login
