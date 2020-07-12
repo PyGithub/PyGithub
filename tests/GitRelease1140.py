@@ -28,9 +28,30 @@ import os
 from . import Framework
 
 
+class FileLikeStub:
+    def __init__(self):
+        self.dat = b"I wanted to come up with some clever phrase or something here to test with but my mind is blank."
+        self.file_length = len(self.dat)
+        self.index = 0
+
+    def read(self, size=-1):
+        if size < 0 or size is None:
+            start = self.index
+            self.index = self.file_length
+            return self.dat[start:]
+        else:
+            start = self.index
+            end = start + size
+            self.index = end
+            return self.dat[start:end]
+
+
 class Release1140(Framework.TestCase):
     # https://github.com/PyGithub/PyGithub/issues/1140
     def setUp(self):
+        # Following the comment in tests/GitRelease.py:
+        #   "Do not get self.release here as it casues bad data to be saved in --record mode"
+        # Guessing that it's a bad idea to write something like self.release = self.g.get_user().get_repo("RepoTest").get_releases()[0]
         super().setUp()
         self.content_path = "content.txt"
         with open(self.content_path, "w") as content:
@@ -49,3 +70,13 @@ class Release1140(Framework.TestCase):
                 label="unit test artifact",
             )
 
+    def testUploadAssetFileLike(self):
+        release = self.g.get_user().get_repo("RepoTest").get_releases()[0]
+        file_like = FileLikeStub()
+        release.upload_asset_from_memory(
+            file_like,
+            file_like.file_length,
+            name="file_like",
+            content_type="text/plain",
+            label="another unit test artifact",
+        )
