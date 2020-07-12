@@ -1,0 +1,22 @@
+https
+GET
+api.github.com
+None
+/repos/tmshn/PyGithub/installation
+{'User-Agent': 'PyGithub/Python', 'Accept-Encoding': 'gzip, deflate', 'Accept': 'application/vnd.github.machine-man-preview+json', 'Connection': 'keep-alive', 'Authorization': 'Bearer jwt_removed'}
+None
+200
+[('Date', 'Sun, 12 Jul 2020 13:23:25 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', 'W/"7e60ff8e93fa712d13ee3e4a9515a846"'), ('X-GitHub-Media-Type', 'github.machine-man-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'D64A:3FB3:5DF566:737905:5F0B0ECD')]
+{"id":10457792,"account":{"login":"tmshn","id":3760893,"node_id":"MDQ6VXNlcjM3NjA4OTM=","avatar_url":"https://avatars2.githubusercontent.com/u/3760893?v=4","gravatar_id":"","url":"https://api.github.com/users/tmshn","html_url":"https://github.com/tmshn","followers_url":"https://api.github.com/users/tmshn/followers","following_url":"https://api.github.com/users/tmshn/following{/other_user}","gists_url":"https://api.github.com/users/tmshn/gists{/gist_id}","starred_url":"https://api.github.com/users/tmshn/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/tmshn/subscriptions","organizations_url":"https://api.github.com/users/tmshn/orgs","repos_url":"https://api.github.com/users/tmshn/repos","events_url":"https://api.github.com/users/tmshn/events{/privacy}","received_events_url":"https://api.github.com/users/tmshn/received_events","type":"User","site_admin":false},"repository_selection":"all","access_tokens_url":"https://api.github.com/app/installations/10457792/access_tokens","repositories_url":"https://api.github.com/installation/repositories","html_url":"https://github.com/settings/installations/10457792","app_id":72523,"app_slug":"tmshn-experimental-toy-2","target_id":3760893,"target_type":"User","permissions":{},"events":[],"created_at":"2020-07-12T06:26:21.000Z","updated_at":"2020-07-12T06:32:00.000Z","single_file_name":null}
+
+https
+POST
+api.github.com
+None
+/app/installations/10457792/access_tokens
+{'User-Agent': 'PyGithub/Python', 'Accept-Encoding': 'gzip, deflate', 'Accept': 'application/vnd.github.machine-man-preview+json', 'Connection': 'keep-alive', 'Content-Length': '2', 'Content-Type': 'application/json', 'Authorization': 'Bearer jwt_removed'}
+b'{}'
+201
+[('Date', 'Sun, 12 Jul 2020 13:23:25 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '170'), ('Server', 'GitHub.com'), ('Status', '201 Created'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', '"1025beffacba9aefc400e83d79425595"'), ('X-GitHub-Media-Type', 'github.machine-man-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'D64D:3FB3:5DF57A:73791F:5F0B0ECD')]
+{"token":"v1.b4860e8960a8c02e68abf693a404d515e56fdf88","expires_at":"2020-07-12T14:23:25Z","permissions":{"issues":"read","metadata":"read"},"repository_selection":"all"}
+

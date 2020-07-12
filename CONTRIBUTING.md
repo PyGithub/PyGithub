@@ -92,6 +92,13 @@ jwt = "my_json_web_token"  # Can be left empty if not used
 
 login_netrc = "my_another_login"  # Can be left empty if not used
 password_netrc = "my_password_for_another_login"  # Can be left empty if not used
+
+integration_id = 12345  # Can be left empty if not used
+integration_private_key = """
+-----BEGIN RSA PRIVATE KEY-----
+...
+-----END RSA PRIVATE KEY-----
+"""  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.

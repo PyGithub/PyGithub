@@ -274,6 +274,8 @@ class BasicTestCase(unittest.TestCase):
             # self.client_secret = GithubCredentials.client_secret
             self.login_netrc = GithubCredentials.login_netrc
             self.password_netrc = GithubCredentials.password_netrc
+            self.integration_id = GithubCredentials.integration_id
+            self.integration_private_key = GithubCredentials.integration_private_key
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
@@ -291,6 +293,37 @@ class BasicTestCase(unittest.TestCase):
             self.jwt = "jwt"
             self.login_netrc = "login_netrc"
             self.password_netrc = "password_netrc"
+            self.integration_id = "integration_id"
+            # Note: this is just a random meaningless RSA key (format is actual RSA key, but not tied to anything)
+            self.integration_private_key = """
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEAv9Ihp6i6+2BJft+8In/4BQ/2ceRpGDM/LLKNKs5G2oxHu/b3
+FZx/sK3q6gPKi/NU0Rx45jNt3IzWliG9ACVV/MXzsmqOqOXh8/UDKJKxAeqXdyja
+76LOh3LQuoHHDLhLOQdXc+ZU7Chg9y3DUQZXwOJc0gXdVHxzwmcZ0r/Xa8pyN9xA
+ilXEbMm5pi+8hNGviuv0Ny5m3eq8lqzb5apdLq8FUPMAIHvTLGiyKJUQ/gAXYVJT
+tdUiHkEZhho7KkuqQqfy9TtJb6CjfF6bqQmu/UzBVDuNaoyL9jQDuspXU7VM2Q1a
+e9STYN4xowuIXmeLkfja2s1q5pAYDBBT44Tk+QIDAQABAoIBAQC4Jj7w+ecn1HQ6
+PQgcBsZP9dcd162c8fXAL1mespEK1ok3RgxGzws2zoArUKBuYpgWeEMInG7nwL1x
+O8p6DV3TYSZnLizusGKPFbSGiu0rbc8jMjGcxKuJFQyVQGmbKIHuqcGnHoSAgvMz
+2NcdPf2YyrdZWQ/2P9PR2bDMxidE7lOJJb1Mo+kE3sSdk07Z4761CThXn9e3AHAp
+Z7fWtq0LrZBrIWJIzeD0z9Obh2uhYp8KCXhYmrnjbyoKCjsr9Q/PF1OskqCFkNNI
+VF99+h7UVpKNdyhkO/sLtZJmfrwXCqbc6Aa7g0EtvIzUJM3aVTcgQqEPyKSMQXYB
+cnWeiDZBAoGBAP+ujIrzVL+F07ywV6RfLJLN0aonlHiC4WSRO3JSBC0kTsCjhbUw
+O9r/6KiaDLSZxJ6588ViB+yx0RLD15eNzcOJKv/rEt/Wm5k4VcKwdctff1gM3htX
+ZTuS1VViJO0NLHnPrXQuaTXFBTdG1zroHy1M4OCQtrdHpXIMkFolUWGVAoGBAMAP
+PRimcdXYlyCinFQNi+Hud5NpdWDsvFStYDhhvNxTP3TE6/G4/ko5jM/g4A7A2RVJ
+xBLqsnUmewGo3oGaPqvWrIMMFdZmWRm5EwVDiW/Wa3PXbic1jw7dE6hr8clNS0MU
+gv3ObbTf+HHWSA2ZjkyB08slL08hkcpUbKj+zuTVAoGAJm2bnf64jBiXHFL8uS28
+y0u36XUNcZdqPO0/HA2LpyU/2OA65mKbfGzeEQkmQ7agwKJ+Kvpy6nZHUCSzMIoV
+lP/2wIQaUB43QK4g5aQT8D8oKpm0gDOAeZW2DqEzn5VNS/mUvlODaJt2DzrMeoQM
+u4hEfDwD2kQgb6XHxGS7eIkCgYEAu4RlX5LrJCKDc66wuXQ8dkvxXfEiVI7vVjGs
+93+d+PQiyayWvXykcu37qN9jg6QQj7NlCB80PCNlB/rLvHhP5lEEQDLlg16Mcgv8
+ITCOmK4eXY0iFJA7bAS388Ho4WVhLU5yksIg5O+kT+kqknSxtcswcXCN31HkWUrS
+iLG4aT0CgYEAjgzS4UZP+F/H3kxgFlkOjTTwVQqeV1hnqOSJymf5xD5tKUQsZ7Nk
+ytePJqbsvZZfaG9QAeSuSLp6bjcp+t97QSNy5AUKpidvntbBnMrSDrm/9nnpOIEC
+jTIE8I27SPdR1bkbXAEokN3G5k+C7os/GxDfqtjaPanuJCEyJM1KQTE=
+-----END RSA PRIVATE KEY-----
+"""
 
             httpretty.enable(allow_net_connect=False)
 

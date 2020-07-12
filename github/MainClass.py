@@ -823,15 +823,20 @@ class GithubIntegration(object):
         body = {}
         if user_id:
             body = {"user_id": user_id}
+
+        def auth_header(r):
+            r.headers["Authorization"] = "Bearer {}".format(self.create_jwt())
+            return r
+
         response = requests.post(
             "{}/app/installations/{}/access_tokens".format(
                 self.base_url, installation_id
             ),
             headers={
-                "Authorization": "Bearer {}".format(self.create_jwt()),
                 "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python",
             },
+            auth=auth_header,
             json=body,
         )
 
@@ -861,8 +866,12 @@ class GithubIntegration(object):
         :param repo: str
         :rtype: :class:`github.Installation.Installation`
         """
+
+        def auth_header(r):
+            r.headers["Authorization"] = "Bearer {}".format(self.create_jwt())
+            return r
+
         headers = {
-            "Authorization": "Bearer {}".format(self.create_jwt()),
             "Accept": Consts.mediaTypeIntegrationPreview,
             "User-Agent": "PyGithub/Python",
         }
@@ -870,6 +879,7 @@ class GithubIntegration(object):
         response = requests.get(
             "{}/repos/{}/{}/installation".format(self.base_url, owner, repo),
             headers=headers,
+            auth=auth_header,
         )
         response_dict = response.json()
         return Installation.Installation(None, headers, response_dict, True)
