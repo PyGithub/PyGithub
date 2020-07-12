@@ -41,6 +41,8 @@ import github.GithubObject
 import github.GitReleaseAsset
 import github.NamedUser
 
+from . import Consts
+
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
     """
@@ -259,6 +261,48 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             parameters=post_parameters,
             headers=headers,
             input=path,
+        )
+        return github.GitReleaseAsset.GitReleaseAsset(
+            self._requester, resp_headers, data, completed=True
+        )
+
+    def upload_asset_from_memory(
+        self,
+        file_like,
+        file_size,
+        name,
+        content_type=github.GithubObject.NotSet,
+        label="",
+    ):
+        """Uploads an asset. Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
+        Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
+        :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:release_id/assets <https://developer.github.com/v3/repos/releases/#upload-a-release-asset>`_
+        :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``
+        :param file_size: int, size in bytes of ``file_like``
+        :param content_type: string
+        :param name: string
+        :param label: string
+        :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
+        """
+        assert isinstance(name, str), name
+        assert isinstance(file_size, int), file_size
+        assert isinstance(label, str), label
+
+        post_parameters = {"label": label, "name": name}
+        content_type = (
+            content_type
+            if content_type is not github.GithubObject.NotSet
+            else Consts.defaultMediaType
+        )
+        headers = {"Content-Type": content_type, "Content-Length": str(file_size)}
+
+        resp_headers, data = self._requester.requestBlobAndCheck(
+            "POST",
+            self.upload_url.split("{?")[0],
+            parameters=post_parameters,
+            headers=headers,
+            file_like=file_like,
+            file_size=file_size,
         )
         return github.GitReleaseAsset.GitReleaseAsset(
             self._requester, resp_headers, data, completed=True
