@@ -57,6 +57,10 @@ class Release1140(Framework.TestCase):
         with open(self.content_path, "w") as content:
             content.write("Files are my favorite!")
 
+    def tearDown(self):
+        if os.path.exists(self.content_path):
+            os.remove(self.content_path)
+
     def testUploadAssetFromMemory(self):
         release = self.g.get_user().get_repo("RepoTest").get_releases()[0]
 
