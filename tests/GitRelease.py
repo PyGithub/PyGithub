@@ -70,14 +70,55 @@ create_date = datetime.datetime(2020, 7, 12, 7, 34, 42)
 publish_date = datetime.datetime(2020, 7, 14, 0, 58, 20)
 
 
-class ReleaseRead(Framework.TestCase):
-    """
-    Tests that only involve reading, not modification. All data comes from an existing release manually crafted.
-    """
+class GitRelease(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.new_tag = "v1.25.2"  # Used for new releases
+        self.content_path = "content.txt"
+        self.artifact_path = "archive.zip"
 
-    # Note that it's not possible to specify `self.release` in setUp() because something goes wonky when using --record
+        with open(self.content_path, "w") as zip_content:
+            zip_content.write("Pedro for president.")
+
+        artifact = zipfile.ZipFile(self.artifact_path, "w")
+        artifact.write(self.content_path)
+        artifact.close()
+        self.repo = self.g.get_user(user).get_repo(repo_name)
+        self.release = self.repo.get_release(release_id)
+
+    def tearDown(self):
+        if os.path.exists(self.content_path):
+            os.remove(self.content_path)
+        if os.path.exists(self.artifact_path):
+            os.remove(self.artifact_path)
+
+        super().tearDown()
+
+    # At time of writing (2020-07) the --record option only records setUp() once for the entire class. This causes issues here because for each different test you'll want to create a new release, but the release ID will change between calls, leading to --record collecting bad data.
+    # The workaround I've come up with is to have a seperate setup/teardown method that gets manually called in each test method.
+    def setUpNewRelease(self):
+
+        repo = self.repo
+        commit_sha = repo.get_commits()[0].sha  # Just need any commit
+        self.new_release = repo.create_git_tag_and_release(
+            self.new_tag,
+            "tag message",
+            "release title",
+            "release message",
+            commit_sha,
+            "commit",
+        )
+        self.new_release_id = self.new_release.id
+
+    def tearDownNewRelease(self):
+        try:
+            new_release = self.repo.get_release(self.new_release_id)
+            new_release.delete_release()
+        except GithubException:
+            pass  # Already deleted
+
     def testAttributes(self):
-        release = self.g.get_user(user).get_repo(repo_name).get_latest_release()
+        release = self.release
         self.assertEqual(release.id, release_id)
         self.assertEqual(release.tag_name, tag)
         self.assertEqual(release.target_commitish, "master")
@@ -122,23 +163,20 @@ class ReleaseRead(Framework.TestCase):
         self.assertEqual(repr(release), 'GitRelease(title="Test")')
 
     def testGetRelease(self):
-        release_by_id = (
-            self.g.get_user(user).get_repo(repo_name).get_release(release_id)
-        )
-        release_by_tag = self.g.get_user(user).get_repo(repo_name).get_release(tag)
+        release_by_id = self.release
+        release_by_tag = self.repo.get_release(tag)
         self.assertEqual(release_by_id, release_by_tag)
 
     def testGetLatestRelease(self):
-        repo = self.g.get_user(user).get_repo(repo_name)
-        latest_release = repo.get_latest_release()
+        latest_release = self.repo.get_latest_release()
         self.assertEqual(latest_release.tag_name, tag)
 
     def testGetAssets(self):
         """
         Test retrieving the set of assets for the current release, as well as directly by id.
         """
-        repo = self.g.get_user(user).get_repo(repo_name)
-        release = repo.get_release(release_id)
+        repo = self.repo
+        release = self.release
         self.assertEqual(release.id, release_id)
 
         asset_list = [x for x in release.get_assets()]
@@ -150,91 +188,41 @@ class ReleaseRead(Framework.TestCase):
         self.assertTrue(asset is not None)
         self.assertEqual(asset.id, asset_id)
 
-
-class ReleaseModify(Framework.TestCase):
-    """ Tests involving creating/updating/deleting releases."""
-
-    def setUp(self):
-        super().setUp()
-        self.new_tag = "v1.25.2"  # Used for new releases
-        self.content_path = "content.txt"
-        self.artifact_path = "archive.zip"
-
-        with open(self.content_path, "w") as zip_content:
-            zip_content.write("Pedro for president.")
-
-        artifact = zipfile.ZipFile(self.artifact_path, "w")
-        artifact.write(self.content_path)
-        artifact.close()
-
-    def tearDown(self):
-        if os.path.exists(self.content_path):
-            os.remove(self.content_path)
-        if os.path.exists(self.artifact_path):
-            os.remove(self.artifact_path)
-
-        super().tearDown()
-
-    # At time of writing (2020-07) the --record option only records setUp() once for the entire class. This causes issues here because for each different test you'll want to create a new release, but the release ID will change between calls, leading to --record collecting bad data.
-    # The workaround I've come up with is to have a seperate setup/teardown method that gets manually called in each test method.
-    def setUpEach(self):
-        self.repo = self.g.get_user(user).get_repo(repo_name)
-        repo = self.repo
-        commit_sha = repo.get_commits()[0].sha  # Just need any commit
-        self.new_release = repo.create_git_tag_and_release(
-            self.new_tag,
-            "tag message",
-            "release title",
-            "release message",
-            commit_sha,
-            "commit",
-        )
-        self.new_release_id = self.new_release.id
-
-    def tearDownEach(self):
-        try:
-            new_release = self.repo.get_release(self.new_release_id)
-            new_release.delete_release()
-        except GithubException:
-            pass  # Already deleted
-
     def testDelete(self):
-        self.setUpEach()
+        self.setUpNewRelease()
         self.new_release.delete_release()
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testUpdate(self):
-        self.setUpEach()
-        repo = self.repo
-        release = repo.get_release(self.new_release_id)
+        self.setUpNewRelease()
+        release = self.new_release
         new_release = release.update_release("Updated Test", "Updated Body")
         self.assertEqual(new_release.title, "Updated Test")
         self.assertEqual(new_release.body, "Updated Body")
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testUploadAsset(self):
         """
         Test uploading a new asset to the release.
         """
-        self.setUpEach()
-        repo = self.repo
-        release = repo.get_release(self.new_release_id)
+        self.setUpNewRelease()
+        release = self.new_release
         self.assertEqual(release.id, self.new_release_id)
 
         release.upload_asset(
             self.artifact_path, "unit test artifact", "application/zip"
         )
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testUploadAssetWithName(self):
-        self.setUpEach()
+        self.setUpNewRelease()
         release = self.new_release
         r = release.upload_asset(self.artifact_path, name="foobar.zip")
         self.assertEqual(r.name, "foobar.zip")
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testCreateGitTagAndRelease(self):
-        self.setUpEach()
+        self.setUpNewRelease()
         # Creation code already done in setup, so we'll just test what's already here.
         release = self.new_release
         self.assertEqual(release.tag_name, self.new_tag)
@@ -247,10 +235,10 @@ class ReleaseModify(Framework.TestCase):
                 user, repo_name, self.new_tag
             ),
         )
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testUploadAssetFromMemory(self):
-        self.setUpEach()
+        self.setUpNewRelease()
         release = self.new_release
         content_size = os.path.getsize(self.content_path)
         with open(self.content_path, "rb") as f:
@@ -264,10 +252,10 @@ class ReleaseModify(Framework.TestCase):
         asset_list = [x for x in release.get_assets()]
         self.assertTrue(asset_list is not None)
         self.assertEqual(len(asset_list), 1)
-        self.tearDownEach()
+        self.tearDownNewRelease()
 
     def testUploadAssetFileLike(self):
-        self.setUpEach()
+        self.setUpNewRelease()
         file_like = FileLikeStub()
         release = self.new_release
         release.upload_asset_from_memory(
@@ -280,4 +268,4 @@ class ReleaseModify(Framework.TestCase):
         asset_list = [x for x in release.get_assets()]
         self.assertTrue(asset_list is not None)
         self.assertEqual(len(asset_list), 1)
-        self.tearDownEach()
+        self.tearDownNewRelease()
