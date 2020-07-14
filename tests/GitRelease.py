@@ -38,8 +38,28 @@ import datetime
 import os
 import zipfile
 
-from . import Framework
 from github import GithubException
+
+from . import Framework
+
+
+class FileLikeStub:
+    def __init__(self):
+        self.dat = b"I wanted to come up with some clever phrase or something here to test with but my mind is blank."
+        self.file_length = len(self.dat)
+        self.index = 0
+
+    def read(self, size=-1):
+        if size < 0 or size is None:
+            start = self.index
+            self.index = self.file_length
+            return self.dat[start:]
+        else:
+            start = self.index
+            end = start + size
+            self.index = end
+            return self.dat[start:end]
+
 
 repo_name = "RepoTest"
 user = "rickrickston123"
@@ -161,7 +181,7 @@ class ReleaseModify(Framework.TestCase):
         self.repo = self.g.get_user(user).get_repo(repo_name)
         repo = self.repo
         commit_sha = repo.get_commits()[0].sha  # Just need any commit
-        new_release = repo.create_git_tag_and_release(
+        self.new_release = repo.create_git_tag_and_release(
             self.new_tag,
             "tag message",
             "release title",
@@ -169,8 +189,7 @@ class ReleaseModify(Framework.TestCase):
             commit_sha,
             "commit",
         )
-        self.new_release_id = new_release.id
-        # assert self.new_release_id != release_id
+        self.new_release_id = self.new_release.id
 
     def tearDownEach(self):
         try:
@@ -180,10 +199,8 @@ class ReleaseModify(Framework.TestCase):
             pass  # Already deleted
 
     def testDelete(self):
-        # repo = self.g.get_user(user).get_repo(repo_name)
         self.setUpEach()
-        to_delete = self.repo.get_release(self.new_release_id)
-        to_delete.delete_release()
+        self.new_release.delete_release()
         self.tearDownEach()
 
     def testUpdate(self):
@@ -211,7 +228,7 @@ class ReleaseModify(Framework.TestCase):
 
     def testUploadAssetWithName(self):
         self.setUpEach()
-        release = self.repo.get_release(self.new_release_id)
+        release = self.new_release
         r = release.upload_asset(self.artifact_path, name="foobar.zip")
         self.assertEqual(r.name, "foobar.zip")
         self.tearDownEach()
@@ -219,8 +236,7 @@ class ReleaseModify(Framework.TestCase):
     def testCreateGitTagAndRelease(self):
         self.setUpEach()
         # Creation code already done in setup, so we'll just test what's already here.
-        repo = self.repo
-        release = repo.get_release(self.new_release_id)
+        release = self.new_release
         self.assertEqual(release.tag_name, self.new_tag)
         self.assertEqual(release.body, "release message")
         self.assertEqual(release.title, "release title")
@@ -231,4 +247,37 @@ class ReleaseModify(Framework.TestCase):
                 user, repo_name, self.new_tag
             ),
         )
+        self.tearDownEach()
+
+    def testUploadAssetFromMemory(self):
+        self.setUpEach()
+        release = self.new_release
+        content_size = os.path.getsize(self.content_path)
+        with open(self.content_path, "rb") as f:
+            release.upload_asset_from_memory(
+                f,
+                content_size,
+                name="file_name",
+                content_type="text/plain",
+                label="unit test artifact",
+            )
+        asset_list = [x for x in release.get_assets()]
+        self.assertTrue(asset_list is not None)
+        self.assertEqual(len(asset_list), 1)
+        self.tearDownEach()
+
+    def testUploadAssetFileLike(self):
+        self.setUpEach()
+        file_like = FileLikeStub()
+        release = self.new_release
+        release.upload_asset_from_memory(
+            file_like,
+            file_like.file_length,
+            name="file_like",
+            content_type="text/plain",
+            label="another unit test artifact",
+        )
+        asset_list = [x for x in release.get_assets()]
+        self.assertTrue(asset_list is not None)
+        self.assertEqual(len(asset_list), 1)
         self.tearDownEach()
