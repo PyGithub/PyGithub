@@ -302,6 +302,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._patch_url.value
 
     @property
+    def requested_reviewers(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._requested_reviewers)
+        return self._requested_reviewers.value
+
+    @property
     def review_comment_url(self):
         """
         :type: string
@@ -968,6 +976,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
+        self._requested_reviewers = github.GithubObject.NotSet
         self._review_comment_url = github.GithubObject.NotSet
         self._review_comments = github.GithubObject.NotSet
         self._review_comments_url = github.GithubObject.NotSet
@@ -1067,6 +1076,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._number = self._makeIntAttribute(attributes["number"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+        if "requested_reviewers" in attributes:  # pragma no branch
+            self._requested_reviewers = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["requested_reviewers"]
+            )
         if "review_comment_url" in attributes:  # pragma no branch
             self._review_comment_url = self._makeStringAttribute(
                 attributes["review_comment_url"]
