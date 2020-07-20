@@ -29,6 +29,7 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ import jwt
 import requests
 import urllib3
 
+import github.ApplicationOAuth
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -776,6 +778,14 @@ class Github(object):
         """
         return Installation.Installation(
             self.__requester, headers={}, attributes={"id": id}, completed=True
+        )
+
+    def get_oauth_application(self, client_id, client_secret):
+        return github.ApplicationOAuth.ApplicationOAuth(
+            self.__requester,
+            headers={},
+            attributes={"client_id": client_id, "client_secret": client_secret},
+            completed=False,
         )
 
 
