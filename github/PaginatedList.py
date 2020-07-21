@@ -230,7 +230,7 @@ class PaginatedList(PaginatedListBase):
         if "link" in headers:
             linkHeaders = headers["link"].split(", ")
             for linkHeader in linkHeaders:
-                (url, rel) = linkHeader.split("; ")
+                url, rel, *rest = linkHeader.split("; ")
                 url = url[1:-1]
                 rel = rel[5:-1]
                 links[rel] = url
