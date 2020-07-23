@@ -104,7 +104,6 @@ class Requester:
         client_secret: Optional[str],
         user_agent: str,
         per_page: int,
-        api_preview: bool,
         verify: bool,
         retry: Any,
     ) -> None: ...

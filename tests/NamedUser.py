@@ -72,6 +72,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.public_repos, 61)
         self.assertEqual(self.user.suspended_at, None)
         self.assertEqual(self.user.total_private_repos, None)
+        self.assertEqual(self.user.twitter_username, "nvie")
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/nvie")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjgzODQ0")
@@ -110,6 +111,7 @@ class NamedUser(Framework.TestCase):
             self.user.suspended_at, datetime.datetime(2013, 8, 10, 7, 11, 7)
         )
         self.assertEqual(self.user.total_private_repos, 5)
+        self.assertIsNone(self.user.twitter_username)
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
@@ -248,21 +250,21 @@ class NamedUser(Framework.TestCase):
             ],
         )
 
-    def testGetReposWithType(self):
+    def testGetReposWithAllArgs(self):
         self.assertListKeyEqual(
-            self.user.get_repos("owner"),
+            self.user.get_repos(type="owner", sort="created", direction="asc"),
             lambda r: r.name,
             [
-                "django",
-                "PyGithub",
-                "developer.github.com",
-                "acme-public-website",
-                "C4Planner",
                 "DrawTurksHead",
-                "DrawSyntax",
-                "QuadProgMm",
-                "Boost.HierarchicalEnum",
-                "ViDE",
+                "vincent-jacques.net",
+                "IpMap",
+                "MockMockMock",
+                "ActionTree",
+                "InteractiveCommandLine",
+                "RecursiveDocument",
+                "MarblesCollide",
+                "jacquev6.github.io",
+                "LowVoltage",
             ],
         )
 

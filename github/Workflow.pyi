@@ -1,12 +1,23 @@
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject
+from github.Branch import Branch
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.WorkflowRun import WorkflowRun
 
-class Deployment(CompletableGithubObject):
+class Workflow(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
+    def get_runs(
+        self,
+        actor: Union[str, NamedUser, _NotSetType],
+        branch: Union[str, Branch, _NotSetType],
+        event: Union[str, _NotSetType],
+        status: Union[str, _NotSetType]
+    ) -> PaginatedList[WorkflowRun]: ...
     @property
     def id(self) -> int: ...
     @property

@@ -2,7 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,57 +27,56 @@ import datetime
 from . import Framework
 
 
-class Workflow(Framework.TestCase):
+class DeploymentStatus(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.workflow = self.g.get_repo("PyGithub/PyGithub").get_workflow("check.yml")
+        self.deployment = (
+            self.g.get_user().get_repo("PyGithub").get_deployment(242997115)
+        )
+        self.status = self.deployment.get_status(344110026)
 
     def testAttributes(self):
+        self.assertEqual(self.status.id, 344110026)
+        created_at = datetime.datetime(2020, 6, 27, 18, 57, 35)
+        self.assertEqual(self.status.created_at, created_at)
+        self.assertEqual(self.status.creator.login, "colbygallup")
         self.assertEqual(
-            repr(self.workflow),
-            'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
+            self.status.deployment_url,
+            "https://api.github.com/repos/colbygallup/PyGithub/deployments/242997115",
         )
-        self.assertEqual(self.workflow.id, 1026390)
-        self.assertEqual(self.workflow.name, "check")
-        self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
-        self.assertEqual(self.workflow.state, "active")
-        timestamp = datetime.datetime(2020, 4, 15, 0, 48, 32)
-        self.assertEqual(self.workflow.created_at, timestamp)
-        self.assertEqual(self.workflow.updated_at, timestamp)
+        self.assertEqual(self.status.description, "")
+        self.assertEqual(self.status.environment, "production")
         self.assertEqual(
-            self.workflow.url,
-            "https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390",
+            self.status.repository_url,
+            "https://api.github.com/repos/colbygallup/PyGithub",
+        )
+        self.assertEqual(self.status.state, "failure")
+        self.assertEqual(self.status.target_url, "")
+        self.assertEqual(self.status.updated_at, created_at)
+        self.assertEqual(
+            self.status.url,
+            "https://api.github.com/repos/colbygallup/PyGithub/deployments/242997115/statuses/344110026",
         )
         self.assertEqual(
-            self.workflow.html_url,
-            "https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml",
+            self.status.node_id, "MDE2OkRlcGxveW1lbnRTdGF0dXMzNDQxMTAwMjY=",
         )
         self.assertEqual(
-            self.workflow.badge_url,
-            "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg",
+            repr(self.status),
+            'DeploymentStatus(url="https://api.github.com/repos/colbygallup/PyGithub/deployments/242997115/statuses/344110026", id=344110026)',
         )
 
-    def testGetRunsWithNoArguments(self):
-        self.assertListKeyEqual(
-            self.workflow.get_runs(),
-            lambda r: r.id,
-            [109950033, 109168419, 108934155, 108817672],
+    def testCreate(self):
+        newStatus = self.deployment.create_status("success")
+        self.assertEqual(newStatus.state, "success")
+        self.assertEqual(
+            newStatus.repository_url,
+            "https://api.github.com/repos/colbygallup/PyGithub",
         )
 
-    def testGetRunsWithObjects(self):
-        sfdye = self.g.get_user("sfdye")
-        master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
+    def testGetStatuses(self):
+        statuses = self.deployment.get_statuses()
         self.assertListKeyEqual(
-            self.workflow.get_runs(
-                actor=sfdye, branch=master, event="push", status="completed"
-            ),
-            lambda r: r.id,
-            [100957683, 94845611, 93946842, 92714488],
-        )
-
-    def testGetRunsWithStrings(self):
-        self.assertListKeyEqual(
-            self.workflow.get_runs(actor="s-t-e-v-e-n-k", branch="master"),
-            lambda r: r.id,
-            [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
+            statuses,
+            lambda s: s.id,
+            [346100235, 344427441, 344110026, 344109923, 344107728],
         )

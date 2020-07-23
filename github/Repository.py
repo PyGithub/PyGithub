@@ -136,6 +136,7 @@ import github.Tag
 import github.Team
 import github.View
 import github.Workflow
+import github.WorkflowRun
 
 from . import Consts
 
@@ -1939,7 +1940,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/traffic/clones <https://developer.github.com/v3/repos/traffic/>`_
         :param per: string, must be one of day or week, day by default
-        :rtype: None or list of :class:`github.Clone.Clone`
+        :rtype: None or list of :class:`github.Clones.Clones`
         """
         assert per is github.GithubObject.NotSet or (
             isinstance(per, str) and (per == "day" or per == "week")
@@ -2924,7 +2925,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_releases(self):
         """
-        :calls: `GET /repos/:owner/:repo/releases <https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository`_
+        :calls: `GET /repos/:owner/:repo/releases <https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRelease.GitRelease`
         """
         return github.PaginatedList.PaginatedList(
@@ -3007,9 +3008,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
+    def get_workflow_runs(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowRun.WorkflowRun,
+            self._requester,
+            self.url + "/actions/runs",
+            None,
+            list_item="workflow_runs",
+        )
+
     def get_workflow(self, id_or_name):
         """
         :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id <https://developer.github.com/v3/actions/workflows>`_
+        :param id_or_name: int or string
+
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
@@ -3017,6 +3033,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", self.url + "/actions/workflows/" + id_or_name
         )
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
+
+    def get_workflow_run(self, id_):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runs/:run_id <https://developer.github.com/v3/actions/workflow-runs>`_
+        :param id_: int
+
+        :rtype: :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert isinstance(id_, int)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/runs/" + str(id_)
+        )
+        return github.WorkflowRun.WorkflowRun(
+            self._requester, headers, data, completed=True
+        )
 
     def has_in_assignees(self, assignee):
         """

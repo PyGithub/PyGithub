@@ -68,6 +68,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
+    @property
+    def twitter_username(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
+
     def __hash__(self):
         return hash((self.id, self.login))
 
@@ -681,6 +689,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._suspended_at = github.GithubObject.NotSet
         self._team_count = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
+        self._twitter_username = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -783,6 +792,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(
                 attributes["total_private_repos"]
+            )
+        if "twitter_username" in attributes:  # pragma no branch
+            self._twitter_username = self._makeStringAttribute(
+                attributes["twitter_username"]
             )
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])

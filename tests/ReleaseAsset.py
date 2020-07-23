@@ -30,74 +30,48 @@ from . import Framework
 
 
 class ReleaseAsset(Framework.TestCase):
-    """
-    Test harness for functionality related to release assets (files attached to
-    the github release).
-    """
-
     def setUp(self):
         super().setUp()
-        # Do not get self.release here as it causes bad data to be saved in --record mode
+        self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
+        self.asset = self.release.get_assets()[0]
 
     def testAttributes(self):
-        """
-        Test properties & to-string.
-        """
-        release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
-        self.assertEqual(release.id, 1210814)
-
-        asset = release.get_assets()[0]
-        self.assertEqual(asset.id, 16)
+        self.assertEqual(self.release.id, 1210814)
+        self.assertEqual(self.asset.id, 16)
         self.assertEqual(
-            asset.url,
+            self.asset.url,
             "https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16",
         )
-        self.assertEqual(asset.name, "Archive.zip")
-        self.assertEqual(asset.label, "Installation msi & runbook zipped")
-        self.assertEqual(asset.content_type, "application/zip")
-        self.assertEqual(asset.state, "uploaded")
-        self.assertEqual(asset.size, 3783)
-        self.assertEqual(asset.download_count, 2)
-        self.assertEqual(asset.created_at, datetime.datetime(2017, 2, 1, 22, 40, 58))
-        self.assertEqual(asset.updated_at, datetime.datetime(2017, 2, 1, 22, 44, 58))
+        self.assertEqual(self.asset.name, "Archive.zip")
+        self.assertEqual(self.asset.label, "Installation msi & runbook zipped")
+        self.assertEqual(self.asset.content_type, "application/zip")
+        self.assertEqual(self.asset.state, "uploaded")
+        self.assertEqual(self.asset.size, 3783)
+        self.assertEqual(self.asset.download_count, 2)
         self.assertEqual(
-            asset.browser_download_url,
+            self.asset.created_at, datetime.datetime(2017, 2, 1, 22, 40, 58)
+        )
+        self.assertEqual(
+            self.asset.updated_at, datetime.datetime(2017, 2, 1, 22, 44, 58)
+        )
+        self.assertEqual(
+            self.asset.browser_download_url,
             "https://github.com/edhollandAL/PyGithub/releases/download/v1.25.2/Asset.zip",
         )
-        self.assertEqual(asset.uploader.login, "PyGithub")
+        self.assertEqual(self.asset.uploader.login, "PyGithub")
         self.assertEqual(
-            asset.__repr__(),
+            repr(self.asset),
             'GitReleaseAsset(url="https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")',
         )
 
     def testDelete(self):
-        """
-        Test deleting a release asset.
-        """
-        release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
-        self.assertEqual(release.id, 1210814)
-        asset = release.get_assets()[0]
-        self.assertEqual(asset.id, 16)
-
-        self.assertTrue(asset.delete_asset(), msg="Asset deletion failed.")
+        self.assertTrue(self.asset.delete_asset())
 
     def testUpdate(self):
-        """
-        Test updating the editable properties of a release asset.
-        """
-        release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
-        self.assertEqual(release.id, 1210814)
-
-        asset = release.get_assets()[0]
-
-        self.assertEqual(asset.id, 16)
-        self.assertEqual(asset.name, "Archive.zip")
-        self.assertEqual(asset.label, "Installation msi & runbook zipped")
-
         new_name = "updated-name.zip"
         new_label = "Updated label"
-        updated_asset = asset.update_asset(new_name, new_label)
+        updated_asset = self.asset.update_asset(new_name, new_label)
         self.assertEqual(updated_asset.name, new_name)
-        self.assertNotEqual(asset.name, updated_asset.name)
+        self.assertNotEqual(self.asset.name, updated_asset.name)
         self.assertEqual(updated_asset.label, new_label)
-        self.assertNotEqual(asset.label, updated_asset.label)
+        self.assertNotEqual(self.asset.label, updated_asset.label)

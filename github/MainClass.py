@@ -29,6 +29,7 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ import jwt
 import requests
 import urllib3
 
+import github.ApplicationOAuth
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -115,7 +117,6 @@ class Github(object):
         :param client_secret: string
         :param user_agent: string
         :param per_page: int
-        :param api_preview: bool
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         """
@@ -258,7 +259,7 @@ class Github(object):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
         :param login: string
-        :rtype: :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         """
         assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
@@ -777,6 +778,14 @@ class Github(object):
         """
         return Installation.Installation(
             self.__requester, headers={}, attributes={"id": id}, completed=True
+        )
+
+    def get_oauth_application(self, client_id, client_secret):
+        return github.ApplicationOAuth.ApplicationOAuth(
+            self.__requester,
+            headers={},
+            attributes={"client_id": client_id, "client_secret": client_secret},
+            completed=False,
         )
 
 

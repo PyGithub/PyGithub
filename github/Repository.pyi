@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, overload
 
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Branch import Branch
@@ -48,6 +48,8 @@ from github.StatsPunchCard import StatsPunchCard
 from github.Tag import Tag
 from github.Team import Team
 from github.View import View
+from github.Workflow import Workflow
+from github.WorkflowRun import WorkflowRun
 
 class Repository(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -178,9 +180,12 @@ class Repository(CompletableGithubObject):
         due_on: Union[date, _NotSetType] = ...,
     ) -> Milestone: ...
     def create_project(self, name: str, body: str = ...) -> Project: ...
-    def create_pull(self, *args, **kwds) -> PullRequest: ...
+    @overload
+    def create_pull(self, title: str, body: str, base: str, head: str, maintainer_can_modify: Union[bool, _NotSetType], draft: bool, issue: _NotSetType) -> PullRequest: ...
+    @overload
+    def create_pull(self, title: _NotSetType, body: _NotSetType, base: str, head: str, maintainer_can_modify: _NotSetType, draft: bool, issue: Issue) -> PullRequest: ...
     def create_repository_dispatch(
-        self, event_type: str, client_payload: dict
+        self, event_type: str, client_payload: Dict[str, str]
     ) -> bool: ...
     def create_source_import(
         self,
@@ -297,7 +302,7 @@ class Repository(CompletableGithubObject):
         state: Union[str, _NotSetType] = ...,
         assignee: Union[NamedUser, str, _NotSetType] = ...,
         mentioned: Union[_NotSetType, NamedUser] = ...,
-        labels: Union[List[Label], _NotSetType] = ...,
+        labels: Union[List[str], List[Label], _NotSetType] = ...,
         sort: Union[str, _NotSetType] = ...,
         direction: Union[str, _NotSetType] = ...,
         since: Union[_NotSetType, datetime] = ...,
@@ -381,6 +386,10 @@ class Repository(CompletableGithubObject):
     ) -> Dict[str, Union[int, List[View]]]: ...
     def get_vulnerability_alert(self) -> bool: ...
     def get_watchers(self) -> PaginatedList[NamedUser]: ...
+    def get_workflow(self, id_or_name: Union[str, int]) -> Workflow: ...
+    def get_workflows(self) -> PaginatedList[Workflow]: ...
+    def get_workflow_run(self, id_: int) -> WorkflowRun: ...
+    def get_workflow_runs(self) -> PaginatedList[WorkflowRun]: ...
     @property
     def git_commits_url(self) -> str: ...
     @property
@@ -501,7 +510,7 @@ class Repository(CompletableGithubObject):
         self,
         path: str,
         message: str,
-        content: str,
+        content: Union[bytes, str],
         sha: str,
         branch: Union[_NotSetType, str] = ...,
         committer: Union[_NotSetType, InputGitAuthor] = ...,

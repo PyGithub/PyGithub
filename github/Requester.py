@@ -538,6 +538,7 @@ class Requester:
                 self.__hostname,
                 "uploads.github.com",
                 "status.github.com",
+                "github.com",
             ], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port

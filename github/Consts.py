@@ -123,3 +123,6 @@ teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
 
 # https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
 repositoryVisibilityPreview = "application/vnd.github.nebula-preview+json"
+
+# https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/
+deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
