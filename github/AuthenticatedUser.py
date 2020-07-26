@@ -644,6 +644,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        name = name.lstrip().rstrip().replace(" ", "-") if " " in name else name
         post_parameters = {
             "name": name,
         }
