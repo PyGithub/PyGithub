@@ -14,7 +14,9 @@ class Workflow(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     def create_dispatch(
-        self, ref: Union[str, Branch, Commit, Tag], inputs: Union[dict, None]
+        self,
+        ref: Union[str, Branch, Commit, Tag],
+        inputs: Union[Dict[str, Union[str, int, float]], _NotSetType],
     ) -> bool: ...
     def get_runs(
         self,

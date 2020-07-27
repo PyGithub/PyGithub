@@ -90,7 +90,6 @@ class Workflow(Framework.TestCase):
         branch = self.g.get_repo("wrecker/PyGithub").get_branch(
             "workflow_dispatch_branch"
         )
-
         self.assertTrue(workflow.create_dispatch(branch, dispatch_inputs))
 
     def testCreateDispatchWithTag(self):
@@ -99,10 +98,7 @@ class Workflow(Framework.TestCase):
             "manual_dispatch.yml"
         )
         tags = self.g.get_repo("wrecker/PyGithub").get_tags()
-        for tag in tags:
-            if tag.name == "workflow_dispatch_tag":
-                break
-
+        tag = [t for t in tags if t.name == "workflow_dispatch_tag"].pop()
         self.assertTrue(workflow.create_dispatch(tag, dispatch_inputs))
 
     def testCreateDispatchWithString(self):
@@ -111,9 +107,8 @@ class Workflow(Framework.TestCase):
             "manual_dispatch.yml"
         )
         ref_str = "main"
-
         self.assertTrue(workflow.create_dispatch(ref_str, dispatch_inputs))
 
     def testCreateDispatchForNonTriggerEnabled(self):
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
-        self.assertFalse(workflow.create_dispatch("main", None))
+        self.assertFalse(workflow.create_dispatch("main"))

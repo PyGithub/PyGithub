@@ -106,7 +106,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
 
-    def create_dispatch(self, ref, inputs):
+    def create_dispatch(self, ref, inputs=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/actions/workflows/:workflow_id/dispatches`_
         :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or :class:`github.Commit.Commit` or string
@@ -119,13 +119,15 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(ref, github.Commit.Commit)
             or isinstance(ref, str)
         ), ref
-        assert isinstance(inputs, dict) or inputs is None, inputs
+        assert inputs is github.GithubObject.NotSet or isinstance(inputs, dict), inputs
         if isinstance(ref, github.Branch.Branch):
             ref = ref.name
         elif isinstance(ref, github.Commit.Commit):
             ref = ref.sha
         elif isinstance(ref, github.Tag.Tag):
             ref = ref.name
+        if inputs is github.GithubObject.NotSet:
+            inputs = {}
         status, _, _ = self._requester.requestJson(
             "POST", self.url + "/dispatches", input={"ref": ref, "inputs": inputs}
         )
