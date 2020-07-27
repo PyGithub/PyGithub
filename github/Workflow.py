@@ -119,7 +119,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(ref, github.Commit.Commit)
             or isinstance(ref, str)
         ), ref
-        assert isinstance(inputs, dict) or inputs == None, inputs
+        assert isinstance(inputs, dict) or inputs is None, inputs
         if isinstance(ref, github.Branch.Branch):
             ref = ref.name
         elif isinstance(ref, github.Commit.Commit):
