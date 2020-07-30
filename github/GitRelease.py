@@ -296,13 +296,12 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         )
         headers = {"Content-Type": content_type, "Content-Length": str(file_size)}
 
-        resp_headers, data = self._requester.requestBlobAndCheck(
+        resp_headers, data = self._requester.requestMemoryBlobAndCheck(
             "POST",
             self.upload_url.split("{?")[0],
             parameters=post_parameters,
             headers=headers,
             file_like=file_like,
-            file_size=file_size,
         )
         return github.GitReleaseAsset.GitReleaseAsset(
             self._requester, resp_headers, data, completed=True

@@ -329,33 +329,12 @@ class Requester:
             )
         )
 
-    def requestBlobAndCheck(
-        self,
-        verb,
-        url,
-        parameters=None,
-        headers=None,
-        input=None,
-        file_like=None,
-        file_size=None,
-    ):
-        """Either input must be set, or both of file_like and file_size."""
-        if input is not None:
-            result = self.requestBlob(
+    def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        return self.__check(
+            *self.requestBlob(
                 verb, url, parameters, headers, input, self.__customConnection(url)
             )
-        else:
-            result = self.requestBlobInMemory(
-                verb,
-                url,
-                parameters,
-                headers,
-                file_like,
-                file_size,
-                self.__customConnection(url),
-            )
-
-        return self.__check(*result)
+        )
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
@@ -468,14 +447,18 @@ class Requester:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestBlobInMemory(
-        self, verb, url, parameters, headers, file_like, file_size, cnx=None
+    def requestMemoryBlobAndCheck(
+        self, verb, url, parameters, headers, file_like, cnx=None
     ):
         def encode(file):
             return headers["Content-Type"], file_like
 
-        return self.__requestEncode(
-            cnx, verb, url, parameters, headers, file_like, encode
+        if not cnx:
+            cnx = self.__customConnection(url)
+        return self.__check(
+            *self.__requestEncode(
+                cnx, verb, url, parameters, headers, file_like, encode
+            )
         )
 
     def __requestEncode(
