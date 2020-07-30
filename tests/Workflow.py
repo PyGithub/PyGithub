@@ -81,3 +81,34 @@ class Workflow(Framework.TestCase):
             lambda r: r.id,
             [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
         )
+
+    def testCreateDispatchWithBranch(self):
+        dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
+            "manual_dispatch.yml"
+        )
+        branch = self.g.get_repo("wrecker/PyGithub").get_branch(
+            "workflow_dispatch_branch"
+        )
+        self.assertTrue(workflow.create_dispatch(branch, dispatch_inputs))
+
+    def testCreateDispatchWithTag(self):
+        dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
+            "manual_dispatch.yml"
+        )
+        tags = self.g.get_repo("wrecker/PyGithub").get_tags()
+        tag = [t for t in tags if t.name == "workflow_dispatch_tag"].pop()
+        self.assertTrue(workflow.create_dispatch(tag, dispatch_inputs))
+
+    def testCreateDispatchWithString(self):
+        dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
+            "manual_dispatch.yml"
+        )
+        ref_str = "main"
+        self.assertTrue(workflow.create_dispatch(ref_str, dispatch_inputs))
+
+    def testCreateDispatchForNonTriggerEnabled(self):
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
+        self.assertFalse(workflow.create_dispatch("main"))
