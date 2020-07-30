@@ -94,10 +94,7 @@ class GitRelease(Framework.TestCase):
 
         super().tearDown()
 
-    # At time of writing (2020-07) the --record option only records setUp() once for the entire class. This causes issues here because for each different test you'll want to create a new release, but the release ID will change between calls, leading to --record collecting bad data.
-    # The workaround I've come up with is to have a seperate setup/teardown method that gets manually called in each test method.
     def setUpNewRelease(self):
-
         repo = self.repo
         commit_sha = repo.get_commits()[0].sha  # Just need any commit
         self.new_release = repo.create_git_tag_and_release(
@@ -130,8 +127,8 @@ class GitRelease(Framework.TestCase):
         )
         self.assertEqual(release.body, "Body")
         self.assertEqual(release.title, "Test")
-        self.assertEqual(release.draft, False)
-        self.assertEqual(release.prerelease, False)
+        self.assertFalse(release.draft)
+        self.assertFalse(release.prerelease)
         self.assertEqual(
             release.url,
             "https://api.github.com/repos/{}/{}/releases/{}".format(
@@ -172,9 +169,6 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(latest_release.tag_name, tag)
 
     def testGetAssets(self):
-        """
-        Test retrieving the set of assets for the current release, as well as directly by id.
-        """
         repo = self.repo
         release = self.release
         self.assertEqual(release.id, release_id)
@@ -202,9 +196,6 @@ class GitRelease(Framework.TestCase):
         self.tearDownNewRelease()
 
     def testUploadAsset(self):
-        """
-        Test uploading a new asset to the release.
-        """
         self.setUpNewRelease()
         release = self.new_release
         self.assertEqual(release.id, self.new_release_id)
