@@ -450,7 +450,8 @@ class Requester:
     def requestMemoryBlobAndCheck(
         self, verb, url, parameters, headers, file_like, cnx=None
     ):
-        def encode(file):
+        # The expected signature of encode means that the argument is ignored.
+        def encode(_):
             return headers["Content-Type"], file_like
 
         if not cnx:
