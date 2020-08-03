@@ -801,12 +801,8 @@ class Github(object):
                 self.__requester, {}, {"url": "/app"}, completed=False
             )
         else:
-            headers, data = self.__requester.requestJsonAndCheck(
-                "GET", "/apps/" + slug
-            )
-            return GithubApp.GithubApp(
-                self.__requester, headers, data, completed=True
-            )
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/apps/" + slug)
+            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
 
 class GithubIntegration(object):
