@@ -26,6 +26,7 @@ from datetime import datetime
 
 from . import Framework
 
+
 class GithubApp(Framework.TestCase):
     def setUp(self):
         super().setUp()
