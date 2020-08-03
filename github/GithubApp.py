@@ -28,7 +28,7 @@ import github.NamedUser
 
 class GithubApp(github.GithubObject.CompletableGithubObject):
     """
-    This class represents check suites. The reference can be found here https://docs.github.com/en/rest/reference/apps
+    This class represents github apps. The reference can be found here https://docs.github.com/en/rest/reference/apps
     """
 
     def __repr__(self):
