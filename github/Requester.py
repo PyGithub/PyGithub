@@ -447,6 +447,21 @@ class Requester:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
+    def requestMemoryBlobAndCheck(
+        self, verb, url, parameters, headers, file_like, cnx=None
+    ):
+        # The expected signature of encode means that the argument is ignored.
+        def encode(_):
+            return headers["Content-Type"], file_like
+
+        if not cnx:
+            cnx = self.__customConnection(url)
+        return self.__check(
+            *self.__requestEncode(
+                cnx, verb, url, parameters, headers, file_like, encode
+            )
+        )
+
     def __requestEncode(
         self, cnx, verb, url, parameters, requestHeaders, input, encode
     ):
