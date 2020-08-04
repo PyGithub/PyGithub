@@ -60,6 +60,16 @@ class Organization(github.GithubObject.CompletableGithubObject):
     This class represents Organizations. The reference can be found here http://developer.github.com/v3/orgs/
     """
 
+    def __init__(self, requester, headers, attributes, completed):
+        # GitHub currently returns invalid URLs for organizations.
+        # Work around this by replacing with the correct URLs.
+        attrs = {}
+        for (k, v) in attributes.items():
+            if isinstance(v, str):
+                v = v.replace("/users", "/orgs")
+            attrs[k] = v
+        super().__init__(requester, headers, attrs, completed)
+
     def __repr__(self):
         return self.get__repr__({"login": self._login.value})
 
