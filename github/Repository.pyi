@@ -185,7 +185,7 @@ class Repository(CompletableGithubObject):
     @overload
     def create_pull(self, title: _NotSetType, body: _NotSetType, base: str, head: str, maintainer_can_modify: _NotSetType, issue: Issue) -> PullRequest: ...
     def create_repository_dispatch(
-        self, event_type: str, client_payload: Dict[str, str]
+        self, event_type: str, client_payload: Dict[str, object]
     ) -> bool: ...
     def create_source_import(
         self,
