@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/repositories?per_page=1
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Mon, 03 Aug 2020 09:02:17 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4996'), ('X-RateLimit-Reset', '1596448362'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', 'W/"d773714fdca21c9206d9d35e50fcd1ff"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Link', '<https://api.github.com/repositories?per_page=1&since=369>; rel="next", <https://api.github.com/repositories{?since}>; rel="first"'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'C662:025B:26F607:2FDFF2:5F27D299')]
+[]
+

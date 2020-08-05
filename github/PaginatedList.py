@@ -163,7 +163,10 @@ class PaginatedList(PaginatedListBase):
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
-                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                if lastUrl:
+                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                else:
+                    self.__totalCount = 0
         return self.__totalCount
 
     def _getLastPageUrl(self):
