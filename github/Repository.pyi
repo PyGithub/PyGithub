@@ -230,6 +230,7 @@ class Repository(CompletableGithubObject):
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
+        delete_branch_on_merge: Union[bool, _NotSetType] = ...,
         archived: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
