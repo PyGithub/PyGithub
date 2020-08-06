@@ -102,40 +102,40 @@ class Github:
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
         highlight: bool = ...,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[ContentFile]: ...
     def search_commits(
         self,
         query: str,
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[Commit]: ...
     def search_issues(
         self,
         query: str,
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[Issue]: ...
     def search_repositories(
         self,
         query: str,
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[Repository]: ...
     def search_topics(
         self,
         query: str,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[Topic]: ...
     def search_users(
         self,
         query: str,
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
-        **qualifiers: Dict[str, Any]
+        **qualifiers: Any
     ) -> PaginatedList[NamedUser]: ...
 
 class GithubIntegration:
