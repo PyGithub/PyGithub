@@ -22,8 +22,9 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
 from datetime import datetime
+
+from . import Framework
 
 
 class CheckSuite(Framework.TestCase):
