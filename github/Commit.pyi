@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Union
 
 from github.CheckSuite import CheckSuite
-from github.Commit import Commit
 from github.CommitCombinedStatus import CommitCombinedStatus
 from github.CommitComment import CommitComment
 from github.CommitStats import CommitStats
