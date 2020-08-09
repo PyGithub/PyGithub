@@ -93,6 +93,7 @@ from base64 import b64encode
 from deprecated import deprecated
 
 import github.Branch
+import github.CheckSuite
 import github.Clones
 import github.Commit
 import github.CommitComment
@@ -3326,6 +3327,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         return self._hub("unsubscribe", event, callback, github.GithubObject.NotSet)
+
+    def get_check_suite(self, check_suite_id):
+        """
+        :calls: `GET /repos/:owner/:repo/check-suites/:check_suite_id <https://docs.github.com/en/rest/reference/checks#get-a-check-suite>`_
+        :param check_suite_id: int
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(check_suite_id, int), check_suite_id
+        requestHeaders = {"Accept": "application/vnd.github.antiope-preview+json"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/check-suites/" + str(check_suite_id),
+            headers=requestHeaders,
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
 
     def _hub(self, mode, event, callback, secret):
         assert isinstance(mode, str), mode
