@@ -70,6 +70,7 @@ import github.Topic
 from . import (
     AuthenticatedUser,
     Consts,
+    GithubApp,
     GithubException,
     GitignoreTemplate,
     HookDescription,
@@ -787,6 +788,21 @@ class Github(object):
             attributes={"client_id": client_id, "client_secret": client_secret},
             completed=False,
         )
+
+    def get_app(self, slug=github.GithubObject.NotSet):
+        """
+        :calls: `GET /apps/:slug <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
+        :param slug: string
+        :rtype: :class:`github.GithubApp.GithubApp`
+        """
+        assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
+        if slug is github.GithubObject.NotSet:
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": "/app"}, completed=False
+            )
+        else:
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/apps/" + slug)
+            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
 
 class GithubIntegration(object):
