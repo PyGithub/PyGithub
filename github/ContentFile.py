@@ -94,6 +94,18 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def last_modified(self):
+        """
+        :type: str
+        """
+        self._completeIfNotSet(self._last_modified)
+        commits = self.repository.get_commits(path=self.path)
+        self._last_modified = self._makeStringAttribute(
+            str(commits[0].commit.author.date)
+        )
+        return self._last_modified.value
+
+    @property
     def license(self):
         """
         :type: :class:`github.License.License`
@@ -181,6 +193,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._download_url = github.GithubObject.NotSet
         self._git_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._last_modified = github.GithubObject.NotSet
         self._license = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet

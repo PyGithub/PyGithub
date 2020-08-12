@@ -36,20 +36,21 @@ from . import Framework
 class ContentFile(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.file = self.g.get_user().get_repo("PyGithub").get_readme()
+        self.file = self.g.get_repo("PyGithub/PyGithub").get_readme()
 
     def testAttributes(self):
         self.assertEqual(self.file.type, "file")
         self.assertEqual(self.file.encoding, "base64")
-        self.assertEqual(self.file.size, 7531)
-        self.assertEqual(self.file.name, "ReadMe.md")
-        self.assertEqual(self.file.path, "ReadMe.md")
-        self.assertEqual(len(self.file.content), 10212)
-        self.assertEqual(len(self.file.decoded_content), 7531)
-        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
+        self.assertEqual(self.file.size, 2501)
+        self.assertEqual(self.file.name, "README.md")
+        self.assertEqual(self.file.path, "README.md")
+        self.assertEqual(len(self.file.content), 3392)
+        self.assertEqual(len(self.file.decoded_content), 2501)
+        self.assertEqual(self.file.sha, "6e3832447e58339c4137b7a25a57203338d34a2a")
         self.assertEqual(
             self.file.download_url,
-            "https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md",
+            "https://raw.githubusercontent.com/PyGithub/PyGithub/master/README.md",
         )
         self.assertIsNone(self.file.license)
-        self.assertEqual(repr(self.file), 'ContentFile(path="ReadMe.md")')
+        self.assertEqual(self.file.last_modified, "2020-07-27 04:15:38")
+        self.assertEqual(repr(self.file), 'ContentFile(path="README.md")')
