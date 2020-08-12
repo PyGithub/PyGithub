@@ -98,11 +98,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         :type: str
         """
-        self._completeIfNotSet(self._last_modified)
+        self._completeIfNotSet(self._path)
         commits = self.repository.get_commits(path=self.path)
-        self._last_modified = self._makeStringAttribute(
-            str(commits[0].commit.author.date)
-        )
+        if commits.totalCount:
+            self._last_modified = self._makeStringAttribute(
+                str(commits[0].commit.author.date)
+            )
+        else:
+            self._last_modified = github.GithubObject.NotSet
         return self._last_modified.value
 
     @property
@@ -193,7 +196,6 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._download_url = github.GithubObject.NotSet
         self._git_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
-        self._last_modified = github.GithubObject.NotSet
         self._license = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
