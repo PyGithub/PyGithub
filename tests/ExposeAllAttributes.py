@@ -33,7 +33,7 @@ class ExposeAllAttributes(Framework.TestCase):
         authenticatedUser = self.g.get_user()
         namedUser = self.g.get_user("nvie")
         repository = self.g.get_repo("wrecker/PyGithub")
-        organization = self.g.get_organization("simplecloudsolution")
+        organization = self.g.get_organization("BeaverSoftware")
         plan = authenticatedUser.plan
         branch = repository.get_branch("main")
         commit = repository.get_commit("1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
