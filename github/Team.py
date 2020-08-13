@@ -276,11 +276,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         }
         status, _, _ = self._requester.requestJson(
             "PUT",
-            self.organization.url
-            + "/teams/"
-            + self.slug
-            + "/repos/"
-            + repo_url_param,
+            self.organization.url + "/teams/" + self.slug + "/repos/" + repo_url_param,
             input=put_parameters,
         )
         return status == 204
