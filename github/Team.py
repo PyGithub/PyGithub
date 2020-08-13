@@ -259,7 +259,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def update_team_repository(self, repo, permission):
         """
-        :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository>`_
+        :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository-permissions>`_
         :param repo: string or :class:`github.Repository.Repository`
         :param permission: string
         :rtype: bool
