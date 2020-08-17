@@ -200,6 +200,24 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT", self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
+    def get_team_membership(self, member):
+        """
+        :calls: `GET /orgs/:org/memberships/team/:team_id/:username <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
+        :param member: string or :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`github.Membership.Membership`
+        """
+        assert isinstance(member, str) or isinstance(
+            member, github.NamedUser.NamedUser
+        ), member
+        if isinstance(member, github.NamedUser.NamedUser):
+            member = member._identity
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/memberships/" + member
+        )
+        return github.Membership.Membership(
+            self._requester, headers, data, completed=True
+        )
+
     def add_to_repos(self, repo):
         """
         :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_

@@ -105,6 +105,20 @@ class Team(Framework.TestCase):
         self.assertRaises(AssertionError, self.team.add_membership, user, "admin")
         self.team.remove_membership(user)
 
+    def testTeamMembership(self):
+        user = self.g.get_user("jacquev6")
+        self.assertListKeyEqual(self.team.get_members(), None, [])
+        self.assertFalse(self.team.has_in_members(user))
+        self.team.add_to_members(user)
+        self.assertListKeyEqual(
+            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+        )
+        self.assertTrue(self.team.has_in_members(user))
+        membership_data = self.team.get_team_membership(user)
+        self.assertEqual(membership_data.user.login, "jacquev6")
+        self.assertEqual(membership_data.role, "member")
+        self.assertEqual(membership_data.organization.login, "BeaverSoftware")
+
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
         self.team.set_repo_permission(repo, "admin")
