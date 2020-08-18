@@ -107,9 +107,9 @@ class Team(Framework.TestCase):
 
     def testTeamMembership(self):
         user = self.g.get_user("jacquev6")
-        self.assertListKeyEqual(self.team.get_members(), None, [])
+        self.assertEqual(list(self.team.get_members()), [])
         self.assertFalse(self.team.has_in_members(user))
-        self.team.add_to_members(user)
+        self.team.add_membership(user)
         self.assertListKeyEqual(
             self.team.get_members(), lambda u: u.login, ["jacquev6"]
         )
