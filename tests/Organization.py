@@ -179,6 +179,10 @@ class Organization(Framework.TestCase):
             self.org.get_public_members(), lambda u: u.login, ["jacquev6"]
         )
 
+    def testGetHook(self):
+        hook = self.org.get_hook(257993)
+        self.assertEqual(hook.name, "web")
+
     def testGetHooks(self):
         self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
 
