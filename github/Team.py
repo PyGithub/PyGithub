@@ -280,6 +280,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
@@ -306,6 +307,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             post_parameters["description"] = description
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters["privacy"] = privacy
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
         headers, data = self._requester.requestJsonAndCheck(
