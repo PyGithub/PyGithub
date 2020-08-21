@@ -43,6 +43,8 @@ for repo in g.get_user().get_repos():
     print(repo.name)
 ```
 
+More examples can be found here (close, open, list, create) [Coding examples](https://github.com/PyGithub/PyGithub/tree/master/doc/examples) 
+
 ## Documentation
 
 More information can be found on the [PyGitHub documentation site.](https://pygithub.readthedocs.io/en/latest/introduction.html)
