@@ -4,6 +4,21 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.53 (August 18, 2020)
+-----------------------------------
+
+* Test Organization.get_hook() (#1660) (2646a98c)
+* Add method get_team_membership for user to Team  (#1658) (749e8d35)
+* Add typing files for OAuth classes (#1656) (429fcc73)
+* Fix Repository.create_repository_dispatch type signature (#1643) (f891bd61)
+* PaginatedList's totalCount is 0 if no last page (#1641) (69b37b4a)
+* Add initial support for Github Apps. (#1631) (260558c1)
+* Correct **kwargs typing for search_* (#1636) (165d995d)
+* Add delete_branch_on_merge arg to Repository.edit type stub (#1639) (15b5ae0c)
+* Fix type stub for MainClass.get_user (#1637) (8912be64)
+* Add type stub for Repository.create_fork (#1638) (de386dfb)
+* Correct Repository.create_pull typing harder (#1635) (5ad091d0)
+
 Version 1.52 (August 03, 2020)
 -----------------------------------
 
