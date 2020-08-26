@@ -66,6 +66,7 @@
 # Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1812,6 +1813,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/deployments",
             parameters,
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
 
     def get_deployment(self, id_):
@@ -1822,7 +1824,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/deployments/" + str(id_)
+            "GET",
+            self.url + "/deployments/" + str(id_),
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
@@ -1837,15 +1841,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         payload=github.GithubObject.NotSet,
         environment=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        transient_environment=github.GithubObject.NotSet,
+        production_environment=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
         :param: ref: string
+        :param: task: string
         :param: auto_merge: bool
-        :param: required_contexts: list of statuses
+        :param: required_contexts: list of status contexts
         :param: payload: json
         :param: environment: string
         :param: description: string
+        :param: transient_environment: bool
+        :param: production_environment: bool
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(ref, str), ref
@@ -1857,14 +1866,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
             required_contexts, list
         ), required_contexts  # need to do better checking here
         assert payload is github.GithubObject.NotSet or isinstance(
-            payload, str
-        ), payload  # How to assert it's JSON?
+            payload, dict
+        ), payload
         assert environment is github.GithubObject.NotSet or isinstance(
             environment, str
         ), environment
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert transient_environment is github.GithubObject.NotSet or isinstance(
+            transient_environment, bool
+        ), transient_environment
+        assert production_environment is github.GithubObject.NotSet or isinstance(
+            production_environment, bool
+        ), production_environment
+
         post_parameters = {"ref": ref}
         if task is not github.GithubObject.NotSet:
             post_parameters["task"] = task
@@ -1878,11 +1894,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["environment"] = environment
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if transient_environment is not github.GithubObject.NotSet:
+            post_parameters["transient_environment"] = transient_environment
+        if production_environment is not github.GithubObject.NotSet:
+            post_parameters["production_environment"] = production_environment
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/deployments",
             input=post_parameters,
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
+
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
         )
