@@ -29,9 +29,6 @@ class Organization1655(Framework.TestCase):
 
     def setUp(self):
         super().setUp()
-        self._control_credential = {
-            "login": "AlexandreODelisle"
-        }
         self.org = self.g.get_organization("ThoughtCamera")
 
     def testGetCredentialsAuth(self):
