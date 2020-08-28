@@ -26,7 +26,6 @@ from . import Framework
 
 
 class Organization1655(Framework.TestCase):
-
     def setUp(self):
         super().setUp()
         self.org = self.g.get_organization("ThoughtCamera")

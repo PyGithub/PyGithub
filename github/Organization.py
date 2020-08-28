@@ -43,6 +43,7 @@
 
 import datetime
 
+import github.AuthorizationOrganization
 import github.Event
 import github.GithubObject
 import github.NamedUser
@@ -51,7 +52,6 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
-import github.AuthorizationOrganization
 
 from . import Consts
 
@@ -1157,7 +1157,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-
     def get_credential_authorizations(self):
         """
         :calls: `GET /orgs/:org/credential-authorizations <https://developer.github.com/v3/orgs>`_
@@ -1166,10 +1165,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url + "/credential-authorizations"
         )
-        return [ github.AuthorizationOrganization.AuthorizationOrganization(self._requester, headers, x, completed=True)
-                 for x in data]
-
-
+        return [
+            github.AuthorizationOrganization.AuthorizationOrganization(
+                self._requester, headers, x, completed=True
+            )
+            for x in data
+        ]
 
     def remove_credential_authorization(self, credential_id):
         """
