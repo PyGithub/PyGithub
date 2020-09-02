@@ -139,7 +139,8 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.draft, None)
         self.assertEqual(self.pull.maintainer_can_modify, None)
         self.assertEqual(
-            repr(self.pull), 'PullRequest(title="Title edited by PyGithub", number=31)',
+            repr(self.pull),
+            'PullRequest(title="Title edited by PyGithub", number=31)',
         )
         self.assertEqual(
             repr(self.pull.base),

@@ -135,7 +135,10 @@ class GithubIntegration(unittest.TestCase):
         integration = GithubIntegration(25216, private_key)
         token = integration.create_jwt()
         payload = jwt.decode(
-            token, key=public_key, algorithms=["RS256"], options={"verify_exp": False},
+            token,
+            key=public_key,
+            algorithms=["RS256"],
+            options={"verify_exp": False},
         )
         self.assertDictEqual(
             payload, {"iat": 1550055331, "exp": 1550055391, "iss": 25216}

@@ -239,10 +239,14 @@ class Organization(Framework.TestCase):
     def testGetReposSorted(self):
         repos = self.org.get_repos(sort="updated", direction="desc")
         self.assertListKeyEqual(
-            repos, lambda r: r.name, ["TestPyGithub", "FatherBeaver"],
+            repos,
+            lambda r: r.name,
+            ["TestPyGithub", "FatherBeaver"],
         )
         self.assertListKeyEqual(
-            repos, lambda r: r.has_pages, [False, True],
+            repos,
+            lambda r: r.has_pages,
+            [False, True],
         )
 
     def testGetReposWithType(self):

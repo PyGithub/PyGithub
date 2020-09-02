@@ -170,7 +170,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         status, _, _ = self._requester.requestJson(
-            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview},
+            "DELETE",
+            self.url,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return status == 204
 

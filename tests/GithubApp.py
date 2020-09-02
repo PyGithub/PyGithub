@@ -110,7 +110,8 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46))
         self.assertEqual(app.description, "Sample App to test PyGithub")
         self.assertListEqual(
-            app.events, ["check_run", "check_suite", "label", "member", "public"],
+            app.events,
+            ["check_run", "check_suite", "label", "member", "public"],
         )
         self.assertEqual(app.external_url, "https://pygithub.readthedocs.io")
         self.assertEqual(app.html_url, "https://github.com/apps/pygithubtest")

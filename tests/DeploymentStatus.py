@@ -58,7 +58,8 @@ class DeploymentStatus(Framework.TestCase):
             "https://api.github.com/repos/colbygallup/PyGithub/deployments/242997115/statuses/344110026",
         )
         self.assertEqual(
-            self.status.node_id, "MDE2OkRlcGxveW1lbnRTdGF0dXMzNDQxMTAwMjY=",
+            self.status.node_id,
+            "MDE2OkRlcGxveW1lbnRTdGF0dXMzNDQxMTAwMjY=",
         )
         self.assertEqual(
             repr(self.status),
