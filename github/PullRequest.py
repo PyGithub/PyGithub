@@ -713,7 +713,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/reviews/" + str(id),
+            "GET",
+            self.url + "/reviews/" + str(id),
         )
         return github.PullRequestReview.PullRequestReview(
             self._requester, headers, data, completed=True
