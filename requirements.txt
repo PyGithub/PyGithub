@@ -1,3 +1,4 @@
+pynacl
 requests>=2.14.0
 pyjwt
 sphinx<3

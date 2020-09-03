@@ -121,6 +121,7 @@ import github.PaginatedList
 import github.Path
 import github.Permissions
 import github.Project
+import github.PublicKey
 import github.PullRequest
 import github.Referrer
 import github.Repository
@@ -1413,6 +1414,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def create_secret(self, secret_name, unencrypted_value):
+        """
+        :calls: `PUT /repos/:owner/:repo/actions/secrets/:secret_name <https://docs.github.com/en/rest/reference/actions#get-a-repository-secret>`_
+        :param secret_name: string
+        :param unencrypted_value: string
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(unencrypted_value, str), unencrypted_value
+        public_key = self.get_public_key()
+        payload = public_key.encrypt(unencrypted_value)
+        put_parameters = {
+            "key_id": public_key.key_id,
+            "encrypted_value": payload,
+        }
+        status, headers, data = self._requester.requestJson(
+            "PUT", self.url + "/actions/secrets/" + secret_name, input=put_parameters
+        )
+        return status == 201
+
     def create_source_import(
         self,
         vcs,
@@ -2664,6 +2685,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             "/networks/" + self.owner.login + "/" + self.name + "/events",
             None,
+        )
+
+    def get_public_key(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :rtype: :class:`github.PublicKey.PublicKey`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/secrets/public-key"
+        )
+        return github.PublicKey.PublicKey(
+            self._requester, headers, data, completed=True
         )
 
     def get_pull(self, number):
