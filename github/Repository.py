@@ -3023,7 +3023,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         status=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs>`_
+        :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs/#list-workflow-runs-for-a-repository>`_
         :param actor: :class:`github.NamedUser.NamedUser` or string
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string
