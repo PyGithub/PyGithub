@@ -30,21 +30,21 @@ class PullRequest1682(Framework.TestCase):
         super().setUp()
 
     def testActorParamObj(self):
-        repo = self.g.get_repo('PyGithub/PyGithub')
-        user = self.g.get_user('s-t-e-v-e-n-k')
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        user = self.g.get_user("s-t-e-v-e-n-k")
         runs = repo.get_workflow_runs(actor=user)
         first_run = runs[0]
         self.assertEqual(235543673, first_run.id)
 
     def testActorParamObjStr(self):
-        repo = self.g.get_repo('PyGithub/PyGithub')
-        runs = repo.get_workflow_runs(actor='s-t-e-v-e-n-k')
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        runs = repo.get_workflow_runs(actor="s-t-e-v-e-n-k")
         first_run = runs[0]
         self.assertEqual(235543673, first_run.id)
 
     def testBranchParam(self):
         repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        branch = repo.get_branch('release_action')
+        branch = repo.get_branch("release_action")
         runs = repo.get_workflow_runs(branch=branch)
         first_run = runs[0]
         self.assertEqual(151007846, first_run.id)
@@ -52,23 +52,20 @@ class PullRequest1682(Framework.TestCase):
 
     def testEventParam(self):
         repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(event='pull_request')
+        runs = repo.get_workflow_runs(event="pull_request")
         first_run = runs[0]
         self.assertEqual(33321769, first_run.id)
         self.assertEqual(1, runs.totalCount)
 
     def testStatusParam1(self):
         repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(status='in_progress')
+        runs = repo.get_workflow_runs(status="in_progress")
         first_run = runs[0]
         self.assertEqual(223464742, first_run.id)
         self.assertEqual(1, runs.totalCount)
 
     def testStatusParam2(self):
         repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(status='failure')
+        runs = repo.get_workflow_runs(status="failure")
         first_run = runs[0]
         self.assertEqual(223464742, first_run.id)
-
-
-
