@@ -3015,16 +3015,56 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow_runs(self):
+    def get_workflow_runs(
+        self,
+        actor=github.GithubObject.NotSet,
+        branch=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+    ):
         """
         :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs>`_
+        :param actor: :class:`github.NamedUser.NamedUser` or string
+        :param branch: :class:`github.Branch.Branch` or string
+        :param event: string
+        :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
+
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
+        assert (
+            actor is github.GithubObject.NotSet
+            or isinstance(actor, github.NamedUser.NamedUser)
+            or isinstance(actor, str)
+        ), actor
+        assert (
+            branch is github.GithubObject.NotSet
+            or isinstance(branch, github.Branch.Branch)
+            or isinstance(branch, str)
+        ), branch
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+
+        url_parameters = dict()
+        if actor is not github.GithubObject.NotSet:
+            if isinstance(actor, github.NamedUser.NamedUser):
+                url_parameters["actor"] = actor._identity
+            else:
+                url_parameters["actor"] = actor
+        if branch is not github.GithubObject.NotSet:
+            if isinstance(branch, github.Branch.Branch):
+                url_parameters["branch"] = branch.name
+            else:
+                url_parameters["branch"] = branch
+        if event is not github.GithubObject.NotSet:
+            url_parameters["event"] = event
+        if status is not github.GithubObject.NotSet:
+            url_parameters["status"] = status
+
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,
             self.url + "/actions/runs",
-            None,
+            url_parameters,
             list_item="workflow_runs",
         )
 
