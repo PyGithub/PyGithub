@@ -163,7 +163,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert (
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
-        ), required_approving_review_count
+        ), (required_approving_review_count)
 
         post_parameters = {}
         if (
@@ -250,7 +250,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url,
+            "DELETE",
+            self.protection_url,
         )
 
     def get_required_status_checks(self):
@@ -342,7 +343,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert (
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
-        ), required_approving_review_count
+        ), (required_approving_review_count)
 
         post_parameters = {}
         if dismissal_users is not github.GithubObject.NotSet:

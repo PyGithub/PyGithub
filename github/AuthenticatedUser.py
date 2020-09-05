@@ -479,7 +479,10 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/authorizations", input=post_parameters, headers=request_header,
+            "POST",
+            "/authorizations",
+            input=post_parameters,
+            headers=request_header,
         )
         return github.Authorization.Authorization(
             self._requester, headers, data, completed=True

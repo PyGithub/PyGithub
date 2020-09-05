@@ -32,5 +32,7 @@ class NamedUser1430(Framework.TestCase):
 
     def testGetProjects(self):
         self.assertListKeyBegin(
-            self.user.get_projects(state="all"), lambda e: e.id, [4083095],
+            self.user.get_projects(state="all"),
+            lambda e: e.id,
+            [4083095],
         )
