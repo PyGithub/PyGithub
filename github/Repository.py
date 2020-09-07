@@ -2790,11 +2790,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_self_hosted_runners(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-a-repository`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
         return github.PaginatedList.PaginatedList(
             github.SelfHostedActionsRunner.SelfHostedActionsRunner,
             self._requester,
             self.url + "/actions/runners",
             None,
+            list_item='runners',
         )
 
     def get_source_import(self):
