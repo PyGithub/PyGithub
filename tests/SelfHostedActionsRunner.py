@@ -26,7 +26,6 @@ from . import Framework
 
 
 class SelfHostedActionsRunner(Framework.TestCase):
-
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user("ReDASers")
@@ -35,12 +34,12 @@ class SelfHostedActionsRunner(Framework.TestCase):
     def testAttributes(self):
         runner = self.repo.get_self_hosted_runner(1363)
         self.assertEqual(1363, runner.id)
-        self.assertEqual('windows', runner.os)
-        self.assertEqual('0D80B14DC506', runner.name)
-        self.assertEqual('offline', runner.status)
+        self.assertEqual("windows", runner.os)
+        self.assertEqual("0D80B14DC506", runner.name)
+        self.assertEqual("offline", runner.status)
         self.assertFalse(runner.busy)
         labels = runner.labels()
         self.assertEqual(3, len(labels))
-        self.assertEqual('self-hosted', labels[0]['name'])
-        self.assertEqual('Windows', labels[1]['name'])
-        self.assertEqual('X64', labels[2]['name'])
+        self.assertEqual("self-hosted", labels[0]["name"])
+        self.assertEqual("Windows", labels[1]["name"])
+        self.assertEqual("X64", labels[2]["name"])

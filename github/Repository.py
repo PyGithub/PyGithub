@@ -2812,7 +2812,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/actions/runners",
             None,
-            list_item='runners',
+            list_item="runners",
         )
 
     def get_source_import(self):
@@ -3347,9 +3347,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         :rtype: None
         """
-        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(
-            runner, int
-        ), runner
+        assert isinstance(
+            runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
+        ) or isinstance(runner, int), runner
 
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id

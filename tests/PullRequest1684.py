@@ -24,7 +24,6 @@ from . import Framework
 
 
 class PullRequest1684(Framework.TestCase):
-
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user("ReDASers")
@@ -35,15 +34,15 @@ class PullRequest1684(Framework.TestCase):
         self.assertEqual(19, runners.totalCount)
         runner = runners[0]
         self.assertEqual(1363, runner.id)
-        self.assertEqual('windows', runner.os)
-        self.assertEqual('0D80B14DC506', runner.name)
-        self.assertEqual('offline', runner.status)
+        self.assertEqual("windows", runner.os)
+        self.assertEqual("0D80B14DC506", runner.name)
+        self.assertEqual("offline", runner.status)
         self.assertFalse(runner.busy)
         labels = runner.labels()
         self.assertEqual(3, len(labels))
-        self.assertEqual('self-hosted', labels[0]['name'])
-        self.assertEqual('Windows', labels[1]['name'])
-        self.assertEqual('X64', labels[2]['name'])
+        self.assertEqual("self-hosted", labels[0]["name"])
+        self.assertEqual("Windows", labels[1]["name"])
+        self.assertEqual("X64", labels[2]["name"])
 
     def testDeleteRunnerObject(self):
         runners = self.repo.get_self_hosted_runners()
@@ -54,7 +53,7 @@ class PullRequest1684(Framework.TestCase):
 
         runners = self.repo.get_self_hosted_runners()
         ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
-        self.assertEqual(initial_length-1, runners.totalCount)
+        self.assertEqual(initial_length - 1, runners.totalCount)
         self.assertNotIn(runner_to_delete.id, ids)
 
     def testDeleteRunnerId(self):
