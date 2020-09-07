@@ -44,3 +44,24 @@ class PullRequest1684(Framework.TestCase):
         self.assertEqual('self-hosted', labels[0]['name'])
         self.assertEqual('Windows', labels[1]['name'])
         self.assertEqual('X64', labels[2]['name'])
+
+    def testDeleteRunnerObject(self):
+        runners = self.repo.get_self_hosted_runners()
+        initial_length = runners.totalCount
+        runner_to_delete = runners[0]
+
+        self.repo.remove_self_hosted_runner(runner_to_delete)
+
+        runners = self.repo.get_self_hosted_runners()
+        ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
+        self.assertEqual(initial_length-1, runners.totalCount)
+        self.assertNotIn(runner_to_delete.id, ids)
+
+    def testDeleteRunnerId(self):
+        ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
+        id_to_delete = ids[0]
+
+        self.repo.remove_self_hosted_runner(id_to_delete)
+
+        ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
+        self.assertNotIn(id_to_delete, ids)

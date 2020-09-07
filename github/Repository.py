@@ -3341,6 +3341,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "DELETE", self.url + "/collaborators/" + collaborator
         )
 
+    def remove_self_hosted_runner(self, runner):
+        """
+        :calls: `DELETE /repos/:owner/:repo/actions/runners/:runner_id <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository>`_
+        :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        :rtype: None
+        """
+        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(
+            runner, int
+        ), runner
+
+        if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
+            runner = runner.id
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", self.url + "/actions/runners/" + str(runner)
+        )
+
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
         """
         :calls: `POST /hub <http://developer.github.com/>`_
