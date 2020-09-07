@@ -125,6 +125,7 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryKey
+import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
 import github.StatsCodeFrequency
@@ -2786,6 +2787,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.ContentFile.ContentFile(
             self._requester, headers, data, completed=True
+        )
+
+    def get_self_hosted_runners(self):
+        return github.PaginatedList.PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            self.url + "/actions/runners",
+            None,
         )
 
     def get_source_import(self):
