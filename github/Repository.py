@@ -3015,6 +3015,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
+    def get_workflow(self, id_or_name):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id <https://developer.github.com/v3/actions/workflows>`_
+        :param id_or_name: int or string
+
+        :rtype: :class:`github.Workflow.Workflow`
+        """
+        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/workflows/" + id_or_name
+        )
+        return github.Workflow.Workflow(self._requester, headers, data, completed=True)
+
     def get_workflow_runs(
         self,
         actor=github.GithubObject.NotSet,
@@ -3067,19 +3080,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             list_item="workflow_runs",
         )
-
-    def get_workflow(self, id_or_name):
-        """
-        :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id <https://developer.github.com/v3/actions/workflows>`_
-        :param id_or_name: int or string
-
-        :rtype: :class:`github.Workflow.Workflow`
-        """
-        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/actions/workflows/" + id_or_name
-        )
-        return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_run(self, id_):
         """
