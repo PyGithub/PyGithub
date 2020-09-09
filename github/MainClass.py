@@ -318,9 +318,11 @@ class Github(object):
             url_parameters,
         )
 
-    def get_repo(self, full_name_or_id, lazy=False):
+    def get_repo(self, full_name_or_id, lazy=False, is_org=False):
         """
-        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`
+        :param lazy: bool
+        :param is_org: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
@@ -328,8 +330,7 @@ class Github(object):
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
             return Repository.Repository(
-                self.__requester, {}, {"url": url}, completed=False
-            )
+                self.__requester, {}, {"is_organization": is_org, "url": url}, completed=False)
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", "%s%s" % (url_base, full_name_or_id)
         )

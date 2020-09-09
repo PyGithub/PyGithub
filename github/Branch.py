@@ -58,6 +58,13 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return self._commit.value
 
     @property
+    def is_organization(self):
+        """
+        :type: bool
+        """
+        return self._is_organization.value
+
+    @property
     def name(self):
         """
         :type: string
@@ -87,6 +94,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def _initAttributes(self):
         self._commit = github.GithubObject.NotSet
+        self._is_organization = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._protection_url = github.GithubObject.NotSet
         self._protected = github.GithubObject.NotSet
@@ -96,6 +104,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(
                 github.Commit.Commit, attributes["commit"]
+            )
+        if "is_organization" in attributes:  # pragma no branch
+            self._is_organization = self._makeBoolAttribute(
+                attributes["is_organization"]
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
@@ -204,7 +216,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             or required_approving_review_count is not github.GithubObject.NotSet
         ):
             post_parameters["required_pull_request_reviews"] = {}
-            if self._rawData.get("is_organization", False):
+            if self.is_organization \
+                    or dismissal_users is not github.GithubObject.NotSet \
+                    or dismissal_teams is not github.GithubObject.NotSet:
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ] = {}

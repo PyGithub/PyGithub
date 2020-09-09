@@ -470,6 +470,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_organization(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_organization)
+        return self._is_organization.value
+
+    @property
     def issue_comment_url(self):
         """
         :type: string
@@ -1606,7 +1614,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url + "/branches/" + branch
         )
-        data['is_organization'] = self.organization is not None
+        data['is_organization'] = self.is_organization
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
     def get_branches(self):
@@ -3409,6 +3417,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._hooks_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._is_organization = github.GithubObject.NotSet
         self._issue_comment_url = github.GithubObject.NotSet
         self._issue_events_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
@@ -3550,6 +3559,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_organization" in attributes:  # pragma no branch
+            self._is_organization = self._makeBoolAttribute(
+                attributes["is_organization"] or attributes.get("organization")
+            )
         if "issue_comment_url" in attributes:  # pragma no branch
             self._issue_comment_url = self._makeStringAttribute(
                 attributes["issue_comment_url"]
