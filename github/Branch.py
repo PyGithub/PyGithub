@@ -83,7 +83,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         :type: dict
         """
-        return self._protection
+        return self._protection.value
 
     @property
     def protection_url(self):
@@ -216,6 +216,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             or required_approving_review_count is not github.GithubObject.NotSet
         ):
             post_parameters["required_pull_request_reviews"] = {}
+            # This field should be omitted for personal repos
+            # https://developer.github.com/v3/repos/branches/#update-branch-protection
+            # However, for org repos it must be specified or GitHub treats as no one allowed,
+            # because an empty object is required to disable
             if self.is_organization \
                     or dismissal_users is not github.GithubObject.NotSet \
                     or dismissal_teams is not github.GithubObject.NotSet:
