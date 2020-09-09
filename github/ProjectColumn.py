@@ -126,8 +126,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param note: string
         :param content_id: integer
         :param content_type: string
+
+        :rtype :class:`github.ProjectCard.ProjectCard`:
         """
-        post_parameters = {}
         if isinstance(note, str):
             assert content_id is github.GithubObject.NotSet, content_id
             assert content_type is github.GithubObject.NotSet, content_type
@@ -145,6 +146,53 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         return github.ProjectCard.ProjectCard(
             self._requester, headers, data, completed=True
         )
+
+    def move(self, position):
+        """
+        :calls: `POST POST /projects/columns/:column_id/moves <https://developer.github.com/v3/projects/columns/#move-a-project-column>`_
+        :param position: string
+
+        :rtype: bool
+        """
+        assert isinstance(position, str), position
+        post_parameters = {"position": position}
+        status, _, _ = self._requester.requestJson(
+            "POST",
+            self.url + "/moves",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 201
+
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#delete-a-project-column>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
+    def edit(self, name):
+        """
+        :calls: `PATCH /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#update-a-project-column>`_
+        :param name: string
+        :rtype: None
+        """
+        assert isinstance(name, str), name
+        patch_parameters = {"name": name}
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+
+        self._useAttributes(data)
 
     def _initAttributes(self):
         self._cards_url = github.GithubObject.NotSet

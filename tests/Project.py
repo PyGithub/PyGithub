@@ -29,7 +29,7 @@ from . import Framework
 
 class Project(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
 
     def testGetProject(self):
@@ -37,6 +37,7 @@ class Project(Framework.TestCase):
         proj = self.g.get_project(pid)
         self.assertEqual(proj.id, pid)
         self.assertEqual(proj.name, "TestProject")
+        self.assertEqual(repr(proj), 'Project(name="TestProject")')
 
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
@@ -93,6 +94,7 @@ class Project(Framework.TestCase):
         )
         self.assertEqual(col.created_at.year, 2018)
         self.assertTrue(col.updated_at >= col.created_at)
+        self.assertEqual(repr(col), 'ProjectColumn(name="To Do")')
 
     # See https://developer.github.com/v3/projects/cards/#get-a-project-card
     def testProjectCardAttributes(self):
@@ -115,6 +117,7 @@ class Project(Framework.TestCase):
         self.assertEqual(card.created_at.year, 2018)
         self.assertTrue(card.updated_at >= card.created_at)
         self.assertFalse(card.archived)
+        self.assertEqual(repr(card), "ProjectCard(id=11780055)")
 
     def testGetProjectCardContent(self):
         proj = self.g.get_project(1682941)
@@ -127,6 +130,7 @@ class Project(Framework.TestCase):
         self.assertEqual(
             pull.title, "Work in progress on support for GitHub projects API."
         )
+        self.assertRaises(ValueError, pull_card.get_content, "foo")
 
         issue_card = cards[1]
         issue = issue_card.get_content()
@@ -136,6 +140,19 @@ class Project(Framework.TestCase):
         note_card = cards[2]
         note_content = note_card.get_content()
         self.assertEqual(note_content, None)
+
+    def testProjectCardMove(self):
+        proj = self.g.get_project(1682941)
+        cols = proj.get_columns()
+        card = cols[1].get_cards()[0]
+        self.assertTrue(card.move("top", cols[2].id))
+        self.assertTrue(card.move("bottom", cols[1]))
+
+    def testProjectCardDelete(self):
+        proj = self.g.get_project(1682941)
+        cols = proj.get_columns()
+        card = cols[1].get_cards()[0]
+        self.assertTrue(card.delete())
 
     def testGetAllProjectCards(self):
         expectedProjects = ["TestProject"]
@@ -154,14 +171,18 @@ class Project(Framework.TestCase):
         project = self.repo.create_project(
             "Project created by PyGithub", "Project Body"
         )
-        column = project.create_column("Project Column created by PyGithub",)
+        column = project.create_column(
+            "Project Column created by PyGithub",
+        )
         self.assertEqual(column.id, 3999333)
 
     def testCreateCardWithNote(self):
         project = self.repo.create_project(
             "Project created by PyGithub", "Project Body"
         )
-        column = project.create_column("Project Column created by PyGithub",)
+        column = project.create_column(
+            "Project Column created by PyGithub",
+        )
         card1 = column.create_card(note="Project Card")
         self.assertEqual(card1.id, 16039019)
 
@@ -169,7 +190,29 @@ class Project(Framework.TestCase):
         project = self.repo.create_project(
             "Project created by PyGithub", "Project Body"
         )
-        column = project.create_column("Project Column created by PyGithub",)
+        column = project.create_column(
+            "Project Column created by PyGithub",
+        )
         issue = self.repo.create_issue(title="Issue created by PyGithub")
         card2 = column.create_card(content_id=issue.id, content_type="Issue")
         self.assertEqual(card2.id, 16039106)
+
+    def testEditCardWithoutParameters(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit()
+
+    def testEditCardNote(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit(note="Edited Card")
+        self.assertEqual(card.note, "Edited Card")
+
+    def testEditCardArchived(self):
+        proj = self.g.get_project(4015343)
+        col = proj.get_columns()[0]
+        card = col.create_card(note="Project Card")
+        card.edit(archived=True)
+        self.assertEqual(card.archived, True)

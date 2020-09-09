@@ -35,7 +35,7 @@ from . import Framework
 
 class Persistence(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_repo("akfish/PyGithub")
 
         self.dumpedRepo = IO()
@@ -44,6 +44,7 @@ class Persistence(Framework.TestCase):
 
     def tearDown(self):
         self.dumpedRepo.close()
+        super().tearDown()
 
     def testLoad(self):
         loadedRepo = self.g.load(self.dumpedRepo)

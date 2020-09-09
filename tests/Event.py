@@ -35,7 +35,7 @@ from . import Framework
 
 class Event(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.event = self.g.get_user("jacquev6").get_events()[0]
 
     def testAttributes(self):
@@ -169,8 +169,4 @@ class Event(Framework.TestCase):
         self.assertTrue(self.event.public)
         self.assertEqual(self.event.repo.name, "jacquev6/PyGithub")
         self.assertEqual(self.event.type, "PushEvent")
-
-        # test __repr__() based on this attributes
-        self.assertEqual(
-            self.event.__repr__(), 'Event(type="PushEvent", id="1556114751")'
-        )
+        self.assertEqual(repr(self.event), 'Event(type="PushEvent", id="1556114751")')

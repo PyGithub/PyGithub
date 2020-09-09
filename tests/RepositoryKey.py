@@ -38,7 +38,7 @@ from . import Framework
 
 class RepositoryKey(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         # When recording test, be sure to create a deploy key for yourself on
         # Github and update it here.
         self.key = self.g.get_user("lra").get_repo("mackup").get_key(21870881)
@@ -55,10 +55,9 @@ class RepositoryKey(Framework.TestCase):
         )
         self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
-
-        # test __repr__() based on this attributes
+        self.assertTrue(self.key.read_only)
         self.assertEqual(
-            self.key.__repr__(), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
+            repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
         )
 
     def testDelete(self):

@@ -104,7 +104,6 @@ class PaginatedList(PaginatedListBase):
     If you want to know the total number of items in the list::
 
         print(user.get_repos().totalCount)
-        print(len(user.get_repos()))
 
     You can also index them or take slices::
 
@@ -131,7 +130,7 @@ class PaginatedList(PaginatedListBase):
         headers=None,
         list_item="items",
     ):
-        PaginatedListBase.__init__(self)
+        super().__init__()
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
@@ -164,7 +163,10 @@ class PaginatedList(PaginatedListBase):
             else:
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
-                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                if lastUrl:
+                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                else:
+                    self.__totalCount = 0
         return self.__totalCount
 
     def _getLastPageUrl(self):
@@ -231,7 +233,7 @@ class PaginatedList(PaginatedListBase):
         if "link" in headers:
             linkHeaders = headers["link"].split(", ")
             for linkHeader in linkHeaders:
-                (url, rel) = linkHeader.split("; ")
+                url, rel, *rest = linkHeader.split("; ")
                 url = url[1:-1]
                 rel = rel[5:-1]
                 links[rel] = url

@@ -36,7 +36,7 @@ from . import Framework
 
 class Hook(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.hook = self.g.get_user().get_repo("PyGithub").get_hook(257993)
 
     def testAttributes(self):
@@ -64,11 +64,11 @@ class Hook(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings",
         )
 
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.hook.__repr__(),
+            repr(self.hook),
             'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)',
         )
+        self.assertEqual(repr(self.hook.last_response), 'HookResponse(status="ok")')
 
     def testEditWithMinimalParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com/hook"})

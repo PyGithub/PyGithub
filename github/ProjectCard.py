@@ -24,6 +24,8 @@
 
 import github.GithubObject
 
+from . import Consts
+
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
 #
@@ -110,28 +112,93 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     # Note that the content_url for any card will be an "issue" URL, from
-    # which you can retrieve either an Issue or a PullRequest. Unforunately
+    # which you can retrieve either an Issue or a PullRequest. Unfortunately
     # the API doesn't make it clear which you are dealing with.
     def get_content(self, content_type=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number <https://developer.github.com/v3/pulls/#get-a-single-pull-request>`_
+        :param content_type: string, optional
         :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
+        assert content_type is github.GithubObject.NotSet or isinstance(
+            content_type, str
+        ), content_type
         if self.content_url is None:
             return None
 
         if content_type == "PullRequest":
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET", self.content_url.replace("issues", "pulls")
-            )
-            return github.PullRequest.PullRequest(
-                self._requester, headers, data, completed=True
-            )
+            url = self.content_url.replace("issues", "pulls")
+            retclass = github.PullRequest.PullRequest
         elif content_type is github.GithubObject.NotSet or content_type == "Issue":
-            headers, data = self._requester.requestJsonAndCheck("GET", self.content_url)
-            return github.Issue.Issue(self._requester, headers, data, completed=True)
+            url = self.content_url
+            retclass = github.Issue.Issue
         else:
-            assert False, "Unknown content type: %s" % content_type
+            raise ValueError("Unknown content type: %s" % content_type)
+        headers, data = self._requester.requestJsonAndCheck("GET", url)
+        return retclass(self._requester, headers, data, completed=True)
+
+    def move(self, position, column):
+        """
+        :calls: `POST /projects/columns/cards/:card_id/moves <https://developer.github.com/v3/projects/cards>`_
+        :param position: string
+        :param column: :class:`github.ProjectColumn.ProjectColumn` or int
+        :rtype: bool
+        """
+        assert isinstance(position, str), position
+        assert isinstance(column, github.ProjectColumn.ProjectColumn) or isinstance(
+            column, int
+        ), column
+        post_parameters = {
+            "position": position,
+            "column_id": column.id
+            if isinstance(column, github.ProjectColumn.ProjectColumn)
+            else column,
+        }
+        status, _, _ = self._requester.requestJson(
+            "POST",
+            self.url + "/moves",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 201
+
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/cards/:card_id <https://developer.github.com/v3/projects/cards>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
+    def edit(
+        self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet
+    ):
+        """
+        :calls: `PATCH /projects/columns/cards/:card_id <http://developer.github.com/v3/projects/cards>`_
+        :param note: string
+        :param archived: bool
+        :rtype: None
+        """
+        assert note is github.GithubObject.NotSet or isinstance(note, str), note
+        assert archived is github.GithubObject.NotSet or isinstance(
+            archived, bool
+        ), archived
+        patch_parameters = dict()
+        if note is not github.GithubObject.NotSet:
+            patch_parameters["note"] = note
+        if archived is not github.GithubObject.NotSet:
+            patch_parameters["archived"] = archived
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        self._useAttributes(data)
 
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet

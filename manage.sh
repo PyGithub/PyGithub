@@ -17,11 +17,6 @@ function fix_headers {
     python scripts/fix_headers.py
 }
 
-function test {
-    coverage run --branch --include=github/*.py --omit=github/tests/*.py setup.py test --quiet || exit
-    coverage report --show-missing || exit
-}
-
 function bump {
     previousVersion=$( grep '^version =' setup.py | sed 's/version = \"\(.*\)\"/\1/' )
     echo "Next version number? (previous: '$previousVersion')"

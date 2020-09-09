@@ -35,7 +35,7 @@ from . import Framework
 
 class Milestone(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.milestone = self.g.get_user().get_repo("PyGithub").get_milestone(1)
 
     def testAttributes(self):
@@ -55,10 +55,8 @@ class Milestone(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/milestones/1",
         )
         self.assertEqual(self.milestone.creator.login, "jacquev6")
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.milestone.__repr__(), 'Milestone(title="Version 0.4", number=1)'
+            repr(self.milestone), 'Milestone(title="Version 0.4", number=1)'
         )
 
     def testEditWithMinimalParameters(self):

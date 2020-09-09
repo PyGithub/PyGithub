@@ -1,0 +1,20 @@
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/dispatches
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"event_type": "type", "client_payload": {"foo": "bar"}}
+204
+[('Server', 'GitHub.com'), ('Date', 'Fri, 17 Apr 2020 00:12:32 GMT'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4985'), ('X-RateLimit-Reset', '1587085387'), ('X-OAuth-Scopes', 'read:org, repo, user'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'C28E:5F24:21A272:43ED41:5E98F470')]
+
+
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/dispatches
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"event_type": "type"}
+204
+[('Date', 'Fri, 17 Apr 2020 00:12:33 GMT'), ('Server', 'GitHub.com'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4984'), ('X-RateLimit-Reset', '1587085388'), ('X-OAuth-Scopes', 'read:org, repo, user'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'C290:52DA:50234:B404B:5E98F470')]

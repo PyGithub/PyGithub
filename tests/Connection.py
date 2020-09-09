@@ -24,12 +24,11 @@
 
 
 import itertools
-import unittest
 from io import StringIO
 from unittest.mock import Mock
 
-import httpretty
-from parameterized import parameterized
+import httpretty  # type: ignore
+import pytest  # type: ignore
 
 from . import Framework
 
@@ -62,56 +61,55 @@ PARAMETERS = itertools.product(
 class RecordingMockConnection(Framework.RecordingConnection):
     def __init__(self, file, protocol, host, port, realConnection):
         self._realConnection = realConnection
-        Framework.RecordingConnection.__init__(self, file, protocol, host, port)
+        super().__init__(file, protocol, host, port)
 
 
-class Connection(unittest.TestCase):
-    @parameterized.expand(itertools.chain(*p) for p in PARAMETERS)
-    def testRecordAndReplay(
-        self, replaying_connection_class, protocol, response_body, expected_recording
-    ):
-        file = StringIO()
-        host = "api.github.com"
-        verb = "GET"
-        url = "/user"
-        headers = {"Authorization": "Basic p4ssw0rd", "User-Agent": "PyGithub/Python"}
+@pytest.mark.parametrize(
+    ("replaying_connection_class", "protocol", "response_body", "expected_recording"),
+    list(tuple(itertools.chain(*p)) for p in PARAMETERS),
+)
+def testRecordAndReplay(
+    replaying_connection_class, protocol, response_body, expected_recording
+):
+    file = StringIO()
+    host = "api.github.com"
+    verb = "GET"
+    url = "/user"
+    headers = {"Authorization": "Basic p4ssw0rd", "User-Agent": "PyGithub/Python"}
 
-        response = Mock()
-        response.status = 200
-        response.getheaders.return_value = {}
-        response.read.return_value = response_body
+    response = Mock()
+    response.status = 200
+    response.getheaders.return_value = {}
+    response.read.return_value = response_body
 
-        connection = Mock()
-        connection.getresponse.return_value = response
+    connection = Mock()
+    connection.getresponse.return_value = response
 
-        # write mock response to buffer
-        recording_connection = RecordingMockConnection(
-            file, protocol, host, None, lambda *args, **kwds: connection
-        )
-        recording_connection.request(verb, url, None, headers)
-        recording_connection.getresponse()
-        recording_connection.close()
+    # write mock response to buffer
+    recording_connection = RecordingMockConnection(
+        file, protocol, host, None, lambda *args, **kwds: connection
+    )
+    recording_connection.request(verb, url, None, headers)
+    recording_connection.getresponse()
+    recording_connection.close()
 
-        # validate contents of buffer
-        file_value_lines = file.getvalue().split("\n")
-        expected_recording_lines = (protocol + expected_recording).split("\n")
-        self.assertEquals(file_value_lines[:5], expected_recording_lines[:5])
-        self.assertEquals(
-            eval(file_value_lines[5]), eval(expected_recording_lines[5])
-        )  # dict literal, so keys not in guaranteed order
-        self.assertEquals(file_value_lines[6:], expected_recording_lines[6:])
+    # validate contents of buffer
+    file_value_lines = file.getvalue().split("\n")
+    expected_recording_lines = (protocol + expected_recording).split("\n")
+    assert file_value_lines[:5] == expected_recording_lines[:5]
+    assert eval(file_value_lines[5]) == eval(expected_recording_lines[5])
+    # dict literal, so keys not in guaranteed order
+    assert file_value_lines[6:] == expected_recording_lines[6:]
 
-        # required for replay to work as expected
-        httpretty.enable(allow_net_connect=False)
+    # required for replay to work as expected
+    httpretty.enable(allow_net_connect=False)
 
-        # rewind buffer and attempt to replay response from it
-        file.seek(0)
-        replaying_connection = replaying_connection_class(
-            self, file, host=host, port=None
-        )
-        replaying_connection.request(verb, url, None, headers)
-        replaying_connection.getresponse()
+    # rewind buffer and attempt to replay response from it
+    file.seek(0)
+    replaying_connection = replaying_connection_class(file, host=host, port=None)
+    replaying_connection.request(verb, url, None, headers)
+    replaying_connection.getresponse()
 
-        # not necessarily required for subsequent tests
-        httpretty.disable()
-        httpretty.reset()
+    # not necessarily required for subsequent tests
+    httpretty.disable()
+    httpretty.reset()

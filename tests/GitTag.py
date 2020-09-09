@@ -36,7 +36,7 @@ from . import Framework
 
 class GitTag(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.tag = (
             self.g.get_user()
             .get_repo("PyGithub")
@@ -64,9 +64,7 @@ class GitTag(Framework.TestCase):
             self.tag.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.tag.__repr__(),
+            repr(self.tag),
             'GitTag(tag="v0.6", sha="f5f37322407b02a80de4526ad88d5f188977bc3c")',
         )

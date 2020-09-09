@@ -135,7 +135,10 @@ class GithubIntegration(unittest.TestCase):
         integration = GithubIntegration(25216, private_key)
         token = integration.create_jwt()
         payload = jwt.decode(
-            token, key=public_key, algorithm="RS256", options={"verify_exp": False},
+            token,
+            key=public_key,
+            algorithms=["RS256"],
+            options={"verify_exp": False},
         )
         self.assertDictEqual(
             payload, {"iat": 1550055331, "exp": 1550055391, "iss": 25216}
@@ -154,6 +157,9 @@ class GithubIntegration(unittest.TestCase):
         self.assertEqual(
             auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
         )
+        self.assertEqual(
+            repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
+        )
 
     def test_get_installation(self):
         from github import GithubIntegration
@@ -164,7 +170,7 @@ class GithubIntegration(unittest.TestCase):
             self.get_mock.calls[0][0],
             ("https://api.github.com/repos/foo/bar/installation",),
         )
-        self.assertEqual(inst.id.value, 111111)
+        self.assertEqual(inst.id, 111111)
 
     def test_get_installation_custom_base_url(self):
         from github import GithubIntegration
@@ -175,7 +181,7 @@ class GithubIntegration(unittest.TestCase):
             self.get_mock.calls[0][0],
             ("https://corp.com/v3/repos/foo/bar/installation",),
         )
-        self.assertEqual(inst.id.value, 111111)
+        self.assertEqual(inst.id, 111111)
 
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)

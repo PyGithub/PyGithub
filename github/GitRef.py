@@ -92,22 +92,6 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_statuses(self):
-        """
-        https://developer.github.com/v3/repos/statuses/#list-statuses-for-a-specific-ref
-        :calls: `GET /repos/:owner/:repo/commits/:ref/statuses`
-        :return:
-        """
-        pass
-
-    def get_status(self):
-        """
-        https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-ref
-        :calls: `GET /repos/:owner/:repo/commits/:ref/status`
-        :return:
-        """
-        pass
-
     def _initAttributes(self):
         self._object = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet

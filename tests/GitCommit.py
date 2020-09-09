@@ -36,7 +36,7 @@ from . import Framework
 
 class GitCommit(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.commit = (
             self.g.get_user()
             .get_repo("PyGithub")
@@ -70,9 +70,8 @@ class GitCommit(Framework.TestCase):
             self.commit.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.commit.__repr__(),
+            repr(self.commit),
             'GitCommit(sha="4303c5b90e2216d927155e9609436ccb8984c495")',
         )
+        self.assertEqual(repr(self.commit.author), 'GitAuthor(name="Vincent Jacques")')

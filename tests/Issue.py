@@ -40,7 +40,7 @@ from . import Framework
 
 class Issue(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.issue = self.repo.get_issue(28)
 
@@ -80,12 +80,12 @@ class Issue(Framework.TestCase):
         self.assertEqual(
             self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28"
         )
+        self.assertFalse(self.issue.locked)
+        self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.issue.__repr__(), 'Issue(title="Issue created by PyGithub", number=28)'
+            repr(self.issue), 'Issue(title="Issue created by PyGithub", number=28)'
         )
 
     def testEditWithoutParameters(self):
@@ -289,6 +289,7 @@ class Issue(Framework.TestCase):
         self.assertEqual("subscribed", first.event)
         self.assertIsNone(first.commit_id)
         self.assertIsNone(first.commit_url)
+        self.assertEqual(repr(first), "TimelineEvent(id=15819975)")
 
         for event in events:
             self.assertIn(event.event, expected_events)
@@ -299,6 +300,10 @@ class Issue(Framework.TestCase):
                 # cross-referenced events don't include an event id or node_id
                 self.assertIsNotNone(event.source)
                 self.assertEqual(event.source.type, "issue")
+                self.assertEqual(event.source.issue.number, 857)
+                self.assertEqual(
+                    repr(event.source), 'TimelineEventSource(type="issue")'
+                )
             else:
                 self.assertIsNotNone(event.id)
                 self.assertIsNotNone(event.node_id)

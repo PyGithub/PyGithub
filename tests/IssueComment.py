@@ -36,7 +36,7 @@ from . import Framework
 
 class IssueComment(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.comment = (
             self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
         )
@@ -59,10 +59,8 @@ class IssueComment(Framework.TestCase):
             self.comment.html_url,
             "https://github.com/jacquev6/PyGithub/issues/28#issuecomment-5808311",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.comment.__repr__(),
+            repr(self.comment),
             'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)',
         )
 

@@ -154,16 +154,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, str), "reaction type should be a string"
-        assert reaction_type in [
-            "+1",
-            "-1",
-            "laugh",
-            "confused",
-            "heart",
-            "hooray",
-        ], "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
-
+        assert isinstance(reaction_type, str), reaction_type
         post_parameters = {
             "content": reaction_type,
         }

@@ -42,7 +42,7 @@ from . import Framework
 
 class Team(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.org = self.g.get_organization("BeaverSoftware")
         self.team = self.org.get_team(189850)
 
@@ -55,10 +55,9 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
-
-        # test __repr__() based on this attributes
+        self.assertEqual(self.team.parent, None)
         self.assertEqual(
-            self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)'
+            repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
         )
 
     def testDiscussions(self):
@@ -88,6 +87,7 @@ class Team(Framework.TestCase):
         self.assertEqual(d.title, "TITLE")
         self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36))
         self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
+        self.assertEqual(repr(d), 'TeamDiscussion(title="TITLE", number=1)')
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")
@@ -105,6 +105,20 @@ class Team(Framework.TestCase):
         self.assertRaises(AssertionError, self.team.add_membership, user, "admin")
         self.team.remove_membership(user)
 
+    def testTeamMembership(self):
+        user = self.g.get_user("jacquev6")
+        self.assertEqual(list(self.team.get_members()), [])
+        self.assertFalse(self.team.has_in_members(user))
+        self.team.add_membership(user)
+        self.assertListKeyEqual(
+            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+        )
+        self.assertTrue(self.team.has_in_members(user))
+        membership_data = self.team.get_team_membership(user)
+        self.assertEqual(membership_data.user.login, "jacquev6")
+        self.assertEqual(membership_data.role, "member")
+        self.assertEqual(membership_data.organization.login, "BeaverSoftware")
+
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
         self.team.set_repo_permission(repo, "admin")
@@ -113,11 +127,14 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
+        self.assertIsNone(self.team.get_repo_permission(repo))
         self.team.add_to_repos(repo)
         self.assertListKeyEqual(
             self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
         )
         self.assertTrue(self.team.has_in_repos(repo))
+        permissions = self.team.get_repo_permission(repo)
+        self.assertTrue(permissions.pull)
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
@@ -137,6 +154,15 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+
+    def testGetTeams(self):
+        nested_teams = self.team.get_teams()
+        self.assertListKeyEqual(
+            nested_teams, lambda t: t.name, ["DummyTeam1", "DummyTeam2", "DummyTeam3"]
+        )
+        parent = nested_teams[0].parent
+        self.assertEqual(self.team.name, parent.name)
+        self.assertEqual(self.team.id, parent.id)
 
     def testDelete(self):
         self.team.delete()

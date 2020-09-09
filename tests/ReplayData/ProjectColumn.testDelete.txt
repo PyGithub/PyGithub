@@ -1,0 +1,22 @@
+https
+GET
+api.github.com
+None
+/projects/columns/8747987
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Thu, 16 Apr 2020 05:35:02 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4968'), ('X-RateLimit-Reset', '1587018428'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"aa3a7d465eb2292ad4dae97e54d06bc1"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'D4DC:200F7:11C86CC:14C5AC2:5E97EE86')]
+{"url":"https://api.github.com/projects/columns/8747987","project_url":"https://api.github.com/projects/4294766","cards_url":"https://api.github.com/projects/columns/8747987/cards","id":8747987,"node_id":"MDEzOlByb2plY3RDb2x1bW44NzQ3OTg3","name":"test","created_at":"2020-04-16T05:34:23Z","updated_at":"2020-04-16T05:34:23Z"}
+
+https
+DELETE
+api.github.com
+None
+/projects/columns/8747987
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Date', 'Thu, 16 Apr 2020 05:35:03 GMT'), ('Server', 'GitHub.com'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4967'), ('X-RateLimit-Reset', '1587018428'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'D4DE:18633:3644A6:3E3C58:5E97EE87')]
+
+

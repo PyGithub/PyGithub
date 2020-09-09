@@ -29,6 +29,7 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -51,11 +52,14 @@
 import datetime
 import pickle
 import time
+import warnings
 
 import jwt
 import requests
 import urllib3
 
+import github.ApplicationOAuth
+import github.Event
 import github.Gist
 import github.GithubObject
 import github.License
@@ -66,6 +70,7 @@ import github.Topic
 from . import (
     AuthenticatedUser,
     Consts,
+    GithubApp,
     GithubException,
     GitignoreTemplate,
     HookDescription,
@@ -130,6 +135,12 @@ class Github(object):
             or isinstance(retry, (int))
             or isinstance(retry, (urllib3.util.Retry))
         )
+        if client_id is not None or client_secret is not None:
+            warnings.warn(
+                "client_id and client_secret are deprecated and will be removed in a future release, switch to token authentication",
+                FutureWarning,
+                stacklevel=2,
+            )
         self.__requester = Requester(
             login_or_token,
             password,
@@ -235,11 +246,21 @@ class Github(object):
             github.License.License, self.__requester, "/licenses", url_parameters
         )
 
+    def get_events(self):
+        """
+        :calls: `GET /events <https://developer.github.com/v3/activity/events/#list-public-events>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Event.Event, self.__requester, "/events", None
+        )
+
     def get_user(self, login=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
         :param login: string
-        :rtype: :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         """
         assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
@@ -349,6 +370,21 @@ class Github(object):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return github.Project.Project(self.__requester, headers, data, completed=True)
+
+    def get_project_column(self, id):
+        """
+        :calls: `GET /projects/columns/:column_id <https://developer.github.com/v3/projects/columns/#get-a-project-column>`_
+        :rtype: :class:`github.ProjectColumn.ProjectColumn`
+        :param id: integer
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/projects/columns/%d" % id,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return github.ProjectColumn.ProjectColumn(
+            self.__requester, headers, data, completed=True
+        )
 
     def get_gist(self, id):
         """
@@ -705,7 +741,7 @@ class Github(object):
     def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
-        and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
+        and optionally headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
@@ -717,7 +753,7 @@ class Github(object):
     def dump(self, obj, file, protocol=0):
         """
         Dumps (pickles) a PyGithub object to a file-like object.
-        Some effort is made to not pickle sensitive informations like the Github credentials used in the :class:`Github` instance.
+        Some effort is made to not pickle sensitive information like the Github credentials used in the :class:`Github` instance.
         But NO EFFORT is made to remove sensitive information from the object's attributes.
 
         :param obj: the object to pickle
@@ -745,6 +781,29 @@ class Github(object):
             self.__requester, headers={}, attributes={"id": id}, completed=True
         )
 
+    def get_oauth_application(self, client_id, client_secret):
+        return github.ApplicationOAuth.ApplicationOAuth(
+            self.__requester,
+            headers={},
+            attributes={"client_id": client_id, "client_secret": client_secret},
+            completed=False,
+        )
+
+    def get_app(self, slug=github.GithubObject.NotSet):
+        """
+        :calls: `GET /apps/:slug <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
+        :param slug: string
+        :rtype: :class:`github.GithubApp.GithubApp`
+        """
+        assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
+        if slug is github.GithubObject.NotSet:
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": "/app"}, completed=False
+            )
+        else:
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/apps/" + slug)
+            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+
 
 class GithubIntegration(object):
     """
@@ -768,7 +827,7 @@ class GithubIntegration(object):
         The expiration can be extended beyond this, to a maximum of 600 seconds.
 
         :param expiration: int
-        :return:
+        :return string:
         """
         now = int(time.time())
         payload = {"iat": now, "exp": now + expiration, "iss": self.integration_id}

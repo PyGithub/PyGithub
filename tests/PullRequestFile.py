@@ -33,7 +33,7 @@ from . import Framework
 
 class PullRequestFile(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.file = self.g.get_user().get_repo("PyGithub").get_pull(31).get_files()[0]
 
     def testAttributes(self):
@@ -55,9 +55,7 @@ class PullRequestFile(Framework.TestCase):
         )
         self.assertEqual(self.file.sha, "8a4f306d4b223682dd19410d4a9150636ebe4206")
         self.assertEqual(self.file.status, "modified")
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.file.__repr__(),
+            repr(self.file),
             'File(sha="8a4f306d4b223682dd19410d4a9150636ebe4206", filename="codegen/templates/GithubObject.py")',
         )

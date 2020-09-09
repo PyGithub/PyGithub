@@ -27,7 +27,7 @@ from . import Framework
 
 class PullRequest1168(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.notifications = self.g.get_repo("PyGithub/PyGithub").get_notifications(
             all=True
         )

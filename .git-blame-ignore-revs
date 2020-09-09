@@ -3,3 +3,6 @@
 
 # Fix isort - add known first and third party
 540a0850017e836f13a8c566abfdf7f6a952ffe3
+
+# Format with new black
+07e29fe014b7e214e72b51129fbef55468a7309d

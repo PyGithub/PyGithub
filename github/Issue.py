@@ -364,7 +364,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser` or None
-        :param assignees: list (of string or :class:`github.NamedUser.NamedUser`)
+        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string
@@ -573,16 +573,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
         """
-        assert isinstance(reaction_type, str), "reaction type should be a string"
-        assert reaction_type in [
-            "+1",
-            "-1",
-            "laugh",
-            "confused",
-            "heart",
-            "hooray",
-        ], "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
-
+        assert isinstance(reaction_type, str), reaction_type
         post_parameters = {
             "content": reaction_type,
         }
@@ -612,6 +603,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self.number
 
     def _initAttributes(self):
+        self._active_lock_reason = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
@@ -625,6 +617,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._labels = github.GithubObject.NotSet
         self._labels_url = github.GithubObject.NotSet
+        self._locked = github.GithubObject.NotSet
         self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._pull_request = github.GithubObject.NotSet

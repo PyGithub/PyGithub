@@ -35,7 +35,7 @@ from . import Framework
 
 class GistComment(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.comment = self.g.get_gist("2729810").get_comment(323629)
 
     def testAttributes(self):
@@ -51,10 +51,8 @@ class GistComment(Framework.TestCase):
             self.comment.url, "https://api.github.com/gists/2729810/comments/323629"
         )
         self.assertEqual(self.comment.user.login, "jacquev6")
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.comment.__repr__(),
+            repr(self.comment),
             'GistComment(user=NamedUser(login="jacquev6"), id=323629)',
         )
 

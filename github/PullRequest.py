@@ -182,6 +182,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._diff_url.value
 
     @property
+    def draft(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
+
+    @property
     def head(self):
         """
         :type: :class:`github.PullRequestPart.PullRequestPart`
@@ -357,6 +365,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    @property
+    def maintainer_can_modify(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._maintainer_can_modify)
+        return self._maintainer_can_modify.value
+
     def as_issue(self):
         """
         :calls: `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
@@ -397,6 +413,25 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/comments", input=post_parameters
+        )
+        return github.PullRequestComment.PullRequestComment(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_review_comment_reply(self, comment_id, body):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/:pull_number/comments/:comment_id/replies <http://developer.github.com/v3/pulls/comments>`_
+        :param comment_id: int
+        :param body: string
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
+        assert isinstance(comment_id, int), comment_id
+        assert isinstance(body, str), body
+        post_parameters = {"body": body}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/comments/" + str(comment_id) + "/replies",
+            input=post_parameters,
         )
         return github.PullRequestComment.PullRequestComment(
             self._requester, headers, data, completed=True
@@ -515,6 +550,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         body=github.GithubObject.NotSet,
         state=github.GithubObject.NotSet,
         base=github.GithubObject.NotSet,
+        maintainer_can_modify=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
@@ -522,12 +558,16 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param body: string
         :param state: string
         :param base: string
+        :param maintainer_can_modify: bool
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, str), title
         assert body is github.GithubObject.NotSet or isinstance(body, str), body
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert base is github.GithubObject.NotSet or isinstance(base, str), base
+        assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(
+            maintainer_can_modify, bool
+        ), maintainer_can_modify
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -537,6 +577,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["state"] = state
         if base is not github.GithubObject.NotSet:
             post_parameters["base"] = base
+        if maintainer_can_modify is not github.GithubObject.NotSet:
+            post_parameters["maintainer_can_modify"] = maintainer_can_modify
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
@@ -671,7 +713,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/reviews/" + str(id),
+            "GET",
+            self.url + "/reviews/" + str(id),
         )
         return github.PullRequestReview.PullRequestReview(
             self._requester, headers, data, completed=True
@@ -796,6 +839,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
+        :param commit_title: string
+        :param merge_method: string
+        :param sha: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
         assert commit_message is github.GithubObject.NotSet or isinstance(
@@ -845,7 +891,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
     def remove_from_assignees(self, *assignees):
         """
@@ -868,16 +915,21 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.issue_url + "/assignees", input=post_parameters
         )
-        self._useAttributes(data)
+        # Only use the assignees attribute, since we call this PR as an issue
+        self._useAttributes({"assignees": data["assignees"]})
 
-    def update_branch(self, expected_head_sha):
+    def update_branch(self, expected_head_sha=github.GithubObject.NotSet):
         """
         :calls `PUT /repos/:owner/:repo/pulls/:pull_number/update-branch <https://developer.github.com/v3/pulls>`_
         :param expected_head_sha: string
         :rtype: bool
         """
-        assert isinstance(expected_head_sha, str), expected_head_sha
-        post_parameters = {"expected_head_sha": expected_head_sha}
+        assert expected_head_sha is github.GithubObject.NotSet or isinstance(
+            expected_head_sha, str
+        ), expected_head_sha
+        post_parameters = {}
+        if expected_head_sha is not github.GithubObject.NotSet:
+            post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
             self.url + "/update-branch",
@@ -901,11 +953,13 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
+        self._draft = github.GithubObject.NotSet
         self._head = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._issue_url = github.GithubObject.NotSet
         self._labels = github.GithubObject.NotSet
+        self._maintainer_can_modify = github.GithubObject.NotSet
         self._merge_commit_sha = github.GithubObject.NotSet
         self._mergeable = github.GithubObject.NotSet
         self._mergeable_state = github.GithubObject.NotSet
@@ -968,6 +1022,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
+        if "draft" in attributes:  # pragma no branch
+            self._draft = self._makeBoolAttribute(attributes["draft"])
         if "head" in attributes:  # pragma no branch
             self._head = self._makeClassAttribute(
                 github.PullRequestPart.PullRequestPart, attributes["head"]
@@ -981,6 +1037,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(
                 github.Label.Label, attributes["labels"]
+            )
+        if "maintainer_can_modify" in attributes:  # pragma no branch
+            self._maintainer_can_modify = self._makeBoolAttribute(
+                attributes["maintainer_can_modify"]
             )
         if "merge_commit_sha" in attributes:  # pragma no branch
             self._merge_commit_sha = self._makeStringAttribute(

@@ -38,7 +38,7 @@ from . import Framework
 
 class PullRequest(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 
@@ -47,6 +47,9 @@ class PullRequest(Framework.TestCase):
         self.pullIssue256Merged = marco_repo.get_pull(2)
         self.pullIssue256Conflict = marco_repo.get_pull(3)
         self.pullIssue256Uncached = marco_repo.get_pull(4)
+
+        flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
+        self.pullMaintainerCanModify = flo_repo.get_pull(2)
 
     def testAttributesIssue256(self):
         self.assertEqual(
@@ -133,11 +136,15 @@ class PullRequest(Framework.TestCase):
             self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
-
-        # test __repr__() based on this attributes
+        self.assertEqual(self.pull.draft, None)
+        self.assertEqual(self.pull.maintainer_can_modify, None)
         self.assertEqual(
-            self.pull.__repr__(),
+            repr(self.pull),
             'PullRequest(title="Title edited by PyGithub", number=31)',
+        )
+        self.assertEqual(
+            repr(self.pull.base),
+            'PullRequestPart(sha="ed866fc43833802ab553e5ff8581c81bb00dd433")',
         )
 
     def testCreateComment(self):
@@ -195,10 +202,18 @@ class PullRequest(Framework.TestCase):
         self.pull.edit()
 
     def testEditWithAllArguments(self):
-        self.pull.edit("Title edited by PyGithub", "Body edited by PyGithub", "open")
-        self.assertEqual(self.pull.title, "Title edited by PyGithub")
-        self.assertEqual(self.pull.body, "Body edited by PyGithub")
-        self.assertEqual(self.pull.state, "open")
+        self.pullMaintainerCanModify.edit(
+            "Title edited by PyGithub",
+            "Body edited by PyGithub",
+            "open",
+            "master",
+            True,
+        )
+        self.assertEqual(self.pullMaintainerCanModify.title, "Title edited by PyGithub")
+        self.assertEqual(self.pullMaintainerCanModify.body, "Body edited by PyGithub")
+        self.assertEqual(self.pullMaintainerCanModify.state, "open")
+        self.assertEqual(self.pullMaintainerCanModify.base.ref, "master")
+        self.assertTrue(self.pullMaintainerCanModify.maintainer_can_modify)
 
     def testGetCommits(self):
         self.assertListKeyEqual(
@@ -352,6 +367,10 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(status.merged)
         self.assertEqual(status.message, "Pull Request successfully merged")
         self.assertTrue(self.pull.is_merged())
+        self.assertEqual(
+            repr(status),
+            'PullRequestMergeStatus(sha="688208b1a5a074871d0e9376119556897439697d", merged=True)',
+        )
 
     def testMergeWithCommitMessage(self):
         self.g.get_user().get_repo("PyGithub").get_pull(39).merge(
@@ -364,18 +383,22 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
         )
+        url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees,
             lambda a: a.login,
             ["jacquev6", "stuglaser", "jayfk", "jzelinskie"],
         )
+        self.assertEqual(self.pull.url, url)
         self.pull.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(
             self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
         )
+        self.assertEqual(self.pull.url, url)
 
     def testUpdateBranch(self):
         self.assertTrue(
             self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
         )
+        self.assertTrue(self.pull.update_branch())

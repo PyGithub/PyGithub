@@ -41,7 +41,7 @@ from . import Framework
 
 class AuthenticatedUser(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user()
 
     def testAttributes(self):
@@ -77,9 +77,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.user.__repr__(), 'AuthenticatedUser(login="jacquev6")')
+        self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
 
     def testEditWithoutArguments(self):
         self.user.edit()
@@ -331,6 +329,10 @@ class AuthenticatedUser(Framework.TestCase):
         repo = self.user.create_repo(name="TestPyGithub")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
+    def testCreateProject(self):
+        project = self.user.create_project(name="TestPyGithub", body="This is the body")
+        self.assertEqual(project.url, "https://api.github.com/projects/4084610")
+
     def testCreateRepositoryWithAllArguments(self):
         repo = self.user.create_repo(
             name="TestPyGithub",
@@ -344,6 +346,7 @@ class AuthenticatedUser(Framework.TestCase):
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
+            delete_branch_on_merge=False,
         )
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
@@ -672,6 +675,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(notification.url, None)
         self.assertEqual(notification.subject.url, None)
         self.assertEqual(notification.subject.latest_comment_url, None)
+        self.assertEqual(
+            repr(notification),
+            'Notification(subject=NotificationSubject(title="Feature/coveralls"), id="8406712")',
+        )
+        self.assertEqual(
+            repr(notification.subject), 'NotificationSubject(title="Feature/coveralls")'
+        )
 
     def testGetNotifications(self):
         self.assertListKeyEqual(
@@ -711,8 +721,19 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetInvitations(self):
         invitation = self.user.get_invitations()[0]
+        self.assertEqual(repr(invitation), "Invitation(id=17285388)")
         self.assertEqual(invitation.id, 17285388)
         self.assertEqual(invitation.permissions, "write")
+        created_at = datetime.datetime(2019, 6, 27, 11, 47)
+        self.assertEqual(invitation.created_at, created_at)
+        self.assertEqual(
+            invitation.url,
+            "https://api.github.com/user/repository_invitations/17285388",
+        )
+        self.assertEqual(
+            invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations"
+        )
+        self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
 
@@ -725,3 +746,11 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetMigrations(self):
         self.assertEqual(self.user.get_migrations().totalCount, 46)
+
+    def testInstallations(self):
+        installations = self.user.get_installations()
+        self.assertEqual(installations[0].id, 123456)
+        self.assertEqual(installations[0].app_id, 10101)
+        self.assertEqual(installations[0].target_id, 3344556)
+        self.assertEqual(installations[0].target_type, "User")
+        self.assertEqual(installations.totalCount, 1)

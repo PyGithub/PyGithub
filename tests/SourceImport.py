@@ -27,7 +27,7 @@ from . import Framework
 
 class SourceImport(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.user = self.g.get_user("brix4dayz")
         self.repo = self.user.get_repo("source-import-test")
         self.source_import = self.repo.get_source_import()

@@ -27,8 +27,8 @@
 ################################################################################
 
 import requests
-import urllib3
-from httpretty import httpretty
+import urllib3  # type: ignore
+from httpretty import httpretty  # type: ignore
 
 import github
 
@@ -46,7 +46,7 @@ class Retry(Framework.TestCase):
         )
 
         Framework.enableRetry(retry)
-        Framework.TestCase.setUp(self)
+        super().setUp()
 
     def testShouldNotRetryWhenStatusNotOnList(self):
         with self.assertRaises(github.GithubException):

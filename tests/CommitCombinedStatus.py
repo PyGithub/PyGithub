@@ -33,7 +33,7 @@ from . import Framework
 
 class CommitCombinedStatus(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.combined_status = (
             self.g.get_repo("edx/edx-platform", lazy=True)
             .get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659")
@@ -77,9 +77,7 @@ class CommitCombinedStatus(Framework.TestCase):
             self.combined_status.url,
             "https://api.github.com/repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659/status",
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.combined_status.__repr__(),
+            repr(self.combined_status),
             'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")',
         )

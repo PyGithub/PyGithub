@@ -37,7 +37,7 @@ from . import Framework
 
 class CommitStatus(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.statuses = list(
             self.g.get_user()
             .get_repo("PyGithub")
@@ -66,9 +66,7 @@ class CommitStatus(Framework.TestCase):
             "https://github.com/jacquev6/PyGithub/issues/67",
         )
         self.assertEqual(self.statuses[1].target_url, None)
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.statuses[0].__repr__(),
+            repr(self.statuses[0]),
             'CommitStatus(state="success", id=277040, context="build")',
         )

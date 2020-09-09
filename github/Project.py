@@ -140,6 +140,60 @@ class Project(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def delete(self):
+        """
+        :calls: `DELETE /projects/:project_id <https://developer.github.com/v3/projects/#delete-a-project>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview}
+        )
+
+    def edit(
+        self,
+        name=github.GithubObject.NotSet,
+        body=github.GithubObject.NotSet,
+        state=github.GithubObject.NotSet,
+        organization_permission=github.GithubObject.NotSet,
+        private=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `PATCH /projects/:project_id <https://developer.github.com/v3/projects/#update-a-project>`_
+        :param name: string
+        :param body: string
+        :param state: string
+        :param organization_permission: string
+        :param private: bool
+        :rtype: None
+        """
+        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+        assert body is github.GithubObject.NotSet or isinstance(name, str), body
+        assert state is github.GithubObject.NotSet or isinstance(name, str), state
+        assert organization_permission is github.GithubObject.NotSet or isinstance(
+            organization_permission, str
+        ), organization_permission
+        assert private is github.GithubObject.NotSet or isinstance(
+            private, bool
+        ), private
+        patch_parameters = dict()
+        if name is not github.GithubObject.NotSet:
+            patch_parameters["name"] = name
+        if body is not github.GithubObject.NotSet:
+            patch_parameters["body"] = body
+        if state is not github.GithubObject.NotSet:
+            patch_parameters["state"] = state
+        if organization_permission is not github.GithubObject.NotSet:
+            patch_parameters["organization_permission"] = organization_permission
+        if private is not github.GithubObject.NotSet:
+            patch_parameters["private"] = private
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        self._useAttributes(data)
+
     def get_columns(self):
         """
         :calls: `GET /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#list-project-columns>`_
@@ -156,7 +210,7 @@ class Project(github.GithubObject.CompletableGithubObject):
 
     def create_column(self, name):
         """
-        calls: `POST https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
+        calls: `POST /projects/:project_id/columns <https://developer.github.com/v3/projects/columns/#create-a-project-column>`_
         :param name: string
         """
         assert isinstance(name, str), name

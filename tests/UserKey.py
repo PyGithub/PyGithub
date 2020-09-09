@@ -34,7 +34,7 @@ from . import Framework
 
 class UserKey(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.key = self.g.get_user().get_key(2626650)
 
     def testAttributes(self):
@@ -46,10 +46,8 @@ class UserKey(Framework.TestCase):
         self.assertEqual(self.key.title, "Key added through PyGithub")
         self.assertEqual(self.key.url, "https://api.github.com/user/keys/2626650")
         self.assertTrue(self.key.verified)
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.key.__repr__(),
+            repr(self.key),
             'UserKey(title="Key added through PyGithub", id=2626650)',
         )
 

@@ -34,7 +34,7 @@ from . import Framework
 
 class Label(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.label = self.g.get_user().get_repo("PyGithub").get_label("Bug")
 
     def testAttributes(self):
@@ -44,9 +44,7 @@ class Label(Framework.TestCase):
         self.assertEqual(
             self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug"
         )
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.label.__repr__(), 'Label(name="Bug")')
+        self.assertEqual(repr(self.label), 'Label(name="Bug")')
 
     def testEdit(self):
         self.label.edit(

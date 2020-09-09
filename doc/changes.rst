@@ -4,6 +4,157 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.53 (August 18, 2020)
+-----------------------------------
+
+* Test Organization.get_hook() (#1660) (2646a98c)
+* Add method get_team_membership for user to Team  (#1658) (749e8d35)
+* Add typing files for OAuth classes (#1656) (429fcc73)
+* Fix Repository.create_repository_dispatch type signature (#1643) (f891bd61)
+* PaginatedList's totalCount is 0 if no last page (#1641) (69b37b4a)
+* Add initial support for Github Apps. (#1631) (260558c1)
+* Correct **kwargs typing for search_* (#1636) (165d995d)
+* Add delete_branch_on_merge arg to Repository.edit type stub (#1639) (15b5ae0c)
+* Fix type stub for MainClass.get_user (#1637) (8912be64)
+* Add type stub for Repository.create_fork (#1638) (de386dfb)
+* Correct Repository.create_pull typing harder (#1635) (5ad091d0)
+
+Version 1.52 (August 03, 2020)
+-----------------------------------
+
+* upload_asset with data in memory (#1601) (a7786393)
+* Make Issue.closed_by nullable (#1629) (06dae387)
+* Add support for workflow dispatch event (#1625) (16850ef1)
+* Do not check reaction_type before sending (#1592) (136a3e80)
+* Various Github Action improvement (#1610) (416f2d0f)
+* more flexible header splitting (#1616) (85e71361)
+* Create Dependabot config file (#1607) (e272f117)
+* Add support for deployment statuses (#1588) (048c8a1d)
+* Adds the 'twitter_username' attribute to NamedUser. (#1585) (079f75a7)
+* Create WorkflowRun.timing namedtuple from the dict (#1587) (1879518e)
+* Add missing properties to PullRequest.pyi (#1577) (c84fad81)
+* Add support for Workflow Runs (#1583) (4fb1d23f)
+* More precise typing for Repository.create_pull (#1581) (4ed7aaf8)
+* Update sphinx-rtd-theme requirement from <0.5 to <0.6 (#1563) (f9e4feeb)
+* More precise typing for MainClass.get_user() (#1575) (3668f866)
+* Small documentation correction in Repository.py (#1565) (f0f6ec83)
+* Remove "api_preview" parameter from type stubs and docstrings
+  (#1559) (cc1b884c)
+* Upgrade actions/setup-python to v2 (#1555) (6f1640d2)
+* Clean up tests for GitReleaseAsset (#1546) (925764ad)
+* Repository.update_file() content also accepts bytes (#1543) (9fb8588b)
+* Fix Repository.get_issues stub (#1540) (b40b75f8)
+* Check all arguments of NamedUser.get_repos() (#1532) (69bfc325)
+* Correct Workflow typing (#1533) (f41c046f)
+* Remove RateLimit.rate (#1529) (7abf6004)
+* PullRequestReview is not a completable object (#1528) (19fc43ab)
+* Test more attributes (#1526) (52ec366b)
+* Remove pointless setters in GitReleaseAsset (#1527) (1dd1cf9c)
+* Drop some unimplemented methods in GitRef (#1525) (d4b61311)
+* Remove unneeded duplicate string checks in Branch (#1524) (61b61092)
+* Turn on coverage reporting for codecov (#1522) (e79b9013)
+* Drastically increase coverage by checking repr() (#1521) (291c4630)
+* Fixed formatting of docstrings for `Repository.create_git_tag_and_release()`
+  and `StatsPunchCard`. (#1520) (ce400bc7)
+* Remove Repository.topics (#1505) (53d58d2b)
+* Small improvements to typing (#1517) (7b20b13d)
+* Correct Repository.get_workflows() (#1518) (8727003f)
+* docs(repository): correct releases link (#1514) (f7cc534d)
+* correct Repository.stargazers_count return type to int (#1513) (b5737d41)
+* Fix two RST warnings in Webhook.rst (#1512) (5a8bc203)
+* Filter FutureWarning for 2 test cases (#1510) (09a1d9e4)
+* Raise a FutureWarning on use of client_{id,secret} (#1506) (2475fa66)
+* Improve type signature for create_from_raw_data (#1503) (c7b5eff0)
+* feat(column): move, edit and delete project columns (#1497) (a32a8965)
+* Add support for Workflows (#1496) (a1ed7c0e)
+* Add create_repository_dispatch to typing files (#1502) (ba9d59c2)
+* Add OAuth support for GitHub applications (4b437110)
+* Create AccessToken entity (4a6468aa)
+* Extend installation attributes (61808da1)
+
+Version 1.51 (May 03, 2020)
+-----------------------------------
+
+* Type stubs are now packaged with the build (#1489) (6eba4506)
+* Travis CI is now dropped in favor of Github workflow (#1488) (d6e77ba1)
+* Get the project column by id (#1466) (63855409)
+
+Version 1.50 (April 26, 2020)
+-----------------------------------
+**New features**
+
+* PyGithub now supports type checking thanks to (#1231) (91433fe9)
+* Slack is now the main channel of communication rather than Gitter (6a6e7c26)
+* Ability to retrieve public events (#1481) (5cf9950b)
+* Add and handle the maintainer_can_modify attribute in PullRequest (#1465) (e0997b43)
+* List matching references (#1471) (d3bc6a5c)
+* Add create_repository_dispatch (#1449) (edcbdfda)
+* Add some Organization and Repository attributes. (#1468) (3ab97d61)
+* Add create project method (801ea385)
+
+**Bug Fixes & Improvements**
+
+* Drop use of shadow-cat for draft PRs (#1469) (84bb69ab)
+* AuthenticatedUser.get_organization_membership() should be str (#1473) (38b34db5)
+* Drop documentation for len() of PaginatedList (#1470) (70462598)
+* Fix param name of projectcard's move function (#1451) (bafc4efc)
+* Correct typos found with codespell (#1467) (83bef0f7)
+* Export IncompletableObject in the github namespace (#1450) (0ebdbb26)
+* Add GitHub Action workflow for checks (#1464) (f1401c15)
+* Drop unneeded ignore rule for flake8 (#1454) (b4ca9177)
+* Use pytest to parametrize tests (#1438) (d2e9bd69)
+
+Version 1.47 (March 15, 2020)
+-----------------------------------
+**Bug Fixes & Improvements**
+
+* Add support to edit and delete a project (#1434) (f11f7395)
+* Add method for fetching pull requests associated with a commit (#1433) (0c55381b)
+* Add "get_repo_permission" to Team class (#1416) (219bde53)
+* Add list projects support, update tests (#1431) (e44d11d5)
+* Don't transform completely in PullRequest.*assignees (#1428) (b1c35499)
+* Add create_project support, add tests (#1429) (bf62f752)
+* Add draft attribute, update test (bd285248)
+* Docstring for Repository.create_git_tag_and_release (#1425) (bfeacded)
+* Create a tox docs environment (#1426) (b30c09aa)
+* Add Deployments API (#1424) (3d93ee1c)
+* Add support for editing project cards (#1418) (425280ce)
+* Add draft flag parameter, update tests (bd0211eb)
+* Switch to using pytest (#1423) (c822dd1c)
+* Fix GitMembership with a hammer (#1420) (f2939eb7)
+* Add support to reply to a Pull request comment (#1374) (1c82573d)
+* PullRequest.update_branch(): allow expected_head_sha to be empty (#1412) (806130e9)
+* Implement ProjectCard.delete() (#1417) (aeb27b78)
+* Add pre-commit plugin for black/isort/flake8 (#1398) (08b1c474)
+* Add tox (#1388) (125536fe)
+* Open file in text mode in scripts/add_attribute.py (#1396) (0396a493)
+* Silence most ResourceWarnings (#1393) (dd31a706)
+* Assert more attributes in Membership (#1391) (d6dee016)
+* Assert on changed Repository attributes (#1390) (6e3ceb19)
+* Add reset to the repr for Rate (#1389) (0829af81)
+
+Version 1.46 (February 11, 2020)
+-----------------------------------
+**Important**
+
+Python 2 support has been removed. If you still require Python 2, use 1.45.
+
+**Bug Fixes & Improvements**
+
+* Add repo edit support for delete_branch_on_merge (#1381) (9564cd4d)
+* Fix mistake in Repository.create_fork() (#1383) (ad040baf)
+* Correct two attributes in Invitation (#1382) (882fe087)
+* Search repo issues by string label (#1379) (4ae1a1e5)
+* Correct Repository.create_git_tag_and_release() (#1362) (ead565ad)
+* exposed seats and filled_seats for Github Organization Plan (#1360) (06a300ae)
+* Repository.create_project() body is optional (#1359) (0e09983d)
+* Implement move action for ProjectCard (#1356) (b11add41)
+* Tidy up ProjectCard.get_content() (#1355) (dd80a6c0)
+* Added nested teams and parent (#1348) (eacabb2f)
+* Correct parameter for Label.edit (#1350) (16e5f989)
+* doc: example of Pull Request creation (#1344) (d5ad09ae)
+* Fix PyPI wheel deployment (#1330) (4561930b)
+
 Version 1.45 (December 29, 2019)
 -----------------------------------
 **Important**
@@ -504,7 +655,7 @@ Version 1.27.1 (August 12, 2016)
 * fix python3 compatibility issue for using json/base64 (5b7f0bb)
 * remove not covered API from readme (9c6f881)
 * change replay data for update file test case (46895df)
-* fix python3 compatability error in test case (00777db)
+* fix python3 compatibility error in test case (00777db)
 * Add repo content create/update/delete testcase (4aaeb9e)
 * add MAINTAINERS file (a16b55b)
 * travis: disable email (6347157)
@@ -598,7 +749,7 @@ Version 1.25.1 (September 28th, 2014)
 * `Implement <https://github.com/jacquev6/PyGithub/issues/196>`__ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`__ for asking
 * In case bad data is returned by Github API v3, `raise <https://github.com/jacquev6/PyGithub/issues/195>`__ an exception only when the user accesses the faulty attribute, not when constructing the object containing this attribute. Thank you `klmitch <https://github.com/klmitch>`__ for asking
 * `Fix <https://github.com/jacquev6/PyGithub/issues/199>`__ parameter public/private of ``Repository.edit``. Thank you `daireobroin449 <https://github.com/daireobroin449>`__ for reporting the issue
-* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corrensponding APIs are not documented anymore
+* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corresponding APIs are not documented anymore
 
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`__ (September 8th, 2013) (AKFish's edition)
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -708,7 +859,7 @@ Version 1.12.1 (February 20th, 2013)
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`__ (December 25th, 2012) (Christmas 2012 edition)
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-* Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`__ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
+* Major improvement: support Python 3! PyGithub is automatically tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`__ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
 * Add a shortcut function :meth:`github.MainClass.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`__ for the contribution
 * :meth:`github.MainClass.Github.get_gitignore_templates` and :meth:`github.MainClass.Github.get_gitignore_template` for APIs ``/gitignore/templates``
 * Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`__ for the contribution

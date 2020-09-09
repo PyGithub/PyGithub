@@ -33,7 +33,7 @@ from . import Framework
 
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.pull = self.repo.get_pull(538)
 
@@ -76,10 +76,8 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(
             self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59)
         )
-        self.assertIn(self.created_pullreview, self.pullreviews)
-
-        # test __repr__() based on this attributes
+        self.assertIn(self.created_pullreview.id, [r.id for r in self.pullreviews])
         self.assertEqual(
-            self.pullreview.__repr__(),
+            repr(self.pullreview),
             'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)',
         )

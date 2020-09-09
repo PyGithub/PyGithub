@@ -35,7 +35,7 @@ from . import Framework
 
 class Download(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.download = self.g.get_user().get_repo("PyGithub").get_download(242550)
 
     def testAttributes(self):
@@ -67,9 +67,7 @@ class Download(Framework.TestCase):
             self.download.url,
             "https://api.github.com/repos/jacquev6/PyGithub/downloads/242550",
         )
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.download.__repr__(), "Download(id=242550)")
+        self.assertEqual(repr(self.download), "Download(id=242550)")
 
     def testDelete(self):
         self.download.delete()

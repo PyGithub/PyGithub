@@ -33,7 +33,7 @@ from . import Framework
 
 class GitRef(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.ref = (
             self.g.get_user()
             .get_repo("PyGithub")
@@ -55,9 +55,12 @@ class GitRef(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
 
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.ref.__repr__(), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")'
+            repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")'
+        )
+        self.assertEqual(
+            repr(self.ref.object),
+            'GitObject(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
     def testEdit(self):

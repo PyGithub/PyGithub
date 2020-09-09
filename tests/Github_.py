@@ -204,6 +204,7 @@ class Github(Framework.TestCase):
                 ["string", "category_id"],
             ],
         )
+        self.assertEqual(repr(hook), 'HookDescription(name="activecollab")')
 
     def testGetRepoFromFullName(self):
         self.assertEqual(
@@ -307,6 +308,7 @@ class Github(Framework.TestCase):
             t.source,
             "*.py[cod]\n\n# C extensions\n*.so\n\n# Packages\n*.egg\n*.egg-info\ndist\nbuild\neggs\nparts\nbin\nvar\nsdist\ndevelop-eggs\n.installed.cfg\nlib\nlib64\n\n# Installer logs\npip-log.txt\n\n# Unit test / coverage reports\n.coverage\n.tox\nnosetests.xml\n\n# Translations\n*.mo\n\n# Mr Developer\n.mr.developer.cfg\n.project\n.pydevproject\n",
         )
+        self.assertEqual(repr(t), 'GitignoreTemplate(name="Python")')
 
         t = self.g.get_gitignore_template("C++")
         self.assertEqual(t.name, "C++")
@@ -512,4 +514,11 @@ class Github(Framework.TestCase):
         self.assertEqual(
             self.g.get_license("mit").description,
             "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+        )
+
+    def testGetEvents(self):
+        self.assertListKeyBegin(
+            self.g.get_events(),
+            lambda e: e.type,
+            ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
         )

@@ -36,7 +36,7 @@ from . import Framework
 
 class PaginatedList(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
 
@@ -269,6 +269,11 @@ class PaginatedList(Framework.TestCase):
             count += 1
             if count == 75:
                 break
+
+    def testTotalCountWithNoLastPage(self):
+        # Fudged replay data, we don't need the data, only the headers
+        repos = self.g.get_repos()
+        self.assertEqual(0, repos.totalCount)
 
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)

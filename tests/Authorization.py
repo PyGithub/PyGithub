@@ -34,7 +34,7 @@ from . import Framework
 
 class Authorization(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        super().setUp()
         self.authorization = self.g.get_user().get_authorization(372259)
 
     def testAttributes(self):
@@ -58,6 +58,10 @@ class Authorization(Framework.TestCase):
         )
         self.assertEqual(
             self.authorization.url, "https://api.github.com/authorizations/372259"
+        )
+        self.assertEqual(repr(self.authorization), "Authorization(scopes=[])")
+        self.assertEqual(
+            repr(self.authorization.app), 'AuthorizationApplication(name="GitHub API")'
         )
 
     def testEdit(self):

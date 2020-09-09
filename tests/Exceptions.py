@@ -34,7 +34,6 @@
 import pickle
 
 import github
-from github.GithubException import IncompletableObject
 
 from . import Framework
 
@@ -142,4 +141,4 @@ class SpecificExceptions(Framework.TestCase):
     def testIncompletableObject(self):
         github.UserKey.UserKey.setCheckAfterInitFlag(False)
         obj = github.UserKey.UserKey(None, {}, {}, False)
-        self.assertRaises(IncompletableObject, obj._completeIfNeeded)
+        self.assertRaises(github.IncompletableObject, obj._completeIfNeeded)
