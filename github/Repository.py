@@ -1614,7 +1614,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url + "/branches/" + branch
         )
-        data['is_organization'] = self.is_organization
+        data["is_organization"] = self.is_organization
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
     def get_branches(self):

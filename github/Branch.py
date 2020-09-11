@@ -220,9 +220,11 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             # https://developer.github.com/v3/repos/branches/#update-branch-protection
             # However, for org repos it must be specified or GitHub treats as no one allowed,
             # because an empty object is required to disable
-            if self.is_organization \
-                    or dismissal_users is not github.GithubObject.NotSet \
-                    or dismissal_teams is not github.GithubObject.NotSet:
+            if (
+                self.is_organization
+                or dismissal_users is not github.GithubObject.NotSet
+                or dismissal_teams is not github.GithubObject.NotSet
+            ):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ] = {}
