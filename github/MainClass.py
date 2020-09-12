@@ -279,7 +279,7 @@ class Github(object):
         """
         :calls: `GET /user/:id <http://developer.github.com/v3/users>`_
         :param user_id: int
-        :rtype: :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
+        :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(user_id, int), user_id
         headers, data = self.__requester.requestJsonAndCheck(
