@@ -591,7 +591,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
-        parent_team_id=github.GithubObject.NotSet
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
