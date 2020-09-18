@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/installations
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4953'), ('content-length', '295'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"07e5e1a2fafd1a5e2de62eb3afd007d5"'), ('date', 'Sun, 27 May 2012 07:02:25 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"total_count":1,"installations":[{"id":123456,"account":{"login":"rigaspapas","id":12345,"node_id":"MDQ6VXNlcjE3NzM2NTI=","avatar_url":"https://avatars1.githubusercontent.com/u/12345?v=4","gravatar_id":"","url":"https://api.github.com/users/rigaspapas","html_url":"https://github.com/rigaspapas","followers_url":"https://api.github.com/users/rigaspapas/followers","following_url":"https://api.github.com/users/rigaspapas/following{/other_user}","gists_url":"https://api.github.com/users/rigaspapas/gists{/gist_id}","starred_url":"https://api.github.com/users/rigaspapas/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/rigaspapas/subscriptions","organizations_url":"https://api.github.com/users/rigaspapas/orgs","repos_url":"https://api.github.com/users/rigaspapas/repos","events_url":"https://api.github.com/users/rigaspapas/events{/privacy}","received_events_url":"https://api.github.com/users/rigaspapas/received_events","type":"User","site_admin":false},"repository_selection":"selected","access_tokens_url":"https://api.github.com/installations/242638/access_tokens","repositories_url":"https://api.github.com/installation/repositories","html_url":"https://github.com/settings/installations/123456","app_id":10101,"target_id":3344556,"target_type":"User","permissions":{"contents":"write","pull_requests":"write","administration":"read","metadata":"read","statuses":"read"},"events":["push"],"created_at":"2018-07-13T17:59:47.000+03:00","updated_at":"2018-07-13T17:59:47.000+03:00","single_file_name":null}]}

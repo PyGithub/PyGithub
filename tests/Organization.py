@@ -405,3 +405,11 @@ class Organization(Framework.TestCase):
     def testGetMigrations(self):
         self.org = self.g.get_organization("sample-test-organisation")
         self.assertEqual(self.org.get_migrations().totalCount, 2)
+
+    def testGetInstallations(self):
+        installations = self.org.get_installations()
+        self.assertEqual(installations[0].id, 123456)
+        self.assertEqual(installations[0].app_id, 10101)
+        self.assertEqual(installations[0].target_id, 3344556)
+        self.assertEqual(installations[0].target_type, "User")
+        self.assertEqual(installations.totalCount, 1)
