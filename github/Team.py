@@ -288,6 +288,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param permission: string
         :param privacy: string
+        :param parent_team_id: string
         :rtype: None
         """
         assert isinstance(name, str), name
@@ -309,8 +310,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
-        if privacy is not github.GithubObject.NotSet:
-            post_parameters["privacy"] = privacy
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )

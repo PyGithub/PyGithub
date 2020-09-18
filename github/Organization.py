@@ -600,6 +600,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
