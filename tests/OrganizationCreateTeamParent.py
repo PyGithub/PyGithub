@@ -29,37 +29,52 @@ from . import Framework
 
 class OrganizationTeamMgmt(Framework.TestCase):
 
-    teamName = "MyTeam"
+    _parentTeam = "parentTeam"
+    _childTeam = "childTeam"
 
     def setUp(self):
         super().setUp()
         self.org = self.g.get_organization("ThoughtCamera")
 
     def test_delete_team_by_id(self):
-        self.org.create_team(name=self.teamName, privacy="closed")
-        self.MyTeam = self.org.get_team_by_slug(self.teamName)
-        self.assertEqual(self.MyTeam.name, self.teamName)
+        self.org.create_team(name=self._parentTeam, privacy="closed")
+        self.MyTeam = self.org.get_team_by_slug(self._parentTeam)
+        self.assertEqual(self.MyTeam.name, self._parentTeam)
 
         self.org.remove_team(team_id=self.MyTeam.id)
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_team(id=self.MyTeam.id)
 
     def test_delete_team_by_slug(self):
-        self.org.create_team(name=self.teamName, privacy="closed")
-        self.MyTeam = self.org.get_team_by_slug(self.teamName)
-        self.assertEqual(self.MyTeam.name, self.teamName)
+        self.org.create_team(name=self._parentTeam, privacy="closed")
+        self.MyTeam = self.org.get_team_by_slug(self._parentTeam)
+        self.assertEqual(self.MyTeam.name, self._parentTeam)
 
         self.assertIsNone(self.org.remove_team_by_slug(team_slug=self.MyTeam.slug))
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_team_by_slug(slug=self.MyTeam.slug)
 
-    def test_team_parent(self):
-        self.org.create_team(name=self.teamName, privacy="closed")
-        self.MyTeam = self.org.get_team_by_slug(self.teamName)
-        self.assertEqual(self.MyTeam.name, self.teamName)
+    def test_create_team_parent(self):
+        self.org.create_team(name=self._parentTeam, privacy="closed")
+        self.MyTeam = self.org.get_team_by_slug(self._parentTeam)
+        self.assertEqual(self.MyTeam.name, self._parentTeam)
 
-        self.org.create_team(name="ChildTeam", parent_team_id=self.MyTeam.id)
-        self.assertEqual(self.org.get_team_by_slug("ChildTeam").parent, self.MyTeam)
+        self.org.create_team(name=self._childTeam, parent_team_id=self.MyTeam.id)
+        self.assertEqual(self.org.get_team_by_slug(self._childTeam).parent, self.MyTeam)
+        self.assertIsNone(self.org.remove_team_by_slug(team_slug=self.MyTeam.slug))
+        with self.assertRaises(github.UnknownObjectException):
+            self.org.get_team_by_slug(slug=self.MyTeam.slug)
+
+    def test_edit_team_parent(self):
+        self.org.create_team(name=self._parentTeam, privacy="closed")
+        self.MyTeam = self.org.get_team_by_slug(self._parentTeam)
+        self.assertEqual(self.MyTeam.name, self._parentTeam)
+
+        self.org.create_team(name=self._childTeam, privacy="closed")
+        ChildTeam = self.org.get_team_by_slug(slug=self._childTeam)
+        ChildTeam.edit(name=self._childTeam, parent_team_id=self.MyTeam.id)
+
+        self.assertEqual(self.org.get_team_by_slug(self._childTeam).parent, self.MyTeam)
         self.assertIsNone(self.org.remove_team_by_slug(team_slug=self.MyTeam.slug))
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_team_by_slug(slug=self.MyTeam.slug)
