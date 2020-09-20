@@ -33,6 +33,9 @@ class OrganizationTeamMgmt(Framework.TestCase):
         self.org.create_team(name=self.teamName, privacy="closed")
         self.MyTeam = self.org.get_team_by_slug(self.teamName)
         self.assertEqual(self.MyTeam.name, self.teamName)
+
         self.org.create_team(name="ChildTeam", parent_team_id=self.MyTeam.id)
-        self.assertTrue(self.org.get_team_by_slug("ChildTeam"))
+        self.assertEqual(self.org.get_team_by_slug("ChildTeam").parent, self.MyTeam)
         self.assertIsNone(self.org.remove_team_by_slug(team_slug=self.MyTeam.slug))
+        with self.assertRaises(github.UnknownObjectException):
+            self.org.get_team_by_slug(slug=self.MyTeam.slug)
