@@ -591,6 +591,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
@@ -599,6 +600,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: int
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
@@ -614,6 +616,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert parent_team_id is github.GithubObject.NotSet or isinstance(
+            parent_team_id, int
+        ), parent_team_id
         post_parameters = {
             "name": name,
         }
@@ -627,6 +632,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/teams", input=post_parameters
         )
@@ -1154,6 +1161,28 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "/orgs/" + self.login + "/migrations",
             None,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
+        )
+
+    def remove_team(self, team_id):
+        """
+        :calls: `DELETE /organizations/:org_id/team/:team_id <https://developer.github.com/v3/teams>`_
+        :param team_id: integer
+        :rtype: None`
+        """
+        assert isinstance(team_id, int), team_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", "/organizations/" + str(self.id) + "/team/" + str(team_id)
+        )
+
+    def remove_team_by_slug(self, team_slug):
+        """
+        :calls: `DELETE /orgs/:org/teams/:team_slug <https://developer.github.com/v3/teams>`_
+        :param team_slug: str
+        :rtype: None`
+        """
+        assert isinstance(team_slug, str), team_slug
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", "/orgs/" + self.login + "/teams/" + team_slug
         )
 
     def _initAttributes(self):
