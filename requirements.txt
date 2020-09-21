@@ -3,3 +3,4 @@ pyjwt
 sphinx<3
 sphinx-rtd-theme<0.6
 Deprecated
+please create version
