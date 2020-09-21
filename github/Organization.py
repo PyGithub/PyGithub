@@ -1175,12 +1175,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
     def remove_credential_authorization(self, credential_id):
         """
         :calls: `DELETE /orgs/:org/credential-authorizations/:credential_id <https://developer.github.com/v3/orgs/>`_
-        :param credential_id: string
+        :param credential_id: int
         :rtype: bool
         """
-        assert isinstance(credential_id, str), credential_id
+        assert isinstance(credential_id, int), credential_id
         status, headers, data = self._requester.requestJson(
-            "DELETE", self.url + "/credential-authorizations/" + credential_id
+            "DELETE", self.url + "/credential-authorizations/" + str(credential_id)
         )
         return status == 204
 
