@@ -679,7 +679,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.IssueComment.IssueComment(
             self._requester, headers, data, completed=True
         )
-
+# in version_1 changed for test
     def get_issue_comments(self):
         """
         :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
