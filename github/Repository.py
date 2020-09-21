@@ -844,7 +844,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/collaborators/" + collaborator + "/permission",
+            "GET",
+            self.url + "/collaborators/" + collaborator + "/permission",
         )
         return data["permission"]
 
@@ -1876,7 +1877,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/deployments", input=post_parameters,
+            "POST",
+            self.url + "/deployments",
+            input=post_parameters,
         )
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
@@ -2245,7 +2248,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if organization is not github.GithubObject.NotSet:
             post_parameters["organization"] = organization
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/forks", input=post_parameters,
+            "POST",
+            self.url + "/forks",
+            input=post_parameters,
         )
         return Repository(self._requester, headers, data, completed=True)
 
@@ -2790,7 +2795,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/import", headers=import_header,
+            "GET",
+            self.url + "/import",
+            headers=import_header,
         )
         if not data:
             return None

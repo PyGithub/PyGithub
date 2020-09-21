@@ -39,7 +39,7 @@ class AuthorizationOrganization(github.GithubObject.NonCompletableGithubObject):
                 "credential_authorized_at": self.credential_authorized_at,
                 "credential_accessed_at": self.credential_accessed_at,
                 "token_last_eight": self.token_last_eight,
-                "scopes": self.scopes
+                "scopes": self.scopes,
             }
         )
 
@@ -107,12 +107,20 @@ class AuthorizationOrganization(github.GithubObject.NonCompletableGithubObject):
         if "credential_id" in attributes:  # pragma no branch
             self._credential_id = self._makeIntAttribute(attributes["credential_id"])
         if "credential_type" in attributes:  # pragma no branch
-            self._credential_type = self._makeStringAttribute(attributes["credential_type"])
+            self._credential_type = self._makeStringAttribute(
+                attributes["credential_type"]
+            )
         if "credential_authorized_at" in attributes:  # pragma no branch
-            self._credential_authorized_at = self._makeDatetimeAttribute(attributes["credential_authorized_at"])
+            self._credential_authorized_at = self._makeDatetimeAttribute(
+                attributes["credential_authorized_at"]
+            )
         if "credential_accessed_at" in attributes:  # pragma no branch
-            self._credential_accessed_at = self._makeDatetimeAttribute(attributes["credential_accessed_at"])
+            self._credential_accessed_at = self._makeDatetimeAttribute(
+                attributes["credential_accessed_at"]
+            )
         if "token_last_eight" in attributes:  # pragma no branch
-            self._token_last_eight = self._makeStringAttribute(attributes["token_last_eight"])
+            self._token_last_eight = self._makeStringAttribute(
+                attributes["token_last_eight"]
+            )
         if "scopes" in attributes:  # pragma no branch
             self._scopes = self._makeListOfStringsAttribute(attributes["scopes"])

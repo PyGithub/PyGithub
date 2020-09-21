@@ -300,7 +300,14 @@ class Repository(Framework.TestCase):
 
     def testCreateGitTreeWithNullSha(self):
         tree = self.repo.create_git_tree(
-            [github.InputGitTreeElement("Baz.bar", "100644", "blob", sha=None,)]
+            [
+                github.InputGitTreeElement(
+                    "Baz.bar",
+                    "100644",
+                    "blob",
+                    sha=None,
+                )
+            ]
         )
         self.assertEqual(tree.sha, "9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f")
 

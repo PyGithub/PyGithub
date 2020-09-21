@@ -194,7 +194,9 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/statuses", input=post_parameters,
+            "POST",
+            self.url + "/statuses",
+            input=post_parameters,
         )
         return github.DeploymentStatus.DeploymentStatus(
             self._requester, headers, data, completed=True

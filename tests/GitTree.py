@@ -72,7 +72,8 @@ class GitTree(Framework.TestCase):
         )
 
         self.assertEqual(
-            repr(self.tree), 'GitTree(sha="f492784d8ca837779650d1fb406a1a3587a764ad")',
+            repr(self.tree),
+            'GitTree(sha="f492784d8ca837779650d1fb406a1a3587a764ad")',
         )
         self.assertEqual(
             repr(self.tree.tree[0]),
