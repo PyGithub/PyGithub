@@ -30,12 +30,12 @@ from . import Framework
 class OrganizationAuthorization(Framework.TestCase):
     subset = {
         "login": "AlexandreODelisle",
-        "credential_id": 5077647,
+        "credential_id": 5077768,
         "credential_type": "personal access token",
-        "token_last_eight": "4c4c6b2c",
+        "token_last_eight": "14ab3430",
         "scopes": ["repo"],
         "credential_authorized_at": datetime.datetime.strptime(
-            "2020-09-23 00:22:07", "%Y-%m-%d %H:%M:%S"
+            "2020-09-23 00:38:34", "%Y-%m-%d %H:%M:%S"
         ),  # Will need to be updated if test re-ran ( delete )
         "credential_accessed_at": None,  # Will need to be updated if test re-ran ( delete )
     }
@@ -46,6 +46,7 @@ class OrganizationAuthorization(Framework.TestCase):
 
     def testAttributes(self):
         credentials_list = self.org.get_credential_authorizations()
+        print(credentials_list)
         filtered_credentials_list = list(
             filter(
                 lambda x: x.login == self.subset["login"]
@@ -65,6 +66,11 @@ class OrganizationAuthorization(Framework.TestCase):
         )
         self.assertEqual(
             AuthCred.credential_accessed_at, self.subset["credential_accessed_at"]
+        )
+        self.assertEqual(
+            repr(AuthCred),
+            'AuthorizationOrganization(token_last_eight="14ab3430", scopes=[\'repo\'], login="AlexandreODelisle", credential_type="personal access token", credential_id=5077768, credential_authorized_at=2020-09-23 00:38:34, credential_accessed_at=None)'
+            "",
         )
 
     def testGetCredentialsAuth(self):
