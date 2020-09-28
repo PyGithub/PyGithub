@@ -11,10 +11,11 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 Jess Morgan <979404+JessMorgan@users.noreply.github.com>      #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -222,6 +223,22 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+    
+    def delete_reaction(self, reaction_id):
+        """
+        :calls: `DELETE /repos/:owner/:repo/pulls/comments/:comment_id/reactions/:reaction_id
+                <https://developer.github.com/v3/reactions/#delete-a-pull-request-comment-reaction>`_
+        :param reaction_id: integer
+        :rtype: :class:`github.Reaction.Reaction`
+        """
+        assert isinstance(reaction_id, int), reaction_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/reactions/{reaction_id}",
+            None,
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
+        )
+        return None
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
