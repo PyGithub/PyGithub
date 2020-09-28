@@ -595,7 +595,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert isinstance(reaction_id, int), reaction_id
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            f"{self.url}/reactions/{reaction_id}",
+            self.url + "/reactions/" + str(reaction_id),
             None,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )

@@ -223,7 +223,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
-    
+
     def delete_reaction(self, reaction_id):
         """
         :calls: `DELETE /repos/:owner/:repo/pulls/comments/:comment_id/reactions/:reaction_id
@@ -234,7 +234,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         assert isinstance(reaction_id, int), reaction_id
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            f"{self.url}/reactions/{reaction_id}",
+            self.url + "/reactions/" + str(reaction_id),
             None,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
