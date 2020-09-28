@@ -189,6 +189,21 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
+    def delete_reaction(self, reaction_id):
+        """
+        :calls: `DELETE /repos/:owner/:repo/comments/:comment_id/reactions/:reaction_id
+                <https://developer.github.com/v3/reactions/#delete-a-commit-comment-reaction>`_
+        :param reaction_id: integer
+        :rtype: None
+        """
+        assert isinstance(reaction_id, int), reaction_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/reactions/{reaction_id}",
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
+        )
+        return None
+
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
