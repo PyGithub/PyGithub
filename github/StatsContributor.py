@@ -37,7 +37,7 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
 
     class Week(github.GithubObject.NonCompletableGithubObject):
         """
-        This class represents weekly statistics of a contibutor.
+        This class represents weekly statistics of a contributor.
         """
 
         @property

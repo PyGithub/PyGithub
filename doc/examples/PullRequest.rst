@@ -13,7 +13,7 @@ Create a new Pull Request
     >>>
     >>> TESTS
     >>>   - [x] Send 'GET' request
-    >>>   - [x] Send 'POST' request with/without boody
+    >>>   - [x] Send 'POST' request with/without body
     >>> '''
     >>> pr = repo.create_pull(title="Use 'requests' instead of 'httplib'", body=body, head="develop", base="master")
     >>> pr

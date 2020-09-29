@@ -39,11 +39,35 @@ else:
 
 
 types = {
-    "string": ("string", None, "self._makeStringAttribute(attributes[\"" + attributeName + "\"])"),
-    "int": ("integer", None, "self._makeIntAttribute(attributes[\"" + attributeName + "\"])"),
-    "bool": ("bool", None, "self._makeBoolAttribute(attributes[\"" + attributeName + "\"])"),
-    "datetime": ("datetime.datetime", "(str, unicode)", "self._makeDatetimeAttribute(attributes[\"" + attributeName + "\"])"),
-    "class": (":class:`" + attributeClassType + "`", None, "self._makeClassAttribute(" + attributeClassType + ", attributes[\"" + attributeName + "\"])"),
+    "string": (
+        "string",
+        None,
+        'self._makeStringAttribute(attributes["' + attributeName + '"])',
+    ),
+    "int": (
+        "integer",
+        None,
+        'self._makeIntAttribute(attributes["' + attributeName + '"])',
+    ),
+    "bool": (
+        "bool",
+        None,
+        'self._makeBoolAttribute(attributes["' + attributeName + '"])',
+    ),
+    "datetime": (
+        "datetime.datetime",
+        "(str, unicode)",
+        'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
+    ),
+    "class": (
+        ":class:`" + attributeClassType + "`",
+        None,
+        "self._makeClassAttribute("
+        + attributeClassType
+        + ', attributes["'
+        + attributeName
+        + '"])',
+    ),
 }
 
 attributeDocType, attributeAssertType, attributeValue = types[attributeType]
@@ -73,15 +97,19 @@ while not added:
     elif line.startswith("    def "):
         attrName = line[8:-7]
         # Properties will be inserted after __repr__, but before any other function.
-        if attrName != "__repr__" and (attrName == "_identity" or attrName > attributeName or not isProperty):
+        if attrName != "__repr__" and (
+            attrName == "_identity" or attrName > attributeName or not isProperty
+        ):
             if not isProperty:
                 newLines.append("    @property")
             newLines.append("    def " + attributeName + "(self):")
-            newLines.append("        \"\"\"")
+            newLines.append('        """')
             newLines.append("        :type: " + attributeDocType)
-            newLines.append("        \"\"\"")
+            newLines.append('        """')
             if isCompletable:
-                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
+                newLines.append(
+                    "        self._completeIfNotSet(self._" + attributeName + ")"
+                )
             newLines.append("        return self._" + attributeName + ".value")
             newLines.append("")
             if isProperty:
@@ -103,7 +131,9 @@ while not added:
             if line:
                 attrName = line[14:-29]
             if not line or attrName > attributeName:
-                newLines.append("        self._" + attributeName + " = github.GithubObject.NotSet")
+                newLines.append(
+                    "        self._" + attributeName + " = github.GithubObject.NotSet"
+                )
                 added = True
     newLines.append(line)
 
@@ -123,10 +153,26 @@ while not added:
             if line:
                 attrName = line[12:-36]
             if not line or attrName > attributeName:
-                newLines.append("        if \"" + attributeName + "\" in attributes:  # pragma no branch")
+                newLines.append(
+                    '        if "'
+                    + attributeName
+                    + '" in attributes:  # pragma no branch'
+                )
                 if attributeAssertType:
-                    newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
-                newLines.append("            self._" + attributeName + " = " + attributeValue)
+                    newLines.append(
+                        '            assert attributes["'
+                        + attributeName
+                        + '"] is None or isinstance(attributes["'
+                        + attributeName
+                        + '"], '
+                        + attributeAssertType
+                        + '), attributes["'
+                        + attributeName
+                        + '"]'
+                    )
+                newLines.append(
+                    "            self._" + attributeName + " = " + attributeValue
+                )
                 added = True
     newLines.append(line)
 
@@ -136,6 +182,6 @@ while i < len(lines):
     i += 1
     newLines.append(line)
 
-with open(fileName, "wb") as f:
+with open(fileName, "w") as f:
     for line in newLines:
         f.write(line + "\n")

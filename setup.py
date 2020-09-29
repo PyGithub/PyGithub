@@ -45,7 +45,7 @@ import textwrap
 
 import setuptools
 
-version = "1.46"
+version = "1.53"
 
 
 if __name__ == "__main__":
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             See http://pygithub.readthedocs.io/en/latest/"""
         ),
         packages=["github"],
-        package_data={},
+        package_data={"github": ["py.typed", "*.pyi"]},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
@@ -98,9 +98,8 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.8",
             "Topic :: Software Development",
         ],
-        test_suite="tests.AllTests",
         python_requires=">=3.5",
         install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
         extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=0.9.6", "parameterized>=0.7.0"],
+        tests_require=["cryptography", "httpretty>=0.9.6"],
     )

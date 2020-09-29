@@ -21,6 +21,7 @@
 # Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -478,7 +479,10 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/authorizations", input=post_parameters, headers=request_header,
+            "POST",
+            "/authorizations",
+            input=post_parameters,
+            headers=request_header,
         )
         return github.Authorization.Authorization(
             self._requester, headers, data, completed=True
@@ -582,6 +586,27 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "POST", "/user/keys", input=post_parameters
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
+
+    def create_project(self, name, body=github.GithubObject.NotSet):
+        """
+        :calls: `POST /user/projects <https://developer.github.com/v3/projects/#create-a-user-project>`_
+        :param name: string
+        :param body: string
+        :rtype: :class:`github.Project.Project`
+        """
+        assert isinstance(name, str), name
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        post_parameters = {
+            "name": name,
+            "body": body,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/user/projects",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return github.Project.Project(self._requester, headers, data, completed=True)
 
     def create_repo(
         self,
@@ -1128,6 +1153,20 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository, self._requester, "/user/subscriptions", None
         )
 
+    def get_installations(self):
+        """
+        :calls: `GET /user/installations <http://developer.github.com/v3/apps>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Installation.Installation`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Installation.Installation,
+            self._requester,
+            "/user/installations",
+            None,
+            headers={"Accept": Consts.mediaTypeIntegrationPreview},
+            list_item="installations",
+        )
+
     def has_in_following(self, following):
         """
         :calls: `GET /user/following/:user <http://developer.github.com/v3/users/followers>`_
@@ -1327,9 +1366,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /user/memberships/orgs/:org <https://developer.github.com/v3/orgs/members/#get-your-organization-membership>`_
         :rtype: :class:`github.Membership.Membership`
         """
-        assert isinstance(org, int)
+        assert isinstance(org, str)
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", "/user/memberships/orgs/" + str(org)
+            "GET", "/user/memberships/orgs/" + org
         )
         return github.Membership.Membership(
             self._requester, headers, data, completed=True

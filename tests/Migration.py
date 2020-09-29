@@ -78,6 +78,10 @@ class Migration(Framework.TestCase):
         self.assertEqual(
             self.migration.updated_at, datetime.datetime(2018, 9, 14, 1, 35, 46)
         )
+        self.assertEqual(
+            repr(self.migration),
+            'Migration(url="https://api.github.com/user/migrations/25320", state="exported")',
+        )
 
     def testGetArchiveUrlWhenNotExported(self):
         self.assertRaises(

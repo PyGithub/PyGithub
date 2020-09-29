@@ -27,8 +27,6 @@
 #                                                                              #
 ################################################################################
 
-from deprecated import deprecated
-
 import github.GithubObject
 import github.Rate
 
@@ -40,23 +38,6 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"core": self._core.value})
-
-    @property
-    @deprecated(
-        reason="""
-            The rate object is deprecated. If you're writing new API client code
-            or updating existing code, you should use the core object instead of
-            the rate object. The core object contains the same information that
-            is present in the rate object.
-        """
-    )
-    def rate(self):
-        """
-        (Deprecated) Rate limit for non-search-related API, use `core` instead
-
-        :type: class:`github.Rate.Rate`
-        """
-        return self._core.value
 
     @property
     def core(self):

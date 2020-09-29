@@ -84,10 +84,8 @@ class Commit(Framework.TestCase):
         self.assertEqual(
             self.commit.commit.tree.sha, "4c6bd50994f0f9823f898b1c6c964ad7d4fa11ab"
         )
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.commit.__repr__(),
+            repr(self.commit),
             'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
@@ -150,3 +148,11 @@ class Commit(Framework.TestCase):
             status.target_url, "https://github.com/jacquev6/PyGithub/issues/67"
         )
         self.assertEqual(status.description, "Status successfuly created by PyGithub")
+
+    def testGetPulls(self):
+        commit = (
+            self.g.get_user()
+            .get_repo("PyGithub")
+            .get_commit("e44d11d565c022496544dd6ed1f19a8d718c2b0c")
+        )
+        self.assertListKeyEqual(commit.get_pulls(), lambda c: c.number, [1431])

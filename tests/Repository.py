@@ -76,6 +76,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.git_url, "git://github.com/jacquev6/PyGithub.git")
         self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.has_issues)
+        self.assertEqual(
+            self.repo.deployments_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/deployments",
+        )
+        self.assertFalse(self.repo.has_pages)
+        self.assertEqual(
+            self.repo.releases_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
+        )
         self.assertFalse(self.repo.has_wiki)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
@@ -97,7 +106,6 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.source, None)
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
-        self.assertEqual(self.repo.topics, None)
         self.assertEqual(
             self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28)
         )
@@ -105,10 +113,9 @@ class Repository(Framework.TestCase):
             self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub"
         )
         self.assertEqual(self.repo.watchers, 15)
-
-        # test __repr__() based on this attributes
+        self.assertEqual(repr(self.repo), 'Repository(full_name="jacquev6/PyGithub")')
         self.assertEqual(
-            self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")'
+            repr(self.repo.permissions), "Permissions(push=True, pull=True, admin=True)"
         )
 
     def testEditWithoutArguments(self):
@@ -134,7 +141,14 @@ class Repository(Framework.TestCase):
         self.assertEqual(
             self.repo.description, "Python library implementing the full Github API v3"
         )
-        # FIXME assertions should be performed on all changed parameters
+        self.assertFalse(self.repo.archived)
+        self.assertTrue(self.repo.has_issues)
+        self.assertFalse(self.repo.has_projects)
+        self.assertFalse(self.repo.has_wiki)
+        self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.allow_squash_merge)
+        self.assertTrue(self.repo.allow_merge_commit)
+        self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
 
     def testEditWithDefaultBranch(self):
@@ -287,7 +301,14 @@ class Repository(Framework.TestCase):
 
     def testCreateGitTreeWithNullSha(self):
         tree = self.repo.create_git_tree(
-            [github.InputGitTreeElement("Baz.bar", "100644", "blob", sha=None,)]
+            [
+                github.InputGitTreeElement(
+                    "Baz.bar",
+                    "100644",
+                    "blob",
+                    sha=None,
+                )
+            ]
         )
         self.assertEqual(tree.sha, "9b8166fc80d0f0fe9192d4bf1dbaa87f194e012f")
 
@@ -411,6 +432,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(
             source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test"
         )
+
+    def testCreateRepositoryDispatch(self):
+        with_payload = self.repo.create_repository_dispatch("type", {"foo": "bar"})
+        self.assertTrue(with_payload)
+        without_payload = self.repo.create_repository_dispatch("type")
+        self.assertTrue(without_payload)
 
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
@@ -941,6 +968,19 @@ class Repository(Framework.TestCase):
             ],
         )
 
+    def testGetWorkflows(self):
+        workflows = self.g.get_repo("PyGithub/PyGithub").get_workflows()
+        self.assertListKeyEqual(
+            workflows, lambda w: w.name, ["check", "Publish to PyPI"]
+        )
+
+    def testGetWorkflowRuns(self):
+        self.assertListKeyEqual(
+            self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(),
+            lambda r: r.id,
+            [110932306, 110932159, 110932072, 110286191, 110278769],
+        )
+
     def testGetSourceImport(self):
         import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
         source_import = import_repo.get_source_import()
@@ -1049,8 +1089,9 @@ class Repository(Framework.TestCase):
 
     def testGetStargazersWithDates(self):
         repo = self.g.get_user("danvk").get_repo("comparea")
+        stargazers = repo.get_stargazers_with_dates()
         self.assertListKeyEqual(
-            repo.get_stargazers_with_dates(),
+            stargazers,
             lambda stargazer: (stargazer.starred_at, stargazer.user.login),
             [
                 (datetime.datetime(2014, 8, 13, 19, 22, 5), u"sAlexander"),
@@ -1061,6 +1102,7 @@ class Repository(Framework.TestCase):
                 (datetime.datetime(2015, 5, 9, 19, 14, 45), u"JoePython1"),
             ],
         )
+        self.assertEqual(repr(stargazers[0]), 'Stargazer(user="sAlexander")')
 
     def testGetSubscribers(self):
         self.assertListKeyEqual(
@@ -1186,20 +1228,30 @@ class Repository(Framework.TestCase):
             43929,
         )
 
+    def testCreateDeployment(self):
+        deployment = self.repo.create_deployment(
+            "8f039d9c4ebd6f24b4bb04634ed062375c11b751"
+        )
+        self.assertEqual(deployment.id, 201741959)
+
+    def testGetDeployments(self):
+        deployments = self.repo.get_deployments()
+        self.assertListKeyEqual(deployments, lambda d: d.id, [201741959])
+
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = "Hello world".encode()
+        author = github.InputGitAuthor(
+            "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
+        )
+        self.assertEqual(repr(author), 'InputGitAuthor(name="Enix Yu")')
         self.repo.create_file(
             path=newFile,
             message="Create file for testCreateFile",
             content=content,
             branch="master",
-            committer=github.InputGitAuthor(
-                "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
-            ),
-            author=github.InputGitAuthor(
-                "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
-            ),
+            committer=author,
+            author=author,
         )
 
     def testUpdateFile(self):
@@ -1451,7 +1503,7 @@ class Repository(Framework.TestCase):
     def testUnsubscribePubSubHubbub(self):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
 
-    def testStatistics(self):
+    def testStatisticsContributors(self):
         stats = self.repo.get_stats_contributors()
         seenJacquev6 = False
         for s in stats:
@@ -1467,16 +1519,19 @@ class Repository(Framework.TestCase):
                 self.assertEqual(s.weeks[0].w, datetime.datetime(2012, 2, 12))
         self.assertTrue(seenJacquev6)
 
+    def testStatisticsCommitActivity(self):
         stats = self.repo.get_stats_commit_activity()
         self.assertEqual(stats[0].week, datetime.datetime(2012, 11, 18, 0, 0))
         self.assertEqual(stats[0].total, 29)
         self.assertEqual(stats[0].days, [0, 7, 3, 9, 7, 3, 0])
 
+    def testStatisticsCodeFrequency(self):
         stats = self.repo.get_stats_code_frequency()
         self.assertEqual(stats[0].week, datetime.datetime(2012, 2, 12, 0, 0))
         self.assertEqual(stats[0].additions, 3853)
         self.assertEqual(stats[0].deletions, -2098)
 
+    def testStatisticsParticipation(self):
         stats = self.repo.get_stats_participation()
         self.assertEqual(
             stats.owner,
@@ -1593,6 +1648,7 @@ class Repository(Framework.TestCase):
             ],
         )
 
+    def testStatisticsPunchCard(self):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
@@ -1611,6 +1667,16 @@ class Repository(Framework.TestCase):
     def testGetRepositoryWith301Redirect(self):
         repo = self.g.get_repo("protoncoin/protoncoin")
         self.assertEqual(repo.full_name, "padima2/protoncoin")
+
+    def testGetMatchingRefs(self):
+        refs = self.g.get_repo("FlorentClarret/PyGithub").get_git_matching_refs("tags")
+        self.assertEqual(85, refs.totalCount)
+        self.assertEqual("refs/tags/v0.1", refs[0].ref)
+        self.assertEqual("refs/tags/v0.2", refs[1].ref)
+        self.assertEqual("refs/tags/v0.3", refs[2].ref)
+        self.assertEqual("refs/tags/v0.4", refs[3].ref)
+        self.assertEqual("refs/tags/v0.5", refs[4].ref)
+        self.assertEqual("refs/tags/v0.6", refs[5].ref)
 
 
 class LazyRepository(Framework.TestCase):

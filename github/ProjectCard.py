@@ -112,7 +112,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     # Note that the content_url for any card will be an "issue" URL, from
-    # which you can retrieve either an Issue or a PullRequest. Unforunately
+    # which you can retrieve either an Issue or a PullRequest. Unfortunately
     # the API doesn't make it clear which you are dealing with.
     def get_content(self, content_type=github.GithubObject.NotSet):
         """
@@ -150,7 +150,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         ), column
         post_parameters = {
             "position": position,
-            "column": column.id
+            "column_id": column.id
             if isinstance(column, github.ProjectColumn.ProjectColumn)
             else column,
         }
@@ -161,6 +161,44 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return status == 201
+
+    def delete(self):
+        """
+        :calls: `DELETE /projects/columns/cards/:card_id <https://developer.github.com/v3/projects/cards>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return status == 204
+
+    def edit(
+        self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet
+    ):
+        """
+        :calls: `PATCH /projects/columns/cards/:card_id <http://developer.github.com/v3/projects/cards>`_
+        :param note: string
+        :param archived: bool
+        :rtype: None
+        """
+        assert note is github.GithubObject.NotSet or isinstance(note, str), note
+        assert archived is github.GithubObject.NotSet or isinstance(
+            archived, bool
+        ), archived
+        patch_parameters = dict()
+        if note is not github.GithubObject.NotSet:
+            patch_parameters["note"] = note
+        if archived is not github.GithubObject.NotSet:
+            patch_parameters["archived"] = archived
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        self._useAttributes(data)
 
     def _initAttributes(self):
         self._archived = github.GithubObject.NotSet

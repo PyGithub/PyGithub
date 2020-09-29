@@ -118,15 +118,24 @@ class Notification(github.GithubObject.CompletableGithubObject):
         """
         :calls: `PATCH /notifications/threads/:id <https://developer.github.com/v3/activity/notifications/>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url,)
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+        )
 
     def get_pull_request(self):
+        """
+        :type: :class:github.PullRequest.PullRequest
+        """
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
         )
 
     def get_issue(self):
+        """
+        :type: :class:github.Issue.Issue
+        """
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 

@@ -270,6 +270,11 @@ class PaginatedList(Framework.TestCase):
             if count == 75:
                 break
 
+    def testTotalCountWithNoLastPage(self):
+        # Fudged replay data, we don't need the data, only the headers
+        repos = self.g.get_repos()
+        self.assertEqual(0, repos.totalCount)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100

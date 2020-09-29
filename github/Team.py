@@ -47,6 +47,7 @@ import github.Organization
 import github.PaginatedList
 import github.Repository
 import github.TeamDiscussion
+from github.GithubException import UnknownObjectException
 
 from . import Consts
 
@@ -199,6 +200,24 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT", self.url + "/memberships/" + member._identity, input=put_parameters
         )
 
+    def get_team_membership(self, member):
+        """
+        :calls: `GET /orgs/:org/memberships/team/:team_id/:username <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
+        :param member: string or :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`github.Membership.Membership`
+        """
+        assert isinstance(member, str) or isinstance(
+            member, github.NamedUser.NamedUser
+        ), member
+        if isinstance(member, github.NamedUser.NamedUser):
+            member = member._identity
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/memberships/" + member
+        )
+        return github.Membership.Membership(
+            self._requester, headers, data, completed=True
+        )
+
     def add_to_repos(self, repo):
         """
         :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
@@ -209,6 +228,29 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.url + "/repos/" + repo._identity
         )
+
+    def get_repo_permission(self, repo):
+        """
+        :calls: `GET /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: string or :class:`github.Repository.Repository`
+        :rtype: None or :class:`github.Permissions.Permissions`
+        """
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str
+        ), repo
+        if isinstance(repo, github.Repository.Repository):
+            repo = repo._identity
+        try:
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/repos/" + repo,
+                headers={"Accept": Consts.teamRepositoryPermissions},
+            )
+            return github.Permissions.Permissions(
+                self._requester, headers, data["permissions"], completed=True
+            )
+        except UnknownObjectException:
+            return None
 
     def set_repo_permission(self, repo, permission):
         """
@@ -277,7 +319,10 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self.url + "/teams", None,
+            github.Team.Team,
+            self._requester,
+            self.url + "/teams",
+            None,
         )
 
     def get_discussions(self):

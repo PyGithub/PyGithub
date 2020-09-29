@@ -59,6 +59,10 @@ class Authorization(Framework.TestCase):
         self.assertEqual(
             self.authorization.url, "https://api.github.com/authorizations/372259"
         )
+        self.assertEqual(repr(self.authorization), "Authorization(scopes=[])")
+        self.assertEqual(
+            repr(self.authorization.app), 'AuthorizationApplication(name="GitHub API")'
+        )
 
     def testEdit(self):
         self.authorization.edit()

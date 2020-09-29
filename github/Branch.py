@@ -143,18 +143,16 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
         assert contexts is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str) for element in contexts
+            isinstance(element, str) for element in contexts
         ), contexts
         assert enforce_admins is github.GithubObject.NotSet or isinstance(
             enforce_admins, bool
         ), enforce_admins
         assert dismissal_users is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str)
-            for element in dismissal_users
+            isinstance(element, str) for element in dismissal_users
         ), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str)
-            for element in dismissal_teams
+            isinstance(element, str) for element in dismissal_teams
         ), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
             dismiss_stale_reviews, bool
@@ -165,7 +163,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert (
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
-        ), required_approving_review_count
+        ), (required_approving_review_count)
 
         post_parameters = {}
         if (
@@ -252,7 +250,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url,
+            "DELETE",
+            self.protection_url,
         )
 
     def get_required_status_checks(self):
@@ -277,7 +276,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
         assert contexts is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str) for element in contexts
+            isinstance(element, str) for element in contexts
         ), contexts
 
         post_parameters = {}
@@ -330,12 +329,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_approving_review_count: int
         """
         assert dismissal_users is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str)
-            for element in dismissal_users
+            isinstance(element, str) for element in dismissal_users
         ), dismissal_users
         assert dismissal_teams is github.GithubObject.NotSet or all(
-            isinstance(element, str) or isinstance(element, str)
-            for element in dismissal_teams
+            isinstance(element, str) for element in dismissal_teams
         ), dismissal_teams
         assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
             dismiss_stale_reviews, bool
@@ -346,7 +343,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert (
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
-        ), required_approving_review_count
+        ), (required_approving_review_count)
 
         post_parameters = {}
         if dismissal_users is not github.GithubObject.NotSet:
@@ -433,9 +430,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in users
-        ), users
+        assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.protection_url + "/restrictions/users", input=users
@@ -446,9 +441,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in users
-        ), users
+        assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.protection_url + "/restrictions/users", input=users
@@ -459,9 +452,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
         :users: list of strings (user names)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in users
-        ), users
+        assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.protection_url + "/restrictions/users", input=users
@@ -472,9 +463,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in teams
-        ), teams
+        assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.protection_url + "/restrictions/teams", input=teams
@@ -485,9 +474,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in teams
-        ), teams
+        assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.protection_url + "/restrictions/teams", input=teams
@@ -498,9 +485,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
         :teams: list of strings (team slugs)
         """
-        assert all(
-            isinstance(element, str) or isinstance(element, str) for element in teams
-        ), teams
+        assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.protection_url + "/restrictions/teams", input=teams

@@ -64,11 +64,11 @@ class Hook(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings",
         )
 
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.hook.__repr__(),
+            repr(self.hook),
             'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)',
         )
+        self.assertEqual(repr(self.hook.last_response), 'HookResponse(status="ok")')
 
     def testEditWithMinimalParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com/hook"})

@@ -63,10 +63,8 @@ class CommitComment(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/comments/1361949",
         )
         self.assertEqual(self.comment.user.login, "jacquev6")
-
-        # test __repr__() based on this attributes
         self.assertEqual(
-            self.comment.__repr__(),
+            repr(self.comment),
             'CommitComment(user=NamedUser(login="jacquev6"), id=1361949)',
         )
 

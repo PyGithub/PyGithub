@@ -51,6 +51,5 @@ class ContentFile(Framework.TestCase):
             self.file.download_url,
             "https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md",
         )
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.file.__repr__(), 'ContentFile(path="ReadMe.md")')
+        self.assertIsNone(self.file.license)
+        self.assertEqual(repr(self.file), 'ContentFile(path="ReadMe.md")')

@@ -55,16 +55,26 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
         self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(self.org.default_repository_permission, "none")
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertEqual(self.org.disk_usage, 2)
         self.assertEqual(self.org.email, "")
         self.assertEqual(self.org.followers, 0)
         self.assertEqual(self.org.following, 0)
         self.assertEqual(self.org.gravatar_id, None)
+        self.assertTrue(self.org.has_organization_projects)
+        self.assertTrue(self.org.has_repository_projects)
+        self.assertEqual(
+            self.org.hooks_url, "https://api.github.com/orgs/BeaverSoftware/hooks"
+        )
         self.assertEqual(self.org.html_url, "https://github.com/BeaverSoftware")
         self.assertEqual(self.org.id, 1)
+        self.assertEqual(
+            self.org.issues_url, "https://api.github.com/orgs/BeaverSoftware/issues"
+        )
         self.assertEqual(self.org.location, "Paris, France")
         self.assertEqual(self.org.login, "BeaverSoftware")
+        self.assertFalse(self.org.members_can_create_repositories)
         self.assertEqual(self.org.name, "BeaverSoftware")
         self.assertEqual(self.org.owned_private_repos, 0)
         self.assertEqual(self.org.plan.name, "free")
@@ -79,9 +89,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.two_factor_requirement_enabled, None)
         self.assertEqual(self.org.type, "Organization")
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
-
-        # test __repr__() based on this attributes
-        self.assertEqual(self.org.__repr__(), 'Organization(login="BeaverSoftware")')
+        self.assertEqual(repr(self.org), 'Organization(login="BeaverSoftware")')
 
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
@@ -171,6 +179,10 @@ class Organization(Framework.TestCase):
             self.org.get_public_members(), lambda u: u.login, ["jacquev6"]
         )
 
+    def testGetHook(self):
+        hook = self.org.get_hook(257993)
+        self.assertEqual(hook.name, "web")
+
     def testGetHooks(self):
         self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
 
@@ -217,21 +229,30 @@ class Organization(Framework.TestCase):
         self.assertFalse(self.org.has_in_members(lyloa))
 
     def testGetRepos(self):
+        repos = self.org.get_repos()
         self.assertListKeyEqual(
-            self.org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+            repos, lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
         )
+        self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, False])
+        self.assertListKeyEqual(repos, lambda r: r.has_wiki, [True, True])
 
     def testGetReposSorted(self):
+        repos = self.org.get_repos(sort="updated", direction="desc")
         self.assertListKeyEqual(
-            self.org.get_repos(sort="updated", direction="desc"),
+            repos,
             lambda r: r.name,
             ["TestPyGithub", "FatherBeaver"],
         )
+        self.assertListKeyEqual(
+            repos,
+            lambda r: r.has_pages,
+            [False, True],
+        )
 
     def testGetReposWithType(self):
-        self.assertListKeyEqual(
-            self.org.get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"]
-        )
+        repos = self.org.get_repos("public")
+        self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "PyGithub"])
+        self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
     def testGetEvents(self):
         self.assertListKeyEqual(
@@ -292,6 +313,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
         )
+        self.assertTrue(repo.has_wiki)
+        self.assertTrue(repo.has_pages)
 
     def testCreateRepoWithAllArguments(self):
         team = self.org.get_team(141496)
@@ -313,6 +336,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
         )
+        self.assertFalse(repo.has_wiki)
+        self.assertFalse(repo.has_pages)
 
     def testCreateRepositoryWithAutoInit(self):
         repo = self.org.create_repo(
@@ -321,6 +346,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
         )
+        self.assertTrue(repo.has_pages)
+        self.assertTrue(repo.has_wiki)
 
     def testCreateFork(self):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
@@ -328,6 +355,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub"
         )
+        self.assertFalse(repo.has_wiki)
+        self.assertFalse(repo.has_pages)
 
     def testCreateRepoFromTemplate(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
