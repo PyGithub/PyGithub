@@ -404,11 +404,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
 
     def create_repo_from_template(
-            self,
-            name,
-            repo,
-            description=github.GithubObject.NotSet,
-            private=github.GithubObject.NotSet,
+        self,
+        name,
+        repo,
+        description=github.GithubObject.NotSet,
+        private=github.GithubObject.NotSet,
     ):
         """self.name
         :calls: `POST  /repos/:template_owner/:template_repo/generate <https://developer.github.com/v3/repos/#create-repository-using-a-repository-template>`_
