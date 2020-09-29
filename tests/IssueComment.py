@@ -84,7 +84,6 @@ class IssueComment(Framework.TestCase):
 
         self.assertEqual(reaction.id, 17282654)
         self.assertEqual(reaction.content, "hooray")
-    
 
     def testDeleteReaction(self):
         self.comment.delete_reaction(85743754)
