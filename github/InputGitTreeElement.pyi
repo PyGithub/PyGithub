@@ -9,7 +9,7 @@ class InputGitTreeElement:
         mode: str,
         type: str,
         content: Union[str, _NotSetType] = ...,
-        sha: Union[str, _NotSetType] = ...,
+        sha: Union[str, _NotSetType, None] = ...,
     ) -> None: ...
     @property
     def _identity(self) -> Dict[str, str]: ...
