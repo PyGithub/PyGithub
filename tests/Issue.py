@@ -265,7 +265,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(reaction.content, "hooray")
 
     def testDeleteReaction(self):
-        self.issue.delete_reaction(85740167)
+        self.assertTrue(self.issue.delete_reaction(85740167))
 
     def testGetTimeline(self):
         expected_events = {

@@ -92,4 +92,4 @@ class PullRequestComment(Framework.TestCase):
         self.assertEqual(reaction.content, "hooray")
 
     def testDeleteReaction(self):
-        self.comment.delete_reaction(85750463)
+        self.assertTrue(self.comment.delete_reaction(85750463))

@@ -229,7 +229,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/pulls/comments/:comment_id/reactions/:reaction_id
                 <https://developer.github.com/v3/reactions/#delete-a-pull-request-comment-reaction>`_
         :param reaction_id: integer
-        :rtype: :class:`github.Reaction.Reaction`
+        :rtype: None
         """
         assert isinstance(reaction_id, int), reaction_id
         headers, data = self._requester.requestJsonAndCheck(
