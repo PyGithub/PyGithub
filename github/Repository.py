@@ -66,6 +66,7 @@
 # Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2020 Sergio Oliveira Campos <seocam@seocam.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -2519,7 +2520,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/events/" + str(id),
-            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+            headers={"Accept": Consts.projectCardPreview},
         )
         return github.IssueEvent.IssueEvent(
             self._requester, headers, data, completed=True
@@ -2535,7 +2536,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/issues/events",
             None,
-            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+            headers={"Accept": Consts.projectCardPreview},
         )
 
     def get_key(self, id):

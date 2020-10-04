@@ -11,6 +11,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2020 Sergio Oliveira Campos <seocam@seocam.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -65,9 +66,6 @@ mediaTypeImportPreview = "application/vnd.github.barred-rock-preview"
 # https://developer.github.com/changes/2016-05-12-reactions-api-preview/
 mediaTypeReactionsPreview = "application/vnd.github.squirrel-girl-preview"
 
-# https://developer.github.com/changes/2016-09-14-Integrations-Early-Access/
-mediaTypeIntegrationPreview = "application/vnd.github.machine-man-preview+json"
-
 # https://developer.github.com/changes/2016-09-14-projects-api/
 mediaTypeProjectsPreview = "application/vnd.github.inertia-preview+json"
 
@@ -82,9 +80,6 @@ mediaTypeTopicsPreview = "application/vnd.github.mercy-preview+json"
 
 # https://developer.github.com/changes/2018-02-22-label-description-search-preview/
 mediaTypeLabelDescriptionSearchPreview = "application/vnd.github.symmetra-preview+json"
-
-# https://developer.github.com/changes/2018-01-10-lock-reason-api-preview/
-mediaTypeLockReasonPreview = "application/vnd.github.sailor-v-preview+json"
 
 # https://developer.github.com/changes/2018-01-25-organization-invitation-api-preview/
 mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview+json"
@@ -123,3 +118,6 @@ teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
 
 # https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/
 deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
+
+# https://developer.github.com/changes/2018-09-05-project-card-events/
+projectCardPreview = "application/vnd.github.starfox-preview"

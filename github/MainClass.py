@@ -30,6 +30,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2020 Sergio Oliveira Campos <seocam@seocam.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -855,7 +856,6 @@ class GithubIntegration(object):
             ),
             headers={
                 "Authorization": "Bearer {}".format(self.create_jwt()),
-                "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python",
             },
             json=body,
@@ -889,7 +889,6 @@ class GithubIntegration(object):
         """
         headers = {
             "Authorization": "Bearer {}".format(self.create_jwt()),
-            "Accept": Consts.mediaTypeIntegrationPreview,
             "User-Agent": "PyGithub/Python",
         }
 

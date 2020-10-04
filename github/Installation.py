@@ -7,6 +7,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2020 Sergio Oliveira Campos <seocam@seocam.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,10 +38,6 @@ import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
-
-from . import Consts
-
-INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 
 class Installation(github.GithubObject.NonCompletableGithubObject):
@@ -91,7 +88,6 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
             requester=self._requester,
             firstUrl="/installation/repositories",
             firstParams=url_parameters,
-            headers=INTEGRATION_PREVIEW_HEADERS,
             list_item="repositories",
         )
 

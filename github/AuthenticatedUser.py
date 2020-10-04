@@ -22,6 +22,7 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2020 Sergio Oliveira Campos <seocam@seocam.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1122,7 +1123,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._requester,
             "/user/installations",
             None,
-            headers={"Accept": Consts.mediaTypeIntegrationPreview},
             list_item="installations",
         )
 
