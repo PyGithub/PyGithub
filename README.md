@@ -58,6 +58,9 @@ For more information read [CONTRIBUTING.md].
 
 [CONTRIBUTING.md]: /CONTRIBUTING.md
 
+### Testing
+```pytest```
+
 ### Maintainership
 
 We're actively seeking maintainers that will triage issues and pull requests and cut releases.
