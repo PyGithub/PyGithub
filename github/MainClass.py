@@ -108,6 +108,7 @@ class Github(object):
         per_page=DEFAULT_PER_PAGE,
         verify=True,
         retry=None,
+        mock=None,
     ):
         """
         :param login_or_token: string
@@ -120,6 +121,7 @@ class Github(object):
         :param per_page: int
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
+        :param mock: dict
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -141,6 +143,7 @@ class Github(object):
                 FutureWarning,
                 stacklevel=2,
             )
+        assert mock is None or isinstance(mock, dict)
         self.__requester = Requester(
             login_or_token,
             password,
@@ -153,7 +156,10 @@ class Github(object):
             per_page,
             verify,
             retry,
+            mock,
         )
+        print("in Main Class GitHub. Mock: ")
+        print(mock)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """

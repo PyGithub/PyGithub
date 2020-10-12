@@ -266,6 +266,7 @@ class Requester:
         per_page,
         verify,
         retry,
+        mock=None,
     ):
         self._initializeDebugFeature()
 
@@ -312,6 +313,7 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+        self.mock = mock
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -404,10 +406,31 @@ class Requester:
     def requestJson(
         self, verb, url, parameters=None, headers=None, input=None, cnx=None
     ):
+        print("requestJson: \n\n\n\n")
+        print("mock: ")
+        print(self.mock)
+
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        if self.mock is None:
+            return self.__requestEncode(
+                cnx, verb, url, parameters, headers, input, encode
+            )
+        else:
+            return self.requestMock(verb, url, parameters, headers, input, encode)
+
+    def requestMock(self, verb, url, parameters, headers=None, input=None, encode=None):
+        print("\n\n************************Mock\n\n")
+        d = self.mock[verb][url]
+        # if input is not None:
+        #     d = d[str(input)]
+        # if parameters is not None:
+        #     d = d[str(parameters)]
+        status = d["status"]
+        output = d["json"]
+        responseHeaders = ""
+        return status, responseHeaders, output
 
     def requestMultipart(
         self, verb, url, parameters=None, headers=None, input=None, cnx=None
