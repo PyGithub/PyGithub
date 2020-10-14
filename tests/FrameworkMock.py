@@ -58,8 +58,8 @@ class TestCase(Framework.BasicTestCase):
 
         # Set up frame debugging
         # github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
-        github.Requester.Requester.setDebugFlag(True)
-        github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+        # github.Requester.Requester.setDebugFlag(True)
+        # github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
         jstr = {
             "login": "octocat",
             "id": 1,

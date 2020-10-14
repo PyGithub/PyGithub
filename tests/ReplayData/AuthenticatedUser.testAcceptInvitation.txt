@@ -3,9 +3,9 @@ PATCH
 api.github.com
 None
 /user/repository_invitations/4294886
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 {}
-404
-[('Date', 'Wed, 14 Oct 2020 19:24:39 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '404 Not Found'), ('X-OAuth-Scopes', 'repo, user'), ('X-Accepted-OAuth-Scopes', 'repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4997'), ('X-RateLimit-Reset', '1602707023'), ('X-RateLimit-Used', '3'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '8736:FB11:911C6A9:A878FE1:5F875077')]
-{"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/repos#accept-a-repository-invitation"}
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4981'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'D039:11DAA:17FC875:24A1090:59635F0C'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.072659'), ('x-xss-protection', '1; mode=block'), ('x-served-by', '7f48e2f7761567e923121f17538d7a6d'), ('date', 'Mon, 10 Jul 2017 11:03:40 GMT'), ('access-control-allow-origin', '*'), ('x-frame-options', 'deny'), ('x-ratelimit-reset', '1499685825')]
+
 

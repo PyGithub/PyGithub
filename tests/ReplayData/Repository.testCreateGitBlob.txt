@@ -2,10 +2,10 @@ https
 POST
 api.github.com
 None
-/repos/ahmad88me/PyGithub/git/blobs
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+/repos/jacquev6/PyGithub/git/blobs
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 {"content": "Blob created by PyGithub", "encoding": "latin1"}
 201
-[('Date', 'Mon, 12 Oct 2020 14:59:26 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '157'), ('Server', 'GitHub.com'), ('Status', '201 Created'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', '"f1f7c6f39a9c3776f0aff8640debbd9110b59ca802170fc7bdb2a460ca76ebdd"'), ('X-OAuth-Scopes', 'repo, user'), ('X-Accepted-OAuth-Scopes', ''), ('Location', 'https://api.github.com/repos/ahmad88me/PyGithub/git/blobs/5dd930f591cd5188e9ea7200e308ad355182a1d8'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4929'), ('X-RateLimit-Reset', '1602517371'), ('X-RateLimit-Used', '71'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'C812:7C67:64CC18C:7631CBB:5F846F4E')]
-{"sha":"5dd930f591cd5188e9ea7200e308ad355182a1d8","url":"https://api.github.com/repos/ahmad88me/PyGithub/git/blobs/5dd930f591cd5188e9ea7200e308ad355182a1d8"}
+[('status', '201 Created'), ('x-ratelimit-remaining', '4997'), ('content-length', '156'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f5cc2fa3ba4de95ac0eb8c2ca47350c0"'), ('date', 'Fri, 11 May 2012 11:43:09 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/jacquev6/PyGithub/git/blobs/5dd930f591cd5188e9ea7200e308ad355182a1d8')]
+{"url":"https://api.github.com/repos/jacquev6/PyGithub/git/blobs/5dd930f591cd5188e9ea7200e308ad355182a1d8","sha":"5dd930f591cd5188e9ea7200e308ad355182a1d8"}
 
