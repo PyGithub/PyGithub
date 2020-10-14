@@ -57,7 +57,7 @@ class TestCase(Framework.BasicTestCase):
         super().setUp()
 
         # Set up frame debugging
-        # github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
+        github.GithubObject.GithubObject.setCheckAfterInitFlag(False)
         # github.Requester.Requester.setDebugFlag(True)
         # github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
         jstr = {
