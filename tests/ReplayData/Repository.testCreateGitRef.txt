@@ -2,10 +2,10 @@ https
 POST
 api.github.com
 None
-/repos/jacquev6/PyGithub/git/refs
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
-{"sha": "4303c5b90e2216d927155e9609436ccb8984c495", "ref": "refs/heads/BranchCreatedByPyGithub"}
+/repos/ahmad88me/PyGithub/git/refs
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"ref": "refs/heads/BranchCreatedByPyGithub", "sha": "4303c5b90e2216d927155e9609436ccb8984c495"}
 201
-[('status', '201 Created'), ('x-ratelimit-remaining', '4987'), ('content-length', '322'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"0302e489fc6bd534afa44cdbec1227e7"'), ('date', 'Thu, 10 May 2012 18:49:19 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub')]
-{"object":{"type":"commit","sha":"4303c5b90e2216d927155e9609436ccb8984c495","url":"https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495"},"ref":"refs/heads/BranchCreatedByPyGithub","url":"https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub"}
+[('Date', 'Mon, 12 Oct 2020 15:00:44 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '405'), ('Server', 'GitHub.com'), ('Status', '201 Created'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', '"c0aab65c8542b96134c14a8eb975aad33f4bfb6aa2738963bb1ccc9146c2b9c6"'), ('X-OAuth-Scopes', 'repo, user'), ('X-Accepted-OAuth-Scopes', 'repo'), ('Location', 'https://api.github.com/repos/ahmad88me/PyGithub/git/refs/heads/BranchCreatedByPyGithub'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4912'), ('X-RateLimit-Reset', '1602517371'), ('X-RateLimit-Used', '88'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'E642:DBD9:67B32C6:79331DC:5F846F9B')]
+{"ref":"refs/heads/BranchCreatedByPyGithub","node_id":"MDM6UmVmMjg4MTE3NzAyOnJlZnMvaGVhZHMvQnJhbmNoQ3JlYXRlZEJ5UHlHaXRodWI=","url":"https://api.github.com/repos/ahmad88me/PyGithub/git/refs/heads/BranchCreatedByPyGithub","object":{"sha":"4303c5b90e2216d927155e9609436ccb8984c495","type":"commit","url":"https://api.github.com/repos/ahmad88me/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495"}}
 

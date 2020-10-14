@@ -54,14 +54,11 @@ class RepositoryMock(FrameworkMock.TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user()
-        print("\n---------------------\n----------------------------\n")
-        self.repo = self.user.get_repo("demo")
+        self.repo = self.user.get_repo("PyGithub")
 
     def testAttributes(self):
         self.assertTrue(True)
-        # self.assertEqual(
-        #     self.repo.clone_url, "https://github.com/ahmad88me/demo.git"
-        # )
+        self.assertEqual(self.repo.clone_url, "https://github.com/octocat/PyGithub.git")
         # self.assertEqual(1,2)
         # self.assertEqual(
         #     self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47)

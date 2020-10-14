@@ -57,73 +57,66 @@ class TestCase(Framework.BasicTestCase):
         super().setUp()
 
         # Set up frame debugging
-        github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
+        # github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-        # j = {
-        #         'login': 'ahmad88me',
-        #         'email': 'ahmad88me@gmail.com',
-        #         'name': 'Ahmad Alobaid',
-        #         'avatar_url': 'http://runzbuzz.com',
-        #         'id': 13,
-        #         "type": "User",
-        # }
-        jstr = """{
-          "login": "octocat",
-          "id": 1,
-          "node_id": "MDQ6VXNlcjE=",
-          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-          "gravatar_id": "",
-          "url": "https://api.github.com/users/octocat",
-          "html_url": "https://github.com/octocat",
-          "followers_url": "https://api.github.com/users/octocat/followers",
-          "following_url": "https://api.github.com/users/octocat/following{/other_user}",
-          "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
-          "organizations_url": "https://api.github.com/users/octocat/orgs",
-          "repos_url": "https://api.github.com/users/octocat/repos",
-          "events_url": "https://api.github.com/users/octocat/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/octocat/received_events",
-          "type": "User",
-          "site_admin": false,
-          "name": "monalisa octocat",
-          "company": "GitHub",
-          "blog": "https://github.com/blog",
-          "location": "San Francisco",
-          "email": "octocat@github.com",
-          "hireable": false,
-          "bio": "There once was...",
-          "twitter_username": "monatheoctocat",
-          "public_repos": 2,
-          "public_gists": 1,
-          "followers": 20,
-          "following": 0,
-          "created_at": "2008-01-14T04:33:35Z",
-          "updated_at": "2008-01-14T04:33:35Z"
-        }"""
+        jstr = {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": False,
+            "name": "monalisa octocat",
+            "company": "GitHub",
+            "blog": "https://github.com/blog",
+            "location": "San Francisco",
+            "email": "octocat@github.com",
+            "hireable": False,
+            "bio": "There once was...",
+            "twitter_username": "monatheoctocat",
+            "public_repos": 2,
+            "public_gists": 1,
+            "followers": 20,
+            "following": 0,
+            "created_at": "2008-01-14T04:33:35Z",
+            "updated_at": "2008-01-14T04:33:35Z",
+        }
         mock_dict = {
-            "GET": {
-                "/repos/ahmad88me/demo": {
+            "/repos/octocat/PyGithub": {
+                "GET": {
                     "status": 200,
-                    "json": {"https://github.com/ahmad88me/demo.git"},
-                },
-                "/user": {
+                    "body": {
+                        "repository": "https://github.com/octocat/PyGithub.git",
+                        "clone_url": "https://github.com/octocat/PyGithub.git",
+                    },
+                }
+            },
+            "/user": {
+                "GET": {
                     "status": 200,
-                    "json": jstr,
-                    # "json": j,
-                },
-            }
+                    "body": jstr,
+                }
+            },
         }
 
         if self.tokenAuthMode:
-            # self.g = github.Github(self.oauth_token, retry=self.retry)
             self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
-            print("Working with tokenAuth****************************\n\n\n\n")
-
+        elif self.jwtAuthMode:
+            self.g = github.Github(jwt=self.jwt, retry=self.retry, mock=mock_dict)
         else:
-            print("ERROR****************************\n\n\n\n")
-        # elif self.jwtAuthMode:
-        #     self.g = github.Github(jwt=self.jwt, retry=self.retry, mock=mock_dict)
-        # else:
-        #     self.g = github.Github(self.login, self.password, retry=self.retry, mock=mock_dict)
+            self.g = github.Github(
+                self.login, self.password, retry=self.retry, mock=mock_dict
+            )

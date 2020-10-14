@@ -706,7 +706,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param bio: string
         :rtype: None
         """
-        print("\n************\nedit: \n" + str(name))
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
         assert email is github.GithubObject.NotSet or isinstance(email, str), email
         assert blog is github.GithubObject.NotSet or isinstance(blog, str), blog
@@ -1018,17 +1017,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
-        print(
-            "**************************\nAuthUser - get_repo\nlogin: " + str(self.login)
-        )
-        # print(self.login)
-        print("name: " + str(name))
-        # print(name)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", "/repos/" + self.login + "/" + name
         )
-        print("***********\nAuthUser - get_repo\nget repo data: " + str(data))
-        print("headers: " + str(headers))
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
         )
@@ -1343,7 +1334,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
-        print("******\nAuthUser\n_initAttributes")
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
         self._blog = github.GithubObject.NotSet
@@ -1383,9 +1373,6 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-
-        print("****************\nAuth-User\nuse Attributes: " + str(attributes))
-
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch

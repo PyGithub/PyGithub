@@ -314,7 +314,6 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
         self.mock = mock
-        print("Requester mock: " + str(mock))
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -340,16 +339,7 @@ class Requester:
         )
 
     def __check(self, status, responseHeaders, output):
-        print("**********\n__check")
-        print("output: ")
-        print(output)
-        print(type(output))
-        print("responseHeaders: ")
-        print(responseHeaders)
         output = self.__structuredFromJson(output)
-        print("output structuredFromJson: ")
-        print(output)
-        print(type(output))
         if status >= 400:
             raise self.__createException(status, responseHeaders, output)
         return responseHeaders, output
@@ -416,14 +406,6 @@ class Requester:
     def requestJson(
         self, verb, url, parameters=None, headers=None, input=None, cnx=None
     ):
-        print("*******************************\nrequestJson:")
-        print("verb: " + verb)
-        print("url: " + url)
-        print("parameters: " + str(parameters))
-        print("input: " + str(input))
-        print("headers: " + str(headers))
-        # print(self.mock)
-
         def encode(input):
             return "application/json", json.dumps(input)
 
@@ -435,19 +417,30 @@ class Requester:
             return self.requestMock(verb, url, parameters, headers, input, encode)
 
     def requestMock(self, verb, url, parameters, headers=None, input=None, encode=None):
-        print("\n\n************************Mock")
-        print("verb: " + verb)
-        print("url: " + url)
-        print("parameters: " + str(parameters))
-        print("input: " + str(input))
-        print("headers: " + str(headers))
-        d = self.mock[verb][url]
-        # if input is not None:
-        #     d = d[str(input)]
-        # if parameters is not None:
-        #     d = d[str(parameters)]
+        if url in self.mock:
+            if verb in self.mock[url]:
+                d = self.mock[url][verb]
+            else:
+                raise GithubException.MockException(
+                    "The method <%s> is not found in the mock" % verb
+                )
+        else:
+            raise GithubException.MockException(
+                "The URL <%s> is not found in the mock" % url
+            )
+        if "status" not in d:
+            raise GithubException.MockException(
+                "status is not present in the mock for the url %s" % url
+            )
         status = d["status"]
-        output = d["json"]
+        if "body" not in d:
+            raise GithubException.MockException(
+                "body is not present in the mock for the url %s" % url
+            )
+        output = str(d["body"])
+        output = (
+            output.replace("True", "true").replace("False", "false").replace("'", '"')
+        )
         responseHeaders = ""
         return status, responseHeaders, output
 

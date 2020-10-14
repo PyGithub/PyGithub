@@ -123,8 +123,6 @@ class Github(object):
         :param retry: int or urllib3.util.retry.Retry object
         :param mock: dict
         """
-        print("Start - Mock: ")
-        print(mock)
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
         assert password is None or isinstance(password, str), password
         assert jwt is None or isinstance(jwt, str), jwt
@@ -144,7 +142,7 @@ class Github(object):
                 FutureWarning,
                 stacklevel=2,
             )
-        assert mock is None or isinstance(mock, dict)
+        assert mock is None or isinstance(mock, dict), mock
         self.__requester = Requester(
             login_or_token,
             password,
@@ -159,8 +157,6 @@ class Github(object):
             retry,
             mock,
         )
-        print("In the end of Main Class GitHub. Mock: ")
-        print(mock)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
@@ -271,7 +267,6 @@ class Github(object):
         """
         assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
-            print("*************\nmain class\n NotSet")
             return AuthenticatedUser.AuthenticatedUser(
                 self.__requester, {}, {"url": "/user"}, completed=False
             )
