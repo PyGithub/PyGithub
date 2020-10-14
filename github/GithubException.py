@@ -137,9 +137,5 @@ class MockException(Exception):
     Exception raised when there is a missing or invalid data in the mock values
     """
 
-    def __init__(self, err_msg, *args, **kwargs):
-        self.err_msg = err_msg
-        super().__init__(*args, **kwargs)
-
     def __str__(self):
         return self.err_msg
