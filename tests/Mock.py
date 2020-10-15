@@ -88,6 +88,22 @@ class RepositoryMock(FrameworkMock.TestCase):
             },
         }
 
+        mock_dict_invalid_url = {
+            "/abc": {
+                "GET": {
+                    "status": 200,
+                }
+            },
+        }
+
+        mock_dict_invalid_method = {
+            "/user": {
+                "ABC": {
+                    "status": 200,
+                }
+            },
+        }
+
         if self.tokenAuthMode:
             self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
         elif self.jwtAuthMode:
@@ -116,6 +132,34 @@ class RepositoryMock(FrameworkMock.TestCase):
             self.g.get_user().name
 
         mock_dict = mock_dict_no_body
+
+        if self.tokenAuthMode:
+            self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
+        elif self.jwtAuthMode:
+            self.g = github.Github(jwt=self.jwt, retry=self.retry, mock=mock_dict)
+        else:
+            self.g = github.Github(
+                self.login, self.password, retry=self.retry, mock=mock_dict
+            )
+
+        with self.assertRaises(github.MockException):
+            self.g.get_user().name
+
+        mock_dict = mock_dict_invalid_url
+
+        if self.tokenAuthMode:
+            self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
+        elif self.jwtAuthMode:
+            self.g = github.Github(jwt=self.jwt, retry=self.retry, mock=mock_dict)
+        else:
+            self.g = github.Github(
+                self.login, self.password, retry=self.retry, mock=mock_dict
+            )
+
+        with self.assertRaises(github.MockException):
+            self.g.get_user().name
+
+        mock_dict = mock_dict_invalid_method
 
         if self.tokenAuthMode:
             self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
