@@ -439,7 +439,10 @@ class Requester:
             )
         output = str(d["body"])
         output = (
-            output.replace("True", "true").replace("False", "false").replace("'", '"')
+            output.replace("True", "true")
+            .replace("False", "false")
+            .replace("None", "null")
+            .replace("'", '"')
         )
         responseHeaders = ""
         return status, responseHeaders, output

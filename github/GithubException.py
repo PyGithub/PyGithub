@@ -136,6 +136,3 @@ class MockException(Exception):
     """
     Exception raised when there is a missing or invalid data in the mock values
     """
-
-    def __str__(self):
-        return self.err_msg

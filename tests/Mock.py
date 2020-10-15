@@ -56,50 +56,26 @@ class RepositoryMock(FrameworkMock.TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user()
-        self.repo = self.user.get_repo("PyGithub")
+        self.repo = self.user.get_repo("Hello-World")
 
     def testException(self):
         github.GithubObject.GithubObject.setCheckAfterInitFlag(False)
         # github.Requester.Requester.setDebugFlag(True)
         # github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-        jstr = {
-            "login": "octocat",
-            "id": 1,
-            "node_id": "MDQ6VXNlcjE=",
-            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-            "gravatar_id": "",
-            "url": "https://api.github.com/users/octocat",
-            "html_url": "https://github.com/octocat",
-            "followers_url": "https://api.github.com/users/octocat/followers",
-            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
-            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
-            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
-            "organizations_url": "https://api.github.com/users/octocat/orgs",
-            "repos_url": "https://api.github.com/users/octocat/repos",
-            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
-            "received_events_url": "https://api.github.com/users/octocat/received_events",
-            "type": "User",
-            "site_admin": False,
-            "name": "monalisa octocat",
-            "company": "GitHub",
-            "blog": "https://github.com/blog",
-            "location": "San Francisco",
-            "email": "octocat@github.com",
-            "hireable": False,
-            "bio": "There once was...",
-            "twitter_username": "monatheoctocat",
-            "public_repos": 2,
-            "public_gists": 1,
-            "followers": 20,
-            "following": 0,
-            "created_at": "2008-01-14T04:33:35Z",
-            "updated_at": "2008-01-14T04:33:35Z",
+
+        mock_dict = {
+            "/user": {
+                "GET": {
+                    "body": self.user_dict,
+                    "status": 200,
+                }
+            },
         }
+
         mock_dict_no_status = {
             "/user": {
                 "GET": {
-                    "body": jstr,
+                    "body": self.user_dict,
                 }
             },
         }
@@ -111,6 +87,18 @@ class RepositoryMock(FrameworkMock.TestCase):
                 }
             },
         }
+
+        if self.tokenAuthMode:
+            self.g = github.Github(self.oauth_token, retry=self.retry, mock=mock_dict)
+        elif self.jwtAuthMode:
+            self.g = github.Github(jwt=self.jwt, retry=self.retry, mock=mock_dict)
+        else:
+            self.g = github.Github(
+                self.login, self.password, retry=self.retry, mock=mock_dict
+            )
+
+        self.assertEqual(self.user.name, self.g.get_user().name)
+
         mock_dict = mock_dict_no_status
 
         if self.tokenAuthMode:
@@ -121,6 +109,11 @@ class RepositoryMock(FrameworkMock.TestCase):
             self.g = github.Github(
                 self.login, self.password, retry=self.retry, mock=mock_dict
             )
+
+        # self.g.get_user().name
+
+        with self.assertRaises(github.MockException):
+            self.g.get_user().name
 
         mock_dict = mock_dict_no_body
 
@@ -133,9 +126,14 @@ class RepositoryMock(FrameworkMock.TestCase):
                 self.login, self.password, retry=self.retry, mock=mock_dict
             )
 
+        with self.assertRaises(github.MockException):
+            self.g.get_user().name
+
     def testAttributes(self):
         self.assertTrue(True)
-        self.assertEqual(self.repo.clone_url, "https://github.com/octocat/PyGithub.git")
+        self.assertEqual(
+            self.repo.clone_url, "https://github.com/octocat/Hello-World.git"
+        )
         # self.assertEqual(1,2)
         # self.assertEqual(
         #     self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47)
