@@ -57,14 +57,14 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
     @property
     def status(self):
         """
-        :type: status
+        :type: str
         """
         return self._status.value
 
     @property
     def busy(self):
         """
-        :type: Bool
+        :type: bool
         """
         return self._busy.value
 
