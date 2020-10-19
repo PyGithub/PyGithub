@@ -69,6 +69,30 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
+    @property
+    def required_linear_history(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._required_linear_history)
+        return self._required_linear_history.value
+
+    @property
+    def allow_force_pushes(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_force_pushes)
+        return self._allow_force_pushes.value
+
+    @property
+    def allow_deletions(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_deletions)
+        return self._allow_deletions.value
+
     def get_user_push_restrictions(self):
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -99,6 +123,9 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._required_pull_request_reviews = github.GithubObject.NotSet
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
+        self._required_linear_history = github.GithubObject.NotSet
+        self._allow_force_pushes = github.GithubObject.NotSet
+        self._allow_deletions = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "url" in attributes:  # pragma no branch
@@ -111,6 +138,18 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "enforce_admins" in attributes:  # pragma no branch
             self._enforce_admins = self._makeBoolAttribute(
                 attributes["enforce_admins"]["enabled"]
+            )
+        if "required_linear_history" in attributes:  # pragma no branch
+            self._required_linear_history = self._makeBoolAttribute(
+                attributes["required_linear_history"]["enabled"]
+            )
+        if "allow_force_pushes" in attributes:  # pragma no branch
+            self._allow_force_pushes = self._makeBoolAttribute(
+                attributes["allow_force_pushes"]["enabled"]
+            )
+        if "allow_deletions" in attributes:  # pragma no branch
+            self._allow_deletions = self._makeBoolAttribute(
+                attributes["allow_deletions"]["enabled"]
             )
         if "required_pull_request_reviews" in attributes:  # pragma no branch
             self._required_pull_request_reviews = self._makeClassAttribute(
