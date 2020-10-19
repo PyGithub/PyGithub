@@ -93,6 +93,7 @@ from base64 import b64encode
 from deprecated import deprecated
 
 import github.Branch
+import github.CheckRun
 import github.Clones
 import github.Commit
 import github.CommitComment
@@ -3366,6 +3367,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(
             self._requester, resp_headers, data, completed=True
         )
+
+    def get_check_run(self, check_run_id):
+        """
+        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id https://docs.github.com/en/rest/reference/checks#get-a-check-run`
+        :param check_run_id: int
+        :rtype: :class:`github.CheckRun.CheckRun`
+        """
+        assert isinstance(check_run_id, int), check_run_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/check-runs/" + str(check_run_id)
+        )
+        return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet
