@@ -22,8 +22,12 @@
 #                                                                              #
 ################################################################################
 
+import datetime
+
+import github.CheckRunAnnotation
 import github.GithubApp
 import github.GithubObject
+import github.PaginatedList
 import github.PullRequest
 
 
@@ -165,6 +169,99 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    def get_annotations(self):
+        """
+        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRunAnnotation.CheckRunAnnotation`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.CheckRunAnnotation.CheckRunAnnotation,
+            self._requester,
+            self.url + "/annotations",
+            None,
+            headers={"Accept": "application/vnd.github.v3+json"},
+        )
+
+    def edit(
+        self,
+        name=github.GithubObject.NotSet,
+        head_sha=github.GithubObject.NotSet,
+        details_url=github.GithubObject.NotSet,
+        external_id=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        started_at=github.GithubObject.NotSet,
+        conclusion=github.GithubObject.NotSet,
+        completed_at=github.GithubObject.NotSet,
+        output=github.GithubObject.NotSet,
+        actions=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `PATCH /repos/:owner/:repo/check-runs/:check_run_id <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`
+        :param name: string
+        :param head_sha: string
+        :param details_url: string
+        :param external_id: string
+        :param status: string
+        :param started_at: datetime.datetime
+        :param conclusion: string
+        :param completed_at: datetime.datetime
+        :param output: dict
+        :param actions: list of dict
+        """
+        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+        assert head_sha is github.GithubObject.NotSet or isinstance(
+            head_sha, str
+        ), head_sha
+        assert details_url is github.GithubObject.NotSet or isinstance(
+            details_url, str
+        ), details_url
+        assert external_id is github.GithubObject.NotSet or isinstance(
+            external_id, str
+        ), external_id
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert started_at is github.GithubObject.NotSet or isinstance(
+            started_at, datetime.datetime
+        ), started_at
+        assert conclusion is github.GithubObject.NotSet or isinstance(
+            conclusion, str
+        ), conclusion
+        assert completed_at is github.GithubObject.NotSet or isinstance(
+            completed_at, datetime.datetime
+        ), completed_at
+        assert output is github.GithubObject.NotSet or isinstance(output, dict), output
+        assert actions is github.GithubObject.NotSet or all(
+            isinstance(element, dict) for element in actions
+        ), actions
+
+        post_parameters = dict()
+        if name is not github.GithubObject.NotSet:
+            post_parameters["name"] = name
+        if head_sha is not github.GithubObject.NotSet:
+            post_parameters["head_sha"] = head_sha
+        if details_url is not github.GithubObject.NotSet:
+            post_parameters["details_url"] = details_url
+        if external_id is not github.GithubObject.NotSet:
+            post_parameters["external_id"] = external_id
+        if status is not github.GithubObject.NotSet:
+            post_parameters["status"] = status
+        if started_at is not github.GithubObject.NotSet:
+            post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if completed_at is not github.GithubObject.NotSet:
+            post_parameters["completed_at"] = completed_at.strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            )
+        if conclusion is not github.GithubObject.NotSet:
+            post_parameters["conclusion"] = conclusion
+        if output is not github.GithubObject.NotSet:
+            post_parameters["output"] = output
+        if actions is not github.GithubObject.NotSet:
+            post_parameters["actions"] = actions
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", self.url, input=post_parameters
+        )
+        self._useAttributes(data)
 
     def _initAttributes(self):
         self._app = github.GithubObject.NotSet
