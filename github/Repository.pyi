@@ -98,6 +98,19 @@ class Repository(CompletableGithubObject):
     def contents_url(self) -> str: ...
     @property
     def contributors_url(self) -> str: ...
+    def create_check_run(
+        self,
+        name: str = ...,
+        head_sha: str = ...,
+        details_url: Union[_NotSetType, str] = ...,
+        external_id: Union[_NotSetType, str] = ...,
+        status: Union[_NotSetType, str] = ...,
+        started_at: Union[_NotSetType, datetime] = ...,
+        conclusion: Union[_NotSetType, str] = ...,
+        completed_at: Union[_NotSetType, datetime] = ...,
+        output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = ...,
+        actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
+    ) -> CheckRun: ...
     def create_file(
         self,
         path: str,

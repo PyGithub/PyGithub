@@ -3368,6 +3368,85 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, resp_headers, data, completed=True
         )
 
+    def create_check_run(
+        self,
+        name,
+        head_sha,
+        details_url=github.GithubObject.NotSet,
+        external_id=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        started_at=github.GithubObject.NotSet,
+        conclusion=github.GithubObject.NotSet,
+        completed_at=github.GithubObject.NotSet,
+        output=github.GithubObject.NotSet,
+        actions=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/:owner/:repo/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`
+        :param name: string
+        :param head_sha: string
+        :param details_url: string
+        :param external_id: string
+        :param status: string
+        :param started_at: datetime.datetime
+        :param conclusion: string
+        :param completed_at: datetime.datetime
+        :param output: dict
+        :param actions: list of dict
+        """
+        assert isinstance(name, str), name
+        assert isinstance(head_sha, str), head_sha
+        assert details_url is github.GithubObject.NotSet or isinstance(
+            details_url, str
+        ), details_url
+        assert external_id is github.GithubObject.NotSet or isinstance(
+            external_id, str
+        ), external_id
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert started_at is github.GithubObject.NotSet or isinstance(
+            started_at, datetime.datetime
+        ), started_at
+        assert conclusion is github.GithubObject.NotSet or isinstance(
+            conclusion, str
+        ), conclusion
+        assert completed_at is github.GithubObject.NotSet or isinstance(
+            completed_at, datetime.datetime
+        ), completed_at
+        assert output is github.GithubObject.NotSet or isinstance(output, dict), output
+        assert actions is github.GithubObject.NotSet or all(
+            isinstance(element, dict) for element in actions
+        ), actions
+
+        post_parameters = {
+            "name": name,
+            "head_sha": head_sha,
+        }
+        if details_url is not github.GithubObject.NotSet:
+            post_parameters["details_url"] = details_url
+        if external_id is not github.GithubObject.NotSet:
+            post_parameters["external_id"] = external_id
+        if status is not github.GithubObject.NotSet:
+            post_parameters["status"] = status
+        if started_at is not github.GithubObject.NotSet:
+            post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if completed_at is not github.GithubObject.NotSet:
+            post_parameters["completed_at"] = completed_at.strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            )
+        if conclusion is not github.GithubObject.NotSet:
+            post_parameters["conclusion"] = conclusion
+        if output is not github.GithubObject.NotSet:
+            post_parameters["output"] = output
+        if actions is not github.GithubObject.NotSet:
+            post_parameters["actions"] = actions
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/check-runs",
+            input=post_parameters,
+        )
+        return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
+
     def get_check_run(self, check_run_id):
         """
         :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id https://docs.github.com/en/rest/reference/checks#get-a-check-run`
