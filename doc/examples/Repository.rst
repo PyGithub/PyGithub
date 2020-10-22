@@ -107,6 +107,20 @@ Get a specific content file
     ...
     ContentFile(path="README.md")
 
+Read a specific content file
+---------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> contents = repo.get_contents("README.md")
+    >>> text = str(contents.decoded_content, 'utf-8')
+    >>> print(text)
+    # PyGitHub
+    
+    [![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
+    ...
+
 Create a new file in the repository
 -----------------------------------
 
