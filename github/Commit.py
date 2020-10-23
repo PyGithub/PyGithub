@@ -266,7 +266,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         filter=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/:owner/:repo/commits/:sha/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`
+        :calls: `GET /repos/:owner/:repo/commits/:sha/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
         :param check_name: string
         :param status: string
         :param filter: string

@@ -3382,7 +3382,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         actions=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/:owner/:repo/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`
+        :calls: `POST /repos/:owner/:repo/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`_
         :param name: string
         :param head_sha: string
         :param details_url: string
@@ -3449,7 +3449,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_check_run(self, check_run_id):
         """
-        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id https://docs.github.com/en/rest/reference/checks#get-a-check-run`
+        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id <https://docs.github.com/en/rest/reference/checks#get-a-check-run>`_
         :param check_run_id: int
         :rtype: :class:`github.CheckRun.CheckRun`
         """

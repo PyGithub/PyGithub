@@ -173,7 +173,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
 
     def get_annotations(self):
         """
-        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`
+        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRunAnnotation.CheckRunAnnotation`
         """
         return github.PaginatedList.PaginatedList(
@@ -198,7 +198,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         actions=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repos/:owner/:repo/check-runs/:check_run_id <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`
+        :calls: `PATCH /repos/:owner/:repo/check-runs/:check_run_id <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`_
         :param name: string
         :param head_sha: string
         :param details_url: string
