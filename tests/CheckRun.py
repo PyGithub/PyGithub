@@ -62,16 +62,7 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.id, 1039891953)
         self.assertEqual(self.check_run.name, "test (Python 3.8)")
         self.assertEqual(self.check_run.node_id, "MDg6Q2hlY2tSdW4xMDM5ODkxOTUz")
-        self.assertDictEqual(
-            self.check_run.output,
-            {
-                "title": None,
-                "summary": None,
-                "text": None,
-                "annotations_count": 0,
-                "annotations_url": "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891953/annotations",
-            },
-        )
+        self.assertEqual(self.check_run.output.annotations_count, 0)
         self.assertEqual(len(self.check_run.pull_requests), 0)
         self.assertEqual(
             self.check_run.started_at, datetime.datetime(2020, 8, 28, 4, 20, 27)
@@ -85,18 +76,21 @@ class CheckRun(Framework.TestCase):
             repr(self.check_run), 'CheckRun(id=1039891953, conclusion="success")'
         )
 
-    def testCheckRunOutputDictionary(self):
+    def testCheckRunOutputAttributes(self):
         check_run_output = self.repo.get_check_run(1039891917).output
-        self.assertEqual(check_run_output["title"], "test (Python 3.6)")
+        self.assertEqual(check_run_output.title, "test (Python 3.6)")
         self.assertEqual(
-            check_run_output["summary"],
+            check_run_output.summary,
             "There are 1 failures, 0 warnings, and 0 notices.",
         )
-        self.assertIsNone(check_run_output["text"])
-        self.assertEqual(check_run_output["annotations_count"], 1)
+        self.assertIsNone(check_run_output.text)
+        self.assertEqual(check_run_output.annotations_count, 1)
         self.assertEqual(
-            check_run_output["annotations_url"],
+            check_run_output.annotations_url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891917/annotations",
+        )
+        self.assertEqual(
+            repr(check_run_output), 'CheckRunOutput(title="test (Python 3.6)")'
         )
 
     def testGetCheckRunsForRef(self):
@@ -153,10 +147,10 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.status, "in_progress")
         self.assertEqual(check_run.external_id, "50")
         self.assertEqual(check_run.started_at, datetime.datetime(2020, 9, 4, 1, 14, 52))
-        self.assertEqual(check_run.output["title"], "PyGithub Check Run Test")
-        self.assertEqual(check_run.output["summary"], "Test summary")
-        self.assertIsNone(check_run.output["text"])
-        self.assertEqual(check_run.output["annotations_count"], 0)
+        self.assertEqual(check_run.output.title, "PyGithub Check Run Test")
+        self.assertEqual(check_run.output.summary, "Test summary")
+        self.assertIsNone(check_run.output.text)
+        self.assertEqual(check_run.output.annotations_count, 0)
         # We don't want to keep this hanging
         check_run.edit(conclusion="success")
         self.assertEqual(check_run.conclusion, "success")
@@ -219,11 +213,18 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(
             check_run.completed_at, datetime.datetime(2020, 10, 20, 11, 30, 50)
         ),
-        self.assertEqual(check_run.output["annotations_count"], 2)
+        self.assertEqual(check_run.output.annotations_count, 2)
 
     def testUpdateCheckRunSuccess(self):
         # This is a different check run created for this test
-        check_run = self.testrepo.get_check_run(1282225678)
+        check_run = self.testrepo.create_check_run(
+            name="edit_check_run",
+            head_sha="0283d46537193f1fed7d46859f15c5304b9836f9",
+            status="in_progress",
+            external_id="100",
+            started_at=datetime.datetime(2020, 10, 20, 14, 24, 31),
+            output={"title": "Check run for testing edit method", "summary": ""},
+        )
         self.assertEqual(check_run.name, "edit_check_run")
         self.assertEqual(check_run.status, "in_progress")
         check_run.edit(
@@ -237,16 +238,23 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.name, "edit_check_run")
         self.assertEqual(check_run.status, "completed")
         self.assertEqual(check_run.conclusion, "success")
-        self.assertEqual(check_run.output["title"], "Check run for testing edit method")
+        self.assertEqual(check_run.output.title, "Check run for testing edit method")
         self.assertEqual(
-            check_run.output["summary"],
+            check_run.output.summary,
             "This is the summary of editing check run as completed.",
         )
-        self.assertEqual(check_run.output["annotations_count"], 0)
+        self.assertEqual(check_run.output.annotations_count, 0)
 
     def testUpdateCheckRunFailure(self):
         # This is a different check run created for this test
-        check_run = self.testrepo.get_check_run(1282225765)
+        check_run = self.testrepo.create_check_run(
+            name="fail_check_run",
+            head_sha="0283d46537193f1fed7d46859f15c5304b9836f9",
+            status="in_progress",
+            external_id="101",
+            started_at=datetime.datetime(2020, 10, 20, 10, 14, 51),
+            output={"title": "Check run for testing failure", "summary": ""},
+        )
         self.assertEqual(check_run.name, "fail_check_run")
         self.assertEqual(check_run.status, "in_progress")
         check_run.edit(
@@ -279,7 +287,7 @@ class CheckRun(Framework.TestCase):
         )
         self.assertEqual(check_run.status, "completed")
         self.assertEqual(check_run.conclusion, "failure")
-        self.assertEqual(check_run.output["annotations_count"], 1)
+        self.assertEqual(check_run.output.annotations_count, 1)
 
     def testUpdateCheckRunAll(self):
         check_run = self.testrepo.get_check_run(1279259090)
@@ -325,7 +333,6 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(repr(annotation), 'CheckRunAnnotation(title="Spell Checker")')
 
     def testListCheckRunAnnotations(self):
-        # This is a different check run created for this test
         check_run = self.testrepo.get_check_run(1280914700)
         self.assertEqual(check_run.name, "annotations")
         self.assertEqual(check_run.status, "completed")
