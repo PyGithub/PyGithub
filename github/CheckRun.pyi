@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Union
 
 from github.CheckRunAnnotation import CheckRunAnnotation
+from github.CheckRunOutput import CheckRunOutput
 from github.GithubApp import GithubApp
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
@@ -22,7 +23,9 @@ class CheckRun(CompletableGithubObject):
         started_at: Union[_NotSetType, datetime] = ...,
         conclusion: Union[_NotSetType, str] = ...,
         completed_at: Union[_NotSetType, datetime] = ...,
-        output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = ...,
+        output: Union[
+            _NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
+        ] = ...,
         actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
     ) -> None: ...
     @property
@@ -48,7 +51,7 @@ class CheckRun(CompletableGithubObject):
     @property
     def node_id(self) -> str: ...
     @property
-    def output(self) -> Dict[str, Any]: ...
+    def output(self) -> CheckRunOutput: ...
     @property
     def pull_requests(self) -> List[PullRequest]: ...
     @property

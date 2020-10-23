@@ -25,6 +25,7 @@
 import datetime
 
 import github.CheckRunAnnotation
+import github.CheckRunOutput
 import github.GithubApp
 import github.GithubObject
 import github.PaginatedList
@@ -133,7 +134,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def output(self):
         """
-        :rtype: dict
+        :rtype: :class:`github.CheckRunOutput.CheckRunOutput`
         """
         self._completeIfNotSet(self._output)
         return self._output.value
@@ -309,7 +310,9 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "output" in attributes:  # pragma no branch
-            self._output = self._makeDictAttribute(attributes["output"])
+            self._output = self._makeClassAttribute(
+                github.CheckRunOutput.CheckRunOutput, attributes["output"]
+            )
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
                 github.PullRequest.PullRequest, attributes["pull_requests"]
