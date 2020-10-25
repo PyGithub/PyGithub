@@ -66,6 +66,7 @@
 # Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2020 Yannick Jadoul <yannick.jadoul@belgacom.net>                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -92,6 +93,7 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
+import github.Artifact
 import github.Branch
 import github.Clones
 import github.Commit
@@ -3053,6 +3055,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", self.url + "/actions/runs/" + str(id_)
         )
         return github.WorkflowRun.WorkflowRun(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_artifacts(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/artifacts <https://developer.github.com/v3/actions/artifacts/#list-artifacts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            self.url + "/actions/artifacts",
+            None,
+            list_item="artifacts",
+        )
+
+    def get_artifact(self, id_):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/artifacts/:artifact_id <https://developer.github.com/v3/actions/artifacts/#get-an-artifact>`_
+        :param id_: integer
+        :rtype: :class:`github.Artifact.Artifact`
+        """
+        assert isinstance(id_, int)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/artifacts/" + str(id_)
+        )
+        return github.Artifact.Artifact(
             self._requester, headers, data, completed=True
         )
 
