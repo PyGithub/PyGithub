@@ -1,8 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict, NamedTuple, List
 
+from github.Artifact import Artifact
 from github.GitCommit import GitCommit
 from github.GithubObject import CompletableGithubObject
+from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
 
@@ -61,3 +63,4 @@ class WorkflowRun(CompletableGithubObject):
     def cancel(self) -> bool: ...
     def rerun(self) -> bool: ...
     def timing(self) -> TimingData: ...
+    def get_artifacts(self) -> PaginatedList[Artifact]: ...

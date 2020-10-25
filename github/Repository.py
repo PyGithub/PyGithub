@@ -3081,9 +3081,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url + "/actions/artifacts/" + str(id_)
         )
-        return github.Artifact.Artifact(
-            self._requester, headers, data, completed=True
-        )
+        return github.Artifact.Artifact(self._requester, headers, data, completed=True)
 
     def has_in_assignees(self, assignee):
         """

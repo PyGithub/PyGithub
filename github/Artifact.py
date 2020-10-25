@@ -37,7 +37,7 @@ class Artifact(github.GithubObject.CompletableGithubObject):
     @property
     def id(self):
         """
-        :type: int
+        :type: integer
         """
         self._completeIfNotSet(self._id)
         return self._id.value
@@ -61,7 +61,7 @@ class Artifact(github.GithubObject.CompletableGithubObject):
     @property
     def size_in_bytes(self):
         """
-        :type: int
+        :type: integer
         """
         self._completeIfNotSet(self._size_in_bytes)
         return self._size_in_bytes.value
@@ -138,7 +138,9 @@ class Artifact(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "archive_download_url" in attributes:  # pragma no branch
-            self._archive_download_url = self._makeStringAttribute(attributes["archive_download_url"])
+            self._archive_download_url = self._makeStringAttribute(
+                attributes["archive_download_url"]
+            )
         if "expired" in attributes:  # pragma no branch
             self._expired = self._makeBoolAttribute(attributes["expired"])
         if "created_at" in attributes:  # pragma no branch

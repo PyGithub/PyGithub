@@ -546,7 +546,9 @@ class Requester:
         if status == 302 and "location" in responseHeaders:
             o = urllib.parse.urlparse(responseHeaders["location"])
             if cnx.host == o.netloc:
-                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+                return self.__requestRaw(
+                    original_cnx, verb, o.path, requestHeaders, input
+                )
             else:
                 # potentially insecure so allow only special cases
                 if o.netloc in ["pipelines.actions.githubusercontent.com"]:
