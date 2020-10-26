@@ -302,6 +302,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._patch_url.value
 
     @property
+    def rebaseable(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._rebaseable)
+        return self._rebaseable.value
+
+    @property
     def review_comment_url(self):
         """
         :type: string
@@ -969,6 +977,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
+        self._rebaseable = github.GithubObject.NotSet
         self._review_comment_url = github.GithubObject.NotSet
         self._review_comments = github.GithubObject.NotSet
         self._review_comments_url = github.GithubObject.NotSet
@@ -1068,6 +1077,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._number = self._makeIntAttribute(attributes["number"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+        if "rebaseable" in attributes:  # pragma no branch
+            self._rebaseable = self._makeBoolAttribute(attributes["rebaseable"])
         if "review_comment_url" in attributes:  # pragma no branch
             self._review_comment_url = self._makeStringAttribute(
                 attributes["review_comment_url"]
