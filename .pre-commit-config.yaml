@@ -22,5 +22,5 @@ repos:
       - id: codespell
         exclude: tests/
         args:
-          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan"
+          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
           - --quiet-level=2
