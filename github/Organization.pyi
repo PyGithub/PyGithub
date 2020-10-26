@@ -7,6 +7,7 @@ from github.Hook import Hook
 from github.Issue import Issue
 from github.Label import Label
 from github.Migration import Migration
+from github.Installation import Installation
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Plan import Plan
