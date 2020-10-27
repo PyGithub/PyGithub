@@ -288,7 +288,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param permission: string
         :param privacy: string
-        :param parent_team_id: string
+        :param parent_team_id: int
         :rtype: None
         """
         assert isinstance(name, str), name
