@@ -71,7 +71,7 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
 
     def labels(self):
         """
-        :type: List[Dict]
+        :type: list of dicts
         """
         return self._labels.value
 
