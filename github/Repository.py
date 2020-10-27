@@ -2792,6 +2792,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_self_hosted_runner(self, runner_id):
         """
         :calls: `GET /repos/:owner/:repo/actions/runners/:id <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository`_
+        :param runner_id: int
         :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         """
         assert isinstance(runner_id, int), runner_id
