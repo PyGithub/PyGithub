@@ -27,7 +27,8 @@ import github.GithubObject
 
 class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Self-hosted GitHub Actions Runners
+    This class represents Self-hosted GitHub Actions Runners. The reference can be found at
+    https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
     """
 
     def __repr__(self):
