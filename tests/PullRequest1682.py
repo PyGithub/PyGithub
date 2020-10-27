@@ -28,44 +28,31 @@ from . import Framework
 class PullRequest1682(Framework.TestCase):
     def setUp(self):
         super().setUp()
+        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
 
-    def testActorParamObj(self):
-        repo = self.g.get_repo("PyGithub/PyGithub")
-        user = self.g.get_user("s-t-e-v-e-n-k")
-        runs = repo.get_workflow_runs(actor=user)
-        first_run = runs[0]
-        self.assertEqual(235543673, first_run.id)
+    def test_no_parameters(self):
+        runs = self.repo.get_workflow_runs()
+        self.assertEqual(313400760, runs[0].id)
 
-    def testActorParamObjStr(self):
-        repo = self.g.get_repo("PyGithub/PyGithub")
-        runs = repo.get_workflow_runs(actor="s-t-e-v-e-n-k")
-        first_run = runs[0]
-        self.assertEqual(235543673, first_run.id)
-
-    def testBranchParam(self):
-        repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        branch = repo.get_branch("release_action")
-        runs = repo.get_workflow_runs(branch=branch)
-        first_run = runs[0]
-        self.assertEqual(151007846, first_run.id)
-        self.assertEqual(54, runs.totalCount)
-
-    def testEventParam(self):
-        repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(event="pull_request")
-        first_run = runs[0]
-        self.assertEqual(33321769, first_run.id)
+    def test_object_parameters(self):
+        branch = self.repo.get_branch("adversary")
+        runs = self.repo.get_workflow_runs(branch=branch)
+        self.assertEqual(204764033, runs[0].id)
         self.assertEqual(1, runs.totalCount)
 
-    def testStatusParam1(self):
-        repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(status="in_progress")
-        first_run = runs[0]
-        self.assertEqual(223464742, first_run.id)
-        self.assertEqual(1, runs.totalCount)
+        user = self.g.get_user("shahryarabaki")
+        runs = self.repo.get_workflow_runs(actor=user)
+        self.assertEqual(28372848, runs[0].id)
 
-    def testStatusParam2(self):
-        repo = self.g.get_repo("zacker150/DownloaderForReddit")
-        runs = repo.get_workflow_runs(status="failure")
-        first_run = runs[0]
-        self.assertEqual(223464742, first_run.id)
+    def test_string_parameters(self):
+        runs = self.repo.get_workflow_runs(actor="xzhou29")
+        self.assertEqual(226142695, runs[0].id)
+
+        runs = self.repo.get_workflow_runs(branch="API_Flatten")
+        self.assertEqual(287515889, runs[0].id)
+
+        runs = self.repo.get_workflow_runs(event="pull_request")
+        self.assertEqual(298867254, runs[0].id)
+
+        runs = self.repo.get_workflow_runs(status="failure")
+        self.assertEqual(292080359, runs[0].id)
