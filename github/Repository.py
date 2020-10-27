@@ -3346,7 +3346,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :calls: `DELETE /repos/:owner/:repo/actions/runners/:runner_id <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository>`_
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
-        :rtype: None
+        :rtype: bool
         """
         assert isinstance(
             runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
@@ -3355,9 +3355,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
 
-        headers, data = self._requester.requestJsonAndCheck(
+        status, _, _ = self._requester.requestJson(
             "DELETE", self.url + "/actions/runners/" + str(runner)
         )
+        return status == 204
 
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
         """

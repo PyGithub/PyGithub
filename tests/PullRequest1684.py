@@ -49,7 +49,8 @@ class PullRequest1684(Framework.TestCase):
         initial_length = runners.totalCount
         runner_to_delete = runners[0]
 
-        self.repo.remove_self_hosted_runner(runner_to_delete)
+        result = self.repo.remove_self_hosted_runner(runner_to_delete)
+        self.assertTrue(result)
 
         runners = self.repo.get_self_hosted_runners()
         ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
@@ -60,7 +61,8 @@ class PullRequest1684(Framework.TestCase):
         ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
         id_to_delete = ids[0]
 
-        self.repo.remove_self_hosted_runner(id_to_delete)
+        result = self.repo.remove_self_hosted_runner(id_to_delete)
+        self.assertTrue(result)
 
         ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
         self.assertNotIn(id_to_delete, ids)
