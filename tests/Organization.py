@@ -163,8 +163,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(team.description, "Description also created by PyGithub")
 
     def testCreateTeamWithParent(self):
-        parent_team = self.org.create_team("parent_team")
-        child_team = self.org.create_team("child_team", parent_team_id=parent_team.id)
+        parent_team = self.org.create_team("parent_team", privacy="closed")
+        child_team = self.org.create_team("child_team", privacy="closed", parent_team_id=parent_team.id)
         self.assertEqual(child_team.parent, parent_team)
 
     def testDeleteHook(self):
