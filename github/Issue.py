@@ -24,6 +24,7 @@
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -584,6 +585,20 @@ class Issue(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+
+    def delete_reaction(self, reaction_id):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:issue_number/reactions/:reaction_id <https://developer.github.com/v3/reactions/#delete-an-issue-reaction>`_
+        :param reaction_id: integer
+        :rtype: bool
+        """
+        assert isinstance(reaction_id, int), reaction_id
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            self.url + "/reactions/" + str(reaction_id),
+            headers={"Accept": Consts.mediaTypeReactionsPreview},
+        )
+        return status == 204
 
     def get_timeline(self):
         """
