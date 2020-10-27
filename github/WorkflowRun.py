@@ -93,6 +93,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         return self._conclusion.value
 
     @property
+    def workflow_id(self):
+        """
+        :type: int
+        """
+        self._completeIfNotSet(self._workflow_id)
+        return self._workflow_id.value
+
+    @property
     def url(self):
         """
         :type: string
@@ -245,6 +253,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         self._event = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
+        self._workflow_id = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._pull_requests = github.GithubObject.NotSet
@@ -276,6 +285,8 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "conclusion" in attributes:  # pragma no branch
             self._conclusion = self._makeStringAttribute(attributes["conclusion"])
+        if "workflow_id" in attributes:  # pragma no branch
+            self._workflow_id = self._makeIntAttribute(attributes["workflow_id"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "html_url" in attributes:  # pragma no branch
