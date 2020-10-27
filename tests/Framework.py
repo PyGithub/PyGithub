@@ -95,7 +95,7 @@ class RecordingConnection:
         self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
+    def request(self, verb, url, input, headers, decode):
         self.__cnx.request(verb, url, input, headers)
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
@@ -159,14 +159,14 @@ class ReplayingConnection:
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
+    def request(self, verb, url, input, headers, decode):
         full_url = Url(
             scheme=self.__protocol, host=self.__host, port=self.__port, path=url
         )
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
-        self.__cnx.request(verb, url, input, headers)
+        self.__cnx.request(verb, url, input, headers, decode)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)

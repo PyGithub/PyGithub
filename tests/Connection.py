@@ -89,7 +89,7 @@ def testRecordAndReplay(
     recording_connection = RecordingMockConnection(
         file, protocol, host, None, lambda *args, **kwds: connection
     )
-    recording_connection.request(verb, url, None, headers)
+    recording_connection.request(verb, url, None, headers, True)
     recording_connection.getresponse()
     recording_connection.close()
 
@@ -107,7 +107,7 @@ def testRecordAndReplay(
     # rewind buffer and attempt to replay response from it
     file.seek(0)
     replaying_connection = replaying_connection_class(file, host=host, port=None)
-    replaying_connection.request(verb, url, None, headers)
+    replaying_connection.request(verb, url, None, headers, True)
     replaying_connection.getresponse()
 
     # not necessarily required for subsequent tests

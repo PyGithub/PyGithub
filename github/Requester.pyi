@@ -22,7 +22,12 @@ class HTTPRequestsConnectionClass:
     def close(self) -> None: ...
     def getresponse(self) -> RequestsResponse: ...
     def request(
-        self, verb: str, url: str, input: None, headers: Dict[str, str]
+        self,
+        verb: str,
+        url: str,
+        input: None,
+        headers: Dict[str, str],
+        decode: bool,
     ) -> None: ...
 
 class HTTPSRequestsConnectionClass:
@@ -43,6 +48,7 @@ class HTTPSRequestsConnectionClass:
         url: str,
         input: Optional[Union[str, BufferedReader]],
         headers: Dict[str, str],
+        decode: bool,
     ) -> None: ...
 
 class Requester:
@@ -80,19 +86,21 @@ class Requester:
         self,
         verb: str,
         url: str,
-        parameters: Dict[str, str] = ...,
-        headers: Dict[str, str] = ...,
-        input: Optional[str] = ...,
-        encode: Callable[[str], str] = ...,
-    ) -> Tuple[int, Dict[str, Any], str]: ...
+        parameters: Dict[str, str],
+        headers: Dict[str, str],
+        input: Optional[str],
+        encode: Callable[[str], str],
+        decode: bool
+    ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
     def __requestRaw(
         self,
         verb: str,
         url: str,
-        parameters: Dict[str, str] = ...,
-        headers: Dict[str, str] = ...,
-        input: Optional[str] = ...,
-    ) -> Tuple[int, Dict[str, Any], str]: ...
+        parameters: Dict[str, str],
+        headers: Dict[str, str],
+        input: Optional[str],
+        decode: bool
+    ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
     def __init__(
         self,
         login_or_token: Optional[str],
@@ -121,7 +129,8 @@ class Requester:
         headers: Dict[str, str] = ...,
         input: Optional[str] = ...,
         cnx: Optional[ReplayingHttpsConnection] = ...,
-    ) -> Tuple[int, Dict[str, Any], str]: ...
+        decode: bool = ...,
+    ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
     def requestBlobAndCheck(
         self,
         verb: str,
@@ -155,7 +164,8 @@ class Requester:
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
         cnx: Optional[ReplayingHttpsConnection] = ...,
-    ) -> Tuple[int, Dict[str, Any], str]: ...
+        decode: bool = ...,
+    ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
     def requestMultipartAndCheck(
         self,
         verb: str,
@@ -164,6 +174,14 @@ class Requester:
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
+    def requestMultipartBinaryAndCheck(
+        self,
+        verb: str,
+        url: str,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, Any]] = ...,
+        input: Optional[OrderedDict] = ...,
+    ) -> Tuple[Dict[str, Any], bytes]: ...
     @classmethod
     def resetConnectionClasses(cls) -> None: ...
     @classmethod
@@ -172,6 +190,6 @@ class Requester:
     def setOnCheckMe(cls, onCheckMe: Callable) -> None: ...
 
 class RequestsResponse:
-    def __init__(self, r: Response) -> None: ...
+    def __init__(self, r: Response, decode: bool) -> None: ...
     def getheaders(self) -> Iterator[Any]: ...
-    def read(self) -> str: ...
+    def read(self) -> Union[str, bytes]: ...

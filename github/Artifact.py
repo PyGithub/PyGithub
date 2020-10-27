@@ -114,6 +114,28 @@ class Artifact(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._expires_at)
         return self._expires_at.value
 
+    def download(self, archive_format="zip"):
+        """
+        :calls: `/repos/:owner/:repo/actions/artifacts/:artifact_id/:archive_format <https://developer.github.com/v3/actions/artifacts/#download-an-artifact>`_
+        :rtype: namedtuple with filename and content members
+        """
+        headers, data = self._requester.requestMultipartBinaryAndCheck(
+            "GET", self.url + "/" + archive_format
+        )
+        if headers.get("status") == "302 Found" and "location" in headers:
+            headers, data = self._requester.requestMultipartBinaryAndCheck(
+                "GET", headers["location"]
+            )
+
+        return data
+
+    def delete(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/actions/artifacts/:artifact_id <https://developer.github.com/v3/actions/artifacts/#delete-an-artifact>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._node_id = github.GithubObject.NotSet

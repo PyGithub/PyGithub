@@ -69,16 +69,16 @@ from . import Consts, GithubException
 
 class RequestsResponse:
     # mimic the httplib response object
-    def __init__(self, r):
+    def __init__(self, r, decode):
         self.status = r.status_code
         self.headers = r.headers
-        self.text = r.text
+        self.content = r.text if decode else r.content
 
     def getheaders(self):
         return self.headers.items()
 
     def read(self):
-        return self.text
+        return self.content
 
 
 class HTTPSRequestsConnectionClass(object):
@@ -98,11 +98,12 @@ class HTTPSRequestsConnectionClass(object):
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
             self.session.mount("https://", self.adapter)
 
-    def request(self, verb, url, input, headers):
+    def request(self, verb, url, input, headers, decode):
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.decode = decode
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
@@ -115,7 +116,7 @@ class HTTPSRequestsConnectionClass(object):
             verify=self.verify,
             allow_redirects=False,
         )
-        return RequestsResponse(r)
+        return RequestsResponse(r, decode=self.decode)
 
     def close(self):
         return
@@ -138,11 +139,12 @@ class HTTPRequestsConnectionClass(object):
             self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
             self.session.mount("http://", self.adapter)
 
-    def request(self, verb, url, input, headers):
+    def request(self, verb, url, input, headers, decode):
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.decode = decode
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
@@ -155,7 +157,7 @@ class HTTPRequestsConnectionClass(object):
             verify=self.verify,
             allow_redirects=False,
         )
-        return RequestsResponse(r)
+        return RequestsResponse(r, decode=self.decode)
 
     def close(self):
         return
@@ -333,7 +335,7 @@ class Requester:
         self, verb, url, parameters=None, headers=None, input=None
     ):
         status, responseHeaders, output = self.requestMultipart(
-            verb, url, parameters, headers, input, self.__customConnection(url)
+            verb, url, parameters, headers, input, self.__customConnection(url), False
         )
         if status >= 400:
             raise self.__createException(status, responseHeaders, output)
@@ -417,10 +419,19 @@ class Requester:
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, True
+        )
 
     def requestMultipart(
-        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+        self,
+        verb,
+        url,
+        parameters=None,
+        headers=None,
+        input=None,
+        cnx=None,
+        decode=True,
     ):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
@@ -437,9 +448,13 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, decode
+        )
 
-    def requestBlob(self, verb, url, parameters={}, headers={}, input=None, cnx=None):
+    def requestBlob(
+        self, verb, url, parameters={}, headers={}, input=None, cnx=None, decode=True
+    ):
         def encode(local_path):
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
@@ -455,7 +470,9 @@ class Requester:
 
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, decode
+        )
 
     def requestMemoryBlobAndCheck(
         self, verb, url, parameters, headers, file_like, cnx=None
@@ -468,12 +485,12 @@ class Requester:
             cnx = self.__customConnection(url)
         return self.__check(
             *self.__requestEncode(
-                cnx, verb, url, parameters, headers, file_like, encode
+                cnx, verb, url, parameters, headers, file_like, encode, True
             )
         )
 
     def __requestEncode(
-        self, cnx, verb, url, parameters, requestHeaders, input, encode
+        self, cnx, verb, url, parameters, requestHeaders, input, encode, decode
     ):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -494,7 +511,7 @@ class Requester:
         self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(
-            cnx, verb, url, requestHeaders, encoded_input
+            cnx, verb, url, requestHeaders, encoded_input, decode
         )
 
         if (
@@ -515,11 +532,11 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def __requestRaw(self, cnx, verb, url, requestHeaders, input):
+    def __requestRaw(self, cnx, verb, url, requestHeaders, input, decode):
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        cnx.request(verb, url, input, requestHeaders)
+        cnx.request(verb, url, input, requestHeaders, decode)
         response = cnx.getresponse()
 
         status = response.status
@@ -537,11 +554,15 @@ class Requester:
             verb == "GET" or verb == "HEAD"
         ):  # only for requests that are considered 'safe' in RFC 2616
             time.sleep(Consts.PROCESSING_202_WAIT_TIME)
-            return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+            return self.__requestRaw(
+                original_cnx, verb, url, requestHeaders, input, decode
+            )
 
         if status == 301 and "location" in responseHeaders:
             o = urllib.parse.urlparse(responseHeaders["location"])
-            return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+            return self.__requestRaw(
+                original_cnx, verb, o.path, requestHeaders, input, decode
+            )
 
         return status, responseHeaders, output
 
@@ -564,6 +585,7 @@ class Requester:
                 "uploads.github.com",
                 "status.github.com",
                 "github.com",
+                "pipelines.actions.githubusercontent.com",
             ], o.hostname
             assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
