@@ -43,6 +43,7 @@
 
 import datetime
 
+import github.AuthorizationOrganization
 import github.Event
 import github.GithubObject
 import github.NamedUser
@@ -1155,6 +1156,33 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
+
+    def get_credential_authorizations(self):
+        """
+        :calls: `GET /orgs/:org/credential-authorizations <https://developer.github.com/v3/orgs>`_
+        :rtype: list
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/credential-authorizations"
+        )
+        return [
+            github.AuthorizationOrganization.AuthorizationOrganization(
+                self._requester, headers, x, completed=True
+            )
+            for x in data
+        ]
+
+    def remove_credential_authorization(self, credential_id):
+        """
+        :calls: `DELETE /orgs/:org/credential-authorizations/:credential_id <https://developer.github.com/v3/orgs/>`_
+        :param credential_id: int
+        :rtype: bool
+        """
+        assert isinstance(credential_id, int), credential_id
+        status, headers, data = self._requester.requestJson(
+            "DELETE", self.url + "/credential-authorizations/" + str(credential_id)
+        )
+        return status == 204
 
     def _initAttributes(self):
         self._default_repository_permission = github.GithubObject.NotSet
