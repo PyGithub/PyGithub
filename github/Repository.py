@@ -125,6 +125,7 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryKey
+import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
 import github.StatsCodeFrequency
@@ -2788,6 +2789,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_self_hosted_runner(self, runner_id):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runners/:id <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository`_
+        :param runner_id: int
+        :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        assert isinstance(runner_id, int), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/runners/" + str(runner_id)
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_self_hosted_runners(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-a-repository`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            self.url + "/actions/runners",
+            None,
+            list_item="runners",
+        )
+
     def get_source_import(self):
         """
         :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
@@ -3353,6 +3381,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", self.url + "/collaborators/" + collaborator
         )
+
+    def remove_self_hosted_runner(self, runner):
+        """
+        :calls: `DELETE /repos/:owner/:repo/actions/runners/:runner_id <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository>`_
+        :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        :rtype: bool
+        """
+        assert isinstance(
+            runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
+        ) or isinstance(runner, int), runner
+
+        if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
+            runner = runner.id
+
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url + "/actions/runners/" + str(runner)
+        )
+        return status == 204
 
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
         """
