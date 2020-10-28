@@ -123,6 +123,10 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         self.team.set_repo_permission(repo, "admin")
 
+    def testUpdateTeamRepository(self):
+        repo = self.org.get_repo("FatherBeaver")
+        self.assertTrue(self.team.update_team_repository(repo, "admin"))
+
     def testRepos(self):
         repo = self.org.get_repo("FatherBeaver")
         self.assertListKeyEqual(self.team.get_repos(), None, [])

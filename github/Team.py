@@ -41,6 +41,8 @@
 #                                                                              #
 ################################################################################
 
+from deprecated import deprecated
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
@@ -252,6 +254,11 @@ class Team(github.GithubObject.CompletableGithubObject):
         except UnknownObjectException:
             return None
 
+    @deprecated(
+        reason="""
+        Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
+        """
+    )
     def set_repo_permission(self, repo, permission):
         """
         :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
@@ -259,6 +266,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :rtype: None
         """
+
         assert isinstance(repo, github.Repository.Repository), repo
         put_parameters = {
             "permission": permission,
@@ -266,6 +274,30 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", self.url + "/repos/" + repo._identity, input=put_parameters
         )
+
+    def update_team_repository(self, repo, permission):
+        """
+        :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository-permissions>`_
+        :param repo: string or :class:`github.Repository.Repository`
+        :param permission: string
+        :rtype: bool
+        """
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str
+        ), repo
+        assert isinstance(permission, str), permission
+        repo_url_param = repo
+        if isinstance(repo, github.Repository.Repository):
+            repo_url_param = repo._identity
+        put_parameters = {
+            "permission": permission,
+        }
+        status, _, _ = self._requester.requestJson(
+            "PUT",
+            self.organization.url + "/teams/" + self.slug + "/repos/" + repo_url_param,
+            input=put_parameters,
+        )
+        return status == 204
 
     def delete(self):
         """
