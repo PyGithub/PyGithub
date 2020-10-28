@@ -35,6 +35,7 @@
 ################################################################################
 
 
+import warnings
 from datetime import datetime
 
 from . import Framework
@@ -121,7 +122,10 @@ class Team(Framework.TestCase):
 
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
+        # Ignore the warning since this method is deprecated
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         self.team.set_repo_permission(repo, "admin")
+        warnings.resetwarnings()
 
     def testUpdateTeamRepository(self):
         repo = self.org.get_repo("FatherBeaver")
