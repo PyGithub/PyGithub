@@ -129,7 +129,6 @@ class Requester:
         headers: Dict[str, str] = ...,
         input: Optional[str] = ...,
         cnx: Optional[ReplayingHttpsConnection] = ...,
-        decode: bool = ...,
     ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
     def requestBlobAndCheck(
         self,
@@ -156,6 +155,14 @@ class Requester:
         headers: Optional[Dict[str, str]] = ...,
         input: Optional[Any] = ...,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
+    def requestJsonToBinaryAndCheck(
+        self,
+        verb: str,
+        url: str,
+        parameters: Optional[Dict[str, Any]] = ...,
+        headers: Optional[Dict[str, str]] = ...,
+        input: Optional[Any] = ...,
+    ) -> Tuple[Dict[str, Any], bytes]: ...
     def requestMultipart(
         self,
         verb: str,
@@ -164,8 +171,7 @@ class Requester:
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
         cnx: Optional[ReplayingHttpsConnection] = ...,
-        decode: bool = ...,
-    ) -> Tuple[int, Dict[str, Any], Union[str, bytes]]: ...
+    ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestMultipartAndCheck(
         self,
         verb: str,
@@ -174,14 +180,6 @@ class Requester:
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
-    def requestMultipartBinaryAndCheck(
-        self,
-        verb: str,
-        url: str,
-        parameters: Optional[Dict[str, Any]] = ...,
-        headers: Optional[Dict[str, Any]] = ...,
-        input: Optional[OrderedDict] = ...,
-    ) -> Tuple[Dict[str, Any], bytes]: ...
     @classmethod
     def resetConnectionClasses(cls) -> None: ...
     @classmethod

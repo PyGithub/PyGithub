@@ -119,11 +119,11 @@ class Artifact(github.GithubObject.CompletableGithubObject):
         :calls: `/repos/:owner/:repo/actions/artifacts/:artifact_id/:archive_format <https://developer.github.com/v3/actions/artifacts/#download-an-artifact>`_
         :rtype: namedtuple with filename and content members
         """
-        headers, data = self._requester.requestMultipartBinaryAndCheck(
+        headers, data = self._requester.requestJsonToBinaryAndCheck(
             "GET", self.url + "/" + archive_format
         )
         if headers.get("status") == "302 Found" and "location" in headers:
-            headers, data = self._requester.requestMultipartBinaryAndCheck(
+            headers, data = self._requester.requestJsonToBinaryAndCheck(
                 "GET", headers["location"]
             )
 
@@ -134,9 +134,7 @@ class Artifact(github.GithubObject.CompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/actions/artifacts/:artifact_id <https://developer.github.com/v3/actions/artifacts/#delete-an-artifact>`_
         :rtype: bool
         """
-        status, headers, data = self._requester.requestJson(
-            "DELETE", self.url
-        )
+        status, headers, data = self._requester.requestJson("DELETE", self.url)
         return status == 204
 
     def _initAttributes(self):

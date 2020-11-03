@@ -322,6 +322,19 @@ class Requester:
             )
         )
 
+    def requestJsonToBinaryAndCheck(
+        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+    ):
+        def encode(input):
+            return "application/json", json.dumps(input)
+
+        status, responseHeaders, output = self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, False
+        )
+        if status >= 400:
+            raise self.__createException(status, responseHeaders, output)
+        return responseHeaders, output
+
     def requestMultipartAndCheck(
         self, verb, url, parameters=None, headers=None, input=None
     ):
@@ -330,16 +343,6 @@ class Requester:
                 verb, url, parameters, headers, input, self.__customConnection(url)
             )
         )
-
-    def requestMultipartBinaryAndCheck(
-        self, verb, url, parameters=None, headers=None, input=None
-    ):
-        status, responseHeaders, output = self.requestMultipart(
-            verb, url, parameters, headers, input, self.__customConnection(url), False
-        )
-        if status >= 400:
-            raise self.__createException(status, responseHeaders, output)
-        return responseHeaders, output
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -431,7 +434,6 @@ class Requester:
         headers=None,
         input=None,
         cnx=None,
-        decode=True,
     ):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
@@ -449,12 +451,10 @@ class Requester:
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
         return self.__requestEncode(
-            cnx, verb, url, parameters, headers, input, encode, decode
+            cnx, verb, url, parameters, headers, input, encode, True
         )
 
-    def requestBlob(
-        self, verb, url, parameters={}, headers={}, input=None, cnx=None, decode=True
-    ):
+    def requestBlob(self, verb, url, parameters={}, headers={}, input=None, cnx=None):
         def encode(local_path):
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
@@ -471,7 +471,7 @@ class Requester:
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(
-            cnx, verb, url, parameters, headers, input, encode, decode
+            cnx, verb, url, parameters, headers, input, encode, True
         )
 
     def requestMemoryBlobAndCheck(
