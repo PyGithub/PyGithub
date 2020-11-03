@@ -132,9 +132,12 @@ class Artifact(github.GithubObject.CompletableGithubObject):
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo/actions/artifacts/:artifact_id <https://developer.github.com/v3/actions/artifacts/#delete-an-artifact>`_
-        :rtype: None
+        :rtype: bool
         """
-        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+        status, headers, data = self._requester.requestJson(
+            "DELETE", self.url
+        )
+        return status == 204
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
