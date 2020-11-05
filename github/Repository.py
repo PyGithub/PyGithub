@@ -1393,6 +1393,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_transfer_request(
+        self, new_owner, teams=github.GithubObject.NotSet
+    ):
+        """
+        :calls: POST /repos/:owner/:repo/transfer <https://developer.github.com/v3/repos/#transfer-a-repository>
+        :param new_owner: string
+        :param teams: list
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(new_owner, str), new_owner
+        assert teams is github.GithubObject.NotSet or isinstance(
+            teams, list
+        ), teams
+        post_parameters = {"new_owner": new_owner}
+        if teams is not github.GithubObject.NotSet:
+            post_parameters["team_ids"] = teams
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", self.url + "/transfer", input=post_parameters
+        )
+        return Repository(self._requester, headers, data, completed=True)
+
     def create_repository_dispatch(
         self, event_type, client_payload=github.GithubObject.NotSet
     ):
