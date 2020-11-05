@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from github.GithubObject import NonCompletableGithubObject, _ValuedAttribute
+from github.GithubObject import NonCompletableGithubObject
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
