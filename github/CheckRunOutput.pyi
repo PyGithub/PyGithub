@@ -1,8 +1,8 @@
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import NonCompletableGithubObject
 
-class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
+class CheckRunOutput(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

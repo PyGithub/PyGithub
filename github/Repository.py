@@ -3393,6 +3393,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param completed_at: datetime.datetime
         :param output: dict
         :param actions: list of dict
+        :rtype: :class:`github.CheckRun.CheckRun`
         """
         assert isinstance(name, str), name
         assert isinstance(head_sha, str), head_sha

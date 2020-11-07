@@ -46,7 +46,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def app(self):
         """
-        :rtype: :class:`github.GithubApp.GithubApp`
+        :type: :class:`github.GithubApp.GithubApp`
         """
         self._completeIfNotSet(self._app)
         return self._app.value
@@ -62,7 +62,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def completed_at(self):
         """
-        :rtype: datetime.datetime
+        :type: datetime.datetime
         """
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
@@ -70,7 +70,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def conclusion(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
@@ -78,7 +78,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def details_url(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._details_url)
         return self._details_url.value
@@ -86,7 +86,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def external_id(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._external_id)
         return self._external_id.value
@@ -94,7 +94,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def head_sha(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
@@ -102,7 +102,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def html_url(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
@@ -110,7 +110,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def id(self):
         """
-        :rtype: integer
+        :type: integer
         """
         self._completeIfNotSet(self._id)
         return self._id.value
@@ -118,7 +118,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def name(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._name)
         return self._name.value
@@ -126,7 +126,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def node_id(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
@@ -134,7 +134,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def output(self):
         """
-        :rtype: :class:`github.CheckRunOutput.CheckRunOutput`
+        :type: :class:`github.CheckRunOutput.CheckRunOutput`
         """
         self._completeIfNotSet(self._output)
         return self._output.value
@@ -142,7 +142,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def pull_requests(self):
         """
-        :rtype: list of :class:`github.PullRequest.PullRequest`
+        :type: list of :class:`github.PullRequest.PullRequest`
         """
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
@@ -150,7 +150,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def started_at(self):
         """
-        :rtype: datetime.datetime
+        :type: datetime.datetime
         """
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
@@ -158,7 +158,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def status(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._status)
         return self._status.value
@@ -166,7 +166,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def url(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
@@ -209,6 +209,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         :param completed_at: datetime.datetime
         :param output: dict
         :param actions: list of dict
+        :rtype: None
         """
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
         assert head_sha is github.GithubObject.NotSet or isinstance(
