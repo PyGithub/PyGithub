@@ -40,7 +40,7 @@ class CheckRun(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.check_run.app.id, 15368)
         self.assertEqual(self.check_run.app.slug, "github-actions")
-        self.assertEqual(self.check_run.check_suite, {"id": 1110219217})
+        self.assertEqual(self.check_run.check_suite_id, 1110219217)
         self.assertEqual(
             self.check_run.completed_at, datetime.datetime(2020, 8, 28, 4, 21, 21)
         )

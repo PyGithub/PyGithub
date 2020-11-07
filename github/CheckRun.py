@@ -52,12 +52,12 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._app.value
 
     @property
-    def check_suite(self):
+    def check_suite_id(self):
         """
-        :type: dict
+        :type: integer
         """
-        self._completeIfNotSet(self._check_suite)
-        return self._check_suite.value
+        self._completeIfNotSet(self._check_suite_id)
+        return self._check_suite_id.value
 
     @property
     def completed_at(self):
@@ -267,7 +267,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._app = github.GithubObject.NotSet
-        self._check_suite = github.GithubObject.NotSet
+        self._check_suite_id = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
         self._details_url = github.GithubObject.NotSet
@@ -290,8 +290,12 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
                 github.GithubApp.GithubApp, attributes["app"]
             )
         # This only gives us a dictionary with `id` attribute of `check_suite`
-        if "check_suite" in attributes:  # pragma no branch
-            self._check_suite = self._makeDictAttribute(attributes["check_suite"])
+        if (
+            "check_suite" in attributes and "id" in attributes["check_suite"]
+        ):  # pragma no branch
+            self._check_suite_id = self._makeIntAttribute(
+                attributes["check_suite"]["id"]
+            )
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
