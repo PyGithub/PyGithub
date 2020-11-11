@@ -785,16 +785,6 @@ class Github(object):
         """
         return self.create_from_raw_data(*pickle.load(f))
 
-    def get_installation(self, id):
-        """
-
-        :param id:
-        :return:
-        """
-        return Installation.Installation(
-            self.__requester, headers={}, attributes={"id": id}, completed=True
-        )
-
     def get_oauth_application(self, client_id, client_secret):
         return github.ApplicationOAuth.ApplicationOAuth(
             self.__requester,
