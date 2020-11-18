@@ -12,7 +12,7 @@
 PyGitHub is a Python library to access the [GitHub REST API].
 This library enables you to manage [GitHub] resources such as repositories, user profiles, and organizations in your Python applications.
 
-[GitHub REST API]: https://docs.github.com/en/free-pro-team@latest/rest
+[GitHub REST API]: https://docs.github.com/rest
 [GitHub]: https://github.com
 
 ## Install
