@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Union
 
+from github.CheckRun import CheckRun
 from github.CommitCombinedStatus import CommitCombinedStatus
 from github.CommitComment import CommitComment
 from github.CommitStats import CommitStats
@@ -43,6 +44,12 @@ class Commit(CompletableGithubObject):
     def get_combined_status(self) -> CommitCombinedStatus: ...
     def get_comments(self) -> PaginatedList[GitCommit]: ...
     def get_statuses(self) -> PaginatedList[CommitStatus]: ...
+    def get_check_runs(
+        self,
+        check_name: Union[_NotSetType, str] = ...,
+        status: Union[_NotSetType, str] = ...,
+        filter: Union[_NotSetType, str] = ...,
+    ) -> PaginatedList[CheckRun]: ...
     @property
     def html_url(self) -> str: ...
     @property

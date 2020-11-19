@@ -32,6 +32,7 @@
 #                                                                              #
 ################################################################################
 
+import github.CheckRun
 import github.CommitCombinedStatus
 import github.CommitComment
 import github.CommitStats
@@ -256,6 +257,40 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self.url + "/pulls",
             None,
             headers={"Accept": "application/vnd.github.groot-preview+json"},
+        )
+
+    def get_check_runs(
+        self,
+        check_name=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        filter=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/commits/:sha/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
+        :param check_name: string
+        :param status: string
+        :param filter: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRun.CheckRun`
+        """
+        assert check_name is github.GithubObject.NotSet or isinstance(
+            check_name, str
+        ), check_name
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
+        url_parameters = dict()
+        if check_name is not github.GithubObject.NotSet:
+            url_parameters["check_name"] = check_name
+        if status is not github.GithubObject.NotSet:
+            url_parameters["status"] = status
+        if status is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter
+        return github.PaginatedList.PaginatedList(
+            github.CheckRun.CheckRun,
+            self._requester,
+            self.url + "/check-runs",
+            url_parameters,
+            headers={"Accept": "application/vnd.github.v3+json"},
+            list_item="check_runs",
         )
 
     @property
