@@ -1,4 +1,4 @@
-requests>=2.14.0
+requests>=2.14.0,<2.25
 pyjwt
 sphinx<3
 sphinx-rtd-theme<0.6
