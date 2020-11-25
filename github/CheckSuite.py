@@ -36,7 +36,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def after(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._after)
         return self._after.value
@@ -44,7 +44,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def app(self):
         """
-        :rtype: :class:`github.GithubApp.GithubApp`
+        :type: :class:`github.GithubApp.GithubApp`
         """
         self._completeIfNotSet(self._app)
         return self._app.value
@@ -52,7 +52,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def before(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._before)
         return self._before.value
@@ -60,7 +60,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def check_runs_url(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._check_runs_url)
         return self._check_runs_url.value
@@ -68,7 +68,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def conclusion(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
@@ -76,7 +76,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :rtype: datetime.datetime
+        :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -84,7 +84,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def head_branch(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
@@ -92,7 +92,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def head_commit(self):
         """
-        :rtype: :class:`github.GitCommit.GitCommit`
+        :type: :class:`github.GitCommit.GitCommit`
         """
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
@@ -100,7 +100,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def head_sha(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
@@ -108,7 +108,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def id(self):
         """
-        :rtype: int
+        :type: int
         """
         self._completeIfNotSet(self._id)
         return self._id.value
@@ -116,7 +116,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def latest_check_runs_count(self):
         """
-        :rtype: int
+        :type: int
         """
         self._completeIfNotSet(self._latest_check_runs_count)
         return self._latest_check_runs_count.value
@@ -124,7 +124,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def pull_requests(self):
         """
-        :rtype: list of :class:`github.PullRequest.PullRequest`
+        :type: list of :class:`github.PullRequest.PullRequest`
         """
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
@@ -132,7 +132,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def repository(self):
         """
-        :rtype: :class:`github.Repository.Repository`
+        :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
         return self._repository.value
@@ -140,7 +140,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def status(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._status)
         return self._status.value
@@ -148,7 +148,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :rtype: datetime.datetime
+        :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -156,7 +156,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     @property
     def url(self):
         """
-        :rtype: string
+        :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value

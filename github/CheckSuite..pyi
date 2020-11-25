@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from datetime import datetime
 from github.GithubObject import CompletableGithubObject
