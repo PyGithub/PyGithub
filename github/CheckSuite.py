@@ -163,6 +163,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
 
     def rerequest(self):
         """
+        :calls: `POST /repos/:owner/:repo/check-suites/:check_suite_id/rerequest <https://docs.github.com/en/rest/reference/checks#rerequest-a-check-suite>`_
         :rtype: bool
         """
         request_headers = {"Accept": "application/vnd.github.antiope-preview+json"}
