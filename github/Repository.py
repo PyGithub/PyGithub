@@ -1850,7 +1850,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param: task: string
         :param: auto_merge: bool
         :param: required_contexts: list of status contexts
-        :param: payload: json
+        :param: payload: dict
         :param: environment: string
         :param: description: string
         :param: transient_environment: bool

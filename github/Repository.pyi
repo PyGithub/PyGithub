@@ -9,6 +9,7 @@ from github.Commit import Commit
 from github.CommitComment import CommitComment
 from github.Comparison import Comparison
 from github.ContentFile import ContentFile
+from github.Deployment import Deployment
 from github.Download import Download
 from github.Event import Event
 from github.GitBlob import GitBlob
@@ -112,6 +113,18 @@ class Repository(CompletableGithubObject):
         output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = ...,
         actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
     ) -> CheckRun: ...
+    def create_deployment(
+        self,
+        ref: str,
+        task: Union[str, _NotSetType] = ...,
+        auto_merge: Union[bool, _NotSetType] = ...,
+        required_contexts: Union[List[str], _NotSetType] = ...,
+        payload: Union[Dict[str, Any], _NotSetType] = ...,
+        environment: Union[str, _NotSetType] = ...,
+        description: Union[str, _NotSetType] = ...,
+        transient_environment: Union[bool, _NotSetType] = ...,
+        production_environment: Union[bool, _NotSetType] = ...,
+    ) -> Deployment: ...
     def create_file(
         self,
         path: str,
@@ -295,6 +308,14 @@ class Repository(CompletableGithubObject):
     def get_contributors(
         self, anon: Union[str, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
+    def get_deployment(self, id_: int) -> Any: ...
+    def get_deployments(
+        self,
+        sha: Union[str, _NotSetType] = ...,
+        ref: Union[str, _NotSetType] = ...,
+        task: Union[str, _NotSetType] = ...,
+        environment: Union[str, _NotSetType] = ...,
+    ) -> PaginatedList[Deployment]: ...
     def get_dir_contents(
         self, path: str, ref: Union[str, _NotSetType] = ...
     ) -> List[ContentFile]: ...

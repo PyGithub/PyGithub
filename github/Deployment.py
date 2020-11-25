@@ -46,22 +46,6 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def production_environment(self):
-        """
-        :type: bool
-        """
-        self._completeIfNotSet(self._production_environment)
-        return self._production_environment.value
-
-    @property
-    def transient_environment(self):
-        """
-        :type: bool
-        """
-        self._completeIfNotSet(self._transient_environment)
-        return self._transient_environment.value
-
-    @property
     def url(self):
         """
         :type: string
@@ -108,6 +92,22 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._environment)
         return self._environment.value
+
+    @property
+    def production_environment(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._production_environment)
+        return self._production_environment.value
+
+    @property
+    def transient_environment(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._transient_environment)
+        return self._transient_environment.value
 
     @property
     def description(self):
