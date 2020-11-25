@@ -3429,7 +3429,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CheckSuite.CheckSuite`
         """
         assert isinstance(check_suite_id, int), check_suite_id
-        requestHeaders = {"Accept": "application/vnd.github.antiope-preview+json"}
+        requestHeaders = {"Accept": "application/vnd.github.v3+json"}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/check-suites/" + str(check_suite_id),

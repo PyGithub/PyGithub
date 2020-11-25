@@ -166,7 +166,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/check-suites/:check_suite_id/rerequest <https://docs.github.com/en/rest/reference/checks#rerequest-a-check-suite>`_
         :rtype: bool
         """
-        request_headers = {"Accept": "application/vnd.github.antiope-preview+json"}
+        request_headers = {"Accept": "application/vnd.github.v3+json"}
         status, _, _ = self._requester.requestJson(
             "POST", self.url + "/rerequest", headers=request_headers
         )
