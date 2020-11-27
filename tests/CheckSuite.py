@@ -154,3 +154,21 @@ class CheckSuite(Framework.TestCase):
         self.assertEqual(check_suite.head_sha, sha)
         self.assertEqual(check_suite.status, "queued")
         self.assertIsNone(check_suite.conclusion)
+
+    def testUpdateCheckSuitesPreferences(self):
+        data = [{"app_id": 85429, "setting": False}]
+        repo_preferences = self.test_repo.update_check_suites_preferences(data)
+        setting = None
+        for app in repo_preferences.preferences["auto_trigger_checks"]:
+            if app["app_id"] == data[0]["app_id"]:
+                setting = app["setting"]
+        self.assertFalse(setting)
+        self.assertEqual(
+            repo_preferences.repository.full_name, "dhruvmanila/pygithub-testing"
+        )
+        data = [{"app_id": 85429, "setting": True}]
+        repo_preferences = self.test_repo.update_check_suites_preferences(data)
+        for app in repo_preferences.preferences["auto_trigger_checks"]:
+            if app["app_id"] == data[0]["app_id"]:
+                setting = app["setting"]
+        self.assertTrue(setting)
