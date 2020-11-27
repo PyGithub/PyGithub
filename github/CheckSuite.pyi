@@ -1,12 +1,13 @@
+from datetime import datetime
 from typing import Any, Dict, List
 
-from datetime import datetime
-from github.GithubObject import CompletableGithubObject
-from github.GithubApp import GithubApp
+from github.CheckRun import CheckRun
 from github.GitCommit import GitCommit
+from github.GithubApp import GithubApp
+from github.GithubObject import CompletableGithubObject
+from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
-
 
 class CheckSuite(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -44,4 +45,7 @@ class CheckSuite(CompletableGithubObject):
     def updated_at(self) -> datetime: ...
     @property
     def url(self) -> str: ...
-    def rerequest(self) -> bool: ... 
+    def rerequest(self) -> bool: ...
+    def get_check_runs(
+        self, check_name: str, status: str, filter: str
+    ) -> PaginatedList[CheckRun]: ...
