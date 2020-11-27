@@ -3422,6 +3422,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         return self._hub("unsubscribe", event, callback, github.GithubObject.NotSet)
 
+    def create_check_suite(self, head_sha):
+        """
+        :calls: `POST /repos/:owner/:repo/check-suites <https://docs.github.com/en/rest/reference/checks#create-a-check-suite>`_
+        :param head_sha: string
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(head_sha, str), head_sha
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/check-suites",
+            input={"head_sha": head_sha},
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
     def get_check_suite(self, check_suite_id):
         """
         :calls: `GET /repos/:owner/:repo/check-suites/:check_suite_id <https://docs.github.com/en/rest/reference/checks#get-a-check-suite>`_
