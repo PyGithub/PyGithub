@@ -3,6 +3,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Raju Subramanian <coder@mahesh.net>                           #
+# Copyright 2020 Dhruv Manilawala <dhruvmanila@gmail.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +32,9 @@ class CheckSuite(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.check_suite_id = 1004503837
+        self.test_check_suite_id = 1366665055
+        self.test_repo = self.g.get_repo("dhruvmanila/pygithub-testing")
+        self.test_check_suite = self.test_repo.get_check_suite(self.test_check_suite_id)
         self.repo = self.g.get_repo("wrecker/PySample")
         self.check_suite = self.repo.get_check_suite(self.check_suite_id)
         self.check_suite_ref = "fd09d934bcce792176d6b79d6d0387e938b62b7a"
@@ -87,3 +91,59 @@ class CheckSuite(Framework.TestCase):
         cs = self.repo.get_check_suite(1004503395)
         status = cs.rerequest()
         self.assertTrue(status)
+
+    def testGetCheckRuns(self):
+        check_runs = self.test_check_suite.get_check_runs()
+        self.assertEqual(check_runs.totalCount, 8)
+        self.assertListEqual(
+            [cr.id for cr in check_runs],
+            [
+                1278952206,
+                1279259090,
+                1280450752,
+                1280914700,
+                1296027873,
+                1296028076,
+                1296029378,
+                1296029552,
+            ],
+        )
+
+    def testGetCheckRunsFilterByCheckName(self):
+        check_runs = self.test_check_suite.get_check_runs(check_name="Testing")
+        self.assertEqual(check_runs.totalCount, 1)
+        self.assertEqual([cr.id for cr in check_runs], [1278952206])
+
+    def testGetCheckRunsFilterByStatus(self):
+        check_runs = self.test_check_suite.get_check_runs(status="completed")
+        self.assertEqual(check_runs.totalCount, 8)
+        self.assertListEqual(
+            [cr.id for cr in check_runs],
+            [
+                1278952206,
+                1279259090,
+                1280450752,
+                1280914700,
+                1296027873,
+                1296028076,
+                1296029378,
+                1296029552,
+            ],
+        )
+
+    def testGetCheckRunsFilterByFilter(self):
+        check_runs = self.test_check_suite.get_check_runs(filter="all")
+        self.assertEqual(check_runs.totalCount, 8)
+        self.assertListEqual(
+            [cr.id for cr in check_runs],
+            [
+                1278952206,
+                1279259090,
+                1280450752,
+                1280914700,
+                1296027873,
+                1296028076,
+                1296029378,
+                1296029552,
+            ],
+        )
