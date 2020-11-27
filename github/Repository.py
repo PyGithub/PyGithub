@@ -127,6 +127,7 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryKey
+import github.RepositoryPreferences
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -3452,6 +3453,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
             headers=requestHeaders,
         )
         return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
+    def update_check_suites_preferences(self, auto_trigger_checks):
+        """
+        :calls: `PATCH /repos/:owner/:repo/check-suites/preferences <https://docs.github.com/en/rest/reference/checks#update-repository-preferences-for-check-suites>`_
+        :param auto_trigger_checks: list of dict
+        :rtype: :class:`github.RepositoryPreferences.RepositoryPreferences`
+        """
+        assert all(
+            isinstance(element, dict) for element in auto_trigger_checks
+        ), auto_trigger_checks
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/check-suites/preferences",
+            input={"auto_trigger_checks": auto_trigger_checks},
+        )
+        return github.RepositoryPreferences.RepositoryPreferences(
             self._requester, headers, data, completed=True
         )
 

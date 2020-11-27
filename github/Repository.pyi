@@ -40,6 +40,7 @@ from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
 from github.RepositoryKey import RepositoryKey
+from github.RepositoryPreferences import RepositoryPreferences
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.SourceImport import SourceImport
 from github.Stargazer import Stargazer
@@ -434,6 +435,9 @@ class Repository(CompletableGithubObject):
     def get_workflows(self) -> PaginatedList[Workflow]: ...
     def get_workflow_run(self, id_: int) -> WorkflowRun: ...
     def get_workflow_runs(self) -> PaginatedList[WorkflowRun]: ...
+    def update_check_suites_preferences(
+        self, auto_trigger_checks: List[Dict[str, Union[bool, int]]]
+    ) -> RepositoryPreferences: ...
     @property
     def git_commits_url(self) -> str: ...
     @property
