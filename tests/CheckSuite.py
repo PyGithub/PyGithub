@@ -147,3 +147,10 @@ class CheckSuite(Framework.TestCase):
                 1296029552,
             ],
         )
+
+    def testCreateCheckSuite(self):
+        sha = "e5868bd5a9ccdd65c9c979250e11105f4c88faf4"
+        check_suite = self.test_repo.create_check_suite(head_sha=sha)
+        self.assertEqual(check_suite.head_sha, sha)
+        self.assertEqual(check_suite.status, "queued")
+        self.assertIsNone(check_suite.conclusion)
