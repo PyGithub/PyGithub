@@ -95,6 +95,7 @@ from deprecated import deprecated
 
 import github.Branch
 import github.CheckRun
+import github.CheckSuite
 import github.Clones
 import github.Commit
 import github.CommitComment
@@ -127,6 +128,7 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryKey
+import github.RepositoryPreferences
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -3443,6 +3445,57 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         return self._hub("unsubscribe", event, callback, github.GithubObject.NotSet)
+
+    def create_check_suite(self, head_sha):
+        """
+        :calls: `POST /repos/:owner/:repo/check-suites <https://docs.github.com/en/rest/reference/checks#create-a-check-suite>`_
+        :param head_sha: string
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(head_sha, str), head_sha
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/check-suites",
+            input={"head_sha": head_sha},
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_check_suite(self, check_suite_id):
+        """
+        :calls: `GET /repos/:owner/:repo/check-suites/:check_suite_id <https://docs.github.com/en/rest/reference/checks#get-a-check-suite>`_
+        :param check_suite_id: int
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(check_suite_id, int), check_suite_id
+        requestHeaders = {"Accept": "application/vnd.github.v3+json"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/check-suites/" + str(check_suite_id),
+            headers=requestHeaders,
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
+    def update_check_suites_preferences(self, auto_trigger_checks):
+        """
+        :calls: `PATCH /repos/:owner/:repo/check-suites/preferences <https://docs.github.com/en/rest/reference/checks#update-repository-preferences-for-check-suites>`_
+        :param auto_trigger_checks: list of dict
+        :rtype: :class:`github.RepositoryPreferences.RepositoryPreferences`
+        """
+        assert all(
+            isinstance(element, dict) for element in auto_trigger_checks
+        ), auto_trigger_checks
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/check-suites/preferences",
+            input={"auto_trigger_checks": auto_trigger_checks},
+        )
+        return github.RepositoryPreferences.RepositoryPreferences(
+            self._requester, headers, data, completed=True
+        )
 
     def _hub(self, mode, event, callback, secret):
         assert isinstance(mode, str), mode
