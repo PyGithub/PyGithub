@@ -4,6 +4,41 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.54 (November 30, 2020)
+-----------------------------------
+**Important**
+
+This is the last release that will support Python 3.5.
+
+**Breaking Changes**
+
+The Github.get_installation(integer) method has been removed.
+Repository.create_deployment()'s payload parameter is now a dictionary.
+
+**Bug Fixes & Improvements**
+
+* Add support for Check Suites (#1764) (6d501b28)
+* Add missing preview features of Deployment and Deployment Statuses API (#1674) (197e0653)
+* Correct typing for Commit.get_comments() (#1765) (fcdd9eae)
+* Pin requests to <2.25 as well (#1757) (d159425f)
+* Add Support for Check Runs (#1727) (c77c0676)
+* Added a method for getting a user by their id (#1691) (4cfc9912)
+* Fix #1742 - incorrect typehint for `Installation.id` (#1743) (546f6495)
+* Add WorkflowRun.workflow_id (#1737) (78a29a7c)
+* Add support for Python 3.9 (#1735) (1bb18ab5)
+* Added support for the Self-Hosted actions runners API (#1684) (24251f4b)
+* Fix Branch protection status in the examples (#1729) (88800844)
+* Filter the DeprecationWarning in Team tests (#1728) (23f47539)
+* Added get_installations() to Organizations (#1695) (b42fb244)
+* Fix #1507: Add new Teams: Add or update team repository endpoint (#1509) (1c55be51)
+* Added support for `Repository.get_workflow_runs` parameters (#1682) (c23564dd)
+* feat(pullrequest): add the rebaseable attribute (#1690) (ee4c7a7e)
+* Add support for deleting reactions (#1708) (f7d203c0)
+* Correct type hint for InputGitTreeElement.sha (08b72b48)
+* Ignore new black formatting commit for git blame (#1680) (7ec4f155)
+* Format with new black (#1679) (07e29fe0)
+* Add get_timeline() to Issue's type stubs (#1663) (6bc9ecc8)
+
 Version 1.53 (August 18, 2020)
 -----------------------------------
 
