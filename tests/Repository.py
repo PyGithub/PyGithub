@@ -28,6 +28,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1229,13 +1230,21 @@ class Repository(Framework.TestCase):
 
     def testCreateDeployment(self):
         deployment = self.repo.create_deployment(
-            "8f039d9c4ebd6f24b4bb04634ed062375c11b751"
+            ref="743f5a58b0bce91c4eab744ff7e39dfca9e6e8a5",
+            task="deploy",
+            auto_merge=False,
+            required_contexts=[],
+            payload={"test": True},
+            environment="test",
+            description="Test deployment",
+            transient_environment=True,
+            production_environment=False,
         )
-        self.assertEqual(deployment.id, 201741959)
+        self.assertEqual(deployment.id, 263877258)
 
     def testGetDeployments(self):
         deployments = self.repo.get_deployments()
-        self.assertListKeyEqual(deployments, lambda d: d.id, [201741959])
+        self.assertListKeyEqual(deployments, lambda d: d.id, [263877258, 262350588])
 
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
