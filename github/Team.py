@@ -71,6 +71,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def ldap_dn(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._ldap_dn)
+        return self._ldap_dn.value
+
+    @property
     def members_count(self):
         """
         :type: integer
@@ -101,6 +109,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def ldap_dn(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._ldap_dn)
+        return self._ldap_dn.value
 
     @property
     def permission(self):
@@ -312,6 +328,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
+        ldap_dn=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
@@ -319,12 +336,16 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param permission: string
         :param privacy: string
+        :param ldap_dn: string
         :rtype: None
         """
         assert isinstance(name, str), name
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert ldap_dn is github.GithubObject.NotSet or isinstance(
+            ldap_dn, str
+        ), ldap_dn
         assert permission is github.GithubObject.NotSet or isinstance(
             permission, str
         ), permission
@@ -336,6 +357,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if ldap_dn is not github.GithubObject.NotSet:
+            post_parameters["ldap_dn"] = ldap_dn
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
@@ -476,10 +499,12 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
+        self._ldap_dn = github.GithubObject.NotSet
         self._members_count = github.GithubObject.NotSet
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
+        self._ldap_dn = github.GithubObject.NotSet
         self._permission = github.GithubObject.NotSet
         self._repos_count = github.GithubObject.NotSet
         self._repositories_url = github.GithubObject.NotSet
@@ -492,6 +517,8 @@ class Team(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "ldap_dn" in attributes:  # pragma no branch
+            self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "members_count" in attributes:  # pragma no branch
             self._members_count = self._makeIntAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch
@@ -500,6 +527,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "ldap_dn" in attributes:  # pragma no branch
+            self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch

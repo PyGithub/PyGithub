@@ -591,6 +591,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        ldap_dn=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
@@ -599,6 +600,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param ldap_dn: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
@@ -614,6 +616,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert ldap_dn is github.GithubObject.NotSet or isinstance(
+            ldap_dn, str
+        ), ldap_dn
         post_parameters = {
             "name": name,
         }
@@ -627,6 +632,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if ldap_dn is not github.GithubObject.NotSet:
+            post_parameters["ldap_dn"] = ldap_dn
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/teams", input=post_parameters
         )

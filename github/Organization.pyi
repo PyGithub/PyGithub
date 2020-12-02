@@ -73,6 +73,7 @@ class Organization(CompletableGithubObject):
         permission: Union[str, _NotSetType] = ...,
         privacy: Union[str, _NotSetType] = ...,
         description: Union[str, _NotSetType] = ...,
+        ldap_dn: Union[str, _NotSetType] = ...,
     ) -> Team: ...
     @property
     def created_at(self) -> datetime: ...
