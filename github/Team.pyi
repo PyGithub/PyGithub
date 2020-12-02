@@ -30,7 +30,6 @@ class Team(CompletableGithubObject):
         description: Union[str, _NotSetType] = ...,
         permission: Union[str, _NotSetType] = ...,
         privacy: Union[str, _NotSetType] = ...,
-        ldap_dn: Union[str, _NotSetType] = ...,
     ) -> None: ...
     def get_discussions(self) -> PaginatedList[TeamDiscussion]: ...
     def get_members(

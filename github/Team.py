@@ -328,7 +328,6 @@ class Team(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
-        ldap_dn=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
@@ -336,16 +335,12 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param permission: string
         :param privacy: string
-        :param ldap_dn: string
         :rtype: None
         """
         assert isinstance(name, str), name
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
-        assert ldap_dn is github.GithubObject.NotSet or isinstance(
-            ldap_dn, str
-        ), ldap_dn
         assert permission is github.GithubObject.NotSet or isinstance(
             permission, str
         ), permission
@@ -357,8 +352,6 @@ class Team(github.GithubObject.CompletableGithubObject):
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        if ldap_dn is not github.GithubObject.NotSet:
-            post_parameters["ldap_dn"] = ldap_dn
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
