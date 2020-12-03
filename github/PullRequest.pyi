@@ -61,16 +61,16 @@ class PullRequest(CompletableGithubObject):
     ) -> PullRequestComment: ...
     def create_review_request(
         self,
-        reviewers: Union[_NotSetType, str] = ...,
-        team_reviewers: Union[_NotSetType, str] = ...,
+        reviewers: Union[_NotSetType, List[str]] = ...,
+        team_reviewers: Union[_NotSetType, List[str]] = ...,
     ) -> None: ...
     @property
     def created_at(self) -> datetime: ...
     def delete_labels(self) -> None: ...
     def delete_review_request(
         self,
-        reviewers: Union[_NotSetType, str] = ...,
-        team_reviewers: Union[_NotSetType, str] = ...,
+        reviewers: Union[_NotSetType, List[str]] = ...,
+        team_reviewers: Union[_NotSetType, List[str]] = ...,
     ) -> None: ...
     @property
     def deletions(self) -> int: ...
