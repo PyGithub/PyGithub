@@ -9,7 +9,7 @@
 [![codecov](https://codecov.io/gh/PyGithub/PyGithub/branch/master/graph/badge.svg)](https://codecov.io/gh/PyGithub/PyGithub)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-PyGitHub is a Python library to access the [GitHub API v3] and [Github Enterprise API v3].
+PyGitHub is a Python library to access the [GitHub API v3] and [Github Enterprise API v3]..
 This library enables you to manage [GitHub] resources such as repositories, user profiles, and organizations in your Python applications.
 
 [GitHub API v3]: https://developer.github.com/v3
