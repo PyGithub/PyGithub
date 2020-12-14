@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -420,8 +418,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(
             self.event_renamed.rename,
             {
-                u"to": u"Adding new attributes to IssueEvent",
-                u"from": u"Adding new attributes to IssueEvent Object (DO NOT MERGE - SEE NOTES)",
+                "to": "Adding new attributes to IssueEvent",
+                "from": "Adding new attributes to IssueEvent Object (DO NOT MERGE - SEE NOTES)",
             },
         )
         self.assertEqual(self.event_renamed.dismissed_review, None)
@@ -663,9 +661,9 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(
             self.event_review_dismissed.dismissed_review,
             {
-                u"dismissal_message": u"dismiss",
-                u"state": u"changes_requested",
-                u"review_id": 145431295,
+                "dismissal_message": "dismiss",
+                "state": "changes_requested",
+                "review_id": 145431295,
             },
         )
         self.assertEqual(self.event_review_dismissed.lock_reason, None)

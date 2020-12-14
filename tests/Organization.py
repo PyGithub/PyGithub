@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -389,8 +387,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/orgs/members/#create-organization-invitation",
-                u"message": u"You must be an admin to create an invitation to an organization.",
+                "documentation_url": "https://developer.github.com/v3/orgs/members/#create-organization-invitation",
+                "message": "You must be an admin to create an invitation to an organization.",
             },
         )
 

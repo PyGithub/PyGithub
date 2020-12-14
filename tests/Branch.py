@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -87,10 +85,10 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#update-branch-protection",
-                u"message": u"Validation Failed",
-                u"errors": [
-                    u"Only organization repositories can have users and team restrictions"
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#update-branch-protection",
+                "message": "Validation Failed",
+                "errors": [
+                    "Only organization repositories can have users and team restrictions"
                 ],
             },
         )
@@ -104,10 +102,10 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#update-branch-protection",
-                u"message": u"Validation Failed",
-                u"errors": [
-                    u"Only organization repositories can have users and team restrictions"
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#update-branch-protection",
+                "message": "Validation Failed",
+                "errors": [
+                    "Only organization repositories can have users and team restrictions"
                 ],
             },
         )
@@ -147,8 +145,8 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#get-branch-protection",
-                u"message": u"Branch not protected",
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#get-branch-protection",
+                "message": "Branch not protected",
             },
         )
 
@@ -166,8 +164,8 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#get-required-status-checks-of-protected-branch",
-                u"message": u"Required status checks not enabled",
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#get-required-status-checks-of-protected-branch",
+                "message": "Required status checks not enabled",
             },
         )
 
@@ -193,8 +191,8 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch",
-                u"message": u"Invalid request.\n\n9 must be less than or equal to 6.",
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch",
+                "message": "Invalid request.\n\n9 must be less than or equal to 6.",
             },
         )
 
@@ -207,8 +205,8 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch",
-                u"message": u"Dismissal restrictions are supported only for repositories owned by an organization.",
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#update-pull-request-review-enforcement-of-protected-branch",
+                "message": "Dismissal restrictions are supported only for repositories owned by an organization.",
             },
         )
 
@@ -295,8 +293,8 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/branches/#list-team-restrictions-of-protected-branch",
-                u"message": u"Push restrictions not enabled",
+                "documentation_url": "https://developer.github.com/v3/repos/branches/#list-team-restrictions-of-protected-branch",
+                "message": "Push restrictions not enabled",
             },
         )
 

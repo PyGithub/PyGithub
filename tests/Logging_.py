@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -62,7 +60,7 @@ class Logging(Framework.BasicTestCase):
             output,
         ):
             self.verb = verb
-            self.url = "%s://%s%s" % (scheme, hostname, fragment)
+            self.url = f"{scheme}://{hostname}{fragment}"
             self.requestHeaders = requestHeaders
             self.input = input_
             self.status = status
