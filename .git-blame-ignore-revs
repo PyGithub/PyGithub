@@ -6,3 +6,6 @@
 
 # Format with new black
 07e29fe014b7e214e72b51129fbef55468a7309d
+
+# Add pyupgrade to pre-commit
+e113e37de1ec687c68337d777f3629251b35ab28
