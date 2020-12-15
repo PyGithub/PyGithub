@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
@@ -43,16 +41,16 @@ PARAMETERS = itertools.product(
             "\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\n{\"body\":\"BODY TEXT\"}\n\n",
         ),
         (
-            u'{"body":"BODY\xa0TEXT"}',
-            u"\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\n{\"body\":\"BODY\xa0TEXT\"}\n\n",
+            '{"body":"BODY\xa0TEXT"}',
+            "\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\n{\"body\":\"BODY\xa0TEXT\"}\n\n",
         ),
         (
             "BODY TEXT",
             "\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\nBODY TEXT\n\n",
         ),
         (
-            u"BODY\xa0TEXT",
-            u"\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\nBODY\xa0TEXT\n\n",
+            "BODY\xa0TEXT",
+            "\nGET\napi.github.com\nNone\n/user\n{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}\nNone\n200\n[]\nBODY\xa0TEXT\n\n",
         ),
     ],
 )

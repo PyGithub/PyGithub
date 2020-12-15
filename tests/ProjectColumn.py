@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # ########################## Copyrights and license ############################
 #                                                                              #
 # This file is part of PyGithub.                                               #

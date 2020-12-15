@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -53,12 +51,10 @@ class PaginatedListBase:
             return self._Slice(self, index)
 
     def __iter__(self):
-        for element in self.__elements:
-            yield element
+        yield from self.__elements
         while self._couldGrow():
             newElements = self._grow()
-            for element in newElements:
-                yield element
+            yield from newElements
 
     def _isBiggerThan(self, index):
         return len(self.__elements) > index or self._couldGrow()

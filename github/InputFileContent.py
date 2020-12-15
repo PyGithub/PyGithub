@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -31,7 +29,7 @@
 import github.GithubObject
 
 
-class InputFileContent(object):
+class InputFileContent:
     """
     This class represents InputFileContents
     """

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
@@ -141,7 +139,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.author.type, "User")
         self.assertEqual(
             release.html_url,
-            "https://github.com/{}/{}/releases/tag/{}".format(user, repo_name, tag),
+            f"https://github.com/{user}/{repo_name}/releases/tag/{tag}",
         )
         self.assertEqual(release.created_at, create_date)
         self.assertEqual(release.published_at, publish_date)

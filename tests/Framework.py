@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -132,7 +130,7 @@ class RecordingConnection:
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(str(line) + u"\n")
+        self.__file.write(str(line) + "\n")
 
 
 class RecordingHttpConnection(RecordingConnection):
@@ -314,7 +312,7 @@ class BasicTestCase(unittest.TestCase):
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = io.open(self.__fileName, mode, encoding="utf-8")
+            self.__file = open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self):

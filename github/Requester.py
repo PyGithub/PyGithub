@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
@@ -81,7 +79,7 @@ class RequestsResponse:
         return self.text
 
 
-class HTTPSRequestsConnectionClass(object):
+class HTTPSRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
         self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
@@ -106,7 +104,7 @@ class HTTPSRequestsConnectionClass(object):
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
-        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
             url,
             headers=self.headers,
@@ -121,7 +119,7 @@ class HTTPSRequestsConnectionClass(object):
         return
 
 
-class HTTPRequestsConnectionClass(object):
+class HTTPRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
         self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
@@ -146,7 +144,7 @@ class HTTPRequestsConnectionClass(object):
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
-        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
             url,
             headers=self.headers,
@@ -513,7 +511,7 @@ class Requester:
         response = cnx.getresponse()
 
         status = response.status
-        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
+        responseHeaders = {k.lower(): v for k, v in response.getheaders()}
         output = response.read()
 
         cnx.close()

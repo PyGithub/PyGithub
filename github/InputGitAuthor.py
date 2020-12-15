@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -33,7 +31,7 @@
 import github.GithubObject
 
 
-class InputGitAuthor(object):
+class InputGitAuthor:
     """
     This class represents InputGitAuthors
     """
@@ -56,7 +54,7 @@ class InputGitAuthor(object):
         self.__date = date
 
     def __repr__(self):
-        return 'InputGitAuthor(name="{}")'.format(self.__name)
+        return f'InputGitAuthor(name="{self.__name}")'
 
     @property
     def _identity(self):

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # ########################## Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
