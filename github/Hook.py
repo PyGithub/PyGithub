@@ -189,14 +189,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/hooks/:id/tests <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck("POST", self.url + "/tests")
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
     def ping(self):
         """
         :calls: `POST /repos/:owner/:repo/hooks/:id/pings <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck("POST", self.url + "/pings")
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
     def _initAttributes(self):
         self._active = github.GithubObject.NotSet

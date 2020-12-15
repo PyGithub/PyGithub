@@ -75,7 +75,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         """
         self._requester.requestJsonAndCheck(
             "DELETE",
-            self._parentUrl("") + "/reactions/" + str(self.id),
+            f"{self._parentUrl('')}/reactions/{self.id}",
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 

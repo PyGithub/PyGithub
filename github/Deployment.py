@@ -163,7 +163,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.DeploymentStatus.DeploymentStatus,
             self._requester,
-            self.url + "/statuses",
+            f"{self.url}/statuses",
             None,
             headers={"Accept": self._get_accept_header()},
         )
@@ -177,7 +177,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/statuses/" + str(id_),
+            f"{self.url}/statuses/{id_}",
             headers={"Accept": self._get_accept_header()},
         )
         return github.DeploymentStatus.DeploymentStatus(
@@ -234,7 +234,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/statuses",
+            f"{self.url}/statuses",
             input=post_parameters,
             headers={"Accept": self._get_accept_header()},
         )

@@ -210,7 +210,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/comments", input=post_parameters
+            "POST", f"{self.url}/comments", input=post_parameters
         )
         return github.GistComment.GistComment(
             self._requester, headers, data, completed=True
@@ -221,7 +221,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :calls: `POST /gists/:id/forks <http://developer.github.com/v3/gists>`_
         :rtype: :class:`github.Gist.Gist`
         """
-        headers, data = self._requester.requestJsonAndCheck("POST", self.url + "/forks")
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/forks")
         return Gist(self._requester, headers, data, completed=True)
 
     def delete(self):
@@ -268,7 +268,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/comments/" + str(id)
+            "GET", f"{self.url}/comments/{id}"
         )
         return github.GistComment.GistComment(
             self._requester, headers, data, completed=True
@@ -282,7 +282,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.GistComment.GistComment,
             self._requester,
-            self.url + "/comments",
+            f"{self.url}/comments",
             None,
         )
 
@@ -291,7 +291,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :calls: `GET /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: bool
         """
-        status, headers, data = self._requester.requestJson("GET", self.url + "/star")
+        status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
         return status == 204
 
     def reset_starred(self):
@@ -300,7 +300,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/star"
+            "DELETE", f"{self.url}/star"
         )
 
     def set_starred(self):
@@ -308,7 +308,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck("PUT", self.url + "/star")
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
 
     def _initAttributes(self):
         self._comments = github.GithubObject.NotSet

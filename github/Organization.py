@@ -370,7 +370,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if role is not github.GithubObject.NotSet:
             put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/memberships/" + member._identity, input=put_parameters
+            "PUT", f"{self.url}/memberships/{member._identity}", input=put_parameters
         )
 
     def add_to_public_members(self, public_member):
@@ -381,7 +381,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/public_members/" + public_member._identity
+            "PUT", f"{self.url}/public_members/{public_member._identity}"
         )
 
     def create_fork(self, repo):
@@ -396,7 +396,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            f"/repos/{repo.owner.login}/{repo.name}/forks",
             parameters=url_parameters,
         )
         return github.Repository.Repository(
@@ -433,7 +433,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/hooks", input=post_parameters
+            "POST", f"{self.url}/hooks", input=post_parameters
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -451,7 +451,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["body"] = body
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/projects",
+            f"{self.url}/projects",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
@@ -576,7 +576,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/repos", input=post_parameters
+            "POST", f"{self.url}/repos", input=post_parameters
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -626,7 +626,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/teams", input=post_parameters
+            "POST", f"{self.url}/teams", input=post_parameters
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -638,7 +638,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/hooks/" + str(id)
+            "DELETE", f"{self.url}/hooks/{id}"
         )
 
     def edit(
@@ -730,7 +730,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url + "/hooks/" + str(id), input=post_parameters
+            "PATCH", f"{self.url}/hooks/{id}", input=post_parameters
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -740,7 +740,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, self.url + "/events", None
+            github.Event.Event, self._requester, f"{self.url}/events", None
         )
 
     def get_hook(self, id):
@@ -751,7 +751,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/hooks/" + str(id)
+            "GET", f"{self.url}/hooks/{id}"
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -761,7 +761,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Hook.Hook`
         """
         return github.PaginatedList.PaginatedList(
-            github.Hook.Hook, self._requester, self.url + "/hooks", None
+            github.Hook.Hook, self._requester, f"{self.url}/hooks", None
         )
 
     def get_issues(
@@ -810,7 +810,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
-            github.Issue.Issue, self._requester, self.url + "/issues", url_parameters
+            github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters
         )
 
     def get_members(
@@ -835,7 +835,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/members",
+            f"{self.url}/members",
             url_parameters,
         )
 
@@ -853,7 +853,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
-            self.url + "/projects",
+            f"{self.url}/projects",
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview},
         )
@@ -866,7 +866,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/public_members",
+            f"{self.url}/public_members",
             None,
         )
 
@@ -886,7 +886,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/outside_collaborators",
+            f"{self.url}/outside_collaborators",
             url_parameters,
         )
 
@@ -898,7 +898,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/outside_collaborators/" + collaborator._identity
+            "DELETE", f"{self.url}/outside_collaborators/{collaborator._identity}"
         )
 
     def convert_to_outside_collaborator(self, member):
@@ -909,7 +909,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/outside_collaborators/" + member._identity
+            "PUT", f"{self.url}/outside_collaborators/{member._identity}"
         )
 
     def get_repo(self, name):
@@ -920,7 +920,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", "/repos/" + self.login + "/" + name
+            "GET", f"/repos/{self.login}/{name}"
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -955,7 +955,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            self.url + "/repos",
+            f"{self.url}/repos",
             url_parameters,
         )
 
@@ -966,7 +966,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", "/teams/" + str(id))
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/teams/{id}")
         return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_team_by_slug(self, slug):
@@ -977,7 +977,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(slug, str), slug
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/teams/" + slug
+            "GET", f"{self.url}/teams/{slug}"
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -987,7 +987,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self.url + "/teams", None
+            github.Team.Team, self._requester, f"{self.url}/teams", None
         )
 
     def invitations(self):
@@ -998,7 +998,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/invitations",
+            f"{self.url}/invitations",
             None,
             headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
         )
@@ -1039,7 +1039,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             parameters["team_ids"] = [t.id for t in teams]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/invitations",
+            f"{self.url}/invitations",
             headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
             input=parameters,
         )
@@ -1052,7 +1052,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
-            "GET", self.url + "/members/" + member._identity
+            "GET", f"{self.url}/members/{member._identity}"
         )
         if status == 302:
             status, headers, data = self._requester.requestJson(
@@ -1068,7 +1068,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         status, headers, data = self._requester.requestJson(
-            "GET", self.url + "/public_members/" + public_member._identity
+            "GET", f"{self.url}/public_members/{public_member._identity}"
         )
         return status == 204
 
@@ -1080,7 +1080,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/memberships/" + member._identity
+            "DELETE", f"{self.url}/memberships/{member._identity}"
         )
 
     def remove_from_members(self, member):
@@ -1091,7 +1091,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/members/" + member._identity
+            "DELETE", f"{self.url}/members/{member._identity}"
         )
 
     def remove_from_public_members(self, public_member):
@@ -1102,7 +1102,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/public_members/" + public_member._identity
+            "DELETE", f"{self.url}/public_members/{public_member._identity}"
         )
 
     def create_migration(
@@ -1133,7 +1133,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["exclude_attachments"] = exclude_attachments
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            "/orgs/" + self.login + "/migrations",
+            f"/orgs/{self.login}/migrations",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
@@ -1149,7 +1149,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Migration.Migration,
             self._requester,
-            "/orgs/" + self.login + "/migrations",
+            f"/orgs/{self.login}/migrations",
             None,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
@@ -1163,7 +1163,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Installation.Installation,
             self._requester,
-            self.url + "/installations",
+            f"{self.url}/installations",
             None,
             None,
             list_item="installations",

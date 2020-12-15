@@ -162,7 +162,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         if position is not github.GithubObject.NotSet:
             post_parameters["position"] = position
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/comments", input=post_parameters
+            "POST", f"{self.url}/comments", input=post_parameters
         )
         return github.CommitComment.CommitComment(
             self._requester, headers, data, completed=True
@@ -204,7 +204,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             post_parameters["context"] = context
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
+            f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
         return github.CommitStatus.CommitStatus(
@@ -219,7 +219,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CommitComment.CommitComment,
             self._requester,
-            self.url + "/comments",
+            f"{self.url}/comments",
             None,
         )
 
@@ -231,7 +231,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CommitStatus.CommitStatus,
             self._requester,
-            self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
+            f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             None,
         )
 
@@ -240,7 +240,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/commits/:ref/status/ <http://developer.github.com/v3/repos/statuses>`_
         :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/status")
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
         return github.CommitCombinedStatus.CommitCombinedStatus(
             self._requester, headers, data, completed=True
         )
@@ -253,7 +253,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequest.PullRequest,
             self._requester,
-            self.url + "/pulls",
+            f"{self.url}/pulls",
             None,
             headers={"Accept": "application/vnd.github.groot-preview+json"},
         )
@@ -286,7 +286,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CheckRun.CheckRun,
             self._requester,
-            self.url + "/check-runs",
+            f"{self.url}/check-runs",
             url_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
             list_item="check_runs",
@@ -314,7 +314,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CheckSuite.CheckSuite,
             self._requester,
-            self.url + "/check-suites",
+            f"{self.url}/check-suites",
             parameters,
             headers=request_headers,
             list_item="check_suites",

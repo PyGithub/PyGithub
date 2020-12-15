@@ -288,12 +288,12 @@ class PaginatedList(Framework.TestCase):
         PaginatedListImpl(
             CommitComment.CommitComment,
             self.repo._requester,
-            self.repo.url + "/comments",
+            f"{self.repo.url}/comments",
             None,
         )
 
     def testCustomPerPageWithNoUrlParams2(self):
-        # This test is redountant and less unitary than testCustomPerPageWithNoUrlParams
+        # This test is redundant and less unitary than testCustomPerPageWithNoUrlParams
         # but I hope it will be more robust if we refactor PaginatedList,
         # because testCustomPerPageWithNoUrlParams only tests the constructor
         self.g.per_page = 100

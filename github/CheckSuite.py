@@ -166,7 +166,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         """
         request_headers = {"Accept": "application/vnd.github.v3+json"}
         status, _, _ = self._requester.requestJson(
-            "POST", self.url + "/rerequest", headers=request_headers
+            "POST", f"{self.url}/rerequest", headers=request_headers
         )
         return status == 201
 
@@ -198,7 +198,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CheckRun.CheckRun,
             self._requester,
-            self.url + "/check-runs",
+            f"{self.url}/check-runs",
             url_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
             list_item="check_runs",

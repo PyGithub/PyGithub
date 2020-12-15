@@ -258,7 +258,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :rtype: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.protection_url + "/required_status_checks"
+            "GET", f"{self.protection_url}/required_status_checks"
         )
         return github.RequiredStatusChecks.RequiredStatusChecks(
             self._requester, headers, data, completed=True
@@ -284,7 +284,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
-            self.protection_url + "/required_status_checks",
+            f"{self.protection_url}/required_status_checks",
             input=post_parameters,
         )
 
@@ -293,7 +293,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/required_status_checks"
+            "DELETE",
+            f"{self.protection_url}/required_status_checks",
         )
 
     def get_required_pull_request_reviews(self):
@@ -303,7 +304,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.protection_url + "/required_pull_request_reviews",
+            f"{self.protection_url}/required_pull_request_reviews",
             headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
         )
         return github.RequiredPullRequestReviews.RequiredPullRequestReviews(
@@ -360,7 +361,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             ] = required_approving_review_count
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
-            self.protection_url + "/required_pull_request_reviews",
+            f"{self.protection_url}/required_pull_request_reviews",
             headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
             input=post_parameters,
         )
@@ -370,7 +371,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/required_pull_request_reviews"
+            "DELETE",
+            f"{self.protection_url}/required_pull_request_reviews",
         )
 
     def get_admin_enforcement(self):
@@ -379,7 +381,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :rtype: bool
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.protection_url + "/enforce_admins"
+            "GET", f"{self.protection_url}/enforce_admins"
         )
         return data["enabled"]
 
@@ -388,7 +390,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.protection_url + "/enforce_admins"
+            "POST", f"{self.protection_url}/enforce_admins"
         )
 
     def remove_admin_enforcement(self):
@@ -396,7 +398,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/enforce_admins"
+            "DELETE", f"{self.protection_url}/enforce_admins"
         )
 
     def get_user_push_restrictions(self):
@@ -407,7 +409,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.protection_url + "/restrictions/users",
+            f"{self.protection_url}/restrictions/users",
             None,
         )
 
@@ -419,7 +421,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Team.Team,
             self._requester,
-            self.protection_url + "/restrictions/teams",
+            f"{self.protection_url}/restrictions/teams",
             None,
         )
 
@@ -431,7 +433,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.protection_url + "/restrictions/users", input=users
+            "POST", f"{self.protection_url}/restrictions/users", input=users
         )
 
     def replace_user_push_restrictions(self, *users):
@@ -442,7 +444,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.protection_url + "/restrictions/users", input=users
+            "PUT", f"{self.protection_url}/restrictions/users", input=users
         )
 
     def remove_user_push_restrictions(self, *users):
@@ -453,7 +455,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in users), users
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/restrictions/users", input=users
+            "DELETE", f"{self.protection_url}/restrictions/users", input=users
         )
 
     def add_team_push_restrictions(self, *teams):
@@ -464,7 +466,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.protection_url + "/restrictions/teams", input=teams
+            "POST", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
     def replace_team_push_restrictions(self, *teams):
@@ -475,7 +477,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.protection_url + "/restrictions/teams", input=teams
+            "PUT", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
     def remove_team_push_restrictions(self, *teams):
@@ -486,7 +488,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert all(isinstance(element, str) for element in teams), teams
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/restrictions/teams", input=teams
+            "DELETE", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
     def remove_push_restrictions(self):
@@ -494,7 +496,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.protection_url + "/restrictions"
+            "DELETE", f"{self.protection_url}/restrictions"
         )
 
     def get_required_signatures(self):
@@ -503,7 +505,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.protection_url + "/required_signatures",
+            f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
         return data["enabled"]
@@ -514,7 +516,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.protection_url + "/required_signatures",
+            f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
 
@@ -524,6 +526,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.protection_url + "/required_signatures",
+            f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )

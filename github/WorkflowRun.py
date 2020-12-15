@@ -239,7 +239,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/actions/runs/:run_id/timing <https://developer.github.com/v3/actions/workflow-runs/>`_
         :rtype: namedtuple with billable and run_duration_ms members
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/timing")
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
         timingdata = namedtuple("TimingData", data.keys())
         return timingdata._make(data.values())
 

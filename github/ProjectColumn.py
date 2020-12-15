@@ -108,7 +108,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.ProjectCard.ProjectCard,
             self._requester,
-            self.url + "/cards",
+            f"{self.url}/cards",
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview},
         )
@@ -139,7 +139,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/cards", headers=import_header, input=post_parameters
+            "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
         return github.ProjectCard.ProjectCard(
             self._requester, headers, data, completed=True
@@ -156,7 +156,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         post_parameters = {"position": position}
         status, _, _ = self._requester.requestJson(
             "POST",
-            self.url + "/moves",
+            f"{self.url}/moves",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
