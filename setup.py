@@ -54,7 +54,12 @@ if __name__ == "__main__":
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
-        url="http://pygithub.readthedocs.io/en/latest/",
+        url="https://github.com/pygithub/pygithub",
+        project_urls={
+            "Documentation": "http://pygithub.readthedocs.io/en/latest/",
+            "Source": "https://github.com/pygithub/pygithub",
+            "Tracker": "https://github.com/pygithub/pygithub/issues",
+        },
         long_description=textwrap.dedent(
             """\
             (Very short) Tutorial
