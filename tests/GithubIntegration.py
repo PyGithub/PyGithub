@@ -161,28 +161,6 @@ class GithubIntegration(unittest.TestCase):
             repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
         )
 
-    def test_get_installation(self):
-        from github import GithubIntegration
-
-        integr = GithubIntegration("11111", private_key)
-        inst = integr.get_installation("foo", "bar")
-        self.assertEqual(
-            self.get_mock.calls[0][0],
-            ("https://api.github.com/repos/foo/bar/installation",),
-        )
-        self.assertEqual(inst.id, 111111)
-
-    def test_get_installation_custom_base_url(self):
-        from github import GithubIntegration
-
-        integr = GithubIntegration("11111", private_key, base_url="https://corp.com/v3")
-        inst = integr.get_installation("foo", "bar")
-        self.assertEqual(
-            self.get_mock.calls[0][0],
-            ("https://corp.com/v3/repos/foo/bar/installation",),
-        )
-        self.assertEqual(inst.id, 111111)
-
     def tearDown(self):
         GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)
         sys.modules["time"].time = self.origin_time
