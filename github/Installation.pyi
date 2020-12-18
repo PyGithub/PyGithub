@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
@@ -34,7 +34,7 @@ class Installation(NonCompletableGithubObject):
     @property
     def repository_selection(self) -> str: ...
     @property
-    def single_file_name(self) -> str: ...
+    def single_file_name(self) -> Optional[str]: ...
     @property
     def single_file_paths(self) -> List[str]: ...
     @property

@@ -127,7 +127,7 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
     @property
     def single_file_name(self):
         """
-        :type: string
+        :type: string or None
         """
         return self._single_file_name.value
 
