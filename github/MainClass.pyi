@@ -24,7 +24,7 @@ from github.Topic import Topic
 
 # from urllib3.util.retry import Retry
 
-TGithubObject = TypeVar('TGithubObject', bound=GithubObject)
+TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
 class Github:
     def __init__(
@@ -130,11 +130,7 @@ class Github:
         order: Union[str, _NotSetType] = ...,
         **qualifiers: Any
     ) -> PaginatedList[Repository]: ...
-    def search_topics(
-        self,
-        query: str,
-        **qualifiers: Any
-    ) -> PaginatedList[Topic]: ...
+    def search_topics(self, query: str, **qualifiers: Any) -> PaginatedList[Topic]: ...
     def search_users(
         self,
         query: str,
@@ -142,6 +138,8 @@ class Github:
         order: Union[str, _NotSetType] = ...,
         **qualifiers: Any
     ) -> PaginatedList[NamedUser]: ...
+    def get_installation_by_id(self, installation_id: int) -> Installation: ...
+    def get_installation_by_repo(self, owner: str, repo: str) -> Installation: ...
 
 class GithubIntegration:
     def __init__(
@@ -151,4 +149,3 @@ class GithubIntegration:
     def get_access_token(
         self, installation_id: int, user_id: Optional[int] = ...
     ) -> InstallationAuthorization: ...
-    def get_installation(self, owner: str, repo: str) -> Installation: ...
