@@ -789,7 +789,7 @@ class Github:
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
-    def get_installation(self, installation_id):
+    def get_installation_by_id(self, installation_id):
         """
         You must use a JWT to access this endpoint which can be generated using the
         method `create_jwt()` from :class:`github.GithubIntegration`.
@@ -801,6 +801,25 @@ class Github:
         assert isinstance(installation_id, int), installation_id
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", f"/app/installations/{installation_id}"
+        )
+        return Installation.Installation(
+            self.__requester, headers, data, completed=True
+        )
+
+    def get_installation_by_repo(self, owner, repo):
+        """
+        You must use a JWT to access this endpoint which can be generated using the
+        method `create_jwt()` from :class:`github.GithubIntegration`.
+
+        :calls: `GET /repos/:owner/:repo/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`_
+        :param owner: str
+        :param repo: str
+        :rtype: :class:`github.Installation.Installation`
+        """
+        assert isinstance(owner, str), owner
+        assert isinstance(repo, str), repo
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", f"/repos/{owner}/{repo}/installation"
         )
         return Installation.Installation(
             self.__requester, headers, data, completed=True
@@ -879,23 +898,3 @@ class GithubIntegration:
         raise GithubException.GithubException(
             status=response.status_code, data=response.text
         )
-
-    def get_installation(self, owner, repo):
-        """
-        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation>`_
-        :param owner: str
-        :param repo: str
-        :rtype: :class:`github.Installation.Installation`
-        """
-        headers = {
-            "Authorization": f"Bearer {self.create_jwt()}",
-            "Accept": Consts.mediaTypeIntegrationPreview,
-            "User-Agent": "PyGithub/Python",
-        }
-
-        response = requests.get(
-            f"{self.base_url}/repos/{owner}/{repo}/installation",
-            headers=headers,
-        )
-        response_dict = response.json()
-        return Installation.Installation(None, headers, response_dict, True)
