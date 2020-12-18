@@ -789,6 +789,23 @@ class Github:
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
+    def get_installation(self, installation_id):
+        """
+        You must use a JWT to access this endpoint which can be generated using the
+        method `create_jwt()` from :class:`github.GithubIntegration`.
+
+        :calls: `GET /app/installations/:installation_id <https://docs.github.com/en/rest/reference/apps#get-an-installation-for-the-authenticated-app>`_
+        :param installation_id: int
+        :rtype: :class:`github.Installation.Installation`
+        """
+        assert isinstance(installation_id, int), installation_id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", f"/app/installations/{installation_id}"
+        )
+        return Installation.Installation(
+            self.__requester, headers, data, completed=True
+        )
+
 
 class GithubIntegration:
     """
