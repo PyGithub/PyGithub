@@ -523,3 +523,17 @@ class Github(Framework.TestCase):
             lambda e: e.type,
             ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
         )
+
+    def testGetInstallationById(self):
+        # This test was performed with the option: --auth_with_jwt
+        installation = self.g.get_installation_by_id(12482183)
+        self.assertEqual(installation.id, 12482183)
+        self.assertEqual(installation.app_slug, "test-pygithub")
+
+    def testGetInstallationByRepo(self):
+        # This test was performed with the option: --auth_with_jwt
+        installation = self.g.get_installation_by_repo(
+            "dhruvmanila", "pygithub-testing"
+        )
+        self.assertEqual(installation.id, 12482183)
+        self.assertEqual(installation.app_slug, "test-pygithub")
