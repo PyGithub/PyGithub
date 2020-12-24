@@ -762,6 +762,30 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
+    def restore_branch(self):
+        """
+        :calls: `POST /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs>`_
+        :rtype: :class:`github.GitRef.GitRef`
+        """
+        return self.head.repo.create_git_ref(
+            "refs/heads/" + self.head.ref, sha=self.head.sha
+        )
+
+    def delete_branch(self, force=False):
+        """
+        :calls: `POST /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs>`_
+        :rtype: :class:`github.GitRef.GitRef`
+        """
+        if force:  # Forcibly delete the branch and close any associated PRs
+            return self.head.repo.get_git_ref("heads/%s" % (self.head.ref)).delete()
+        remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+        if remaining_pulls.totalCount > 0:
+            raise AttributeError(
+                "PRs referencing this branch remain. Not deleting the branch"
+            )
+        else:
+            return self.head.repo.get_git_ref("heads/%s" % (self.head.ref)).delete()
+
     def enable_automerge(
         self,
         merge_method: Opt[str] = "MERGE",
@@ -770,6 +794,7 @@ class PullRequest(CompletableGithubObject):
         commit_body: Opt[str] = NotSet,
         commit_headline: Opt[str] = NotSet,
         expected_head_oid: Opt[str] = NotSet,
+        deletebranch=False,
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
@@ -843,6 +868,9 @@ class PullRequest(CompletableGithubObject):
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
+        if deletebranch:
+            self.delete_branch(False)
+
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
     def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
