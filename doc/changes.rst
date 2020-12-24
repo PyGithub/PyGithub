@@ -4,6 +4,16 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.54.1 (December 24, 2020)
+-----------------------------------
+
+* Pin pyjwt version (#1797) (31a1c007)
+* Add pyupgrade to pre-commit configuration (#1783) (e113e37d)
+* Fix #1731: Incorrect annotation (82c349ce)
+* Drop support for Python 3.5 (#1770) (63e4fae9)
+* Revert "Pin requests to <2.25 as well (#1757)" (#1763) (a806b523)
+* Fix stubs file for Repository (fab682a5)
+
 Version 1.54 (November 30, 2020)
 -----------------------------------
 **Important**
