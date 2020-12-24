@@ -773,7 +773,7 @@ class PullRequest(CompletableGithubObject):
 
     def delete_branch(self, force=False):
         """
-        :calls: `POST /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs>`_
+        :calls: `DELETE /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs>`_
         :rtype: :class:`github.GitRef.GitRef`
         """
         if force:  # Forcibly delete the branch and close any associated PRs
