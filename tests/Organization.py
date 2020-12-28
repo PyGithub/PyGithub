@@ -158,9 +158,11 @@ class Organization(Framework.TestCase):
             "push",
             "secret",
             "Description also created by PyGithub",
+            "ou=Users,dc=example,dc=com"
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
+        self.assertEqual(team.ldap_dn, "ou=Users,dc=example,dc=com")
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})

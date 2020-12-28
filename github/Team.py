@@ -320,6 +320,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
+        ldap_dn=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
@@ -327,6 +328,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param permission: string
         :param privacy: string
+        :param ldap_dn: string
         :rtype: None
         """
         assert isinstance(name, str), name
@@ -339,6 +341,9 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert privacy is github.GithubObject.NotSet or isinstance(
             privacy, str
         ), privacy
+        assert ldap_dn is github.GithubObject.NotSet or isinstance(
+            ldap_dn, str
+        ), ldap_dn
         post_parameters = {
             "name": name,
         }
@@ -348,6 +353,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
+        if ldap_dn is not github.GithubObject.NotSet:
+            post_parameters["ldap_dn"] = ldap_dn
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
@@ -499,10 +506,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._parent = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        print("data is {0}".format(attributes))
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "ldap_dn" in attributes:  # pragma no branch
+            print("found ldap_dn attribute")
             self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
+        else:
+            print("not found ldap_dn attribute")
         if "members_count" in attributes:  # pragma no branch
             self._members_count = self._makeIntAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch

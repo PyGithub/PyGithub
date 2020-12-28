@@ -57,6 +57,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.parent, None)
+        self.assertEqual(self.team.ldap_dn, "ou=Users,dc=example,dc=com")
         self.assertEqual(
             repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
         )
@@ -157,11 +158,13 @@ class Team(Framework.TestCase):
             "Description edited by PyGithub",
             "admin",
             "secret",
+            ldap_dn="ou=Users2,dc=example,dc=com"
         )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+        self.assertEqual(self.team.ldap_dn, "ou=Users2,dc=example,dc=com")
 
     def testGetTeams(self):
         nested_teams = self.team.get_teams()
