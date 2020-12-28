@@ -1,5 +1,5 @@
 requests>=2.14.0
-pyjwt<2.0
+pyjwt<3.0
 sphinx<3
 sphinx-rtd-theme<0.6
 Deprecated
