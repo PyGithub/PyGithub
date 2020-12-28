@@ -506,14 +506,10 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._parent = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        print("data is {0}".format(attributes))
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "ldap_dn" in attributes:  # pragma no branch
-            print("found ldap_dn attribute")
             self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
-        else:
-            print("not found ldap_dn attribute")
         if "members_count" in attributes:  # pragma no branch
             self._members_count = self._makeIntAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch

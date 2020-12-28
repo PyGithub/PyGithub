@@ -976,7 +976,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", "/teams/" + str(id))
-        print("data is {0}".format(data))
         return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_team_by_slug(self, slug):
