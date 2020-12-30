@@ -112,9 +112,12 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(self.repo.watchers, 15)
         self.assertEqual(repr(self.repo), 'Repository(full_name="jacquev6/PyGithub")')
-        self.assertEqual(
-            repr(self.repo.permissions), "Permissions(push=True, pull=True, admin=True)"
-        )
+        self.assertTrue(self.repo.permissions.admin)
+        self.assertTrue(self.repo.permissions.push)
+        self.assertTrue(self.repo.permissions.pull)
+        # Allow None or any boolean value for backwards compatibility
+        self.assertIn(self.repo.permissions.maintain, [None, False, True])
+        self.assertIn(self.repo.permissions.triage, [None, False, True])
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
