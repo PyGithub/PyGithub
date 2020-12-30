@@ -40,8 +40,10 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__(
             {
                 "admin": self._admin.value,
+                "maintain": self._maintain.value,
                 "pull": self._pull.value,
                 "push": self._push.value,
+                "triage": self._triage.value,
             }
         )
 
@@ -51,6 +53,13 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         :type: bool
         """
         return self._admin.value
+
+    @property
+    def maintain(self):
+        """
+        :type: bool
+        """
+        return self._maintain.value
 
     @property
     def pull(self):
@@ -66,15 +75,28 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         """
         return self._push.value
 
+    @property
+    def triage(self):
+        """
+        :type: bool
+        """
+        return self._triage.value
+
     def _initAttributes(self):
         self._admin = github.GithubObject.NotSet
+        self._maintain = github.GithubObject.NotSet
         self._pull = github.GithubObject.NotSet
         self._push = github.GithubObject.NotSet
+        self._triage = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
+        if "maintain" in attributes:  # pragma no branch
+            self._maintain = self._makeBoolAttribute(attributes["maintain"])
         if "pull" in attributes:  # pragma no branch
             self._pull = self._makeBoolAttribute(attributes["pull"])
         if "push" in attributes:  # pragma no branch
             self._push = self._makeBoolAttribute(attributes["push"])
+        if "triage" in attributes:  # pragma no branch
+            self._triage = self._makeBoolAttribute(attributes["triage"])
