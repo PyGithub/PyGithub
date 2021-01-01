@@ -1,2 +1,8 @@
 comment:
   after_n_builds: 4
+
+codecov:
+  disable_default_path_fixes: true # manual fix properly covers all files
+
+fixes:
+  - "::github/" # manual fix properly covers all files
