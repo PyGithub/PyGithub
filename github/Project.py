@@ -165,8 +165,8 @@ class Project(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
-        assert body is github.GithubObject.NotSet or isinstance(name, str), body
-        assert state is github.GithubObject.NotSet or isinstance(name, str), state
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert organization_permission is github.GithubObject.NotSet or isinstance(
             organization_permission, str
         ), organization_permission
