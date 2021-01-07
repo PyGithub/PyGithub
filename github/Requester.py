@@ -90,11 +90,15 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
-        # Code to support retries
-        if retry:
+
+        if retry is None:
+            self.retry = requests.adapters.DEFAULT_RETRIES
+        else:
             self.retry = retry
-            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount("https://", self.adapter)
+        self.adapter = requests.adapters.HTTPAdapter(
+            max_retries=self.retry,
+        )
+        self.session.mount("https://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -130,11 +134,15 @@ class HTTPRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
-        # Code to support retries
-        if retry:
+
+        if retry is None:
+            self.retry = requests.adapters.DEFAULT_RETRIES
+        else:
             self.retry = retry
-            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount("http://", self.adapter)
+        self.adapter = requests.adapters.HTTPAdapter(
+            max_retries=self.retry,
+        )
+        self.session.mount("http://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
