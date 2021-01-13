@@ -158,7 +158,7 @@ class Organization(Framework.TestCase):
             "push",
             "secret",
             "Description also created by PyGithub",
-            "ou=Users,dc=example,dc=com"
+            "ou=Users,dc=example,dc=com",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")

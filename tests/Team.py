@@ -158,7 +158,7 @@ class Team(Framework.TestCase):
             "Description edited by PyGithub",
             "admin",
             "secret",
-            ldap_dn="ou=Users2,dc=example,dc=com"
+            ldap_dn="ou=Users2,dc=example,dc=com",
         )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
