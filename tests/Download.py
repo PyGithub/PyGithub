@@ -42,7 +42,8 @@ class Download(Framework.TestCase):
         self.assertEqual(self.download.bucket, None)
         self.assertEqual(self.download.content_type, "text/plain")
         self.assertEqual(
-            self.download.created_at, datetime.datetime(2012, 5, 22, 18, 58, 32)
+            self.download.created_at,
+            datetime.datetime(2012, 5, 22, 18, 58, 32, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.download.description, None)
         self.assertEqual(self.download.download_count, 0)

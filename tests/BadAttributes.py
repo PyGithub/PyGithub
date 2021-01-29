@@ -35,7 +35,10 @@ from . import Framework
 class BadAttributes(Framework.TestCase):
     def testBadSimpleAttribute(self):
         user = self.g.get_user("klmitch")
-        self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9))
+        self.assertEqual(
+            user.created_at,
+            datetime.datetime(2011, 3, 23, 15, 42, 9, tzinfo=datetime.timezone.utc),
+        )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.name

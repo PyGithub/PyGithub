@@ -42,7 +42,8 @@ class Authorization(Framework.TestCase):
         )
         self.assertEqual(self.authorization.app.name, "GitHub API")
         self.assertEqual(
-            self.authorization.created_at, datetime.datetime(2012, 5, 22, 18, 3, 17)
+            self.authorization.created_at,
+            datetime.datetime(2012, 5, 22, 18, 3, 17, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.authorization.id, 372259)
         self.assertEqual(self.authorization.note, None)
@@ -52,7 +53,8 @@ class Authorization(Framework.TestCase):
             self.authorization.token, "82459c4500086f8f0cc67d2936c17d1e27ad1c33"
         )
         self.assertEqual(
-            self.authorization.updated_at, datetime.datetime(2012, 5, 22, 18, 3, 17)
+            self.authorization.updated_at,
+            datetime.datetime(2012, 5, 22, 18, 3, 17, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.authorization.url, "https://api.github.com/authorizations/372259"

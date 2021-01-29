@@ -52,11 +52,11 @@ class PullRequest(Framework.TestCase):
     def testAttributesIssue256(self):
         self.assertEqual(
             self.pullIssue256Closed.closed_at,
-            datetime.datetime(2018, 5, 22, 14, 50, 43),
+            datetime.datetime(2018, 5, 22, 14, 50, 43, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.pullIssue256Merged.closed_at,
-            datetime.datetime(2018, 5, 22, 14, 53, 13),
+            datetime.datetime(2018, 5, 22, 14, 53, 13, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.pullIssue256Conflict.closed_at, None)
         self.assertEqual(self.pullIssue256Uncached.closed_at, None)
@@ -96,11 +96,15 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.base.repo.full_name, "jacquev6/PyGithub")
         self.assertEqual(self.pull.body, "Body edited by PyGithub")
         self.assertEqual(self.pull.changed_files, 45)
-        self.assertEqual(self.pull.closed_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
+        self.assertEqual(
+            self.pull.closed_at,
+            datetime.datetime(2012, 5, 27, 10, 29, 7, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.pull.comments, 1)
         self.assertEqual(self.pull.commits, 3)
         self.assertEqual(
-            self.pull.created_at, datetime.datetime(2012, 5, 27, 9, 25, 36)
+            self.pull.created_at,
+            datetime.datetime(2012, 5, 27, 9, 25, 36, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(
@@ -119,7 +123,10 @@ class PullRequest(Framework.TestCase):
         self.assertFalse(self.pull.mergeable)
         self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
-        self.assertEqual(self.pull.merged_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
+        self.assertEqual(
+            self.pull.merged_at,
+            datetime.datetime(2012, 5, 27, 10, 29, 7, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
         self.assertEqual(
@@ -129,7 +136,8 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.state, "closed")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
-            self.pull.updated_at, datetime.datetime(2012, 11, 3, 8, 19, 40)
+            self.pull.updated_at,
+            datetime.datetime(2012, 11, 3, 8, 19, 40, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"

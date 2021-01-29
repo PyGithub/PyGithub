@@ -53,7 +53,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.blog, "http://www.example.com")
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(
+            self.org.created_at,
+            datetime.datetime(2014, 1, 9, 16, 56, 17, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.org.default_repository_permission, "none")
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertEqual(self.org.disk_usage, 2)

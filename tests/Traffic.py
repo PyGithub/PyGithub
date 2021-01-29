@@ -68,10 +68,14 @@ class Traffic(Framework.TestCase):
         self.assertEqual(len(viewsResponse["views"]), 5)
         view_obj = viewsResponse["views"][0]
         self.assertEqual(view_obj.uniques, 4)
-        self.assertEqual(view_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
+        self.assertEqual(
+            view_obj.timestamp,
+            datetime.datetime(2018, 11, 27, 0, 0, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(view_obj.count, 56)
         self.assertEqual(
-            repr(view_obj), "View(uniques=4, timestamp=2018-11-27 00:00:00, count=56)"
+            repr(view_obj),
+            "View(uniques=4, timestamp=2018-11-27 00:00:00+00:00, count=56)",
         )
 
     def testGetClones(self):
@@ -81,8 +85,12 @@ class Traffic(Framework.TestCase):
         self.assertEqual(len(clonesResponse["clones"]), 1)
         clone_obj = clonesResponse["clones"][0]
         self.assertEqual(clone_obj.uniques, 4)
-        self.assertEqual(clone_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
+        self.assertEqual(
+            clone_obj.timestamp,
+            datetime.datetime(2018, 11, 27, 0, 0, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(clone_obj.count, 4)
         self.assertEqual(
-            repr(clone_obj), "Clones(uniques=4, timestamp=2018-11-27 00:00:00, count=4)"
+            repr(clone_obj),
+            "Clones(uniques=4, timestamp=2018-11-27 00:00:00+00:00, count=4)",
         )

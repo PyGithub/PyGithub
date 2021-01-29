@@ -39,7 +39,9 @@ class Workflow(Framework.TestCase):
         self.assertEqual(self.workflow.name, "check")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
-        timestamp = datetime.datetime(2020, 4, 15, 0, 48, 32)
+        timestamp = datetime.datetime(
+            2020, 4, 15, 0, 48, 32, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.workflow.created_at, timestamp)
         self.assertEqual(self.workflow.updated_at, timestamp)
         self.assertEqual(

@@ -76,7 +76,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_subscribed.actor.login, "jacquev6")
         self.assertEqual(self.event_subscribed.commit_id, None)
         self.assertEqual(
-            self.event_subscribed.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_subscribed.created_at,
+            datetime.datetime(2012, 5, 27, 5, 40, 15, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_subscribed.event, "subscribed")
         self.assertEqual(self.event_subscribed.id, 16347479)
@@ -104,7 +105,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_assigned.actor.login, "jacquev6")
         self.assertEqual(self.event_assigned.commit_id, None)
         self.assertEqual(
-            self.event_assigned.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_assigned.created_at,
+            datetime.datetime(2012, 5, 27, 5, 40, 15, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_assigned.event, "assigned")
         self.assertEqual(self.event_assigned.id, 16347480)
@@ -134,7 +136,8 @@ class IssueEvent(Framework.TestCase):
             self.event_referenced.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433"
         )
         self.assertEqual(
-            self.event_referenced.created_at, datetime.datetime(2012, 5, 27, 7, 29, 25)
+            self.event_referenced.created_at,
+            datetime.datetime(2012, 5, 27, 7, 29, 25, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_referenced.event, "referenced")
         self.assertEqual(self.event_referenced.id, 16348656)
@@ -165,7 +168,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_closed.actor.login, "jacquev6")
         self.assertEqual(self.event_closed.commit_id, None)
         self.assertEqual(
-            self.event_closed.created_at, datetime.datetime(2012, 5, 27, 11, 4, 25)
+            self.event_closed.created_at,
+            datetime.datetime(2012, 5, 27, 11, 4, 25, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_closed.event, "closed")
         self.assertEqual(self.event_closed.id, 16351220)
@@ -191,7 +195,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_labeled.actor.login, "jacquev6")
         self.assertEqual(self.event_labeled.commit_id, None)
         self.assertEqual(
-            self.event_labeled.created_at, datetime.datetime(2014, 3, 2, 18, 55, 10)
+            self.event_labeled.created_at,
+            datetime.datetime(2014, 3, 2, 18, 55, 10, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_labeled.event, "labeled")
         self.assertEqual(self.event_labeled.id, 98136337)
@@ -217,7 +222,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_mentioned.actor.login, "jzelinskie")
         self.assertEqual(self.event_mentioned.commit_id, None)
         self.assertEqual(
-            self.event_mentioned.created_at, datetime.datetime(2017, 3, 21, 17, 30, 14)
+            self.event_mentioned.created_at,
+            datetime.datetime(2017, 3, 21, 17, 30, 14, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_mentioned.event, "mentioned")
         self.assertEqual(self.event_mentioned.id, 1009034767)
@@ -247,7 +253,8 @@ class IssueEvent(Framework.TestCase):
             self.event_merged.commit_id, "2525515b094d7425f7018eb5b66171e21c5fbc10"
         )
         self.assertEqual(
-            self.event_merged.created_at, datetime.datetime(2017, 3, 25, 16, 52, 49)
+            self.event_merged.created_at,
+            datetime.datetime(2017, 3, 25, 16, 52, 49, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_merged.event, "merged")
         self.assertEqual(self.event_merged.id, 1015402964)
@@ -279,7 +286,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.commit_id, None)
         self.assertEqual(
             self.event_review_requested.created_at,
-            datetime.datetime(2017, 3, 22, 19, 6, 44),
+            datetime.datetime(2017, 3, 22, 19, 6, 44, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_review_requested.event, "review_requested")
         self.assertEqual(self.event_review_requested.id, 1011101309)
@@ -312,7 +319,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_reopened.actor.login, "sfdye")
         self.assertEqual(self.event_reopened.commit_id, None)
         self.assertEqual(
-            self.event_reopened.created_at, datetime.datetime(2018, 8, 10, 13, 10, 9)
+            self.event_reopened.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 9, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_reopened.event, "reopened")
         self.assertEqual(self.event_reopened.id, 1782463023)
@@ -340,7 +348,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unassigned.actor.login, "sfdye")
         self.assertEqual(self.event_unassigned.commit_id, None)
         self.assertEqual(
-            self.event_unassigned.created_at, datetime.datetime(2018, 8, 10, 13, 10, 21)
+            self.event_unassigned.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 21, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_unassigned.event, "unassigned")
         self.assertEqual(self.event_unassigned.id, 1782463379)
@@ -368,7 +377,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlabeled.actor.login, "sfdye")
         self.assertEqual(self.event_unlabeled.commit_id, None)
         self.assertEqual(
-            self.event_unlabeled.created_at, datetime.datetime(2018, 8, 10, 13, 10, 38)
+            self.event_unlabeled.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 38, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_unlabeled.event, "unlabeled")
         self.assertEqual(self.event_unlabeled.id, 1782463917)
@@ -396,7 +406,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_renamed.actor.login, "sfdye")
         self.assertEqual(self.event_renamed.commit_id, None)
         self.assertEqual(
-            self.event_renamed.created_at, datetime.datetime(2018, 8, 10, 13, 15, 18)
+            self.event_renamed.created_at,
+            datetime.datetime(2018, 8, 10, 13, 15, 18, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_renamed.event, "renamed")
         self.assertEqual(self.event_renamed.id, 1782472556)
@@ -431,7 +442,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_base_ref_changed.commit_id, None)
         self.assertEqual(
             self.event_base_ref_changed.created_at,
-            datetime.datetime(2018, 8, 10, 16, 38, 22),
+            datetime.datetime(2018, 8, 10, 16, 38, 22, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_base_ref_changed.event, "base_ref_changed")
         self.assertEqual(self.event_base_ref_changed.id, 1782915693)
@@ -461,7 +472,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_deleted.commit_id, None)
         self.assertEqual(
             self.event_head_ref_deleted.created_at,
-            datetime.datetime(2018, 8, 10, 16, 39, 20),
+            datetime.datetime(2018, 8, 10, 16, 39, 20, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_head_ref_deleted.event, "head_ref_deleted")
         self.assertEqual(self.event_head_ref_deleted.id, 1782917185)
@@ -491,7 +502,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_restored.commit_id, None)
         self.assertEqual(
             self.event_head_ref_restored.created_at,
-            datetime.datetime(2018, 8, 10, 16, 39, 23),
+            datetime.datetime(2018, 8, 10, 16, 39, 23, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_head_ref_restored.event, "head_ref_restored")
         self.assertEqual(self.event_head_ref_restored.id, 1782917299)
@@ -522,7 +533,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_milestoned.actor.login, "sfdye")
         self.assertEqual(self.event_milestoned.commit_id, None)
         self.assertEqual(
-            self.event_milestoned.created_at, datetime.datetime(2018, 8, 11, 0, 46, 19)
+            self.event_milestoned.created_at,
+            datetime.datetime(2018, 8, 11, 0, 46, 19, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_milestoned.event, "milestoned")
         self.assertEqual(self.event_milestoned.id, 1783596418)
@@ -551,7 +563,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_demilestoned.commit_id, None)
         self.assertEqual(
             self.event_demilestoned.created_at,
-            datetime.datetime(2018, 8, 11, 0, 46, 22),
+            datetime.datetime(2018, 8, 11, 0, 46, 22, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_demilestoned.event, "demilestoned")
         self.assertEqual(self.event_demilestoned.id, 1783596452)
@@ -580,7 +592,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_locked.actor.login, "PyGithub")
         self.assertEqual(self.event_locked.commit_id, None)
         self.assertEqual(
-            self.event_locked.created_at, datetime.datetime(2018, 8, 11, 0, 46, 56)
+            self.event_locked.created_at,
+            datetime.datetime(2018, 8, 11, 0, 46, 56, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_locked.event, "locked")
         self.assertEqual(self.event_locked.id, 1783596743)
@@ -608,7 +621,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlocked.actor.login, "PyGithub")
         self.assertEqual(self.event_unlocked.commit_id, None)
         self.assertEqual(
-            self.event_unlocked.created_at, datetime.datetime(2018, 8, 11, 0, 47, 7)
+            self.event_unlocked.created_at,
+            datetime.datetime(2018, 8, 11, 0, 47, 7, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_unlocked.event, "unlocked")
         self.assertEqual(self.event_unlocked.id, 1783596818)
@@ -637,7 +651,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_dismissed.commit_id, None)
         self.assertEqual(
             self.event_review_dismissed.created_at,
-            datetime.datetime(2018, 8, 11, 1, 7, 10),
+            datetime.datetime(2018, 8, 11, 1, 7, 10, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_review_dismissed.event, "review_dismissed")
         self.assertEqual(self.event_review_dismissed.id, 1783605084)
@@ -674,7 +688,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_request_removed.commit_id, None)
         self.assertEqual(
             self.event_review_request_removed.created_at,
-            datetime.datetime(2018, 8, 11, 12, 32, 59),
+            datetime.datetime(2018, 8, 11, 12, 32, 59, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.event_review_request_removed.event, "review_request_removed"
@@ -712,7 +726,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_marked_as_duplicate.commit_id, None)
         self.assertEqual(
             self.event_marked_as_duplicate.created_at,
-            datetime.datetime(2018, 8, 11, 12, 32, 35),
+            datetime.datetime(2018, 8, 11, 12, 32, 35, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_marked_as_duplicate.event, "marked_as_duplicate")
         self.assertEqual(self.event_marked_as_duplicate.id, 1783779725)
@@ -744,7 +758,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unmarked_as_duplicate.commit_id, None)
         self.assertEqual(
             self.event_unmarked_as_duplicate.created_at,
-            datetime.datetime(2018, 8, 15, 2, 57, 46),
+            datetime.datetime(2018, 8, 15, 2, 57, 46, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.event_unmarked_as_duplicate.event, "unmarked_as_duplicate"
@@ -778,7 +792,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_added_to_project.commit_id, None)
         self.assertEqual(
             self.event_added_to_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 13, 24),
+            datetime.datetime(2018, 8, 16, 8, 13, 24, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_added_to_project.event, "added_to_project")
         self.assertEqual(self.event_added_to_project.id, 1791766828)
@@ -808,7 +822,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.commit_id, None)
         self.assertEqual(
             self.event_moved_columns_in_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 13, 55),
+            datetime.datetime(2018, 8, 16, 8, 13, 55, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.event_moved_columns_in_project.event, "moved_columns_in_project"
@@ -842,7 +856,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_removed_from_project.commit_id, None)
         self.assertEqual(
             self.event_removed_from_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 14, 8),
+            datetime.datetime(2018, 8, 16, 8, 14, 8, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event_removed_from_project.event, "removed_from_project")
         self.assertEqual(self.event_removed_from_project.id, 1791768212)
@@ -874,7 +888,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.commit_id, None)
         self.assertEqual(
             self.event_converted_note_to_issue.created_at,
-            datetime.datetime(2018, 8, 16, 8, 14, 34),
+            datetime.datetime(2018, 8, 16, 8, 14, 34, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.event_converted_note_to_issue.event, "converted_note_to_issue"

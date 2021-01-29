@@ -55,9 +55,13 @@ class WorkflowRun(Framework.TestCase):
             "https://github.com/PyGithub/PyGithub/actions/runs/148274629",
         )
         self.assertEqual(self.workflow_run.pull_requests, [])
-        created_at = datetime.datetime(2020, 6, 26, 4, 51, 26)
+        created_at = datetime.datetime(
+            2020, 6, 26, 4, 51, 26, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.workflow_run.created_at, created_at)
-        updated_at = datetime.datetime(2020, 6, 26, 4, 52, 59)
+        updated_at = datetime.datetime(
+            2020, 6, 26, 4, 52, 59, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.workflow_run.updated_at, updated_at)
         self.assertEqual(
             self.workflow_run.jobs_url,

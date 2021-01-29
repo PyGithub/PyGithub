@@ -39,7 +39,8 @@ class Reaction(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.reactions[0].content, "+1")
         self.assertEqual(
-            self.reactions[0].created_at, datetime.datetime(2017, 12, 5, 1, 59, 33)
+            self.reactions[0].created_at,
+            datetime.datetime(2017, 12, 5, 1, 59, 33, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.reactions[0].id, 16916340)
         self.assertEqual(self.reactions[0].user.login, "nicolastrres")

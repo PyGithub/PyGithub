@@ -64,8 +64,8 @@ user = "rickrickston123"
 release_id = 28524234
 author_id = 64711998
 tag = "v1.0"
-create_date = datetime.datetime(2020, 7, 12, 7, 34, 42)
-publish_date = datetime.datetime(2020, 7, 14, 0, 58, 20)
+create_date = datetime.datetime(2020, 7, 12, 7, 34, 42, tzinfo=datetime.timezone.utc)
+publish_date = datetime.datetime(2020, 7, 14, 0, 58, 20, tzinfo=datetime.timezone.utc)
 
 
 class GitRelease(Framework.TestCase):

@@ -39,7 +39,8 @@ class Event(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.event.actor.login, "jacquev6")
         self.assertEqual(
-            self.event.created_at, datetime.datetime(2012, 5, 26, 10, 1, 39)
+            self.event.created_at,
+            datetime.datetime(2012, 5, 26, 10, 1, 39, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.event.id, "1556114751")
         self.assertEqual(self.event.org, None)

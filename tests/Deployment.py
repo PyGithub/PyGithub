@@ -48,7 +48,9 @@ class Deployment(Framework.TestCase):
         self.assertEqual(self.deployment.environment, "test")
         self.assertEqual(self.deployment.description, "Test deployment")
         self.assertEqual(self.deployment.creator.login, "jacquev6")
-        created_at = datetime.datetime(2020, 8, 26, 11, 44, 53)
+        created_at = datetime.datetime(
+            2020, 8, 26, 11, 44, 53, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.deployment.created_at, created_at)
         self.assertEqual(self.deployment.updated_at, created_at)
         self.assertEqual(self.deployment.transient_environment, True)

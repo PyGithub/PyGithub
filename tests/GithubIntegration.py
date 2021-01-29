@@ -155,10 +155,12 @@ class GithubIntegration(unittest.TestCase):
         )
         self.assertEqual(auth_obj.token, "v1.ce63424bc55028318325caac4f4c3a5378ca0038")
         self.assertEqual(
-            auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
+            auth_obj.expires_at,
+            datetime.datetime(2019, 2, 13, 11, 10, 38, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
-            repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
+            repr(auth_obj),
+            "InstallationAuthorization(expires_at=2019-02-13 11:10:38+00:00)",
         )
 
     def test_get_installation(self):
