@@ -21,7 +21,7 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -48,7 +48,9 @@ class CheckSuite(Framework.TestCase):
             "https://api.github.com/repos/wrecker/PySample/check-suites/1004503837/check-runs",
         )
         self.assertEqual(cs.conclusion, "success")
-        self.assertEqual(cs.created_at, datetime(2020, 8, 4, 5, 6, 54))
+        self.assertEqual(
+            cs.created_at, datetime(2020, 8, 4, 5, 6, 54, tzinfo=timezone.utc)
+        )
         self.assertEqual(cs.head_branch, "wrecker-patch-1")
         self.assertEqual(cs.head_commit.sha, "fd09d934bcce792176d6b79d6d0387e938b62b7a")
         self.assertEqual(cs.head_sha, "fd09d934bcce792176d6b79d6d0387e938b62b7a")
@@ -61,7 +63,9 @@ class CheckSuite(Framework.TestCase):
             cs.repository.url, "https://api.github.com/repos/wrecker/PySample"
         )
         self.assertEqual(cs.status, "completed")
-        self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40))
+        self.assertEqual(
+            cs.updated_at, datetime(2020, 8, 4, 5, 7, 40, tzinfo=timezone.utc)
+        )
         self.assertEqual(
             cs.url,
             "https://api.github.com/repos/wrecker/PySample/check-suites/1004503837",

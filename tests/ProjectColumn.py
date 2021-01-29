@@ -49,11 +49,11 @@ class ProjectColumn(Framework.TestCase):
         )
         self.assertEqual(
             self.get_project_column.created_at,
-            datetime.datetime(2020, 4, 13, 20, 29, 53),
+            datetime.datetime(2020, 4, 13, 20, 29, 53, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.get_project_column.updated_at,
-            datetime.datetime(2020, 4, 14, 18, 9, 38),
+            datetime.datetime(2020, 4, 14, 18, 9, 38, tzinfo=datetime.timezone.utc),
         )
 
     def testGetAllCards(self):

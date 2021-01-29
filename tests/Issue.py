@@ -50,7 +50,8 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(
-            self.issue.closed_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
+            self.issue.closed_at,
+            datetime.datetime(2012, 5, 26, 14, 59, 33, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
         self.assertEqual(self.issue.comments, 0)
@@ -59,7 +60,8 @@ class Issue(Framework.TestCase):
             "https://github.com/jacquev6/PyGithub/issues/28/comments",
         )
         self.assertEqual(
-            self.issue.created_at, datetime.datetime(2012, 5, 19, 10, 38, 23)
+            self.issue.created_at,
+            datetime.datetime(2012, 5, 19, 10, 38, 23, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.issue.events_url,
@@ -87,7 +89,8 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
         self.assertEqual(
-            self.issue.updated_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
+            self.issue.updated_at,
+            datetime.datetime(2012, 5, 26, 14, 59, 33, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
             self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28"
@@ -161,7 +164,9 @@ class Issue(Framework.TestCase):
 
     def testGetCommentsSince(self):
         self.assertListKeyEqual(
-            self.issue.get_comments(datetime.datetime(2012, 5, 26, 13, 59, 33)),
+            self.issue.get_comments(
+                datetime.datetime(2012, 5, 26, 13, 59, 33, tzinfo=datetime.timezone.utc)
+            ),
             lambda c: c.user.login,
             ["jacquev6", "roskakori"],
         )

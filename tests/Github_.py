@@ -209,7 +209,8 @@ class Github(Framework.TestCase):
         self.assertEqual(delivery.id, 12345)
         self.assertEqual(delivery.guid, "abcde-12345")
         self.assertEqual(
-            delivery.delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+            delivery.delivered_at,
+            datetime.datetime(2012, 5, 27, 6, 0, 32, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(delivery.redelivery, False)
         self.assertEqual(delivery.duration, 0.27)
@@ -237,7 +238,8 @@ class Github(Framework.TestCase):
         self.assertEqual(deliveries[0].id, 12345)
         self.assertEqual(deliveries[0].guid, "abcde-12345")
         self.assertEqual(
-            deliveries[0].delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+            deliveries[0].delivered_at,
+            datetime.datetime(2012, 5, 27, 6, 0, 32, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(deliveries[0].redelivery, False)
         self.assertEqual(deliveries[0].duration, 0.27)

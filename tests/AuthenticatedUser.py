@@ -51,7 +51,10 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.blog, "http://vincent-jacques.net")
         self.assertEqual(self.user.collaborators, 0)
         self.assertEqual(self.user.company, "Criteo")
-        self.assertEqual(self.user.created_at, datetime.datetime(2010, 7, 9, 6, 10, 6))
+        self.assertEqual(
+            self.user.created_at,
+            datetime.datetime(2010, 7, 9, 6, 10, 6, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.user.disk_usage, 16692)
         self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
         self.assertEqual(self.user.followers, 13)
@@ -699,7 +702,8 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(notification.subject.type, "PullRequest")
         self.assertEqual(notification.repository.id, 8432784)
         self.assertEqual(
-            notification.updated_at, datetime.datetime(2013, 3, 15, 5, 43, 11)
+            notification.updated_at,
+            datetime.datetime(2013, 3, 15, 5, 43, 11, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(notification.url, None)
         self.assertEqual(notification.subject.url, None)
@@ -753,7 +757,9 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(repr(invitation), "Invitation(id=17285388)")
         self.assertEqual(invitation.id, 17285388)
         self.assertEqual(invitation.permissions, "write")
-        created_at = datetime.datetime(2019, 6, 27, 11, 47)
+        created_at = datetime.datetime(
+            2019, 6, 27, 11, 47, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(invitation.created_at, created_at)
         self.assertEqual(
             invitation.url,

@@ -40,7 +40,8 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.app.slug, "github-actions")
         self.assertEqual(self.check_run.check_suite_id, 1110219217)
         self.assertEqual(
-            self.check_run.completed_at, datetime.datetime(2020, 8, 28, 4, 21, 21)
+            self.check_run.completed_at,
+            datetime.datetime(2020, 8, 28, 4, 21, 21, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.check_run.conclusion, "success")
         self.assertEqual(
@@ -63,7 +64,8 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.output.annotations_count, 0)
         self.assertEqual(len(self.check_run.pull_requests), 0)
         self.assertEqual(
-            self.check_run.started_at, datetime.datetime(2020, 8, 28, 4, 20, 27)
+            self.check_run.started_at,
+            datetime.datetime(2020, 8, 28, 4, 20, 27, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.check_run.status, "completed")
         self.assertEqual(
@@ -144,7 +146,10 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.head_sha, "0283d46537193f1fed7d46859f15c5304b9836f9")
         self.assertEqual(check_run.status, "in_progress")
         self.assertEqual(check_run.external_id, "50")
-        self.assertEqual(check_run.started_at, datetime.datetime(2020, 9, 4, 1, 14, 52))
+        self.assertEqual(
+            check_run.started_at,
+            datetime.datetime(2020, 9, 4, 1, 14, 52, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(check_run.output.title, "PyGithub Check Run Test")
         self.assertEqual(check_run.output.summary, "Test summary")
         self.assertIsNone(check_run.output.text)
@@ -205,11 +210,13 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.head_sha, "0283d46537193f1fed7d46859f15c5304b9836f9")
         self.assertEqual(check_run.status, "completed")
         self.assertEqual(
-            check_run.started_at, datetime.datetime(2020, 10, 20, 10, 30, 29)
+            check_run.started_at,
+            datetime.datetime(2020, 10, 20, 10, 30, 29, tzinfo=datetime.timezone.utc),
         ),
         self.assertEqual(check_run.conclusion, "success")
         self.assertEqual(
-            check_run.completed_at, datetime.datetime(2020, 10, 20, 11, 30, 50)
+            check_run.completed_at,
+            datetime.datetime(2020, 10, 20, 11, 30, 50, tzinfo=datetime.timezone.utc),
         ),
         self.assertEqual(check_run.output.annotations_count, 2)
 
@@ -309,10 +316,12 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.details_url, "https://www.example-url.com")
         self.assertEqual(check_run.external_id, "49")
         self.assertEqual(
-            check_run.started_at, datetime.datetime(2020, 10, 20, 1, 10, 20)
+            check_run.started_at,
+            datetime.datetime(2020, 10, 20, 1, 10, 20, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(
-            check_run.completed_at, datetime.datetime(2020, 10, 20, 2, 20, 30)
+            check_run.completed_at,
+            datetime.datetime(2020, 10, 20, 2, 20, 30, tzinfo=datetime.timezone.utc),
         )
 
     def testCheckRunAnnotationAttributes(self):

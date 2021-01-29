@@ -47,6 +47,8 @@
 
 import datetime
 
+from dateutil.tz.tz import tzoffset
+
 import github
 
 from . import Framework
@@ -71,10 +73,12 @@ class Migration(Framework.TestCase):
             self.migration.url, "https://api.github.com/user/migrations/25320"
         )
         self.assertEqual(
-            self.migration.created_at, datetime.datetime(2018, 9, 14, 1, 35, 35)
+            self.migration.created_at,
+            datetime.datetime(2018, 9, 14, 1, 35, 35, tzinfo=tzoffset(None, 19800)),
         )
         self.assertEqual(
-            self.migration.updated_at, datetime.datetime(2018, 9, 14, 1, 35, 46)
+            self.migration.updated_at,
+            datetime.datetime(2018, 9, 14, 1, 35, 46, tzinfo=tzoffset(None, 19800)),
         )
         self.assertEqual(
             repr(self.migration),

@@ -39,10 +39,14 @@ class Milestone(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(
-            self.milestone.created_at, datetime.datetime(2012, 3, 8, 12, 22, 10)
+            self.milestone.created_at,
+            datetime.datetime(2012, 3, 8, 12, 22, 10, tzinfo=datetime.timezone.utc),
         )
         self.assertEqual(self.milestone.description, "")
-        self.assertEqual(self.milestone.due_on, datetime.datetime(2012, 3, 13, 7, 0, 0))
+        self.assertEqual(
+            self.milestone.due_on,
+            datetime.datetime(2012, 3, 13, 7, 0, 0, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.milestone.id, 93546)
         self.assertEqual(self.milestone.number, 1)
         self.assertEqual(self.milestone.open_issues, 0)
@@ -71,7 +75,10 @@ class Milestone(Framework.TestCase):
         self.assertEqual(self.milestone.title, "Title edited twice by PyGithub")
         self.assertEqual(self.milestone.state, "closed")
         self.assertEqual(self.milestone.description, "Description edited by PyGithub")
-        self.assertEqual(self.milestone.due_on, datetime.datetime(2012, 6, 16, 7, 0, 0))
+        self.assertEqual(
+            self.milestone.due_on,
+            datetime.datetime(2012, 6, 16, 7, 0, 0, tzinfo=datetime.timezone.utc),
+        )
 
     def testGetLabels(self):
         self.assertListKeyEqual(

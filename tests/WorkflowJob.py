@@ -50,9 +50,13 @@ class WorkflowJob(Framework.TestCase):
         )
         self.assertEqual(self.job.status, "completed")
         self.assertEqual(self.job.conclusion, "success")
-        started_at = datetime.datetime(2023, 2, 17, 16, 3, 46)
+        started_at = datetime.datetime(
+            2023, 2, 17, 16, 3, 46, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.job.started_at, started_at)
-        completed_at = datetime.datetime(2023, 2, 17, 16, 4, 52)
+        completed_at = datetime.datetime(
+            2023, 2, 17, 16, 4, 52, tzinfo=datetime.timezone.utc
+        )
         self.assertEqual(self.job.completed_at, completed_at)
         self.assertEqual(self.job.name, "test (Python 3.7)")
         self.assertEqual(

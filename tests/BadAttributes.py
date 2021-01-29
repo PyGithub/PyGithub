@@ -26,6 +26,8 @@
 
 import datetime
 
+from dateutil.parser import ParserError
+
 import github
 
 from . import Framework
@@ -35,7 +37,10 @@ from . import Framework
 class BadAttributes(Framework.TestCase):
     def testBadSimpleAttribute(self):
         user = self.g.get_user("klmitch")
-        self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9))
+        self.assertEqual(
+            user.created_at,
+            datetime.datetime(2011, 3, 23, 15, 42, 9, tzinfo=datetime.timezone.utc),
+        )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.name
@@ -52,11 +57,11 @@ class BadAttributes(Framework.TestCase):
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, str)
         self.assertEqual(
-            raisedexp.exception.transformation_exception.__class__, ValueError
+            raisedexp.exception.transformation_exception.__class__, ParserError
         )
         self.assertEqual(
             raisedexp.exception.transformation_exception.args,
-            ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",),
+            ("Unknown string format: %s", "foobar"),
         )
 
     def testBadTransformedAttribute(self):
