@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Union
+from typing import Any, Dict, IO, Union
 
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitReleaseAsset import GitReleaseAsset
@@ -51,6 +51,14 @@ class GitRelease(CompletableGithubObject):
         label: str = ...,
         content_type: Union[_NotSetType, str] = ...,
         name: Union[_NotSetType, str] = ...,
+    ) -> GitReleaseAsset: ...
+    def upload_asset_from_memory(
+        self,
+        file_like: IO[Any],
+        file_size: int,
+        name: str,
+        content_type: Union[_NotSetType, str] = ...,
+        label: str = ...,
     ) -> GitReleaseAsset: ...
     @property
     def upload_url(self) -> str: ...
