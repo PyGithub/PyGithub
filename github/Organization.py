@@ -589,6 +589,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
@@ -612,6 +613,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert parent_team_id is githbub.GithubObject.Notset or isinstance(
+            parent_team_id, int
+        ), parent_team_id
         post_parameters = {
             "name": name,
         }
@@ -625,6 +629,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/teams", input=post_parameters
         )
