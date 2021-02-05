@@ -268,6 +268,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
+    
+    @property
+    def parent_team_id(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._parent_team_id)
+        return self._parent_team_id.value
 
     @property
     def plan(self):
@@ -589,6 +597,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/teams <http://docs.github.com/en/rest/reference/orgs#teams>`_
@@ -597,6 +606,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: integer
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
@@ -612,6 +622,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert parent_team_id is github.GithubObject.NotSet or isinstance(
+            parent_team_id, int
+        ), parent_team_id
         post_parameters = {
             "name": name,
         }
@@ -625,6 +638,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/teams", input=post_parameters
         )
@@ -1197,6 +1212,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
+        self._parent_team_id = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
         self._private_gists = github.GithubObject.NotSet
         self._public_gists = github.GithubObject.NotSet
