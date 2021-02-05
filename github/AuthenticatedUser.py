@@ -906,7 +906,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
-            github.Issue.Issue, self._requester, "/issues", url_parameters
+            github.Issue.Issue, self._requester, "/user/issues", url_parameters
         )
 
     def get_key(self, id):
