@@ -106,6 +106,7 @@ class Github:
         per_page=DEFAULT_PER_PAGE,
         verify=True,
         retry=None,
+        pool_size=None,
     ):
         """
         :param login_or_token: string
@@ -118,6 +119,7 @@ class Github:
         :param per_page: int
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
+        :param pool_size: int
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -133,6 +135,8 @@ class Github:
             or isinstance(retry, (int))
             or isinstance(retry, (urllib3.util.Retry))
         )
+        assert pool_size is None or isinstance(pool_size, (int)), pool_size
+
         if client_id is not None or client_secret is not None:
             warnings.warn(
                 "client_id and client_secret are deprecated and will be removed in a future release, switch to token authentication",
@@ -151,6 +155,7 @@ class Github:
             per_page,
             verify,
             retry,
+            pool_size,
         )
 
     def __get_FIX_REPO_GET_GIT_REF(self):
