@@ -281,7 +281,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             url_parameters["check_name"] = check_name
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
-        if status is not github.GithubObject.NotSet:
+        if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
         return github.PaginatedList.PaginatedList(
             github.CheckRun.CheckRun,
