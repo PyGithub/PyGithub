@@ -156,6 +156,7 @@ class Organization(Framework.TestCase):
             "push",
             "secret",
             "Description also created by PyGithub",
+            189850,
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
@@ -374,7 +375,7 @@ class Organization(Framework.TestCase):
     def testInviteUserByEmail(self):
         self.org.invite_user(email="foo@example.com")
 
-    def testInviteUserWithRoleAndTeam(self):
+    def testInviteUserWithRoleAnd](self):
         team = self.org.create_team("Team created by PyGithub")
         self.org.invite_user(
             email="foo@example.com", role="billing_manager", teams=[team]
