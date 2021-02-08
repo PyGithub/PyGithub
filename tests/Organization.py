@@ -375,7 +375,7 @@ class Organization(Framework.TestCase):
     def testInviteUserByEmail(self):
         self.org.invite_user(email="foo@example.com")
 
-    def testInviteUserWithRoleAnd](self):
+    def testInviteUserWithRoleAndTeam(self):
         team = self.org.create_team("Team created by PyGithub")
         self.org.invite_user(
             email="foo@example.com", role="billing_manager", teams=[team]
