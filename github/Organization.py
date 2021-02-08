@@ -614,7 +614,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
-        assert parent_team_id is githbub.GithubObject.Notset or isinstance(
+        assert parent_team_id is github.GithubObject.Notset or isinstance(
             parent_team_id, int
         ), parent_team_id
         post_parameters = {
