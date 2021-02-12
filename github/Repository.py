@@ -1221,7 +1221,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_key(self, title, key, read_only=False):
         """
-        :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
+        :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/#deploy-keys>`_
         :param title: string
         :param key: string
         :param read_only: bool
@@ -2565,7 +2565,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_key(self, id):
         """
-        :calls: `GET /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys>`_
+        :calls: `GET /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/#deploy-keys>`_
         :param id: integer
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
@@ -2579,7 +2579,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_keys(self):
         """
-        :calls: `GET /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
+        :calls: `GET /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/#deploy-keys>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
