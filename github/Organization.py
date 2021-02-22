@@ -639,7 +639,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if parent_team_id is not github.GithubObject.NotSet:
-            post_parameters["parent_team_id"] = str(parent_team_id)
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST", self.url + "/teams", input=post_parameters
         )
