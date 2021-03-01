@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
@@ -37,14 +35,14 @@ class ApplicationOAuth(Framework.TestCase):
         sample_uri = "https://myapp.com/some/path"
         sample_uri_encoded = "https%3A%2F%2Fmyapp.com%2Fsome%2Fpath"
         self.assertEqual(
-            self.app.get_login_url(), "{}?client_id={}".format(BASE_URL, self.CLIENT_ID)
+            self.app.get_login_url(), f"{BASE_URL}?client_id={self.CLIENT_ID}"
         )
         self.assertTrue(
-            "redirect_uri={}".format(sample_uri_encoded)
+            f"redirect_uri={sample_uri_encoded}"
             in self.app.get_login_url(redirect_uri=sample_uri)
         )
         self.assertTrue(
-            "client_id={}".format(self.CLIENT_ID)
+            f"client_id={self.CLIENT_ID}"
             in self.app.get_login_url(redirect_uri=sample_uri)
         )
         self.assertTrue(
@@ -54,7 +52,7 @@ class ApplicationOAuth(Framework.TestCase):
             "login=user" in self.app.get_login_url(state="123abc", login="user")
         )
         self.assertTrue(
-            "client_id={}".format(self.CLIENT_ID)
+            f"client_id={self.CLIENT_ID}"
             in self.app.get_login_url(state="123abc", login="user")
         )
 

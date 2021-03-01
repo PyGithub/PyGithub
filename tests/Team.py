@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -35,6 +33,7 @@
 ################################################################################
 
 
+import warnings
 from datetime import datetime
 
 from . import Framework
@@ -121,7 +120,14 @@ class Team(Framework.TestCase):
 
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
+        # Ignore the warning since this method is deprecated
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         self.team.set_repo_permission(repo, "admin")
+        warnings.resetwarnings()
+
+    def testUpdateTeamRepository(self):
+        repo = self.org.get_repo("FatherBeaver")
+        self.assertTrue(self.team.update_team_repository(repo, "admin"))
 
     def testRepos(self):
         repo = self.org.get_repo("FatherBeaver")

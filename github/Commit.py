@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -32,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+import github.CheckRun
+import github.CheckSuite
 import github.CommitCombinedStatus
 import github.CommitComment
 import github.CommitStats
@@ -256,6 +256,68 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self.url + "/pulls",
             None,
             headers={"Accept": "application/vnd.github.groot-preview+json"},
+        )
+
+    def get_check_runs(
+        self,
+        check_name=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        filter=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/commits/:sha/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
+        :param check_name: string
+        :param status: string
+        :param filter: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRun.CheckRun`
+        """
+        assert check_name is github.GithubObject.NotSet or isinstance(
+            check_name, str
+        ), check_name
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
+        url_parameters = dict()
+        if check_name is not github.GithubObject.NotSet:
+            url_parameters["check_name"] = check_name
+        if status is not github.GithubObject.NotSet:
+            url_parameters["status"] = status
+        if status is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter
+        return github.PaginatedList.PaginatedList(
+            github.CheckRun.CheckRun,
+            self._requester,
+            self.url + "/check-runs",
+            url_parameters,
+            headers={"Accept": "application/vnd.github.v3+json"},
+            list_item="check_runs",
+        )
+
+    def get_check_suites(
+        self, app_id=github.GithubObject.NotSet, check_name=github.GithubObject.NotSet
+    ):
+        """
+        :class: `GET /repos/:owner/:repo/commits/:ref/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
+        :param app_id: int
+        :param check_name: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckSuite.CheckSuite`
+        """
+        assert app_id is github.GithubObject.NotSet or isinstance(app_id, int), app_id
+        assert check_name is github.GithubObject.NotSet or isinstance(
+            check_name, str
+        ), check_name
+        parameters = dict()
+        if app_id is not github.GithubObject.NotSet:
+            parameters["app_id"] = app_id
+        if check_name is not github.GithubObject.NotSet:
+            parameters["check_name"] = check_name
+        request_headers = {"Accept": "application/vnd.github.v3+json"}
+        return github.PaginatedList.PaginatedList(
+            github.CheckSuite.CheckSuite,
+            self._requester,
+            self.url + "/check-suites",
+            parameters,
+            headers=request_headers,
+            list_item="check_suites",
         )
 
     @property

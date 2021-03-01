@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -93,6 +92,22 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         return self._environment.value
 
     @property
+    def production_environment(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._production_environment)
+        return self._production_environment.value
+
+    @property
+    def transient_environment(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._transient_environment)
+        return self._transient_environment.value
+
+    @property
     def description(self):
         """
         :type: string
@@ -150,6 +165,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/statuses",
             None,
+            headers={"Accept": self._get_accept_header()},
         )
 
     def get_status(self, id_):
@@ -162,7 +178,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/statuses/" + str(id_),
-            headers={"Accept": github.Consts.deploymentEnhancementsPreview},
+            headers={"Accept": self._get_accept_header()},
         )
         return github.DeploymentStatus.DeploymentStatus(
             self._requester, headers, data, completed=True
@@ -173,12 +189,18 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         state,
         target_url=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+        environment_url=github.GithubObject.NotSet,
+        auto_inactive=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/:owner/:repo/deployments/:deployment_id/statuses <https://developer.github.com/v3/repos/deployments/#create-a-deployment-status>`_
         :param: state: string
         :param: target_url: string
         :param: description: string
+        :param: environment: string
+        :param: environment_url: string
+        :param: auto_inactive: bool
         :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
         """
         assert isinstance(state, str), state
@@ -187,23 +209,52 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         ), target_url
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
-        ), target_url
+        ), description
+        assert environment is github.GithubObject.NotSet or isinstance(
+            environment, str
+        ), environment
+        assert environment_url is github.GithubObject.NotSet or isinstance(
+            environment_url, str
+        ), environment_url
+        assert auto_inactive is github.GithubObject.NotSet or isinstance(
+            auto_inactive, bool
+        ), auto_inactive
+
         post_parameters = {"state": state}
         if target_url is not github.GithubObject.NotSet:
             post_parameters["target_url"] = target_url
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if environment is not github.GithubObject.NotSet:
+            post_parameters["environment"] = environment
+        if environment_url is not github.GithubObject.NotSet:
+            post_parameters["environment_url"] = environment_url
+        if auto_inactive is not github.GithubObject.NotSet:
+            post_parameters["auto_inactive"] = auto_inactive
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/statuses",
             input=post_parameters,
+            headers={"Accept": self._get_accept_header()},
         )
         return github.DeploymentStatus.DeploymentStatus(
             self._requester, headers, data, completed=True
         )
 
+    @staticmethod
+    def _get_accept_header():
+        return ", ".join(
+            [
+                github.Consts.deploymentEnhancementsPreview,
+                github.Consts.deploymentStatusEnhancementsPreview,
+            ]
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
+        self._production_environment = github.GithubObject.NotSet
+        self._transient_environment = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._task = github.GithubObject.NotSet
@@ -220,6 +271,14 @@ class Deployment(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "production_environment" in attributes:  # pragma no branch
+            self._production_environment = self._makeBoolAttribute(
+                attributes["production_environment"]
+            )
+        if "transient_environment" in attributes:  # pragma no branch
+            self._transient_environment = self._makeBoolAttribute(
+                attributes["transient_environment"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "sha" in attributes:  # pragma no branch

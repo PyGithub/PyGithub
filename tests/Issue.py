@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -14,6 +12,7 @@
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -262,6 +261,9 @@ class Issue(Framework.TestCase):
 
         self.assertEqual(reaction.id, 16917472)
         self.assertEqual(reaction.content, "hooray")
+
+    def testDeleteReaction(self):
+        self.assertTrue(self.issue.delete_reaction(85740167))
 
     def testGetTimeline(self):
         expected_events = {

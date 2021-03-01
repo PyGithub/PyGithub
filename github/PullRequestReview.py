@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -1154,6 +1152,21 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "/orgs/" + self.login + "/migrations",
             None,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
+        )
+
+    def get_installations(self):
+        """
+        :calls: `GET /orgs/:org/installations <https://developer.github.com/v3/orgs/#list-app-installations-for-an-organization>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Installation.Installation`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Installation.Installation,
+            self._requester,
+            self.url + "/installations",
+            None,
+            None,
+            list_item="installations",
         )
 
     def _initAttributes(self):

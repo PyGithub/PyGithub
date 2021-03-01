@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #

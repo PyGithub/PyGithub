@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 ############################ Copyrights and license ############################
 #                                                                              #
@@ -45,7 +44,7 @@ import textwrap
 
 import setuptools
 
-version = "1.53"
+version = "1.54.1"
 
 
 if __name__ == "__main__":
@@ -92,14 +91,14 @@ if __name__ == "__main__":
             "Operating System :: OS Independent",
             "Programming Language :: Python",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.5",
             "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
             "Topic :: Software Development",
         ],
-        python_requires=">=3.5",
-        install_requires=["deprecated", "pyjwt", "pynacl", "requests>=2.14.0"],
+        python_requires=">=3.6",
+        install_requires=["deprecated", "pyjwt<2.0", "pynacl>=1.4.0", "requests>=2.14.0"],
         extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=0.9.6"],
+        tests_require=["cryptography", "httpretty>=1.0.3"],
     )

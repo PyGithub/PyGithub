@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
@@ -55,7 +53,7 @@ class Topic(Framework.TestCase):
         self.assertEqual(topic.curated, True)
         self.assertEqual(topic.score, 7576.306)
 
-        self.assertEqual(topic.__repr__(), u'Topic(name="python")')
+        self.assertEqual(topic.__repr__(), 'Topic(name="python")')
 
     def testNamesFromSearchResults(self):
         expected_names = [

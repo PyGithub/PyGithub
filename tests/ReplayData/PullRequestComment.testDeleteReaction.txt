@@ -1,0 +1,11 @@
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/pulls/comments/886298/reactions/85750463
+{'Accept': 'application/vnd.github.squirrel-girl-preview', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Date', 'Mon, 28 Sep 2020 22:15:48 GMT'), ('Server', 'GitHub.com'), ('Status', '204 No Content'), ('X-OAuth-Scopes', 'public_repo, repo:status, write:discussion'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.squirrel-girl-preview'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4991'), ('X-RateLimit-Reset', '1601334930'), ('X-RateLimit-Used', '9'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('X-GitHub-Request-Id', '9B34:FACF:17050546:1B72222B:5F726093')]
+
+

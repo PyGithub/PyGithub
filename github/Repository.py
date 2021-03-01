@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
@@ -66,6 +64,7 @@
 # Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -93,6 +92,8 @@ from base64 import b64encode
 from deprecated import deprecated
 
 import github.Branch
+import github.CheckRun
+import github.CheckSuite
 import github.Clones
 import github.Commit
 import github.CommitComment
@@ -126,6 +127,8 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryKey
+import github.RepositoryPreferences
+import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
 import github.StatsCodeFrequency
@@ -1831,6 +1834,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/deployments",
             parameters,
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
 
     def get_deployment(self, id_):
@@ -1841,7 +1845,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/deployments/" + str(id_)
+            "GET",
+            self.url + "/deployments/" + str(id_),
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
@@ -1856,15 +1862,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         payload=github.GithubObject.NotSet,
         environment=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        transient_environment=github.GithubObject.NotSet,
+        production_environment=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/:owner/:repo/deployments <https://developer.github.com/v3/repos/deployments/>`_
         :param: ref: string
+        :param: task: string
         :param: auto_merge: bool
-        :param: required_contexts: list of statuses
-        :param: payload: json
+        :param: required_contexts: list of status contexts
+        :param: payload: dict
         :param: environment: string
         :param: description: string
+        :param: transient_environment: bool
+        :param: production_environment: bool
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(ref, str), ref
@@ -1876,14 +1887,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
             required_contexts, list
         ), required_contexts  # need to do better checking here
         assert payload is github.GithubObject.NotSet or isinstance(
-            payload, str
-        ), payload  # How to assert it's JSON?
+            payload, dict
+        ), payload
         assert environment is github.GithubObject.NotSet or isinstance(
             environment, str
         ), environment
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert transient_environment is github.GithubObject.NotSet or isinstance(
+            transient_environment, bool
+        ), transient_environment
+        assert production_environment is github.GithubObject.NotSet or isinstance(
+            production_environment, bool
+        ), production_environment
+
         post_parameters = {"ref": ref}
         if task is not github.GithubObject.NotSet:
             post_parameters["task"] = task
@@ -1897,11 +1915,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["environment"] = environment
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if transient_environment is not github.GithubObject.NotSet:
+            post_parameters["transient_environment"] = transient_environment
+        if production_environment is not github.GithubObject.NotSet:
+            post_parameters["production_environment"] = production_environment
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/deployments",
             input=post_parameters,
+            headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
+
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
         )
@@ -2821,6 +2846,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_self_hosted_runner(self, runner_id):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runners/:id <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository`_
+        :param runner_id: int
+        :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        assert isinstance(runner_id, int), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/actions/runners/" + str(runner_id)
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_self_hosted_runners(self):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-a-repository`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            self.url + "/actions/runners",
+            None,
+            list_item="runners",
+        )
+
     def get_source_import(self):
         """
         :calls: `GET /repos/:owner/:repo/import <https://developer.github.com/v3/migration/source_imports/#get-import-progress>`_
@@ -3048,19 +3100,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow_runs(self):
-        """
-        :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
-        """
-        return github.PaginatedList.PaginatedList(
-            github.WorkflowRun.WorkflowRun,
-            self._requester,
-            self.url + "/actions/runs",
-            None,
-            list_item="workflow_runs",
-        )
-
     def get_workflow(self, id_or_name):
         """
         :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id <https://developer.github.com/v3/actions/workflows>`_
@@ -3073,6 +3112,59 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", self.url + "/actions/workflows/" + id_or_name
         )
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
+
+    def get_workflow_runs(
+        self,
+        actor=github.GithubObject.NotSet,
+        branch=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /repos/:owner/:repo/actions/runs <https://developer.github.com/v3/actions/workflow-runs/#list-workflow-runs-for-a-repository>`_
+        :param actor: :class:`github.NamedUser.NamedUser` or string
+        :param branch: :class:`github.Branch.Branch` or string
+        :param event: string
+        :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
+
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert (
+            actor is github.GithubObject.NotSet
+            or isinstance(actor, github.NamedUser.NamedUser)
+            or isinstance(actor, str)
+        ), actor
+        assert (
+            branch is github.GithubObject.NotSet
+            or isinstance(branch, github.Branch.Branch)
+            or isinstance(branch, str)
+        ), branch
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+
+        url_parameters = dict()
+        if actor is not github.GithubObject.NotSet:
+            if isinstance(actor, github.NamedUser.NamedUser):
+                url_parameters["actor"] = actor._identity
+            else:
+                url_parameters["actor"] = actor
+        if branch is not github.GithubObject.NotSet:
+            if isinstance(branch, github.Branch.Branch):
+                url_parameters["branch"] = branch.name
+            else:
+                url_parameters["branch"] = branch
+        if event is not github.GithubObject.NotSet:
+            url_parameters["event"] = event
+        if status is not github.GithubObject.NotSet:
+            url_parameters["status"] = status
+
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowRun.WorkflowRun,
+            self._requester,
+            self.url + "/actions/runs",
+            url_parameters,
+            list_item="workflow_runs",
+        )
 
     def get_workflow_run(self, id_):
         """
@@ -3347,6 +3439,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "DELETE", self.url + "/collaborators/" + collaborator
         )
 
+    def remove_self_hosted_runner(self, runner):
+        """
+        :calls: `DELETE /repos/:owner/:repo/actions/runners/:runner_id <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository>`_
+        :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        :rtype: bool
+        """
+        assert isinstance(
+            runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
+        ) or isinstance(runner, int), runner
+
+        if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
+            runner = runner.id
+
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url + "/actions/runners/" + str(runner)
+        )
+        return status == 204
+
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
         """
         :calls: `POST /hub <http://developer.github.com/>`_
@@ -3366,6 +3476,57 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         return self._hub("unsubscribe", event, callback, github.GithubObject.NotSet)
+
+    def create_check_suite(self, head_sha):
+        """
+        :calls: `POST /repos/:owner/:repo/check-suites <https://docs.github.com/en/rest/reference/checks#create-a-check-suite>`_
+        :param head_sha: string
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(head_sha, str), head_sha
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/check-suites",
+            input={"head_sha": head_sha},
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_check_suite(self, check_suite_id):
+        """
+        :calls: `GET /repos/:owner/:repo/check-suites/:check_suite_id <https://docs.github.com/en/rest/reference/checks#get-a-check-suite>`_
+        :param check_suite_id: int
+        :rtype: :class:`github.CheckSuite.CheckSuite`
+        """
+        assert isinstance(check_suite_id, int), check_suite_id
+        requestHeaders = {"Accept": "application/vnd.github.v3+json"}
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/check-suites/" + str(check_suite_id),
+            headers=requestHeaders,
+        )
+        return github.CheckSuite.CheckSuite(
+            self._requester, headers, data, completed=True
+        )
+
+    def update_check_suites_preferences(self, auto_trigger_checks):
+        """
+        :calls: `PATCH /repos/:owner/:repo/check-suites/preferences <https://docs.github.com/en/rest/reference/checks#update-repository-preferences-for-check-suites>`_
+        :param auto_trigger_checks: list of dict
+        :rtype: :class:`github.RepositoryPreferences.RepositoryPreferences`
+        """
+        assert all(
+            isinstance(element, dict) for element in auto_trigger_checks
+        ), auto_trigger_checks
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/check-suites/preferences",
+            input={"auto_trigger_checks": auto_trigger_checks},
+        )
+        return github.RepositoryPreferences.RepositoryPreferences(
+            self._requester, headers, data, completed=True
+        )
 
     def _hub(self, mode, event, callback, secret):
         assert isinstance(mode, str), mode
@@ -3399,6 +3560,98 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(
             self._requester, resp_headers, data, completed=True
         )
+
+    def create_check_run(
+        self,
+        name,
+        head_sha,
+        details_url=github.GithubObject.NotSet,
+        external_id=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        started_at=github.GithubObject.NotSet,
+        conclusion=github.GithubObject.NotSet,
+        completed_at=github.GithubObject.NotSet,
+        output=github.GithubObject.NotSet,
+        actions=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/:owner/:repo/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`_
+        :param name: string
+        :param head_sha: string
+        :param details_url: string
+        :param external_id: string
+        :param status: string
+        :param started_at: datetime.datetime
+        :param conclusion: string
+        :param completed_at: datetime.datetime
+        :param output: dict
+        :param actions: list of dict
+        :rtype: :class:`github.CheckRun.CheckRun`
+        """
+        assert isinstance(name, str), name
+        assert isinstance(head_sha, str), head_sha
+        assert details_url is github.GithubObject.NotSet or isinstance(
+            details_url, str
+        ), details_url
+        assert external_id is github.GithubObject.NotSet or isinstance(
+            external_id, str
+        ), external_id
+        assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert started_at is github.GithubObject.NotSet or isinstance(
+            started_at, datetime.datetime
+        ), started_at
+        assert conclusion is github.GithubObject.NotSet or isinstance(
+            conclusion, str
+        ), conclusion
+        assert completed_at is github.GithubObject.NotSet or isinstance(
+            completed_at, datetime.datetime
+        ), completed_at
+        assert output is github.GithubObject.NotSet or isinstance(output, dict), output
+        assert actions is github.GithubObject.NotSet or all(
+            isinstance(element, dict) for element in actions
+        ), actions
+
+        post_parameters = {
+            "name": name,
+            "head_sha": head_sha,
+        }
+        if details_url is not github.GithubObject.NotSet:
+            post_parameters["details_url"] = details_url
+        if external_id is not github.GithubObject.NotSet:
+            post_parameters["external_id"] = external_id
+        if status is not github.GithubObject.NotSet:
+            post_parameters["status"] = status
+        if started_at is not github.GithubObject.NotSet:
+            post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if completed_at is not github.GithubObject.NotSet:
+            post_parameters["completed_at"] = completed_at.strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            )
+        if conclusion is not github.GithubObject.NotSet:
+            post_parameters["conclusion"] = conclusion
+        if output is not github.GithubObject.NotSet:
+            post_parameters["output"] = output
+        if actions is not github.GithubObject.NotSet:
+            post_parameters["actions"] = actions
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/check-runs",
+            input=post_parameters,
+        )
+        return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
+
+    def get_check_run(self, check_run_id):
+        """
+        :calls: `GET /repos/:owner/:repo/check-runs/:check_run_id <https://docs.github.com/en/rest/reference/checks#get-a-check-run>`_
+        :param check_run_id: int
+        :rtype: :class:`github.CheckRun.CheckRun`
+        """
+        assert isinstance(check_run_id, int), check_run_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self.url + "/check-runs/" + str(check_run_id)
+        )
+        return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet

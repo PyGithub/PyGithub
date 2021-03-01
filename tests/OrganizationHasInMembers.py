@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #

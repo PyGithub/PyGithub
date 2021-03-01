@@ -51,7 +51,7 @@ class GithubIntegration(unittest.TestCase):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
 
-        class Mock(object):
+        class Mock:
             def __init__(self):
                 self.args = tuple()
                 self.kwargs = dict()
@@ -66,8 +66,8 @@ class GithubIntegration(unittest.TestCase):
             @property
             def text(self):
                 return (
-                    u'{"token": "v1.ce63424bc55028318325caac4f4c3a5378ca0038",'
-                    u'"expires_at": "2019-02-13T11:10:38Z"}'
+                    '{"token": "v1.ce63424bc55028318325caac4f4c3a5378ca0038",'
+                    '"expires_at": "2019-02-13T11:10:38Z"}'
                 )
 
             def __call__(self, *args, **kwargs):
@@ -79,7 +79,7 @@ class GithubIntegration(unittest.TestCase):
         self.mock = Mock()
         sys.modules["requests"].post = self.mock
 
-        class GetMock(object):
+        class GetMock:
             def __init__(self):
                 self.args = tuple()
                 self.kwargs = dict()
@@ -95,28 +95,28 @@ class GithubIntegration(unittest.TestCase):
             @property
             def text(self):
                 return (
-                    u'{"id":111111,"account":{"login":"foo","id":11111111,'
-                    u'"node_id":"foobar",'
-                    u'"avatar_url":"https://avatars3.githubusercontent.com/u/11111111?v=4",'
-                    u'"gravatar_id":"","url":"https://api.github.com/users/foo",'
-                    u'"html_url":"https://github.com/foo",'
-                    u'"followers_url":"https://api.github.com/users/foo/followers",'
-                    u'"following_url":"https://api.github.com/users/foo/following{/other_user}",'
-                    u'"gists_url":"https://api.github.com/users/foo/gists{/gist_id}",'
-                    u'"starred_url":"https://api.github.com/users/foo/starred{/owner}{/repo}",'
-                    u'"subscriptions_url":"https://api.github.com/users/foo/subscriptions",'
-                    u'"organizations_url":"https://api.github.com/users/foo/orgs",'
-                    u'"repos_url":"https://api.github.com/users/foo/repos",'
-                    u'"events_url":"https://api.github.com/users/foo/events{/privacy}",'
-                    u'"received_events_url":"https://api.github.com/users/foo/received_events",'
-                    u'"type":"Organization","site_admin":false},"repository_selection":"all",'
-                    u'"access_tokens_url":"https://api.github.com/app/installations/111111/access_tokens",'
-                    u'"repositories_url":"https://api.github.com/installation/repositories",'
-                    u'"html_url":"https://github.com/organizations/foo/settings/installations/111111",'
-                    u'"app_id":11111,"target_id":11111111,"target_type":"Organization",'
-                    u'"permissions":{"issues":"write","pull_requests":"write","statuses":"write","contents":"read",'
-                    u'"metadata":"read"},"events":["pull_request","release"],"created_at":"2019-04-17T16:10:37.000Z",'
-                    u'"updated_at":"2019-05-03T06:27:48.000Z","single_file_name":null}'
+                    '{"id":111111,"account":{"login":"foo","id":11111111,'
+                    '"node_id":"foobar",'
+                    '"avatar_url":"https://avatars3.githubusercontent.com/u/11111111?v=4",'
+                    '"gravatar_id":"","url":"https://api.github.com/users/foo",'
+                    '"html_url":"https://github.com/foo",'
+                    '"followers_url":"https://api.github.com/users/foo/followers",'
+                    '"following_url":"https://api.github.com/users/foo/following{/other_user}",'
+                    '"gists_url":"https://api.github.com/users/foo/gists{/gist_id}",'
+                    '"starred_url":"https://api.github.com/users/foo/starred{/owner}{/repo}",'
+                    '"subscriptions_url":"https://api.github.com/users/foo/subscriptions",'
+                    '"organizations_url":"https://api.github.com/users/foo/orgs",'
+                    '"repos_url":"https://api.github.com/users/foo/repos",'
+                    '"events_url":"https://api.github.com/users/foo/events{/privacy}",'
+                    '"received_events_url":"https://api.github.com/users/foo/received_events",'
+                    '"type":"Organization","site_admin":false},"repository_selection":"all",'
+                    '"access_tokens_url":"https://api.github.com/app/installations/111111/access_tokens",'
+                    '"repositories_url":"https://api.github.com/installation/repositories",'
+                    '"html_url":"https://github.com/organizations/foo/settings/installations/111111",'
+                    '"app_id":11111,"target_id":11111111,"target_type":"Organization",'
+                    '"permissions":{"issues":"write","pull_requests":"write","statuses":"write","contents":"read",'
+                    '"metadata":"read"},"events":["pull_request","release"],"created_at":"2019-04-17T16:10:37.000Z",'
+                    '"updated_at":"2019-05-03T06:27:48.000Z","single_file_name":null}'
                 )
 
             def __call__(self, *args, **kwargs):

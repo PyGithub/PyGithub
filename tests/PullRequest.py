@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -119,6 +117,7 @@ class PullRequest(Framework.TestCase):
         )
         self.assertListKeyEqual(self.pull.labels, lambda a: a.name, ["refactoring"])
         self.assertFalse(self.pull.mergeable)
+        self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
         self.assertEqual(self.pull.merged_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
@@ -146,6 +145,7 @@ class PullRequest(Framework.TestCase):
             repr(self.pull.base),
             'PullRequestPart(sha="ed866fc43833802ab553e5ff8581c81bb00dd433")',
         )
+        self.assertTrue(self.pullIssue256Conflict.rebaseable)
 
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")

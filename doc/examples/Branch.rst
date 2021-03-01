@@ -38,7 +38,7 @@ Get protection status of a branch
 .. code-block:: python
 
     >>> branch = g.get_repo("PyGithub/PyGithub").get_branch("master")
-    >>> branch.protection
+    >>> branch.protected
     True
 
 See required status checks of a branch

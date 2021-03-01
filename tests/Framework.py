@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -132,7 +130,7 @@ class RecordingConnection:
         return self.__cnx.close()
 
     def __writeLine(self, line):
-        self.__file.write(str(line) + u"\n")
+        self.__file.write(str(line) + "\n")
 
 
 class RecordingHttpConnection(RecordingConnection):
@@ -246,6 +244,7 @@ class BasicTestCase(unittest.TestCase):
     tokenAuthMode = False
     jwtAuthMode = False
     retry = None
+    pool_size = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -314,7 +313,7 @@ class BasicTestCase(unittest.TestCase):
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = io.open(self.__fileName, mode, encoding="utf-8")
+            self.__file = open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self):
@@ -354,11 +353,17 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
         if self.tokenAuthMode:
-            self.g = github.Github(self.oauth_token, retry=self.retry)
+            self.g = github.Github(
+                self.oauth_token, retry=self.retry, pool_size=self.pool_size
+            )
         elif self.jwtAuthMode:
-            self.g = github.Github(jwt=self.jwt, retry=self.retry)
+            self.g = github.Github(
+                jwt=self.jwt, retry=self.retry, pool_size=self.pool_size
+            )
         else:
-            self.g = github.Github(self.login, self.password, retry=self.retry)
+            self.g = github.Github(
+                self.login, self.password, retry=self.retry, pool_size=self.pool_size
+            )
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
@@ -375,3 +380,7 @@ def activateJWTAuthMode():  # pragma no cover (Function useful only when recordi
 
 def enableRetry(retry):
     BasicTestCase.retry = retry
+
+
+def setPoolSize(pool_size):
+    BasicTestCase.pool_size = pool_size

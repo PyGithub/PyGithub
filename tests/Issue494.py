@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
@@ -34,7 +32,7 @@ class Issue494(Framework.TestCase):
 
     def testRepr(self):
         expected = (
-            u'PullRequest(title="Change SetHostnameCustomizer to check if '
-            u'/etc/sysconfig/network exist…", number=465)'
+            'PullRequest(title="Change SetHostnameCustomizer to check if '
+            '/etc/sysconfig/network exist…", number=465)'
         )
         self.assertEqual(self.pull.__repr__(), expected)

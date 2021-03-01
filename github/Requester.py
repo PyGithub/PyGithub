@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
@@ -81,10 +79,17 @@ class RequestsResponse:
         return self.text
 
 
-class HTTPSRequestsConnectionClass(object):
+class HTTPSRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
-        self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
+        self,
+        host,
+        port=None,
+        strict=False,
+        timeout=None,
+        retry=None,
+        pool_size=None,
+        **kwargs,
     ):
         self.port = port if port else 443
         self.host = host
@@ -92,11 +97,23 @@ class HTTPSRequestsConnectionClass(object):
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
-        # Code to support retries
-        if retry:
+
+        if retry is None:
+            self.retry = requests.adapters.DEFAULT_RETRIES
+        else:
             self.retry = retry
-            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount("https://", self.adapter)
+
+        if pool_size is None:
+            self.pool_size = requests.adapters.DEFAULT_POOLSIZE
+        else:
+            self.pool_size = pool_size
+
+        self.adapter = requests.adapters.HTTPAdapter(
+            max_retries=self.retry,
+            pool_connections=self.pool_size,
+            pool_maxsize=self.pool_size,
+        )
+        self.session.mount("https://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -106,7 +123,7 @@ class HTTPSRequestsConnectionClass(object):
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
-        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
             url,
             headers=self.headers,
@@ -121,10 +138,17 @@ class HTTPSRequestsConnectionClass(object):
         return
 
 
-class HTTPRequestsConnectionClass(object):
+class HTTPRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
-        self, host, port=None, strict=False, timeout=None, retry=None, **kwargs
+        self,
+        host,
+        port=None,
+        strict=False,
+        timeout=None,
+        retry=None,
+        pool_size=None,
+        **kwargs,
     ):
         self.port = port if port else 80
         self.host = host
@@ -132,11 +156,23 @@ class HTTPRequestsConnectionClass(object):
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
-        # Code to support retries
-        if retry:
+
+        if retry is None:
+            self.retry = requests.adapters.DEFAULT_RETRIES
+        else:
             self.retry = retry
-            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
-            self.session.mount("http://", self.adapter)
+
+        if pool_size is None:
+            self.pool_size = requests.adapters.DEFAULT_POOLSIZE
+        else:
+            self.pool_size = pool_size
+
+        self.adapter = requests.adapters.HTTPAdapter(
+            max_retries=self.retry,
+            pool_connections=self.pool_size,
+            pool_maxsize=self.pool_size,
+        )
+        self.session.mount("http://", self.adapter)
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -146,7 +182,7 @@ class HTTPRequestsConnectionClass(object):
 
     def getresponse(self):
         verb = getattr(self.session, self.verb.lower())
-        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
             url,
             headers=self.headers,
@@ -266,6 +302,7 @@ class Requester:
         per_page,
         verify,
         retry,
+        pool_size,
     ):
         self._initializeDebugFeature()
 
@@ -289,6 +326,7 @@ class Requester:
         self.__prefix = o.path
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
+        self.__pool_size = pool_size
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -356,11 +394,17 @@ class Requester:
             ):  # issue80
                 if o.scheme == "http":
                     cnx = self.__httpConnectionClass(
-                        o.hostname, o.port, retry=self.__retry
+                        o.hostname,
+                        o.port,
+                        retry=self.__retry,
+                        pool_size=self.__pool_size,
                     )
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
-                        o.hostname, o.port, retry=self.__retry
+                        o.hostname,
+                        o.port,
+                        retry=self.__retry,
+                        pool_size=self.__pool_size,
                     )
         return cnx
 
@@ -513,7 +557,7 @@ class Requester:
         response = cnx.getresponse()
 
         status = response.status
-        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
+        responseHeaders = {k.lower(): v for k, v in response.getheaders()}
         output = response.read()
 
         cnx.close()
@@ -577,7 +621,11 @@ class Requester:
             return self.__connection
 
         self.__connection = self.__connectionClass(
-            self.__hostname, self.__port, retry=self.__retry, **kwds
+            self.__hostname,
+            self.__port,
+            retry=self.__retry,
+            pool_size=self.__pool_size,
+            **kwds,
         )
 
         return self.__connection

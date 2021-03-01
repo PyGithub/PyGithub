@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
@@ -77,3 +75,14 @@ class Retry(Framework.TestCase):
         self.assertEqual(len(httpretty.latest_requests), 4)
         for request in httpretty.latest_requests:
             self.assertEqual(request.path, "/repos/PyGithub/PyGithub")
+
+    def testReturnsRepoAfterSettingRetryHttp(self):
+        g = github.Github(
+            self.login,
+            self.password,
+            base_url="http://my.enterprise.com",
+            retry=0,
+        )  # http here
+        repository = g.get_repo(REPO_NAME)
+        self.assertIsInstance(repository, github.Repository.Repository)
+        self.assertEqual(repository.full_name, REPO_NAME)

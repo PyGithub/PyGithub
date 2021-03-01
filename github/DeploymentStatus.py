@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -74,6 +73,14 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._environment.value
 
     @property
+    def environment_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._environment_url)
+        return self._environment_url.value
+
+    @property
     def repository_url(self):
         """
         :type: string
@@ -135,6 +142,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._deployment_url = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._environment = github.GithubObject.NotSet
+        self._environment_url = github.GithubObject.NotSet
         self._repository_url = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
         self._target_url = github.GithubObject.NotSet
@@ -144,6 +152,10 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._node_id = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "environment_url" in attributes:  # pragma no branch
+            self._environment_url = self._makeStringAttribute(
+                attributes["environment_url"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "id" in attributes:  # pragma no branch

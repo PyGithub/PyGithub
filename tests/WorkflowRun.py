@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
@@ -47,6 +45,7 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
         self.assertEqual(self.workflow_run.conclusion, "failure")
+        self.assertEqual(self.workflow_run.workflow_id, 1026390)
         self.assertEqual(
             self.workflow_run.url,
             "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/148274629",

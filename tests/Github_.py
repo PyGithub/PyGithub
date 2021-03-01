@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -319,6 +317,9 @@ class Github(Framework.TestCase):
 
     def testStringOfNotSet(self):
         self.assertEqual(str(github.GithubObject.NotSet), "NotSet")
+
+    def testGetUserById(self):
+        self.assertEqual(self.g.get_user_by_id(583231).login, "octocat")
 
     def testGetUsers(self):
         self.assertListKeyBegin(

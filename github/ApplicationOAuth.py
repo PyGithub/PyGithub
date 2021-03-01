@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ###########################
 #                                                                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>               #
@@ -75,7 +73,7 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         parameters = urllib.parse.urlencode(parameters)
 
         base_url = "https://github.com/login/oauth/authorize"
-        return u"{}?{}".format(base_url, parameters)
+        return f"{base_url}?{parameters}"
 
     def get_access_token(self, code, state=None):
         """

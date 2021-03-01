@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
@@ -11,6 +9,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -123,3 +122,6 @@ teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
 
 # https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/
 deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
+
+# https://developer.github.com/changes/2018-10-16-deployments-environments-states-and-auto-inactive-updates/
+deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json"

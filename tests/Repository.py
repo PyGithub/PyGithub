@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -28,6 +26,7 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -480,8 +479,8 @@ class Repository(Framework.TestCase):
         self.assertEqual(
             raisedexp.exception.data,
             {
-                u"documentation_url": u"https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level",
-                u"message": u"Must have push access to view collaborator permission.",
+                "documentation_url": "https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level",
+                "message": "Must have push access to view collaborator permission.",
             },
         )
 
@@ -1101,12 +1100,12 @@ class Repository(Framework.TestCase):
             stargazers,
             lambda stargazer: (stargazer.starred_at, stargazer.user.login),
             [
-                (datetime.datetime(2014, 8, 13, 19, 22, 5), u"sAlexander"),
-                (datetime.datetime(2014, 10, 15, 5, 2, 30), u"ThomasG77"),
-                (datetime.datetime(2015, 4, 14, 15, 22, 40), u"therusek"),
-                (datetime.datetime(2015, 4, 29, 0, 9, 40), u"athomann"),
-                (datetime.datetime(2015, 4, 29, 14, 26, 46), u"jcapron"),
-                (datetime.datetime(2015, 5, 9, 19, 14, 45), u"JoePython1"),
+                (datetime.datetime(2014, 8, 13, 19, 22, 5), "sAlexander"),
+                (datetime.datetime(2014, 10, 15, 5, 2, 30), "ThomasG77"),
+                (datetime.datetime(2015, 4, 14, 15, 22, 40), "therusek"),
+                (datetime.datetime(2015, 4, 29, 0, 9, 40), "athomann"),
+                (datetime.datetime(2015, 4, 29, 14, 26, 46), "jcapron"),
+                (datetime.datetime(2015, 5, 9, 19, 14, 45), "JoePython1"),
             ],
         )
         self.assertEqual(repr(stargazers[0]), 'Stargazer(user="sAlexander")')
@@ -1237,17 +1236,25 @@ class Repository(Framework.TestCase):
 
     def testCreateDeployment(self):
         deployment = self.repo.create_deployment(
-            "8f039d9c4ebd6f24b4bb04634ed062375c11b751"
+            ref="743f5a58b0bce91c4eab744ff7e39dfca9e6e8a5",
+            task="deploy",
+            auto_merge=False,
+            required_contexts=[],
+            payload={"test": True},
+            environment="test",
+            description="Test deployment",
+            transient_environment=True,
+            production_environment=False,
         )
-        self.assertEqual(deployment.id, 201741959)
+        self.assertEqual(deployment.id, 263877258)
 
     def testGetDeployments(self):
         deployments = self.repo.get_deployments()
-        self.assertListKeyEqual(deployments, lambda d: d.id, [201741959])
+        self.assertListKeyEqual(deployments, lambda d: d.id, [263877258, 262350588])
 
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
-        content = "Hello world".encode()
+        content = b"Hello world"
         author = github.InputGitAuthor(
             "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
         )
@@ -1665,7 +1672,7 @@ class Repository(Framework.TestCase):
 
     def testGetTopics(self):
         topic_list = self.repo.get_topics()
-        topic = u"github"
+        topic = "github"
         self.assertIn(topic, topic_list)
 
     def testReplaceTopics(self):
@@ -1690,7 +1697,7 @@ class LazyRepository(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user()
-        self.repository_name = "%s/%s" % (self.user.login, "PyGithub")
+        self.repository_name = "{}/{}".format(self.user.login, "PyGithub")
 
     def getLazyRepository(self):
         return self.g.get_repo(self.repository_name, lazy=True)
