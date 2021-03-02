@@ -102,7 +102,7 @@ if __name__ == "__main__":
             "deprecated",
             "pyjwt<2.0",
             "pynacl>=1.4.0",
-            "requests>=2.14.0"
+            "requests>=2.14.0",
         ],
         extras_require={"integrations": ["cryptography"]},
         tests_require=["cryptography", "httpretty>=1.0.3"],
