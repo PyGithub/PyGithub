@@ -308,14 +308,17 @@ class Requester:
 
         if password is not None:
             login = login_or_token
-            self.__authorizationHeader = "Basic " + base64.b64encode(
-                (login + ":" + password).encode("utf-8")
-            ).decode("utf-8").replace("\n", "")
+            b64 = (
+                base64.b64encode((f"{login}:{password}").encode("utf-8"))
+                .decode("utf-8")
+                .replace("\n", "")
+            )
+            self.__authorizationHeader = f"Basic {b64}"
         elif login_or_token is not None:
             token = login_or_token
-            self.__authorizationHeader = "token " + token
+            self.__authorizationHeader = f"token {token}"
         elif jwt is not None:
-            self.__authorizationHeader = "Bearer " + jwt
+            self.__authorizationHeader = f"Bearer {jwt}"
         else:
             self.__authorizationHeader = None
 
@@ -462,14 +465,12 @@ class Requester:
 
             encoded_input = ""
             for name, value in input.items():
-                encoded_input += "--" + boundary + eol
-                encoded_input += (
-                    'Content-Disposition: form-data; name="' + name + '"' + eol
-                )
+                encoded_input += f"--{boundary}{eol}"
+                encoded_input += f'Content-Disposition: form-data; name="{name}"{eol}'
                 encoded_input += eol
                 encoded_input += value + eol
-            encoded_input += "--" + boundary + "--" + eol
-            return "multipart/form-data; boundary=" + boundary, encoded_input
+            encoded_input += f"--{boundary}--{eol}"
+            return f"multipart/form-data; boundary={boundary}", encoded_input
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
@@ -590,7 +591,7 @@ class Requester:
         # URLs generated locally will be relative to __base_url
         # URLs returned from the server will start with __base_url
         if url.startswith("/"):
-            url = self.__prefix + url
+            url = f"{self.__prefix}{url}"
         else:
             o = urllib.parse.urlparse(url)
             assert o.hostname in [
@@ -603,14 +604,14 @@ class Requester:
             assert o.port == self.__port
             url = o.path
             if o.query != "":
-                url += "?" + o.query
+                url += f"?{o.query}"
         return url
 
     def __addParametersToUrl(self, url, parameters):
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + urllib.parse.urlencode(parameters)
+            return f"{url}?{urllib.parse.urlencode(parameters)}"
 
     def __createConnection(self):
         kwds = {}

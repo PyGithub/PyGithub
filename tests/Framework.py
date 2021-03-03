@@ -308,7 +308,7 @@ class BasicTestCase(unittest.TestCase):
                 ):  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
                     fileName = os.path.join(
                         self.replayDataFolder,
-                        self.__class__.__name__ + "." + functionName + ".txt",
+                        f"{self.__class__.__name__}.{functionName}.txt",
                     )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()

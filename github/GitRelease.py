@@ -313,7 +313,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.GitReleaseAsset.GitReleaseAsset,
             self._requester,
-            self.url + "/assets",
+            f"{self.url}/assets",
             None,
         )
 

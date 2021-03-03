@@ -215,7 +215,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         post_parameters = {"name": name}
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/columns", headers=import_header, input=post_parameters
+            "POST", f"{self.url}/columns", headers=import_header, input=post_parameters
         )
         return github.ProjectColumn.ProjectColumn(
             self._requester, headers, data, completed=True

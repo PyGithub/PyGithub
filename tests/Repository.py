@@ -1689,7 +1689,7 @@ class LazyRepository(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user()
-        self.repository_name = "{}/{}".format(self.user.login, "PyGithub")
+        self.repository_name = f"{self.user.login}/PyGithub"
 
     def getLazyRepository(self):
         return self.g.get_repo(self.repository_name, lazy=True)

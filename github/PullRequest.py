@@ -418,7 +418,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "position": position,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/comments", input=post_parameters
+            "POST", f"{self.url}/comments", input=post_parameters
         )
         return github.PullRequestComment.PullRequestComment(
             self._requester, headers, data, completed=True
@@ -436,7 +436,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         post_parameters = {"body": body}
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/comments/" + str(comment_id) + "/replies",
+            f"{self.url}/comments/{comment_id}/replies",
             input=post_parameters,
         )
         return github.PullRequestComment.PullRequestComment(
@@ -454,7 +454,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.issue_url + "/comments", input=post_parameters
+            "POST", f"{self.issue_url}/comments", input=post_parameters
         )
         return github.IssueComment.IssueComment(
             self._requester, headers, data, completed=True
@@ -496,7 +496,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         else:
             post_parameters["comments"] = comments
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/reviews", input=post_parameters
+            "POST", f"{self.url}/reviews", input=post_parameters
         )
         return github.PullRequestReview.PullRequestReview(
             self._requester, headers, data, completed=True
@@ -523,7 +523,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             ), team_reviewers
             post_parameters["team_reviewers"] = team_reviewers
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/requested_reviewers", input=post_parameters
+            "POST", f"{self.url}/requested_reviewers", input=post_parameters
         )
 
     def delete_review_request(
@@ -547,7 +547,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             ), team_reviewers
             post_parameters["team_reviewers"] = team_reviewers
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/requested_reviewers", input=post_parameters
+            "DELETE", f"{self.url}/requested_reviewers", input=post_parameters
         )
 
     def edit(
@@ -606,7 +606,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self._parentUrl(self.url) + "/comments/" + str(id)
+            "GET", f"{self._parentUrl(self.url)}/comments/{id}"
         )
         return github.PullRequestComment.PullRequestComment(
             self._requester, headers, data, completed=True
@@ -636,7 +636,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
-            self.url + "/comments",
+            f"{self.url}/comments",
             url_parameters,
         )
 
@@ -650,7 +650,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
-            self.url + "/reviews/" + str(id) + "/comments",
+            f"{self.url}/reviews/{id}/comments",
             None,
         )
 
@@ -660,7 +660,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         return github.PaginatedList.PaginatedList(
-            github.Commit.Commit, self._requester, self.url + "/commits", None
+            github.Commit.Commit, self._requester, f"{self.url}/commits", None
         )
 
     def get_files(self):
@@ -669,7 +669,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.File.File`
         """
         return github.PaginatedList.PaginatedList(
-            github.File.File, self._requester, self.url + "/files", None
+            github.File.File, self._requester, f"{self.url}/files", None
         )
 
     def get_issue_comment(self, id):
@@ -680,7 +680,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self._parentUrl(self.issue_url) + "/comments/" + str(id)
+            "GET", f"{self._parentUrl(self.issue_url)}/comments/{id}"
         )
         return github.IssueComment.IssueComment(
             self._requester, headers, data, completed=True
@@ -694,7 +694,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
-            self.issue_url + "/comments",
+            f"{self.issue_url}/comments",
             None,
         )
 
@@ -706,7 +706,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
             self._requester,
-            self.issue_url + "/events",
+            f"{self.issue_url}/events",
             None,
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
@@ -720,7 +720,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/reviews/" + str(id),
+            f"{self.url}/reviews/{id}",
         )
         return github.PullRequestReview.PullRequestReview(
             self._requester, headers, data, completed=True
@@ -734,7 +734,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequestReview.PullRequestReview,
             self._requester,
-            self.url + "/reviews",
+            f"{self.url}/reviews",
             None,
         )
 
@@ -747,14 +747,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             github.PaginatedList.PaginatedList(
                 github.NamedUser.NamedUser,
                 self._requester,
-                self.url + "/requested_reviewers",
+                f"{self.url}/requested_reviewers",
                 None,
                 list_item="users",
             ),
             github.PaginatedList.PaginatedList(
                 github.Team.Team,
                 self._requester,
-                self.url + "/requested_reviewers",
+                f"{self.url}/requested_reviewers",
                 None,
                 list_item="teams",
             ),
@@ -766,7 +766,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, self.issue_url + "/labels", None
+            github.Label.Label, self._requester, f"{self.issue_url}/labels", None
         )
 
     def add_to_labels(self, *labels):
@@ -783,7 +783,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             for label in labels
         ]
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.issue_url + "/labels", input=post_parameters
+            "POST", f"{self.issue_url}/labels", input=post_parameters
         )
 
     def delete_labels(self):
@@ -792,7 +792,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.issue_url + "/labels"
+            "DELETE", f"{self.issue_url}/labels"
         )
 
     def remove_from_labels(self, label):
@@ -807,7 +807,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         else:
             label = urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.issue_url + "/labels/" + label
+            "DELETE", f"{self.issue_url}/labels/{label}"
         )
 
     def set_labels(self, *labels):
@@ -824,7 +824,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             for label in labels
         ]
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.issue_url + "/labels", input=post_parameters
+            "PUT", f"{self.issue_url}/labels", input=post_parameters
         )
 
     def is_merged(self):
@@ -832,7 +832,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :rtype: bool
         """
-        status, headers, data = self._requester.requestJson("GET", self.url + "/merge")
+        status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
     def merge(
@@ -870,7 +870,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if sha is not github.GithubObject.NotSet:
             post_parameters["sha"] = sha
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/merge", input=post_parameters
+            "PUT", f"{self.url}/merge", input=post_parameters
         )
         return github.PullRequestMergeStatus.PullRequestMergeStatus(
             self._requester, headers, data, completed=True
@@ -895,7 +895,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.issue_url + "/assignees", input=post_parameters
+            "POST", f"{self.issue_url}/assignees", input=post_parameters
         )
         # Only use the assignees attribute, since we call this PR as an issue
         self._useAttributes({"assignees": data["assignees"]})
@@ -919,7 +919,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.issue_url + "/assignees", input=post_parameters
+            "DELETE", f"{self.issue_url}/assignees", input=post_parameters
         )
         # Only use the assignees attribute, since we call this PR as an issue
         self._useAttributes({"assignees": data["assignees"]})
@@ -938,7 +938,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
-            self.url + "/update-branch",
+            f"{self.url}/update-branch",
             input=post_parameters,
             headers={"Accept": Consts.updateBranchPreview},
         )

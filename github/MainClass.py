@@ -234,7 +234,7 @@ class Github:
         """
 
         assert isinstance(key, str), key
-        headers, data = self.__requester.requestJsonAndCheck("GET", "/licenses/" + key)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
         return github.License.License(self.__requester, headers, data, completed=True)
 
     def get_licenses(self):
@@ -272,7 +272,7 @@ class Github:
             )
         else:
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET", "/users/" + login
+                "GET", f"/users/{login}"
             )
             return github.NamedUser.NamedUser(
                 self.__requester, headers, data, completed=True
@@ -285,9 +285,7 @@ class Github:
         :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(user_id, int), user_id
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", "/user/" + str(user_id)
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
         return github.NamedUser.NamedUser(
             self.__requester, headers, data, completed=True
         )
@@ -313,7 +311,7 @@ class Github:
         :rtype: :class:`github.Organization.Organization`
         """
         assert isinstance(login, str), login
-        headers, data = self.__requester.requestJsonAndCheck("GET", "/orgs/" + login)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
         return github.Organization.Organization(
             self.__requester, headers, data, completed=True
         )
@@ -347,9 +345,7 @@ class Github:
             return Repository.Repository(
                 self.__requester, {}, {"url": url}, completed=False
             )
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", f"{url_base}{full_name_or_id}"
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", url)
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
     def get_repos(
@@ -410,7 +406,7 @@ class Github:
         :rtype: :class:`github.Gist.Gist`
         """
         assert isinstance(id, str), id
-        headers, data = self.__requester.requestJsonAndCheck("GET", "/gists/" + id)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/gists/{id}")
         return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
     def get_gists(self, since=github.GithubObject.NotSet):
@@ -705,7 +701,7 @@ class Github:
         """
         assert isinstance(name, str), name
         headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", "/hooks/" + name
+            "GET", f"/hooks/{name}"
         )
         return HookDescription.HookDescription(
             self.__requester, headers, attributes, completed=True
@@ -741,7 +737,7 @@ class Github:
         """
         assert isinstance(name, str), name
         headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", "/gitignore/templates/" + name
+            "GET", f"/gitignore/templates/{name}"
         )
         return GitignoreTemplate.GitignoreTemplate(
             self.__requester, headers, attributes, completed=True
@@ -808,7 +804,7 @@ class Github:
                 self.__requester, {}, {"url": "/app"}, completed=False
             )
         else:
-            headers, data = self.__requester.requestJsonAndCheck("GET", "/apps/" + slug)
+            headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
 
@@ -857,9 +853,7 @@ class GithubIntegration:
         if user_id:
             body = {"user_id": user_id}
         response = requests.post(
-            "{}/app/installations/{}/access_tokens".format(
-                self.base_url, installation_id
-            ),
+            f"{self.base_url}/app/installations/{installation_id}/access_tokens",
             headers={
                 "Authorization": f"Bearer {self.create_jwt()}",
                 "Accept": Consts.mediaTypeIntegrationPreview,

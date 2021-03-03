@@ -825,7 +825,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             put_parameters = None
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/collaborators/" + collaborator, input=put_parameters
+            "PUT", f"{self.url}/collaborators/{collaborator}", input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty
         # there's a pending invitation for the given user.
@@ -848,7 +848,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             collaborator = collaborator._identity
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/collaborators/" + collaborator + "/permission",
+            f"{self.url}/collaborators/{collaborator}/permission",
         )
         return data["permission"]
 
@@ -860,7 +860,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Invitation.Invitation,
             self._requester,
-            self.url + "/invitations",
+            f"{self.url}/invitations",
             None,
         )
 
@@ -872,7 +872,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(invite_id, int), invite_id
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/invitations/" + str(invite_id)
+            "DELETE", f"{self.url}/invitations/{invite_id}"
         )
 
     def compare(self, base, head):
@@ -885,7 +885,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(base, str), base
         assert isinstance(head, str), head
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/compare/" + base + "..." + head
+            "GET", f"{self.url}/compare/{base}...{head}"
         )
         return github.Comparison.Comparison(
             self._requester, headers, data, completed=True
@@ -905,7 +905,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "encoding": encoding,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/git/blobs", input=post_parameters
+            "POST", f"{self.url}/git/blobs", input=post_parameters
         )
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -947,7 +947,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if committer is not github.GithubObject.NotSet:
             post_parameters["committer"] = committer._identity
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/git/commits", input=post_parameters
+            "POST", f"{self.url}/git/commits", input=post_parameters
         )
         return github.GitCommit.GitCommit(
             self._requester, headers, data, completed=True
@@ -967,7 +967,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "sha": sha,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/git/refs", input=post_parameters
+            "POST", f"{self.url}/git/refs", input=post_parameters
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -1057,7 +1057,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ):
             post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/releases", input=post_parameters
+            "POST", f"{self.url}/releases", input=post_parameters
         )
         return github.GitRelease.GitRelease(
             self._requester, headers, data, completed=True
@@ -1091,7 +1091,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if tagger is not github.GithubObject.NotSet:
             post_parameters["tagger"] = tagger._identity
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/git/tags", input=post_parameters
+            "POST", f"{self.url}/git/tags", input=post_parameters
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -1114,7 +1114,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if base_tree is not github.GithubObject.NotSet:
             post_parameters["base_tree"] = base_tree._identity
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/git/trees", input=post_parameters
+            "POST", f"{self.url}/git/trees", input=post_parameters
         )
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
@@ -1148,7 +1148,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/hooks", input=post_parameters
+            "POST", f"{self.url}/hooks", input=post_parameters
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -1215,7 +1215,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 for element in labels
             ]
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/issues", input=post_parameters
+            "POST", f"{self.url}/issues", input=post_parameters
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -1236,7 +1236,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "read_only": read_only,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/keys", input=post_parameters
+            "POST", f"{self.url}/keys", input=post_parameters
         )
         return github.RepositoryKey.RepositoryKey(
             self._requester, headers, data, completed=True
@@ -1263,7 +1263,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/labels",
+            f"{self.url}/labels",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
@@ -1305,7 +1305,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             else:
                 post_parameters["due_on"] = due_on.isoformat()
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/milestones", input=post_parameters
+            "POST", f"{self.url}/milestones", input=post_parameters
         )
         return github.Milestone.Milestone(
             self._requester, headers, data, completed=True
@@ -1327,7 +1327,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/projects", headers=import_header, input=post_parameters
+            "POST", f"{self.url}/projects", headers=import_header, input=post_parameters
         )
         return github.Project.Project(self._requester, headers, data, completed=True)
 
@@ -1389,7 +1389,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         post_parameters = kwds
 
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/pulls", input=post_parameters
+            "POST", f"{self.url}/pulls", input=post_parameters
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
@@ -1412,7 +1412,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if client_payload is not github.GithubObject.NotSet:
             post_parameters["client_payload"] = client_payload
         status, headers, data = self._requester.requestJson(
-            "POST", self.url + "/dispatches", input=post_parameters
+            "POST", f"{self.url}/dispatches", input=post_parameters
         )
         return status == 204
 
@@ -1450,7 +1450,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/import", headers=import_header, input=put_parameters
+            "PUT", f"{self.url}/import", headers=import_header, input=put_parameters
         )
 
         return github.SourceImport.SourceImport(
@@ -1584,9 +1584,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(archive_format, str), archive_format
         assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
-        url = self.url + "/" + archive_format
+        url = f"{self.url}/{archive_format}"
         if ref is not github.GithubObject.NotSet:
-            url += "/" + ref
+            url += f"/{ref}"
         headers, data = self._requester.requestJsonAndCheck("GET", url)
         return headers["location"]
 
@@ -1596,7 +1596,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser, self._requester, self.url + "/assignees", None
+            github.NamedUser.NamedUser, self._requester, f"{self.url}/assignees", None
         )
 
     def get_branch(self, branch):
@@ -1607,7 +1607,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(branch, str), branch
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/branches/" + branch
+            "GET", f"{self.url}/branches/{branch}"
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -1617,7 +1617,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Branch.Branch`
         """
         return github.PaginatedList.PaginatedList(
-            github.Branch.Branch, self._requester, self.url + "/branches", None
+            github.Branch.Branch, self._requester, f"{self.url}/branches", None
         )
 
     def get_collaborators(self, affiliation=github.GithubObject.NotSet):
@@ -1633,13 +1633,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             assert isinstance(affiliation, str), affiliation
             assert (
                 affiliation in allowed_affiliations
-            ), "Affiliation can be one of " + ", ".join(allowed_affiliations)
+            ), f"Affiliation can be one of {', '.join(allowed_affiliations)}"
             url_parameters["affiliation"] = affiliation
 
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/collaborators",
+            f"{self.url}/collaborators",
             url_parameters,
         )
 
@@ -1651,7 +1651,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/comments/" + str(id)
+            "GET", f"{self.url}/comments/{id}"
         )
         return github.CommitComment.CommitComment(
             self._requester, headers, data, completed=True
@@ -1665,7 +1665,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CommitComment.CommitComment,
             self._requester,
-            self.url + "/comments",
+            f"{self.url}/comments",
             None,
         )
 
@@ -1677,7 +1677,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/commits/" + sha
+            "GET", f"{self.url}/commits/{sha}"
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
@@ -1735,7 +1735,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             else:
                 url_parameters["author"] = author
         return github.PaginatedList.PaginatedList(
-            github.Commit.Commit, self._requester, self.url + "/commits", url_parameters
+            github.Commit.Commit, self._requester, f"{self.url}/commits", url_parameters
         )
 
     def get_contents(self, path, ref=github.GithubObject.NotSet):
@@ -1755,7 +1755,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents/" + urllib.parse.quote(path),
+            f"{self.url}/contents/{urllib.parse.quote(path)}",
             parameters=url_parameters,
         )
 
@@ -1811,7 +1811,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Deployment.Deployment,
             self._requester,
-            self.url + "/deployments",
+            f"{self.url}/deployments",
             parameters,
             headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
@@ -1825,7 +1825,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/deployments/" + str(id_),
+            f"{self.url}/deployments/{id_}",
             headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
         return github.Deployment.Deployment(
@@ -1901,7 +1901,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/deployments",
+            f"{self.url}/deployments",
             input=post_parameters,
             headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
@@ -1916,7 +1916,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`list` of :class:`github.Referrer.Referrer`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/traffic/popular/referrers"
+            "GET", f"{self.url}/traffic/popular/referrers"
         )
         if isinstance(data, list):
             return [
@@ -1930,7 +1930,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`list` of :class:`github.Path.Path`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/traffic/popular/paths"
+            "GET", f"{self.url}/traffic/popular/paths"
         )
         if isinstance(data, list):
             return [
@@ -1951,7 +1951,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/traffic/views", parameters=url_parameters
+            "GET", f"{self.url}/traffic/views", parameters=url_parameters
         )
         if (
             (isinstance(data, dict))
@@ -1977,7 +1977,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if per is not github.GithubObject.NotSet:
             url_parameters["per"] = per
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/traffic/clones", parameters=url_parameters
+            "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
         if (
             (isinstance(data, dict))
@@ -2004,7 +2004,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
-            self.url + "/projects",
+            f"{self.url}/projects",
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview},
         )
@@ -2056,7 +2056,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents/" + urllib.parse.quote(path),
+            f"{self.url}/contents/{urllib.parse.quote(path)}",
             input=put_parameters,
         )
 
@@ -2120,7 +2120,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents/" + urllib.parse.quote(path),
+            f"{self.url}/contents/{urllib.parse.quote(path)}",
             input=put_parameters,
         )
 
@@ -2178,7 +2178,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents/" + urllib.parse.quote(path),
+            f"{self.url}/contents/{urllib.parse.quote(path)}",
             input=url_parameters,
         )
 
@@ -2217,7 +2217,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
-            self.url + "/contributors",
+            f"{self.url}/contributors",
             url_parameters,
         )
 
@@ -2229,7 +2229,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/downloads/" + str(id)
+            "GET", f"{self.url}/downloads/{id}"
         )
         return github.Download.Download(self._requester, headers, data, completed=True)
 
@@ -2239,7 +2239,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Download.Download`
         """
         return github.PaginatedList.PaginatedList(
-            github.Download.Download, self._requester, self.url + "/downloads", None
+            github.Download.Download, self._requester, f"{self.url}/downloads", None
         )
 
     def get_events(self):
@@ -2248,7 +2248,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, self.url + "/events", None
+            github.Event.Event, self._requester, f"{self.url}/events", None
         )
 
     def get_forks(self):
@@ -2257,7 +2257,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
-            Repository, self._requester, self.url + "/forks", None
+            Repository, self._requester, f"{self.url}/forks", None
         )
 
     def create_fork(self, organization=github.GithubObject.NotSet):
@@ -2274,7 +2274,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["organization"] = organization
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/forks",
+            f"{self.url}/forks",
             input=post_parameters,
         )
         return Repository(self._requester, headers, data, completed=True)
@@ -2287,7 +2287,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/git/blobs/" + sha
+            "GET", f"{self.url}/git/blobs/{sha}"
         )
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -2299,7 +2299,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/git/commits/" + sha
+            "GET", f"{self.url}/git/commits/{sha}"
         )
         return github.GitCommit.GitCommit(
             self._requester, headers, data, completed=True
@@ -2316,7 +2316,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             prefix = "/git/"
         assert isinstance(ref, str), ref
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + prefix + ref
+            "GET", f"{self.url}{prefix}{ref}"
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -2326,7 +2326,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRef.GitRef`
         """
         return github.PaginatedList.PaginatedList(
-            github.GitRef.GitRef, self._requester, self.url + "/git/refs", None
+            github.GitRef.GitRef, self._requester, f"{self.url}/git/refs", None
         )
 
     def get_git_matching_refs(self, ref):
@@ -2338,7 +2338,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.GitRef.GitRef,
             self._requester,
-            self.url + "/git/matching-refs/" + ref,
+            f"{self.url}/git/matching-refs/{ref}",
             None,
         )
 
@@ -2350,7 +2350,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/git/tags/" + sha
+            "GET", f"{self.url}/git/tags/{sha}"
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -2370,7 +2370,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             # GitHub API requires the recursive parameter be set to 1.
             url_parameters["recursive"] = 1
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/git/trees/" + sha, parameters=url_parameters
+            "GET", f"{self.url}/git/trees/{sha}", parameters=url_parameters
         )
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
@@ -2382,7 +2382,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/hooks/" + str(id)
+            "GET", f"{self.url}/hooks/{id}"
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -2392,7 +2392,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Hook.Hook`
         """
         return github.PaginatedList.PaginatedList(
-            github.Hook.Hook, self._requester, self.url + "/hooks", None
+            github.Hook.Hook, self._requester, f"{self.url}/hooks", None
         )
 
     def get_issue(self, number):
@@ -2403,7 +2403,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/issues/" + str(number)
+            "GET", f"{self.url}/issues/{number}"
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -2497,7 +2497,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             else:
                 url_parameters["creator"] = creator._identity
         return github.PaginatedList.PaginatedList(
-            github.Issue.Issue, self._requester, self.url + "/issues", url_parameters
+            github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters
         )
 
     def get_issues_comments(
@@ -2530,7 +2530,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
-            self.url + "/issues/comments",
+            f"{self.url}/issues/comments",
             url_parameters,
         )
 
@@ -2543,7 +2543,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/issues/events/" + str(id),
+            f"{self.url}/issues/events/{id}",
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
         return github.IssueEvent.IssueEvent(
@@ -2558,7 +2558,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
             self._requester,
-            self.url + "/issues/events",
+            f"{self.url}/issues/events",
             None,
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
@@ -2571,7 +2571,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/keys/" + str(id)
+            "GET", f"{self.url}/keys/{id}"
         )
         return github.RepositoryKey.RepositoryKey(
             self._requester, headers, data, completed=True
@@ -2585,7 +2585,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.RepositoryKey.RepositoryKey,
             self._requester,
-            self.url + "/keys",
+            f"{self.url}/keys",
             None,
         )
 
@@ -2597,7 +2597,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/labels/" + urllib.parse.quote(name)
+            "GET", f"{self.url}/labels/{urllib.parse.quote(name)}"
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -2607,7 +2607,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, self.url + "/labels", None
+            github.Label.Label, self._requester, f"{self.url}/labels", None
         )
 
     def get_languages(self):
@@ -2616,7 +2616,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: dict of string to integer
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/languages"
+            "GET", f"{self.url}/languages"
         )
         return data
 
@@ -2627,7 +2627,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
 
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/license"
+            "GET", f"{self.url}/license"
         )
         return github.ContentFile.ContentFile(
             self._requester, headers, data, completed=True
@@ -2641,7 +2641,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/milestones/" + str(number)
+            "GET", f"{self.url}/milestones/{number}"
         )
         return github.Milestone.Milestone(
             self._requester, headers, data, completed=True
@@ -2675,7 +2675,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Milestone.Milestone,
             self._requester,
-            self.url + "/milestones",
+            f"{self.url}/milestones",
             url_parameters,
         )
 
@@ -2687,7 +2687,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
-            "/networks/" + self.owner.login + "/" + self.name + "/events",
+            f"/networks/{self.owner.login}/{self.name}/events",
             None,
         )
 
@@ -2699,7 +2699,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/pulls/" + str(number)
+            "GET", f"{self.url}/pulls/{number}"
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
@@ -2743,7 +2743,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequest.PullRequest,
             self._requester,
-            self.url + "/pulls",
+            f"{self.url}/pulls",
             url_parameters,
         )
 
@@ -2792,7 +2792,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
-            self.url + "/pulls/comments",
+            f"{self.url}/pulls/comments",
             url_parameters,
         )
 
@@ -2807,7 +2807,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/readme", parameters=url_parameters
+            "GET", f"{self.url}/readme", parameters=url_parameters
         )
         return github.ContentFile.ContentFile(
             self._requester, headers, data, completed=True
@@ -2821,7 +2821,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(runner_id, int), runner_id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/actions/runners/" + str(runner_id)
+            "GET", f"{self.url}/actions/runners/{runner_id}"
         )
         return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
             self._requester, headers, data, completed=True
@@ -2835,7 +2835,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.SelfHostedActionsRunner.SelfHostedActionsRunner,
             self._requester,
-            self.url + "/actions/runners",
+            f"{self.url}/actions/runners",
             None,
             list_item="runners",
         )
@@ -2848,7 +2848,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/import",
+            f"{self.url}/import",
             headers=import_header,
         )
         if not data:
@@ -2864,7 +2864,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser, self._requester, self.url + "/stargazers", None
+            github.NamedUser.NamedUser, self._requester, f"{self.url}/stargazers", None
         )
 
     def get_stargazers_with_dates(self):
@@ -2875,7 +2875,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Stargazer.Stargazer,
             self._requester,
-            self.url + "/stargazers",
+            f"{self.url}/stargazers",
             None,
             headers={"Accept": Consts.mediaTypeStarringPreview},
         )
@@ -2886,7 +2886,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or list of :class:`github.StatsContributor.StatsContributor`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/stats/contributors"
+            "GET", f"{self.url}/stats/contributors"
         )
         if not data:
             return None
@@ -2904,7 +2904,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or list of :class:`github.StatsCommitActivity.StatsCommitActivity`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/stats/commit_activity"
+            "GET", f"{self.url}/stats/commit_activity"
         )
         if not data:
             return None
@@ -2922,7 +2922,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or list of :class:`github.StatsCodeFrequency.StatsCodeFrequency`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/stats/code_frequency"
+            "GET", f"{self.url}/stats/code_frequency"
         )
         if not data:
             return None
@@ -2940,7 +2940,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or :class:`github.StatsParticipation.StatsParticipation`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/stats/participation"
+            "GET", f"{self.url}/stats/participation"
         )
         if not data:
             return None
@@ -2955,7 +2955,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or :class:`github.StatsPunchCard.StatsPunchCard`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/stats/punch_card"
+            "GET", f"{self.url}/stats/punch_card"
         )
         if not data:
             return None
@@ -2970,7 +2970,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser, self._requester, self.url + "/subscribers", None
+            github.NamedUser.NamedUser, self._requester, f"{self.url}/subscribers", None
         )
 
     def get_tags(self):
@@ -2979,7 +2979,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
         """
         return github.PaginatedList.PaginatedList(
-            github.Tag.Tag, self._requester, self.url + "/tags", None
+            github.Tag.Tag, self._requester, f"{self.url}/tags", None
         )
 
     def get_releases(self):
@@ -2988,7 +2988,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRelease.GitRelease`
         """
         return github.PaginatedList.PaginatedList(
-            github.GitRelease.GitRelease, self._requester, self.url + "/releases", None
+            github.GitRelease.GitRelease, self._requester, f"{self.url}/releases", None
         )
 
     def get_release(self, id):
@@ -2999,14 +2999,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         if isinstance(id, int):
             headers, data = self._requester.requestJsonAndCheck(
-                "GET", self.url + "/releases/" + str(id)
+                "GET", f"{self.url}/releases/{id}"
             )
             return github.GitRelease.GitRelease(
                 self._requester, headers, data, completed=True
             )
         elif isinstance(id, str):
             headers, data = self._requester.requestJsonAndCheck(
-                "GET", self.url + "/releases/tags/" + id
+                "GET", f"{self.url}/releases/tags/{id}"
             )
             return github.GitRelease.GitRelease(
                 self._requester, headers, data, completed=True
@@ -3018,7 +3018,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/releases/latest"
+            "GET", f"{self.url}/releases/latest"
         )
         return github.GitRelease.GitRelease(
             self._requester, headers, data, completed=True
@@ -3030,7 +3030,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self.url + "/teams", None
+            github.Team.Team, self._requester, f"{self.url}/teams", None
         )
 
     def get_topics(self):
@@ -3040,7 +3040,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/topics",
+            f"{self.url}/topics",
             headers={"Accept": Consts.mediaTypeTopicsPreview},
         )
         return data["names"]
@@ -3051,7 +3051,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser, self._requester, self.url + "/watchers", None
+            github.NamedUser.NamedUser, self._requester, f"{self.url}/watchers", None
         )
 
     def get_workflows(self):
@@ -3062,7 +3062,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Workflow.Workflow,
             self._requester,
-            self.url + "/actions/workflows",
+            f"{self.url}/actions/workflows",
             None,
             list_item="workflows",
         )
@@ -3076,7 +3076,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/actions/workflows/" + id_or_name
+            "GET", f"{self.url}/actions/workflows/{id_or_name}"
         )
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
@@ -3128,7 +3128,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,
-            self.url + "/actions/runs",
+            f"{self.url}/actions/runs",
             url_parameters,
             list_item="workflow_runs",
         )
@@ -3142,7 +3142,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id_, int)
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/actions/runs/" + str(id_)
+            "GET", f"{self.url}/actions/runs/{id_}"
         )
         return github.WorkflowRun.WorkflowRun(
             self._requester, headers, data, completed=True
@@ -3162,7 +3162,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             assignee = assignee._identity
 
         status, headers, data = self._requester.requestJson(
-            "GET", self.url + "/assignees/" + assignee
+            "GET", f"{self.url}/assignees/{assignee}"
         )
         return status == 204
 
@@ -3180,17 +3180,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             collaborator = collaborator._identity
 
         status, headers, data = self._requester.requestJson(
-            "GET", self.url + "/collaborators/" + collaborator
+            "GET", f"{self.url}/collaborators/{collaborator}"
         )
         return status == 204
 
     def _legacy_convert_issue(self, attributes):
         convertedAttributes = {
             "number": attributes["number"],
-            "url": "/repos" + urllib.parse.urlparse(attributes["html_url"]).path,
+            "url": f"/repos{urllib.parse.urlparse(attributes['html_url']).path}",
             "user": {
                 "login": attributes["user"],
-                "url": "/users/" + attributes["user"],
+                "url": f"/users/{attributes['user']}",
             },
         }
         if "labels" in attributes:  # pragma no branch
@@ -3213,14 +3213,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(keyword, str), keyword
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/legacy/issues/search/"
-            + self.owner.login
-            + "/"
-            + self.name
-            + "/"
-            + state
-            + "/"
-            + urllib.parse.quote(keyword),
+            f"/legacy/issues/search/{self.owner.login}/{self.name}/{state}/{urllib.parse.quote(keyword)}",
         )
         return [
             github.Issue.Issue(
@@ -3272,7 +3265,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Notification.Notification,
             self._requester,
-            self.url + "/notifications",
+            f"{self.url}/notifications",
             params,
         )
 
@@ -3285,7 +3278,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", self.url + "/notifications", input=put_parameters
+            "PUT", f"{self.url}/notifications", input=put_parameters
         )
 
     def merge(self, base, head, commit_message=github.GithubObject.NotSet):
@@ -3308,7 +3301,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", self.url + "/merges", input=post_parameters
+            "POST", f"{self.url}/merges", input=post_parameters
         )
         if data is None:
             return None
@@ -3324,7 +3317,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         post_parameters = {"names": topics}
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/topics",
+            f"{self.url}/topics",
             headers={"Accept": Consts.mediaTypeTopicsPreview},
             input=post_parameters,
         )
@@ -3336,7 +3329,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson(
             "GET",
-            self.url + "/vulnerability-alerts",
+            f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
         return status == 204
@@ -3348,7 +3341,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson(
             "PUT",
-            self.url + "/vulnerability-alerts",
+            f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
         return status == 204
@@ -3360,7 +3353,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson(
             "DELETE",
-            self.url + "/vulnerability-alerts",
+            f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
         return status == 204
@@ -3372,7 +3365,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson(
             "PUT",
-            self.url + "/automated-security-fixes",
+            f"{self.url}/automated-security-fixes",
             headers={"Accept": Consts.automatedSecurityFixes},
         )
         return status == 204
@@ -3384,7 +3377,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson(
             "DELETE",
-            self.url + "/automated-security-fixes",
+            f"{self.url}/automated-security-fixes",
             headers={"Accept": Consts.automatedSecurityFixes},
         )
         return status == 204
@@ -3403,7 +3396,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             collaborator = collaborator._identity
 
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url + "/collaborators/" + collaborator
+            "DELETE", f"{self.url}/collaborators/{collaborator}"
         )
 
     def remove_self_hosted_runner(self, runner):
@@ -3420,7 +3413,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             runner = runner.id
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", self.url + "/actions/runners/" + str(runner)
+            "DELETE", f"{self.url}/actions/runners/{runner}"
         )
         return status == 204
 
@@ -3453,7 +3446,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(head_sha, str), head_sha
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/check-suites",
+            f"{self.url}/check-suites",
             input={"head_sha": head_sha},
         )
         return github.CheckSuite.CheckSuite(
@@ -3470,7 +3463,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         requestHeaders = {"Accept": "application/vnd.github.v3+json"}
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/check-suites/" + str(check_suite_id),
+            f"{self.url}/check-suites/{check_suite_id}",
             headers=requestHeaders,
         )
         return github.CheckSuite.CheckSuite(
@@ -3488,7 +3481,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ), auto_trigger_checks
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
-            self.url + "/check-suites/preferences",
+            f"{self.url}/check-suites/preferences",
             input={"auto_trigger_checks": auto_trigger_checks},
         )
         return github.RepositoryPreferences.RepositoryPreferences(
@@ -3503,9 +3496,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         post_parameters = collections.OrderedDict()
         post_parameters["hub.callback"] = callback
-        post_parameters["hub.topic"] = (
-            "https://github.com/" + self.full_name + "/events/" + event
-        )
+        post_parameters[
+            "hub.topic"
+        ] = f"https://github.com/{self.full_name}/events/{event}"
         post_parameters["hub.mode"] = mode
         if secret is not github.GithubObject.NotSet:
             post_parameters["hub.secret"] = secret
@@ -3516,13 +3509,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     @property
     def _identity(self):
-        return self.owner.login + "/" + self.name
+        return f"{self.owner.login}/{self.name}"
 
     def get_release_asset(self, id):
         assert isinstance(id, (int)), id
 
         resp_headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/releases/assets/" + str(id)
+            "GET", f"{self.url}/releases/assets/{id}"
         )
         return github.GitReleaseAsset.GitReleaseAsset(
             self._requester, resp_headers, data, completed=True
@@ -3603,7 +3596,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/check-runs",
+            f"{self.url}/check-runs",
             input=post_parameters,
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
@@ -3616,7 +3609,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(check_run_id, int), check_run_id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/check-runs/" + str(check_run_id)
+            "GET", f"{self.url}/check-runs/{check_run_id}"
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 

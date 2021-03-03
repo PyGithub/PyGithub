@@ -163,7 +163,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "slug" in attributes:  # pragma no branch
             self._slug = self._makeStringAttribute(attributes["slug"])
-            self._url = self._makeStringAttribute("/apps/" + attributes["slug"])
+            self._url = self._makeStringAttribute(f"/apps/{attributes['slug']}")
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:

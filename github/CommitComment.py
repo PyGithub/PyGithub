@@ -164,7 +164,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Reaction.Reaction,
             self._requester,
-            self.url + "/reactions",
+            f"{self.url}/reactions",
             None,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
@@ -182,7 +182,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/reactions",
+            f"{self.url}/reactions",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
@@ -198,7 +198,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         assert isinstance(reaction_id, int), reaction_id
         status, _, _ = self._requester.requestJson(
             "DELETE",
-            self.url + "/reactions/" + str(reaction_id),
+            f"{self.url}/reactions/{reaction_id}",
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
         return status == 204

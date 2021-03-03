@@ -177,7 +177,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CheckRunAnnotation.CheckRunAnnotation,
             self._requester,
-            self.url + "/annotations",
+            f"{self.url}/annotations",
             None,
             headers={"Accept": "application/vnd.github.v3+json"},
         )

@@ -101,7 +101,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         post_parameters = {"message": message}
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.pull_request_url + "/reviews/%s/dismissals" % self.id,
+            f"{self.pull_request_url}/reviews/{self.id}/dismissals",
             input=post_parameters,
         )
 

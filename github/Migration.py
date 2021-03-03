@@ -144,7 +144,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/archive",
+            f"{self.url}/archive",
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
         return data["data"]
@@ -155,7 +155,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/archive",
+            f"{self.url}/archive",
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
@@ -168,7 +168,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo_name, str), repo_name
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/repos/" + repo_name + "/lock",
+            f"{self.url}/repos/{repo_name}/lock",
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 

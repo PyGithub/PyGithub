@@ -434,7 +434,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, self.url + "/events", None
+            github.Event.Event, self._requester, f"{self.url}/events", None
         )
 
     def get_followers(self):
@@ -443,7 +443,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            NamedUser, self._requester, self.url + "/followers", None
+            NamedUser, self._requester, f"{self.url}/followers", None
         )
 
     def get_following(self):
@@ -452,7 +452,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
-            NamedUser, self._requester, self.url + "/following", None
+            NamedUser, self._requester, f"{self.url}/following", None
         )
 
     def get_gists(self, since=github.GithubObject.NotSet):
@@ -468,7 +468,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
-            github.Gist.Gist, self._requester, self.url + "/gists", url_parameters
+            github.Gist.Gist, self._requester, f"{self.url}/gists", url_parameters
         )
 
     def get_keys(self):
@@ -477,7 +477,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.UserKey.UserKey`
         """
         return github.PaginatedList.PaginatedList(
-            github.UserKey.UserKey, self._requester, self.url + "/keys", None
+            github.UserKey.UserKey, self._requester, f"{self.url}/keys", None
         )
 
     def get_orgs(self):
@@ -486,7 +486,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
         """
         return github.PaginatedList.PaginatedList(
-            github.Organization.Organization, self._requester, self.url + "/orgs", None
+            github.Organization.Organization, self._requester, f"{self.url}/orgs", None
         )
 
     def get_projects(self, state="open"):
@@ -500,7 +500,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Project.Project,
             self._requester,
-            self.url + "/projects",
+            f"{self.url}/projects",
             url_parameters,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
@@ -511,7 +511,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, self.url + "/events/public", None
+            github.Event.Event, self._requester, f"{self.url}/events/public", None
         )
 
     def get_public_received_events(self):
@@ -522,7 +522,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
-            self.url + "/received_events/public",
+            f"{self.url}/received_events/public",
             None,
         )
 
@@ -532,7 +532,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, self.url + "/received_events", None
+            github.Event.Event, self._requester, f"{self.url}/received_events", None
         )
 
     def get_repo(self, name):
@@ -543,7 +543,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", "/repos/" + self.login + "/" + name
+            "GET", f"/repos/{self.login}/{name}"
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -577,7 +577,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            self.url + "/repos",
+            f"{self.url}/repos",
             url_parameters,
         )
 
@@ -587,7 +587,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
-            github.Repository.Repository, self._requester, self.url + "/starred", None
+            github.Repository.Repository, self._requester, f"{self.url}/starred", None
         )
 
     def get_subscriptions(self):
@@ -598,7 +598,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            self.url + "/subscriptions",
+            f"{self.url}/subscriptions",
             None,
         )
 
@@ -608,7 +608,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
-            github.Repository.Repository, self._requester, self.url + "/watched", None
+            github.Repository.Repository, self._requester, f"{self.url}/watched", None
         )
 
     def has_in_following(self, following):
@@ -619,7 +619,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson(
-            "GET", self.url + "/following/" + following._identity
+            "GET", f"{self.url}/following/{following._identity}"
         )
         return status == 204
 
@@ -639,7 +639,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if isinstance(org, github.Organization.Organization):
             org = org.login
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", "/orgs/" + org + "/memberships/" + self.login
+            "GET", f"/orgs/{org}/memberships/{self.login}"
         )
         return github.Membership.Membership(
             self._requester, headers, data, completed=True

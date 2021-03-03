@@ -200,7 +200,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, self.url + "/labels", None
+            github.Label.Label, self._requester, f"{self.url}/labels", None
         )
 
     @property
