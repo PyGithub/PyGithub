@@ -37,6 +37,7 @@ from github.PaginatedList import PaginatedList
 from github.Path import Path
 from github.Permissions import Permissions
 from github.Project import Project
+from github.PublicKey import PublicKey
 from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
@@ -237,6 +238,7 @@ class Repository(CompletableGithubObject):
     def create_repository_dispatch(
         self, event_type: str, client_payload: Dict[str, Any]
     ) -> bool: ...
+    def create_secret(self, secret_name: str, unencrypted_value: str) -> bool: ...
     def create_source_import(
         self,
         vcs: str,
@@ -409,6 +411,7 @@ class Repository(CompletableGithubObject):
     def get_projects(
         self, state: Union[str, _NotSetType] = ...
     ) -> PaginatedList[Project]: ...
+    def get_public_key(self) -> PublicKey: ...
     def get_pull(self, number: int) -> PullRequest: ...
     def get_pulls(
         self,

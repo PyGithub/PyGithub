@@ -47,6 +47,7 @@
 ################################################################################
 
 import datetime
+from unittest import mock
 
 import github
 
@@ -436,6 +437,13 @@ class Repository(Framework.TestCase):
         self.assertTrue(with_payload)
         without_payload = self.repo.create_repository_dispatch("type")
         self.assertTrue(without_payload)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateSecret(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        result = self.repo.create_secret("secret-name", "secret-value")
+        self.assertTrue(result)
 
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
