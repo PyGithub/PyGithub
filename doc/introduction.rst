@@ -15,10 +15,7 @@ First create a Github instance::
 
     from github import Github
     
-    # using username and password
-    g = Github("user", "password")
-    
-    # or using an access token
+    # using an access token
     g = Github("access_token")
 
     # Github Enterprise with custom hostname
