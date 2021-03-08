@@ -1433,7 +1433,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "encrypted_value": payload,
         }
         status, headers, data = self._requester.requestJson(
-            "PUT", self.url + "/actions/secrets/" + secret_name, input=put_parameters
+            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
         return status == 201
 
@@ -2718,7 +2718,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PublicKey.PublicKey`
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url + "/actions/secrets/public-key"
+            "GET", f"{self.url}/actions/secrets/public-key"
         )
         return github.PublicKey.PublicKey(
             self._requester, headers, data, completed=True
