@@ -1,2 +1,8 @@
 comment:
   after_n_builds: 4
+
+codecov:
+  disable_default_path_fixes: true # Automatic detection does not discover all files
+
+fixes:
+  - "::github/"
