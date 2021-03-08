@@ -442,8 +442,10 @@ class Repository(Framework.TestCase):
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        result = self.repo.create_secret("secret-name", "secret-value")
-        self.assertTrue(result)
+        self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
+
+    def testDeleteSecret(self):
+        self.assertTrue(self.repo.delete_secret("secret_name"))
 
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")

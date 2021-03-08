@@ -1437,6 +1437,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
+    def delete_secret(self, secret_name):
+        """
+        :calls: `DELETE /repos/:owner/:repo/actions/secrets/:secret_name <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :param secret_name: string
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
+        )
+        return status == 204
+
     def create_source_import(
         self,
         vcs,
