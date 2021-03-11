@@ -788,6 +788,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def visibility(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._visibility)
+        return self._visibility.value
+
+    @property
     def watchers(self):
         """
         :type: integer
@@ -3738,6 +3746,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
 
@@ -3944,6 +3953,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:  # pragma no branch
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch

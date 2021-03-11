@@ -463,6 +463,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         homepage=github.GithubObject.NotSet,
         private=github.GithubObject.NotSet,
+        visibility=github.GithubObject.NotSet,
         has_issues=github.GithubObject.NotSet,
         has_wiki=github.GithubObject.NotSet,
         has_downloads=github.GithubObject.NotSet,
@@ -506,6 +507,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert private is github.GithubObject.NotSet or isinstance(
             private, bool
         ), private
+        assert visibility is github.GithubObject.NotSet or isinstance(
+            visibility, str
+        ), visibility
         assert has_issues is github.GithubObject.NotSet or isinstance(
             has_issues, bool
         ), has_issues
@@ -551,6 +555,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["homepage"] = homepage
         if private is not github.GithubObject.NotSet:
             post_parameters["private"] = private
+        if visibility is not github.GithubObject.NotSet:
+            post_parameters["visibility"] = visibility
         if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
         if has_wiki is not github.GithubObject.NotSet:
@@ -576,7 +582,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/repos", input=post_parameters
+            "POST",
+            f"{self.url}/repos",
+            input=post_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -920,7 +929,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"/repos/{self.login}/{name}"
+            "GET",
+            f"/repos/{self.login}/{name}",
+            headers={"Accept": Consts.repoVisibilityPreview},
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -934,7 +945,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     ):
         """
         :calls: `GET /orgs/{org}/repos <http://docs.github.com/en/rest/reference/repos>`_
-        :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member')
+        :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member', 'internal')
         :param sort: string ('created', 'updated', 'pushed', 'full_name')
         :param direction: string ('asc', desc')
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -957,6 +968,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             f"{self.url}/repos",
             url_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
         )
 
     def get_team(self, id):
