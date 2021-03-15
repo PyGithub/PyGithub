@@ -502,6 +502,46 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def delete_review(
+        self,
+        commit=github.GithubObject.NotSet,
+        body=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        comments=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :param commit: github.Commit.Commit
+        :param body: string
+        :param event: string
+        :param comments: list
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert commit is github.GithubObject.NotSet or isinstance(
+            commit, github.Commit.Commit
+        ), commit
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert comments is github.GithubObject.NotSet or isinstance(
+            comments, list
+        ), comments
+        post_parameters = dict()
+        if commit is not github.GithubObject.NotSet:
+            post_parameters["commit_id"] = commit.sha
+        if body is not github.GithubObject.NotSet:
+            post_parameters["body"] = body
+        post_parameters["event"] = (
+            "COMMENT" if event == github.GithubObject.NotSet else event
+        )
+        if comments is github.GithubObject.NotSet:
+            post_parameters["comments"] = []
+        else:
+            post_parameters["comments"] = comments
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.url}/reviews", input=post_parameters
+        )
+
+
     def create_review_request(
         self,
         reviewers=github.GithubObject.NotSet,
