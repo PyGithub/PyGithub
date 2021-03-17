@@ -508,7 +508,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: None
         """
-        
+        assert isinstance(id, int), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.url}/reviews{id}"
+        )
+
     def create_review_request(
         self,
         reviewers=github.GithubObject.NotSet,
