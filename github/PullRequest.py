@@ -534,7 +534,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["body"] = body
         if event is not github.GithubObject.NotSet :   
             post_parameters["event"] = event
-        
         if comments is github.GithubObject.NotSet:
             post_parameters["comments"] = []
         else:
