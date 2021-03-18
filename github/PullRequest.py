@@ -488,9 +488,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["commit_id"] = commit.sha
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
-        post_parameters["event"] = (
-            "COMMENT" if event == github.GithubObject.NotSet else event
-        )
+        if event is not github.GithubObject.NotSet :   
+            post_parameters["event"] = event
+        
         if comments is github.GithubObject.NotSet:
             post_parameters["comments"] = []
         else:
@@ -508,13 +508,15 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         body=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         comments=github.GithubObject.NotSet,
+        review_id = github.GithubObject.NotSet,
     ):
         """
-        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/review_id <https://developer.github.com/v3/pulls/reviews/review_id>`_
         :param commit: github.Commit.Commit
         :param body: string
         :param event: string
         :param comments: list
+        :param review_id: string
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
         assert commit is github.GithubObject.NotSet or isinstance(
@@ -530,15 +532,15 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["commit_id"] = commit.sha
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
-        post_parameters["event"] = (
-            "COMMENT" if event == github.GithubObject.NotSet else event
-        )
+        if event is not github.GithubObject.NotSet :   
+            post_parameters["event"] = event
+        
         if comments is github.GithubObject.NotSet:
             post_parameters["comments"] = []
         else:
             post_parameters["comments"] = comments
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/reviews", input=post_parameters
+            "DELETE", f"{self.url}/reviews/"+review_id, input=post_parameters
         )
 
 
