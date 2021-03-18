@@ -55,7 +55,7 @@ class PullRequest(CompletableGithubObject):
         body: Union[_NotSetType, str] = ...,
         event: Union[_NotSetType, str] = ...,
         comments: Union[_NotSetType, str] = ...,
-    ) -> PullRequestReview: ...
+    ) -> PullRequestReview: ...       
     def create_review_comment(
         self, body: str, commit_id: Commit, path: str, position: int
     ) -> PullRequestComment: ...
@@ -67,6 +67,14 @@ class PullRequest(CompletableGithubObject):
     @property
     def created_at(self) -> datetime: ...
     def delete_labels(self) -> None: ...
+    def delete_review(
+        self,
+        commit: Commit = ...,
+        body: Union[_NotSetType, str] = ...,
+        event: Union[_NotSetType, str] = ...,
+        comments: Union[_NotSetType, str] = ...,
+        review_id: Union[_NotSetType, str] = ...,
+    ) -> None: ...         
     def delete_review_request(
         self,
         reviewers: Union[_NotSetType, List[str]] = ...,
