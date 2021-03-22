@@ -40,6 +40,7 @@
 ################################################################################
 
 import datetime
+from collections import namedtuple
 
 import github.Authorization
 import github.Event
@@ -373,7 +374,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert all(isinstance(element, str) for element in emails), emails
-        post_parameters = emails
+        post_parameters = {"emails": emails}
         headers, data = self._requester.requestJsonAndCheck(
             "POST", "/user/emails", input=post_parameters
         )
@@ -763,10 +764,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     def get_emails(self):
         """
         :calls: `GET /user/emails <http://developer.github.com/v3/users/emails>`_
-        :rtype: list of string
+        :rtype: list of namedtuples with members email, primary, verified and visibility
         """
         headers, data = self._requester.requestJsonAndCheck("GET", "/user/emails")
-        return data
+        itemdata = namedtuple("EmailData", data[0].keys())
+        return [itemdata._make(item.values()) for item in data]
 
     def get_events(self):
         """
@@ -1189,7 +1191,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert all(isinstance(element, str) for element in emails), emails
-        post_parameters = emails
+        post_parameters = {"emails": emails}
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", "/user/emails", input=post_parameters
         )
