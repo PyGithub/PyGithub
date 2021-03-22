@@ -300,7 +300,7 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         if self._url.value is None:
             raise GithubException.IncompletableObject(
-                400, "Returned object contains no URL"
+                400, "Returned object contains no URL", None
             )
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
