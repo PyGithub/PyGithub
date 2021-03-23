@@ -119,7 +119,7 @@ while not added:
 
 added = False
 
-inInit = False
+inInit = line.endswith("def _initAttributes(self):")
 while not added:
     line = lines[i].rstrip()
     i += 1
