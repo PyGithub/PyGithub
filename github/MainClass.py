@@ -50,7 +50,6 @@
 import datetime
 import pickle
 import time
-import warnings
 
 import jwt
 import requests
@@ -100,8 +99,6 @@ class Github:
         jwt=None,
         base_url=DEFAULT_BASE_URL,
         timeout=DEFAULT_TIMEOUT,
-        client_id=None,
-        client_secret=None,
         user_agent="PyGithub/Python",
         per_page=DEFAULT_PER_PAGE,
         verify=True,
@@ -113,8 +110,6 @@ class Github:
         :param password: string
         :param base_url: string
         :param timeout: integer
-        :param client_id: string
-        :param client_secret: string
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
@@ -127,8 +122,6 @@ class Github:
         assert jwt is None or isinstance(jwt, str), jwt
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
-        assert client_id is None or isinstance(client_id, str), client_id
-        assert client_secret is None or isinstance(client_secret, str), client_secret
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert (
             retry is None
@@ -136,21 +129,12 @@ class Github:
             or isinstance(retry, (urllib3.util.Retry))
         )
         assert pool_size is None or isinstance(pool_size, (int)), pool_size
-
-        if client_id is not None or client_secret is not None:
-            warnings.warn(
-                "client_id and client_secret are deprecated and will be removed in a future release, switch to token authentication",
-                FutureWarning,
-                stacklevel=2,
-            )
         self.__requester = Requester(
             login_or_token,
             password,
             jwt,
             base_url,
             timeout,
-            client_id,
-            client_secret,
             user_agent,
             per_page,
             verify,
