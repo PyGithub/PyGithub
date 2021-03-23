@@ -296,8 +296,6 @@ class Requester:
         jwt,
         base_url,
         timeout,
-        client_id,
-        client_secret,
         user_agent,
         per_page,
         verify,
@@ -343,9 +341,6 @@ class Requester:
         self.per_page = per_page
 
         self.oauth_scopes = None
-
-        self.__clientId = client_id
-        self.__clientSecret = client_secret
 
         assert user_agent is not None, (
             "github now requires a user-agent. "
@@ -581,9 +576,6 @@ class Requester:
         return status, responseHeaders, output
 
     def __authenticate(self, url, requestHeaders, parameters):
-        if self.__clientId and self.__clientSecret and "client_id=" not in url:
-            parameters["client_id"] = self.__clientId
-            parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
 

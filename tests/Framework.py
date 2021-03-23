@@ -268,9 +268,6 @@ class BasicTestCase(unittest.TestCase):
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
             self.jwt = GithubCredentials.jwt
-            # @todo Remove client_id and client_secret from ReplayData (as we already remove login, password and oauth_token)
-            # self.client_id = GithubCredentials.client_id
-            # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
@@ -283,8 +280,6 @@ class BasicTestCase(unittest.TestCase):
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"
-            self.client_id = "client_id"
-            self.client_secret = "client_secret"
             self.jwt = "jwt"
 
             httpretty.enable(allow_net_connect=False)
