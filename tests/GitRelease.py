@@ -206,7 +206,9 @@ class GitRelease(Framework.TestCase):
     def testUploadAssetWithName(self):
         self.setUpNewRelease()
         release = self.new_release
-        r = release.upload_asset(self.artifact_path, name="foobar.zip")
+        r = release.upload_asset(
+            self.artifact_path, name="foobar.zip", content_type="application/zip"
+        )
         self.assertEqual(r.name, "foobar.zip")
         self.tearDownNewRelease()
 
