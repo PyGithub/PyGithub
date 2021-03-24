@@ -179,8 +179,9 @@ class PullRequest(Framework.TestCase):
 
     def testPendingReview(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
-        review_id = self.pull.create_review(commit, "Body of review", "event", []) 
-        review_id = self.repo.get_review()
+        self.pull.create_review(commit, "Body of review", "event", []) 
+        review = self.repo.get_review()
+        review_id = review.id
         self.assertListKeyEqual(
             self.pull.get_review(), lambda r: r.id, review_id,
         )
