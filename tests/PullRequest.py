@@ -178,13 +178,19 @@ class PullRequest(Framework.TestCase):
         )
 
     def testPendingReview(self):
-        review_id = self.repo.get_review(42)
-        self.assertListKeyEqual(
-            self.pull.get_review(), lambda r: r.id, [42],
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_comment(
+            "Comment created by PyGithub", commit, "src/github/Issue.py", 5
         )
-        self.delete_pending_review(42)
+        review_id = self.pull.create_review(commit, "Body of review", "event", [])
+        ) 
+        review_id = self.repo.get_review()
         self.assertListKeyEqual(
-            self.pull.get_review(), lambda r: r.id, [],
+            self.pull.get_review(), lambda r: r.id, review_id,
+        )
+        self.delete_pending_review()
+        self.assertListKeyEqual(
+            self.pull.get_review(), lambda r: r.id, review_id,
         )
 
     def testGetReviewComments(self):
