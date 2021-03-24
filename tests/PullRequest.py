@@ -177,6 +177,16 @@ class PullRequest(Framework.TestCase):
             [16349963, 16350729, 16350730, 16350731, 28469043, 98136335],
         )
 
+    def testPendingReview(self):
+        42 = self.repo.get_review(42)
+        self.assertListKeyEqual(
+            self.pull.get_review(), lambda r: r.id, [42],
+        )
+        self.delete_pending_review(42)
+        self.assertListKeyEqual(
+            self.pull.get_review(), lambda r: r.id, [],
+        )
+
     def testGetReviewComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(since=epoch)
