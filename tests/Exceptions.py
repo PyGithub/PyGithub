@@ -92,6 +92,11 @@ class Exceptions(Framework.TestCase):
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException("foo", "bar", None)))
 
+    def testJSONParseError(self):
+        # Replay data was forged to force a JSON error
+        with self.assertRaises(ValueError):
+            self.g.get_user("jacquev6")
+
 
 class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
