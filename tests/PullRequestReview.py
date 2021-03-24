@@ -79,3 +79,8 @@ class PullRequestReview(Framework.TestCase):
             repr(self.pullreview),
             'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)',
         )
+
+    def testDeleteReview(self):
+        self.pullreview.delete_pending_review()
+        review_id = self.pull.get_review(28482091)
+        self.assertEqual(pr.state, "CHANGES_REQUESTED")
