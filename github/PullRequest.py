@@ -502,17 +502,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def delete_pending_review(self, id):
-        """
-        :calls: `POST /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
-        :param id: integer
-        :rtype: None
-        """
-        assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/reviews{id}"
-        )
-
     def create_review_request(
         self,
         reviewers=github.GithubObject.NotSet,

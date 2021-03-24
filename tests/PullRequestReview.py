@@ -55,6 +55,11 @@ class PullRequestReview(Framework.TestCase):
         pr = self.pull.get_review(28482091)
         self.assertEqual(pr.state, "DISMISSED")
 
+    def testDelete(self):
+        self.pullreview.delete()
+        pr = self.pull.get_review(28482091)
+        self.assertEqual(pr.state, "CHANGES_REQUESTED")
+
     def testAttributes(self):
         self.assertEqual(self.pullreview.id, 28482091)
         self.assertEqual(self.pullreview.user.login, "jzelinskie")
@@ -79,8 +84,3 @@ class PullRequestReview(Framework.TestCase):
             repr(self.pullreview),
             'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)',
         )
-
-    def testDeleteReview(self):
-        self.pullreview.delete_pending_review()
-        review_id = self.pull.get_review(28482091)
-        self.assertEqual(pr.state, "CHANGES_REQUESTED")
