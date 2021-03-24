@@ -178,7 +178,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testPendingReview(self):
-        42 = self.repo.get_review(42)
+        review_id = self.repo.get_review(42)
         self.assertListKeyEqual(
             self.pull.get_review(), lambda r: r.id, [42],
         )
