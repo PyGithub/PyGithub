@@ -99,13 +99,17 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.bio, "Bio edited by PyGithub")
 
     def testEmails(self):
+        emails = self.user.get_emails()
         self.assertEqual(
-            self.user.get_emails(),
+            [item.email for item in emails],
             ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
         )
+        self.assertTrue(emails[0].primary)
+        self.assertTrue(emails[0].verified)
+        self.assertEqual(emails[0].visibility, "private")
         self.user.add_to_emails("1@foobar.com", "2@foobar.com")
         self.assertEqual(
-            self.user.get_emails(),
+            [item.email for item in self.user.get_emails()],
             [
                 "vincent@vincent-jacques.net",
                 "1@foobar.com",
@@ -115,7 +119,7 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.user.remove_from_emails("1@foobar.com", "2@foobar.com")
         self.assertEqual(
-            self.user.get_emails(),
+            [item.email for item in self.user.get_emails()],
             ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
         )
 
