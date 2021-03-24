@@ -441,6 +441,8 @@ class Requester:
             try:
                 return json.loads(data)
             except ValueError:
+                if data.startswith("{") or data.startswith("["):
+                    raise
                 return {"data": data}
 
     def requestJson(
