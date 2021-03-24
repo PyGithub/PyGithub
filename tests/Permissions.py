@@ -29,13 +29,13 @@ class Permissions(Framework.TestCase):
         self.userRepo = self.g.get_repo("PyGithub/PyGithub")
 
     def testUserRepoPermissionAttributes(self):
-        self.assertEqual(self.userRepo.permissions.admin, False)
+        self.assertFalse(self.userRepo.permissions.admin)
         # Attribute is not present for users (only for teams)
-        self.assertEqual(self.userRepo.permissions.maintain, None)
-        self.assertEqual(self.userRepo.permissions.pull, True)
-        self.assertEqual(self.userRepo.permissions.push, False)
+        self.assertIs(self.userRepo.permissions.maintain, None)
+        self.assertTrue(self.userRepo.permissions.pull)
+        self.assertFalse(self.userRepo.permissions.push)
         # Attribute is not present for users (only for teams)
-        self.assertEqual(self.userRepo.permissions.triage, None)
+        self.assertIs(self.userRepo.permissions.triage, None)
 
     def testUserRepoPermissionRepresentation(self):
         self.assertEqual(
