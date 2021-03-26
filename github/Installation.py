@@ -43,7 +43,7 @@ INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 class Installation(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Installations. The reference can be found here https://developer.github.com/v3/apps/installations/
+    This class represents Installations. The reference can be found here https://docs.github.com/en/rest/reference/apps#installations
     """
 
     def __repr__(self):
@@ -79,7 +79,7 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
 
     def get_repos(self):
         """
-        :calls: `GET /installation/repositories <https://developer.github.com/v3/integrations/installations/#list-repositories>`_
+        :calls: `GET /installation/repositories <https://docs.github.com/en/rest/reference/integrations/installations#list-repositories>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         url_parameters = dict()

@@ -30,7 +30,7 @@ import github.NamedUser
 
 class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents PullRequestReviews. The reference can be found here https://developer.github.com/v3/pulls/reviews/
+    This class represents PullRequestReviews. The reference can be found here https://docs.github.com/en/rest/reference/pulls#reviews
     """
 
     def __repr__(self):
@@ -94,7 +94,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
 
     def dismiss(self, message):
         """
-        :calls: `PUT /repos/:owner/:repo/pulls/:number/reviews/:review_id/dismissals <https://developer.github.com/v3/pulls/reviews/>`_
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :rtype: None
         """
         assert isinstance(message, str), message

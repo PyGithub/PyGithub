@@ -34,7 +34,7 @@ import github.GitTreeElement
 
 class GitTree(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitTrees. The reference can be found here https://developer.github.com/v3/git/trees/
+    This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
     """
 
     def __repr__(self):

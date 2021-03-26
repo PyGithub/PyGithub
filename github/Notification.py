@@ -34,7 +34,7 @@ import github.Repository
 
 class Notification(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Notifications. The reference can be found here http://developer.github.com/v3/activity/notifications/
+    This class represents Notifications. The reference can be found here http://docs.github.com/en/rest/reference/activity#notifications
     """
 
     def __repr__(self):
@@ -114,7 +114,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
 
     def mark_as_read(self):
         """
-        :calls: `PATCH /notifications/threads/:id <https://developer.github.com/v3/activity/notifications/>`_
+        :calls: `PATCH /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",

@@ -31,7 +31,7 @@ import github.Repository
 
 class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents CommitCombinedStatuses. The reference can be found here https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-ref
+    This class represents CommitCombinedStatuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
     def __repr__(self):

@@ -42,7 +42,7 @@ from . import Consts
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Branches. The reference can be found here https://developer.github.com/v3/repos/branches
+    This class represents Branches. The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
     """
 
     def __repr__(self):
@@ -98,7 +98,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_protection(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -123,7 +123,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         team_push_restrictions=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
+        :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         :strict: bool
         :contexts: list of strings
         :enforce_admins: bool
@@ -245,7 +245,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_protection(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -254,7 +254,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_required_status_checks(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -268,7 +268,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet
     ):
         """
-        :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
+        :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         :strict: bool
         :contexts: list of strings
         """
@@ -290,7 +290,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_required_status_checks(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_status_checks <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -299,7 +299,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_required_pull_request_reviews(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -320,7 +320,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_approving_review_count=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
+        :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         :dismissal_users: list of strings
         :dismissal_teams: list of strings
         :dismiss_stale_reviews: bool
@@ -368,7 +368,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_required_pull_request_reviews(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -377,7 +377,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_admin_enforcement(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: bool
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -387,7 +387,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def set_admin_enforcement(self):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.protection_url}/enforce_admins"
@@ -395,7 +395,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_admin_enforcement(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/enforce_admins <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.protection_url}/enforce_admins"
@@ -403,7 +403,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_user_push_restrictions(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -415,7 +415,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_team_push_restrictions(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
@@ -427,7 +427,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def add_user_push_restrictions(self, *users):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
         """
         assert all(isinstance(element, str) for element in users), users
@@ -438,7 +438,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def replace_user_push_restrictions(self, *users):
         """
-        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
         """
         assert all(isinstance(element, str) for element in users), users
@@ -449,7 +449,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_user_push_restrictions(self, *users):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/users <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
         """
         assert all(isinstance(element, str) for element in users), users
@@ -460,7 +460,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def add_team_push_restrictions(self, *teams):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
         """
         assert all(isinstance(element, str) for element in teams), teams
@@ -471,7 +471,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def replace_team_push_restrictions(self, *teams):
         """
-        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
         """
         assert all(isinstance(element, str) for element in teams), teams
@@ -482,7 +482,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_team_push_restrictions(self, *teams):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions/teams <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
         """
         assert all(isinstance(element, str) for element in teams), teams
@@ -493,7 +493,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_push_restrictions(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/restrictions <https://developer.github.com/v3/repos/branches>`_
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.protection_url}/restrictions"
@@ -501,7 +501,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def get_required_signatures(self):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -512,7 +512,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def add_required_signatures(self):
         """
-        :calls: `POST /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -522,7 +522,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def remove_required_signatures(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection/required_signatures <https://developer.github.com/v3/repos/branches>`
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",

@@ -34,7 +34,7 @@ import github.GithubObject
 
 class Authorization(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Authorizations. The reference can be found here https://developer.github.com/v3/oauth_authorizations/
+    This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
     def __repr__(self):
@@ -114,7 +114,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /authorizations/:id <http://developer.github.com/v3/oauth>`_
+        :calls: `DELETE /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
@@ -128,7 +128,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         note_url=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /authorizations/:id <http://developer.github.com/v3/oauth>`_
+        :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         :param scopes: list of string
         :param add_scopes: list of string
         :param remove_scopes: list of string

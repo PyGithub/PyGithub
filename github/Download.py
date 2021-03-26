@@ -33,7 +33,7 @@ import github.GithubObject
 
 class Download(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Downloads. The reference can be found here https://developer.github.com/v3/repos/downloads/
+    This class represents Downloads. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
 
     def __repr__(self):
@@ -201,7 +201,7 @@ class Download(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/downloads/:id <http://developer.github.com/v3/repos/downloads>`_
+        :calls: `DELETE /repos/{owner}/{repo}/downloads/{id} <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)

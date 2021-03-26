@@ -30,7 +30,7 @@ import github.GithubObject
 class Referrer(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a popylar Referrer for a GitHub repository.
-    The reference can be found here https://developer.github.com/v3/repos/traffic/
+    The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
     def __repr__(self):

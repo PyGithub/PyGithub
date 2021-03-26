@@ -30,7 +30,7 @@ from . import Consts
 
 class Reaction(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Reactions. The reference can be found here https://developer.github.com/v3/reactions/
+    This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions
     """
 
     def __repr__(self):
@@ -70,7 +70,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /reactions/:id <https://developer.github.com/v3/reactions/#delete-a-reaction>`_
+        :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction>`_
         :rtype: None
         """
         self._requester.requestJsonAndCheck(

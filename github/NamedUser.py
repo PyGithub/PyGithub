@@ -52,7 +52,7 @@ from . import Consts
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
-    This class represents NamedUsers. The reference can be found here https://developer.github.com/v3/users/#get-a-single-user
+    This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-single-user
     """
 
     def __repr__(self):
@@ -430,7 +430,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_events(self):
         """
-        :calls: `GET /users/:user/events <http://developer.github.com/v3/activity/events>`_
+        :calls: `GET /users/{user}/events <http://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -439,7 +439,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_followers(self):
         """
-        :calls: `GET /users/:user/followers <http://developer.github.com/v3/users/followers>`_
+        :calls: `GET /users/{user}/followers <http://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -448,7 +448,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_following(self):
         """
-        :calls: `GET /users/:user/following <http://developer.github.com/v3/users/followers>`_
+        :calls: `GET /users/{user}/following <http://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -457,7 +457,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_gists(self, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /users/:user/gists <http://developer.github.com/v3/gists>`_
+        :calls: `GET /users/{user}/gists <http://docs.github.com/en/rest/reference/gists>`_
         :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
@@ -473,7 +473,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_keys(self):
         """
-        :calls: `GET /users/:user/keys <http://developer.github.com/v3/users/keys>`_
+        :calls: `GET /users/{user}/keys <http://docs.github.com/en/rest/reference/users#keys>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.UserKey.UserKey`
         """
         return github.PaginatedList.PaginatedList(
@@ -482,7 +482,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_orgs(self):
         """
-        :calls: `GET /users/:user/orgs <http://developer.github.com/v3/orgs>`_
+        :calls: `GET /users/{user}/orgs <http://docs.github.com/en/rest/reference/orgs>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
         """
         return github.PaginatedList.PaginatedList(
@@ -491,7 +491,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_projects(self, state="open"):
         """
-        :calls: `GET /users/:user/projects <https://developer.github.com/v3/projects/#list-user-projects>`_
+        :calls: `GET /users/{user}/projects <https://docs.github.com/en/rest/reference/projects#list-user-projects>`_
         :param state: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
         """
@@ -507,7 +507,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_public_events(self):
         """
-        :calls: `GET /users/:user/events/public <http://developer.github.com/v3/activity/events>`_
+        :calls: `GET /users/{user}/events/public <http://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -516,7 +516,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_public_received_events(self):
         """
-        :calls: `GET /users/:user/received_events/public <http://developer.github.com/v3/activity/events>`_
+        :calls: `GET /users/{user}/received_events/public <http://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -528,7 +528,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_received_events(self):
         """
-        :calls: `GET /users/:user/received_events <http://developer.github.com/v3/activity/events>`_
+        :calls: `GET /users/{user}/received_events <http://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -537,7 +537,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
+        :calls: `GET /repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/repos>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
@@ -556,7 +556,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         direction=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /users/:user/repos <http://developer.github.com/v3/repos>`_
+        :calls: `GET /users/{user}/repos <http://docs.github.com/en/rest/reference/repos>`_
         :param type: string
         :param sort: string
         :param direction: string
@@ -583,7 +583,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_starred(self):
         """
-        :calls: `GET /users/:user/starred <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /users/{user}/starred <http://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -592,7 +592,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_subscriptions(self):
         """
-        :calls: `GET /users/:user/subscriptions <http://developer.github.com/v3/activity/watching>`_
+        :calls: `GET /users/{user}/subscriptions <http://docs.github.com/en/rest/reference/activity#watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -604,7 +604,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_watched(self):
         """
-        :calls: `GET /users/:user/watched <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /users/{user}/watched <http://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -613,7 +613,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_following(self, following):
         """
-        :calls: `GET /users/:user/following/:target_user <http://developer.github.com/v3/users/followers/#check-if-one-user-follows-another>`_
+        :calls: `GET /users/{user}/following/{target_user} <http://docs.github.com/en/rest/reference/users/followers#check-if-one-user-follows-another>`_
         :param following: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -629,7 +629,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_organization_membership(self, org):
         """
-        :calls: `GET /orgs/:org/memberships/:username <https://developer.github.com/v3/orgs/members/#get-organization-membership>`_
+        :calls: `GET /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs/members#get-organization-membership>`_
         :param org: string or :class:`github.Organization.Organization`
         :rtype: :class:`github.Membership.Membership`
         """
