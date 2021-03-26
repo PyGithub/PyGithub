@@ -27,7 +27,7 @@ import github.TimelineEventSource
 
 class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents IssueTimelineEvents. The reference can be found here https://developer.github.com/v3/issues/timeline/
+    This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
     def __repr__(self):

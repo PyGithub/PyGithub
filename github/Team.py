@@ -54,7 +54,7 @@ from . import Consts
 
 class Team(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Teams. The reference can be found here http://developer.github.com/v3/orgs/teams/
+    This class represents Teams. The reference can be found here http://docs.github.com/en/rest/reference/teams
     """
 
     def __repr__(self):
@@ -167,9 +167,9 @@ class Team(github.GithubObject.CompletableGithubObject):
     def add_to_members(self, member):
         """
         This API call is deprecated. Use `add_membership` instead.
-        https://developer.github.com/v3/teams/members/#deprecation-notice-1
+        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `PUT /teams/{id}/members/{user} <http://docs.github.com/en/rest/reference/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -180,7 +180,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_membership(self, member, role=github.GithubObject.NotSet):
         """
-        :calls: `PUT /teams/:id/memberships/:user <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `PUT /teams/{id}/memberships/{user} <http://docs.github.com/en/rest/reference/teams>`_
         :param member: :class:`github.Nameduser.NamedUser`
         :param role: string
         :rtype: None
@@ -202,7 +202,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_team_membership(self, member):
         """
-        :calls: `GET /orgs/:org/memberships/team/:team_id/:username <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
+        :calls: `GET /orgs/{org}/memberships/team/{team_id}/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
         :param member: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`github.Membership.Membership`
         """
@@ -220,7 +220,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_repos(self, repo):
         """
-        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `PUT /teams/{id}/repos/{org}/{repo} <http://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -231,7 +231,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_repo_permission(self, repo):
         """
-        :calls: `GET /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `GET /teams/{id}/repos/{org}/{repo} <http://docs.github.com/en/rest/reference/teams>`_
         :param repo: string or :class:`github.Repository.Repository`
         :rtype: None or :class:`github.Permissions.Permissions`
         """
@@ -259,7 +259,7 @@ class Team(github.GithubObject.CompletableGithubObject):
     )
     def set_repo_permission(self, repo, permission):
         """
-        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `PUT /teams/{id}/repos/{org}/{repo} <http://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
@@ -275,7 +275,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def update_team_repository(self, repo, permission):
         """
-        :calls: `PUT /orgs/:org/teams/:team_slug/repos/:owner/:repo <https://developer.github.com/v3/teams/#add-or-update-team-repository-permissions>`_
+        :calls: `PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams#add-or-update-team-repository-permissions>`_
         :param repo: string or :class:`github.Repository.Repository`
         :param permission: string
         :rtype: bool
@@ -299,7 +299,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `DELETE /teams/{id} <http://docs.github.com/en/rest/reference/teams>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
@@ -312,7 +312,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         privacy=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `PATCH /teams/{id} <http://docs.github.com/en/rest/reference/teams>`_
         :param name: string
         :param description: string
         :param permission: string
@@ -345,7 +345,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_teams(self):
         """
-        :calls: `GET /teams/:id/teams <https://developer.github.com/v3/teams/#list-child-teams>`_
+        :calls: `GET /teams/{id}/teams <https://docs.github.com/en/rest/reference/teams#list-child-teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
@@ -357,7 +357,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_discussions(self):
         """
-        :calls: `GET /teams/:id/discussions <https://developer.github.com/v3/teams/discussions/#list-discussions>`_
+        :calls: `GET /teams/{id}/discussions <https://docs.github.com/en/rest/reference/teams/discussions#list-discussions>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TeamDiscussion.TeamDiscussion`
         """
         return github.PaginatedList.PaginatedList(
@@ -370,7 +370,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_members(self, role=github.GithubObject.NotSet):
         """
-        :calls: `GET /teams/:id/members <https://developer.github.com/v3/teams/members/#list-team-members>`_
+        :calls: `GET /teams/{id}/members <https://docs.github.com/en/rest/reference/teams/members#list-team-members>`_
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -388,7 +388,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_repos(self):
         """
-        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `GET /teams/{id}/repos <http://docs.github.com/en/rest/reference/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -397,7 +397,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def invitations(self):
         """
-        :calls: `GET /teams/:id/invitations <https://developer.github.com/v3/teams/members>`_
+        :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -410,7 +410,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_members(self, member):
         """
-        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `GET /teams/{id}/members/{user} <http://docs.github.com/en/rest/reference/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -422,7 +422,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_repos(self, repo):
         """
-        :calls: `GET /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `GET /teams/{id}/repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -434,7 +434,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_membership(self, member):
         """
-        :calls: `DELETE /teams/:team_id/memberships/:username <https://developer.github.com/v3/teams/members/#remove-team-membership>`
+        :calls: `DELETE /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams/members#remove-team-membership>`
         :param member:
         :return:
         """
@@ -446,9 +446,9 @@ class Team(github.GithubObject.CompletableGithubObject):
     def remove_from_members(self, member):
         """
         This API call is deprecated. Use `remove_membership` instead:
-        https://developer.github.com/v3/teams/members/#deprecation-notice-2
+        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `DELETE /teams/{id}/members/{user} <http://docs.github.com/en/rest/reference/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -459,7 +459,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_repos(self, repo):
         """
-        :calls: `DELETE /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :calls: `DELETE /teams/{id}/repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """

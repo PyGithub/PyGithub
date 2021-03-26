@@ -25,7 +25,7 @@ import github.GithubObject
 
 class Topic(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents topics as used by https://github.com/topics. The object reference can be found here https://developer.github.com/v3/search/#search-topics
+    This class represents topics as used by https://github.com/topics. The object reference can be found here https://docs.github.com/en/rest/reference/search#search-topics
     """
 
     def __repr__(self):

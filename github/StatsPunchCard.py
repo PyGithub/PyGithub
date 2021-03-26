@@ -30,7 +30,7 @@ import github.NamedUser  # TODO remove unused
 
 class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents StatsPunchCards. The reference can be found here http://developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day
+    This class represents StatsPunchCards. The reference can be found here http://docs.github.com/en/rest/reference/repos/statistics#get-the-number-of-commits-per-hour-in-each-day
     """
 
     def get(self, day, hour):

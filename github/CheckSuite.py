@@ -161,7 +161,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
 
     def rerequest(self):
         """
-        :calls: `POST /repos/:owner/:repo/check-suites/:check_suite_id/rerequest <https://docs.github.com/en/rest/reference/checks#rerequest-a-check-suite>`_
+        :calls: `POST /repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest <https://docs.github.com/en/rest/reference/checks#rerequest-a-check-suite>`_
         :rtype: bool
         """
         request_headers = {"Accept": "application/vnd.github.v3+json"}
@@ -177,7 +177,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         filter=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/:owner/:repo/check-suites/:check_suite_id/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-in-a-check-suite>`_
+        :calls: `GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-in-a-check-suite>`_
         :param check_name: string
         :param status: string
         :param filter: string
