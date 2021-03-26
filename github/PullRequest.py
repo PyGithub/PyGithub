@@ -764,27 +764,28 @@ class PullRequest(CompletableGithubObject):
 
     def restore_branch(self):
         """
-        :calls: `POST /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs>`_
+        :meth:`Repository.create_git_ref`
         :rtype: :class:`github.GitRef.GitRef`
         """
         return self.head.repo.create_git_ref(
-            "refs/heads/" + self.head.ref, sha=self.head.sha
+            f"refs/heads/{self.head.ref}", sha=self.head.sha
         )
 
     def delete_branch(self, force=False):
         """
-        :calls: `DELETE /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs>`_
-        :rtype: :class:`github.GitRef.GitRef`
+        :meth:`GitRef.delete`
+        :rtype: bool
         """
-        if force:  # Forcibly delete the branch and close any associated PRs
-            return self.head.repo.get_git_ref("heads/%s" % (self.head.ref)).delete()
-        remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
-        if remaining_pulls.totalCount > 0:
-            raise AttributeError(
-                "PRs referencing this branch remain. Not deleting the branch"
-            )
-        else:
-            return self.head.repo.get_git_ref("heads/%s" % (self.head.ref)).delete()
+        if not force:
+            remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+            if remaining_pulls.totalCount > 0:
+                raise AttributeError(
+                    "PRs referencing this branch remain. Not deleting the branch"
+                )
+            else:
+                return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
+        return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
+        
 
     def enable_automerge(
         self,
@@ -869,7 +870,7 @@ class PullRequest(CompletableGithubObject):
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
         if deletebranch:
-            self.delete_branch(False)
+            self.delete_branch()
 
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
