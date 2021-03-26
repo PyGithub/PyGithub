@@ -65,7 +65,7 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     @property
     def key_id(self):
         """
-        :type: string
+        :type: string or int
         """
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
@@ -78,7 +78,10 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch
-            self._key_id = self._makeStringAttribute(attributes["key_id"])
+            if type(attributes["key_id"]) == str:
+                self._key_id = self._makeStringAttribute(attributes["key_id"])
+            else:
+                self._key_id = self._makeIntAttribute(attributes["key_id"])
 
     def encrypt(self, unencrypted_value):
         return encrypt(self._key.value, unencrypted_value)
