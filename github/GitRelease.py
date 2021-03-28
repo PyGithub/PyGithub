@@ -170,6 +170,16 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._zipball_url)
         return self._zipball_url.value
 
+    @property
+    def assets(self):
+        """
+        Already returned assets info (no additional requests will be done).
+
+        :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
+        """
+        self._completeIfNotSet(self._assets)
+        return self._assets.value
+
     def delete_release(self):
         """
         :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos/releases#delete-a-release>`_
@@ -333,6 +343,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._published_at = github.GithubObject.NotSet
         self._tarball_url = github.GithubObject.NotSet
         self._zipball_url = github.GithubObject.NotSet
+        self._assets = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:
@@ -369,3 +380,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "zipball_url" in attributes:
             self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
+        if "assets" in attributes:
+            self._assets = self._makeListOfClassesAttribute(
+                github.GitReleaseAsset.GitReleaseAsset, attributes["assets"]
+            )
