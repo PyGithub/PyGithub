@@ -837,7 +837,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def restore_branch(self):
         """
-        :meth:`Repository.create_git_ref`
+        Convenience function that calls :meth:`Repository.create_git_ref`
         :rtype: :class:`github.GitRef.GitRef`
         """
         return self.head.repo.create_git_ref(
@@ -846,7 +846,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def delete_branch(self, force=False):
         """
-        :meth:`GitRef.delete`
+        Convenience function that calls :meth:`GitRef.delete`
         :rtype: bool
         """
         if not force:
