@@ -460,7 +460,6 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.delete_restore_pull.is_merged())
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
-        self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
             {
