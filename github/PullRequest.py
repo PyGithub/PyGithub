@@ -782,8 +782,6 @@ class PullRequest(CompletableGithubObject):
                 raise AttributeError(
                     "PRs referencing this branch remain. Not deleting the branch"
                 )
-            else:
-                return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
         return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
 
     def enable_automerge(
