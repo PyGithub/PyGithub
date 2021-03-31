@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.54.0.1 (April 26, 2021)
+-----------------------------------
+
+* Hotfix release to better support Python 3.5 users.
+* Pin pyjwt to <2.0 (502caed9)
+
 Version 1.54 (November 30, 2020)
 -----------------------------------
 **Important**
