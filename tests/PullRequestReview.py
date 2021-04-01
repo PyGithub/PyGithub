@@ -32,6 +32,7 @@ from . import Framework
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         super().setUp()
+
         self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.pull = self.repo.get_pull(538)
 
@@ -54,11 +55,6 @@ class PullRequestReview(Framework.TestCase):
         self.pullreview.dismiss("with prejudice")
         pr = self.pull.get_review(28482091)
         self.assertEqual(pr.state, "DISMISSED")
-
-    def testDelete(self):
-        self.pullreview.delete()
-        pr = self.pull.get_review(28482091)
-        self.assertEqual(pr.state, "CHANGES_REQUESTED")
 
     def testAttributes(self):
         self.assertEqual(self.pullreview.id, 28482091)
