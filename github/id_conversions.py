@@ -4,8 +4,7 @@ __all__ = ("db_id_and_type_to_node_id", "node_id_to_db_id_and_type")
 
 __license__ = "Unlicense"
 
-from base64 import b64encode, b64decode
-
+from base64 import b64decode, b64encode
 
 def _db_id_and_type_to_node_id(db_id: int, type_name: str) -> str:
     return "0" + str(len(type_name)) + ":" + type_name + str(db_id)
@@ -20,7 +19,7 @@ def db_id_and_type_to_node_id(db_id: int, type_name: str) -> str:
 
 def _node_id_to_db_id_and_type(node_id: str) -> (int, str):
     type_len, rest = node_id.split(":")
-    if not type_len or type_len[0] != '0':
+    if not type_len or type_len[0] != "0":
         raise ValueError("Node ID must start from 0")
 
     type_len = int(type_len[1:])
