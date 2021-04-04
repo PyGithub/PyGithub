@@ -1,7 +1,6 @@
 from github.id_conversions import db_id_and_type_to_node_id, node_id_to_db_id_and_type
 
 from . import Framework
-from github.id_conversions import db_id_and_type_to_node_id, node_id_to_db_id_and_type
 
 
 class TestIDConversions(Framework.TestCase):
