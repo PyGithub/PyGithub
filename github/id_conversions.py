@@ -6,6 +6,7 @@ __license__ = "Unlicense"
 
 from base64 import b64decode, b64encode
 
+
 def _db_id_and_type_to_node_id(db_id: int, type_name: str) -> str:
     return "0" + str(len(type_name)) + ":" + type_name + str(db_id)
 
