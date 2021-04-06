@@ -51,6 +51,7 @@
 ################################################################################
 
 import base64
+import copy
 import json
 import logging
 import mimetypes
@@ -628,6 +629,7 @@ class Requester:
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
+        requestHeaders = copy.deepcopy(requestHeaders)
         if self.__logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
                 if requestHeaders["Authorization"].startswith("Basic"):
