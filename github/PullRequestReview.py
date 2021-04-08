@@ -94,6 +94,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
 
     def dismiss(self, message):
         """
+        
         :calls: `PUT /repos/:owner/:repo/pulls/:number/reviews/:review_id/dismissals <https://developer.github.com/v3/pulls/reviews/>`_
         :rtype: None
         """
