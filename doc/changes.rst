@@ -12,6 +12,7 @@ Version 1.55 (April 26, 2021)
 * Adjust to Github API changes regarding emails (#1890) (2c77cfad)
   - This impacts what AuthenticatedUser.get_emails() returns
 * PublicKey.key_id could be int on Github Enterprise (#1894) (ad124ef4)
+* Export headers in GithubException (#1887) (ddd437a7)
 
 **Bug Fixes & Improvements**
 
@@ -29,7 +30,6 @@ Version 1.55 (April 26, 2021)
 * Update PyJWT Version to 2.0+ (#1891) (a68577b7)
 * Use right variable in both get_check_runs() (#1889) (3003e065)
 * fix bad assertions in github.Project.edit (#1817) (6bae9e5c)
-* Export headers in GithubException (#1887) (ddd437a7)
 * Test repr() for PublicKey (#1879) (e0acd8f4)
 * Add support for deleting repository secrets (#1868) (696793de)
 * Switch repository secrets to using f-strings (#1867) (aa240304)
