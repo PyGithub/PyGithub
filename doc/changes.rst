@@ -39,7 +39,7 @@ Version 1.55 (April 26, 2021)
 * Adding github actions secrets (#1681) (c90c050e)
 * fix get_user_issues (#1842) (7db1b0c9)
 * Switch all string addition to using f-strings (#1774) (290b6272)
-* Enabling connetion pool_size definition (a77d4f48)
+* Enabling connection pool_size definition (a77d4f48)
 * Always define the session adapter (aaec0a0f)
 
 Version 1.54.1 (December 24, 2020)
