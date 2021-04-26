@@ -142,30 +142,28 @@ class Github:
             pool_size,
         )
 
-    def __get_FIX_REPO_GET_GIT_REF(self):
+    @property
+    def FIX_REPO_GET_GIT_REF(self):
         """
         :type: bool
         """
         return self.__requester.FIX_REPO_GET_GIT_REF
 
-    def __set_FIX_REPO_GET_GIT_REF(self, value):
+    @FIX_REPO_GET_GIT_REF.setter
+    def FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    FIX_REPO_GET_GIT_REF = property(
-        __get_FIX_REPO_GET_GIT_REF, __set_FIX_REPO_GET_GIT_REF
-    )
-
-    def __get_per_page(self):
+    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    @property
+    def per_page(self):
         """
         :type: int
         """
         return self.__requester.per_page
 
-    def __set_per_page(self, value):
+    @per_page.setter
+    def per_page(self, value):
         self.__requester.per_page = value
-
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
-    per_page = property(__get_per_page, __set_per_page)
 
     # v2: Provide a unified way to access values of headers of last response
     # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
