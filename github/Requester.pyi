@@ -5,7 +5,6 @@ from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
 from requests.models import Response
 
 from github.GithubObject import GithubObject
-from tests.Framework import ReplayingHttpsConnection
 
 # from urllib3.util.retry import Retry
 
@@ -57,7 +56,9 @@ class Requester:
     def __authenticate(
         self, url: str, responseHeader: Dict[str, Any], parameters: Dict[str, Any],
     ) -> None: ...
-    def __customConnection(self, url: str,) -> Optional[ReplayingHttpsConnection]: ...
+    def __customConnection(
+        self, url: str,
+    ) -> Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]]: ...
     def __createConnection(
         self,
     ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]: ...
@@ -120,7 +121,9 @@ class Requester:
         parameters: Dict[str, str] = ...,
         headers: Dict[str, str] = ...,
         input: Optional[str] = ...,
-        cnx: Optional[ReplayingHttpsConnection] = ...,
+        cnx: Optional[
+            Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
+        ] = ...,
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestBlobAndCheck(
         self,
@@ -137,7 +140,9 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[Any] = ...,
-        cnx: Optional[ReplayingHttpsConnection] = ...,
+        cnx: Optional[
+            Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
+        ] = ...,
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestJsonAndCheck(
         self,
@@ -154,7 +159,9 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, Any]] = ...,
         input: Optional[OrderedDict] = ...,
-        cnx: Optional[ReplayingHttpsConnection] = ...,
+        cnx: Optional[
+            Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
+        ] = ...,
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def requestMultipartAndCheck(
         self,
