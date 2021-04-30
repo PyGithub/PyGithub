@@ -72,7 +72,8 @@ if TYPE_CHECKING:
 
 class Commit(CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+    This class represents Commits. The reference can be found here: https://docs.github.com/en/rest/reference/git#commits
+    Commit refers to the commit object once it has been transferred from the local git repository to the remote server.
     """
 
     def _initAttributes(self) -> None:
