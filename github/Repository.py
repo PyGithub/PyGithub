@@ -1705,7 +1705,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_commit(self, sha):
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha} <http://docs.github.com/en/rest/reference/repos#commits>`_
-        :param sha: string. Can represent a commit SHA or a GitTag
+        :param sha: string. Can represent a commit SHA or a GitTag tag
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
@@ -1724,7 +1724,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/commits <http://docs.github.com/en/rest/reference/repos#commits>`_
-        :param sha: string. Can represent a commit SHA, a branch name or a GitTag
+        :param sha: string. Can represent a commit SHA, a branch name or a GitTag tag
         :param path: string
         :param since: datetime.datetime
         :param until: datetime.datetime
