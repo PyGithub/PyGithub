@@ -11,6 +11,7 @@ from github.GitCommit import GitCommit
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
+from github.PullRequest import PullRequest
 
 class Commit(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -56,6 +57,7 @@ class Commit(CompletableGithubObject):
         status: Union[_NotSetType, str] = ...,
         filter: Union[_NotSetType, str] = ...,
     ) -> PaginatedList[CheckRun]: ...
+    def get_pulls(self) -> PaginatedList[PullRequest]: ...
     @property
     def html_url(self) -> str: ...
     @property
