@@ -286,6 +286,9 @@ class CompletableGithubObject(GithubObject):
     def __eq__(self, other):
         return other.__class__ is self.__class__ and other._url.value == self._url.value
 
+    def __hash__(self):
+        return hash(self._url.value)
+
     def __ne__(self, other):
         return not self == other
 
@@ -300,7 +303,7 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         if self._url.value is None:
             raise GithubException.IncompletableObject(
-                400, "Returned object contains no URL"
+                400, "Returned object contains no URL", None
             )
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)

@@ -36,7 +36,7 @@ import github.Repository
 
 class Event(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Events. The reference can be found here http://developer.github.com/v3/activity/events/
+    This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
     """
 
     def __repr__(self):

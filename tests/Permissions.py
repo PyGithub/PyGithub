@@ -1,9 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Karsten Wagner <39054096+karsten-wagner@users.noreply.github.c#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -23,28 +20,25 @@
 #                                                                              #
 ################################################################################
 
-import warnings
-
-import github
-
 from . import Framework
 
 
-class Issue158(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/158
+class Permissions(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # Ignore the warning since client_{id,secret} are deprecated
-        warnings.filterwarnings("ignore", category=FutureWarning)
+        self.userRepo = self.g.get_repo("PyGithub/PyGithub")
 
-    def tearDown(self):
-        super().tearDown()
-        warnings.resetwarnings()
+    def testUserRepoPermissionAttributes(self):
+        self.assertFalse(self.userRepo.permissions.admin)
+        # Attribute is not present for users (only for teams)
+        self.assertIs(self.userRepo.permissions.maintain, None)
+        self.assertTrue(self.userRepo.permissions.pull)
+        self.assertFalse(self.userRepo.permissions.push)
+        # Attribute is not present for users (only for teams)
+        self.assertIs(self.userRepo.permissions.triage, None)
 
-    # Warning: I don't have a scret key, so the requests for this test are forged
-    def testPaginationWithSecretKeyAuthentication(self):
-        g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
-        self.assertListKeyEqual(
-            g.get_organization("BeaverSoftware").get_repos("public"),
-            lambda r: r.name,
-            ["FatherBeaver", "PyGithub"],
+    def testUserRepoPermissionRepresentation(self):
+        self.assertEqual(
+            repr(self.userRepo.permissions),
+            "Permissions(triage=None, push=False, pull=True, maintain=None, admin=False)",
         )

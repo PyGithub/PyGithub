@@ -99,7 +99,7 @@ mediaTypeRequireMultipleApprovingReviews = (
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
 
-# https://developer.github.com/v3/search/#highlighting-code-search-results-1
+# https://docs.github.com/en/rest/reference/search#highlighting-code-search-results-1
 highLightSearchPreview = "application/vnd.github.v3.text-match+json"
 
 # https://developer.github.com/changes/2018-02-22-protected-branches-required-signatures/
@@ -117,7 +117,7 @@ updateBranchPreview = "application/vnd.github.lydian-preview+json"
 # https://developer.github.com/changes/2016-05-23-timeline-preview-api/
 issueTimelineEventsPreview = "application/vnd.github.mockingbird-preview"
 
-# https://developer.github.com/v3/teams/#check-if-a-team-manages-a-repository
+# https://docs.github.com/en/rest/reference/teams#check-if-a-team-manages-a-repository
 teamRepositoryPermissions = "application/vnd.github.v3.repository+json"
 
 # https://developer.github.com/changes/2016-04-06-deployment-and-deployment-status-enhancements/

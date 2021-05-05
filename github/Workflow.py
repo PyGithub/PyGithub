@@ -26,7 +26,7 @@ import github.WorkflowRun
 
 class Workflow(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Workflows. The reference can be found here https://developer.github.com/v3/actions/workflows/
+    This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
 
     def __repr__(self):
@@ -106,7 +106,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
 
     def create_dispatch(self, ref, inputs=github.GithubObject.NotSet):
         """
-        :calls: `POST /repos/:owner/:repo/actions/workflows/:workflow_id/dispatches`_
+        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or :class:`github.Commit.Commit` or string
         :param inputs: dict
         :rtype: bool
@@ -139,7 +139,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         status=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/:owner/:repo/actions/workflows/:workflow_id/runs <https://developer.github.com/v3/actions/workflow-runs>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :param actor: :class:`github.NamedUser.NamedUser` or string
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string

@@ -90,7 +90,7 @@ class PaginatedListBase:
 
 class PaginatedList(PaginatedListBase):
     """
-    This class abstracts the `pagination of the API <http://developer.github.com/v3/#pagination>`_.
+    This class abstracts the `pagination of the API <http://docs.github.com/en/rest/reference/#pagination>`_.
 
     You can simply enumerate through instances of this class::
 

@@ -28,7 +28,7 @@ import github.PullRequest
 
 class WorkflowRun(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Workflow Runs. The reference can be found here https://developer.github.com/v3/actions/workflow-runs/
+    This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
     """
 
     def __repr__(self):
@@ -220,7 +220,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     def cancel(self):
         """
-        :calls: `POST /repos/:owner/:repo/actions/runs/:run_id/cancel <https://developer.github.com/v3/actions/workflow-runs/>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :rtype: bool
         """
         status, _, _ = self._requester.requestJson("POST", self.cancel_url)
@@ -228,7 +228,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     def rerun(self):
         """
-        :calls: `POST /repos/:owner/:repo/actions/runs/:run_id/rerun <https://developer.github.com/v3/actions/workflow-runs/>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :rtype: bool
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
@@ -236,7 +236,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     def timing(self):
         """
-        :calls: `GET /repos/:owner/:repo/actions/runs/:run_id/timing <https://developer.github.com/v3/actions/workflow-runs/>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :rtype: namedtuple with billable and run_duration_ms members
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")

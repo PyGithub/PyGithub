@@ -44,7 +44,7 @@ import textwrap
 
 import setuptools
 
-version = "1.54.1"
+version = "1.55"
 
 
 if __name__ == "__main__":
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         python_requires=">=3.6",
         install_requires=[
             "deprecated",
-            "pyjwt<2.0",
+            "pyjwt>=2.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
         ],

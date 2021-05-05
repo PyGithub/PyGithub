@@ -39,7 +39,7 @@ from . import Consts
 
 class Migration(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Migrations. The reference can be found here http://developer.github.com/v3/migrations/
+    This class represents Migrations. The reference can be found here http://docs.github.com/en/rest/reference/migrations
     """
 
     def __repr__(self):
@@ -128,7 +128,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def get_status(self):
         """
-        :calls: `GET /user/migrations/:migration_id <https://developer.github.com/v3/migrations/users>`_
+        :calls: `GET /user/migrations/{migration_id} <https://docs.github.com/en/rest/reference/migrations>`_
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -139,7 +139,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def get_archive_url(self):
         """
-        :calls: `GET /user/migrations/:migration_id/archive <https://developer.github.com/v3/migrations/users>`_
+        :calls: `GET /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -151,7 +151,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /user/migrations/:migration_id/archive <https://developer.github.com/v3/migrations/users>`_
+        :calls: `DELETE /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -161,7 +161,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
 
     def unlock_repo(self, repo_name):
         """
-        :calls: `DELETE /user/migrations/:migration_id/repos/:repo_name/lock <https://developer.github.com/v3/migrations/users>`_
+        :calls: `DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock <https://docs.github.com/en/rest/reference/migrations>`_
         :param repo_name: str
         :rtype: None
         """

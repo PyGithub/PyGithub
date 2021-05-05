@@ -296,8 +296,6 @@ class Requester:
         jwt,
         base_url,
         timeout,
-        client_id,
-        client_secret,
         user_agent,
         per_page,
         verify,
@@ -344,12 +342,9 @@ class Requester:
 
         self.oauth_scopes = None
 
-        self.__clientId = client_id
-        self.__clientSecret = client_secret
-
         assert user_agent is not None, (
             "github now requires a user-agent. "
-            "See http://developer.github.com/v3/#user-agent-required"
+            "See http://docs.github.com/en/rest/reference/#user-agent-required"
         )
         self.__userAgent = user_agent
         self.__verify = verify
@@ -435,7 +430,7 @@ class Requester:
             cls = GithubException.UnknownObjectException
         else:
             cls = GithubException.GithubException
-        return cls(status, output)
+        return cls(status, output, headers)
 
     def __structuredFromJson(self, data):
         if len(data) == 0:
@@ -446,6 +441,8 @@ class Requester:
             try:
                 return json.loads(data)
             except ValueError:
+                if data.startswith("{") or data.startswith("["):
+                    raise
                 return {"data": data}
 
     def requestJson(
@@ -581,9 +578,6 @@ class Requester:
         return status, responseHeaders, output
 
     def __authenticate(self, url, requestHeaders, parameters):
-        if self.__clientId and self.__clientSecret and "client_id=" not in url:
-            parameters["client_id"] = self.__clientId
-            parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
 

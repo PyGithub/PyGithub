@@ -140,7 +140,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         position=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/repos/comments>`_
+        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <http://docs.github.com/en/rest/reference/repos#comments>`_
         :param body: string
         :param line: integer
         :param path: string
@@ -177,7 +177,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         context=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/:owner/:repo/statuses/:sha <http://developer.github.com/v3/repos/statuses>`_
+        :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <http://docs.github.com/en/rest/reference/repos#statuses>`_
         :param state: string
         :param target_url: string
         :param description: string
@@ -214,7 +214,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/repos/comments>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <http://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitComment.CommitComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -226,7 +226,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_statuses(self):
         """
-        :calls: `GET /repos/:owner/:repo/statuses/:ref <http://developer.github.com/v3/repos/statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <http://docs.github.com/en/rest/reference/repos#statuses>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
         return github.PaginatedList.PaginatedList(
@@ -238,7 +238,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_combined_status(self):
         """
-        :calls: `GET /repos/:owner/:repo/commits/:ref/status/ <http://developer.github.com/v3/repos/statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
         :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
@@ -248,7 +248,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_pulls(self):
         """
-        :calls: `GET /repos/:owner/:repo/commits/:sha/pulls <https://developer.github.com/v3/repos/commits/#list-pull-requests-associated-with-commit>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
         return github.PaginatedList.PaginatedList(
@@ -266,7 +266,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         filter=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/:owner/:repo/commits/:sha/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
         :param check_name: string
         :param status: string
         :param filter: string
@@ -282,7 +282,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             url_parameters["check_name"] = check_name
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
-        if status is not github.GithubObject.NotSet:
+        if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
         return github.PaginatedList.PaginatedList(
             github.CheckRun.CheckRun,
@@ -297,7 +297,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         self, app_id=github.GithubObject.NotSet, check_name=github.GithubObject.NotSet
     ):
         """
-        :class: `GET /repos/:owner/:repo/commits/:ref/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
+        :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
         :param app_id: int
         :param check_name: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckSuite.CheckSuite`

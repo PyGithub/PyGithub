@@ -113,9 +113,12 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(self.repo.watchers, 15)
         self.assertEqual(repr(self.repo), 'Repository(full_name="jacquev6/PyGithub")')
-        self.assertEqual(
-            repr(self.repo.permissions), "Permissions(push=True, pull=True, admin=True)"
-        )
+        self.assertTrue(self.repo.permissions.admin)
+        self.assertTrue(self.repo.permissions.push)
+        self.assertTrue(self.repo.permissions.pull)
+        # Allow None or any boolean value for backwards compatibility
+        self.assertIn(self.repo.permissions.maintain, [None, False, True])
+        self.assertIn(self.repo.permissions.triage, [None, False, True])
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -442,8 +445,10 @@ class Repository(Framework.TestCase):
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        result = self.repo.create_secret("secret-name", "secret-value")
-        self.assertTrue(result)
+        self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
+
+    def testDeleteSecret(self):
+        self.assertTrue(self.repo.delete_secret("secret_name"))
 
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")

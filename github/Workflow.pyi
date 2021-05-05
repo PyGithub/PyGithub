@@ -16,14 +16,14 @@ class Workflow(CompletableGithubObject):
     def create_dispatch(
         self,
         ref: Union[str, Branch, Commit, Tag],
-        inputs: Union[Dict[str, Union[str, int, float]], _NotSetType],
+        inputs: Union[Dict[str, Union[str, int, float]], _NotSetType] = ...,
     ) -> bool: ...
     def get_runs(
         self,
-        actor: Union[str, NamedUser, _NotSetType],
-        branch: Union[str, Branch, _NotSetType],
-        event: Union[str, _NotSetType],
-        status: Union[str, _NotSetType],
+        actor: Union[str, NamedUser, _NotSetType] = ...,
+        branch: Union[str, Branch, _NotSetType] = ...,
+        event: Union[str, _NotSetType] = ...,
+        status: Union[str, _NotSetType] = ...,
     ) -> PaginatedList[WorkflowRun]: ...
     @property
     def id(self) -> int: ...
