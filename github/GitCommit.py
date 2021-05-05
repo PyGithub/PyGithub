@@ -35,8 +35,8 @@ import github.GitTree
 
 class GitCommit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitCommits. The reference can be found here https://developer.github.com/v3/git/commits/
-    GitCommit refers to the commit object that is saved in the local repository
+    This class represents GitCommits. The reference can be found here: https://developer.github.com/v3/git/commits/
+    GitCommit refers to the commit object that is saved in the local repository.
     """
 
     def __repr__(self):

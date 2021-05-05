@@ -45,8 +45,8 @@ import github.PaginatedList
 
 class Commit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here http://developer.github.com/v3/git/commits/
-    Commit refers to the commit object once it gets transferred from local git repository to the remote server
+    This class represents Commits. The reference can be found here: http://developer.github.com/v3/git/commits/
+    Commit refers to the commit object once it has been transferred from the local git repository to the remote server.
     """
 
     def __repr__(self):
