@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/actions/jobs/2542493927/logs
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+403
+[('Server', 'GitHub.com'), ('Date', 'Fri, 14 May 2021 15:29:57 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '47'), ('X-RateLimit-Reset', '1621007197'), ('X-RateLimit-Used', '13'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'FFBB:2443:B174F:B4C25:609E9775')]
+{"message":"Must have admin rights to Repository.","documentation_url":"https://docs.github.com/rest/reference/actions#download-job-logs-for-a-workflow-run"}
+
