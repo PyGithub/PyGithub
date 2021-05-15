@@ -1,39 +1,30 @@
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union
 
 class GithubException(Exception):
-    def __init__(self, status: Union[int, str], data: Any, headers: Optional[Dict[str, str]]) -> None: ...
+    def __init__(
+        self, status: Union[int, str], data: Any, headers: Optional[Dict[str, str]]
+    ) -> None: ...
     def __str__(self) -> str: ...
     @property
     def data(self) -> Dict[str, Union[str, List[str], List[Dict[str, str]]]]: ...
     @property
     def status(self) -> int: ...
-
     @property
     def headers(self) -> Union[None, Dict[str, str]]: ...
 
-class BadAttributeException(GithubException):
+T = TypeVar("T")
+
+class BadAttributeException(GithubException, Generic[T]):
     def __init__(
         self,
         actualValue: Any,
-        expectedType: Union[
-            Dict[Tuple[Type[str], Type[str]], Type[dict]],
-            Tuple[Type[str], Type[str]],
-            List[Type[dict]],
-            List[Tuple[Type[str], Type[str]]],
-        ],
+        expectedType: T,
         transformationException: Optional[ValueError],
     ) -> None: ...
     @property
     def actual_value(self) -> Any: ...
     @property
-    def expected_type(
-        self,
-    ) -> Union[
-        List[Type[dict]],
-        Tuple[Type[str], Type[str]],
-        Dict[Tuple[Type[str], Type[str]], Type[dict]],
-        List[Tuple[Type[str], Type[str]]],
-    ]: ...
+    def expected_type(self) -> T: ...
     @property
     def transformation_exception(self) -> Optional[ValueError]: ...
 
