@@ -158,7 +158,7 @@ class Requester:
         url: str,
         parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, Any]] = ...,
-        input: Optional[OrderedDict] = ...,
+        input: Optional[OrderedDict[str, str]] = ...,
         cnx: Optional[
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = ...,
@@ -169,7 +169,7 @@ class Requester:
         url: str,
         parameters: Optional[Dict[str, Any]] = ...,
         headers: Optional[Dict[str, Any]] = ...,
-        input: Optional[OrderedDict] = ...,
+        input: Optional[OrderedDict[str, str]] = ...,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
     @classmethod
     def resetConnectionClasses(cls) -> None: ...
