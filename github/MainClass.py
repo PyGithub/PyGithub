@@ -791,8 +791,8 @@ class Github:
 
     def get_installation_by_id(self, installation_id):
         """
-        You must use a JWT to access this endpoint which can be generated using the
-        method `create_jwt()` from :class:`github.GithubIntegration`.
+        You must use a JWT to access this endpoint which can be generated using
+        :meth:`github.GithubIntegration.create_jwt`.
 
         :calls: `GET /app/installations/:installation_id <https://docs.github.com/en/rest/reference/apps#get-an-installation-for-the-authenticated-app>`_
         :param installation_id: int
@@ -808,8 +808,8 @@ class Github:
 
     def get_installation_by_repo(self, owner, repo):
         """
-        You must use a JWT to access this endpoint which can be generated using the
-        method `create_jwt()` from :class:`github.GithubIntegration`.
+        You must use a JWT to access this endpoint which can be generated using
+        :meth:`github.GithubIntegration.create_jwt`.
 
         :calls: `GET /repos/:owner/:repo/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`_
         :param owner: str
