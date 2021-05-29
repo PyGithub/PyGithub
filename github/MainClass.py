@@ -54,6 +54,7 @@ import time
 import jwt
 import requests
 import urllib3
+from deprecated import deprecated
 
 import github.ApplicationOAuth
 import github.Event
@@ -898,3 +899,17 @@ class GithubIntegration:
         raise GithubException.GithubException(
             status=response.status_code, data=response.text
         )
+
+    @deprecated(
+        reason="GithubIntegration.get_installation is deprecated, use "
+        + "GitHub.get_installation_by_repo instead."
+    )
+    def get_installation(self, owner, repo):
+        """
+        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation>`_
+        :param owner: str
+        :param repo: str
+        :rtype: :class:`github.Installation.Installation`
+        """
+        github = Github(self.create_jwt())
+        return github.get_installation_by_repo(owner, repo)
