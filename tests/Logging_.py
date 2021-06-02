@@ -198,3 +198,19 @@ class Logging(Framework.BasicTestCase):
         }
         output = '{"type":"User","html_url":"https://github.com/jacquev6","login":"jacquev6","followers":14,"company":"Criteo","created_at":"2010-07-09T06:10:06Z","email":"vincent@vincent-jacques.net","hireable":false,"avatar_url":"https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png","public_gists":3,"bio":"","following":29,"name":"Vincent Jacques","blog":"http://vincent-jacques.net","gravatar_id":"b68de5ae38616c296fa345d2b9df2225","id":327146,"public_repos":13,"location":"Paris, France","url":"https://api.github.com/users/jacquev6"}'
         self.assertLogging("GET", url, requestHeaders, responseHeaders, output)
+
+    def testLoggingDoesNotModifyRequestHeaders(self):
+        # Recorded replay data already sanitizes Authorization headers, so we
+        # need to go under the covers
+        requestHeaders = {"Authorization": "thisisnotatoken"}
+        responseHeaders = {"status": "200 OK"}
+        github.Github()._Github__requester._Requester__log(
+            "GET",
+            "http://example.com",
+            requestHeaders,
+            None,
+            200,
+            responseHeaders,
+            None,
+        )
+        self.assertEqual(requestHeaders["Authorization"], "thisisnotatoken")

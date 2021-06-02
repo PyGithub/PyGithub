@@ -629,17 +629,18 @@ class Requester:
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(logging.DEBUG):
+            headersForRequest = requestHeaders.copy()
             if "Authorization" in requestHeaders:
                 if requestHeaders["Authorization"].startswith("Basic"):
-                    requestHeaders[
+                    headersForRequest[
                         "Authorization"
                     ] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
-                    requestHeaders["Authorization"] = "token (oauth token removed)"
+                    headersForRequest["Authorization"] = "token (oauth token removed)"
                 elif requestHeaders["Authorization"].startswith("Bearer"):
-                    requestHeaders["Authorization"] = "Bearer (jwt removed)"
+                    headersForRequest["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    requestHeaders[
+                    headersForRequest[
                         "Authorization"
                     ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
             self.__logger.debug(
@@ -648,7 +649,7 @@ class Requester:
                 self.__scheme,
                 self.__hostname,
                 url,
-                requestHeaders,
+                headersForRequest,
                 input,
                 status,
                 responseHeaders,
