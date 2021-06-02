@@ -47,6 +47,7 @@
 ################################################################################
 
 import datetime
+import logging
 from unittest import mock
 
 import github
@@ -1684,6 +1685,9 @@ class Repository(Framework.TestCase):
         self.repo.replace_topics(["github", "testing"])
 
     def testGetRepositoryWith301Redirect(self):
+        # Ensure redirects work even with DEBUG log level
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
         repo = self.g.get_repo("protoncoin/protoncoin")
         self.assertEqual(repo.full_name, "padima2/protoncoin")
 
