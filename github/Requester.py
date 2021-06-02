@@ -630,6 +630,8 @@ class Requester:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
+                # Protect auth credentials in original requestHeaders for use in redirects
+                requestHeaders = requestHeaders.copy()
                 if requestHeaders["Authorization"].startswith("Basic"):
                     requestHeaders[
                         "Authorization"
