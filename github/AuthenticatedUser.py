@@ -367,6 +367,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def two_factor_authentication(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._two_factor_authentication)
+        return self._two_factor_authentication.value
+
     def add_to_emails(self, *emails):
         """
         :calls: `POST /user/emails <http://docs.github.com/en/rest/reference/users#emails>`_
@@ -1369,6 +1377,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._two_factor_authentication = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "avatar_url" in attributes:  # pragma no branch
@@ -1455,3 +1464,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "two_factor_authentication" in attributes:
+            self._two_factor_authentication = self._makeBoolAttribute(
+                attributes["two_factor_authentication"]
+            )
