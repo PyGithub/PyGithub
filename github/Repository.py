@@ -819,6 +819,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         if permission is not github.GithubObject.NotSet:
             put_parameters = {"permission": permission}
@@ -847,6 +849,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ), collaborator
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/collaborators/{collaborator}/permission",
@@ -885,6 +889,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
+        base = urllib.parse.quote(base)
+        head = urllib.parse.quote(head)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/compare/{base}...{head}"
         )
@@ -1426,6 +1432,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        secret_name = urllib.parse.quote(secret_name)
         public_key = self.get_public_key()
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
@@ -1444,6 +1451,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        secret_name = urllib.parse.quote(secret_name)
         status, headers, data = self._requester.requestJson(
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
         )
@@ -1639,6 +1647,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Branch.Branch`
         """
         assert isinstance(branch, str), branch
+        branch = urllib.parse.quote(branch)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/branches/{branch}"
         )
@@ -1709,6 +1718,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/commits/{sha}"
         )
@@ -2319,6 +2329,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitBlob.GitBlob`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/git/blobs/{sha}"
         )
@@ -2331,6 +2342,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitCommit.GitCommit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/git/commits/{sha}"
         )
@@ -2348,6 +2360,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}{prefix}{ref}"
         )
@@ -2368,6 +2381,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         return github.PaginatedList.PaginatedList(
             github.GitRef.GitRef,
             self._requester,
@@ -2382,6 +2396,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitTag.GitTag`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/git/tags/{sha}"
         )
@@ -2398,6 +2413,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert recursive is github.GithubObject.NotSet or isinstance(
             recursive, bool
         ), recursive
+        sha = urllib.parse.quote(sha)
         url_parameters = dict()
         if recursive is not github.GithubObject.NotSet and recursive:
             # GitHub API requires the recursive parameter be set to 1.
@@ -3050,6 +3066,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self._requester, headers, data, completed=True
             )
         elif isinstance(id, str):
+            id = urllib.parse.quote(id)
             headers, data = self._requester.requestJsonAndCheck(
                 "GET", f"{self.url}/releases/tags/{id}"
             )
@@ -3120,6 +3137,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
+        id_or_name = urllib.parse.quote(str(id_or_name))
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/actions/workflows/{id_or_name}"
         )
@@ -3205,6 +3223,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         if isinstance(assignee, github.NamedUser.NamedUser):
             assignee = assignee._identity
+        else:
+            assignee = urllib.parse.quote(assignee)
 
         status, headers, data = self._requester.requestJson(
             "GET", f"{self.url}/assignees/{assignee}"
@@ -3223,6 +3243,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         status, headers, data = self._requester.requestJson(
             "GET", f"{self.url}/collaborators/{collaborator}"
@@ -3439,6 +3461,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/collaborators/{collaborator}"

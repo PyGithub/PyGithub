@@ -39,6 +39,8 @@
 #                                                                              #
 ################################################################################
 
+import urllib.parse
+
 from deprecated import deprecated
 
 import github.GithubObject
@@ -211,6 +213,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         ), member
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
+        else:
+            member = urllib.parse.quote(member)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/memberships/{member}"
         )
@@ -240,6 +244,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         ), repo
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity
+        else:
+            repo = urllib.parse.quote(repo)
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",

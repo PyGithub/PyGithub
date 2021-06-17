@@ -40,6 +40,7 @@
 ################################################################################
 
 import datetime
+import urllib.parse
 
 import github.Event
 import github.GithubObject
@@ -976,6 +977,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(slug, str), slug
+        slug = urllib.parse.quote(slug)
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/teams/{slug}"
         )

@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+import urllib.parse
+
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
@@ -166,6 +168,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(repo_name, str), repo_name
+        repo_name = urllib.parse.quote(repo_name)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/repos/{repo_name}/lock",
