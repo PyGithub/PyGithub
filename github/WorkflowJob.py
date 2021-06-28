@@ -131,7 +131,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
     @property
     def steps(self):
         """
-        :type: list of dictionaries
+        :type: list of github.WorkflowStep.WorkflowStep
         """
         self._completeIfNotSet(self._steps)
         return self._steps.value
