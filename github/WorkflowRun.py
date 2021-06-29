@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Yixin Guo <yixin.guo@ni.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,6 +23,7 @@
 
 from collections import namedtuple
 
+import github.Artifact
 import github.GithubObject
 import github.PullRequest
 
@@ -242,6 +244,19 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
         timingdata = namedtuple("TimingData", data.keys())
         return timingdata._make(data.values())
+
+    def get_artifacts(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts <https://docs.github.com/en/rest/reference/actions#artifacts>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            self.artifacts_url,
+            None,
+            list_item="artifacts",
+        )
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
