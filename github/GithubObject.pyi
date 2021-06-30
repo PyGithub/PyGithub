@@ -1,11 +1,6 @@
 from typing import Any, Callable, Dict, List, Optional, Type, Union
 
-from github.Commit import Commit
 from github.GistFile import GistFile
-from github.GitRelease import GitRelease
-from github.NamedUser import NamedUser
-from github.Organization import Organization
-from github.PullRequestReview import PullRequestReview
 from github.Requester import Requester
 
 class GithubObject:
@@ -108,7 +103,7 @@ class CompletableGithubObject(GithubObject):
     def _completeIfNotSet(
         self, value: Union[_ValuedAttribute, _BadAttribute, _NotSetType]
     ) -> None: ...
-    def update(self) -> bool: ...
+    def update(self, additional_headers: Optional[Dict[str, str]]=None) -> bool: ...
 
 class _BadAttribute:
     def __init__(
@@ -119,6 +114,8 @@ class _BadAttribute:
 
 class _NotSetType:
     def __repr__(self) -> str: ...
+
+NotSet: _NotSetType
 
 class _ValuedAttribute:
     def __init__(self, value: Any) -> None: ...

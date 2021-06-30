@@ -53,7 +53,8 @@ __all__ = [
 
 import logging
 
-from github.MainClass import Github, GithubIntegration
+from github.GithubIntegration import GithubIntegration
+from github.MainClass import Github
 
 from .GithubException import (
     BadAttributeException,

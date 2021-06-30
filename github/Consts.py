@@ -125,3 +125,12 @@ deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
 
 # https://developer.github.com/changes/2018-10-16-deployments-environments-states-and-auto-inactive-updates/
 deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json"
+
+
+DEFAULT_BASE_URL = "https://api.github.com"
+DEFAULT_STATUS_URL = "https://status.github.com"
+# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
+# Thus, the timeout should be slightly > 10s to account for network/front-end
+# latency.
+DEFAULT_TIMEOUT = 15
+DEFAULT_PER_PAGE = 30

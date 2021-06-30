@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from github.CheckRun import CheckRun
 from github.GitCommit import GitCommit
@@ -8,6 +8,7 @@ from github.GithubObject import CompletableGithubObject
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
+from github.GithubObject import _NotSetType, NotSet
 
 class CheckSuite(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -47,5 +48,8 @@ class CheckSuite(CompletableGithubObject):
     def url(self) -> str: ...
     def rerequest(self) -> bool: ...
     def get_check_runs(
-        self, check_name: str, status: str, filter: str
+        self,
+        check_name: Union[str, _NotSetType]=NotSet,
+        status: Union[str, _NotSetType]=NotSet,
+        filter: Union[str, _NotSetType]=NotSet,
     ) -> PaginatedList[CheckRun]: ...
