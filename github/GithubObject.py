@@ -177,9 +177,15 @@ class GithubObject:
             ):  # pragma no branch (This branch was used only when creating a download)
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
-                return datetime.datetime.strptime(
-                    s, "%Y-%m-%dT%H:%M:%S.000Z"
-                )  # pragma no cover (This branch was used only when creating a download)
+                try:
+                    return datetime.datetime.strptime(
+                        s, "%Y-%m-%dT%H:%M:%S.000Z"
+                    )  # pragma  no cover (This branch was used only when creating a download)
+                except ValueError:
+                    # Dates returned for actions runner include milliseconds, but strptime wants microseconds
+                    return datetime.datetime.strptime(
+                        f"{s[:-1]}000{s[-1]}", "%Y-%m-%dT%H:%M:%S.%fZ"
+                    )
             elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
                     1 if s[19] == "-" else -1
