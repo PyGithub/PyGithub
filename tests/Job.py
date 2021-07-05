@@ -24,17 +24,31 @@ from datetime import datetime
 from . import Framework
 
 
-class SelfHostedActionsRunnerRegistrationToken(Framework.TestCase):
+class Job(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.org = self.g.get_organization("coveo")
         self.repo = self.org.get_repo("github-app")
 
     def testAttributes(self):
-        token = self.repo.get_self_hosted_action_runner_registration_token()
-        self.assertEqual("INSERTABEAUTIFULTOKENHERE", token.token)
-        # 2021-07-05T17:07:52.961-04:00. The returned datetime is naïve, but represents a time in UTC.
-        self.assertEqual(
-            datetime(2021, 7, 5, 21, 7, 52, tzinfo=None),
-            token.expires_at,
-        )
+        workflow_runs = self.repo.get_workflow_runs()
+        job = workflow_runs[0].get_jobs()[0]
+
+        self.assertEqual(2993004021, job.id)
+        self.assertEqual(1002152666, job.run_id)
+        self.assertEqual("MDg6Q2hlY2tSdW4yOTkzMDA0MDIx", job.node_id)
+        self.assertEqual("ba2ad8220081ac147afaa5e53e895a9db0ceefda", job.head_sha)
+        self.assertEqual("completed", job.status)
+        self.assertEqual("success", job.conclusion)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20), job.started_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 26, 28), job.completed_at)
+        self.assertEqual("stew ci", job.name)
+        self.assertEqual(10, len(job.steps))
+
+        step = job.steps[0]
+        self.assertEqual("Set up job", step.name)
+        self.assertEqual("completed", step.status)
+        self.assertEqual("success", step.conclusion)
+        self.assertEqual(1, step.number)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20), step.started_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 21), step.completed_at)

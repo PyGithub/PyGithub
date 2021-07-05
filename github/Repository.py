@@ -65,6 +65,7 @@
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2021 Denis Blanchette <dblanchette@coveo.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -114,6 +115,7 @@ import github.Hook
 import github.Invitation
 import github.Issue
 import github.IssueEvent
+import github.Job
 import github.Label
 import github.Milestone
 import github.NamedUser
@@ -3137,6 +3139,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/actions/workflows/{id_or_name}"
         )
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
+
+    def get_workflow_job(self, job_id):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/jobs/{job_id} <https://docs.github.com/en/rest/reference/actions#workflow-jobs>`_
+        :param job_id: int or string
+
+        :rtype: :class:`github.Job.Job`
+        """
+        assert isinstance(job_id, int) or isinstance(job_id, str), job_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/jobs/{job_id}"
+        )
+        return github.Job.Job(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
         self,
