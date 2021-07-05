@@ -129,6 +129,7 @@ import github.Repository
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.SelfHostedActionsRunner
+import github.SelfHostedActionsRunnerRegistrationToken
 import github.SourceImport
 import github.Stargazer
 import github.StatsCodeFrequency
@@ -2869,6 +2870,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/actions/runners/{runner_id}"
         )
         return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_self_hosted_action_runner_registration_token(self):
+        """
+        :calls: POST /repos/{owner}/{repo}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-a-repository>
+        :rtype: string
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/actions/runners/registration-token"
+        )
+        return github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken(
             self._requester, headers, data, completed=True
         )
 
