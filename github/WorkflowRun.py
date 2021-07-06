@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Denis Blanchette <dblanchette@coveo.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -23,6 +24,7 @@
 from collections import namedtuple
 
 import github.GithubObject
+import github.Job
 import github.PullRequest
 
 
@@ -217,6 +219,19 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
+
+    def get_jobs(self):
+        """
+        :calls: `GET` /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>
+        :rtype: list of :class:`github.Job.Job`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Job.Job,
+            self._requester,
+            f"{self.url}/jobs",
+            None,
+            list_item="jobs",
+        )
 
     def cancel(self):
         """

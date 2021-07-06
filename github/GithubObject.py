@@ -186,7 +186,13 @@ class GithubObject:
                     return datetime.datetime.strptime(
                         f"{s[:-1]}000{s[-1]}", "%Y-%m-%dT%H:%M:%S.%fZ"
                     )
+            if len(s) >= 29:
+                # Milliseconds and timezone included
+                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
+                    1 if s[23] == "-" else -1
+                ) * datetime.timedelta(hours=int(s[24:26]), minutes=int(s[27:29]))
             elif len(s) >= 25:
+                # Timezone included, but no milliseconds
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
                     1 if s[19] == "-" else -1
                 ) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
