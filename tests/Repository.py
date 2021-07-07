@@ -59,6 +59,8 @@ class Repository(Framework.TestCase):
         super().setUp()
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
+        self.org = self.g.get_organization("coveo")
+        self.secrets_repo = self.org.get_repo("github-api-playground")
 
     def testAttributes(self):
         self.assertEqual(
@@ -441,11 +443,21 @@ class Repository(Framework.TestCase):
         without_payload = self.repo.create_repository_dispatch("type")
         self.assertTrue(without_payload)
 
-    @mock.patch("github.PublicKey.encrypt")
-    def testCreateSecret(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
-        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+    # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+    @mock.patch("github.PublicKey.encrypt", return_value="MOCK_ENCRYPTED_VALUE")
+    def testCreateSecret(self, _encrypt):
         self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
+
+    def testListSecrets(self):
+        secrets = self.secrets_repo.list_repository_secrets()
+
+        secret = secrets[0]
+        self.assertEqual("TEST_SECRET", secret.name)
+        self.assertEqual(datetime.datetime(2021, 7, 6, 19, 53, 25), secret.created_at)
+        self.assertEqual(datetime.datetime(2021, 7, 6, 19, 53, 25), secret.updated_at)
+        self.assertEqual(
+            None, secret.visibility
+        )  # No visibility for repository secrets
 
     def testDeleteSecret(self):
         self.assertTrue(self.repo.delete_secret("secret_name"))

@@ -47,7 +47,9 @@ import github.NamedUser
 import github.PaginatedList
 import github.Plan
 import github.Project
+import github.PublicKey
 import github.Repository
+import github.Secret
 import github.Team
 
 from . import Consts
@@ -888,6 +890,161 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             f"{self.url}/outside_collaborators",
             url_parameters,
+        )
+
+    def get_public_key(self):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :rtype: :class:`github.PublicKey.PublicKey`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets/public-key"
+        )
+        return github.PublicKey.PublicKey(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_or_update_secret(
+        self, secret_name, secret_value, visibility, selected_repository_ids=None
+    ):
+        """
+        Return whether the secret has been created (True) or updated (False).
+
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
+        :param secret_name: string
+        :param secret_value: string
+        :param visibility: string. "all", "private", or "selected"
+        :param selected_repository_ids: list of int. Only available when visibility is "selected"
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(secret_value, str), secret_value
+        assert isinstance(visibility, str), visibility
+        if visibility != "selected":
+            if selected_repository_ids:
+                raise ValueError(
+                    "selected_repository_ids can only be used with visibility `selected`"
+                )
+        elif selected_repository_ids is not None:
+            if not isinstance(selected_repository_ids, list):
+                raise ValueError("selected_repository_ids should be a list")
+            if not all(isinstance(repo_id, int) for repo_id in selected_repository_ids):
+                raise ValueError("selected_repository_ids elements should all be int")
+
+        public_key = self.get_public_key()
+        encrypted_secret_value = github.PublicKey.encrypt(public_key.key, secret_value)
+
+        put_parameters = {
+            "encrypted_value": encrypted_secret_value,
+            "key_id": public_key.key_id,
+            "visibility": visibility,
+        }
+        if selected_repository_ids:
+            put_parameters["selected_repository_ids"] = selected_repository_ids
+        status, _headers, _data = self._requester.requestJsonAndCheckGetStatus(
+            "PUT",
+            f"{self.url}/actions/secrets/{secret_name}",
+            input=put_parameters,
+        )
+        # Status is 201 when created and 204 when updated (whether there are changes or not)
+        return status == 201
+
+    def get_secret(self, secret_name):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#get-an-organization-secrets>`_
+        :rtype: :class:`github.Secret.Secret`
+        """
+        assert isinstance(secret_name, str), secret_name
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets/{secret_name}"
+        )
+        return github.Secret.Secret(self._requester, headers, data, completed=True)
+
+    def get_secrets(self):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets <https://docs.github.com/en/rest/reference/actions#secrets>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
+
+    def list_secret_selected_repositories(self, secret_name):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/reference/actions#list-selected-repositories-for-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert isinstance(secret_name, str), secret_name
+
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self._requester,
+            f"{self.url}/actions/secrets/{secret_name}/repositories",
+            None,
+            list_item="repositories",
+        )
+
+    def set_secret_selected_repositories(self, secret_name, selected_repository_ids):
+        """
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/reference/actions#set-selected-repositories-for-an-organization-secret>`_
+        :param secret_name: string
+        :param selected_repository_ids: list of int
+        """
+
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(selected_repository_ids, list) and all(
+            isinstance(repo_id, int) for repo_id in selected_repository_ids
+        ), selected_repository_ids
+
+        _headers, _data = self._requester.requestJsonAndCheck(
+            "PUT",
+            f"{self.url}/actions/secrets/{secret_name}/repositories",
+            input={"selected_repository_ids": selected_repository_ids},
+        )
+
+    def add_secret_selected_repository(self, secret_name, repository_id):
+        """
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id} <https://docs.github.com/en/rest/reference/actions#add-selected-repository-to-an-organization-secret>`_
+        :param secret_name: string
+        :param repository_id: int
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(repository_id, int), repository_id
+
+        _headers, _data = self._requester.requestJsonAndCheck(
+            "PUT",
+            f"{self.url}/actions/secrets/{secret_name}/repositories/{repository_id}",
+        )
+
+    def remove_secret_selected_repository(self, secret_name, repository_id):
+        """
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id} <https://docs.github.com/en/rest/reference/actions#remove-selected-repository-from-an-organization-secret>`_
+        :param secret_name: string
+        :param repository_id: int
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(repository_id, int), repository_id
+
+        _headers, _data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/actions/secrets/{secret_name}/repositories/{repository_id}",
+        )
+
+    def delete_secret(self, secret_name):
+        """
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-an-organization-secret>`_
+        :param secret_name: string
+        """
+        assert isinstance(secret_name, str)
+
+        _headers, _data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
         )
 
     def remove_outside_collaborator(self, collaborator):
