@@ -908,7 +908,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self, secret_name, secret_value, visibility, selected_repository_ids=None
     ):
         """
-        Return whether the secret has been created
+        Return whether the secret has been created (True) or updated (False).
 
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
         :param secret_name: string
