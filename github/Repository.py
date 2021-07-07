@@ -1440,6 +1440,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
+    def list_repository_secrets(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets <https://docs.github.com/en/rest/reference/actions#list-repository-secrets>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
+
     def delete_secret(self, secret_name):
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_

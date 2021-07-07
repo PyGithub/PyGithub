@@ -399,6 +399,15 @@ class Requester:
             )
         )
 
+    def requestJsonAndCheckGetStatus(
+        self, verb, url, parameters=None, headers=None, input=None
+    ):
+        status, updateHeaders, output = self.requestJson(
+            verb, url, parameters, headers, input, self.__customConnection(url)
+        )
+        responseHeaders, output = self.__check(status, updateHeaders, output)
+        return status, responseHeaders, output
+
     def requestMultipartAndCheck(
         self, verb, url, parameters=None, headers=None, input=None
     ):
