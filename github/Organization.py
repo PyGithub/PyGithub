@@ -921,13 +921,15 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(secret_value, str), secret_value
         assert isinstance(visibility, str), visibility
         if visibility != "selected":
-            assert (
-                selected_repository_ids is None
-            ), "selected_repository_ids can only be used with visibility `selected`"
+            if selected_repository_ids:
+                raise ValueError(
+                    "selected_repository_ids can only be used with visibility `selected`"
+                )
         elif selected_repository_ids is not None:
-            assert isinstance(selected_repository_ids, list) and all(
-                isinstance(repo_id, int) for repo_id in selected_repository_ids
-            ), selected_repository_ids
+            if not isinstance(selected_repository_ids, list):
+                raise ValueError("selected_repository_ids should be a list")
+            if not all(isinstance(repo_id, int) for repo_id in selected_repository_ids):
+                raise ValueError("selected_repository_ids elements should all be int")
 
         public_key = self.get_public_key()
         encrypted_secret_value = github.PublicKey.encrypt(public_key.key, secret_value)

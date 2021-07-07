@@ -73,7 +73,11 @@ class OrganizationSecrets(Framework.TestCase):
                 selected_repository_ids=[self.repo.id, self.repo2.id],
             )
 
-        self.assertRaises(AssertionError, will_raise)
+        self.assertRaisesRegex(
+            ValueError,
+            "selected_repository_ids can only be used with visibility `selected`",
+            will_raise,
+        )
 
         def will_also_raise():
             # Cannot have selected_repository_ids with visibility "all"
@@ -84,7 +88,37 @@ class OrganizationSecrets(Framework.TestCase):
                 selected_repository_ids=[self.repo.id, self.repo2.id],
             )
 
-        self.assertRaises(AssertionError, will_also_raise)
+        self.assertRaisesRegex(
+            ValueError,
+            "selected_repository_ids can only be used with visibility `selected`",
+            will_also_raise,
+        )
+
+        def will_raise_again():
+            self.org.create_or_update_secret(
+                "not_important",
+                "not important either",
+                visibility="selected",
+                selected_repository_ids=self.repo.id,
+            )
+
+        self.assertRaisesRegex(
+            ValueError, "selected_repository_ids should be a list", will_raise_again
+        )
+
+        def will_raise_a_final_time():
+            self.org.create_or_update_secret(
+                "not_important",
+                "not important either",
+                visibility="selected",
+                selected_repository_ids=["not", "integers"],
+            )
+
+        self.assertRaisesRegex(
+            ValueError,
+            "selected_repository_ids elements should all be int",
+            will_raise_a_final_time,
+        )
 
         created_the_third = self.org.create_or_update_secret(
             "not_important",
