@@ -30,6 +30,8 @@ class Github:
         login_or_token: Optional[str] = ...,
         password: Optional[str] = ...,
         jwt: Optional[str] = ...,
+        app_id: Optional[Union[int, str]] = ...,
+        app_private_key: Optional[str] = ...,
         base_url: str = ...,
         timeout: int = ...,
         user_agent: str = ...,
