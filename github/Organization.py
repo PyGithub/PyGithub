@@ -50,6 +50,8 @@ import github.Project
 import github.PublicKey
 import github.Repository
 import github.Secret
+import github.SelfHostedActionsRunner
+import github.SelfHostedActionsRunnerRegistrationToken
 import github.Team
 
 from . import Consts
@@ -1045,6 +1047,63 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
         _headers, _data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
+        )
+
+    def get_self_hosted_runner(self, runner_id):
+        """
+        :calls: `GET /orgs/{org}/actions/runners/{id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-an-organization>`_
+        :param runner_id: int
+        :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        assert isinstance(runner_id, int), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/runners/{runner_id}"
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
+            self._requester, headers, data, completed=True
+        )
+
+    def remove_self_hosted_runner(self, runner):
+        """
+        :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization>`_
+        :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        :rtype: bool
+        """
+        assert isinstance(
+            runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
+        ) or isinstance(runner, int), runner
+
+        if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
+            runner = runner.id
+
+        status, _, _ = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/runners/{runner}"
+        )
+        return status == 204
+
+    def get_self_hosted_runners(self):
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-an-organization>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
+
+    def get_self_hosted_action_runner_registration_token(self):
+        """
+        :calls: POST /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-an-organization>
+        :rtype: :class:`github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/actions/runners/registration-token"
+        )
+        return github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken(
+            self._requester, headers, data, completed=True
         )
 
     def remove_outside_collaborator(self, collaborator):
