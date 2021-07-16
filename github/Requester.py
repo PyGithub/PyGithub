@@ -378,7 +378,7 @@ class Requester:
         installation_id = integration.get_installations()[0].id
         return integration.get_access_token(installation_id)
 
-    def _refresh_token_if_needed(self) -> None:
+    def _refresh_token_if_needed(self):
         """Get a new access token from the GitHub app installation if the one we have is about to expire"""
         if not self.__installation_authorization:
             return
@@ -386,11 +386,26 @@ class Requester:
             logging.debug("Refreshing access token")
             self._refresh_token()
 
-    def _refresh_token(self) -> None:
+    def _refresh_token(self):
         """In the context of a GitHub app, refresh the access token"""
         assert self.__app_id is not None and self.__app_private_key is not None
         self.__installation_authorization = self._get_installation_authorization()
         self.__authorizationHeader = f"token {self.__installation_authorization.token}"
+
+    @property
+    def clone_credentials(self):
+        """Available only for GitHub App authentication.
+        Get the credentials needed to authenticate HTTP requests to clone repositories
+        https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#http-based-git-access-by-an-installation
+        """
+        if not self.__installation_authorization:
+            return None
+
+        self._refresh_token_if_needed()
+        return (
+            "x-access-token",
+            self.__installation_authorization.token,
+        )
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
