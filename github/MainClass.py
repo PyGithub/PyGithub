@@ -201,6 +201,14 @@ class Github:
         """
         return self.__requester.oauth_scopes
 
+    @property
+    def clone_credentials(self):
+        """Available only for GitHub App authentication.
+        Get the credentials needed to authenticate HTTP requests to clone repositories
+        https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#http-based-git-access-by-an-installation
+        """
+        return self.__requester.clone_credentials
+
     def get_license(self, key=github.GithubObject.NotSet):
         """
         :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-an-individual-license>`_
