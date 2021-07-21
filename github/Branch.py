@@ -76,6 +76,14 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         return self._protection_url.value
 
+    @property
+    def commit_branch_url(self):
+        """
+        :type: string
+        """
+        # github doesn't return the commit/{branch} api :shrug:
+        return self.commit.url.replace(self.commit.sha, self.name)
+
     def _initAttributes(self):
         self._commit = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -528,4 +536,19 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE",
             f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
+        )
+
+    def get_check_runs(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.commit_branch_url}/check-runs",
+        )
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            f"{self.commit_branch_url}/check-runs",
+            None,
+            list_item='check_runs'
         )
