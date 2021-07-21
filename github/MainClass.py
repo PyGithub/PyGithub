@@ -843,6 +843,7 @@ class GithubIntegration:
             },
             json=body,
         )
+        response_headers = {k.lower(): v for k, v in response.headers.items()}
 
         if response.status_code == 201:
             return InstallationAuthorization.InstallationAuthorization(
@@ -853,14 +854,18 @@ class GithubIntegration:
             )
         elif response.status_code == 403:
             raise GithubException.BadCredentialsException(
-                status=response.status_code, data=response.text
+                status=response.status_code,
+                data=response.text,
+                headers=response_headers,
             )
         elif response.status_code == 404:
             raise GithubException.UnknownObjectException(
-                status=response.status_code, data=response.text
+                status=response.status_code,
+                data=response.text,
+                headers=response_headers,
             )
         raise GithubException.GithubException(
-            status=response.status_code, data=response.text
+            status=response.status_code, data=response.text, headers=response_headers
         )
 
     def get_installation(self, owner, repo):

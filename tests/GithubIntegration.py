@@ -64,6 +64,10 @@ class GithubIntegration(unittest.TestCase):
                 return json.loads(self.text)
 
             @property
+            def headers(self):
+                return {"foo": "bar"}
+
+            @property
             def text(self):
                 return (
                     '{"token": "v1.ce63424bc55028318325caac4f4c3a5378ca0038",'
