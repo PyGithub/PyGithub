@@ -595,7 +595,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CheckSuite.CheckSuite,
             self._requester,
-            f"{self.url}/check-suites",
+            f"{self.commit_branch_url}/check-suites",
             parameters,
             list_item="check_suites",
         )
