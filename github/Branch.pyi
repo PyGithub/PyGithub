@@ -1,8 +1,10 @@
 from typing import Any, Dict, List, Union
 
 from github.BranchProtection import BranchProtection
+from github.CheckRun import CheckRun
+from github.CheckSuite import CheckSuite
 from github.Commit import Commit
-from github.GithubObject import NonCompletableGithubObject, _NotSetType
+from github.GithubObject import NonCompletableGithubObject, _NotSetType, NotSet
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
@@ -62,3 +64,14 @@ class Branch(NonCompletableGithubObject):
     def remove_required_signatures(self) -> None: ...
     def remove_required_status_checks(self) -> None: ...
     def set_admin_enforcement(self) -> None: ...
+    def get_check_suites(
+        self,
+        app_id: Union[_NotSetType, int]=NotSet,
+        check_name: Union[_NotSetType, str]=NotSet,
+    ) -> PaginatedList[CheckSuite]: ...
+    def get_check_runs(
+        self,
+        check_name: Union[_NotSetType, str] = ...,
+        status: Union[_NotSetType, str] = ...,
+        filter: Union[_NotSetType, str] = ...,
+    ) -> PaginatedList[CheckRun]: ...
