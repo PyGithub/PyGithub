@@ -28,6 +28,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2021 Wojciech Graj <wojtek.graj.2004@gmail.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -378,6 +379,21 @@ class Github:
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return github.ProjectColumn.ProjectColumn(
+            self.__requester, headers, data, completed=True
+        )
+
+    def get_project_card(self, id):
+        """
+        :calls: `GET /projects/columns/cards/{card_id} <https://docs.github.com/en/rest/reference/projects#get-a-project-card>`_
+        :rtype: :class:`github.ProjectCard.ProjectCard`
+        :param id: integer
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/projects/columns/cards/%d" % (id),
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
+        )
+        return github.ProjectCard.ProjectCard(
             self.__requester, headers, data, completed=True
         )
 
