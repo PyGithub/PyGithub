@@ -12,6 +12,7 @@ from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Plan import Plan
 from github.Project import Project
+from github.PublicKey import PublicKey
 from github.Repository import Repository
 from github.Team import Team
 
@@ -66,6 +67,13 @@ class Organization(CompletableGithubObject):
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
+    def create_secret(
+        self,
+        secret_name: str,
+        unencrypted_value: str,
+        visibility: str = ...,
+        selected_repositories: Union[List[Repository], _NotSetType] = ...,
+    ) -> bool: ...
     def create_team(
         self,
         name: str,
@@ -79,6 +87,7 @@ class Organization(CompletableGithubObject):
     def delete_hook(self, id: int) -> None: ...
     @property
     def default_repository_permission(self) -> str: ...
+    def delete_secret(self, secret_name: str) -> bool: ...
     @property
     def description(self) -> str: ...
     @property
@@ -133,6 +142,7 @@ class Organization(CompletableGithubObject):
     def get_projects(
         self, state: Union[_NotSetType, str] = ...
     ) -> PaginatedList[Project]: ...
+    def get_public_key(self) -> PublicKey: ...
     def get_public_members(self) -> PaginatedList[NamedUser]: ...
     def get_repo(self, name: str) -> Repository: ...
     def get_repos(
