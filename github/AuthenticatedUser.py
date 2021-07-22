@@ -974,10 +974,10 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         params = dict()
         if all is not github.GithubObject.NotSet:
             # convert True, False to true, false for api parameters
-            params["all"] = str(all).lower() if isinstance(all, bool) else all
+            params["all"] = "true" if all else "false"
         if participating is not github.GithubObject.NotSet:
             # convert True, False to true, false for api parameters
-            params["participating"] = str(participating).lower() if isinstance(participating, bool) else participating
+            params["participating"] = "true" if participating else "false"
         if since is not github.GithubObject.NotSet:
             params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if before is not github.GithubObject.NotSet:
