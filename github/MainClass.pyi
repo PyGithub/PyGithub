@@ -18,6 +18,7 @@ from github.NamedUser import NamedUser
 from github.Organization import Organization
 from github.PaginatedList import PaginatedList
 from github.Project import Project
+from github.ProjectCard import ProjectCard
 from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
