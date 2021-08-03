@@ -92,6 +92,7 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
+import github.Autolink
 import github.Artifact
 import github.Branch
 import github.CheckRun
@@ -917,6 +918,29 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Comparison.Comparison(
             self._requester, headers, data, completed=True
         )
+
+    def create_autolink(
+        self,
+        key_prefix,
+        url_template
+    ):
+        """
+        :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
+        :param key_prefix: string
+        :param url_template: string
+        :rtype: :class:`github.Autolink.Autolink`
+        """
+        assert isinstance(key_prefix, str), key_prefix
+        assert isinstance(url_template, str), url_template
+
+        post_parameters = {
+            "key_prefix": key_prefix,
+            "url_template": url_template
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/autolinks", input=post_parameters
+        )
+        return github.Autolink.Autolink(self._requester, headers, data, completed=True)
 
     def create_git_blob(self, content, encoding):
         """
@@ -2086,6 +2110,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             f"{self.url}/projects",
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview},
+        )
+
+    def get_autolinks(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Autolink.Autolink`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Autolink.Autolink, self._requester, f"{self.url}/autolinks", None
         )
 
     def create_file(
@@ -3506,6 +3539,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         status, _, _ = self._requester.requestJson(
             "DELETE", f"{self.url}/actions/runners/{runner}"
+        )
+        return status == 204
+
+    def remove_autolink(self, autolink):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :rtype: None
+        """
+        is_autolink = isinstance(
+            autolink, github.Autolink.Autolink
+        )
+        assert is_autolink or isinstance(autolink, int), autolink
+
+        status, _, _ = self._requester.requestJson(
+            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
         )
         return status == 204
 
