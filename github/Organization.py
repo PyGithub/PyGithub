@@ -238,6 +238,30 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._login.value
 
     @property
+    def members_can_create_pages(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._members_can_create_pages)
+        return self._members_can_create_pages.value
+
+    @property
+    def members_can_create_private_pages(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._members_can_create_private_pages)
+        return self._members_can_create_private_pages.value
+
+    @property
+    def members_can_create_public_pages(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._members_can_create_public_pages)
+        return self._members_can_create_public_pages.value
+
+    @property
     def members_can_create_repositories(self):
         """
         :type: bool
@@ -324,6 +348,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
+
+    @property
+    def twitter_username(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
 
     @property
     def two_factor_requirement_enabled(self):
@@ -650,6 +682,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         email=github.GithubObject.NotSet,
         location=github.GithubObject.NotSet,
         name=github.GithubObject.NotSet,
+        twitter_username=github.GithubObject.NotSet,
+        has_organization_projects=github.GithubObject.NotSet,
+        default_repository_permission=github.GithubObject.NotSet,
+        members_can_create_pages=github.GithubObject.NotSet,
+        members_can_create_public_pages=github.GithubObject.NotSet,
+        members_can_create_private_pages=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /orgs/{org} <http://docs.github.com/en/rest/reference/orgs>`_
@@ -660,6 +698,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param email: string
         :param location: string
         :param name: string
+        :param twitter_username: string
+        :param has_organization_projects: bool
+        :param default_repository_permission: string
+        :param members_can_create_pages: bool
+        :param members_can_create_public_pages: bool
+        :param members_can_create_private_pages: bool
         :rtype: None
         """
         assert billing_email is github.GithubObject.NotSet or isinstance(
@@ -692,6 +736,24 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["location"] = location
         if name is not github.GithubObject.NotSet:
             post_parameters["name"] = name
+        if twitter_username is not github.GithubObject.NotSet:
+            post_parameters["twitter_username"] = twitter_username
+        if has_organization_projects is not github.GithubObject.NotSet:
+            post_parameters["has_organization_projects"] = has_organization_projects
+        if default_repository_permission is not github.GithubObject.NotSet:
+            post_parameters[
+                "default_repository_permission"
+            ] = default_repository_permission
+        if members_can_create_pages is not github.GithubObject.NotSet:
+            post_parameters["members_can_create_pages"] = members_can_create_pages
+        if members_can_create_public_pages is not github.GithubObject.NotSet:
+            post_parameters[
+                "members_can_create_public_pages"
+            ] = members_can_create_public_pages
+        if members_can_create_private_pages is not github.GithubObject.NotSet:
+            post_parameters[
+                "members_can_create_private_pages"
+            ] = members_can_create_private_pages
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
@@ -1171,11 +1233,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._default_repository_permission = github.GithubObject.NotSet
+        self._default_repository_permission = github.GithubObject.NotSet
         self._has_organization_projects = github.GithubObject.NotSet
+        self._has_organization_projects = github.GithubObject.NotSet
+        self._has_repository_projects = github.GithubObject.NotSet
         self._has_repository_projects = github.GithubObject.NotSet
         self._hooks_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
+        self._members_can_create_pages = github.GithubObject.NotSet
+        self._members_can_create_private_pages = github.GithubObject.NotSet
+        self._members_can_create_public_pages = github.GithubObject.NotSet
         self._members_can_create_repositories = github.GithubObject.NotSet
+        self._twitter_username = github.GithubObject.NotSet
         self._two_factor_requirement_enabled = github.GithubObject.NotSet
         self._avatar_url = github.GithubObject.NotSet
         self._billing_email = github.GithubObject.NotSet
@@ -1259,6 +1328,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        if "members_can_create_pages" in attributes:  # pragma no branch
+            self._members_can_create_pages = self._makeBoolAttribute(
+                attributes["members_can_create_pages"]
+            )
+        if "members_can_create_private_pages" in attributes:  # pragma no branch
+            self._members_can_create_private_pages = self._makeBoolAttribute(
+                attributes["members_can_create_private_pages"]
+            )
+        if "members_can_create_public_pages" in attributes:  # pragma no branch
+            self._members_can_create_public_pages = self._makeBoolAttribute(
+                attributes["members_can_create_public_pages"]
+            )
         if "members_can_create_repositories" in attributes:  # pragma no branch
             self._members_can_create_repositories = self._makeBoolAttribute(
                 attributes["members_can_create_repositories"]
@@ -1288,6 +1369,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(
                 attributes["total_private_repos"]
+            )
+        if "twitter_username" in attributes:  # pragma no branch
+            self._twitter_username = self._makeStringAttribute(
+                attributes["twitter_username"]
             )
         if "two_factor_requirement_enabled" in attributes:  # pragma no branch
             self._two_factor_requirement_enabled = self._makeBoolAttribute(
