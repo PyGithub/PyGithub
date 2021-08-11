@@ -28,8 +28,8 @@ class Organization(Framework.TestCase):
             self.org.members_can_create_private_pages
         )
         self.assertEqual(self.twitter_username, "twittertest")
-        # self.assertEqual(self.has_organization_projects, True)
-        # self.assertEqual(self.default_repository_permission, "admin")
-        # self.assertEqual(self.members_can_create_pages, True)
-        # self.assertEqual(self.members_can_create_public_pages, False)
-        # self.assertEqual(self.members_can_create_private_pages, True)
+        self.assertEqual(self.has_organization_projects, True)
+        self.assertEqual(self.default_repository_permission, "admin")
+        self.assertEqual(self.members_can_create_pages, True)
+        self.assertEqual(self.members_can_create_public_pages, False)
+        self.assertEqual(self.members_can_create_private_pages, True)
