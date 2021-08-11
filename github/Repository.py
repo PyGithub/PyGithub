@@ -2353,6 +2353,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    def delete_git_ref(self, ref) -> bool:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <http://docs.github.com/en/rest/reference/git#refs>`_
+        :param ref: string
+        :rtype: bool
+        """
+
+        prefix = "/git/refs/"
+        if not self._requester.FIX_REPO_GET_GIT_REF:
+            prefix = "/git/"
+        assert isinstance(ref, str), ref
+        status, _, _ = self._requester.requestJson("DELETE", f"{self.url}{prefix}{ref}")
+        return status == 204
+
     def get_git_refs(self):
         """
         :calls: `GET /repos/{owner}/{repo}/git/refs <http://docs.github.com/en/rest/reference/git#refs>`_
