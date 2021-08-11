@@ -779,6 +779,10 @@ class Repository(Framework.TestCase):
             "31110327ec45f3138e58ed247b2cf420fee481ec",
         )
 
+    def testDeleteGitRef(self):
+        self.assertTrue(self.g.FIX_REPO_GET_GIT_REF)
+        self.assertTrue(self.g.get_repo("curoky/PyGithub").delete_git_ref("heads/test"))
+
     def testGetGitRefWithIssue102Reverted(self):
         self.g.FIX_REPO_GET_GIT_REF = False
         self.assertFalse(self.g.FIX_REPO_GET_GIT_REF)
