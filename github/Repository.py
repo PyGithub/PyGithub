@@ -65,6 +65,7 @@
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2021 curoky <cccuroky@gmail.com>                                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -3192,6 +3193,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.WorkflowRun.WorkflowRun(
             self._requester, headers, data, completed=True
         )
+
+    def delete_workflow_run(self, id_):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :param id_: int
+
+        :rtype: bool
+        """
+        assert isinstance(id_, int)
+        status, _, _ = self._requester.requestJson(
+            "DELETE", self.url + f"/actions/runs/{id_}"
+        )
+        return status == 204
 
     def has_in_assignees(self, assignee):
         """
