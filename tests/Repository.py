@@ -27,6 +27,7 @@
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2021 curoky <cccuroky@gmail.com>                                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -984,6 +985,10 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(
             workflows, lambda w: w.name, ["check", "Publish to PyPI"]
         )
+
+    def testDeleteWorkflowRun(self):
+        repo = self.g.get_repo("curoky/PyGithub")
+        self.assertTrue(repo.delete_workflow_run(1120372408))
 
     def testGetWorkflowRuns(self):
         self.assertListKeyEqual(
