@@ -8,11 +8,6 @@ class Organization(Framework.TestCase):
         self.user = self.g.get_user("karthik-kadajji-t")
         self.org = self.g.get_organization("testkarthik")
         self.org.create_project(project)
-        success = False
-        projects = self.org.get_projects()
-        for project in projects:
-            if project.name == "ultratendency":
-                success = True
-                break
+        project = self.org.get_projects()[0].name
 
-        self.assertEqual(True, success)
+        self.assertEqual("ultratendency", project)
