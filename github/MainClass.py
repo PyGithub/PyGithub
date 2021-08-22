@@ -195,7 +195,7 @@ class Github:
         """
         Rate limit status for different resources (core/search/graphql).
 
-        :calls: `GET /rate_limit <http://docs.github.com/en/rest/reference/rate_limit>`_
+        :calls: `GET /rate_limit <http://docs.github.com/en/rest/reference/rate-limit>`_
         :rtype: :class:`github.RateLimit.RateLimit`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
