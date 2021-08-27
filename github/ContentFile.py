@@ -254,7 +254,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
 
         if append:
             return self.write(
-                ''.join((self.read(binary=False), content)), overwrite=True, message=message,
+                ''.join((self.read(binary=False), content)), append=False, message=message,
                 branch=branch, committer=committer, author=author
             )
         if message is None:
