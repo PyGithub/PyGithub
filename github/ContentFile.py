@@ -131,7 +131,24 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
                 )
             )  # pragma no cover (Should be covered)
         return self._repository.value
-
+    
+    @repository.setter
+    def repository(self, repository):
+        if isinstance(repository, github.Repository.Repository):
+            self._repository = github.GithubObject._ValuedAttribute(repository)
+        elif isinstance(repository, str):
+            self.repository = github.Repository.Repository(
+                self._requester, self._headers, {"url": repository}, completed=False
+            )
+        elif isinstance(repository, github.GithubObject.NotSet):
+            self._repository = repository
+        elif isinstance(repository, github.GithubObject._ValuedAttribute):
+            self.repository = repository.value
+        elif repository is None:
+            self._repository = github.GithubObject.NotSet
+        else:
+            raise TypeError("%s: Cannot set repository with %s, wrong type" % (self, type(repository)))
+    
     @property
     def sha(self):
         """
@@ -222,3 +239,35 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._text_matches = self._makeListOfDictsAttribute(
                 attributes["text_matches"]
             )
+    
+    def read(self, binary=True):
+        if binary:
+            return self.decoded_content
+        return self.decoded_content.decode()
+
+    def write(
+        self, content, append=True, message=None, branch=github.GithubObject.NotSet,
+        committer=github.GithubObject.NotSet, author=github.GithubObject.NotSet
+    ) -> "ContentFile":
+        if isinstance(content, bytes):
+            content = content.decode()
+
+        if append:
+            return self.write(
+                ''.join((self.read(binary=False), content)), overwrite=True, message=message,
+                branch=branch, committer=committer, author=author
+            )
+        if message is None:
+            message = "Update %s" % self.name
+
+        r = self.repository.update_file(
+            path=self.path, message=message, content=content, sha=self.sha,
+            branch=branch, committer=committer, author=author
+        )
+
+        new = self.repository.get_contents(self.path)
+
+        # Pass repo
+        new._repository = self._repository
+
+        return new
