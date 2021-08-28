@@ -309,4 +309,4 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             branch=branch, committer=committer, author=author
         )
 
-        return self.repository.get_contents(self.path) # return new object for commit conflicts
+        return self.repository.get_contents(self.path, ref=self.branch_name) # return new object for commit conflicts
