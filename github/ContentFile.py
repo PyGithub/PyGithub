@@ -35,7 +35,7 @@ import github.GithubObject
 import github.Repository
 
 # URL Parsing
-from urllib import parse as urlparse
+from urllib.parse import urlparse, parse_qs
 
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
