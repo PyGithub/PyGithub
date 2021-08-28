@@ -34,6 +34,9 @@ import base64
 import github.GithubObject
 import github.Repository
 
+# URL Parsing
+from urllib import parse as urlparse
+
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
     """
@@ -121,10 +124,10 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         if self._repository is github.GithubObject.NotSet:
-            # The repository was not set automatically, so it must be looked up by url.
-            repo_url = "/".join(
-                self.url.split("/")[:6]
-            )  # pragma no cover (Should be covered)
+            # The repository was not set automatically, so it must be looked up by url.            
+            parsed_url = self.parsed_url
+            repo_url = "%s://%s%s" % (parsed_url.scheme, parsed_url.netloc, parsed_url.path.split("/contents/%s" % self.path, 1)[0])
+            
             self._repository = github.GithubObject._ValuedAttribute(
                 github.Repository.Repository(
                     self._requester, self._headers, {"url": repo_url}, completed=False
@@ -134,6 +137,9 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     
     @repository.setter
     def repository(self, repository):
+        """
+        :param repository: string or :class:`github.Repository.Repository` or github.GithubObject.NotSet or :class:`github.GithubObject._ValuedAttribute` or None
+        """
         if isinstance(repository, github.Repository.Repository):
             self._repository = github.GithubObject._ValuedAttribute(repository)
         elif isinstance(repository, str):
@@ -180,7 +186,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._url)
         return self._url.value
-
+    
+    @property
+    def parsed_url(self):
+        """
+        :type: urllib.parse.ParseResult
+        """
+        return urlparse(self.url)
+    
     @property
     def text_matches(self):
         """
@@ -188,7 +201,25 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
-
+    
+    @property
+    def branch_name(self):
+        """
+        :type: string
+        """
+        # Query args like: {'ref': ['master']}
+        qargs = parse_qs(self.parsed_url.query)
+        # Safe query args: {'ref': 'master'}
+        qargs = {k: qargs[k][0] if len(qargs[k]) == 1 else qargs[k] for k in qargs}
+        return qargs.get('ref', 'main')
+    
+    @property
+    def branch(self):
+        """
+        :type: github.Branch.Branch
+        """
+        return self.repository.get_branch(self.branch_name)
+    
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._text_matches = github.GithubObject.NotSet
@@ -241,6 +272,10 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             )
     
     def read(self, binary=True):
+        """
+        :param binary: bool; default=True
+        :type: string, bytes
+        """
         if binary:
             return self.decoded_content
         return self.decoded_content.decode()
@@ -248,7 +283,16 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def write(
         self, content, append=True, message=None, branch=github.GithubObject.NotSet,
         committer=github.GithubObject.NotSet, author=github.GithubObject.NotSet
-    ) -> "ContentFile":
+    ):
+        """
+        :param content: string or bytes
+        :param append: bool; default=True
+        :param message: string: default=None
+        :param branch: string: default=author=github.GithubObject.NotSet
+        :param committer: string: default=author=github.GithubObject.NotSet
+        :param author: string: default=author=github.GithubObject.NotSet
+        :type: ContentFile
+        """
         if isinstance(content, bytes):
             content = content.decode()
 
@@ -265,9 +309,4 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             branch=branch, committer=committer, author=author
         )
 
-        new = self.repository.get_contents(self.path)
-
-        # Pass repo
-        new._repository = self._repository
-
-        return new
+        return self.repository.get_contents(self.path) # return new object for commit conflicts
