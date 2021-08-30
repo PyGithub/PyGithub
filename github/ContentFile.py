@@ -281,8 +281,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self.decoded_content.decode()
 
     def write(
-        self, content, append=True, message=None, branch=github.GithubObject.NotSet,
-        committer=github.GithubObject.NotSet, author=github.GithubObject.NotSet
+        self, content, append=True, message=None, committer=github.GithubObject.NotSet,
+        author=github.GithubObject.NotSet
     ):
         """
         :param content: string or bytes
@@ -299,14 +299,15 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if append:
             return self.write(
                 ''.join((self.read(binary=False), content)), append=False, message=message,
-                branch=branch, committer=committer, author=author
+                committer=committer, author=author
             )
         if message is None:
             message = "Update %s" % self.name
-
+        branch_name = self.branch_name
+        
         r = self.repository.update_file(
             path=self.path, message=message, content=content, sha=self.sha,
-            branch=branch, committer=committer, author=author
+            branch=branch_name, committer=committer, author=author
         )
 
-        return self.repository.get_contents(self.path, ref=self.branch_name) # return new object for commit conflicts
+        return self.repository.get_contents(self.path, ref=branch_name) # return new object for commit conflicts
