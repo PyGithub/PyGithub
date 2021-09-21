@@ -104,6 +104,7 @@ class Github:
         verify=True,
         retry=None,
         pool_size=None,
+        proxies=None,
     ):
         """
         :param login_or_token: string
@@ -140,6 +141,7 @@ class Github:
             verify,
             retry,
             pool_size,
+            proxies
         )
 
     @property

@@ -16,6 +16,7 @@ class HTTPRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
+        proxies: Optional[dict] = None,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -32,6 +33,7 @@ class HTTPSRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
+        proxies: Optional[dict] = None,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -107,6 +109,7 @@ class Requester:
         per_page: int,
         verify: bool,
         retry: Any,
+        proxies: Optional[dict]
     ) -> None: ...
     def _initializeDebugFeature(self) -> None: ...
     def check_me(self, obj: GithubObject) -> None: ...

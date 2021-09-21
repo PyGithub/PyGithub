@@ -89,6 +89,7 @@ class HTTPSRequestsConnectionClass:
         timeout=None,
         retry=None,
         pool_size=None,
+        proxies=None,
         **kwargs,
     ):
         self.port = port if port else 443
@@ -97,6 +98,8 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        if proxies:
+            self.session.proxies = proxies
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -148,6 +151,7 @@ class HTTPRequestsConnectionClass:
         timeout=None,
         retry=None,
         pool_size=None,
+        proxies=None,
         **kwargs,
     ):
         self.port = port if port else 80
@@ -156,6 +160,8 @@ class HTTPRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        if proxies:
+            self.session.proxies = proxies
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -301,6 +307,7 @@ class Requester:
         verify,
         retry,
         pool_size,
+        proxies
     ):
         self._initializeDebugFeature()
 
@@ -329,6 +336,8 @@ class Requester:
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
         self.__scheme = o.scheme
+        self.__proxies = proxies
+
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
         elif o.scheme == "http":
@@ -396,6 +405,7 @@ class Requester:
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
+                        proxies=self.__proxies
                     )
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
@@ -403,6 +413,7 @@ class Requester:
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
+                        proxies=self.__proxies
                     )
         return cnx
 
@@ -620,6 +631,7 @@ class Requester:
             self.__port,
             retry=self.__retry,
             pool_size=self.__pool_size,
+            proxies=self.__proxies,
             **kwds,
         )
 
