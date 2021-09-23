@@ -870,6 +870,33 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
         )
 
+    def get_self_hosted_runner(self, runner_id):
+        """
+        :calls: `GET /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-an-organization>`_
+        :param runner_id: int
+        :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        assert isinstance(runner_id, int), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/runners/{runner_id}"
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_self_hosted_runners(self):
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-an-organization>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
+
     def get_outside_collaborators(self, filter_=github.GithubObject.NotSet):
         """
         :calls: `GET /orgs/{org}/outside_collaborators <http://docs.github.com/en/rest/reference/orgs#outside_collaborators>`_
@@ -1104,6 +1131,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/public_members/{public_member._identity}"
         )
+
+    def remove_self_hosted_runner(self, runner_id):
+        """
+        :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization>`_
+        :param runner_id: int
+        :rtype: None
+        """
+        assert isinstance(runner_id, int), runner_id
+
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/runners/{runner_id}"
+        )
+        return status == 204
 
     def create_migration(
         self,
