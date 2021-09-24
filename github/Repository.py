@@ -141,6 +141,7 @@ import github.Team
 import github.View
 import github.Workflow
 import github.WorkflowRun
+import github.GithubCodeScanAlert
 
 from . import Consts
 
@@ -3657,6 +3658,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/check-runs/{check_run_id}"
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
+
+    def get_codescan_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GithubCodeScanAlert.CodeScanAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.GithubCodeScanAlert.CodeScanAlert, self._requester, f"{self.url}/code-scanning/alerts", None
+        )
 
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet
