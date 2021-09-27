@@ -62,6 +62,36 @@ class Workflow(Framework.TestCase):
             [109950033, 109168419, 108934155, 108817672],
         )
 
+    def testGetTwoArtifacts(self):
+        run = self.workflow.get_runs()[0]
+        self.assertEqual(
+            self.workflow.get_artifacts(run),
+            [
+                {
+                    "name": "ni-grpc-device-server-ni-linux-rt-x64",
+                    "url": "https://pipelines.actions.githubusercontent.com/vVJrNqNDqm6ysMIhP6YVnHS7J3XmqpVj7W6p4jmwYjdlXCLT8T/_apis/pipelines/1/runs/3381/signedartifactscontent?artifactName=ni-grpc-device-server-ni-linux-rt-x64&urlExpires=2021-09-27T21%3A58%3A28.1175606Z&urlSigningMethod=HMACV1&urlSignature=uMTODblR7GaKE8biqNFwLrXhY3t44mUzV%2FVYlwr%2Fdms%3D",
+                },
+                {
+                    "name": "ni-grpc-device-tests-ni-linux-rt-x64",
+                    "url": "https://pipelines.actions.githubusercontent.com/vVJrNqNDqm6ysMIhP6YVnHS7J3XmqpVj7W6p4jmwYjdlXCLT8T/_apis/pipelines/1/runs/3381/signedartifactscontent?artifactName=ni-grpc-device-server-ni-linux-rt-x64&urlExpires=2021-09-27T21%3A58%3A28.3700804Z&urlSigningMethod=HMACV1&urlSignature=2rwkNve9SLjjUajljfYh23u7ejLvGu0u4eKK7yQcc3Q%3D",
+                },
+            ],
+        )
+
+    def testGetOneArtifact(self):
+        run = self.workflow.get_runs()[0]
+        self.assertEqual(
+            self.workflow.get_artifacts(run),
+            {
+                "name": "ni-grpc-device-server-ni-linux-rt-x64",
+                "url": "https://pipelines.actions.githubusercontent.com/vVJrNqNDqm6ysMIhP6YVnHS7J3XmqpVj7W6p4jmwYjdlXCLT8T/_apis/pipelines/1/runs/3381/signedartifactscontent?artifactName=ni-grpc-device-server-ni-linux-rt-x64&urlExpires=2021-09-27T21%3A58%3A28.1175606Z&urlSigningMethod=HMACV1&urlSignature=uMTODblR7GaKE8biqNFwLrXhY3t44mUzV%2FVYlwr%2Fdms%3D",
+            },
+        )
+
+    def testGetNoArtifacts(self):
+        run = self.workflow.get_runs()[0]
+        self.assertEqual(self.workflow.get_artifacts(run), None)
+
     def testGetRunsWithObjects(self):
         sfdye = self.g.get_user("sfdye")
         master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
