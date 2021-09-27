@@ -57,7 +57,7 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.pull_requests, [])
         created_at = datetime.datetime(2020, 6, 26, 4, 51, 26)
         self.assertEqual(self.workflow_run.created_at, created_at)
-        updated_at = datetime.datetime(2020, 6, 26, 5, 6, 16)
+        updated_at = datetime.datetime(2020, 6, 26, 4, 52, 59)
         self.assertEqual(self.workflow_run.updated_at, updated_at)
         self.assertEqual(
             self.workflow_run.jobs_url,
@@ -105,10 +105,3 @@ class WorkflowRun(Framework.TestCase):
 
     def test_cancel(self):
         self.assertTrue(self.workflow_run.cancel())
-
-    def test_get_artifacts(self):
-        self.assertListKeyEqual(
-            self.workflow_run.get_artifacts(),
-            lambda a: a.id,
-            [11, 13],
-        )
