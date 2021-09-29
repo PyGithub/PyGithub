@@ -1347,6 +1347,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(raisedexp.exception.status, 409)
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
+    def testMergeUpstream(self):
+        self.assertTrue(self.repo.merge_upstream("master"))
+
+    def testMergeUpstreamFailure(self):
+        self.assertFalse(self.repo.merge_upstream("doesNotExist"))
+
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
             self.repo.get_issues_comments()[:40],

@@ -3353,6 +3353,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
+    def merge_upstream(self, branch):
+        """
+        :calls: `POST /repos/{owner}/{repo}/merge-upstream <http://docs.github.com/en/rest/reference/repos#sync-a-fork-branch-with-the-upstream-repository>`_
+        :param branch: string
+        :rtype: bool
+        """
+        assert isinstance(branch, str), branch
+        post_parameters = {"branch": branch}
+        status, _, _ = self._requester.requestJson(
+            "POST", f"{self.url}/merge-upstream", input=post_parameters
+        )
+        return status == 200
+
     def replace_topics(self, topics):
         """
         :calls: `PUT /repos/{owner}/{repo}/topics <https://docs.github.com/en/rest/reference/repos>`_
