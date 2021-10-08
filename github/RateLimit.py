@@ -31,7 +31,7 @@ import github.Rate
 
 class RateLimit(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents RateLimits. The reference can be found here http://docs.github.com/en/rest/reference/rate_limit
+    This class represents RateLimits. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
 
     def __repr__(self):

@@ -201,7 +201,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /gists/{gist_id}/comments <http://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `POST /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -218,7 +218,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self):
         """
-        :calls: `POST /gists/{id}/forks <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `POST /gists/{id}/forks <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: :class:`github.Gist.Gist`
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/forks")
@@ -226,7 +226,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /gists/{id} <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
@@ -235,7 +235,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet
     ):
         """
-        :calls: `PATCH /gists/{id} <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         :param description: string
         :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
         :rtype: None
@@ -262,7 +262,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /gists/{gist_id}/comments/{id} <http://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `GET /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -276,7 +276,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /gists/{gist_id}/comments <http://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `GET /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -288,7 +288,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def is_starred(self):
         """
-        :calls: `GET /gists/{id}/star <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
@@ -296,7 +296,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def reset_starred(self):
         """
-        :calls: `DELETE /gists/{id}/star <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -305,7 +305,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def set_starred(self):
         """
-        :calls: `PUT /gists/{id}/star <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PUT /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
