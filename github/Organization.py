@@ -1111,6 +1111,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=parameters,
         )
 
+    def cancel_invitation(self, invitee):
+        """
+        :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
+        :param invitee: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(invitee, github.NamedUser.NamedUser), invitee
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/invitations/{invitee.id}"
+        )
+        return status == 204
+
     def has_in_members(self, member):
         """
         :calls: `GET /orgs/{org}/members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
