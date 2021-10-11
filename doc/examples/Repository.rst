@@ -40,7 +40,7 @@ Get list of code scanning alerts
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> codescan_alerts = repo.get_get_codescan_alerts()
+    >>> codescan_alerts = repo.get_codescan_alerts()
     >>> for alert in codescan_alerts:
     ...     print(alert.number, alert.created_at, alert.dismissed_at)
     ...     print("  ", alert.tool.name, alert.tool.version, alert.tool.guid)
