@@ -286,6 +286,9 @@ class CompletableGithubObject(GithubObject):
     def __eq__(self, other):
         return other.__class__ is self.__class__ and other._url.value == self._url.value
 
+    def __hash__(self):
+        return hash(self._url.value)
+
     def __ne__(self, other):
         return not self == other
 

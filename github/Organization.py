@@ -55,7 +55,7 @@ from . import Consts
 
 class Organization(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Organizations. The reference can be found here http://docs.github.com/en/rest/reference/orgs
+    This class represents Organizations. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
     def __repr__(self):
@@ -359,7 +359,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def add_to_members(self, member, role=github.GithubObject.NotSet):
         """
-        :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs/members#add-or-update-organization-membership>`_
+        :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :param role: string
         :rtype: None
@@ -375,7 +375,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def add_to_public_members(self, public_member):
         """
-        :calls: `PUT /orgs/{org}/public_members/{user} <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `PUT /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -386,7 +386,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self, repo):
         """
-        :calls: `POST /repos/{owner}/{repo}/forks <http://docs.github.com/en/rest/reference/repos#forks>`_
+        :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: :class:`github.Repository.Repository`
         """
@@ -411,7 +411,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         active=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/{owner}/hooks <http://docs.github.com/en/rest/reference/orgs#hooks>`_
+        :calls: `POST /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param name: string
         :param config: dict
         :param events: list of string
@@ -478,7 +478,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         delete_branch_on_merge=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/{org}/repos <http://docs.github.com/en/rest/reference/repos>`_
+        :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
         :param name: string
         :param description: string
         :param homepage: string
@@ -600,7 +600,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/{org}/teams <http://docs.github.com/en/rest/reference/orgs#teams>`_
+        :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
         :param permission: string
@@ -641,7 +641,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def delete_hook(self, id):
         """
-        :calls: `DELETE /orgs/{owner}/hooks/{id} <http://docs.github.com/en/rest/reference/orgs#hooks>`_
+        :calls: `DELETE /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param id: integer
         :rtype: None`
         """
@@ -661,7 +661,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         name=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /orgs/{org} <http://docs.github.com/en/rest/reference/orgs>`_
+        :calls: `PATCH /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         :param billing_email: string
         :param blog: string
         :param company: string
@@ -715,7 +715,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         active=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /orgs/{owner}/hooks/{id} <http://docs.github.com/en/rest/reference/orgs#hooks>`_
+        :calls: `PATCH /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param id: integer
         :param name: string
         :param config: dict
@@ -745,7 +745,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_events(self):
         """
-        :calls: `GET /orgs/{org}/events <http://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /orgs/{org}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -754,7 +754,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_hook(self, id):
         """
-        :calls: `GET /orgs/{owner}/hooks/{id} <http://docs.github.com/en/rest/reference/orgs#hooks>`_
+        :calls: `GET /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param id: integer
         :rtype: :class:`github.Hook.Hook`
         """
@@ -766,7 +766,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_hooks(self):
         """
-        :calls: `GET /orgs/{owner}/hooks <http://docs.github.com/en/rest/reference/orgs#hooks>`_
+        :calls: `GET /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Hook.Hook`
         """
         return github.PaginatedList.PaginatedList(
@@ -783,7 +783,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         since=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /orgs/{org}/issues <http://docs.github.com/en/rest/reference/issues>`_
+        :calls: `GET /orgs/{org}/issues <https://docs.github.com/en/rest/reference/issues>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         :param filter: string
         :param state: string
@@ -826,7 +826,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self, filter_=github.GithubObject.NotSet, role=github.GithubObject.NotSet
     ):
         """
-        :calls: `GET /orgs/{org}/members <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param filter_: string
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -869,7 +869,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_public_members(self):
         """
-        :calls: `GET /orgs/{org}/public_members <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/public_members <https://docs.github.com/en/rest/reference/orgs#members>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -881,7 +881,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_outside_collaborators(self, filter_=github.GithubObject.NotSet):
         """
-        :calls: `GET /orgs/{org}/outside_collaborators <http://docs.github.com/en/rest/reference/orgs#outside_collaborators>`_
+        :calls: `GET /orgs/{org}/outside_collaborators <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param filter_: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -901,7 +901,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_outside_collaborator(self, collaborator):
         """
-        :calls: `DELETE /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside_collaborators>`_
+        :calls: `DELETE /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param collaborator: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -912,7 +912,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def convert_to_outside_collaborator(self, member):
         """
-        :calls: `PUT /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside_collaborators>`_
+        :calls: `PUT /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -923,7 +923,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
@@ -944,8 +944,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         direction=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /orgs/{org}/repos <http://docs.github.com/en/rest/reference/repos>`_
-        :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member', 'internal')
+        :calls: `GET /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
+        :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member')
         :param sort: string ('created', 'updated', 'pushed', 'full_name')
         :param direction: string ('asc', desc')
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -973,7 +973,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_team(self, id):
         """
-        :calls: `GET /teams/{id} <http://docs.github.com/en/rest/reference/orgs#teams>`_
+        :calls: `GET /teams/{id} <https://docs.github.com/en/rest/reference/teams>`_
         :param id: integer
         :rtype: :class:`github.Team.Team`
         """
@@ -983,7 +983,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_team_by_slug(self, slug):
         """
-        :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         :param slug: string
         :rtype: :class:`github.Team.Team`
         """
@@ -995,7 +995,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_teams(self):
         """
-        :calls: `GET /orgs/{org}/teams <http://docs.github.com/en/rest/reference/orgs#teams>`_
+        :calls: `GET /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
@@ -1023,7 +1023,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         teams=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/{org}/invitations <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `POST /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param user: :class:`github.NamedUser.NamedUser`
         :param email: string
         :param role: string
@@ -1058,7 +1058,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def has_in_members(self, member):
         """
-        :calls: `GET /orgs/{org}/members/{user} <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -1074,7 +1074,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def has_in_public_members(self, public_member):
         """
-        :calls: `GET /orgs/{org}/public_members/{user} <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -1086,7 +1086,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_membership(self, member):
         """
-        :calls: `DELETE /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs/members#remove-organization-membership>`_
+        :calls: `DELETE /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#remove-an-organization-member>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1097,7 +1097,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_members(self, member):
         """
-        :calls: `DELETE /orgs/{org}/members/{user} <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `DELETE /orgs/{org}/members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1108,7 +1108,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_public_members(self, public_member):
         """
-        :calls: `DELETE /orgs/{org}/public_members/{user} <http://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `DELETE /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1124,7 +1124,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         exclude_attachments=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#users>`_
+        :calls: `POST /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
         :param repos: list or tuple of str
         :param lock_repositories: bool
         :param exclude_attachments: bool
@@ -1155,7 +1155,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_migrations(self):
         """
-        :calls: `GET /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#users>`_
+        :calls: `GET /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
         """
         return github.PaginatedList.PaginatedList(

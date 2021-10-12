@@ -35,7 +35,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks. The reference can be found here http://docs.github.com/en/rest/reference/repos#webhooks
+    This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
     """
 
     def __repr__(self):
@@ -131,7 +131,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <http://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
@@ -146,7 +146,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         active=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <http://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param name: string
         :param config: dict
         :param events: list of string
@@ -186,14 +186,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def test(self):
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <http://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
     def ping(self):
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <http://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
