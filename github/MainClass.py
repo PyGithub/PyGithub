@@ -390,7 +390,7 @@ class Github:
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/projects/columns/cards/%d" % (id),
+            f"/projects/columns/cards/{id}",
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return github.ProjectCard.ProjectCard(
