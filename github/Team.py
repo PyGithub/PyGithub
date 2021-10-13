@@ -164,6 +164,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._parent)
         return self._parent.value
 
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
+
     def add_to_members(self, member):
         """
         This API call is deprecated. Use `add_membership` instead.
@@ -486,6 +494,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._organization = github.GithubObject.NotSet
         self._privacy = github.GithubObject.NotSet
         self._parent = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -520,3 +529,5 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._parent = self._makeClassAttribute(
                 github.Team.Team, attributes["parent"]
             )
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
