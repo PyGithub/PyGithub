@@ -582,6 +582,49 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_secret(
+        self,
+        secret_name,
+        unencrypted_value,
+        visibility="all",
+        selected_repositories=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
+        :param secret_name: string
+        :param unencrypted_value: string
+        :param visibility: string
+        :param selected_repositories: list of :class:`github.Repository.Repository`
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(unencrypted_value, str), unencrypted_value
+        assert isinstance(visibility, str), visibility
+        if visibility == "selected":
+            assert isinstance(selected_repositories, list) and all(
+                isinstance(element, github.Repository.Repository)
+                for element in selected_repositories
+            ), selected_repositories
+        else:
+            assert selected_repositories is github.GithubObject.NotSet
+
+        public_key = self.get_public_key()
+        payload = public_key.encrypt(unencrypted_value)
+        put_parameters = {
+            "key_id": public_key.key_id,
+            "encrypted_value": payload,
+            "visibility": visibility,
+        }
+        if selected_repositories is not github.GithubObject.NotSet:
+            put_parameters["selected_repository_ids"] = [
+                element.id for element in selected_repositories
+            ]
+
+        status, headers, data = self._requester.requestJson(
+            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
+        )
+        return status == 201
+
     def create_team(
         self,
         name,
@@ -640,6 +683,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/hooks/{id}"
         )
+
+    def delete_secret(self, secret_name):
+        """
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
+        )
+        return status == 204
 
     def edit(
         self,
@@ -910,6 +965,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/outside_collaborators/{member._identity}"
+        )
+
+    def get_public_key(self):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :rtype: :class:`github.PublicKey.PublicKey`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets/public-key"
+        )
+        return github.PublicKey.PublicKey(
+            self._requester, headers, data, completed=True
         )
 
     def get_repo(self, name):
