@@ -141,7 +141,7 @@ class Github:
             verify,
             retry,
             pool_size,
-            proxies
+            proxies,
         )
 
     @property

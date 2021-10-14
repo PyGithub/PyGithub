@@ -307,7 +307,7 @@ class Requester:
         verify,
         retry,
         pool_size,
-        proxies
+        proxies,
     ):
         self._initializeDebugFeature()
 
@@ -405,7 +405,7 @@ class Requester:
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
-                        proxies=self.__proxies
+                        proxies=self.__proxies,
                     )
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
@@ -413,7 +413,7 @@ class Requester:
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
-                        proxies=self.__proxies
+                        proxies=self.__proxies,
                     )
         return cnx
 
