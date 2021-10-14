@@ -3545,6 +3545,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def remove_autolink(self, autolink):
         """
         :calls: `DELETE /repos/{owner}/{repo}/autolinks/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :param autolink: int or :class:`github.Autolink.Autolink`
         :rtype: None
         """
         is_autolink = isinstance(
