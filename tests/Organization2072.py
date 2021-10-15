@@ -1,10 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2021 James Simpson <james@snowterminal.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,40 +20,21 @@
 #                                                                              #
 ################################################################################
 
-import github
+from . import Framework
 
 
-class Stargazer(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents Stargazers. The reference can be found here https://docs.github.com/en/rest/reference/activity#starring
-    """
+class Organization2072(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.org = self.g.get_organization("TestOrganization2072")
 
-    def __repr__(self):
-        return self.get__repr__({"user": self._user.value._login.value})
-
-    @property
-    def starred_at(self):
-        """
-        :type: datetime.datetime
-        """
-        return self._starred_at.value
-
-    @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser`
-        """
-        return self._user.value
-
-    def _initAttributes(self):
-        self._starred_at = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
-        if "starred_at" in attributes:
-            self._starred_at = self._makeDatetimeAttribute(attributes["starred_at"])
-        if "user" in attributes:
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+    def testCancelInvitation(self):
+        self.assertFalse(
+            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
+        )
+        self.org.invite_user(email="foo@bar.org")
+        self.assertTrue(
+            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
+        )
+        invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
+        self.assertTrue(self.org.cancel_invitation(invitation))
