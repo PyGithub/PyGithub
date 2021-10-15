@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union, NamedTuple, Tuple
+from typing import Any, Dict, List, NamedTuple, Union
 
 from github.Authorization import Authorization
 from github.Event import Event
@@ -19,6 +19,7 @@ from github.Plan import Plan
 from github.Repository import Repository
 from github.Team import Team
 from github.UserKey import UserKey
+
 
 class EmailData(NamedTuple):
     email: str
