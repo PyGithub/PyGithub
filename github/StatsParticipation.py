@@ -29,7 +29,7 @@ import github.GithubObject
 
 class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents StatsParticipations. The reference can be found here http://docs.github.com/en/rest/reference/repos/statistics#get-the-weekly-commit-count-for-the-repo-owner-and-everyone-else
+    This class represents StatsParticipations. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
     """
 
     @property

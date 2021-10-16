@@ -90,7 +90,7 @@ class PaginatedListBase:
 
 class PaginatedList(PaginatedListBase):
     """
-    This class abstracts the `pagination of the API <http://docs.github.com/en/rest/reference/#pagination>`_.
+    This class abstracts the `pagination of the API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_.
 
     You can simply enumerate through instances of this class::
 

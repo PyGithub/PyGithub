@@ -123,7 +123,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         team_push_restrictions=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
+        :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
         :strict: bool
         :contexts: list of strings
         :enforce_admins: bool
