@@ -12,7 +12,13 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
         return f"{self.path} @ l{self.start_line}:c{self.start_column}-l{self.end_line}:c{self.end_column}"
 
     def __repr__(self):
-        return self.get__repr__({"name": self.number})
+        return self.get__repr__(
+            {
+                "path": self.path,
+                "start_line": self.start_line, "start_column": self.start_column,
+                "end_line": self.end_line, "end_column": self.end_column,
+            }
+        )
 
     @property
     def path(self):

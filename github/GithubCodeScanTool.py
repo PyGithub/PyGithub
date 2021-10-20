@@ -9,7 +9,7 @@ class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"name": self.number})
+        return self.get__repr__({"guid": self.guid, "name": self.number, "version": self.version})
 
     @property
     def name(self):

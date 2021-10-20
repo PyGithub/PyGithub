@@ -10,7 +10,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"ref": self.ref})
+        return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
 
     @property
     def ref(self):
