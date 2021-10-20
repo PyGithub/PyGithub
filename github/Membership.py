@@ -43,7 +43,7 @@ import github.GithubObject
 
 class Membership(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Membership of an organization. The reference can be found here http://docs.github.com/en/rest/reference/orgs
+    This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
     def __repr__(self):
