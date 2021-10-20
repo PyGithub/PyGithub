@@ -153,6 +153,8 @@ class PaginatedList(PaginatedListBase):
                 if data and "total_count" in data:
                     self.__totalCount = data["total_count"]
                 elif data:
+                    if isinstance(data, dict):
+                        data = data[self.__list_item]
                     self.__totalCount = len(data)
                 else:
                     self.__totalCount = 0
