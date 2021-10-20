@@ -450,6 +450,54 @@ class Repository(Framework.TestCase):
     def testDeleteSecret(self):
         self.assertTrue(self.repo.delete_secret("secret_name"))
 
+    def testCodeScanAlerts(self):
+        codescan_alerts = self.repo.get_codescan_alerts()
+        self.assertListKeyEqual(codescan_alerts, lambda c: c.number, [6, ])
+        codescan_alert = codescan_alerts[0]
+        self.assertEqual(codescan_alert.created_at, datetime.datetime(2021, 6, 29, 12, 28, 30))
+        self.assertEqual(codescan_alert.dismissed_at, None)
+        self.assertEqual(codescan_alert.dismissed_by, None)
+        self.assertEqual(codescan_alert.state, "open")
+        most_recent_instance = codescan_alert.most_recent_instance
+        self.assertEqual(most_recent_instance.state, "open")
+        self.assertListEqual(most_recent_instance.classifications, ["stupid typo"])
+        self.assertDictEqual(most_recent_instance.message, {'text': 'Awful stuff might happen.'})
+        self.assertEqual(most_recent_instance.commit_sha, "deadbeef")
+        self.assertEqual(most_recent_instance.location.start_line, 10)
+        self.assertEqual(most_recent_instance.location.start_column, 2)
+        self.assertEqual(most_recent_instance.location.end_line, 10)
+        self.assertEqual(most_recent_instance.location.end_column, 48)
+        rule = codescan_alert.rule
+        self.assertEqual(rule.id, "py/rule-id")
+        self.assertEqual(rule.name, "py/rule-name")
+        self.assertEqual(rule.security_severity_level, "high")
+        self.assertEqual(rule.severity, "warning")
+        self.assertEqual(rule.description, "Bad practice")
+        tool = codescan_alert.tool
+        self.assertEqual(tool.guid, None)
+        self.assertEqual(tool.name, "CodeQL")
+        self.assertEqual(tool.version, "2.5.7")
+        instances = list(codescan_alert.get_instances())
+        self.assertEqual(len(instances), 2)
+        instance_0 = instances[0]
+        self.assertEqual(instance_0.state, "open")
+        self.assertListEqual(instance_0.classifications, ["stupid typo"])
+        self.assertDictEqual(instance_0.message, {'text': 'Awful stuff might happen.'})
+        self.assertEqual(instance_0.commit_sha, "deadbeef")
+        self.assertEqual(instance_0.location.start_line, 10)
+        self.assertEqual(instance_0.location.start_column, 2)
+        self.assertEqual(instance_0.location.end_line, 10)
+        self.assertEqual(instance_0.location.end_column, 48)
+        instance_1 = instances[1]
+        self.assertEqual(instance_1.state, "closed")
+        self.assertListEqual(instance_1.classifications, ["whatever"])
+        self.assertDictEqual(instance_1.message, {'text': 'Argghhh.'})
+        self.assertEqual(instance_1.commit_sha, "hash")
+        self.assertEqual(instance_1.location.start_line, 20)
+        self.assertEqual(instance_1.location.start_column, 17)
+        self.assertEqual(instance_1.location.end_line, 20)
+        self.assertEqual(instance_1.location.end_column, 42)
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
