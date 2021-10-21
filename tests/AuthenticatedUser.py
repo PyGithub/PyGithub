@@ -323,9 +323,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertTrue(self.user.has_in_subscriptions(gitflow))
 
     def testGetAuthorizations(self):
-        self.assertListKeyEqual(
-            self.user.get_authorizations(), lambda a: a.id, [372294]
-        )
+        self.assertListKeyEqual(self.user.get_authorizations(), lambda a: a.id, [372294])
 
     def testCreateRepository(self):
         repo = self.user.create_repo(name="TestPyGithub")
@@ -410,9 +408,7 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetOrganizationEvents(self):
         self.assertListKeyBegin(
-            self.user.get_organization_events(
-                self.g.get_organization("BeaverSoftware")
-            ),
+            self.user.get_organization_events(self.g.get_organization("BeaverSoftware")),
             lambda e: e.type,
             ["CreateEvent", "CreateEvent", "PushEvent", "PushEvent"],
         )
@@ -613,9 +609,7 @@ class AuthenticatedUser(Framework.TestCase):
         )
 
     def testGetOrgs(self):
-        self.assertListKeyEqual(
-            self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"]
-        )
+        self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 
     def testGetRepos(self):
         self.assertListKeyEqual(
@@ -666,14 +660,12 @@ class AuthenticatedUser(Framework.TestCase):
     def testCreateRepoFromTemplate(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
 
-        repo = self.user.create_repo_from_template(
-            "hello-world-docker-action-new", template_repo
-        )
+        repo = self.user.create_repo_from_template("hello-world-docker-action-new", template_repo)
         self.assertEqual(
             repo.url,
             "https://api.github.com/repos/jacquev6/hello-world-docker-action-new",
         )
-        self.assertEqual(repo.is_template, False)
+        self.assertFalse(repo.is_template)
 
     def testCreateRepoFromTemplateWithAllArguments(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
@@ -697,9 +689,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(notification.subject.title, "Feature/coveralls")
         self.assertEqual(notification.subject.type, "PullRequest")
         self.assertEqual(notification.repository.id, 8432784)
-        self.assertEqual(
-            notification.updated_at, datetime.datetime(2013, 3, 15, 5, 43, 11)
-        )
+        self.assertEqual(notification.updated_at, datetime.datetime(2013, 3, 15, 5, 43, 11))
         self.assertEqual(notification.url, None)
         self.assertEqual(notification.subject.url, None)
         self.assertEqual(notification.subject.latest_comment_url, None)
@@ -717,14 +707,10 @@ class AuthenticatedUser(Framework.TestCase):
         )
 
     def testGetNotificationsWithOtherArguments(self):
-        self.assertListKeyEqual(
-            self.user.get_notifications(all=True), lambda n: n.id, []
-        )
+        self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])
 
     def testMarkNotificationsAsRead(self):
-        self.user.mark_notifications_as_read(
-            datetime.datetime(2018, 10, 18, 18, 20, 0o1, 0)
-        )
+        self.user.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 20, 0o1, 0))
 
     def testGetTeams(self):
         self.assertListKeyEqual(
@@ -758,18 +744,14 @@ class AuthenticatedUser(Framework.TestCase):
             invitation.url,
             "https://api.github.com/user/repository_invitations/17285388",
         )
-        self.assertEqual(
-            invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations"
-        )
+        self.assertEqual(invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations")
         self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
 
     def testCreateMigration(self):
         self.assertTrue(
-            isinstance(
-                self.user.create_migration(["sample-repo"]), github.Migration.Migration
-            )
+            isinstance(self.user.create_migration(["sample-repo"]), github.Migration.Migration)
         )
 
     def testGetMigrations(self):

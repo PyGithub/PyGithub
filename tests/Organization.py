@@ -366,7 +366,7 @@ class Organization(Framework.TestCase):
             repo.url,
             "https://api.github.com/repos/BeaverSoftware/hello-world-docker-action-new",
         )
-        self.assertEqual(repo.is_template, False)
+        self.assertFalse(repo.is_template)
 
     def testCreateRepoFromTemplateWithAllArguments(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
