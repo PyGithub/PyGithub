@@ -76,6 +76,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
         self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
+        self.assertTrue(self.user.two_factor_authentication)
 
     def testEditWithoutArguments(self):
         self.user.edit()

@@ -243,6 +243,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         timingdata = namedtuple("TimingData", data.keys())
         return timingdata._make(data.values())
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson("DELETE", self.url)
+        return status == 204
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
