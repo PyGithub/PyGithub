@@ -598,19 +598,15 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:
             assert sort in ("author-date", "committer-date"), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
         query_chunks = []
-        if query:  # pragma no branch (Should be covered)
+        if query:
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
