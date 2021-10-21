@@ -1,9 +1,9 @@
 
 import github.GithubObject
 import github.PaginatedList
-import github.GithubCodeScanRule
-import github.GithubCodeScanTool
-import github.GithubCodeScanAlertInstance
+import github.CodeScanRule
+import github.CodeScanTool
+import github.CodeScanAlertInstance
 
 
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
@@ -25,14 +25,14 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     @property
     def rule(self):
         """
-        :type: :class: `github.GithubCodeScanRule.CodeScanRule`
+        :type: :class: `github.CodeScanRule.CodeScanRule`
         """
         return self._rule.value
 
     @property
     def tool(self):
         """
-        :type:  :class: `github.GithubCodeScanTool.CodeScanTool`
+        :type:  :class: `github.CodeScanTool.CodeScanTool`
         """
         return self._tool.value
 
@@ -102,10 +102,10 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     def get_instances(self):
         """
         :calls: `GET` on the URL for instances as provided by Github
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GithubCodeScanAlertInstance.CodeScanAlertInstance`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlertInstance.pyi.CodeScanAlertInstance`
         """
         return github.PaginatedList.PaginatedList(
-            github.GithubCodeScanAlertInstance.CodeScanAlertInstance,
+            github.CodeScanAlertInstance.CodeScanAlertInstance,
             self._requester,
             self.instances_url,
             None
@@ -133,11 +133,11 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
             self._number = self._makeIntAttribute(attributes["number"])
         if "rule" in attributes:  # pragma no branch
             self._rule = self._makeClassAttribute(
-                github.GithubCodeScanRule.CodeScanRule, attributes["rule"]
+                github.CodeScanRule.CodeScanRule, attributes["rule"]
             )
         if "tool" in attributes:  # pragma no branch
             self._tool = self._makeClassAttribute(
-                github.GithubCodeScanTool.CodeScanTool, attributes["tool"]
+                github.CodeScanTool.CodeScanTool, attributes["tool"]
             )
 
         if "created_at" in attributes:  # pragma no branch
@@ -156,7 +156,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
 
         if "most_recent_instance" in attributes:  # pragma no branch
             self._most_recent_instance = self._makeClassAttribute(
-                github.GithubCodeScanAlertInstance.CodeScanAlertInstance, attributes["most_recent_instance"]
+                github.CodeScanAlertInstance.CodeScanAlertInstance, attributes["most_recent_instance"]
             )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])

@@ -1,6 +1,6 @@
 
 import github.GithubObject
-import github.GithubCodeScanAlertInstanceLocation
+import github.CodeScanAlertInstanceLocation
 
 
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
@@ -57,7 +57,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     @property
     def location(self):
         """
-        :type: :class: `github.GithubCodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation`
+        :type: :class: `github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation`
         """
         return self._location.value
 
@@ -95,7 +95,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
             self._message = self._makeDictAttribute(attributes["message"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
-                github.GithubCodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation, attributes["location"]
+                github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation, attributes["location"]
             )
         if "classifications" in attributes:  # pragma no branch
             self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])

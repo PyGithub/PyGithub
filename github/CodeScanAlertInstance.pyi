@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 import github.GithubObject
-import github.GithubCodeScanAlertInstanceLocation
+import github.CodeScanAlertInstanceLocation
 
 
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
@@ -19,7 +19,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     @property
     def message(self) -> str: ...
     @property
-    def location(self) -> github.GithubCodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation: ...
+    def location(self) -> github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation: ...
     @property
     def classifications(self) -> list[str]: ...
 

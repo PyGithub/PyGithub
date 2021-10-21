@@ -141,7 +141,7 @@ import github.Team
 import github.View
 import github.Workflow
 import github.WorkflowRun
-import github.GithubCodeScanAlert
+import github.CodeScanAlert
 
 from . import Consts
 
@@ -3662,10 +3662,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_codescan_alerts(self):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GithubCodeScanAlert.CodeScanAlert`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
         return github.PaginatedList.PaginatedList(
-            github.GithubCodeScanAlert.CodeScanAlert, self._requester, f"{self.url}/code-scanning/alerts", None
+            github.CodeScanAlert.CodeScanAlert, self._requester, f"{self.url}/code-scanning/alerts", None
         )
 
     def _initAttributes(self):
