@@ -54,7 +54,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     @property
     def dismissed_by(self):
         """
-        :type: dict
+        :type: :class: `github.NamedUser.NamedUser`
         """
         return self._dismissed_by.value
 
@@ -89,7 +89,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     @property
     def most_recent_instance(self):
         """
-        :type: dict
+        :type: :class: github.CodeScanAlertInstance.CodeScanAlertInstance
         """
         return self._most_recent_instance.value
 
@@ -103,7 +103,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     def get_instances(self):
         """
         :calls: `GET` on the URL for instances as provided by Github
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlertInstance.pyi.CodeScanAlertInstance`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlertInstance.CodeScanAlertInstance`
         """
         return github.PaginatedList.PaginatedList(
             github.CodeScanAlertInstance.CodeScanAlertInstance,
