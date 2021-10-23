@@ -1,6 +1,7 @@
 
 import github.GithubObject
 import github.PaginatedList
+import github.NamedUser
 import github.CodeScanRule
 import github.CodeScanTool
 import github.CodeScanAlertInstance
@@ -145,7 +146,9 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
-            self._dismissed_by = self._makeDictAttribute(attributes["dismissed_by"])
+            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+        if "dismissed_reason" in attributes:  # pragma no branch
+            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
 
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
