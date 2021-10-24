@@ -411,7 +411,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         private=github.GithubObject.NotSet,
     ):
         """self.name
-        :calls: `POST /repos/{template_owner}/{template_repo}/generate <http://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
+        :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
         :param name: string
         :param repo :class:`github.Repository.Repository`
         :param description: string
@@ -436,9 +436,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["private"] = private
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            "/repos/" + repo.owner.login + "/" + repo.name + "/generate",
+            f"/repos/{repo.owner.login}/{repo.name}/generate",
             input=post_parameters,
-            headers={"Accept": Consts.mediaTypeTemplatesPreview},
+            headers={"Accept": "application/vnd.github.v3+json"},
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True

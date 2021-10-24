@@ -357,7 +357,6 @@ class Organization(Framework.TestCase):
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 
-
     def testCreateRepoFromTemplate(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
 
