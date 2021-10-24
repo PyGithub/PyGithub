@@ -1323,6 +1323,13 @@ class Repository(Framework.TestCase):
         branch = self.repo.get_branch("develop")
         self.assertEqual(branch.commit.sha, "03058a36164d2a7d946db205f25538434fa27d94")
 
+    def testRenameBranchObject(self):
+        branch = self.repo.get_branch("neat-new-feature")
+        self.assertTrue(self.repo.rename_branch(branch, "terrible-idea"))
+
+    def testRenameBranchString(self):
+        self.assertTrue(self.repo.rename_branch("neat-new-feature", "terrible-idea"))
+
     def testMergeWithoutMessage(self):
         commit = self.repo.merge("branchForBase", "branchForHead")
         self.assertEqual(
