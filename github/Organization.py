@@ -411,7 +411,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         private=github.GithubObject.NotSet,
     ):
         """self.name
-        :calls: `POST  /repos/:template_owner/:template_repo/generate <https://developer.github.com/v3/repos/#create-repository-using-a-repository-template>`_
+        :calls: `POST /repos/{template_owner}/{template_repo}/generate <http://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
         :param name: string
         :param repo :class:`github.Repository.Repository`
         :param description: string
