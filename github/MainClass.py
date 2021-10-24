@@ -598,10 +598,14 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if sort is not github.GithubObject.NotSet:
+        if (
+            sort is not github.GithubObject.NotSet
+        ):  # pragma no branch (Should be covered)
             assert sort in ("author-date", "committer-date"), sort
             url_parameters["sort"] = sort
-        if order is not github.GithubObject.NotSet:
+        if (
+            order is not github.GithubObject.NotSet
+        ):  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
