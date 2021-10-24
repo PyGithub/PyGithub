@@ -1548,6 +1548,27 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
+    def rename_branch(self, branch, new_name):
+        """
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`
+        :param branch: :class:`github.Branch.Branch` or string
+        :param new_name: string
+        :rtype: bool
+
+        NOTE: This method does not return the branch since it may take some
+        time to fully complete server-side.
+        """
+        is_branch = isinstance(branch, github.Branch.Branch)
+        assert isinstance(branch, str) or is_branch, branch
+        assert isinstance(new_name, str), new_name
+        if is_branch:
+            branch = branch.name
+        parameters = {"new_name": new_name}
+        status, _, _ = self._requester.requestJson(
+            "POST", f"{self.url}/branches/{branch}/rename", input=parameters
+        )
+        return status == 201
+
     def get_branches(self):
         """
         :calls: `GET /repos/{owner}/{repo}/branches <https://docs.github.com/en/rest/reference/repos>`_
