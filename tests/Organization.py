@@ -42,7 +42,7 @@ from . import Framework
 class Organization(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.org = self.g.get_organization("BeaverSoftware")
+        self.org = self.g.get_organization("inditex")
 
     def testAttributes(self):
         self.assertEqual(
@@ -210,6 +210,15 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(
             self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"]
         )
+
+    def testGetSelfHostedRunner(self):
+        self.org.get_self_hosted_runner(5846)
+
+    def testGetSelfHostedRunners(self):
+        self.org.get_self_hosted_runners()
+
+    def testGetRemoveSelfHostedRunner(self):
+        self.org.remove_self_hosted_runner(5846)
 
     def testOutsideCollaborators(self):
         octocat = self.g.get_user("octocat")
