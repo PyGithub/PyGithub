@@ -1,0 +1,11 @@
+https
+DELETE
+api.github.com
+None
+/orgs/jorgegarciarey/actions/runners/5846
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Server', 'GitHub.com'), ('Date', 'Tue, 26 Oct 2021 15:57:22 GMT'), ('X-OAuth-Scopes', 'admin:org, read:discussion, read:enterprise, read:gpg_key, read:public_key, read:repo_hook, repo, user, workflow'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2021-11-25 16:39:04 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4984'), ('X-RateLimit-Reset', '1635264376'), ('X-RateLimit-Used', '16'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'E1A2:F4FC:AA5D20:B1A095:61782560')]
+
+

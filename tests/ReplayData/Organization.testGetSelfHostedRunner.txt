@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/orgs/jorgegarciarey/actions/runners/5846
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Tue, 26 Oct 2021 15:40:06 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"bcefa0fb01b0ae6eba77793645dc15cbdb954b73a494349f1be485d30358ef25"'), ('X-OAuth-Scopes', 'admin:org, read:discussion, read:enterprise, read:gpg_key, read:public_key, read:repo_hook, repo, user, workflow'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2021-11-25 16:39:04 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4990'), ('X-RateLimit-Reset', '1635264376'), ('X-RateLimit-Used', '10'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'F49A:A622:201A01F:20B4CA7:61782156')]
+{"id":5846,"name":"self-hosted-runner-testing-32-rhrhh","os":"linux","status":"online","busy":false,"labels":[{"id":10,"name":"self-hosted","type":"read-only"},{"id":11,"name":"Linux","type":"read-only"},{"id":12,"name":"X64","type":"read-only"},{"id":16,"name":"testing","type":"custom"}]}
+
