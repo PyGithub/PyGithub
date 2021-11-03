@@ -126,6 +126,8 @@ deploymentEnhancementsPreview = "application/vnd.github.ant-man-preview+json"
 # https://developer.github.com/changes/2018-10-16-deployments-environments-states-and-auto-inactive-updates/
 deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json"
 
+# https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
+repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"

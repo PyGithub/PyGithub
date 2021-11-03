@@ -32,6 +32,7 @@ from . import Framework
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         super().setUp()
+
         self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.pull = self.repo.get_pull(538)
 

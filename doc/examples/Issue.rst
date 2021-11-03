@@ -9,6 +9,16 @@ Get issue
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> repo.get_issue(number=874)
 	Issue(title="PyGithub example usage", number=874)
+	
+Create comment on issue
+-----------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> issue = repo.get_issue(number=874)
+    >>> issue.create_comment("Test")
+    	IssueComment(user=NamedUser(login="user"), id=36763078)
 
 Create issue
 ------------
