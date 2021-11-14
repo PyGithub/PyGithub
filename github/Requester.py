@@ -353,7 +353,7 @@ class Requester:
 
         assert user_agent is not None, (
             "github now requires a user-agent. "
-            "See http://docs.github.com/en/rest/reference/#user-agent-required"
+            "See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required"
         )
         self.__userAgent = user_agent
         self.__verify = verify
