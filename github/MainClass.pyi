@@ -40,6 +40,7 @@ class Github:
         per_page: int = ...,
         verify: bool = ...,
         retry: Any = ...,
+        proxies: Optional[Dict] = Dict[str, str],
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...

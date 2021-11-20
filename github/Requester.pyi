@@ -16,7 +16,7 @@ class HTTPRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        proxies: Optional[dict] = None,
+        proxies: Optional[dict] = Dict[str, str],
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -33,7 +33,7 @@ class HTTPSRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        proxies: Optional[dict] = None,
+        proxies: Optional[dict] = Dict[str, str],
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
