@@ -2188,7 +2188,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+            'commit': :class:`Commit <github.GitCommit.GitCommit>`}
         """
         assert isinstance(path, str)
         assert isinstance(message, str)
@@ -2223,7 +2223,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "content": github.ContentFile.ContentFile(
                 self._requester, headers, data["content"], completed=False
             ),
-            "commit": github.Commit.Commit(
+            "commit": github.GitCommit.GitCommit(
                 self._requester, headers, data["commit"], completed=True
             ),
         }

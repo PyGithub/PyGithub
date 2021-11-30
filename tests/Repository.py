@@ -1412,13 +1412,36 @@ class Repository(Framework.TestCase):
             "Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"
         )
         self.assertEqual(repr(author), 'InputGitAuthor(name="Enix Yu")')
-        self.repo.create_file(
+        result = self.repo.create_file(
             path=newFile,
             message="Create file for testCreateFile",
             content=content,
             branch="master",
             committer=author,
             author=author,
+        )
+        commit = result["commit"]
+        raw_keys = set(commit.raw_data.keys())
+        self.assertLessEqual(
+            {
+                "sha",
+                "parents",
+                "tree",
+                "author",
+                "committer",
+                "url",
+                "html_url",
+                # missing from replay data but documented in schema
+                # "node_id",
+                # "message",
+                # "verification",
+            },
+            raw_keys,
+            "raw data should match (be a subset of) git-commit keys",
+        )
+        self.assertFalse(
+            {"comments_url", "commit", "stats", "files"} & raw_keys,
+            "characteristic attributes of commit should not be in the raw data",
         )
 
     def testUpdateFile(self):
