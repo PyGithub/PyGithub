@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+import base64
+
 from . import Framework
 
 
@@ -53,6 +55,7 @@ class GitBlob(Framework.TestCase):
         self.assertEqual(len(self.blob.content), 1757)
         self.assertEqual(self.blob.encoding, "base64")
         self.assertEqual(self.blob.size, 1295)
+        self.assertEqual(self.blob.size, len(base64.b64decode(self.blob.content)))
         self.assertEqual(self.blob.sha, "53bce9fa919b4544e67275089b3ec5b44be20667")
         self.assertEqual(
             self.blob.url,

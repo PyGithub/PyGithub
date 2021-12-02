@@ -978,7 +978,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/git/blobs", input=post_parameters
         )
-        return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, headers, data, completed=False)
 
     def create_git_commit(
         self,

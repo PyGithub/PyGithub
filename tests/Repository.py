@@ -46,7 +46,9 @@
 #                                                                              #
 ################################################################################
 
+import base64
 import datetime
+import hashlib
 from unittest import mock
 
 import github
@@ -271,8 +273,16 @@ class Repository(Framework.TestCase):
         self.assertEqual(key.id, 209614)
 
     def testCreateGitBlob(self):
-        blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
-        self.assertEqual(blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8")
+        content = "Blob created by PyGithub"
+        blob = self.repo.create_git_blob(content, "latin1")
+        self.assertNotIn(
+            "content",
+            blob._rawData,
+            "check that the created blob is not locally complete",
+        )
+        blob_data = b"blob %d\0%s" % (len(content), content.encode())
+        self.assertEqual(blob.sha, hashlib.sha1(blob_data).hexdigest())
+        self.assertEqual(base64.b64decode(blob.content), b"Blob created by PyGithub")
 
     def testCreateGitTree(self):
         tree = self.repo.create_git_tree(
