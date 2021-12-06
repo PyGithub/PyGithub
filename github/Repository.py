@@ -2767,13 +2767,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_pull(self, number):
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pull/{number} <https://docs.github.com/en/rest/reference/pulls>`_
         :param number: integer
         :rtype: :class:`github.PullRequest.PullRequest`
         """
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/pulls/{number}"
+            "GET", f"{self.url}/pull/{number}"
         )
         return github.PullRequest.PullRequest(
             self._requester, headers, data, completed=True
