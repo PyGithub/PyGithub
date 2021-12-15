@@ -133,6 +133,17 @@ class SpecificExceptions(Framework.TestCase):
 
         self.assertRaises(github.RateLimitExceededException, exceed)
 
+    def testSecondaryRateLimitExceeded(self):
+        g = github.Github()
+
+        def exceed():
+            for i in range(100):
+                g.get_user("jacquev6")
+
+        self.assertRaisesRegexp(
+            github.RateLimitExceededException, ".*secondary rate limit.*", exceed
+        )
+
     def testAuthenticatedRateLimitExceeded(self):
         def exceed():
             for i in range(100):
