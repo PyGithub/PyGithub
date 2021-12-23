@@ -322,6 +322,7 @@ class Organization(Framework.TestCase):
             description="Repo created by PyGithub",
             homepage="http://foobar.com",
             private=False,
+            visibility="public",
             has_issues=False,
             has_projects=False,
             has_wiki=False,
