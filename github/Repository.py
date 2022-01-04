@@ -1025,15 +1025,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
         draft=False,
         prerelease=False,
         target_commitish=github.GithubObject.NotSet,
+        discussion_category_name,
+        generate_release_notes=False,
     ):
         """
-        :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
+        :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/releases#create-a-release>`_
         :param tag: string
         :param name: string
         :param message: string
         :param draft: bool
         :param prerelease: bool
         :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :param discussion_category_name: string
+        :param generate_release_notes: string
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
@@ -1050,12 +1054,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 github.GitCommit.GitCommit,
             ),
         ), target_commitish
+        assert isinstance(discussion_category_name, str), discussion_category_name
+        assert isinstance(generate_release_notes, bool), generate_release_notes
         post_parameters = {
             "tag_name": tag,
             "name": name,
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
+            "discussion_category_name": discussion_category_name,
+            "generate_release_notes": generate_release_notes,
         }
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
