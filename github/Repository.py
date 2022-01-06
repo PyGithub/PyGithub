@@ -2957,7 +2957,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_stats_contributors(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/stats/contributors <https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity>`_
+        :calls: `GET /repos/{owner}/{repo}/stats/contributors <https://docs.github.com/en/rest/reference/repository-metrics#get-all-contributor-commit-activity>`_
         :rtype: None or list of :class:`github.StatsContributor.StatsContributor`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -2975,7 +2975,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_stats_commit_activity(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/stats/commit_activity <https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity>`_
+        :calls: `GET /repos/{owner}/{repo}/stats/commit_activity <https://docs.github.com/en/rest/reference/repository-metrics#get-the-last-year-of-commit-activity>`_
         :rtype: None or list of :class:`github.StatsCommitActivity.StatsCommitActivity`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -2993,7 +2993,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_stats_code_frequency(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/stats/code_frequency <https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity>`_
+        :calls: `GET /repos/{owner}/{repo}/stats/code_frequency <https://docs.github.com/en/rest/reference/repository-metrics#get-the-weekly-commit-activity>`_
         :rtype: None or list of :class:`github.StatsCodeFrequency.StatsCodeFrequency`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -3011,7 +3011,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_stats_participation(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/stats/participation <https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count>`_
+        :calls: `GET /repos/{owner}/{repo}/stats/participation <https://docs.github.com/en/rest/reference/repository-metrics#get-the-weekly-commit-count>`_
         :rtype: None or :class:`github.StatsParticipation.StatsParticipation`
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -3026,7 +3026,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_stats_punch_card(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/stats/punch_card <https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day>`_
+        :calls: `GET /repos/{owner}/{repo}/stats/punch_card <https://docs.github.com/en/rest/reference/repository-metrics#get-the-hourly-commit-count-for-each-day>`_
         :rtype: None or :class:`github.StatsPunchCard.StatsPunchCard`
         """
         headers, data = self._requester.requestJsonAndCheck(
