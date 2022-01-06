@@ -3050,7 +3050,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_tags(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/tags <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo}/tags <https://docs.github.com/en/rest/reference/repos#list-repository-tags>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
         """
         return github.PaginatedList.PaginatedList(
