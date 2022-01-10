@@ -484,7 +484,7 @@ class Requester:
     ) -> Tuple[Dict[str, Any], Any]:
         data = self.__structuredFromJson(output)
         if status >= 400:
-            raise self.__createException(status, responseHeaders, data)
+            raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
     def __customConnection(
@@ -519,36 +519,44 @@ class Requester:
                     )
         return cnx
 
+    @classmethod
     def __createException(
-        self,
+        cls,
         status: int,
         headers: Dict[str, Any],
         output: Dict[str, Any],
     ) -> Any:
         message = output.get("message", "").lower() if output is not None else ""
 
-        cls = GithubException.GithubException
         if status == 401 and message == "bad credentials":
-            cls = GithubException.BadCredentialsException
+            exc = GithubException.BadCredentialsException
         elif (
             status == 401
             and Consts.headerOTP in headers
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
-            cls = GithubException.TwoFactorException
+            exc = GithubException.TwoFactorException
         elif status == 403 and message.startswith(
             "missing or invalid user agent string"
         ):
-            cls = GithubException.BadUserAgentException
-        elif status == 403 and (
-            message.startswith("api rate limit exceeded")
-            or message.endswith("please wait a few minutes before you try again.")
-        ):
-            cls = GithubException.RateLimitExceededException
+            exc = GithubException.BadUserAgentException
+        elif status == 403 and cls.isRateLimitError(message):
+            exc = GithubException.RateLimitExceededException
         elif status == 404 and message == "not found":
-            cls = GithubException.UnknownObjectException
+            exc = GithubException.UnknownObjectException
+        else:
+            exc = GithubException.GithubException
 
-        return cls(status, output, headers)
+        return exc(status, output, headers)
+
+    @classmethod
+    def isRateLimitError(cls, message):
+        if not message:
+            return False
+
+        message = message.lower()
+        return message.startswith("api rate limit exceeded") or \
+            message.endswith("please wait a few minutes before you try again.")
 
     def __structuredFromJson(self, data: str) -> Any:
         if len(data) == 0:
