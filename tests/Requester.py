@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import contextlib
 import datetime
 from unittest import mock
 
@@ -217,41 +218,48 @@ class Requester(Framework.TestCase):
                 )
 
 
-class RequesterUnThrottled(Framework.TestCase):
+class RequesterThrottleTestCase(Framework.TestCase):
+    now = [datetime.datetime.utcnow()]
+
+    def sleep(self, seconds):
+        self.now[0] = self.now[0] + datetime.timedelta(seconds=seconds)
+
+    def utcnow(self):
+        return self.now[0]
+
+    @contextlib.contextmanager
+    def mock_sleep(self):
+        with mock.patch(
+            "github.Requester.time.sleep", side_effect=self.sleep
+        ) as sleep_mock, mock.patch(
+            "github.Requester.datetime.datetime"
+        ) as datetime_mock:
+            datetime_mock.utcnow = self.utcnow
+            yield sleep_mock
+
+
+class RequesterUnThrottled(RequesterThrottleTestCase):
     seconds_between_requests = None
     seconds_between_writes = None
     per_page = 10
 
     def testShouldNotDeferRequests(self):
-        with mock.patch("github.Requester.time.sleep") as sleep_mock:
+        with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterThrottled.testShouldDeferRequests
             repository = self.g.get_repo(REPO_NAME)
             releases = [release for release in repository.get_releases()]
             self.assertEqual(len(releases), 30)
+
         sleep_mock.assert_not_called()
 
 
-class RequesterThrottled(Framework.TestCase):
+class RequesterThrottled(RequesterThrottleTestCase):
     seconds_between_requests = 1.0
     seconds_between_writes = 3.0
     per_page = 10
 
     def testShouldDeferRequests(self):
-        now = [datetime.datetime.utcnow()]
-
-        def sleep(seconds):
-            now[0] = now[0] + datetime.timedelta(seconds=seconds)
-
-        def utcnow():
-            return now[0]
-
-        with mock.patch(
-            "github.Requester.time.sleep", side_effect=sleep
-        ) as sleep_mock, mock.patch(
-            "github.Requester.datetime.datetime"
-        ) as datetime_mock:
-            datetime_mock.utcnow = utcnow
-
+        with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
             repository = self.g.get_repo(REPO_NAME)
             releases = [release for release in repository.get_releases()]
@@ -262,21 +270,7 @@ class RequesterThrottled(Framework.TestCase):
         )
 
     def testShouldDeferWrites(self):
-        now = [datetime.datetime.utcnow()]
-
-        def sleep(seconds):
-            now[0] = now[0] + datetime.timedelta(seconds=seconds)
-
-        def utcnow():
-            return now[0]
-
-        with mock.patch(
-            "github.Requester.time.sleep", side_effect=sleep
-        ) as sleep_mock, mock.patch(
-            "github.Requester.datetime.datetime"
-        ) as datetime_mock:
-            datetime_mock.utcnow = utcnow
-
+        with self.mock_sleep() as sleep_mock:
             # same test setup as in AuthenticatedUser.testEmail
             user = self.g.get_user()
             emails = user.get_emails()
@@ -308,11 +302,13 @@ class RequesterThrottled(Framework.TestCase):
             [
                 # g.get_user() does not call into GitHub API
                 # user.get_emails() is the first request so no waiting needed
-                mock.call(1),  # user.add_to_emails is a write request,
-                # this is the first write request
-                mock.call(1),  # user.get_emails() is a read request
-                mock.call(2),  # user.remove_from_emails is a write request,
-                # it has to be 3 seconds after the last write
-                mock.call(1),  # user.get_emails() is a read request
+                # user.add_to_emails is a write request, this is the first write request
+                mock.call(1),
+                # user.get_emails() is a read request
+                mock.call(1),
+                # user.remove_from_emails is a write request, it has to be 3 seconds after the last write
+                mock.call(2),
+                # user.get_emails() is a read request
+                mock.call(1),
             ],
         )
