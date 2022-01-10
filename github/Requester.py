@@ -51,8 +51,6 @@
 #                                                                              #
 ################################################################################
 
-import base64
-from collections import defaultdict
 import datetime
 import json
 import logging
@@ -61,6 +59,7 @@ import os
 import re
 import time
 import urllib
+from collections import defaultdict
 from io import IOBase
 from typing import Generic, Optional, TypeVar
 
@@ -593,7 +592,9 @@ class Requester:
                 if isinstance(input, IOBase):
                     input.close()
 
-            self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+            self.__log(
+                verb, url, requestHeaders, input, status, responseHeaders, output
+            )
 
             if status == 202 and (
                 verb == "GET" or verb == "HEAD"
@@ -616,7 +617,9 @@ class Requester:
                     )
                 if o.path == url:
                     port = ":" + str(self.__port) if self.__port is not None else ""
-                    requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
+                    requested_location = (
+                        f"{self.__scheme}://{self.__hostname}{port}{url}"
+                    )
                     raise RuntimeError(
                         f"Requested {requested_location} but server redirected to {location}, "
                         f"you may need to correct your Github server URL "
@@ -626,7 +629,9 @@ class Requester:
                     self._logger.info(
                         f"Following Github server redirection from {url} to {o.path}"
                     )
-                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+                return self.__requestRaw(
+                    original_cnx, verb, o.path, requestHeaders, input
+                )
 
             return status, responseHeaders, output
         finally:
@@ -639,20 +644,28 @@ class Requester:
         # and self.__seconds_between_writes seconds have passed since last write request (if verb refers to a write).
         # Uses self.__last_requests.
         requests = self.__last_requests.values()
-        writes = [l for v, l in self.__last_requests.items() if v != 'GET']
+        writes = [l for v, l in self.__last_requests.items() if v != "GET"]
 
         last_request = max(requests) if requests else 0
         last_write = max(writes) if writes else 0
 
-        next_request = (last_request + self.__seconds_between_requests) if self.__seconds_between_requests else 0
-        next_write = (last_write + self.__seconds_between_writes) if self.__seconds_between_writes else 0
+        next_request = (
+            (last_request + self.__seconds_between_requests)
+            if self.__seconds_between_requests
+            else 0
+        )
+        next_write = (
+            (last_write + self.__seconds_between_writes)
+            if self.__seconds_between_writes
+            else 0
+        )
 
-        next = next_request if verb == 'GET' else max(next_request, next_write)
+        next = next_request if verb == "GET" else max(next_request, next_write)
         defer = max(next - datetime.datetime.utcnow().timestamp(), 0)
         if defer > 0:
             if self.__logger is None:
                 self.__logger = logging.getLogger(__name__)
-            self.__logger.debug(f'sleeping {defer}s before next GitHub request')
+            self.__logger.debug(f"sleeping {defer}s before next GitHub request")
             time.sleep(defer)
 
     def __record_request_time(self, verb):

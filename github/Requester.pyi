@@ -129,12 +129,12 @@ class Requester:
         input: Optional[str],
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def __defer_request(
-            self,
-            verb: str,
+        self,
+        verb: str,
     ) -> None: ...
     def __record_request_time(
-            self,
-            verb: str,
+        self,
+        verb: str,
     ) -> None: ...
     def __init__(
         self,
