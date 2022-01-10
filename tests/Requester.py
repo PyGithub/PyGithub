@@ -218,11 +218,9 @@ class Requester(Framework.TestCase):
 
 
 class RequesterUnThrottled(Framework.TestCase):
-    def setUp(self):
-        Framework.setSecondsBetweenRequests(None)
-        Framework.setSecondsBetweenWrites(None)
-        Framework.setPerPage(10)
-        super().setUp()
+    seconds_between_requests = None
+    seconds_between_writes = None
+    per_page = 10
 
     def testShouldNotDeferRequests(self):
         with mock.patch("github.Requester.time.sleep") as sleep_mock:
@@ -234,11 +232,9 @@ class RequesterUnThrottled(Framework.TestCase):
 
 
 class RequesterThrottled(Framework.TestCase):
-    def setUp(self):
-        Framework.setSecondsBetweenRequests(1.0)
-        Framework.setSecondsBetweenWrites(3.0)
-        Framework.setPerPage(10)
-        super().setUp()
+    seconds_between_requests = 1.0
+    seconds_between_writes = 3.0
+    per_page = 10
 
     def testShouldDeferRequests(self):
         now = [datetime.datetime.utcnow()]

@@ -429,21 +429,9 @@ def activateJWTAuthMode():  # pragma no cover (Function useful only when recordi
     BasicTestCase.jwtAuthMode = True
 
 
-def setPerPage(per_page):
-    BasicTestCase.per_page = per_page
-
-
 def enableRetry(retry):
     BasicTestCase.retry = retry
 
 
 def setPoolSize(pool_size):
     BasicTestCase.pool_size = pool_size
-
-
-def setSecondsBetweenRequests(seconds_between_requests):
-    BasicTestCase.seconds_between_requests = seconds_between_requests
-
-
-def setSecondsBetweenWrites(seconds_between_writes):
-    BasicTestCase.seconds_between_writes = seconds_between_writes
