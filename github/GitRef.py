@@ -34,7 +34,7 @@ import github.GitObject
 
 class GitRef(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#refs
+    This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
     def __repr__(self):
@@ -66,14 +66,14 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <http://docs.github.com/en/rest/reference/git#refs>`_
+        :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, sha, force=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <http://docs.github.com/en/rest/reference/git#refs>`_
+        :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :param sha: string
         :param force: bool
         :rtype: None
