@@ -363,6 +363,8 @@ class TestCase(BasicTestCase):
 
 # methods like these should only be used for test session wide setups
 # not individual tests as values set here will escape tests and impact subsequent tests
+# see https://github.com/PyGithub/PyGithub/pull/2147
+
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
