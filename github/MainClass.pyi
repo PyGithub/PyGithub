@@ -22,7 +22,7 @@ from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
 
-from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 

@@ -6,7 +6,7 @@ from requests.models import Response
 
 from github.GithubObject import GithubObject
 
-from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(
