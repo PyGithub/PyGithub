@@ -128,6 +128,14 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[str],
     ) -> Tuple[int, Dict[str, Any], str]: ...
+    def __defer_request(
+            self,
+            verb: str,
+    ) -> None: ...
+    def __record_request_time(
+            self,
+            verb: str,
+    ) -> None: ...
     def __init__(
         self,
         auth: Optional[Auth],
@@ -138,6 +146,8 @@ class Requester:
         verify: bool,
         retry: Optional[Union[int, Retry]],
         pool_size: Optional[int],
+        seconds_between_requests: Optional[float] = ...,
+        seconds_between_writes: Optional[float] = ...,
     ) -> None: ...
     @property
     def base_url(self) -> str: ...

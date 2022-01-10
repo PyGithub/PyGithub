@@ -31,6 +31,7 @@
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,6 +51,9 @@
 #                                                                              #
 ################################################################################
 
+import base64
+from collections import defaultdict
+import datetime
 import json
 import logging
 import mimetypes
@@ -299,6 +303,8 @@ class Requester:
         verify,
         retry,
         pool_size,
+        seconds_between_requests=None,
+        seconds_between_writes=None,
     ):
         self._initializeDebugFeature()
 
@@ -312,6 +318,9 @@ class Requester:
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
+        self.__seconds_between_requests = seconds_between_requests
+        self.__seconds_between_writes = seconds_between_writes
+        self.__last_requests = defaultdict(lambda: 0.0)
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -566,57 +575,89 @@ class Requester:
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
-        original_cnx = cnx
-        if cnx is None:
-            cnx = self.__createConnection()
-        cnx.request(verb, url, input, requestHeaders)
-        response = cnx.getresponse()
+        self.__defer_request(verb)
 
-        status = response.status
-        responseHeaders = {k.lower(): v for k, v in response.getheaders()}
-        output = response.read()
+        try:
+            original_cnx = cnx
+            if cnx is None:
+                cnx = self.__createConnection()
+            cnx.request(verb, url, input, requestHeaders)
+            response = cnx.getresponse()
 
-        cnx.close()
-        if input:
-            if isinstance(input, IOBase):
-                input.close()
+            status = response.status
+            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
+            output = response.read()
 
-        self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+            cnx.close()
+            if input:
+                if isinstance(input, IOBase):
+                    input.close()
 
-        if status == 202 and (
-            verb == "GET" or verb == "HEAD"
-        ):  # only for requests that are considered 'safe' in RFC 2616
-            time.sleep(Consts.PROCESSING_202_WAIT_TIME)
-            return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+            self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
-        if status == 301 and "location" in responseHeaders:
-            location = responseHeaders["location"]
-            o = urllib.parse.urlparse(location)
-            if o.scheme != self.__scheme:
-                raise RuntimeError(
-                    f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
-                    f"please correct your Github server URL via base_url: Github(base_url=...)"
-                )
-            if o.hostname != self.__hostname:
-                raise RuntimeError(
-                    f"Github server redirected from host {self.__hostname} to {o.hostname}, "
-                    f"please correct your Github server URL via base_url: Github(base_url=...)"
-                )
-            if o.path == url:
-                port = ":" + str(self.__port) if self.__port is not None else ""
-                requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
-                raise RuntimeError(
-                    f"Requested {requested_location} but server redirected to {location}, "
-                    f"you may need to correct your Github server URL "
-                    f"via base_url: Github(base_url=...)"
-                )
-            if self._logger.isEnabledFor(logging.INFO):
-                self._logger.info(
-                    f"Following Github server redirection from {url} to {o.path}"
-                )
-            return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+            if status == 202 and (
+                verb == "GET" or verb == "HEAD"
+            ):  # only for requests that are considered 'safe' in RFC 2616
+                time.sleep(Consts.PROCESSING_202_WAIT_TIME)
+                return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
-        return status, responseHeaders, output
+            if status == 301 and "location" in responseHeaders:
+                location = responseHeaders["location"]
+                o = urllib.parse.urlparse(location)
+                if o.scheme != self.__scheme:
+                    raise RuntimeError(
+                        f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
+                        f"please correct your Github server URL via base_url: Github(base_url=...)"
+                    )
+                if o.hostname != self.__hostname:
+                    raise RuntimeError(
+                        f"Github server redirected from host {self.__hostname} to {o.hostname}, "
+                        f"please correct your Github server URL via base_url: Github(base_url=...)"
+                    )
+                if o.path == url:
+                    port = ":" + str(self.__port) if self.__port is not None else ""
+                    requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
+                    raise RuntimeError(
+                        f"Requested {requested_location} but server redirected to {location}, "
+                        f"you may need to correct your Github server URL "
+                        f"via base_url: Github(base_url=...)"
+                    )
+                if self._logger.isEnabledFor(logging.INFO):
+                    self._logger.info(
+                        f"Following Github server redirection from {url} to {o.path}"
+                    )
+                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
+
+            return status, responseHeaders, output
+        finally:
+            # we record the time of this request after it finished
+            # to defer next request starting from this request's end, not start
+            self.__record_request_time(verb)
+
+    def __defer_request(self, verb):
+        # Ensures at least self.__seconds_between_requests seconds have passed since any last request
+        # and self.__seconds_between_writes seconds have passed since last write request (if verb refers to a write).
+        # Uses self.__last_requests.
+        requests = self.__last_requests.values()
+        writes = [l for v, l in self.__last_requests.items() if v != 'GET']
+
+        last_request = max(requests) if requests else 0
+        last_write = max(writes) if writes else 0
+
+        next_request = (last_request + self.__seconds_between_requests) if self.__seconds_between_requests else 0
+        next_write = (last_write + self.__seconds_between_writes) if self.__seconds_between_writes else 0
+
+        next = next_request if verb == 'GET' else max(next_request, next_write)
+        defer = max(next - datetime.datetime.utcnow().timestamp(), 0)
+        if defer > 0:
+            if self.__logger is None:
+                self.__logger = logging.getLogger(__name__)
+            self.__logger.debug(f'sleeping {defer}s before next GitHub request')
+            time.sleep(defer)
+
+    def __record_request_time(self, verb):
+        # Updates self.__last_requests with current timestamp for given verb
+        self.__last_requests[verb] = datetime.datetime.utcnow().timestamp()
 
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url
