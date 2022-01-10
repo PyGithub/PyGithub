@@ -43,7 +43,7 @@ class Retry(Framework.TestCase):
             total=3, read=3, connect=3, status_forcelist=status_forcelist
         )
 
-        Framework.enableRetry(retry)
+        self.retry = retry
         super().setUp()
 
     def testShouldNotRetryWhenStatusNotOnList(self):

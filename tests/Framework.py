@@ -361,6 +361,9 @@ class TestCase(BasicTestCase):
             )
 
 
+# methods like these should only be used for test session wide setups
+# not individual tests as values set here will escape tests and impact subsequent tests
+
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
 
@@ -371,11 +374,3 @@ def activateTokenAuthMode():  # pragma no cover (Function useful only when recor
 
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.jwtAuthMode = True
-
-
-def enableRetry(retry):
-    BasicTestCase.retry = retry
-
-
-def setPoolSize(pool_size):
-    BasicTestCase.pool_size = pool_size

@@ -7,7 +7,7 @@ REPO_NAME = "PyGithub/PyGithub"
 
 class PoolSize(Framework.TestCase):
     def setUp(self):
-        Framework.setPoolSize(20)
+        self.pool_size = 20
         super().setUp()
 
     def testReturnsRepoAfterSettingPoolSize(self):
