@@ -40,6 +40,9 @@ g = Github(auth=auth)
 # Github Enterprise with custom hostname
 g = Github(base_url="https://{hostname}/api/v3", auth=auth)
 
+# throttle requests to mitigate RateLimitExceededExceptions
+g = Github("access_token", seconds_between_requests=1.0, seconds_between_writes=2.0)
+
 # Then play with your Github objects:
 for repo in g.get_user().get_repos():
     print(repo.name)
