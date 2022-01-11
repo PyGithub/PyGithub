@@ -45,8 +45,12 @@ class RequiredPullRequestReviews(Framework.TestCase):
         )
         self.assertIs(self.required_pull_request_reviews.dismissal_users, None)
         self.assertIs(self.required_pull_request_reviews.dismissal_teams, None)
-        self.assertIs(self.required_pull_request_reviews.bypass_pull_request_users, None)
-        self.assertIs(self.required_pull_request_reviews.bypass_pull_request_users, None)
+        self.assertIs(
+            self.required_pull_request_reviews.bypass_pull_request_users, None
+        )
+        self.assertIs(
+            self.required_pull_request_reviews.bypass_pull_request_users, None
+        )
         self.assertEqual(
             self.required_pull_request_reviews.__repr__(),
             'RequiredPullRequestReviews(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews", require_code_owner_reviews=True, dismiss_stale_reviews=True)',

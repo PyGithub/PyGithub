@@ -133,13 +133,13 @@ class Branch(Framework.TestCase):
         self.assertListKeyEqual(
             branch_protection.get_team_push_restrictions(), lambda u: u.slug, []
         )
-    
+
     def testEditProtectionBypassPullRequestUserTeam(self):
         self.organization_branch.edit_protection(
             bypass_pull_request_users=["jacquev6"],
             bypass_pull_request_teams=["pygithub-owners"],
             user_push_restrictions=[],
-            team_push_restrictions=[]
+            team_push_restrictions=[],
         )
         branch_protection = self.organization_branch.get_protection()
         self.assertListKeyEqual(
@@ -152,7 +152,7 @@ class Branch(Framework.TestCase):
             lambda u: u.slug,
             ["pygithub-owners"],
         )
-    
+
     def testRemoveProtection(self):
         self.assertTrue(self.protected_branch.protected)
         self.protected_branch.remove_protection()
