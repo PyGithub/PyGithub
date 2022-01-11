@@ -75,14 +75,18 @@ class GithubIntegration:
             )
         elif response.status_code == 403:
             raise GithubException.BadCredentialsException(
-                status=response.status_code, data=response.text
+                status=response.status_code,
+                data=response.text,
+                headers=response.headers,
             )
         elif response.status_code == 404:
             raise GithubException.UnknownObjectException(
-                status=response.status_code, data=response.text
+                status=response.status_code,
+                data=response.text,
+                headers=response.headers,
             )
         raise GithubException.GithubException(
-            status=response.status_code, data=response.text
+            status=response.status_code, data=response.text, headers=response.headers
         )
 
     @deprecated.deprecated("Use get_repo_installation")
@@ -122,7 +126,7 @@ class GithubIntegration:
                 jwt=self.create_jwt(),
                 app_id=None,
                 app_private_key=None,
-                base_url=Consts.DEFAULT_BASE_URL,
+                base_url=self.base_url,
                 timeout=Consts.DEFAULT_TIMEOUT,
                 user_agent="PyGithub/Python",
                 per_page=Consts.DEFAULT_PER_PAGE,

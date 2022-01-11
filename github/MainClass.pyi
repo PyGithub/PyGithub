@@ -38,7 +38,7 @@ class Github:
         per_page: int = ...,
         verify: bool = ...,
         retry: Any = ...,
-        pool_size: Optional[int]=None,
+        pool_size: ...,
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...

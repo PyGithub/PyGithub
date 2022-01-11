@@ -38,7 +38,7 @@ class GithubException(Exception):
     Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
     """
 
-    def __init__(self, status, data, headers=None):
+    def __init__(self, status, data, headers):
         super().__init__()
         self.__status = status
         self.__data = data

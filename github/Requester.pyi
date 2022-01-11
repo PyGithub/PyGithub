@@ -17,7 +17,7 @@ class HTTPRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        pool_size: int = None,
+        pool_size: int = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -34,7 +34,7 @@ class HTTPSRequestsConnectionClass:
         strict: bool = ...,
         timeout: Optional[int] = ...,
         retry: Any = ...,
-        pool_size: int = None,
+        pool_size: int = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
