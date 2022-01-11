@@ -72,6 +72,22 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def bypass_pull_request_users(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._bypass_pull_request_users)
+        return self._bypass_pull_request_users.value
+
+    @property
+    def bypass_pull_request_teams(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._bypass_pull_request_teams)
+        return self._bypass_pull_request_teams.value
+
+    @property
     def dismissal_users(self):
         """
         :type: list of :class:`github.NamedUser.NamedUser`
@@ -91,6 +107,8 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         self._dismiss_stale_reviews = github.GithubObject.NotSet
         self._require_code_owner_reviews = github.GithubObject.NotSet
         self._required_approving_review_count = github.GithubObject.NotSet
+        self._bypass_pull_request_users = github.GithubObject.NotSet
+        self._bypass_pull_request_teams = github.GithubObject.NotSet
         self._users = github.GithubObject.NotSet
         self._teams = github.GithubObject.NotSet
 
@@ -112,6 +130,15 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         if "require_code_owner_reviews" in attributes:  # pragma no branch
             self._require_code_owner_reviews = self._makeBoolAttribute(
                 attributes["require_code_owner_reviews"]
+            )
+        if "bypass_pull_request_allowances" in attributes:  # pragma no branch
+            self._bypass_pull_request_users = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser,
+                attributes["bypass_pull_request_allowances"]["users"],
+            )
+            self._bypass_pull_request_teams = self._makeListOfClassesAttribute(
+                github.Team.Team,
+                attributes["bypass_pull_request_allowances"]["teams"],
             )
         if "required_approving_review_count" in attributes:  # pragma no branch
             self._required_approving_review_count = self._makeIntAttribute(

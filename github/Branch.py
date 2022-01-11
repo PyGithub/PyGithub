@@ -114,6 +114,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         strict=github.GithubObject.NotSet,
         contexts=github.GithubObject.NotSet,
         enforce_admins=github.GithubObject.NotSet,
+        bypass_pull_request_users=github.GithubObject.NotSet,
+        bypass_pull_request_teams=github.GithubObject.NotSet,
         dismissal_users=github.GithubObject.NotSet,
         dismissal_teams=github.GithubObject.NotSet,
         dismiss_stale_reviews=github.GithubObject.NotSet,
@@ -127,6 +129,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :strict: bool
         :contexts: list of strings
         :enforce_admins: bool
+        :bypass_pull_request_users: list of strings
+        :bypass_pull_request_teams: list of strings
         :dismissal_users: list of strings
         :dismissal_teams: list of strings
         :dismiss_stale_reviews: bool
@@ -146,6 +150,12 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert enforce_admins is github.GithubObject.NotSet or isinstance(
             enforce_admins, bool
         ), enforce_admins
+        assert bypass_pull_request_users is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in bypass_pull_request_users
+        ), bypass_pull_request_users
+        assert bypass_pull_request_teams is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in bypass_pull_request_teams
+        ), bypass_pull_request_teams
         assert dismissal_users is github.GithubObject.NotSet or all(
             isinstance(element, str) for element in dismissal_users
         ), dismissal_users
@@ -185,7 +195,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["enforce_admins"] = None
 
         if (
-            dismissal_users is not github.GithubObject.NotSet
+            bypass_pull_request_users is not github.GithubObject.NotSet
+            or bypass_pull_request_teams is not github.GithubObject.NotSet
+            or dismissal_users is not github.GithubObject.NotSet
             or dismissal_teams is not github.GithubObject.NotSet
             or dismiss_stale_reviews is not github.GithubObject.NotSet
             or require_code_owner_reviews is not github.GithubObject.NotSet
@@ -219,6 +231,20 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["teams"] = dismissal_teams
+            if (
+                bypass_pull_request_users is not github.GithubObject.NotSet
+                or bypass_pull_request_teams is not github.GithubObject.NotSet
+            ):
+                if bypass_pull_request_users is github.GithubObject.NotSet:
+                    bypass_pull_request_users = []
+                if bypass_pull_request_teams is github.GithubObject.NotSet:
+                    bypass_pull_request_teams = []
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = {
+                    "users": bypass_pull_request_users,
+                    "teams": bypass_pull_request_teams,
+                }
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
@@ -313,6 +339,8 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def edit_required_pull_request_reviews(
         self,
+        bypass_pull_request_users=github.GithubObject.NotSet,
+        bypass_pull_request_teams=github.GithubObject.NotSet,
         dismissal_users=github.GithubObject.NotSet,
         dismissal_teams=github.GithubObject.NotSet,
         dismiss_stale_reviews=github.GithubObject.NotSet,
@@ -321,12 +349,20 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
+        :bypass_pull_request_users: list of strings
+        :bypass_pull_request_teams: list of strings
         :dismissal_users: list of strings
         :dismissal_teams: list of strings
         :dismiss_stale_reviews: bool
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
+        assert bypass_pull_request_users is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in bypass_pull_request_users
+        ), bypass_pull_request_users
+        assert bypass_pull_request_teams is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in bypass_pull_request_teams
+        ), bypass_pull_request_teams
         assert dismissal_users is github.GithubObject.NotSet or all(
             isinstance(element, str) for element in dismissal_users
         ), dismissal_users
@@ -345,6 +381,18 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         ), (required_approving_review_count)
 
         post_parameters = {}
+        if (
+            bypass_pull_request_users is not github.GithubObject.NotSet
+            or bypass_pull_request_users is not github.GithubObject.NotSet
+        ):
+            if bypass_pull_request_users is github.GithubObject.NotSet:
+                bypass_pull_request_users = []
+            if bypass_pull_request_teams is github.GithubObject.NotSet:
+                bypass_pull_request_teams = []
+            post_parameters["bypass_pull_request_allowances"] = {
+                "users": bypass_pull_request_users,
+                "teams": bypass_pull_request_teams,
+            }
         if dismissal_users is not github.GithubObject.NotSet:
             post_parameters["dismissal_restrictions"] = {"users": dismissal_users}
         if dismissal_teams is not github.GithubObject.NotSet:

@@ -67,6 +67,29 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
+    def get_bypass_pull_request_users(self):
+        """
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        if self.get_bypass_pull_request_users is github.GithubObject.NotSet:
+            return None
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.get_bypass_pull_request_users,
+            None,
+        )
+
+    def get_bypass_pull_request_teams(self):
+        """
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        if self.get_bypass_pull_request_teams is github.GithubObject.NotSet:
+            return None
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team, self._requester, self.get_bypass_pull_request_teams, None
+        )
+
     def get_user_push_restrictions(self):
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -86,15 +109,15 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         """
         if self._team_push_restrictions is github.GithubObject.NotSet:
             return None
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self._team_push_restrictions, None
-        )
+        return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
         self._required_pull_request_reviews = github.GithubObject.NotSet
+        self.get_bypass_pull_request_users = github.GithubObject.NotSet
+        self.get_bypass_pull_request_teams = github.GithubObject.NotSet
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
 
@@ -107,9 +130,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 attributes["required_status_checks"],
             )
         if "enforce_admins" in attributes:  # pragma no branch
-            self._enforce_admins = self._makeBoolAttribute(
-                attributes["enforce_admins"]["enabled"]
-            )
+            self._enforce_admins = self._makeBoolAttribute(attributes["enforce_admins"]["enabled"])
         if "required_pull_request_reviews" in attributes:  # pragma no branch
             self._required_pull_request_reviews = self._makeClassAttribute(
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,
