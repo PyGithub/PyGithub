@@ -118,17 +118,19 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateGithubException(self):
-        exc = self.g._Github__requester.__createException(
-            405, {"header": "value"}, {"message": "Something unknown"}
-        )
-        self.assertException(
-            exc,
-            github.GithubException,
-            405,
-            {"message": "Something unknown"},
-            {"header": "value"},
-            '405 {"message": "Something unknown"}',
-        )
+        for status in range(400, 600):
+            with self.subTest(status=status):
+                exc = self.g._Github__requester.__createException(
+                    status, {"header": "value"}, {"message": "Something unknown"}
+                )
+                self.assertException(
+                    exc,
+                    github.GithubException,
+                    status,
+                    {"message": "Something unknown"},
+                    {"header": "value"},
+                    f'{status} {{"message": "Something unknown"}}',
+                )
 
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
