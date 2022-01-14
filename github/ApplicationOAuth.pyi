@@ -13,12 +13,12 @@ class ApplicationOAuth(NonCompletableGithubObject):
     def client_secret(self) -> str: ...
     def get_login_url(
         self,
-        redirect_uri: Optional[str]=None,
-        state: Optional[str]=None,
-        login: Optional[str]=None
+        redirect_uri: Optional[str]=...,
+        state: Optional[str]=...,
+        login: Optional[str]=...
     ) -> str: ...
     def get_access_token(
         self,
         code: str,
-        state: Optional[str]=None
+        state: Optional[str]=...
     ) -> AccessToken: ...
