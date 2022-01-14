@@ -26,15 +26,28 @@ from . import Framework
 
 
 class Requester(Framework.TestCase):
+    def assertException(self, exception, exception_type, status, data, headers, string):
+        self.assertIsInstance(exception, exception_type)
+        self.assertEqual(exception.status, status)
+        if data is None:
+            self.assertIsNone(exception.data)
+        else:
+            self.assertEqual(exception.data, data)
+        self.assertEqual(exception.headers, headers)
+        self.assertEqual(str(exception), string)
+
     def testShouldCreateBadCredentialsException(self):
         exc = self.g._Github__requester.__createException(
             401, {"header": "value"}, {"message": "Bad credentials"}
         )
-        self.assertIsInstance(exc, github.BadCredentialsException)
-        self.assertEqual(exc.status, 401)
-        self.assertEqual(exc.data, {"message": "Bad credentials"})
-        self.assertEqual(exc.headers, {"header": "value"})
-        self.assertEqual(str(exc), '401 {"message": "Bad credentials"}')
+        self.assertException(
+            exc,
+            github.BadCredentialsException,
+            401,
+            {"message": "Bad credentials"},
+            {"header": "value"},
+            '401 {"message": "Bad credentials"}',
+        )
 
     def testShouldCreateTwoFactorException(self):
         exc = self.g._Github__requester.__createException(
@@ -45,18 +58,15 @@ class Requester(Framework.TestCase):
                 "documentation_url": "https://developer.github.com/v3/auth#working-with-two-factor-authentication",
             },
         )
-        self.assertIsInstance(exc, github.TwoFactorException)
-        self.assertEqual(exc.status, 401)
-        self.assertEqual(
-            exc.data,
+        self.assertException(
+            exc,
+            github.TwoFactorException,
+            401,
             {
                 "message": "Must specify two-factor authentication OTP code.",
                 "documentation_url": "https://developer.github.com/v3/auth#working-with-two-factor-authentication",
             },
-        )
-        self.assertEqual(exc.headers, {"x-github-otp": "required; app"})
-        self.assertEqual(
-            str(exc),
+            {"x-github-otp": "required; app"},
             '401 {"message": "Must specify two-factor authentication OTP code.", "documentation_url": "https://developer.github.com/v3/auth#working-with-two-factor-authentication"}',
         )
 
@@ -66,12 +76,13 @@ class Requester(Framework.TestCase):
             {"header": "value"},
             {"message": "Missing or invalid User Agent string"},
         )
-        self.assertIsInstance(exc, github.BadUserAgentException)
-        self.assertEqual(exc.status, 403)
-        self.assertEqual(exc.data, {"message": "Missing or invalid User Agent string"})
-        self.assertEqual(exc.headers, {"header": "value"})
-        self.assertEqual(
-            str(exc), '403 {"message": "Missing or invalid User Agent string"}'
+        self.assertException(
+            exc,
+            github.BadUserAgentException,
+            403,
+            {"message": "Missing or invalid User Agent string"},
+            {"header": "value"},
+            '403 {"message": "Missing or invalid User Agent string"}',
         )
 
     def testShouldCreateRateLimitExceededException(self):
@@ -84,48 +95,53 @@ class Requester(Framework.TestCase):
                 exc = self.g._Github__requester.__createException(
                     403, {"header": "value"}, {"message": message}
                 )
-                self.assertIsInstance(exc, github.RateLimitExceededException)
-                self.assertEqual(exc.status, 403)
-                self.assertEqual(exc.data, {"message": message})
-                self.assertEqual(exc.headers, {"header": "value"})
-                self.assertEqual(str(exc), f'403 {{"message": "{message}"}}')
+                self.assertException(
+                    exc,
+                    github.RateLimitExceededException,
+                    403,
+                    {"message": message},
+                    {"header": "value"},
+                    f'403 {{"message": "{message}"}}',
+                )
 
     def testShouldCreateUnknownObjectException(self):
         exc = self.g._Github__requester.__createException(
             404, {"header": "value"}, {"message": "Not Found"}
         )
-        self.assertIsInstance(exc, github.UnknownObjectException)
-        self.assertEqual(exc.status, 404)
-        self.assertEqual(exc.data, {"message": "Not Found"})
-        self.assertEqual(exc.headers, {"header": "value"})
-        self.assertEqual(str(exc), '404 {"message": "Not Found"}')
+        self.assertException(
+            exc,
+            github.UnknownObjectException,
+            404,
+            {"message": "Not Found"},
+            {"header": "value"},
+            '404 {"message": "Not Found"}',
+        )
 
     def testShouldCreateGithubException(self):
         exc = self.g._Github__requester.__createException(
             405, {"header": "value"}, {"message": "Something unknown"}
         )
-        self.assertIsInstance(exc, github.GithubException)
-        self.assertEqual(exc.status, 405)
-        self.assertEqual(exc.data, {"message": "Something unknown"})
-        self.assertEqual(exc.headers, {"header": "value"})
-        self.assertEqual(str(exc), '405 {"message": "Something unknown"}')
+        self.assertException(
+            exc,
+            github.GithubException,
+            405,
+            {"message": "Something unknown"},
+            {"header": "value"},
+            '405 {"message": "Something unknown"}',
+        )
 
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.__createException(status, {}, {})
-                self.assertIsInstance(exc, github.GithubException)
-                self.assertEqual(exc.status, status)
-                self.assertEqual(exc.data, {})
-                self.assertEqual(exc.headers, {})
-                self.assertEqual(str(exc), f"{status} {{}}")
+                self.assertException(
+                    exc, github.GithubException, status, {}, {}, f"{status} {{}}"
+                )
 
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.__createException(status, {}, None)
-                self.assertIsInstance(exc, github.GithubException)
-                self.assertEqual(exc.status, status)
-                self.assertIsNone(exc.data)
-                self.assertEqual(exc.headers, {})
-                self.assertEqual(str(exc), f"{status} null")
+                self.assertException(
+                    exc, github.GithubException, status, None, {}, f"{status} null"
+                )
