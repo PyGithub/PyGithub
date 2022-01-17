@@ -1041,7 +1041,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         direction=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /user/repos <http://docs.github.com/en/rest/reference/repos>`
+        :calls: `GET /user/repos <https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-users>`_
         :param visibility: string
         :param affiliation: string
         :param type: string
