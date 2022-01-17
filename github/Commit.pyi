@@ -8,7 +8,7 @@ from github.CommitStats import CommitStats
 from github.CommitStatus import CommitStatus
 from github.File import File
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType, NotSet
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
@@ -45,8 +45,8 @@ class Commit(CompletableGithubObject):
     def files(self) -> List[File]: ...
     def get_check_suites(
         self,
-        app_id: Union[_NotSetType, int]=NotSet,
-        check_name: Union[_NotSetType, str]=NotSet,
+        app_id: Union[_NotSetType, int]=...,
+        check_name: Union[_NotSetType, str]=...,
     ) -> PaginatedList[CheckSuite]: ...
     def get_combined_status(self) -> CommitCombinedStatus: ...
     def get_comments(self) -> PaginatedList[CommitComment]: ...

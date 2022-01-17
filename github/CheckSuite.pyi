@@ -4,11 +4,11 @@ from typing import Any, Dict, List, Union
 from github.CheckRun import CheckRun
 from github.GitCommit import GitCommit
 from github.GithubApp import GithubApp
-from github.GithubObject import CompletableGithubObject
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
-from github.GithubObject import _NotSetType, NotSet
+
 
 class CheckSuite(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -49,7 +49,7 @@ class CheckSuite(CompletableGithubObject):
     def rerequest(self) -> bool: ...
     def get_check_runs(
         self,
-        check_name: Union[str, _NotSetType]=NotSet,
-        status: Union[str, _NotSetType]=NotSet,
-        filter: Union[str, _NotSetType]=NotSet,
+        check_name: Union[str, _NotSetType]=...,
+        status: Union[str, _NotSetType]=...,
+        filter: Union[str, _NotSetType]=...,
     ) -> PaginatedList[CheckRun]: ...
