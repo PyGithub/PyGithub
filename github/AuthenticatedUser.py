@@ -784,13 +784,11 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param public: bool
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
-
-
         assert public is github.GithubObject.NotSet or isinstance(public, bool), public
-
-        privacy = ""
-        if public is not github.GithubObject.NotSet and public is True :
+        if public is not github.GithubObject.NotSet and public is True:
             privacy = "/public"
+        else:
+            privacy = ""
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
