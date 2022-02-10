@@ -44,12 +44,12 @@ import textwrap
 
 import setuptools
 
-version = "1.55"
+version = "1.56-rc"
 
 
 if __name__ == "__main__":
     setuptools.setup(
-        name="PyGithub",
+        name="DeliveryPyGithub",
         version=version,
         description="Use the full Github API v3",
         author="Vincent Jacques",
