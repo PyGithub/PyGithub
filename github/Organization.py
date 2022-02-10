@@ -49,6 +49,7 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import github.Secret
 
 from . import Consts
 
@@ -591,6 +592,20 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_secrets(self):
+        """
+        :calls: `GET /orgs/{org}/actions/secrets <https://docs.github.com/en/rest/reference/actions#list-organization-secrets>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            None,
+            list_item="secrets"
+        )
+
     def create_secret(
         self,
         secret_name,
@@ -632,7 +647,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
-        return status == 201
+        return status <= 299
 
     def create_team(
         self,
