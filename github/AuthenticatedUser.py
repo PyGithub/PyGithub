@@ -780,7 +780,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_events(self, public=github.GithubObject.NotSet):
         """
-        :calls: `GET /users/{user}/events{/privacy} <http://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{user}/events{/privacy} <https://docs.github.com/en/rest/reference/users>`_
         :param public: bool
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
