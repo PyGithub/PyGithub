@@ -128,6 +128,7 @@ import github.Referrer
 import github.Repository
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Secret
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -1970,6 +1971,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         return github.Deployment.Deployment(
             self._requester, headers, data, completed=True
+        )
+    
+    def get_secrets(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets <https://docs.github.com/en/rest/reference/actions#list-repository-secrets>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            None,
+            list_item="secrets"
         )
 
     def get_top_referrers(self):

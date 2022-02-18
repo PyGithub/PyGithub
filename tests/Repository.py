@@ -757,6 +757,11 @@ class Repository(Framework.TestCase):
         c = self.g.get_organization("prtg-dev")
         self.assertEqual(self.repo.create_fork(c).full_name, "prtg-dev/PyGithub")
 
+    def testGetSecrets(self):
+        self.assertListKeyEqual(
+            self.repo.get_secrets(), lambda r: r.name, ["ANOTHER_SECRET", "EXISTING_SECRET"]
+        )
+
     def testGetGitRefs(self):
         self.assertListKeyEqual(
             self.repo.get_git_refs(),
