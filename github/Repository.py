@@ -3688,6 +3688,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
+    def update_git_ref(self, ref, sha):
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#update-a-reference>`_
+        :param ref: string
+        :param sha: string
+        :rtype: :class:`github.GitRef.GitRef`
+        """
+        assert isinstance(ref, str), ref
+        assert isinstance(sha, str), sha
+        post_parameters = {"sha": sha}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/git/refs/{ref}", input=post_parameters
+        )
+        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
+
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
