@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, Union
 
 from github.DeploymentStatus import DeploymentStatus
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
@@ -17,11 +17,11 @@ class Deployment(CompletableGithubObject):
     def create_status(
         self,
         state: str,
-        target_url: Union[str, _NotSetType] = ...,
-        description: Union[str, _NotSetType] = ...,
-        environment: Union[str, _NotSetType] = ...,
-        environment_url: Union[str, _NotSetType] = ...,
-        auto_inactive: Union[bool, _NotSetType] = ...,
+        target_url: Union[str, NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        environment: Union[str, NotSetType] = ...,
+        environment_url: Union[str, NotSetType] = ...,
+        auto_inactive: Union[bool, NotSetType] = ...,
     ) -> DeploymentStatus: ...
     @property
     def id(self) -> int: ...

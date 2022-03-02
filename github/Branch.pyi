@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Union
 
 from github.BranchProtection import BranchProtection
 from github.Commit import Commit
-from github.GithubObject import NonCompletableGithubObject, _NotSetType
+from github.GithubObject import NonCompletableGithubObject, NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
@@ -18,29 +18,29 @@ class Branch(NonCompletableGithubObject):
     def commit(self) -> Commit: ...
     def edit_protection(
         self,
-        strict: Union[bool, _NotSetType] = ...,
-        contexts: Union[List[str], _NotSetType] = ...,
-        enforce_admins: Union[bool, _NotSetType] = ...,
-        dismissal_users: Union[_NotSetType, List[str]] = ...,
-        dismissal_teams: Union[_NotSetType, List[str]] = ...,
-        dismiss_stale_reviews: Union[bool, _NotSetType] = ...,
-        require_code_owner_reviews: Union[bool, _NotSetType] = ...,
-        required_approving_review_count: Union[int, _NotSetType] = ...,
-        user_push_restrictions: Union[_NotSetType, List[str]] = ...,
-        team_push_restrictions: Union[_NotSetType, List[str]] = ...,
+        strict: Union[bool, NotSetType] = ...,
+        contexts: Union[List[str], NotSetType] = ...,
+        enforce_admins: Union[bool, NotSetType] = ...,
+        dismissal_users: Union[NotSetType, List[str]] = ...,
+        dismissal_teams: Union[NotSetType, List[str]] = ...,
+        dismiss_stale_reviews: Union[bool, NotSetType] = ...,
+        require_code_owner_reviews: Union[bool, NotSetType] = ...,
+        required_approving_review_count: Union[int, NotSetType] = ...,
+        user_push_restrictions: Union[NotSetType, List[str]] = ...,
+        team_push_restrictions: Union[NotSetType, List[str]] = ...,
     ) -> None: ...
     def edit_required_pull_request_reviews(
         self,
-        dismissal_users: Union[_NotSetType, List[str]] = ...,
-        dismissal_teams: Union[_NotSetType, List[str]] = ...,
-        dismiss_stale_reviews: Union[bool, _NotSetType] = ...,
-        require_code_owner_reviews: Union[_NotSetType, bool] = ...,
-        required_approving_review_count: Union[int, _NotSetType] = ...,
+        dismissal_users: Union[NotSetType, List[str]] = ...,
+        dismissal_teams: Union[NotSetType, List[str]] = ...,
+        dismiss_stale_reviews: Union[bool, NotSetType] = ...,
+        require_code_owner_reviews: Union[NotSetType, bool] = ...,
+        required_approving_review_count: Union[int, NotSetType] = ...,
     ) -> None: ...
     def edit_required_status_checks(
         self,
-        strict: Union[_NotSetType, bool] = ...,
-        contexts: Union[List[str], _NotSetType] = ...,
+        strict: Union[NotSetType, bool] = ...,
+        contexts: Union[List[str], NotSetType] = ...,
     ) -> None: ...
     def edit_team_push_restrictions(self, *teams: str) -> None: ...
     def edit_user_push_restrictions(self, *users: str) -> None: ...

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.PaginatedList import PaginatedList
 from github.ProjectCard import ProjectCard
 
@@ -13,14 +13,14 @@ class ProjectColumn(CompletableGithubObject):
     def cards_url(self) -> str: ...
     def create_card(
         self,
-        note: Union[_NotSetType, str] = ...,
-        content_id: Union[int, _NotSetType] = ...,
-        content_type: Union[_NotSetType, str] = ...,
+        note: Union[NotSetType, str] = ...,
+        content_id: Union[int, NotSetType] = ...,
+        content_type: Union[NotSetType, str] = ...,
     ) -> ProjectCard: ...
     @property
     def created_at(self) -> datetime: ...
     def get_cards(
-        self, archived_state: Union[_NotSetType, str] = ...
+        self, archived_state: Union[NotSetType, str] = ...
     ) -> PaginatedList[ProjectCard]: ...
     @property
     def id(self) -> int: ...

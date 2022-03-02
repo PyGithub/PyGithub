@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.Issue import Issue
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
@@ -21,10 +21,10 @@ class ProjectCard(CompletableGithubObject):
     @property
     def creator(self) -> NamedUser: ...
     def get_content(
-        self, content_type: Union[_NotSetType, str] = ...
+        self, content_type: Union[NotSetType, str] = ...
     ) -> Optional[Union[PullRequest, Issue]]: ...
     def edit(
-        self, note=Union[_NotSetType, str], archived=Union[_NotSetType, bool]
+        self, note=Union[NotSetType, str], archived=Union[NotSetType, bool]
     ) -> None: ...
     @property
     def id(self) -> int: ...

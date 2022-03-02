@@ -1,6 +1,6 @@
 from typing import Dict, Union
 
-from github.GithubObject import _NotSetType
+from github.GithubObject import NotSetType
 
 class InputGitTreeElement:
     def __init__(
@@ -8,8 +8,8 @@ class InputGitTreeElement:
         path: str,
         mode: str,
         type: str,
-        content: Union[str, _NotSetType] = ...,
-        sha: Union[str, _NotSetType, None] = ...,
+        content: Union[str, NotSetType] = ...,
+        sha: Union[str, NotSetType, None] = ...,
     ) -> None: ...
     @property
     def _identity(self) -> Dict[str, str]: ...

@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from github.GistComment import GistComment
 from github.GistFile import GistFile
 from github.GistHistoryState import GistHistoryState
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.InputFileContent import InputFileContent
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
@@ -28,8 +28,8 @@ class Gist(CompletableGithubObject):
     def description(self) -> Optional[str]: ...
     def edit(
         self,
-        description: Union[_NotSetType, str] = ...,
-        files: Union[_NotSetType, Dict[str, Optional[InputFileContent]]] = ...,
+        description: Union[NotSetType, str] = ...,
+        files: Union[NotSetType, Dict[str, Optional[InputFileContent]]] = ...,
     ) -> None: ...
     @property
     def files(self) -> Dict[str, GistFile]: ...

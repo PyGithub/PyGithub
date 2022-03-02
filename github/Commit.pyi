@@ -8,7 +8,7 @@ from github.CommitStats import CommitStats
 from github.CommitStatus import CommitStatus
 from github.File import File
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
@@ -30,23 +30,23 @@ class Commit(CompletableGithubObject):
     def create_comment(
         self,
         body: str,
-        line: Union[int, _NotSetType] = ...,
-        path: Union[_NotSetType, str] = ...,
-        position: Union[int, _NotSetType] = ...,
+        line: Union[int, NotSetType] = ...,
+        path: Union[NotSetType, str] = ...,
+        position: Union[int, NotSetType] = ...,
     ) -> CommitComment: ...
     def create_status(
         self,
         state: str,
-        target_url: Union[_NotSetType, str] = ...,
-        description: Union[_NotSetType, str] = ...,
-        context: Union[_NotSetType, str] = ...,
+        target_url: Union[NotSetType, str] = ...,
+        description: Union[NotSetType, str] = ...,
+        context: Union[NotSetType, str] = ...,
     ) -> CommitStatus: ...
     @property
     def files(self) -> List[File]: ...
     def get_check_suites(
         self,
-        app_id: Union[_NotSetType, int],
-        check_name: Union[_NotSetType, str],
+        app_id: Union[NotSetType, int],
+        check_name: Union[NotSetType, str],
     ) -> PaginatedList[CheckSuite]: ...
     def get_combined_status(self) -> CommitCombinedStatus: ...
     def get_comments(self) -> PaginatedList[CommitComment]: ...
@@ -54,9 +54,9 @@ class Commit(CompletableGithubObject):
     def get_pulls(self) -> PaginatedList[PullRequest]: ...
     def get_check_runs(
         self,
-        check_name: Union[_NotSetType, str] = ...,
-        status: Union[_NotSetType, str] = ...,
-        filter: Union[_NotSetType, str] = ...,
+        check_name: Union[NotSetType, str] = ...,
+        status: Union[NotSetType, str] = ...,
+        filter: Union[NotSetType, str] = ...,
     ) -> PaginatedList[CheckRun]: ...
     @property
     def html_url(self) -> str: ...

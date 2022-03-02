@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.HookResponse import HookResponse
 
 class Hook(CompletableGithubObject):
@@ -19,10 +19,10 @@ class Hook(CompletableGithubObject):
         self,
         name: str,
         config: Dict[str, str],
-        events: Union[_NotSetType, List[str]] = ...,
-        add_events: Union[_NotSetType, List[str]] = ...,
-        remove_events: Union[_NotSetType, List[str]] = ...,
-        active: Union[bool, _NotSetType] = ...,
+        events: Union[NotSetType, List[str]] = ...,
+        add_events: Union[NotSetType, List[str]] = ...,
+        remove_events: Union[NotSetType, List[str]] = ...,
+        active: Union[bool, NotSetType] = ...,
     ) -> None: ...
     @property
     def events(self) -> List[str]: ...

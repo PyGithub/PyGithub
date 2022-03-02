@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union, NamedTuple
 from github.Authorization import Authorization
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.InputFileContent import InputFileContent
 from github.Invitation import Invitation
 from github.Issue import Issue
@@ -48,11 +48,11 @@ class AuthenticatedUser(CompletableGithubObject):
     def company(self) -> str: ...
     def create_authorization(
         self,
-        scopes: Union[List[str], _NotSetType] = ...,
-        note: Union[str, _NotSetType] = ...,
-        note_url: Union[str, _NotSetType] = ...,
-        client_id: Union[str, _NotSetType] = ...,
-        client_secret: Union[str, _NotSetType] = ...,
+        scopes: Union[List[str], NotSetType] = ...,
+        note: Union[str, NotSetType] = ...,
+        note_url: Union[str, NotSetType] = ...,
+        client_id: Union[str, NotSetType] = ...,
+        client_secret: Union[str, NotSetType] = ...,
         onetime_password: Union[str, None] = ...,
     ) -> Authorization: ...
     def create_fork(self, repo: Repository) -> Repository: ...
@@ -60,31 +60,31 @@ class AuthenticatedUser(CompletableGithubObject):
         self,
         public: bool,
         files: Dict[str, InputFileContent],
-        description: Union[str, _NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
     ) -> Gist: ...
     def create_key(self, title: str, key: str) -> UserKey: ...
     def create_migration(
         self,
         repos: List[str],
-        lock_repositories: Union[bool, _NotSetType] = ...,
-        exclude_attachments: Union[bool, _NotSetType] = ...,
+        lock_repositories: Union[bool, NotSetType] = ...,
+        exclude_attachments: Union[bool, NotSetType] = ...,
     ) -> Migration: ...
     def create_repo(
         self,
         name: str,
-        description: Union[str, _NotSetType] = ...,
-        homepage: Union[str, _NotSetType] = ...,
-        private: Union[bool, _NotSetType] = ...,
-        has_issues: Union[bool, _NotSetType] = ...,
-        has_wiki: Union[bool, _NotSetType] = ...,
-        has_downloads: Union[bool, _NotSetType] = ...,
-        has_projects: Union[bool, _NotSetType] = ...,
-        auto_init: Union[bool, _NotSetType] = ...,
-        license_template: _NotSetType = ...,
-        gitignore_template: Union[str, _NotSetType] = ...,
-        allow_squash_merge: Union[bool, _NotSetType] = ...,
-        allow_merge_commit: Union[bool, _NotSetType] = ...,
-        allow_rebase_merge: Union[bool, _NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        homepage: Union[str, NotSetType] = ...,
+        private: Union[bool, NotSetType] = ...,
+        has_issues: Union[bool, NotSetType] = ...,
+        has_wiki: Union[bool, NotSetType] = ...,
+        has_downloads: Union[bool, NotSetType] = ...,
+        has_projects: Union[bool, NotSetType] = ...,
+        auto_init: Union[bool, NotSetType] = ...,
+        license_template: NotSetType = ...,
+        gitignore_template: Union[str, NotSetType] = ...,
+        allow_squash_merge: Union[bool, NotSetType] = ...,
+        allow_merge_commit: Union[bool, NotSetType] = ...,
+        allow_rebase_merge: Union[bool, NotSetType] = ...,
     ) -> Repository: ...
     @property
     def created_at(self) -> datetime: ...
@@ -92,13 +92,13 @@ class AuthenticatedUser(CompletableGithubObject):
     def disk_usage(self) -> int: ...
     def edit(
         self,
-        name: Union[str, _NotSetType] = ...,
-        email: Union[str, _NotSetType] = ...,
-        blog: Union[str, _NotSetType] = ...,
-        company: Union[str, _NotSetType] = ...,
-        location: Union[str, _NotSetType] = ...,
-        hireable: Union[bool, _NotSetType] = ...,
-        bio: Union[str, _NotSetType] = ...,
+        name: Union[str, NotSetType] = ...,
+        email: Union[str, NotSetType] = ...,
+        blog: Union[str, NotSetType] = ...,
+        company: Union[str, NotSetType] = ...,
+        location: Union[str, NotSetType] = ...,
+        hireable: Union[bool, NotSetType] = ...,
+        bio: Union[str, NotSetType] = ...,
     ) -> None: ...
     @property
     def email(self) -> str: ...
@@ -119,17 +119,17 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_followers(self) -> PaginatedList[NamedUser]: ...
     def get_following(self) -> PaginatedList[NamedUser]: ...
     def get_gists(
-        self, since: Union[datetime, _NotSetType] = ...
+        self, since: Union[datetime, NotSetType] = ...
     ) -> PaginatedList[Gist]: ...
     def get_invitations(self) -> PaginatedList[Invitation]: ...
     def get_issues(
         self,
-        filter: Union[str, _NotSetType] = ...,
-        state: Union[str, _NotSetType] = ...,
-        labels: Union[List[Label], _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        filter: Union[str, NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        labels: Union[List[Label], NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[Issue]: ...
     def get_key(self, id: int) -> UserKey: ...
     def get_keys(self) -> PaginatedList[UserKey]: ...
@@ -137,10 +137,10 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_notification(self, id: str) -> Notification: ...
     def get_notifications(
         self,
-        all: Union[bool, _NotSetType] = ...,
-        participating: Union[bool, _NotSetType] = ...,
-        since: Union[datetime, _NotSetType] = ...,
-        before: Union[datetime, _NotSetType] = ...,
+        all: Union[bool, NotSetType] = ...,
+        participating: Union[bool, NotSetType] = ...,
+        since: Union[datetime, NotSetType] = ...,
+        before: Union[datetime, NotSetType] = ...,
     ) -> PaginatedList[Notification]: ...
     def get_organization_events(self, org: Organization) -> PaginatedList[Event]: ...
     def get_organization_membership(self, org: int) -> Membership: ...
@@ -148,11 +148,11 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_repo(self, name: str) -> Repository: ...
     def get_repos(
         self,
-        visibility: Union[str, _NotSetType] = ...,
-        affiliation: Union[str, _NotSetType] = ...,
-        type: Union[str, _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
+        visibility: Union[str, NotSetType] = ...,
+        affiliation: Union[str, NotSetType] = ...,
+        type: Union[str, NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
     ) -> PaginatedList[Repository]: ...
     def get_starred(self) -> PaginatedList[Repository]: ...
     def get_starred_gists(self) -> PaginatedList[Gist]: ...
@@ -160,12 +160,12 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_teams(self) -> PaginatedList[Team]: ...
     def get_user_issues(
         self,
-        filter: Union[str, _NotSetType] = ...,
-        state: Union[str, _NotSetType] = ...,
-        labels: Union[List[Label], _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        filter: Union[str, NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        labels: Union[List[Label], NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[Issue]: ...
     def get_watched(self) -> PaginatedList[Repository]: ...
     @property

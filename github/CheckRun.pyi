@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Union
 from github.CheckRunAnnotation import CheckRunAnnotation
 from github.CheckRunOutput import CheckRunOutput
 from github.GithubApp import GithubApp
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 
@@ -15,18 +15,18 @@ class CheckRun(CompletableGithubObject):
     def get_annotations(self) -> PaginatedList[CheckRunAnnotation]: ...
     def edit(
         self,
-        name: Union[_NotSetType, str] = ...,
-        head_sha: Union[_NotSetType, str] = ...,
-        details_url: Union[_NotSetType, str] = ...,
-        external_id: Union[_NotSetType, str] = ...,
-        status: Union[_NotSetType, str] = ...,
-        started_at: Union[_NotSetType, datetime] = ...,
-        conclusion: Union[_NotSetType, str] = ...,
-        completed_at: Union[_NotSetType, datetime] = ...,
+        name: Union[NotSetType, str] = ...,
+        head_sha: Union[NotSetType, str] = ...,
+        details_url: Union[NotSetType, str] = ...,
+        external_id: Union[NotSetType, str] = ...,
+        status: Union[NotSetType, str] = ...,
+        started_at: Union[NotSetType, datetime] = ...,
+        conclusion: Union[NotSetType, str] = ...,
+        completed_at: Union[NotSetType, datetime] = ...,
         output: Union[
-            _NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
+            NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
         ] = ...,
-        actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
+        actions: Union[NotSetType, List[Dict[str, str]]] = ...,
     ) -> None: ...
     @property
     def app(self) -> GithubApp: ...
