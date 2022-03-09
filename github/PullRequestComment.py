@@ -128,6 +128,14 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._position.value
 
     @property
+    def pull_request_review_id(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._pull_request_review_id)
+        return self._pull_request_review_id.value
+
+    @property
     def pull_request_url(self):
         """
         :type: string
@@ -248,6 +256,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         self._original_position = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._position = github.GithubObject.NotSet
+        self._pull_request_review_id = github.GithubObject.NotSet
         self._pull_request_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -279,6 +288,8 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
             self._position = self._makeIntAttribute(attributes["position"])
+        if "pull_request_review_id" in attributes:  # pragma no branch
+            self._pull_request_review_id = self._makeIntAttribute(attributes["pull_request_review_id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(
                 attributes["pull_request_url"]
