@@ -178,6 +178,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._allow_squash_merge.value
 
     @property
+    def allow_auto_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_auto_merge)
+        return self._allow_auto_merge.value
+
+    @property
     def archived(self):
         """
         :type: bool
@@ -1519,6 +1527,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
+        allow_auto_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
@@ -1536,6 +1545,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
+        :param allow_auto_merge: bool
         :param delete_branch_on_merge: bool
         :param archived: bool. Unarchiving repositories is currently not supported through API (https://docs.github.com/en/rest/reference/repos#update-a-repository)
         :rtype: None
@@ -1576,6 +1586,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
+        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(
+            allow_auto_merge, bool
+        ), allow_auto_merge
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
@@ -1607,6 +1620,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if allow_auto_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_auto_merge"] = allow_auto_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if archived is not github.GithubObject.NotSet:
@@ -3692,6 +3707,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
+        self._allow_auto_merge = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -3785,6 +3801,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._allow_squash_merge = self._makeBoolAttribute(
                 attributes["allow_squash_merge"]
             )
+        if "allow_auto_merge" in attributes:  # pragma no branch
+            self._allow_auto_merge = self._makeBoolAttribute(
+                attributes["allow_auto_merge"]
+            )
+ 
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
