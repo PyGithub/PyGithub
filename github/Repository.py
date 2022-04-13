@@ -143,6 +143,7 @@ import github.Comparison
 import github.ContentFile
 import github.Deployment
 import github.Download
+import github.Environment
 import github.Event
 import github.GitBlob
 import github.GitCommit
@@ -4101,6 +4102,32 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             f"{self.url}/code-scanning/alerts",
             None,
+        )
+
+    def get_environments(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Environment.Environment`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Environment.Environment,
+            self._requester,
+            f"{self.url}/environments",
+            None,
+            list_item="environments",
+        )
+
+    def get_environment(self, environment_name):
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :rtype: :class:`github.Environment.Environment`
+        """
+        assert isinstance(environment_name, str), environment_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/environments/{environment_name}"
+        )
+        return github.Environment.Environment(
+            self._requester, headers, data, completed=True
         )
 
     def _initAttributes(self):
