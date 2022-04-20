@@ -144,6 +144,9 @@ import github.ContentFile
 import github.Deployment
 import github.Download
 import github.Environment
+import github.EnvironmentDeploymentBranchPolicy
+import github.EnvironmentProtectionRule
+import github.EnvironmentProtectionRuleReviewer
 import github.Event
 import github.GitBlob
 import github.GitCommit
@@ -4129,6 +4132,57 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Environment.Environment(
             self._requester, headers, data, completed=True
         )
+
+    def create_environment(
+        self,
+        environment_name,
+        wait_timer=0,
+        reviewers=[],
+        deployment_branch_policy=None,
+    ):
+        """
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/pulls>`_
+        :param name: string
+        :param wait_timer: int
+        :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param deployment_branch_policy: Optional[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams`]
+        :rtype: :class:`github.Environment.Environment`
+        """
+        assert isinstance(environment_name, str), environment_name
+        assert isinstance(wait_timer, int)
+        assert isinstance(reviewers, list)
+        assert all(
+            [
+                isinstance(
+                    reviewer, github.EnvironmentProtectionRuleReviewer.ReviewerParams
+                )
+                for reviewer in reviewers
+            ]
+        )
+        assert (
+            isinstance(
+                deployment_branch_policy,
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams,
+            )
+            or deployment_branch_policy is None
+        )
+
+        put_parameters = {
+            "wait_timer": wait_timer,
+            "reviewers": [reviewer._asdict() for reviewer in reviewers],
+            "deployment_branch_policy": deployment_branch_policy._asdict()
+            if deployment_branch_policy
+            else None,
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/environments/{environment_name}", input=put_parameters
+        )
+        return github.Environment.Environment(
+            self._requester, headers, data, completed=True
+        )
+
+    update_environment = create_environment
 
     def _initAttributes(self):
         self._allow_auto_merge = github.GithubObject.NotSet

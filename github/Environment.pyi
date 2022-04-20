@@ -2,6 +2,7 @@ import datetime
 from typing import List
 import github.GithubObject
 import github.EnvironmentProtectionRule
+import github.EnvironmentDeploymentBranchPolicy
 
 
 class Environment(github.GithubObject.CompletableGithubObject):
@@ -21,3 +22,5 @@ class Environment(github.GithubObject.CompletableGithubObject):
     def updated_at(self) -> datetime.datetime: ...
     @property
     def url(self) -> str: ...
+    @property
+    def deployment_branch_policy(self) -> github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy

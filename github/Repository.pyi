@@ -15,8 +15,8 @@ from github.ContentFile import ContentFile
 from github.Deployment import Deployment
 from github.Download import Download
 from github.Environment import Environment
-from github.EnvironmentProtectionRule import EnvironmentProtectionRule
-from github.EnvironmentProtectionRuleReviewer import EnvironmentProtectionRuleReviewer
+from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+from github.EnvironmentProtectionRuleReviewer import ReviewerParams
 from github.Event import Event
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
@@ -145,6 +145,20 @@ class Repository(CompletableGithubObject):
     ) -> Deployment: ...
     def get_repository_advisories(self) -> PaginatedList[RepositoryAdvisory]: ...
     def get_repository_advisory(self, ghsa: str) -> RepositoryAdvisory: ...
+    def create_environment(
+        self,
+        environment_name: str,
+        wait_timer: int = ...,
+        reviewers: List[ReviewerParams] = ...,
+        deployment_branch_policy: Optional[EnvironmentDeploymentBranchPolicyParams] = ...,
+    ) -> Environment: ...
+    def update_environment(
+        self,
+        environment_name: str,
+        wait_timer: int = ...,
+        reviewers: List[ReviewerParams] = ...,
+        deployment_branch_policy: Optional[EnvironmentDeploymentBranchPolicyParams] = ...,
+    ) -> Environment: ...
     def create_file(
         self,
         path: str,

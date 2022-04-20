@@ -22,6 +22,9 @@
 
 import datetime
 
+import github.EnvironmentDeploymentBranchPolicy
+import github.EnvironmentProtectionRule
+import github.EnvironmentProtectionRuleReviewer
 import github.NamedUser
 import github.Team
 
@@ -52,6 +55,10 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             self.environment.updated_at, datetime.datetime(2022, 4, 13, 15, 6, 32)
+        )
+        self.assertTrue(self.environment.deployment_branch_policy.protected_branches)
+        self.assertFalse(
+            self.environment.deployment_branch_policy.custom_branch_policies
         )
 
     def testProtectionRules(self):
@@ -96,3 +103,68 @@ class Environment(Framework.TestCase):
             "https://api.github.com/repos/alson/PyGithub/environments/dev",
         )
         self.assertEqual(environments[0].name, "dev")
+
+    def testCreateEnvironment(self):
+        environment = self.repo.create_environment("test")
+        self.assertEqual(environment.name, "test")
+        self.assertEqual(environment.id, 470015651)
+        self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
+        self.assertEqual(
+            environment.url,
+            "https://api.github.com/repos/alson/PyGithub/environments/test",
+        )
+        self.assertEqual(
+            environment.html_url,
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+        )
+        self.assertEqual(
+            environment.created_at, datetime.datetime(2022, 4, 19, 14, 4, 32)
+        )
+        self.assertEqual(
+            environment.updated_at, datetime.datetime(2022, 4, 19, 14, 4, 32)
+        )
+        self.assertEqual(len(environment.protection_rules), 0)
+        self.assertIsNone(environment.deployment_branch_policy)
+
+    def testUpdateEnvironment(self):
+        environment = self.repo.create_environment(
+            "test",
+            wait_timer=42,
+            reviewers=[
+                github.EnvironmentProtectionRuleReviewer.ReviewerParams(
+                    type_="User", id_=19245
+                )
+            ],
+            deployment_branch_policy=github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams(
+                protected_branches=True, custom_branch_policies=False
+            ),
+        )
+        self.assertEqual(environment.name, "test")
+        self.assertEqual(environment.id, 470015651)
+        self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
+        self.assertEqual(
+            environment.url,
+            "https://api.github.com/repos/alson/PyGithub/environments/test",
+        )
+        self.assertEqual(
+            environment.html_url,
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+        )
+        self.assertEqual(
+            environment.created_at, datetime.datetime(2022, 4, 19, 14, 4, 32)
+        )
+        self.assertEqual(
+            environment.updated_at, datetime.datetime(2022, 4, 19, 14, 4, 32)
+        )
+        self.assertEqual(len(environment.protection_rules), 3)
+        self.assertEqual(environment.protection_rules[0].type, "required_reviewers")
+        self.assertEqual(len(environment.protection_rules[0].reviewers), 1)
+        self.assertEqual(environment.protection_rules[0].reviewers[0].type, "User")
+        self.assertEqual(
+            environment.protection_rules[0].reviewers[0].reviewer.id, 19245
+        )
+        self.assertEqual(environment.protection_rules[1].type, "wait_timer")
+        self.assertEqual(environment.protection_rules[1].wait_timer, 42)
+        self.assertEqual(environment.protection_rules[2].type, "branch_policy")
+        self.assertTrue(environment.deployment_branch_policy.protected_branches)
+        self.assertFalse(environment.deployment_branch_policy.custom_branch_policies)

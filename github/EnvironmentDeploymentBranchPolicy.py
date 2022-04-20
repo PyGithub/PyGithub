@@ -20,65 +20,60 @@
 #                                                                              #
 ################################################################################
 
+import github.EnvironmentProtectionRuleReviewer
 import github.GithubObject
-import github.NamedUser
-import github.Team
 
 
-class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithubObject):
+class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents a reviewer for an EnvironmentProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    This class represents a deployment branch policy for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
     def __repr__(self):
-        return self.get__repr__({"type": self._type.value})
+        return self.get__repr__({})
 
     @property
-    def type(self):
+    def protected_branches(self):
         """
-        :type: string
+        :type: bool
         """
-        return self._type.value
+        return self._protected_branches.value
 
     @property
-    def reviewer(self):
+    def custom_branch_policies(self):
         """
-        :type: Union[:class:`github.NamedUser.NamedUser`, :class:`github.Team.Team`]
+        :type: bool
         """
-        return self._reviewer.value
+        return self._custom_branch_policies.value
 
     def _initAttributes(self):
-        self._type = github.GithubObject.NotSet
-        self._reviewer = github.GithubObject.NotSet
+        self._protected_branches = github.GithubObject.NotSet
+        self._custom_branch_policies = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
-        if "reviewer" in attributes:  # pragma no branch
-            assert self._type.value in ("User", "Team")
-            if self._type.value == "User":
-                self._reviewer = self._makeClassAttribute(
-                    github.NamedUser.NamedUser, attributes["reviewer"]
-                )
-            elif self._type.value == "Team":
-                self._reviewer = self._makeClassAttribute(
-                    github.Team.Team, attributes["reviewer"]
-                )
+        if "protected_branches" in attributes:  # pragma no branch
+            self._protected_branches = self._makeBoolAttribute(
+                attributes["protected_branches"]
+            )
+        if "custom_branch_policies" in attributes:  # pragma no branch
+            self._custom_branch_policies = self._makeBoolAttribute(
+                attributes["custom_branch_policies"]
+            )
 
 
-class ReviewerParams:
+class EnvironmentDeploymentBranchPolicyParams:
     """
-    This class presents reviewers as can be configured for an Environment.
+    This class presents the deployment branch policy as can be configured for an Environment.
     """
 
-    def __init__(self, type_, id_):
-        assert isinstance(type_, str) and type_ in ("User", "Team")
-        assert isinstance(id_, int)
-        self.type = type_
-        self.id = id_
+    def __init__(self, protected_branches=False, custom_branch_policies=False):
+        assert isinstance(protected_branches, bool)
+        assert isinstance(custom_branch_policies, bool)
+        self.protected_branches = protected_branches
+        self.custom_branch_policies = custom_branch_policies
 
     def _asdict(self):
         return {
-            "type": self.type,
-            "id": self.id,
+            "protected_branches": self.protected_branches,
+            "custom_branch_policies": self.custom_branch_policies,
         }

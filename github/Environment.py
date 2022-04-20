@@ -20,6 +20,7 @@
 #                                                                              #
 ################################################################################
 
+import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 import github.GithubObject
 
@@ -96,6 +97,14 @@ class Environment(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def deployment_branch_policy(self):
+        """
+        :type: :class:`github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy`
+        """
+        self._completeIfNotSet(self._deployment_branch_policy)
+        return self._deployment_branch_policy.value
+
     def _initAttributes(self):
         self._created_at = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -105,6 +114,7 @@ class Environment(github.GithubObject.CompletableGithubObject):
         self._protection_rules = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._deployment_branch_policy = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "created_at" in attributes:  # pragma no branch
@@ -126,3 +136,8 @@ class Environment(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "deployment_branch_policy" in attributes:  # pragma no branch
+            self._deployment_branch_policy = self._makeClassAttribute(
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
+                attributes["deployment_branch_policy"],
+            )

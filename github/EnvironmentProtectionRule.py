@@ -26,11 +26,11 @@ import github.GithubObject
 
 class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents ProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    This class represents a protection rule for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
     def __repr__(self):
-        return self.get__repr__({"name": self._id.value})
+        return self.get__repr__({"id": self._id.value})
 
     @property
     def id(self):
