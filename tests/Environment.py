@@ -22,6 +22,9 @@
 
 import datetime
 
+import pytest
+
+import github
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 import github.EnvironmentProtectionRuleReviewer
@@ -76,6 +79,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(protection_rules[2].wait_timer, 15)
 
     def testReviewers(self):
+        # This is necessary so we can maintain our own expectations, which have been manually editted, for this test.
         reviewers = self.repo.get_environment("dev").protection_rules[1].reviewers
         self.assertEqual(len(reviewers), 2)
         self.assertEqual(reviewers[0].type, "User")
@@ -168,3 +172,8 @@ class Environment(Framework.TestCase):
         self.assertEqual(environment.protection_rules[2].type, "branch_policy")
         self.assertTrue(environment.deployment_branch_policy.protected_branches)
         self.assertFalse(environment.deployment_branch_policy.custom_branch_policies)
+
+    def testDeleteEnvironment(self):
+        self.repo.delete_environment("test")
+        with pytest.raises(github.UnknownObjectException):
+            self.repo.get_environment("test")

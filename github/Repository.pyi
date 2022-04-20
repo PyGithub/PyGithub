@@ -152,13 +152,6 @@ class Repository(CompletableGithubObject):
         reviewers: List[ReviewerParams] = ...,
         deployment_branch_policy: Optional[EnvironmentDeploymentBranchPolicyParams] = ...,
     ) -> Environment: ...
-    def update_environment(
-        self,
-        environment_name: str,
-        wait_timer: int = ...,
-        reviewers: List[ReviewerParams] = ...,
-        deployment_branch_policy: Optional[EnvironmentDeploymentBranchPolicyParams] = ...,
-    ) -> Environment: ...
     def create_file(
         self,
         path: str,
@@ -304,6 +297,7 @@ class Repository(CompletableGithubObject):
     @property
     def default_branch(self) -> str: ...
     def delete(self) -> None: ...
+    def delete_environment(self, environment_name: str) -> None: ...
     def delete_file(
         self,
         path: str,
@@ -663,6 +657,13 @@ class Repository(CompletableGithubObject):
     @property
     def trees_url(self) -> str: ...
     def unsubscribe_from_hub(self, event: str, callback: str) -> None: ...
+    def update_environment(
+        self,
+        environment_name: str,
+        wait_timer: int = ...,
+        reviewers: List[ReviewerParams] = ...,
+        deployment_branch_policy: Optional[EnvironmentDeploymentBranchPolicyParams] = ...,
+    ) -> Environment: ...
     def update_file(
         self,
         path: str,
