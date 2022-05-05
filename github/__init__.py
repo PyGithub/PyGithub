@@ -68,6 +68,8 @@ from .GithubException import (
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
+from .GithubObject import _NotSetType as NotSetType
+from .PaginatedList import PaginatedList as PaginatedList
 
 
 def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)

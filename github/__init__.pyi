@@ -12,5 +12,7 @@ from .GithubException import UnknownObjectException as UnknownObjectException
 from .InputFileContent import InputFileContent as InputFileContent
 from .InputGitAuthor import InputGitAuthor as InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement as InputGitTreeElement
+from .GithubObject import _NotSetType as NotSetType
+from .PaginatedList import PaginatedList as PaginatedList
 
 def enable_console_debug_logging() -> None: ...
