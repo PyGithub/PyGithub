@@ -189,10 +189,11 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         )
 
     def get_artifacts(self, run):
-        """Get download url for one single download run of a artifact.
-
-        Return:
-            info (dict or list): e.g. {'name': 'sandbox-package1, 'url': 'https://pipelines.actions.githubusercontent.com/ddYkl%3D'}
+        """
+        Get download url for one single download run of a artifact.
+        :calls: `GET {run.artifacts_url} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :param run: :class:`github.WorkflowRun.WorkflowRun`
+        :rtype: dict or list[dict] e.g. {'name': 'sandbox-package1, 'url': 'https://pipelines.actions.githubusercontent.com/ddYkl%3D'}
         """
 
         # get artifact content
@@ -228,15 +229,6 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             return ret[0]
         else:
             return ret
-
-    def get_zip_content(self, download_url):
-        """ Returns zip file content as a list """
-
-        url = requests.get(download_url)
-        zipfile = ZipFile(BytesIO(url.content))
-        zip_content = zipfile.namelist()
-
-        return zip_content
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
