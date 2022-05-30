@@ -753,6 +753,10 @@ class Repository(Framework.TestCase):
             self.repo.create_fork("prtg-dev").full_name, "prtg-dev/PyGithub"
         )
 
+    def testCreateForkOrg(self):
+        c = self.g.get_organization("prtg-dev")
+        self.assertEqual(self.repo.create_fork(c).full_name, "prtg-dev/PyGithub")
+
     def testGetGitRefs(self):
         self.assertListKeyEqual(
             self.repo.get_git_refs(),
@@ -1322,6 +1326,13 @@ class Repository(Framework.TestCase):
     def testGetBranch(self):
         branch = self.repo.get_branch("develop")
         self.assertEqual(branch.commit.sha, "03058a36164d2a7d946db205f25538434fa27d94")
+
+    def testRenameBranchObject(self):
+        branch = self.repo.get_branch("neat-new-feature")
+        self.assertTrue(self.repo.rename_branch(branch, "terrible-idea"))
+
+    def testRenameBranchString(self):
+        self.assertTrue(self.repo.rename_branch("neat-new-feature", "terrible-idea"))
 
     def testMergeWithoutMessage(self):
         commit = self.repo.merge("branchForBase", "branchForHead")
