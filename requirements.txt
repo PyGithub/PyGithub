@@ -1,6 +1,6 @@
 pynacl>=1.4.0
 requests>=2.14.0
 pyjwt>=2.0
-sphinx<3
+sphinx<6
 sphinx-rtd-theme<1.1
 Deprecated
