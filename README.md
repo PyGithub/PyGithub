@@ -47,8 +47,7 @@ More information can be found on the [PyGitHub documentation site.](https://pygi
 
 ### Contributing
 
-Long-term discussion and bug reports are maintained via GitHub Issues.
-Code review is done via GitHub Pull Requests.
+Testing - kindly ignore 
 
 For more information read [CONTRIBUTING.md].
 
