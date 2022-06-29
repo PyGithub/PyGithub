@@ -49,6 +49,7 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import json
 
 from . import Consts
 
@@ -590,6 +591,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
         )
+
+    def secret_get_selected_repos(self, secret_name):
+        """
+        :calls: `/orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/actions/secrets#list-selected-repositories-for-an-organization-secret>`
+        :param secret_name: string
+        :rtype: list of :class:`github.Repository.Repository`
+        """
+        assert isinstance(secret_name, str), secret_name
+        status, headers, data = self._requester.requestJson(
+            "GET", f"{self.url}/actions/secrets/{secret_name}/repositories"
+        )
+        repos = json.loads(data)["repositories"]
+        return [self.get_repo(repo["name"]) for repo in repos]
 
     def create_secret(
         self,

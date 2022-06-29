@@ -149,6 +149,13 @@ class Organization(Framework.TestCase):
         team = self.org.create_team("Team created by PyGithub")
         self.assertEqual(team.id, 189850)
 
+    def testSecretGetSelectedRepos(self):
+        org = self.g.get_organization("samdevo-test-organization")
+        repos = org.secret_get_selected_repos("TEST_SECRET_PYGITHUB")
+        self.assertListKeyEqual(
+            repos, lambda r: r.name, ["repo1", "repo2"]
+        )
+
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
         team = self.org.create_team(
