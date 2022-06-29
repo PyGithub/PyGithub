@@ -602,7 +602,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET", f"{self.url}/actions/secrets/{secret_name}/repositories"
         )
-        repos = json.loads(data)["repositories"]
+        data_dict = json.loads(data)
+        if "repositories" not in data_dict:
+            return []
+        repos = data_dict["repositories"]
         return [self.get_repo(repo["name"]) for repo in repos]
 
     def create_secret(
