@@ -49,6 +49,7 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import github.Secret
 import json
 
 from . import Consts
@@ -592,21 +593,36 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def secret_get_selected_repos(self, secret_name):
+    # def get_secret_repos(self, secret_name):
+    #     """
+    #     :calls: `/orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/actions/secrets#list-selected-repositories-for-an-organization-secret>`
+    #     :param secret_name: string
+    #     :rtype: list of :class:`github.Repository.Repository`
+    #     """
+    #
+    #     assert isinstance(secret_name, str), secret_name
+    #     status, headers, data = self._requester.requestJson(
+    #         "GET", f"{self.url}/actions/secrets/{secret_name}/repositories"
+    #     )
+    #     data_dict = json.loads(data)
+    #     if "repositories" not in data_dict:
+    #         return []
+    #     repos = data_dict["repositories"]
+    #     return [self.get_repo(repo["name"]) for repo in repos]
+
+    def get_secret(self, secret_name):
         """
-        :calls: `/orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/actions/secrets#list-selected-repositories-for-an-organization-secret>`
+        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
-        :rtype: list of :class:`github.Repository.Repository`
+        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson(
-            "GET", f"{self.url}/actions/secrets/{secret_name}/repositories"
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False
         )
-        data_dict = json.loads(data)
-        if "repositories" not in data_dict:
-            return []
-        repos = data_dict["repositories"]
-        return [self.get_repo(repo["name"]) for repo in repos]
 
     def create_secret(
         self,
