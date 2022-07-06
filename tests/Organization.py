@@ -38,6 +38,7 @@ from unittest import mock
 import github
 
 from . import Framework
+import github.Secret
 
 
 class Organization(Framework.TestCase):
@@ -148,13 +149,6 @@ class Organization(Framework.TestCase):
     def testCreateTeam(self):
         team = self.org.create_team("Team created by PyGithub")
         self.assertEqual(team.id, 189850)
-
-    def testSecretGetSelectedRepos(self):
-        org = self.g.get_organization("samdevo-test-organization")
-        repos = org.secret_get_selected_repos("TEST_SECRET_PYGITHUB")
-        self.assertListKeyEqual(
-            repos, lambda r: r.name, ["repo1", "repo2"]
-        )
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
@@ -365,19 +359,33 @@ class Organization(Framework.TestCase):
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 
+    def testGetSecrets(self):
+        no_secrets = self.g.get_organization("testsecretorg").get_secrets()
+        self.assertListEqual(no_secrets, [])
+        s = self.g.get_organization("samdevo-test-organization").get_secret("NAME2")
+        self.assertEqual(s.name, "NAME2")
+        self.assertEqual(s.visibility, "selected")
+        self.assertIsInstance(s, github.Secret.Secret)
+        self.assertIsInstance(s.selected_repositories, list)
+        self.assertListEqual(
+            sorted([r.name for r in s.selected_repositories]),
+            ["repo2", "repo3"]
+        )
+
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.org.create_secret("secret-name", "secret-value", "all"))
+        self.assertIsInstance(self.org.create_secret("secret-name", "secret-value", "all"), github.Secret.Secret)
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecretSelected(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(
-            self.org.create_secret("secret-name", "secret-value", "selected", repos)
+        self.assertIsInstance(
+            self.org.create_secret("secret-name", "secret-value", "selected", repos),
+            github.Secret.Secret
         )
 
     def testDeleteSecret(self):

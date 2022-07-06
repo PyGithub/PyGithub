@@ -1,5 +1,7 @@
 import github
 import github.GithubObject
+import github.Repository
+import github.GithubObject
 
 
 class Secret(github.GithubObject.CompletableGithubObject):
@@ -8,15 +10,15 @@ class Secret(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"secret_name": self.secret_name})
+        return self.get__repr__({"name": self.name})
 
     @property
-    def secret_name(self):
+    def name(self):
         """
         :type: string
         """
-        self._completeIfNotSet(self._secret_name)
-        return self._secret_name.value
+        self._completeIfNotSet(self._name)
+        return self._name.value
 
     @property
     def created_at(self):
@@ -47,16 +49,8 @@ class Secret(github.GithubObject.CompletableGithubObject):
         """
         :type: List of type Repository
         """
-        if self.selected_repositories_url == github.GithubObject.NotSet:
-            self._completeIfNotSet(self._selected_repositories)
+        self._completeIfNotSet(self._selected_repositories)
         return self._selected_repositories.value
-
-    @property
-    def selected_repositories_url(self):
-        """
-        :type: string
-        """
-        return self._selected_repositories_url.value
 
     @property
     def url(self):
@@ -66,17 +60,16 @@ class Secret(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     def _initAttributes(self):
-        self._secret_name = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._visibility = github.GithubObject.NotSet
-        self._selected_repositories_url = github.GithubObject.NotSet
         self._selected_repositories = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "secret_name" in attributes:
-            self._secret_name = self._makeStringAttribute(attributes["secret_name"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
@@ -84,9 +77,8 @@ class Secret(github.GithubObject.CompletableGithubObject):
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "selected_repositories_url" in attributes:
-            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
             headers, data = self._requester.requestJsonAndCheck(
-                "GET", self._selected_repositories_url.value
+                "GET", attributes["selected_repositories_url"]
             )
             self._selected_repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, data["repositories"]
@@ -94,35 +86,18 @@ class Secret(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
 
-    def delete(self):
-        """
-        DELETES THE SECRET (self) do not use after this
-        """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}"
-        )
-        return True
-
-    def add_repo(self, repo_name):
+    def add_repo(self, repo):
         if self.visibility != "selected":
             return False
         self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repositories/{repo_name}"
+            "PUT", f"{self.url}/repositories/{repo.id}"
         )
-        self.selected_repositories = github.GithubObject.NotSet
-        return True
+        self._selected_repositories.value.append(repo)
 
-    def remove_repo(self, repo_name):
+    def remove_repo(self, repo):
         if self.visibility != "selected":
             return False
         self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/repositories/{repo_name}"
+            "DELETE", f"{self.url}/repositories/{repo.id}"
         )
-
-    def update_visibility(self, visibility):
-        if self._visibility == "selected":
-            self.selected_repositories_url = github.GithubObject.NotSet
-            self.selected_repositories = github.GithubObject.NotSet
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}", input={"visibility": visibility}
-        )
+        self._selected_repositories.value.remove(repo)

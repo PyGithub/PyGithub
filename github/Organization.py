@@ -593,22 +593,23 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    # def get_secret_repos(self, secret_name):
-    #     """
-    #     :calls: `/orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/actions/secrets#list-selected-repositories-for-an-organization-secret>`
-    #     :param secret_name: string
-    #     :rtype: list of :class:`github.Repository.Repository`
-    #     """
-    #
-    #     assert isinstance(secret_name, str), secret_name
-    #     status, headers, data = self._requester.requestJson(
-    #         "GET", f"{self.url}/actions/secrets/{secret_name}/repositories"
-    #     )
-    #     data_dict = json.loads(data)
-    #     if "repositories" not in data_dict:
-    #         return []
-    #     repos = data_dict["repositories"]
-    #     return [self.get_repo(repo["name"]) for repo in repos]
+    def get_secrets(self):
+        """
+        Gets all organization secrets
+        :rtype: List[github.Secret.Secret]
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets"
+        )
+        return [
+            github.Secret.Secret(
+                requester=self._requester,
+                headers={},
+                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
+                completed=False
+            )
+            for secret in data["secrets"]
+        ]
 
     def get_secret(self, secret_name):
         """
@@ -662,10 +663,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
                 element.id for element in selected_repositories
             ]
 
-        status, headers, data = self._requester.requestJson(
+        self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
-        return status == 201
+
+        return self.get_secret(secret_name)
 
     def create_team(
         self,
