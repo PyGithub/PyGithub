@@ -47,6 +47,7 @@ class Secret(github.GithubObject.CompletableGithubObject):
     @property
     def selected_repositories(self):
         """
+        :calls: `GET {secret_url}/repositories <https://docs.github.com/en/rest/actions/secrets#list-selected-repositories-for-an-organization-secret>`_
         :type: List of type Repository
         """
         self._completeIfNotSet(self._selected_repositories)
@@ -87,6 +88,11 @@ class Secret(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
 
     def add_repo(self, repo):
+        """
+        :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :param repo: github.Repository.Repository
+        :rtype: None
+        """
         if self.visibility != "selected":
             return False
         self._requester.requestJsonAndCheck(
@@ -95,6 +101,11 @@ class Secret(github.GithubObject.CompletableGithubObject):
         self._selected_repositories.value.append(repo)
 
     def remove_repo(self, repo):
+        """
+        :calls: 'DELETE {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :param repo: github.Repository.Repository
+        :rtype: None
+        """
         if self.visibility != "selected":
             return False
         self._requester.requestJsonAndCheck(

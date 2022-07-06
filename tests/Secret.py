@@ -1,8 +1,4 @@
 import datetime
-from unittest import mock
-
-import github
-
 from . import Framework
 
 
