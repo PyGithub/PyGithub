@@ -308,7 +308,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         if "event" in attributes:  # pragma no branch
             self._event = self._makeStringAttribute(attributes["event"])
         if "run_started_at" in attributes:  # pragma no branch
-            assert attributes["run_started_at"] is None or isinstance(attributes["run_started_at"], (str, unicode)), attributes["run_started_at"]
+            assert attributes["run_started_at"] is None or isinstance(attributes["run_started_at"], str), attributes["run_started_at"]
             self._run_started_at = self._makeDatetimeAttribute(attributes["run_started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
