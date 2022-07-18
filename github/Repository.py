@@ -2279,7 +2279,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return [
             github.CodeownerError.CodeownerError(self._requester, headers, element, completed=False)
             for element in data["errors"]
-            if element is not None
+            if element is not None and "errors" in data.keys()
         ]
 
     def get_contributors(self, anon=github.GithubObject.NotSet):
