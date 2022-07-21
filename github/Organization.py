@@ -357,6 +357,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def parent_team_id(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._parent_team_id)
+        return self._parent_team_id.value
+
     def add_to_members(self, member, role=github.GithubObject.NotSet):
         """
         :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
@@ -641,6 +649,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         permission=github.GithubObject.NotSet,
         privacy=github.GithubObject.NotSet,
         description=github.GithubObject.NotSet,
+        parent_team_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
@@ -649,6 +658,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: integer
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
@@ -664,6 +674,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
+        assert parent_team_id is github.GithubObject.NotSet or isinstance(
+            parent_team_id, int
+        )
         post_parameters = {
             "name": name,
         }
@@ -677,6 +690,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if parent_team_id is not github.GithubObject.NotSet:
+            post_parameters["parent_team_id"] = parent_team_id
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/teams", input=post_parameters
         )
@@ -1298,6 +1313,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._type = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._parent_team_id = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "avatar_url" in attributes:  # pragma no branch
