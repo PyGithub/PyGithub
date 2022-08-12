@@ -64,6 +64,13 @@ import requests
 
 from . import Consts, GithubException
 
+class manualAuthHandler(requests.auth.AuthBase):
+    def __init__(self, auth_header_data):
+        self.__rawheader = auth_header_data
+    def __call__(self, request):
+        request.headers["Authorization"] = auth_header_data
+        return request
+
 
 class RequestsResponse:
     # mimic the httplib response object
@@ -131,6 +138,7 @@ class HTTPSRequestsConnectionClass:
             timeout=self.timeout,
             verify=self.verify,
             allow_redirects=False,
+            auth=manualAuthHandler(self.headers['Authorization']) if 'Authorization' in self.headers else None
         )
         return RequestsResponse(r)
 
