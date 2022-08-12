@@ -68,7 +68,7 @@ class manualAuthHandler(requests.auth.AuthBase):
     def __init__(self, auth_header_data):
         self.__rawheader = auth_header_data
     def __call__(self, request):
-        request.headers["Authorization"] = auth_header_data
+        request.headers["Authorization"] = self.__rawheader
         return request
 
 
