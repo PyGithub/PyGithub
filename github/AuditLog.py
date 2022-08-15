@@ -40,7 +40,7 @@ class AuditLog(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__({"actor": self._action.value, "action": self._action.value})
+        return self.get__repr__({"actor": self._actor.value, "action": self._action.value})
 
     @property
     def actor(self):
@@ -91,6 +91,34 @@ class AuditLog(github.GithubObject.NonCompletableGithubObject):
         """
         return self._action.value
 
+    @property
+    def pull_request_id(self):
+        """
+        :type: string
+        """
+        return self._pull_request_id.value
+
+    @property
+    def operation_type(self):
+        """
+        :type: string
+        """
+        return self._operation_type.value
+
+    @property
+    def pull_request_title(self):
+        """
+        :type: string
+        """
+        return self._pull_request_title.value
+
+    @property
+    def pull_request_url(self):
+        """
+        :type: string
+        """
+        return self._pull_request_url.value
+
     def _initAttributes(self):
         self._actor = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -98,23 +126,35 @@ class AuditLog(github.GithubObject.NonCompletableGithubObject):
         self._repo = github.GithubObject.NotSet
         self._action = github.GithubObject.NotSet
         self._actor_location = github.GithubObject.NotSet
+        self._pull_request_id = github.GithubObject.NotSet
+        self._operation_type = github.GithubObject.NotSet
+        self._pull_request_title = github.GithubObject.NotSet
+        self._pull_request_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["actor"]
-            )
-        if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "org" in attributes:  # pragma no branch
-            self._org = self._makeClassAttribute(
-                github.Organization.Organization, attributes["org"]
-            )
-        if "repo" in attributes:  # pragma no branch
-            self._repo = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repo"]
-            )
         if "action" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
+            self._action = self._makeStringAttribute(attributes["action"])
+        if "operation_type" in attributes:  # pragma no branch
+            self._operation_type = self._makeStringAttribute(attributes["operation_type"])
+        if "actor" in attributes:  # pragma no branch
+            self._actor = self._makeStringAttribute(attributes["actor"])
         if "actor_location" in attributes:  # pragma no branch
             self._actor_location = self._makeStringAttribute(attributes["actor_location"]["country_code"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeIntAttribute(attributes["created_at"])
+        if "org" in attributes:  # pragma no branch
+            self._org = self._makeStringAttribute(attributes["org"])
+
+        if "repo" in attributes:  # pragma no branch
+            self._repo = self._makeStringAttribute(attributes["repo"].lstrip(f"{self._org.value}/"))
+        elif "public_repo" in attributes:  # pragma no branch
+            self._repo = self._makeStringAttribute(attributes["public_repo"].lstrip(f"{self._org.value}/"))
+
+        if "pull_request_url" in attributes:  # pragma no branch
+            self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
+        if "pull_request_id" in attributes:  # pragma no branch
+            self._pull_request_id = self._makeIntAttribute(
+                attributes["pull_request_id"]
+            )
+        if "pull_request_title" in attributes:  # pragma no branch
+            self._pull_request_title = self._makeStringAttribute(attributes["pull_request_title"])
