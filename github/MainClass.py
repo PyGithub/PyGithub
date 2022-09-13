@@ -890,7 +890,7 @@ class GithubIntegration:
 
     def get_user_installation(self, username):
         """
-        :calls: `GET /repos/{username}/installation <https://docs.github.com/en/rest/reference/apps#get-a-user-installation-for-the-authenticated-app>`_
+        :calls: `GET /users/{username}/installation <https://docs.github.com/en/rest/reference/apps#get-a-user-installation-for-the-authenticated-app>`_
         :param username: str
         :rtype: :class:`github.Installation.Installation`
         """
@@ -901,7 +901,7 @@ class GithubIntegration:
         }
 
         response = requests.get(
-            f"{self.base_url}/repos/{username}/installation",
+            f"{self.base_url}/users/{username}/installation",
             headers=headers,
         )
         response_dict = response.json()
