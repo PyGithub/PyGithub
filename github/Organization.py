@@ -634,6 +634,25 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
+    def add_repository_to_organization_secret(
+        self,
+        secret_name,
+        repository,
+    ):
+        """
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :param secret_name: string
+        :param repository:  :class:`github.Repository.Repository`
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(repository, github.Repository.Repository)
+
+        status, headers, data = self._requester.requestJson(
+            "PUT", f"{self.url}/actions/secrets/{secret_name}/repositories/{repository.id}"
+        )
+        return status == 204
+
     def create_team(
         self,
         name,

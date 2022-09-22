@@ -376,6 +376,12 @@ class Organization(Framework.TestCase):
     def testDeleteSecret(self):
         self.assertTrue(self.org.delete_secret("secret-name"))
 
+    def testAddOrganizationSecretToRepo(self, encrypt):
+        repo = self.org.get_repo("TestPyGithub")
+        self.assertTrue(
+            self.org.add_repository_to_organization_secret("secret-name", repo)
+        )
+
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
             self.org.invite_user()
