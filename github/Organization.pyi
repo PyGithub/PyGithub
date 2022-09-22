@@ -74,6 +74,11 @@ class Organization(CompletableGithubObject):
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
     ) -> bool: ...
+    def add_repository_to_organization_secret(
+        self,
+        secret_name: str,
+        repository: Repository,
+    ) -> bool: ...
     def create_team(
         self,
         name: str,
