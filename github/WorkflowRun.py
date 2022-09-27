@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,6 +23,7 @@
 
 from collections import namedtuple
 
+import github.Artifact
 import github.GithubObject
 import github.PullRequest
 
@@ -169,6 +171,15 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
+
+    def get_artifacts(self):
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            self._artifacts_url.value,
+            None,
+            list_item="artifacts",
+        )
 
     @property
     def cancel_url(self):
