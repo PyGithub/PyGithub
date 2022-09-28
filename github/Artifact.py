@@ -116,6 +116,14 @@ class Artifact(github.GithubObject.NonCompletableGithubObject):
         """
         return self._workflow_run.value
 
+    def delete(self) -> bool:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#delete-an-artifact>`_
+        :rtype: bool
+        """
+        status, headers, data = self._requester.requestBlob("DELETE", self.url)
+        return status == 204
+
     def _initAttributes(self):
         self._archive_download_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
