@@ -40,3 +40,12 @@ class Artifact(Framework.TestCase):
             repr(artifact),
             f'Artifact(name="vscode-codeql-extension", id={artifact_id})',
         )
+
+    def testDelete(self):
+        artifact_id = 396724439
+        repo_name = "lexa/PyGithub"
+        repo = self.g.get_repo(repo_name)
+        artifact = repo.get_artifact(artifact_id)
+        self.assertTrue(artifact.delete())
+        with self.assertRaises(github.GithubException):
+            repo.get_artifact(artifact_id)
