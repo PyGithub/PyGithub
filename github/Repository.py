@@ -65,6 +65,7 @@
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -91,6 +92,7 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
+import github.Artifact
 import github.Branch
 import github.CheckRun
 import github.CheckSuite
@@ -3702,6 +3704,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/check-runs/{check_run_id}"
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
+
+    def get_artifacts(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            f"{self.url}/actions/artifacts",
+            None,
+            list_item="artifacts",
+        )
+
+    def get_artifact(self, artifact_id):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#get-an-artifact>`_
+        :param artifact_id: int
+        :rtype: :class:`github.Artifact.Artifact`
+        """
+        assert isinstance(artifact_id, int), artifact_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/artifacts/{artifact_id}"
+        )
+
+        return github.Artifact.Artifact(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet
