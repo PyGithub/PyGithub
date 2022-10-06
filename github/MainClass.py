@@ -856,7 +856,7 @@ class GithubIntegration:
                 status=response.status_code, data=response.text
             )
         raise GithubException.GithubException(
-            status=response.status_code, data=response.text
+            status=response.status_code, data=response.text, headers=None
         )
 
     def get_installation(self, owner, repo):
