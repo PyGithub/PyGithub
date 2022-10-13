@@ -474,6 +474,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_template(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_template)
+        return self._is_template.value
+
+    @property
     def issue_comment_url(self):
         """
         :type: string
@@ -764,6 +772,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._teams_url.value
 
     @property
+    def topics(self):
+        """
+        :type: list of strings
+        """
+        self._completeIfNotSet(self._topics)
+        return self._topics.value
+
+    @property
     def trees_url(self):
         """
         :type: string
@@ -786,6 +802,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @property
+    def visibility(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._visibility)
+        return self._visibility.value
 
     @property
     def watchers(self):
@@ -987,7 +1011,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
         :meth:`Repository.create_git_release`.
-
         :param tag: string
         :param tag_message: string
         :param release_name: string
@@ -1644,6 +1667,27 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
+    def rename_branch(self, branch, new_name):
+        """
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`
+        :param branch: :class:`github.Branch.Branch` or string
+        :param new_name: string
+        :rtype: bool
+
+        NOTE: This method does not return the branch since it may take some
+        time to fully complete server-side.
+        """
+        is_branch = isinstance(branch, github.Branch.Branch)
+        assert isinstance(branch, str) or is_branch, branch
+        assert isinstance(new_name, str), new_name
+        if is_branch:
+            branch = branch.name
+        parameters = {"new_name": new_name}
+        status, _, _ = self._requester.requestJson(
+            "POST", f"{self.url}/branches/{branch}/rename", input=parameters
+        )
+        return status == 201
+
     def get_branches(self):
         """
         :calls: `GET /repos/{owner}/{repo}/branches <https://docs.github.com/en/rest/reference/repos>`_
@@ -2296,15 +2340,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def create_fork(self, organization=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
-        :param organization: string or "none" or "*"
+        :param organization: :class:`github.Organization.Organization` or string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert organization is github.GithubObject.NotSet or isinstance(
-            organization, str
-        ), organization
         post_parameters = {}
-        if organization is not github.GithubObject.NotSet:
+        if isinstance(organization, github.Organization.Organization):
+            post_parameters["organization"] = organization.login
+        elif isinstance(organization, str):
             post_parameters["organization"] = organization
+        else:
+            assert organization is github.GithubObject.NotSet, organization
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/forks",
@@ -3699,6 +3744,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._hooks_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._is_template = github.GithubObject.NotSet
         self._issue_comment_url = github.GithubObject.NotSet
         self._issue_events_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
@@ -3735,9 +3781,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._svn_url = github.GithubObject.NotSet
         self._tags_url = github.GithubObject.NotSet
         self._teams_url = github.GithubObject.NotSet
+        self._topics = github.GithubObject.NotSet
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
 
@@ -3840,6 +3888,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_template" in attributes:  # pragma no branch
+            self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
             self._issue_comment_url = self._makeStringAttribute(
                 attributes["issue_comment_url"]
@@ -3940,10 +3990,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
+        if "topics" in attributes:  # pragma no branch
+            self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:  # pragma no branch
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch

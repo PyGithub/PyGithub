@@ -273,6 +273,15 @@ class PaginatedList(Framework.TestCase):
         repos = self.g.get_repos()
         self.assertEqual(0, repos.totalCount)
 
+    def testTotalCountWithDictionary(self):
+        # PullRequest.get_review_requests() actually returns a dictionary that
+        # we fudge into two lists, which means data is a dict, not a list.
+        # We should check the member, not data itself for totalCount.
+        pr = self.g.get_repo("PyGithub/PyGithub").get_pull(2078)
+        review_requests = pr.get_review_requests()
+        self.assertEqual(review_requests[0].totalCount, 0)
+        self.assertEqual(review_requests[1].totalCount, 0)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
@@ -280,9 +289,9 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        from . import (
+        from . import (  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
             CommitComment,
-        )  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
+        )
 
         self.g.per_page = 100
         PaginatedListImpl(
