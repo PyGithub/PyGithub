@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
+import github.Repository
 from github.Event import Event
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Hook import Hook
@@ -15,6 +16,7 @@ from github.Project import Project
 from github.PublicKey import PublicKey
 from github.Repository import Repository
 from github.Team import Team
+from github.Secret import Secret
 
 class Organization(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -67,13 +69,15 @@ class Organization(CompletableGithubObject):
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
+    def get_secrets(self) -> List[Secret]: ...
+    def get_secret(self, secret_name: str) -> Secret: ...
     def create_secret(
         self,
         secret_name: str,
         unencrypted_value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> bool: ...
+    ) -> Secret: ...
     def create_team(
         self,
         name: str,

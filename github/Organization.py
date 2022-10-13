@@ -49,6 +49,8 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import github.Secret
+import json
 
 from . import Consts
 
@@ -591,6 +593,38 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_secrets(self):
+        """
+        Gets all organization secrets
+        :rtype: List[github.Secret.Secret]
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets"
+        )
+        return [
+            github.Secret.Secret(
+                requester=self._requester,
+                headers={},
+                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
+                completed=False
+            )
+            for secret in data["secrets"]
+        ]
+
+    def get_secret(self, secret_name):
+        """
+        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.Secret.Secret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False
+        )
+
     def create_secret(
         self,
         secret_name,
@@ -629,10 +663,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
                 element.id for element in selected_repositories
             ]
 
-        status, headers, data = self._requester.requestJson(
+        self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
-        return status == 201
+
+        return self.get_secret(secret_name)
 
     def create_team(
         self,
