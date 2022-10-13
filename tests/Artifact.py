@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import github
+
 from . import Framework
 
 
@@ -40,6 +42,13 @@ class Artifact(Framework.TestCase):
             repr(artifact),
             f'Artifact(name="vscode-codeql-extension", id={artifact_id})',
         )
+
+    def testGetNonexistentArtifact(self):
+        artifact_id = 396724437
+        repo_name = "lexa/PyGithub"
+        repo = self.g.get_repo(repo_name)
+        with self.assertRaises(github.GithubException):
+            repo.get_artifact(artifact_id)
 
     def testDelete(self):
         artifact_id = 396724439
