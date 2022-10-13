@@ -31,7 +31,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__(
             {
-                "token": "{}...".format(self.token[:5]),
+                "token": f"{self.token[:5]}...",
                 "scope": self.scope,
                 "type": self.type,
             }
