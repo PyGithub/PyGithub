@@ -804,6 +804,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def visibility(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._visibility)
+        return self._visibility.value
+
+    @property
     def watchers(self):
         """
         :type: integer
@@ -2332,15 +2340,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def create_fork(self, organization=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
-        :param organization: string or "none" or "*"
+        :param organization: :class:`github.Organization.Organization` or string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert organization is github.GithubObject.NotSet or isinstance(
-            organization, str
-        ), organization
         post_parameters = {}
-        if organization is not github.GithubObject.NotSet:
+        if isinstance(organization, github.Organization.Organization):
+            post_parameters["organization"] = organization.login
+        elif isinstance(organization, str):
             post_parameters["organization"] = organization
+        else:
+            assert organization is github.GithubObject.NotSet, organization
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/forks",
@@ -3776,6 +3785,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
 
@@ -3986,6 +3996,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:  # pragma no branch
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch
