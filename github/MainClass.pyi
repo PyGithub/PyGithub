@@ -22,7 +22,7 @@ from github.Topic import Topic
 
 # from urllib3.util.retry import Retry
 
-TGithubObject = TypeVar('TGithubObject', bound=GithubObject)
+TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
 class Github:
     def __init__(
@@ -128,11 +128,7 @@ class Github:
         order: Union[str, _NotSetType] = ...,
         **qualifiers: Any
     ) -> PaginatedList[Repository]: ...
-    def search_topics(
-        self,
-        query: str,
-        **qualifiers: Any
-    ) -> PaginatedList[Topic]: ...
+    def search_topics(self, query: str, **qualifiers: Any) -> PaginatedList[Topic]: ...
     def search_users(
         self,
         query: str,
