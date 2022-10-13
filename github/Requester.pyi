@@ -50,20 +50,34 @@ class Requester:
     ) -> None: ...
     def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None: ...
     def __check(
-        self, status: int, responseHeader: Dict[str, Any], output: str,
+        self,
+        status: int,
+        responseHeader: Dict[str, Any],
+        output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]: ...
-    def __addParametersToUrl(self, url: str, parameters: Dict[str, Any],) -> str: ...
+    def __addParametersToUrl(
+        self,
+        url: str,
+        parameters: Dict[str, Any],
+    ) -> str: ...
     def __authenticate(
-        self, url: str, responseHeader: Dict[str, Any], parameters: Dict[str, Any],
+        self,
+        url: str,
+        responseHeader: Dict[str, Any],
+        parameters: Dict[str, Any],
     ) -> None: ...
     def __customConnection(
-        self, url: str,
+        self,
+        url: str,
     ) -> Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]]: ...
     def __createConnection(
         self,
     ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]: ...
     def __createException(
-        self, status: int, headers: Dict[str, Any], output: str,
+        self,
+        status: int,
+        headers: Dict[str, Any],
+        output: str,
     ) -> Any: ...
     def __log(
         self,
