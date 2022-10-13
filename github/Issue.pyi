@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.IssueComment import IssueComment
 from github.IssueEvent import IssueEvent
 from github.IssuePullRequest import IssuePullRequest
@@ -48,19 +48,19 @@ class Issue(CompletableGithubObject):
     def delete_reaction(self, reaction_id: int) -> bool: ...
     def edit(
         self,
-        title: Union[str, _NotSetType] = ...,
-        body: Union[str, _NotSetType] = ...,
-        assignee: Optional[Union[str, _NotSetType, NamedUser]] = ...,
-        state: Union[str, _NotSetType] = ...,
-        milestone: Optional[Union[Milestone, _NotSetType]] = ...,
-        labels: Union[_NotSetType, List[str]] = ...,
-        assignees: Union[_NotSetType, List[str]] = ...,
+        title: Union[str, NotSetType] = ...,
+        body: Union[str, NotSetType] = ...,
+        assignee: Optional[Union[str, NotSetType, NamedUser]] = ...,
+        state: Union[str, NotSetType] = ...,
+        milestone: Optional[Union[Milestone, NotSetType]] = ...,
+        labels: Union[NotSetType, List[str]] = ...,
+        assignees: Union[NotSetType, List[str]] = ...,
     ) -> None: ...
     @property
     def events_url(self) -> str: ...
     def get_comment(self, id: int) -> IssueComment: ...
     def get_comments(
-        self, since: Union[_NotSetType, datetime] = ...
+        self, since: Union[NotSetType, datetime] = ...
     ) -> PaginatedList[IssueComment]: ...
     def get_events(self) -> PaginatedList[IssueEvent]: ...
     def get_labels(self) -> PaginatedList[Label]: ...

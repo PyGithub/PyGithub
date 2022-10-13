@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Type, Union, Final
 
 from github.Commit import Commit
 from github.GistFile import GistFile
@@ -106,7 +106,7 @@ class CompletableGithubObject(GithubObject):
     def __ne__(self, other: Any) -> bool: ...
     def _completeIfNeeded(self) -> None: ...
     def _completeIfNotSet(
-        self, value: Union[_ValuedAttribute, _BadAttribute, _NotSetType]
+        self, value: Union[_ValuedAttribute, _BadAttribute, NotSetType]
     ) -> None: ...
     def update(self) -> bool: ...
 
@@ -117,8 +117,10 @@ class _BadAttribute:
     @property
     def value(self) -> Any: ...
 
-class _NotSetType:
+class NotSetType:
     def __repr__(self) -> str: ...
+
+NotSet: Final[NotSetType]
 
 class _ValuedAttribute:
     def __init__(self, value: Any) -> None: ...

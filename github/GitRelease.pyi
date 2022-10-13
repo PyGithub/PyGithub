@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.GitReleaseAsset import GitReleaseAsset
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
@@ -42,15 +42,15 @@ class GitRelease(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
-        tag_name: Union[str, _NotSetType] = ...,
-        target_commitish: Union[str, _NotSetType] = ...,
+        tag_name: Union[str, NotSetType] = ...,
+        target_commitish: Union[str, NotSetType] = ...,
     ) -> GitRelease: ...
     def upload_asset(
         self,
         path: str,
         label: str = ...,
-        content_type: Union[_NotSetType, str] = ...,
-        name: Union[_NotSetType, str] = ...,
+        content_type: Union[NotSetType, str] = ...,
+        name: Union[NotSetType, str] = ...,
     ) -> GitReleaseAsset: ...
     @property
     def upload_url(self) -> str: ...

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from github.AuthorizationApplication import AuthorizationApplication
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 
 class Authorization(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -15,11 +15,11 @@ class Authorization(CompletableGithubObject):
     def delete(self) -> None: ...
     def edit(
         self,
-        scopes: Union[_NotSetType, List[str]] = ...,
-        add_scopes: Union[_NotSetType, List[str]] = ...,
-        remove_scopes: Union[_NotSetType, List[str]] = ...,
-        note: Union[_NotSetType, str] = ...,
-        note_url: Union[_NotSetType, str] = ...,
+        scopes: Union[NotSetType, List[str]] = ...,
+        add_scopes: Union[NotSetType, List[str]] = ...,
+        remove_scopes: Union[NotSetType, List[str]] = ...,
+        note: Union[NotSetType, str] = ...,
+        note_url: Union[NotSetType, str] = ...,
     ) -> None: ...
     @property
     def id(self) -> int: ...

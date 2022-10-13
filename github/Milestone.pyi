@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.Label import Label
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
@@ -26,9 +26,9 @@ class Milestone(CompletableGithubObject):
     def edit(
         self,
         title: str,
-        state: Union[_NotSetType, str] = ...,
-        description: Union[_NotSetType, str] = ...,
-        due_on: Union[date, _NotSetType] = ...,
+        state: Union[NotSetType, str] = ...,
+        description: Union[NotSetType, str] = ...,
+        due_on: Union[date, NotSetType] = ...,
     ) -> None: ...
     def get_labels(self) -> PaginatedList[Label]: ...
     @property

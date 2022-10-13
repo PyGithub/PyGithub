@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from github.Event import Event
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.Hook import Hook
 from github.Issue import Issue
 from github.Label import Label
@@ -21,7 +21,7 @@ class Organization(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
     def add_to_members(
-        self, member: NamedUser, role: Union[_NotSetType, str] = ...
+        self, member: NamedUser, role: Union[NotSetType, str] = ...
     ) -> None: ...
     def add_to_public_members(self, public_member: NamedUser) -> None: ...
     @property
@@ -40,47 +40,47 @@ class Organization(CompletableGithubObject):
         self,
         name: str,
         config: Dict[str, str],
-        events: Union[_NotSetType, List[str]] = ...,
-        active: Union[bool, _NotSetType] = ...,
+        events: Union[NotSetType, List[str]] = ...,
+        active: Union[bool, NotSetType] = ...,
     ) -> Hook: ...
     def create_migration(
         self,
         repos: List[str],
-        lock_repositories: Union[bool, _NotSetType] = ...,
-        exclude_attachments: Union[bool, _NotSetType] = ...,
+        lock_repositories: Union[bool, NotSetType] = ...,
+        exclude_attachments: Union[bool, NotSetType] = ...,
     ) -> Migration: ...
     def create_repo(
         self,
         name: str,
-        description: Union[str, _NotSetType] = ...,
-        homepage: Union[str, _NotSetType] = ...,
-        private: Union[bool, _NotSetType] = ...,
-        has_issues: Union[bool, _NotSetType] = ...,
-        has_wiki: Union[bool, _NotSetType] = ...,
-        has_downloads: Union[bool, _NotSetType] = ...,
-        has_projects: Union[bool, _NotSetType] = ...,
-        team_id: Union[int, _NotSetType] = ...,
-        auto_init: Union[bool, _NotSetType] = ...,
-        license_template: Union[str, _NotSetType] = ...,
-        gitignore_template: Union[str, _NotSetType] = ...,
-        allow_squash_merge: Union[bool, _NotSetType] = ...,
-        allow_merge_commit: Union[bool, _NotSetType] = ...,
-        allow_rebase_merge: Union[bool, _NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        homepage: Union[str, NotSetType] = ...,
+        private: Union[bool, NotSetType] = ...,
+        has_issues: Union[bool, NotSetType] = ...,
+        has_wiki: Union[bool, NotSetType] = ...,
+        has_downloads: Union[bool, NotSetType] = ...,
+        has_projects: Union[bool, NotSetType] = ...,
+        team_id: Union[int, NotSetType] = ...,
+        auto_init: Union[bool, NotSetType] = ...,
+        license_template: Union[str, NotSetType] = ...,
+        gitignore_template: Union[str, NotSetType] = ...,
+        allow_squash_merge: Union[bool, NotSetType] = ...,
+        allow_merge_commit: Union[bool, NotSetType] = ...,
+        allow_rebase_merge: Union[bool, NotSetType] = ...,
     ) -> Repository: ...
     def create_secret(
         self,
         secret_name: str,
         unencrypted_value: str,
         visibility: str = ...,
-        selected_repositories: Union[List[Repository], _NotSetType] = ...,
+        selected_repositories: Union[List[Repository], NotSetType] = ...,
     ) -> bool: ...
     def create_team(
         self,
         name: str,
-        repo_names: Union[List[Repository], _NotSetType] = ...,
-        permission: Union[str, _NotSetType] = ...,
-        privacy: Union[str, _NotSetType] = ...,
-        description: Union[str, _NotSetType] = ...,
+        repo_names: Union[List[Repository], NotSetType] = ...,
+        permission: Union[str, NotSetType] = ...,
+        privacy: Union[str, NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
     ) -> Team: ...
     @property
     def created_at(self) -> datetime: ...
@@ -94,21 +94,21 @@ class Organization(CompletableGithubObject):
     def disk_usage(self) -> int: ...
     def edit(
         self,
-        billing_email: Union[str, _NotSetType] = ...,
-        blog: Union[str, _NotSetType] = ...,
-        company: Union[str, _NotSetType] = ...,
-        description: Union[str, _NotSetType] = ...,
-        email: Union[str, _NotSetType] = ...,
-        location: Union[str, _NotSetType] = ...,
-        name: Union[str, _NotSetType] = ...,
+        billing_email: Union[str, NotSetType] = ...,
+        blog: Union[str, NotSetType] = ...,
+        company: Union[str, NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        email: Union[str, NotSetType] = ...,
+        location: Union[str, NotSetType] = ...,
+        name: Union[str, NotSetType] = ...,
     ) -> None: ...
     def edit_hook(
         self,
         id: int,
         name: str,
         config: Dict[str, str],
-        events: Union[_NotSetType, List[str]] = ...,
-        active: Union[bool, _NotSetType] = ...,
+        events: Union[NotSetType, List[str]] = ...,
+        active: Union[bool, NotSetType] = ...,
     ) -> Hook: ...
     @property
     def email(self) -> Optional[str]: ...
@@ -122,34 +122,34 @@ class Organization(CompletableGithubObject):
     def get_hooks(self) -> PaginatedList[Hook]: ...
     def get_issues(
         self,
-        filter: Union[str, _NotSetType] = ...,
-        state: Union[str, _NotSetType] = ...,
-        labels: Union[List[Label], _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        filter: Union[str, NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        labels: Union[List[Label], NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[Issue]: ...
     def get_members(
         self,
-        filter_: Union[str, _NotSetType] = ...,
-        role: Union[str, _NotSetType] = ...,
+        filter_: Union[str, NotSetType] = ...,
+        role: Union[str, NotSetType] = ...,
     ) -> PaginatedList[NamedUser]: ...
     def get_migrations(self) -> PaginatedList[Migration]: ...
     def get_installations(self) -> PaginatedList[Installation]: ...
     def get_outside_collaborators(
-        self, filter_: Union[str, _NotSetType] = ...
+        self, filter_: Union[str, NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def get_projects(
-        self, state: Union[_NotSetType, str] = ...
+        self, state: Union[NotSetType, str] = ...
     ) -> PaginatedList[Project]: ...
     def get_public_key(self) -> PublicKey: ...
     def get_public_members(self) -> PaginatedList[NamedUser]: ...
     def get_repo(self, name: str) -> Repository: ...
     def get_repos(
         self,
-        type: Union[str, _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
+        type: Union[str, NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
     ) -> PaginatedList[Repository]: ...
     def get_team(self, id: int) -> Team: ...
     def get_team_by_slug(self, slug: str) -> Team: ...
@@ -173,10 +173,10 @@ class Organization(CompletableGithubObject):
     def invitations(self) -> PaginatedList[NamedUser]: ...
     def invite_user(
         self,
-        user: Union[_NotSetType, NamedUser] = ...,
-        email: Union[str, _NotSetType] = ...,
-        role: Union[str, _NotSetType] = ...,
-        teams: Union[List[Team], _NotSetType] = ...,
+        user: Union[NotSetType, NamedUser] = ...,
+        email: Union[str, NotSetType] = ...,
+        role: Union[str, NotSetType] = ...,
+        teams: Union[List[Team], NotSetType] = ...,
     ) -> None: ...
     def cancel_invitation(self, invitee: NamedUser) -> bool: ...
     @property
@@ -205,7 +205,7 @@ class Organization(CompletableGithubObject):
     def remove_from_membership(self, member: NamedUser) -> None: ...
     def remove_from_public_members(self, public_member: NamedUser) -> None: ...
     def remove_outside_collaborator(self, collaborator: NamedUser) -> None: ...
-    def create_project(self, param: str, body: _NotSetType) -> None: ...
+    def create_project(self, param: str, body: NotSetType) -> None: ...
     @property
     def repos_url(self) -> str: ...
     @property

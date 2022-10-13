@@ -15,7 +15,7 @@ from github.Download import Download
 from github.Event import Event
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject, NotSetType
 from github.GitRef import GitRef
 from github.GitRelease import GitRelease
 from github.GitReleaseAsset import GitReleaseAsset
@@ -60,7 +60,7 @@ from github.WorkflowRun import WorkflowRun
 class Repository(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _hub(
-        self, mode: str, event: str, callback: str, secret: Union[str, _NotSetType]
+        self, mode: str, event: str, callback: str, secret: Union[str, NotSetType]
     ) -> None: ...
     @property
     def _identity(self) -> str: ...
@@ -78,7 +78,7 @@ class Repository(CompletableGithubObject):
     def add_to_collaborators(
         self,
         collaborator: Union[str, NamedUser],
-        permission: Union[str, _NotSetType] = ...,
+        permission: Union[str, NotSetType] = ...,
     ) -> None: ...
     @property
     def archive_url(self) -> str: ...
@@ -107,38 +107,38 @@ class Repository(CompletableGithubObject):
         self,
         name: str = ...,
         head_sha: str = ...,
-        details_url: Union[_NotSetType, str] = ...,
-        external_id: Union[_NotSetType, str] = ...,
-        status: Union[_NotSetType, str] = ...,
-        started_at: Union[_NotSetType, datetime] = ...,
-        conclusion: Union[_NotSetType, str] = ...,
-        completed_at: Union[_NotSetType, datetime] = ...,
+        details_url: Union[NotSetType, str] = ...,
+        external_id: Union[NotSetType, str] = ...,
+        status: Union[NotSetType, str] = ...,
+        started_at: Union[NotSetType, datetime] = ...,
+        conclusion: Union[NotSetType, str] = ...,
+        completed_at: Union[NotSetType, datetime] = ...,
         output: Union[
-            _NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
+            NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
         ] = ...,
-        actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
+        actions: Union[NotSetType, List[Dict[str, str]]] = ...,
     ) -> CheckRun: ...
     def create_check_suite(self, head_sha: str) -> CheckSuite: ...
     def create_deployment(
         self,
         ref: str,
-        task: Union[str, _NotSetType] = ...,
-        auto_merge: Union[bool, _NotSetType] = ...,
-        required_contexts: Union[List[str], _NotSetType] = ...,
-        payload: Union[Dict[str, Any], _NotSetType] = ...,
-        environment: Union[str, _NotSetType] = ...,
-        description: Union[str, _NotSetType] = ...,
-        transient_environment: Union[bool, _NotSetType] = ...,
-        production_environment: Union[bool, _NotSetType] = ...,
+        task: Union[str, NotSetType] = ...,
+        auto_merge: Union[bool, NotSetType] = ...,
+        required_contexts: Union[List[str], NotSetType] = ...,
+        payload: Union[Dict[str, Any], NotSetType] = ...,
+        environment: Union[str, NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        transient_environment: Union[bool, NotSetType] = ...,
+        production_environment: Union[bool, NotSetType] = ...,
     ) -> Deployment: ...
     def create_file(
         self,
         path: str,
         message: str,
         content: str,
-        branch: Union[str, _NotSetType] = ...,
-        committer: Union[InputGitAuthor, _NotSetType] = ...,
-        author: Union[InputGitAuthor, _NotSetType] = ...,
+        branch: Union[str, NotSetType] = ...,
+        committer: Union[InputGitAuthor, NotSetType] = ...,
+        author: Union[InputGitAuthor, NotSetType] = ...,
     ) -> Dict[str, Union[ContentFile, Commit]]: ...
     def create_git_blob(self, content: str, encoding: str) -> GitBlob: ...
     def create_git_commit(
@@ -146,8 +146,8 @@ class Repository(CompletableGithubObject):
         message: str,
         tree: GitTree,
         parents: List[GitCommit],
-        author: Union[InputGitAuthor, _NotSetType] = ...,
-        committer: Union[InputGitAuthor, _NotSetType] = ...,
+        author: Union[InputGitAuthor, NotSetType] = ...,
+        committer: Union[InputGitAuthor, NotSetType] = ...,
     ) -> GitCommit: ...
     def create_git_ref(self, ref: str, sha: str) -> GitRef: ...
     def create_git_release(
@@ -157,7 +157,7 @@ class Repository(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
-        target_commitish: Union[str, _NotSetType] = ...,
+        target_commitish: Union[str, NotSetType] = ...,
     ) -> GitRelease: ...
     def create_git_tag(
         self,
@@ -165,7 +165,7 @@ class Repository(CompletableGithubObject):
         message: str,
         object: str,
         type: str,
-        tagger: Union[InputGitAuthor, _NotSetType] = ...,
+        tagger: Union[InputGitAuthor, NotSetType] = ...,
     ) -> GitTag: ...
     def create_git_tag_and_release(
         self,
@@ -175,43 +175,43 @@ class Repository(CompletableGithubObject):
         release_message: str,
         object: str,
         type: str,
-        tagger: Union[InputGitAuthor, _NotSetType] = ...,
+        tagger: Union[InputGitAuthor, NotSetType] = ...,
         draft: bool = ...,
         prerelease: bool = ...,
     ) -> GitRelease: ...
     def create_git_tree(
         self,
         tree: List[InputGitTreeElement],
-        base_tree: Union[GitTree, _NotSetType] = ...,
+        base_tree: Union[GitTree, NotSetType] = ...,
     ) -> GitTree: ...
     def create_hook(
         self,
         name: str,
         config: Dict[str, str],
-        events: Union[_NotSetType, List[str]] = ...,
-        active: Union[bool, _NotSetType] = ...,
+        events: Union[NotSetType, List[str]] = ...,
+        active: Union[bool, NotSetType] = ...,
     ) -> Hook: ...
     def create_issue(
         self,
         title: str,
-        body: Union[str, _NotSetType] = ...,
-        assignee: Union[NamedUser, str, _NotSetType] = ...,
-        milestone: Union[Milestone, _NotSetType] = ...,
-        labels: Union[List[Label], _NotSetType, List[str]] = ...,
-        assignees: Union[_NotSetType, List[str], List[NamedUser]] = ...,
+        body: Union[str, NotSetType] = ...,
+        assignee: Union[NamedUser, str, NotSetType] = ...,
+        milestone: Union[Milestone, NotSetType] = ...,
+        labels: Union[List[Label], NotSetType, List[str]] = ...,
+        assignees: Union[NotSetType, List[str], List[NamedUser]] = ...,
     ) -> Issue: ...
     def create_key(
         self, title: str, key: str, read_only: bool = ...
     ) -> RepositoryKey: ...
     def create_label(
-        self, name: str, color: str, description: Union[str, _NotSetType] = ...
+        self, name: str, color: str, description: Union[str, NotSetType] = ...
     ) -> Label: ...
     def create_milestone(
         self,
         title: str,
-        state: Union[str, _NotSetType] = ...,
-        description: Union[str, _NotSetType] = ...,
-        due_on: Union[date, _NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        due_on: Union[date, NotSetType] = ...,
     ) -> Milestone: ...
     def create_project(self, name: str, body: str = ...) -> Project: ...
     @overload
@@ -221,18 +221,18 @@ class Repository(CompletableGithubObject):
         body: str,
         base: str,
         head: str,
-        maintainer_can_modify: Union[bool, _NotSetType] = _NotSetType(),
+        maintainer_can_modify: Union[bool, NotSetType] = NotSetType(),
         draft: bool = False,
-        issue: _NotSetType = _NotSetType(),
+        issue: NotSetType = NotSetType(),
     ) -> PullRequest: ...
     @overload
     def create_pull(
         self,
-        title: _NotSetType,
-        body: _NotSetType,
+        title: NotSetType,
+        body: NotSetType,
         base: str,
         head: str,
-        maintainer_can_modify: _NotSetType,
+        maintainer_can_modify: NotSetType,
         issue: Issue,
     ) -> PullRequest: ...
     def create_repository_dispatch(
@@ -244,8 +244,8 @@ class Repository(CompletableGithubObject):
         self,
         vcs: str,
         vcs_url: str,
-        vcs_username: Union[str, _NotSetType] = ...,
-        vcs_password: Union[str, _NotSetType] = ...,
+        vcs_username: Union[str, NotSetType] = ...,
+        vcs_password: Union[str, NotSetType] = ...,
     ) -> SourceImport: ...
     @property
     def created_at(self) -> datetime: ...
@@ -257,10 +257,10 @@ class Repository(CompletableGithubObject):
         path: str,
         message: str,
         sha: str,
-        branch: Union[str, _NotSetType] = ...,
-        committer: Union[InputGitAuthor, _NotSetType] = ...,
-        author: Union[InputGitAuthor, _NotSetType] = ...,
-    ) -> Dict[str, Union[Commit, _NotSetType]]: ...
+        branch: Union[str, NotSetType] = ...,
+        committer: Union[InputGitAuthor, NotSetType] = ...,
+        author: Union[InputGitAuthor, NotSetType] = ...,
+    ) -> Dict[str, Union[Commit, NotSetType]]: ...
     @property
     def delete_branch_on_merge(self) -> bool: ...
     @property
@@ -274,19 +274,19 @@ class Repository(CompletableGithubObject):
     def edit(
         self,
         name: Optional[str] = ...,
-        description: Union[str, _NotSetType] = ...,
-        homepage: Union[str, _NotSetType] = ...,
-        private: Union[bool, _NotSetType] = ...,
-        has_issues: Union[bool, _NotSetType] = ...,
-        has_projects: Union[bool, _NotSetType] = ...,
-        has_wiki: Union[bool, _NotSetType] = ...,
-        has_downloads: Union[bool, _NotSetType] = ...,
-        default_branch: Union[str, _NotSetType] = ...,
-        allow_squash_merge: Union[bool, _NotSetType] = ...,
-        allow_merge_commit: Union[bool, _NotSetType] = ...,
-        allow_rebase_merge: Union[bool, _NotSetType] = ...,
-        delete_branch_on_merge: Union[bool, _NotSetType] = ...,
-        archived: Union[bool, _NotSetType] = ...,
+        description: Union[str, NotSetType] = ...,
+        homepage: Union[str, NotSetType] = ...,
+        private: Union[bool, NotSetType] = ...,
+        has_issues: Union[bool, NotSetType] = ...,
+        has_projects: Union[bool, NotSetType] = ...,
+        has_wiki: Union[bool, NotSetType] = ...,
+        has_downloads: Union[bool, NotSetType] = ...,
+        default_branch: Union[str, NotSetType] = ...,
+        allow_squash_merge: Union[bool, NotSetType] = ...,
+        allow_merge_commit: Union[bool, NotSetType] = ...,
+        allow_rebase_merge: Union[bool, NotSetType] = ...,
+        delete_branch_on_merge: Union[bool, NotSetType] = ...,
+        archived: Union[bool, NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
     def enable_vulnerability_alert(self) -> bool: ...
@@ -303,7 +303,7 @@ class Repository(CompletableGithubObject):
     @property
     def full_name(self) -> str: ...
     def get_archive_link(
-        self, archive_format: str, ref: Union[str, _NotSetType] = ...
+        self, archive_format: str, ref: Union[str, NotSetType] = ...
     ) -> str: ...
     def get_assignees(self) -> PaginatedList[NamedUser]: ...
     def get_branch(self, branch: str) -> Branch: ...
@@ -312,48 +312,48 @@ class Repository(CompletableGithubObject):
     def get_check_run(self, check_run_id: int) -> CheckRun: ...
     def get_check_suite(self, check_suite_id: int) -> CheckSuite: ...
     def get_clones_traffic(
-        self, per: Union[str, _NotSetType] = ...
+        self, per: Union[str, NotSetType] = ...
     ) -> Dict[str, Union[int, List[Clones]]]: ...
     def get_collaborator_permission(
         self, collaborator: Union[str, NamedUser]
     ) -> str: ...
     def get_collaborators(
-        self, affiliation: Union[str, _NotSetType] = ...
+        self, affiliation: Union[str, NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def get_comment(self, id: int) -> CommitComment: ...
     def get_comments(self) -> PaginatedList[CommitComment]: ...
     def get_commit(self, sha: str) -> Commit: ...
     def get_commits(
         self,
-        sha: Union[str, _NotSetType] = ...,
-        path: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
-        until: Union[_NotSetType, datetime] = ...,
-        author: Union[AuthenticatedUser, NamedUser, str, _NotSetType] = ...,
+        sha: Union[str, NotSetType] = ...,
+        path: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
+        until: Union[NotSetType, datetime] = ...,
+        author: Union[AuthenticatedUser, NamedUser, str, NotSetType] = ...,
     ) -> PaginatedList[Commit]: ...
     def get_contents(
-        self, path: str, ref: Union[str, _NotSetType] = ...
+        self, path: str, ref: Union[str, NotSetType] = ...
     ) -> Union[List[ContentFile], ContentFile]: ...
     def get_contributors(
-        self, anon: Union[str, _NotSetType] = ...
+        self, anon: Union[str, NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def get_deployment(self, id_: int) -> Deployment: ...
     def get_deployments(
         self,
-        sha: Union[str, _NotSetType] = ...,
-        ref: Union[str, _NotSetType] = ...,
-        task: Union[str, _NotSetType] = ...,
-        environment: Union[str, _NotSetType] = ...,
+        sha: Union[str, NotSetType] = ...,
+        ref: Union[str, NotSetType] = ...,
+        task: Union[str, NotSetType] = ...,
+        environment: Union[str, NotSetType] = ...,
     ) -> PaginatedList[Deployment]: ...
     def get_dir_contents(
-        self, path: str, ref: Union[str, _NotSetType] = ...
+        self, path: str, ref: Union[str, NotSetType] = ...
     ) -> List[ContentFile]: ...
     def get_download(self, id: int) -> Download: ...
     def get_downloads(self) -> PaginatedList[Download]: ...
     def get_events(self) -> PaginatedList[Event]: ...
     def get_forks(self) -> PaginatedList[Repository]: ...
     def create_fork(
-        self, organization: Union[Organization, str, _NotSetType] = ...
+        self, organization: Union[Organization, str, NotSetType] = ...
     ) -> Repository: ...
     def get_git_blob(self, sha: str) -> GitBlob: ...
     def get_git_commit(self, sha: str) -> GitCommit: ...
@@ -362,28 +362,28 @@ class Repository(CompletableGithubObject):
     def get_git_refs(self) -> PaginatedList[GitRef]: ...
     def get_git_tag(self, sha: str) -> GitTag: ...
     def get_git_tree(
-        self, sha: str, recursive: Union[bool, _NotSetType] = ...
+        self, sha: str, recursive: Union[bool, NotSetType] = ...
     ) -> GitTree: ...
     def get_hook(self, id: int) -> Hook: ...
     def get_hooks(self) -> PaginatedList[Hook]: ...
     def get_issue(self, number: int) -> Issue: ...
     def get_issues(
         self,
-        milestone: Union[Milestone, str, _NotSetType] = ...,
-        state: Union[str, _NotSetType] = ...,
-        assignee: Union[NamedUser, str, _NotSetType] = ...,
-        mentioned: Union[_NotSetType, NamedUser] = ...,
-        labels: Union[List[str], List[Label], _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
-        creator: Union[NamedUser, _NotSetType] = ...,
+        milestone: Union[Milestone, str, NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        assignee: Union[NamedUser, str, NotSetType] = ...,
+        mentioned: Union[NotSetType, NamedUser] = ...,
+        labels: Union[List[str], List[Label], NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
+        creator: Union[NamedUser, NotSetType] = ...,
     ) -> PaginatedList[Issue]: ...
     def get_issues_comments(
         self,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[IssueComment]: ...
     def get_issues_event(self, id: int) -> IssueEvent: ...
     def get_issues_events(self) -> PaginatedList[IssueEvent]: ...
@@ -397,45 +397,45 @@ class Repository(CompletableGithubObject):
     def get_milestone(self, number: int) -> Milestone: ...
     def get_milestones(
         self,
-        state: Union[str, _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
     ) -> PaginatedList[Milestone]: ...
     def get_network_events(self) -> PaginatedList[Event]: ...
     def get_notifications(
         self,
-        all: Union[bool, _NotSetType] = ...,
-        participating: Union[bool, _NotSetType] = ...,
-        since: Union[datetime, _NotSetType] = ...,
-        before: Union[datetime, _NotSetType] = ...,
+        all: Union[bool, NotSetType] = ...,
+        participating: Union[bool, NotSetType] = ...,
+        since: Union[datetime, NotSetType] = ...,
+        before: Union[datetime, NotSetType] = ...,
     ) -> PaginatedList[Notification]: ...
     def get_pending_invitations(self) -> PaginatedList[Invitation]: ...
     def get_projects(
-        self, state: Union[str, _NotSetType] = ...
+        self, state: Union[str, NotSetType] = ...
     ) -> PaginatedList[Project]: ...
     def get_public_key(self) -> PublicKey: ...
     def get_pull(self, number: int) -> PullRequest: ...
     def get_pulls(
         self,
-        state: Union[str, _NotSetType] = ...,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        base: Union[str, _NotSetType] = ...,
-        head: Union[str, _NotSetType] = ...,
+        state: Union[str, NotSetType] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        base: Union[str, NotSetType] = ...,
+        head: Union[str, NotSetType] = ...,
     ) -> PaginatedList[PullRequest]: ...
     def get_pulls_comments(
         self,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[PullRequestComment]: ...
     def get_pulls_review_comments(
         self,
-        sort: Union[str, _NotSetType] = ...,
-        direction: Union[str, _NotSetType] = ...,
-        since: Union[_NotSetType, datetime] = ...,
+        sort: Union[str, NotSetType] = ...,
+        direction: Union[str, NotSetType] = ...,
+        since: Union[NotSetType, datetime] = ...,
     ) -> PaginatedList[PullRequestComment]: ...
-    def get_readme(self, ref: Union[str, _NotSetType] = ...) -> ContentFile: ...
+    def get_readme(self, ref: Union[str, NotSetType] = ...) -> ContentFile: ...
     def get_release(self, id: Union[int, str]) -> GitRelease: ...
     def get_release_asset(self, id: int) -> GitReleaseAsset: ...
     def get_releases(self) -> PaginatedList[GitRelease]: ...
@@ -456,7 +456,7 @@ class Repository(CompletableGithubObject):
     def get_top_referrers(self) -> List[Referrer]: ...
     def get_topics(self) -> List[str]: ...
     def get_views_traffic(
-        self, per: Union[str, _NotSetType] = ...
+        self, per: Union[str, NotSetType] = ...
     ) -> Dict[str, Union[int, List[View]]]: ...
     def get_vulnerability_alert(self) -> bool: ...
     def get_watchers(self) -> PaginatedList[NamedUser]: ...
@@ -514,7 +514,7 @@ class Repository(CompletableGithubObject):
     @property
     def master_branch(self) -> Optional[str]: ...
     def merge(
-        self, base: str, head: str, commit_message: Union[str, _NotSetType] = ...
+        self, base: str, head: str, commit_message: Union[str, NotSetType] = ...
     ) -> Optional[Commit]: ...
     @property
     def merges_url(self) -> str: ...
@@ -569,7 +569,7 @@ class Repository(CompletableGithubObject):
     @property
     def statuses_url(self) -> str: ...
     def subscribe_to_hub(
-        self, event: str, callback: str, secret: Union[str, _NotSetType] = ...
+        self, event: str, callback: str, secret: Union[str, NotSetType] = ...
     ) -> None: ...
     @property
     def subscribers_count(self) -> int: ...
@@ -592,9 +592,9 @@ class Repository(CompletableGithubObject):
         message: str,
         content: Union[bytes, str],
         sha: str,
-        branch: Union[_NotSetType, str] = ...,
-        committer: Union[_NotSetType, InputGitAuthor] = ...,
-        author: Union[_NotSetType, InputGitAuthor] = ...,
+        branch: Union[NotSetType, str] = ...,
+        committer: Union[NotSetType, InputGitAuthor] = ...,
+        author: Union[NotSetType, InputGitAuthor] = ...,
     ) -> Dict[str, Union[ContentFile, Commit]]: ...
     @property
     def updated_at(self) -> datetime: ...

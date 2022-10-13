@@ -36,14 +36,14 @@ from operator import itemgetter
 from . import Consts, GithubException
 
 
-class _NotSetType:
+class NotSetType:
     def __repr__(self):
         return "NotSet"
 
     value = None
 
 
-NotSet = _NotSetType()
+NotSet = NotSetType()
 
 
 class _ValuedAttribute:
