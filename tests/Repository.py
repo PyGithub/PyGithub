@@ -1709,6 +1709,16 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.5", refs[4].ref)
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
 
+    def testUpdateGitRef(self):
+        ref = self.repo.update_git_ref(
+            "heads/BranchCreatedByPyGithub",
+            "4303c5b90e2216d927155e9609436ccb8984c495",
+        )
+        self.assertEqual(
+            ref.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
+        )
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
