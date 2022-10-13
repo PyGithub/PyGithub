@@ -20,7 +20,6 @@ from github.Repository import Repository
 from github.Team import Team
 from github.UserKey import UserKey
 
-
 class EmailData(NamedTuple):
     email: str
     primary: bool

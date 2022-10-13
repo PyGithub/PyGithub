@@ -4,7 +4,6 @@ from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
 
-
 class GithubIntegration:
     def __init__(
         self, integration_id: Union[int, str], private_key: str, base_url: str = ...

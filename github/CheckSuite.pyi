@@ -9,7 +9,6 @@ from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
 
-
 class CheckSuite(CompletableGithubObject):
     def __repr__(self) -> str: ...
     def _initAttributes(self) -> None: ...
@@ -49,7 +48,7 @@ class CheckSuite(CompletableGithubObject):
     def rerequest(self) -> bool: ...
     def get_check_runs(
         self,
-        check_name: Union[str, _NotSetType]=...,
-        status: Union[str, _NotSetType]=...,
-        filter: Union[str, _NotSetType]=...,
+        check_name: Union[str, _NotSetType] = ...,
+        status: Union[str, _NotSetType] = ...,
+        filter: Union[str, _NotSetType] = ...,
     ) -> PaginatedList[CheckRun]: ...

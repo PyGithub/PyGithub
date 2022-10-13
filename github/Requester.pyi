@@ -56,7 +56,10 @@ class Requester:
     ) -> None: ...
     def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None: ...
     def __check(
-        self, status: int, responseHeaders: Dict[str, Any], output: str,
+        self,
+        status: int,
+        responseHeaders: Dict[str, Any],
+        output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]: ...
     def __addParametersToUrl(
         self,
@@ -64,7 +67,10 @@ class Requester:
         parameters: Dict[str, Any],
     ) -> str: ...
     def __authenticate(
-        self, url: str, requestHeaders: Dict[str, Any], parameters: Dict[str, Any],
+        self,
+        url: str,
+        requestHeaders: Dict[str, Any],
+        parameters: Dict[str, Any],
     ) -> None: ...
     def __customConnection(
         self,
