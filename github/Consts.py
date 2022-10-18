@@ -99,6 +99,9 @@ mediaTypeRequireMultipleApprovingReviews = (
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
 
+# https://developer.github.com/changes/2019-07-16-repository-templates-api/
+mediaTypeTemplatesPreview = "application/vnd.github.baptiste-preview+json"
+
 # https://docs.github.com/en/rest/reference/search#highlighting-code-search-results-1
 highLightSearchPreview = "application/vnd.github.v3.text-match+json"
 
