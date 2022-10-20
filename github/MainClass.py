@@ -866,6 +866,15 @@ class GithubIntegration:
         :param repo: str
         :rtype: :class:`github.Installation.Installation`
         """
+        return self.get_repo_installation(owner, repo)
+
+    def get_repo_installation(self, owner, repo):
+        """
+        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`_
+        :param owner: str
+        :param repo: str
+        :rtype: :class:`github.Installation.Installation`
+        """
         headers = {
             "Authorization": f"Bearer {self.create_jwt()}",
             "Accept": Consts.mediaTypeIntegrationPreview,
@@ -874,6 +883,25 @@ class GithubIntegration:
 
         response = requests.get(
             f"{self.base_url}/repos/{owner}/{repo}/installation",
+            headers=headers,
+        )
+        response_dict = response.json()
+        return Installation.Installation(None, headers, response_dict, True)
+
+    def get_user_installation(self, username):
+        """
+        :calls: `GET /users/{username}/installation <https://docs.github.com/en/rest/reference/apps#get-a-user-installation-for-the-authenticated-app>`_
+        :param username: str
+        :rtype: :class:`github.Installation.Installation`
+        """
+        headers = {
+            "Authorization": f"Bearer {self.create_jwt()}",
+            "Accept": Consts.mediaTypeIntegrationPreview,
+            "User-Agent": "PyGithub/Python",
+        }
+
+        response = requests.get(
+            f"{self.base_url}/users/{username}/installation",
             headers=headers,
         )
         response_dict = response.json()
