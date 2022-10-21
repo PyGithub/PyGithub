@@ -36,14 +36,6 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def merged_at(self):
-        """
-        :type: datetime.datetime
-        """
-        self._completeIfNotSet(self._merged_at)
-        return self._merged_at.value
-
-    @property
     def diff_url(self):
         """
         :type: string
@@ -56,6 +48,14 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         :type: string
         """
         return self._html_url.value
+
+    @property
+    def merged_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._merged_at)
+        return self._merged_at.value
 
     @property
     def patch_url(self):
@@ -72,19 +72,19 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         return self._url.value
 
     def _initAttributes(self):
-        self._merged_at = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._merged_at = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "merged_at" in attributes:  # pragma no branch
-            self._closed_at = self._makeDatetimeAttribute(attributes["merged_at"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "merged_at" in attributes:  # pragma no branch
+            self._merged_at = self._makeDatetimeAttribute(attributes["merged_at"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "url" in attributes:  # pragma no branch
