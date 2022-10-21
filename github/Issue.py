@@ -673,7 +673,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
                     github.NamedUser.NamedUser, []
                 )
         if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeStringAttribute(attributes["author_association"])
+            self._author_association = self._makeStringAttribute(
+                attributes["author_association"]
+            )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
