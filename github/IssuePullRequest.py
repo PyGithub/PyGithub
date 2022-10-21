@@ -64,11 +64,19 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         """
         return self._patch_url.value
 
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        return self._url.value
+
     def _initAttributes(self):
         self._merged_at = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "merged_at" in attributes:  # pragma no branch
@@ -79,3 +87,5 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
