@@ -6,7 +6,7 @@ from requests.models import Response
 
 from github.GithubObject import GithubObject
 
-# from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(
@@ -15,7 +15,8 @@ class HTTPRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Any = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -31,7 +32,8 @@ class HTTPSRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Any = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -120,7 +122,8 @@ class Requester:
         user_agent: str,
         per_page: int,
         verify: bool,
-        retry: Any,
+        retry: Optional[Union[int, Retry]],
+        pool_size: Optional[int],
     ) -> None: ...
     def _initializeDebugFeature(self) -> None: ...
     def check_me(self, obj: GithubObject) -> None: ...
