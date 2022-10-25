@@ -10,5 +10,5 @@
 # Add pyupgrade to pre-commit
 e113e37de1ec687c68337d777f3629251b35ab28
 
-Run pre-commit autoupdate and run all hooks
+# Run pre-commit autoupdate and run all hooks
 4c24c73d34b54a061b0c800eeea64dc64c230a63
