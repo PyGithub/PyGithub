@@ -92,8 +92,8 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
-import github.Autolink
 import github.Artifact
+import github.Autolink
 import github.Branch
 import github.CheckRun
 import github.CheckSuite
@@ -919,11 +919,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def create_autolink(
-        self,
-        key_prefix,
-        url_template
-    ):
+    def create_autolink(self, key_prefix, url_template):
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
@@ -933,10 +929,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
 
-        post_parameters = {
-            "key_prefix": key_prefix,
-            "url_template": url_template
-        }
+        post_parameters = {"key_prefix": key_prefix, "url_template": url_template}
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/autolinks", input=post_parameters
         )
@@ -3548,9 +3541,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param autolink: int or :class:`github.Autolink.Autolink`
         :rtype: None
         """
-        is_autolink = isinstance(
-            autolink, github.Autolink.Autolink
-        )
+        is_autolink = isinstance(autolink, github.Autolink.Autolink)
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(

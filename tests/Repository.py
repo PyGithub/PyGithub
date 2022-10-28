@@ -259,7 +259,9 @@ class Repository(Framework.TestCase):
         )
 
     def testCreateAutolink(self):
-        key = self.repo.create_autolink('DUMMY-', 'https://github.com/PyGithub/PyGithub/issues/<num>')
+        key = self.repo.create_autolink(
+            "DUMMY-", "https://github.com/PyGithub/PyGithub/issues/<num>"
+        )
         self.assertEqual(key.id, 209614)
 
     def testCreateGitBlob(self):
