@@ -65,6 +65,7 @@
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -92,6 +93,7 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
+import github.Artifact
 import github.Branch
 import github.CheckRun
 import github.CheckSuite
@@ -476,6 +478,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_template(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_template)
+        return self._is_template.value
+
+    @property
     def issue_comment_url(self):
         """
         :type: string
@@ -766,6 +776,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._teams_url.value
 
     @property
+    def topics(self):
+        """
+        :type: list of strings
+        """
+        self._completeIfNotSet(self._topics)
+        return self._topics.value
+
+    @property
     def trees_url(self):
         """
         :type: string
@@ -997,7 +1015,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
         :meth:`Repository.create_git_release`.
-
         :param tag: string
         :param tag_message: string
         :param release_name: string
@@ -3690,6 +3707,33 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
+    def get_artifacts(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            f"{self.url}/actions/artifacts",
+            None,
+            list_item="artifacts",
+        )
+
+    def get_artifact(self, artifact_id):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#get-an-artifact>`_
+        :param artifact_id: int
+        :rtype: :class:`github.Artifact.Artifact`
+        """
+        assert isinstance(artifact_id, int), artifact_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/artifacts/{artifact_id}"
+        )
+
+        return github.Artifact.Artifact(self._requester, headers, data, completed=True)
+
     def get_codescan_alerts(self):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
@@ -3740,6 +3784,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._hooks_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._is_template = github.GithubObject.NotSet
         self._issue_comment_url = github.GithubObject.NotSet
         self._issue_events_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
@@ -3776,6 +3821,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._svn_url = github.GithubObject.NotSet
         self._tags_url = github.GithubObject.NotSet
         self._teams_url = github.GithubObject.NotSet
+        self._topics = github.GithubObject.NotSet
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -3882,6 +3928,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_template" in attributes:  # pragma no branch
+            self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
             self._issue_comment_url = self._makeStringAttribute(
                 attributes["issue_comment_url"]
@@ -3982,6 +4030,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
+        if "topics" in attributes:  # pragma no branch
+            self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
