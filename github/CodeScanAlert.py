@@ -24,8 +24,8 @@ import github.CodeScanAlertInstance
 import github.CodeScanRule
 import github.CodeScanTool
 import github.GithubObject
-import github.PaginatedList
 import github.NamedUser
+import github.PaginatedList
 
 
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):

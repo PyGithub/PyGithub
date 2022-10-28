@@ -98,10 +98,10 @@ import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
+import github.CodeScanAlert
 import github.Commit
 import github.CommitComment
 import github.Comparison
-import github.CodeScanAlert
 import github.ContentFile
 import github.Deployment
 import github.Download

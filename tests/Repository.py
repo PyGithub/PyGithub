@@ -493,7 +493,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(instance.environment, "{language:python}")
         self.assertEqual(instance.state, "open")
         self.assertListEqual(instance.classifications, ["stupid typo"])
-        self.assertDictEqual(instance.message, {'text': 'Awful stuff might happen.'})
+        self.assertDictEqual(instance.message, {"text": "Awful stuff might happen."})
         self.assertEqual(instance.commit_sha, "deadbeef")
         location = instance.location
         self.assertEqual(
