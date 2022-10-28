@@ -101,6 +101,7 @@ import github.Clones
 import github.Commit
 import github.CommitComment
 import github.Comparison
+import github.CodeScanAlert
 import github.ContentFile
 import github.Deployment
 import github.Download
@@ -144,7 +145,6 @@ import github.Team
 import github.View
 import github.Workflow
 import github.WorkflowRun
-import github.CodeScanAlert
 
 from . import Consts
 
@@ -3740,7 +3740,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
         return github.PaginatedList.PaginatedList(
-            github.CodeScanAlert.CodeScanAlert, self._requester, f"{self.url}/code-scanning/alerts", None
+            github.CodeScanAlert.CodeScanAlert,
+            self._requester,
+            f"{self.url}/code-scanning/alerts",
+            None,
         )
 
     def _initAttributes(self):

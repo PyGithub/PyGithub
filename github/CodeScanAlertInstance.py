@@ -20,8 +20,8 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
 import github.CodeScanAlertInstanceLocation
+import github.GithubObject
 
 
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
@@ -116,7 +116,10 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
             self._message = self._makeDictAttribute(attributes["message"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
-                github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation, attributes["location"]
+                github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation,
+                attributes["location"],
             )
         if "classifications" in attributes:  # pragma no branch
-            self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])
+            self._classifications = self._makeListOfStringsAttribute(
+                attributes["classifications"]
+            )

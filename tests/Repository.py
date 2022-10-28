@@ -453,55 +453,81 @@ class Repository(Framework.TestCase):
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
-        self.assertListKeyEqual(codescan_alerts, lambda c: c.number, [6, ])
+        self.assertListKeyEqual(
+            codescan_alerts,
+            lambda c: c.number,
+            [
+                6,
+            ],
+        )
         codescan_alert = codescan_alerts[0]
         self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
         self.assertEqual(codescan_alert.state, "open")
-        self.assertEqual(codescan_alert.url, "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6")
-        self.assertEqual(codescan_alert.created_at, datetime.datetime(2021, 6, 29, 12, 28, 30))
-        self.assertEqual(codescan_alert.dismissed_at, datetime.datetime(2021, 6, 30, 5, 5, 5))
+        self.assertEqual(
+            codescan_alert.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6",
+        )
+        self.assertEqual(
+            codescan_alert.created_at,
+            datetime.datetime(2021, 6, 29, 12, 28, 30),
+        )
+        self.assertEqual(
+            codescan_alert.dismissed_at,
+            datetime.datetime(2021, 6, 30, 5, 5, 5),
+        )
         self.assertEqual(codescan_alert.dismissed_reason, "Won't tell")
         dismissed_by = codescan_alert.dismissed_by
         self.assertEqual(dismissed_by.login, "dismisser.login")
         instance = codescan_alert.most_recent_instance
         self.assertEqual(
             repr(instance),
-            'CodeScanAlertInstance('
+            "CodeScanAlertInstance("
             'ref="refs/heads/master", '
             'analysis_key=".github/workflows/codeql-analysis.yml:analyze"'
-            ')'
+            ")",
         )
         self.assertEqual(instance.ref, "refs/heads/master")
-        self.assertEqual(instance.analysis_key, ".github/workflows/codeql-analysis.yml:analyze")
+        self.assertEqual(
+            instance.analysis_key, ".github/workflows/codeql-analysis.yml:analyze"
+        )
         self.assertEqual(instance.environment, "{language:python}")
         self.assertEqual(instance.state, "open")
         self.assertListEqual(instance.classifications, ["stupid typo"])
         self.assertDictEqual(instance.message, {'text': 'Awful stuff might happen.'})
         self.assertEqual(instance.commit_sha, "deadbeef")
         location = instance.location
-        self.assertEqual(str(location), "tests/ReplayData/Repository.testCodeScanAlerts.txt @ l10:c2-l10:c48")
+        self.assertEqual(
+            str(location),
+            "tests/ReplayData/Repository.testCodeScanAlerts.txt @ l10:c2-l10:c48",
+        )
         self.assertEqual(
             repr(location),
-            'CodeScanAlertInstanceLocation('
-            'start_line=10, start_column=2, '
+            "CodeScanAlertInstanceLocation("
+            "start_line=10, start_column=2, "
             'path="tests/ReplayData/Repository.testCodeScanAlerts.txt", '
-            'end_line=10, end_column=48'
-            ')'
+            "end_line=10, end_column=48"
+            ")",
         )
-        self.assertEqual(location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt")
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
         self.assertEqual(location.start_line, 10)
         self.assertEqual(location.start_column, 2)
         self.assertEqual(location.end_line, 10)
         self.assertEqual(location.end_column, 48)
         rule = codescan_alert.rule
-        self.assertEqual(repr(rule), 'CodeScanRule(name="py/rule-name", id="py/rule-id")')
+        self.assertEqual(
+            repr(rule), 'CodeScanRule(name="py/rule-name", id="py/rule-id")'
+        )
         self.assertEqual(rule.id, "py/rule-id")
         self.assertEqual(rule.name, "py/rule-name")
         self.assertEqual(rule.security_severity_level, "high")
         self.assertEqual(rule.severity, "warning")
         self.assertEqual(rule.description, "Bad practice")
         tool = codescan_alert.tool
-        self.assertEqual(repr(tool), 'CodeScanTool(version="2.5.7", name="CodeQL", guid=None)')
+        self.assertEqual(
+            repr(tool), 'CodeScanTool(version="2.5.7", name="CodeQL", guid=None)'
+        )
         self.assertEqual(tool.guid, None)
         self.assertEqual(tool.name, "CodeQL")
         self.assertEqual(tool.version, "2.5.7")
@@ -517,7 +543,9 @@ class Repository(Framework.TestCase):
         self.assertDictEqual(instance.message, {"text": "instances[0].message"})
         self.assertEqual(instance.commit_sha, "instances[0].commit_sha")
         location = instance.location
-        self.assertEqual(location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt")
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
         self.assertEqual(location.start_line, 10)
         self.assertEqual(location.start_column, 2)
         self.assertEqual(location.end_line, 10)
@@ -532,7 +560,9 @@ class Repository(Framework.TestCase):
         self.assertDictEqual(instance.message, {"text": "instances[1].message"})
         self.assertEqual(instance.commit_sha, "instances[1].commit_sha")
         location = instance.location
-        self.assertEqual(location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt")
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
         self.assertEqual(location.start_line, 20)
         self.assertEqual(location.start_column, 17)
         self.assertEqual(location.end_line, 20)

@@ -36,8 +36,10 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
         return self.get__repr__(
             {
                 "path": self.path,
-                "start_line": self.start_line, "start_column": self.start_column,
-                "end_line": self.end_line, "end_column": self.end_column,
+                "start_line": self.start_line,
+                "start_column": self.start_column,
+                "end_line": self.end_line,
+                "end_column": self.end_column,
             }
         )
 

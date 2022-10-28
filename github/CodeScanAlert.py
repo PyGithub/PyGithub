@@ -20,12 +20,12 @@
 #                                                                              #
 ################################################################################
 
+import github.CodeScanAlertInstance
+import github.CodeScanRule
+import github.CodeScanTool
 import github.GithubObject
 import github.PaginatedList
 import github.NamedUser
-import github.CodeScanRule
-import github.CodeScanTool
-import github.CodeScanAlertInstance
 
 
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
@@ -130,7 +130,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
             github.CodeScanAlertInstance.CodeScanAlertInstance,
             self._requester,
             self.instances_url,
-            None
+            None,
         )
 
     def _initAttributes(self):
@@ -167,9 +167,13 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
-            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+            self._dismissed_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["dismissed_by"]
+            )
         if "dismissed_reason" in attributes:  # pragma no branch
-            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
+            self._dismissed_reason = self._makeStringAttribute(
+                attributes["dismissed_reason"]
+            )
 
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
@@ -180,7 +184,8 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
 
         if "most_recent_instance" in attributes:  # pragma no branch
             self._most_recent_instance = self._makeClassAttribute(
-                github.CodeScanAlertInstance.CodeScanAlertInstance, attributes["most_recent_instance"]
+                github.CodeScanAlertInstance.CodeScanAlertInstance,
+                attributes["most_recent_instance"],
             )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
