@@ -52,6 +52,10 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(user_agent="PyGithubTester")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
+    def testAppAuthentication(self):
+        g = github.Github(app_id=self.app_id, app_private_key=self.app_private_key)
+        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
     def testAuthorizationHeaderWithLogin(self):
         # See special case in Framework.fixAuthorizationHeader
         g = github.Github("fake_login", "fake_password")
