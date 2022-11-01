@@ -4,11 +4,7 @@ import deprecated
 import jwt
 
 from github import Consts
-from github.GithubException import (
-    BadCredentialsException,
-    GithubException,
-    UnknownObjectException,
-)
+from github.GithubException import GithubException, UnknownObjectException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
@@ -83,8 +79,6 @@ class GithubIntegration:
             )
         except UnknownObjectException:
             raise
-        except BadCredentialsException:
-            raise
         except GithubException:
             raise
         return Installation(
@@ -110,17 +104,19 @@ class GithubIntegration:
 
         return encrypted
 
-    def get_access_token(self, installation_id, user_id=None):
+    def get_access_token(self, installation_id, permissions={}):
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
-        :param user_id: int
         :param installation_id: int
+        :param permissions: dict
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
-        body = {}
-        if user_id:
-            body["user_id"] = user_id
+        if not isinstance(permissions, dict):
+            raise GithubException(
+                status=400, data={"message": "Invalid permissions"}, headers=None
+            )
 
+        body = {"permissions": permissions}
         try:
             headers, response = self.__requester.requestJsonAndCheck(
                 "POST",
@@ -128,8 +124,6 @@ class GithubIntegration:
                 input=body,
             )
         except UnknownObjectException:
-            raise
-        except BadCredentialsException:
             raise
         except GithubException:
             raise
@@ -180,7 +174,7 @@ class GithubIntegration:
         :param repo: str
         :rtype: :class:`github.Installation.Installation`
         """
-        return self.get_installation(owner, repo)
+        return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
     def get_user_installation(self, username):
         """
