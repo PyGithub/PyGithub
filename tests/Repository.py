@@ -258,6 +258,12 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
 
+    def testCreateAutolink(self):
+        key = self.repo.create_autolink(
+            "DUMMY-", "https://github.com/PyGithub/PyGithub/issues/<num>"
+        )
+        self.assertEqual(key.id, 209614)
+
     def testCreateGitBlob(self):
         blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
         self.assertEqual(blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8")
@@ -594,6 +600,9 @@ class Repository(Framework.TestCase):
 
     def testRemoveInvitation(self):
         self.repo.remove_invitation(17285388)
+
+    def testRemoveAutolink(self):
+        self.repo.remove_autolink(209611)
 
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -1285,6 +1294,16 @@ class Repository(Framework.TestCase):
     def testGetPullsWithArguments(self):
         self.assertListKeyEqual(
             self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215]
+        )
+
+    def testGetAutolinks(self):
+        self.assertListKeyEqual(
+            self.repo.get_autolinks(),
+            lambda i: i.id,
+            [
+                209614,
+                209611,
+            ],
         )
 
     def testLegacySearchIssues(self):
