@@ -45,6 +45,7 @@ class GithubIntegration:
             jwt=self.create_jwt(),
             app_id=None,
             app_private_key=None,
+            app_installation_id=None,
             base_url=self.base_url,
             timeout=Consts.DEFAULT_TIMEOUT,
             user_agent="PyGithub/Python",
@@ -104,13 +105,16 @@ class GithubIntegration:
 
         return encrypted
 
-    def get_access_token(self, installation_id, permissions={}):
+    def get_access_token(self, installation_id, permissions=None):
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
         :param installation_id: int
         :param permissions: dict
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
+        if permissions is None:
+            permissions = {}
+
         if not isinstance(permissions, dict):
             raise GithubException(
                 status=400, data={"message": "Invalid permissions"}, headers=None
@@ -183,3 +187,11 @@ class GithubIntegration:
         :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/users/{username}/installation")
+
+    def get_app_installation(self, installation_id):
+        """
+        :calls: `GET /app/installations/{installation_id} <https://docs.github.com/en/rest/apps/apps#get-an-installation-for-the-authenticated-app>`
+        :param installation_id: int
+        :rtype: :class:`github.Installation.Installation`
+        """
+        return self._get_installed_app(url=f"/app/installations/{installation_id}")

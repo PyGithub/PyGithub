@@ -51,6 +51,7 @@ class Requester:
     __installation_authorization: Optional[InstallationAuthorization]
     __app_id: Optional[Union[int, str]]
     __app_private_key: Optional[str]
+    __app_installation_id: Optional[int]
     def DEBUG_ON_RESPONSE(
         self, statusCode: int, responseHeader: Dict[str, str], data: str
     ) -> None: ...
@@ -122,6 +123,7 @@ class Requester:
         jwt: Optional[str],
         app_id: Optional[Union[int, str]],
         app_private_key: Optional[str],
+        app_installation_id: Optional[int],
         base_url: str,
         timeout: int,
         user_agent: str,

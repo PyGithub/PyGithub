@@ -300,6 +300,7 @@ class Requester:
         jwt,
         app_id,
         app_private_key,
+        app_installation_id,
         base_url,
         timeout,
         user_agent,
@@ -313,6 +314,8 @@ class Requester:
         self.__installation_authorization = None
         self.__app_id = app_id
         self.__app_private_key = app_private_key
+        self.__app_installation_id = app_installation_id
+
         if password is not None:
             login = login_or_token
             b64 = (
@@ -371,12 +374,11 @@ class Requester:
         )
 
     def _get_installation_authorization(self):
-        assert self.__app_id is not None and self.__app_private_key is not None
+        assert self.__app_id is not None and self.__app_private_key is not None and self.__app_installation_id is not None
         integration = GithubIntegration.GithubIntegration(
             self.__app_id, self.__app_private_key
         )
-        installation_id = integration.get_installations()[0].id
-        return integration.get_access_token(installation_id)
+        return integration.get_access_token(self.__app_installation_id)
 
     def _refresh_token_if_needed(self) -> None:
         """Get a new access token from the GitHub app installation if the one we have is about to expire"""
@@ -388,7 +390,7 @@ class Requester:
 
     def _refresh_token(self) -> None:
         """In the context of a GitHub app, refresh the access token"""
-        assert self.__app_id is not None and self.__app_private_key is not None
+        assert self.__app_id is not None and self.__app_private_key is not None and self.__app_installation_id is not None
         self.__installation_authorization = self._get_installation_authorization()
         self.__authorizationHeader = f"token {self.__installation_authorization.token}"
 
