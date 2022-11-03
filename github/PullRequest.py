@@ -48,12 +48,12 @@ import github.File
 import github.GithubObject
 import github.IssueComment
 import github.NamedUser
-import github.Team
 import github.PaginatedList
 import github.PullRequestComment
 import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
+import github.Team
 
 from . import Consts
 
@@ -363,9 +363,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     @property
     def requested_teams(self):
-      self._completeIfNotSet(self._requested_teams)
-      return self._requested_teams.value
-
+        self._completeIfNotSet(self._requested_teams)
+        return self._requested_teams.value
 
     @property
     def url(self):
