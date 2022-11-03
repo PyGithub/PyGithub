@@ -155,6 +155,16 @@ class GithubIntegration(Framework.BasicTestCase):
 
         self.assertEqual(installation.id, self.repo_installation_id)
 
+    def testGetAppInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installation = github_integration.get_app_installation(
+            installation_id=self.org_installation_id
+        )
+
+        self.assertEqual(installation.id, self.org_installation_id)
+
     def testGetInstallationNotFound(self):
         github_integration = github.GithubIntegration(
             integration_id=APP_ID, private_key=PRIVATE_KEY

@@ -53,7 +53,11 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testAppAuthentication(self):
-        g = github.Github(app_id=self.app_id, app_private_key=self.app_private_key, app_installation_id=29782936)
+        g = github.Github(
+            app_id=self.app_id,
+            app_private_key=self.app_private_key,
+            app_installation_id=29782936,
+        )
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
 
     def testAuthorizationHeaderWithLogin(self):
