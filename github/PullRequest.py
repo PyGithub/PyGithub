@@ -48,6 +48,7 @@ import github.File
 import github.GithubObject
 import github.IssueComment
 import github.NamedUser
+import github.Team
 import github.PaginatedList
 import github.PullRequestComment
 import github.PullRequestMergeStatus
@@ -354,6 +355,17 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    @property
+    def requested_reviewers(self):
+        self._completeIfNotSet(self._requested_reviewers)
+        return self._requested_reviewers.value
+
+    @property
+    def requested_teams(self):
+      self._completeIfNotSet(self._requested_teams)
+      return self._requested_teams.value
+
 
     @property
     def url(self):
@@ -984,6 +996,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
+        self._requested_reviewers = github.GithubObject.NotSet
+        self._requested_teams = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
@@ -1100,4 +1114,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["user"]
+            )
+        if "requested_reviewers" in attributes:
+            self._requested_reviewers = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["requested_reviewers"]
+            )
+        if "requested_teams" in attributes:
+            self._requested_teams = self._makeListOfClassesAttribute(
+                github.Team.Team, attributes["requested_teams"]
             )
