@@ -46,6 +46,7 @@ class GithubIntegration:
             app_id=None,
             app_private_key=None,
             app_installation_id=None,
+            app_token_permissions=None,
             base_url=self.base_url,
             timeout=Consts.DEFAULT_TIMEOUT,
             user_agent="PyGithub/Python",

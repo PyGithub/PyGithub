@@ -301,6 +301,7 @@ class Requester:
         app_id,
         app_private_key,
         app_installation_id,
+        app_token_permissions,
         base_url,
         timeout,
         user_agent,
@@ -315,6 +316,7 @@ class Requester:
         self.__app_id = app_id
         self.__app_private_key = app_private_key
         self.__app_installation_id = app_installation_id
+        self.__app_token_permissions = app_token_permissions
 
         if password is not None:
             login = login_or_token
@@ -382,7 +384,9 @@ class Requester:
         integration = GithubIntegration.GithubIntegration(
             self.__app_id, self.__app_private_key
         )
-        return integration.get_access_token(self.__app_installation_id)
+        return integration.get_access_token(
+            self.__app_installation_id, permissions=self.__app_token_permissions
+        )
 
     def _refresh_token_if_needed(self) -> None:
         """Get a new access token from the GitHub app installation if the one we have is about to expire"""

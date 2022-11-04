@@ -33,6 +33,7 @@ class Github:
         app_id: Optional[Union[int, str]] = ...,
         app_private_key: Optional[str] = ...,
         app_installation_id: Optional[int] = ...,
+        app_token_permissions: Optional[dict] = ...,
         base_url: str = ...,
         timeout: int = ...,
         user_agent: str = ...,

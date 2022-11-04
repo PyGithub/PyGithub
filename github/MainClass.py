@@ -86,6 +86,7 @@ class Github:
         app_id=None,
         app_private_key=None,
         app_installation_id=None,
+        app_token_permissions=None,
         base_url=Consts.DEFAULT_BASE_URL,
         timeout=Consts.DEFAULT_TIMEOUT,
         user_agent="PyGithub/Python",
@@ -100,6 +101,8 @@ class Github:
         :param jwt: string
         :param app_id: int or string
         :param app_private_key: string
+        :param app_installation_id: int
+        :param app_token_scopes: dict
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -128,6 +131,9 @@ class Github:
         assert app_installation_id is None or isinstance(
             app_installation_id, int
         ), app_installation_id
+        assert app_token_permissions is None or isinstance(
+            app_token_permissions, dict
+        ), app_token_permissions
 
         self.__requester = Requester(
             login_or_token,
@@ -136,6 +142,7 @@ class Github:
             app_id,
             app_private_key,
             app_installation_id,
+            app_token_permissions,
             base_url,
             timeout,
             user_agent,
