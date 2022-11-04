@@ -98,6 +98,7 @@ import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
+import github.CodeownerError
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -2308,6 +2309,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: list of :class:`github.ContentFile.ContentFile`
         """
         return self.get_contents(path, ref=ref)
+
+    def get_codeowner_errors(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/topics <https://docs.github.com/en/rest/repos/repos#list-codeowners-errors>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeownerError.CodeownerError`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/codeowners/errors",
+        )
+        return [
+            github.CodeownerError.CodeownerError(self._requester, headers, element, completed=False)
+            for element in data["errors"]
+            if element is not None and "errors" in data.keys()
+        ]
 
     def get_contributors(self, anon=github.GithubObject.NotSet):
         """
