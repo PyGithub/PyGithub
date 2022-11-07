@@ -160,6 +160,7 @@ class Repository(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes = ...,
         target_commitish: Union[str, _NotSetType] = ...,
     ) -> GitRelease: ...
     def create_git_tag(
