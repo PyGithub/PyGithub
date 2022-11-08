@@ -4,6 +4,22 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.57 (November 05, 2022)
+-----------------------------------
+
+**Breaking Changes**
+
+* Add support for Python 3.11, drop support for Python 3.6 (#2332) (1e2f10dc)
+
+**Bug Fixes & Improvements**
+
+* Speed up get requested reviewers and teams for pr (#2349) (6725eceb)
+* [WorkflowRun] - Add missing attributes (`run_started_at` & `run_attempt`), remove deprecated `unicode` type (#2273) (3a6235b5)
+* Add support for repository autolink references (#2016) (0fadd6be)
+* Add retry and pool_size to typing (#2151) (784a3efd)
+* Fix/types for repo topic team (#2341) (db9337a4)
+* Add class Artifact (#2313) (#2319) (437ff845)
+
 Version 1.56 (October 13, 2022)
 -----------------------------------
 
