@@ -819,17 +819,25 @@ class GithubIntegration:
 
         return encrypted
 
-    def get_access_token(self, installation_id, user_id=None):
+    def get_access_token(
+        self, installation_id, repositories=None, repository_ids=None, permissions=None
+    ):
         """
         Get an access token for the given installation id.
         POSTs https://api.github.com/app/installations/<installation_id>/access_tokens
-        :param user_id: int
         :param installation_id: int
+        :param repositories: list of strings
+        :param repository_ids: list of int
+        :param permissions: dict
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
         body = {}
-        if user_id:
-            body = {"user_id": user_id}
+        if repositories:
+            body["repositories"] = repositories
+        if repository_ids:
+            body["repository_ids"] = repository_ids
+        if permissions:
+            body["permissions"] = permissions
         response = requests.post(
             f"{self.base_url}/app/installations/{installation_id}/access_tokens",
             headers={
