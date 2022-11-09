@@ -34,6 +34,7 @@ Get list of open issues
     Issue(title="Cache fetch responses", number=901)
     Issue(title="Is suspended_users for github enterprise implemented in NamedUser?", number=900)
     Issue(title="Adding migration api wrapper", number=899)
+
 Get list of code scanning alerts
 --------------------------------
 
