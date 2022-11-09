@@ -517,6 +517,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        use_squash_pr_title_as_default=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -536,6 +537,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param use_squash_pr_title_as_default: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -587,6 +589,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert use_squash_pr_title_as_default is github.GithubObject.NotSet or isinstance(
+            use_squash_pr_title_as_default, bool
+        ), use_squash_pr_title_as_default
         post_parameters = {
             "name": name,
         }
@@ -622,6 +627,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if use_squash_pr_title_as_default is not github.GithubObject.NotSet:
+            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/repos",

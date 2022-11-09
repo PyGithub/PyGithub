@@ -809,6 +809,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def use_squash_pr_title_as_default(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._use_squash_pr_title_as_default)
+        return self._use_squash_pr_title_as_default.value
+
+    @property
     def visibility(self):
         """
         :type: string
@@ -1556,6 +1564,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        use_squash_pr_title_as_default=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
         """
@@ -1573,6 +1582,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param use_squash_pr_title_as_default: bool
         :param archived: bool. Unarchiving repositories is currently not supported through API (https://docs.github.com/en/rest/reference/repos#update-a-repository)
         :rtype: None
         """
@@ -1615,6 +1625,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert use_squash_pr_title_as_default is github.GithubObject.NotSet or isinstance(
+            use_squash_pr_title_as_default, bool
+        ), use_squash_pr_title_as_default
         assert archived is github.GithubObject.NotSet or (
             isinstance(archived, bool) and archived is True
         ), archived
@@ -1645,6 +1658,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if use_squash_pr_title_as_default is not github.GithubObject.NotSet:
+            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
@@ -3868,6 +3883,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._use_squash_pr_title_as_default = github.GithubObject.NotSet
         self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
@@ -4079,6 +4095,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
+            self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch
             self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
