@@ -65,3 +65,7 @@ class Deployment(Framework.TestCase):
             repr(self.deployment),
             'Deployment(url="https://api.github.com/repos/jacquev6/PyGithub/deployments/263877258", id=263877258)',
         )
+
+        def testDelete(self):
+            deployment = self.deployment
+            deployment.delete()

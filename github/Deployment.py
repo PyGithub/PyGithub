@@ -242,6 +242,13 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/deployments/{deployment_id} <https://docs.github.com/en/rest/deployments/deployments>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+
     @staticmethod
     def _get_accept_header():
         return ", ".join(
