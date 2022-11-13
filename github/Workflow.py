@@ -131,6 +131,16 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def enable(self):
+        """
+        :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable <https://docs.github.com/en/rest/reference/actions#enable-a-workflow>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "PUT", f"{self.url}/enable"
+        )
+        return status == 204
+
     def get_runs(
         self,
         actor=github.GithubObject.NotSet,

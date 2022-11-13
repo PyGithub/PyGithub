@@ -18,6 +18,7 @@ class Workflow(CompletableGithubObject):
         ref: Union[str, Branch, Commit, Tag],
         inputs: Union[Dict[str, Union[str, int, float]], _NotSetType] = ...,
     ) -> bool: ...
+    def enable(self) -> bool: ...
     def get_runs(
         self,
         actor: Union[str, NamedUser, _NotSetType] = ...,
