@@ -1,0 +1,3 @@
+[tool.poetry]
+name = "PyGithub"
+version = "0.1.0"

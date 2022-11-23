@@ -3786,6 +3786,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
         )
 
+    def get_dependabot_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.CodeScanAlert.CodeScanAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            None,
+        )
+
     def _initAttributes(self):
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
