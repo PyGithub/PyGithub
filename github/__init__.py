@@ -44,6 +44,7 @@ __all__ = [
     "Github",
     "GithubException",
     "GithubIntegration",
+    "GithubRetry",
     "IncompletableObject",
     "InputFileContent",
     "InputGitAuthor",
@@ -70,6 +71,7 @@ from .GithubException import (
     TwoFactorException,
     UnknownObjectException,
 )
+from github.GithubRetry import GithubRetry
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
