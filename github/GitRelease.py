@@ -107,6 +107,15 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._prerelease.value
 
     @property
+    def generate_release_notes(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._generate_release_notes)
+        return self._generate_release_notes.value
+    
+
+    @property
     def author(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
@@ -187,7 +196,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         target_commitish=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
+        :calls: `PATCH /repo s/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
         :param name: string
         :param message: string
         :param draft: bool
@@ -325,6 +334,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._target_commitish = github.GithubObject.NotSet
         self._draft = github.GithubObject.NotSet
         self._prerelease = github.GithubObject.NotSet
+        self._generate_release_notes = github.GithubObject.NotSet
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
@@ -351,6 +361,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._draft = self._makeBoolAttribute(attributes["draft"])
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
+        if "generate_release_notes" in attributes:
+            self.generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
         if "author" in attributes:
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]

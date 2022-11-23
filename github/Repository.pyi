@@ -160,6 +160,7 @@ class Repository(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
         target_commitish: Union[str, _NotSetType] = ...,
     ) -> GitRelease: ...
     def create_git_tag(
@@ -181,6 +182,7 @@ class Repository(CompletableGithubObject):
         tagger: Union[InputGitAuthor, _NotSetType] = ...,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
     ) -> GitRelease: ...
     def create_git_tree(
         self,

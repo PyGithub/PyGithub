@@ -127,6 +127,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.title, "Test")
         self.assertFalse(release.draft)
         self.assertFalse(release.prerelease)
+        self.assertFalse(release.generate_release_notes)
         self.assertEqual(
             release.url,
             "https://api.github.com/repos/{}/{}/releases/{}".format(

@@ -1028,6 +1028,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         tagger=github.GithubObject.NotSet,
         draft=False,
         prerelease=False,
+        generate_release_notes=False,
     ):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
@@ -1041,6 +1042,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param tagger: :class:github.InputGitAuthor.InputGitAuthor
         :param draft: bool
         :param prerelease: bool
+        :param generate_release_notes: bool
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         self.create_git_tag(tag, tag_message, object, type, tagger)
@@ -1050,6 +1052,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             release_message,
             draft,
             prerelease,
+            generate_release_notes,
             target_commitish=object,
         )
 
@@ -1060,6 +1063,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         message,
         draft=False,
         prerelease=False,
+        generate_release_notes=False,
         target_commitish=github.GithubObject.NotSet,
     ):
         """
@@ -1069,6 +1073,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param message: string
         :param draft: bool
         :param prerelease: bool
+        :param generate_release_notes: bool,
         :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
         :rtype: :class:`github.GitRelease.GitRelease`
         """
@@ -1077,6 +1082,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert target_commitish is github.GithubObject.NotSet or isinstance(
             target_commitish,
             (
@@ -1092,6 +1098,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
+            "generate_release_notes": generate_release_notes,
         }
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
