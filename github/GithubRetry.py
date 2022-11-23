@@ -34,10 +34,14 @@ from github import GithubException
 from github.Requester import Requester
 
 
+DEFAULT_SECONDARY_RATE_WAIT = 60
+
+
 class GithubRetry(Retry):
     __logger = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, secondaryRateWait=DEFAULT_SECONDARY_RATE_WAIT, **kwargs):
+        self.secondaryRateWait = secondaryRateWait
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         kwargs['status_forcelist'] = kwargs.get('status_forcelist', list(Retry.RETRY_AFTER_STATUS_CODES)) + [403]
@@ -70,33 +74,47 @@ class GithubRetry(Retry):
                         message = content.get('message')
 
                         if Requester.isRateLimitError(message):
-                            self.__log(logging.DEBUG, f'Response body indicates retry-able error: {message}')
+                            self.__log(logging.DEBUG, f'Response body indicates retry-able rate limit error: {message}')
+                            if Requester.isSecondaryRateLimitError(message):
+                                self.__log(logging.DEBUG, f'Secondary rate limit has backoff of {self.secondaryRateWait}s')
 
-                            # backoff until X-RateLimit-Reset
+                            # we backoff primary rate limit at least until X-RateLimit-Reset
+                            # we backoff secondary rate limit at least for secondaryRateWait seconds, or X-RateLimit-Reset, whatever comes first
+                            backoff = 0
                             if 'X-RateLimit-Reset' in response.headers:
                                 value = response.headers.get('X-RateLimit-Reset')
                                 if value and value.isdigit():
                                     reset = datetime.datetime.utcfromtimestamp(int(value))
                                     delta = reset - self.__utc_now()
-                                    retry = super().increment(method, url, response, error, _pool, _stacktrace)
-                                    backoff = retry.get_backoff_time()
+                                    resetBackoff = delta.total_seconds()
 
-                                    if delta.total_seconds() > 0:
+                                    if resetBackoff > 0:
                                         self.__log(
                                             logging.DEBUG,
-                                            f'Reset occurs in {str(delta)} ({value} / {reset}), '
-                                            f'setting next backoff to {delta.total_seconds()}s'
+                                            f'Reset occurs in {str(delta)} ({value} / {reset})'
                                         )
 
-                                        def get_backoff_time():
-                                            # plus 1s as it is not clear when in that second the reset occurs
-                                            return max(delta.total_seconds() + 1, backoff)
+                                    # plus 1s as it is not clear when in that second the reset occurs
+                                    backoff = resetBackoff + 1
 
-                                        retry.get_backoff_time = get_backoff_time
+                                    # experience has shown that secondary rate limit clears on primary rate reset
+                                    if Requester.isSecondaryRateLimitError(message):
+                                        backoff = min(backoff, self.secondaryRateWait)
+                            elif Requester.isSecondaryRateLimitError(message):
+                                backoff = self.secondaryRateWait
 
-                                    return retry
+                            # we backoff at least retry's next backoff
+                            retry = super().increment(method, url, response, error, _pool, _stacktrace)
+                            if retry.get_backoff_time() > backoff:
+                                self.__log(logging.DEBUG, f'Current backoff is {backoff}s')
+                                backoff = retry.get_backoff_time()
 
-                            return super().increment(method, url, response, error, _pool, _stacktrace)
+                            def get_backoff_time():
+                                return backoff
+
+                            self.__log(logging.DEBUG, f'Setting next backoff to {backoff}s')
+                            retry.get_backoff_time = get_backoff_time
+                            return retry
 
                         self.__log(logging.DEBUG, 'Response message does not indicate retry-able error')
                         raise Requester.createException(response.status, response.headers, {"message": content})

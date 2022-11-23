@@ -5,7 +5,8 @@ from urllib3 import Retry, HTTPResponse
 
 
 class GithubRetry:
-    def __init__(self, **kwargs: Any) -> None: ...
+    secondaryRateWait: int
+    def __init__(self, secondaryRateWait: int, **kwargs: Any) -> None: ...
     def increment(
         self,
         method=None,
