@@ -139,3 +139,7 @@ DEFAULT_STATUS_URL = "https://status.github.com"
 # latency.
 DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
+
+# JWT expiry in seconds. Could be set for max 600 seconds (10 minutes).
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
+JWT_EXPIRY = 60
