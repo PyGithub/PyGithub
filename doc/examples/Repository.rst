@@ -35,6 +35,31 @@ Get list of open issues
     Issue(title="Is suspended_users for github enterprise implemented in NamedUser?", number=900)
     Issue(title="Adding migration api wrapper", number=899)
 
+Get list of code scanning alerts
+--------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> codescan_alerts = repo.get_codescan_alerts()
+    >>> for alert in codescan_alerts:
+    ...     print(alert.number, alert.created_at, alert.dismissed_at)
+    ...     print("  ", alert.tool.name, alert.tool.version, alert.tool.guid)
+    ...     print("  ", alert.rule.name alert.rule.security_severity_level alert.rule.severity)
+    ...     print("    ", alert.rule.description)
+    ...     print("  ", alert.most_recent_instance.ref, alert.most_recent_instance.state)
+    ...     print("    ", alert.most_recent_instance.location)
+    ...     print("    ", alert.most_recent_instance.message['text'])
+    ...
+    3 1984-02-29 12:34:56 None
+      CodeQL 2.6.1 None
+      py/weak-sensitive-data-hashing high warning
+        Use of a broken or weak cryptographic hashing algorithm on sensitive data
+      refs/heads/master | open
+        src/secrets/rats.py @ l42:c13-l42:c69
+        Sensitive data (password) is used in a hashing algorithm (SHA1) that is insecure⤶
+        for password hashing, since it is not a computationally expensive hash function.
+
 Get all the labels of the repository
 ------------------------------------
 

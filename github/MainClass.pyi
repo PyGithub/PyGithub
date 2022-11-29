@@ -20,7 +20,7 @@ from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
 
-# from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
@@ -39,8 +39,8 @@ class Github:
         user_agent: str = ...,
         per_page: int = ...,
         verify: bool = ...,
-        retry: Any = ...,
-        pool_size: int = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...
