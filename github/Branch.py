@@ -121,6 +121,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_approving_review_count=github.GithubObject.NotSet,
         user_push_restrictions=github.GithubObject.NotSet,
         team_push_restrictions=github.GithubObject.NotSet,
+        required_linear_history=github.GithubObject.NotSet,
+        allow_force_pushes=github.GithubObject.NotSet,
+        allow_deletions=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -134,6 +137,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_approving_review_count: int
         :user_push_restrictions: list of strings
         :team_push_restrictions: list of strings
+        :required_linear_history: bool
+        :allow_force_pushes: bool
+        :allow_deletions: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -162,6 +168,15 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
         ), (required_approving_review_count)
+        assert required_linear_history is github.GithubObject.NotSet or isinstance(
+            required_linear_history, bool
+        ), required_linear_history
+        assert allow_force_pushes is github.GithubObject.NotSet or isinstance(
+            allow_force_pushes, bool
+        ), allow_force_pushes
+        assert allow_deletions is github.GithubObject.NotSet or isinstance(
+            allow_deletions, bool
+        ), allow_deletions
 
         post_parameters = {}
         if (
@@ -183,6 +198,21 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["enforce_admins"] = enforce_admins
         else:
             post_parameters["enforce_admins"] = None
+
+        if required_linear_history is not github.GithubObject.NotSet:
+            post_parameters["required_linear_history"] = required_linear_history
+        else:
+            post_parameters["required_linear_history"] = None
+
+        if allow_force_pushes is not github.GithubObject.NotSet:
+            post_parameters["allow_force_pushes"] = allow_force_pushes
+        else:
+            post_parameters["allow_force_pushes"] = None
+
+        if allow_deletions is not github.GithubObject.NotSet:
+            post_parameters["allow_deletions"] = allow_deletions
+        else:
+            post_parameters["allow_deletions"] = None
 
         if (
             dismissal_users is not github.GithubObject.NotSet

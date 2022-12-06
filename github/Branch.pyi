@@ -28,6 +28,9 @@ class Branch(NonCompletableGithubObject):
         required_approving_review_count: Union[int, _NotSetType] = ...,
         user_push_restrictions: Union[_NotSetType, List[str]] = ...,
         team_push_restrictions: Union[_NotSetType, List[str]] = ...,
+        required_linear_history: Union[bool, _NotSetType] = ...,
+        allow_force_pushes: Union[bool, _NotSetType] = ...,
+        allow_deletions: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def edit_required_pull_request_reviews(
         self,
