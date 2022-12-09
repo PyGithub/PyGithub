@@ -124,6 +124,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_linear_history=github.GithubObject.NotSet,
         allow_force_pushes=github.GithubObject.NotSet,
         allow_deletions=github.GithubObject.NotSet,
+        lock_branch=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -140,6 +141,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_linear_history: bool
         :allow_force_pushes: bool
         :allow_deletions: bool
+        :lock_branch: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -177,6 +179,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert allow_deletions is github.GithubObject.NotSet or isinstance(
             allow_deletions, bool
         ), allow_deletions
+        assert lock_branch is github.GithubObject.NotSet or isinstance(
+            lock_branch, bool
+        ), lock_branch
 
         post_parameters = {}
         if (
@@ -213,6 +218,11 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["allow_deletions"] = allow_deletions
         else:
             post_parameters["allow_deletions"] = None
+
+        if lock_branch is not github.GithubObject.NotSet:
+            post_parameters["lock_branch"] = lock_branch
+        else:
+            post_parameters["lock_branch"] = None
 
         if (
             dismissal_users is not github.GithubObject.NotSet
