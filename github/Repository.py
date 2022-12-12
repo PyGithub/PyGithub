@@ -3889,9 +3889,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "allow_forking" in attributes:  # pragma no branch
-            self._allow_forking = self._makeBoolAttribute(
-                attributes["allow_forking"]
-            )
+            self._allow_forking = self._makeBoolAttribute(attributes["allow_forking"])
         if "allow_merge_commit" in attributes:  # pragma no branch
             self._allow_merge_commit = self._makeBoolAttribute(
                 attributes["allow_merge_commit"]
