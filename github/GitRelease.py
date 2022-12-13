@@ -196,7 +196,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         target_commitish=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repo s/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
+        :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
         :param name: string
         :param message: string
         :param draft: bool
