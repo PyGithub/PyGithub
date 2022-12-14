@@ -229,17 +229,13 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         else:
             post_parameters["lock_branch"] = None
 
-        if require_last_push_approval is not github.GithubObject.NotSet:
-            post_parameters["require_last_push_approval"] = require_last_push_approval
-        else:
-            post_parameters["require_last_push_approval"] = None
-
         if (
             dismissal_users is not github.GithubObject.NotSet
             or dismissal_teams is not github.GithubObject.NotSet
             or dismiss_stale_reviews is not github.GithubObject.NotSet
             or require_code_owner_reviews is not github.GithubObject.NotSet
             or required_approving_review_count is not github.GithubObject.NotSet
+            or require_last_push_approval is not github.GithubObject.NotSet
         ):
             post_parameters["required_pull_request_reviews"] = {}
             if dismiss_stale_reviews is not github.GithubObject.NotSet:
@@ -258,6 +254,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ] = {"users": dismissal_users}
+            if require_last_push_approval is not github.GithubObject.NotSet:
+                post_parameters["required_pull_request_reviews"][
+                    "require_last_push_approval"
+                ] = require_last_push_approval
             if dismissal_teams is not github.GithubObject.NotSet:
                 if (
                     "dismissal_restrictions"
