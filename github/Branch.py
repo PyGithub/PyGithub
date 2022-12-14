@@ -125,6 +125,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         allow_force_pushes=github.GithubObject.NotSet,
         allow_deletions=github.GithubObject.NotSet,
         lock_branch=github.GithubObject.NotSet,
+        require_last_push_approval=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -142,6 +143,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :allow_force_pushes: bool
         :allow_deletions: bool
         :lock_branch: bool
+        :require_last_push_approval: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -182,6 +184,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert lock_branch is github.GithubObject.NotSet or isinstance(
             lock_branch, bool
         ), lock_branch
+        assert require_last_push_approval is github.GithubObject.NotSet or isinstance(
+            require_last_push_approval, bool
+        ), require_last_push_approval
 
         post_parameters = {}
         if (
@@ -223,6 +228,11 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["lock_branch"] = lock_branch
         else:
             post_parameters["lock_branch"] = None
+
+        if require_last_push_approval is not github.GithubObject.NotSet:
+            post_parameters["require_last_push_approval"] = require_last_push_approval
+        else:
+            post_parameters["require_last_push_approval"] = None
 
         if (
             dismissal_users is not github.GithubObject.NotSet

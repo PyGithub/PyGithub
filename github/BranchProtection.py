@@ -99,6 +99,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._lock_branch)
         return self._lock_branch.value
 
+    @property
+    def require_last_push_approval(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._require_last_push_approval)
+        return self._require_last_push_approval.value
+
     def get_user_push_restrictions(self):
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -133,6 +141,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._allow_force_pushes = github.GithubObject.NotSet
         self._allow_deletions = github.GithubObject.NotSet
         self._lock_branch = github.GithubObject.NotSet
+        self._require_last_push_approval = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "url" in attributes:  # pragma no branch
@@ -161,6 +170,10 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "lock_branch" in attributes:  # pragma no branch
             self._lock_branch = self._makeBoolAttribute(
                 attributes["lock_branch"]["enabled"]
+            )
+        if "require_last_push_approval" in attributes:  # pragma no branch
+            self._require_last_push_approval = self._makeBoolAttribute(
+                attributes["require_last_push_approval"]["enabled"]
             )
         if "required_pull_request_reviews" in attributes:  # pragma no branch
             self._required_pull_request_reviews = self._makeClassAttribute(
