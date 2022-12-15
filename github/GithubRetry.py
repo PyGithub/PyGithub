@@ -48,6 +48,10 @@ class GithubRetry(Retry):
         kwargs['status_forcelist'] = kwargs.get('status_forcelist', list(Retry.RETRY_AFTER_STATUS_CODES)) + [403]
         super().__init__(**kwargs)
 
+    def new(self, **kw):
+        kw.update(dict(secondaryRateWait=self.secondaryRateWait))
+        return super().new(**kw)
+
     def increment(self,
                   method=None,
                   url=None,
@@ -109,8 +113,9 @@ class GithubRetry(Retry):
                             retry = super().increment(method, url, response, error, _pool, _stacktrace)
                             retry_backoff = retry.get_backoff_time()
                             if retry_backoff > backoff:
-                                self.__log(logging.DEBUG, f'Retry backoff of {retry_backoff}s exceeds '
-                                                          f'required rate limit backoff of {backoff}s')
+                                if backoff >= 0:
+                                    self.__log(logging.DEBUG, f'Retry backoff of {retry_backoff}s exceeds '
+                                                              f'required rate limit backoff of {backoff}s')
                                 backoff = retry.get_backoff_time()
 
                             def get_backoff_time():
