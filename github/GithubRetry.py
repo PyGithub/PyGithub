@@ -44,6 +44,7 @@ class GithubRetry(Retry):
         self.secondaryRateWait = secondaryRateWait
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
+        # to determine if we really retry that 403
         kwargs['status_forcelist'] = kwargs.get('status_forcelist', list(Retry.RETRY_AFTER_STATUS_CODES)) + [403]
         super().__init__(**kwargs)
 
@@ -57,8 +58,8 @@ class GithubRetry(Retry):
         if response:
             self.__log(logging.DEBUG, f'Request {method} {url} failed with {response.status} {response.reason}')
 
-            # we do not retry 403 when there is no Retry-After header (indicating it is retry-able)
-            # and the body message does not imply a rate limit error
+            # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
+            # or the body message does imply a rate limit error
             if response.status == 403:
                 if 'Retry-After' in response.headers:
                     # Sleeping 'Retry-After' seconds is implemented in urllib3.Retry.sleep() and called by urllib3
@@ -79,7 +80,8 @@ class GithubRetry(Retry):
                                 self.__log(logging.DEBUG, f'Secondary rate limit has backoff of {self.secondaryRateWait}s')
 
                             # we backoff primary rate limit at least until X-RateLimit-Reset
-                            # we backoff secondary rate limit at least for secondaryRateWait seconds, or X-RateLimit-Reset, whatever comes first
+                            # we backoff secondary rate limit at least for secondaryRateWait seconds,
+                            # or X-RateLimit-Reset, whatever comes first
                             backoff = 0
                             if 'X-RateLimit-Reset' in response.headers:
                                 value = response.headers.get('X-RateLimit-Reset')
@@ -105,8 +107,10 @@ class GithubRetry(Retry):
 
                             # we backoff at least retry's next backoff
                             retry = super().increment(method, url, response, error, _pool, _stacktrace)
-                            if retry.get_backoff_time() > backoff:
-                                self.__log(logging.DEBUG, f'Current backoff is {backoff}s')
+                            retry_backoff = retry.get_backoff_time()
+                            if retry_backoff > backoff:
+                                self.__log(logging.DEBUG, f'Retry backoff of {retry_backoff}s exceeds '
+                                                          f'required rate limit backoff of {backoff}s')
                                 backoff = retry.get_backoff_time()
 
                             def get_backoff_time():
