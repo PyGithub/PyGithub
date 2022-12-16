@@ -125,8 +125,8 @@ class GithubRetry(Retry):
                             return retry
 
                         self.__log(logging.DEBUG, 'Response message does not indicate retry-able error')
-                        raise Requester.createException(response.status, response.headers, {"message": content})
-                    except MaxRetryError:
+                        raise Requester.createException(response.status, response.headers, content)
+                    except (MaxRetryError, GithubException):
                         raise
                     except Exception as e:
                         self.__log(logging.WARNING, 'Failed to inspect response message', exc_info=e)

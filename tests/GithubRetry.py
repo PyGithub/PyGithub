@@ -210,6 +210,11 @@ class GithubRetry(unittest.TestCase):
         response = urllib3.response.HTTPResponse(status=403, headers={'Retry-After': '123'})
         self.do_test_default_behaviour(retry, response)
 
+    def test_403_with_non_retryable_error(self):
+        retry = github.GithubRetry(total=3)
+        with self.assertRaises(github.BadUserAgentException):
+            retry.increment('TEST', 'URL', self.response_func('{"message":"Missing or invalid User Agent string."}')())
+
     def test_misc_response(self):
         retry = github.GithubRetry(total=3)
         response = urllib3.response.HTTPResponse()
