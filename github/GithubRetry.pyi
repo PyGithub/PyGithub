@@ -6,10 +6,10 @@ from urllib3 import Retry, HTTPResponse
 
 
 DEFAULT_SECONDARY_RATE_WAIT: int
-class GithubRetry:
+class GithubRetry(Retry):
     secondaryRateWait: int
     __logger: Logger
-    def __init__(self, secondaryRateWait: int, **kwargs: Any) -> None: ...
+    def __init__(self, secondaryRateWait: int=..., **kwargs: Any) -> None: ...
     def increment(
         self,
         method=None,
