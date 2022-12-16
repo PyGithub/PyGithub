@@ -5,6 +5,7 @@ from typing import Any
 from urllib3 import Retry, HTTPResponse
 
 
+DEFAULT_SECONDARY_RATE_WAIT: int
 class GithubRetry:
     secondaryRateWait: int
     __logger: Logger

@@ -1,3 +1,25 @@
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+
 from datetime import datetime
 from io import BytesIO
 import unittest
@@ -7,6 +29,7 @@ import urllib3.response
 from urllib3 import Retry
 
 import github
+from github.GithubRetry import DEFAULT_SECONDARY_RATE_WAIT
 from . import Requester
 
 PrimaryRateLimitMessage = Requester.Requester.PrimaryRateLimitErrors[0]
@@ -151,9 +174,9 @@ class GithubRetry(unittest.TestCase):
         response = self.response_func(SecondaryRateLimitJson, reset=None)
         test_increment = self.get_test_increment_func(SecondaryRateLimitMessage)
 
-        retry = test_increment(retry, response(), expected_total=2, expected_backoff=60)
-        retry = test_increment(retry, response(), expected_total=1, expected_backoff=60)
-        retry = test_increment(retry, response(), expected_total=0, expected_backoff=60)
+        retry = test_increment(retry, response(), expected_total=2, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
+        retry = test_increment(retry, response(), expected_total=1, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
+        retry = test_increment(retry, response(), expected_total=0, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
         with self.assertRaises(urllib3.exceptions.MaxRetryError):
             retry.increment('TEST', 'URL', response())
 
