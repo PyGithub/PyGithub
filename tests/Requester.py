@@ -182,7 +182,8 @@ class Requester(Framework.TestCase):
     ]
     SecondaryRateLimitErrors = [
         "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.",
-        "You have exceeded a secondary rate limit. Please wait a few minutes before you try again."
+        "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
+        "Something else here. Please wait a few minutes before you try again."
     ]
     OtherErrors = [
         "User does not exist or is not a member of the organization"

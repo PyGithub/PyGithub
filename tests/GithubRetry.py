@@ -52,7 +52,7 @@ class GithubRetry(unittest.TestCase):
                 self.assertEqual(orig_retry.secondaryRateWait, retry.secondaryRateWait)
 
                 log.assert_has_calls([
-                    mock.call(20, 'Request TEST URL failed with 403 None'),
+                    mock.call(20, 'Request TEST URL failed with 403: None'),
                     mock.call(10, 'There is no Retry-After in the response header'),
                     mock.call(10, f"Response body indicates retry-able rate limit error: {expected_rate_limit_error}")
                 ] + ([
@@ -237,7 +237,7 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual({}, exp.exception.headers)
 
         self.assertListEqual([
-            (20, 'Request TEST URL failed with 403 NOT GOOD'),
+            (20, 'Request TEST URL failed with 403: NOT GOOD'),
             (10, 'There is no Retry-After in the response header'),
             (30, 'Failed to inspect response message')
         ], [call.args for call in log.mock_calls])

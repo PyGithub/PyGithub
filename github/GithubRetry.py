@@ -63,7 +63,7 @@ class GithubRetry(Retry):
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
             # or the body message does imply a rate limit error
             if response.status == 403:
-                self.__log(logging.INFO, f'Request {method} {url} failed with {response.status} {response.reason}')
+                self.__log(logging.INFO, f'Request {method} {url} failed with {response.status}: {response.reason}')
                 if 'Retry-After' in response.headers:
                     # Sleeping 'Retry-After' seconds is implemented in urllib3.Retry.sleep() and called by urllib3
                     self.__log(logging.DEBUG, f'Retrying after {response.headers.get("Retry-After")} seconds')
