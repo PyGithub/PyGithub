@@ -176,6 +176,36 @@ class Requester(Framework.TestCase):
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
         )
 
+    PrimaryRateLimitErrors = [
+        "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+        "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+    ]
+    SecondaryRateLimitErrors = [
+        "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.",
+        "You have exceeded a secondary rate limit. Please wait a few minutes before you try again."
+    ]
+    OtherErrors = [
+        "User does not exist or is not a member of the organization"
+    ]
+
+    def testIsRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
+            self.assertTrue(github.Requester.Requester.isRateLimitError(message), message)
+        for message in self.OtherErrors:
+            self.assertFalse(github.Requester.Requester.isRateLimitError(message), message)
+
+    def testIsPrimaryRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors:
+            self.assertTrue(github.Requester.Requester.isPrimaryRateLimitError(message), message)
+        for message in self.OtherErrors + self.SecondaryRateLimitErrors:
+            self.assertFalse(github.Requester.Requester.isPrimaryRateLimitError(message), message)
+
+    def testIsSecondaryRateLimitError(self):
+        for message in self.SecondaryRateLimitErrors:
+            self.assertTrue(github.Requester.Requester.isSecondaryRateLimitError(message), message)
+        for message in self.OtherErrors + self.PrimaryRateLimitErrors:
+            self.assertFalse(github.Requester.Requester.isSecondaryRateLimitError(message), message)
+
     def assertException(self, exception, exception_type, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
         self.assertEqual(exception.status, status)
@@ -236,11 +266,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateRateLimitExceededException(self):
-        for message in [
-            "API Rate Limit Exceeded for 92.104.200.119",
-            "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
-            "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
-        ]:
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
             with self.subTest(message=message):
                 exc = self.g._Github__requester.__createException(
                     403, {"header": "value"}, {"message": message}

@@ -7,15 +7,12 @@ import urllib3.response
 from urllib3 import Retry
 
 import github
+from . import Requester
 
-
-PrimaryRateLimitMessage = 'API rate limit exceeded for x.x.x.x. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
+PrimaryRateLimitMessage = Requester.Requester.PrimaryRateLimitErrors[0]
 PrimaryRateLimitJson = '{"message":"' + PrimaryRateLimitMessage + '","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
 
-SecondaryRateLimitPostMessage = 'You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.'
-SecondaryRateLimitPostJson = '{"message":"' + SecondaryRateLimitPostMessage + '","documentation_url": "https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits"}'
-
-SecondaryRateLimitMessage = 'You have exceeded a secondary rate limit. Please wait a few minutes before you try again.'
+SecondaryRateLimitMessage = Requester.Requester.SecondaryRateLimitErrors[0]
 SecondaryRateLimitJson = '{"message":"' + SecondaryRateLimitMessage + '","documentation_url": "https://docs.github.com/en/free-pro-team@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits"}'
 
 
