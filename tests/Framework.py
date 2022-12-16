@@ -264,7 +264,6 @@ class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
     jwtAuthMode = False
-    per_page = None
     retry = None
     pool_size = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
@@ -330,15 +329,6 @@ class BasicTestCase(unittest.TestCase):
         httpretty.reset()
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
-
-    def setPerPage(self, per_page):
-        self.per_page = per_page
-
-    def enableRetry(self, retry):
-        self.retry = retry
-
-    def setPoolSize(self, pool_size):
-        self.pool_size = pool_size
 
     def assertWarning(self, warning, expected):
         self.assertWarnings(warning, expected)
@@ -419,15 +409,15 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(
-                auth=self.oauth_token, per_page=self.per_page, retry=self.retry, pool_size=self.pool_size
+                auth=self.oauth_token, retry=self.retry, pool_size=self.pool_size
             )
         elif self.jwtAuthMode:
             self.g = github.Github(
-                auth=self.jwt, per_page=self.per_page, retry=self.retry, pool_size=self.pool_size
+                auth=self.jwt, retry=self.retry, pool_size=self.pool_size
             )
         else:
             self.g = github.Github(
-                auth=self.login, per_page=self.per_page, retry=self.retry, pool_size=self.pool_size
+                auth=self.login, retry=self.retry, pool_size=self.pool_size
             )
 
 
@@ -441,3 +431,11 @@ def activateTokenAuthMode():  # pragma no cover (Function useful only when recor
 
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.jwtAuthMode = True
+
+
+def enableRetry(retry):
+    BasicTestCase.retry = retry
+
+
+def setPoolSize(pool_size):
+    BasicTestCase.pool_size = pool_size
