@@ -43,27 +43,36 @@ class GithubRetry(unittest.TestCase):
     def get_test_increment_func(self, expected_rate_limit_error):
         is_primary = expected_rate_limit_error == PrimaryRateLimitMessage
 
-        def test_increment(retry, response, expected_total, expected_backoff, expected_retry_backoff=None, has_reset=False):
+        def test_increment(retry, response, expected_total=None, expected_backoff=None, expected_retry_backoff=None, expect_retry_error=False, has_reset=False):
+            self.assertTrue(expected_total is not None and expected_backoff is not None and not expect_retry_error or
+                            expected_total is None and expected_backoff is None and expect_retry_error)
+
             orig_retry = retry
             with mock.patch('github.GithubRetry._GithubRetry__log') as log:
-                retry = retry.increment('TEST', 'URL', response)
-                self.assertEqual(expected_total, retry.total)
-                self.assertEqual(expected_backoff if expected_retry_backoff is None else expected_retry_backoff, retry.get_backoff_time())
-                self.assertEqual(orig_retry.secondaryRateWait, retry.secondaryRateWait)
+                if expect_retry_error:
+                    with self.assertRaises(urllib3.exceptions.MaxRetryError):
+                        retry.increment('TEST', 'URL', response)
+                    retry = None
+                else:
+                    retry = retry.increment('TEST', 'URL', response)
+
+                    self.assertEqual(expected_total, retry.total)
+                    self.assertEqual(expected_backoff if expected_retry_backoff is None else expected_retry_backoff, retry.get_backoff_time())
+                    self.assertEqual(orig_retry.secondaryRateWait, retry.secondaryRateWait)
 
                 log.assert_has_calls([
                     mock.call(20, 'Request TEST URL failed with 403: None'),
                     mock.call(10, 'There is no Retry-After in the response header'),
                     mock.call(10, f"Response body indicates retry-able rate limit error: {expected_rate_limit_error}")
                 ] + ([
-                    mock.call(10, f'Secondary rate limit has backoff of {retry.secondaryRateWait}s')
-                ] if not is_primary else []) + ([
+                    mock.call(10, f'Secondary rate limit has backoff of {orig_retry.secondaryRateWait}s')
+                ] if not is_primary and not expect_retry_error else []) + ([
                     mock.call(10, 'Reset occurs in 0:00:12 (1644768012 / 2022-02-13 16:00:12)')
                 ] if has_reset else []) + ([
                     mock.call(10, f'Retry backoff of {expected_retry_backoff}s exceeds required rate limit backoff of {expected_backoff}s')
-                ] if expected_retry_backoff and expected_backoff >= 0 else []) + [
+                ] if expected_retry_backoff and expected_backoff >= 0 else []) + ([
                     mock.call(10, f'Setting next backoff to {expected_backoff if expected_retry_backoff is None else expected_retry_backoff}s')
-                ], any_order=False)
+                ] if not expect_retry_error else []), any_order=False)
             return retry
 
         return test_increment
@@ -94,8 +103,7 @@ class GithubRetry(unittest.TestCase):
         # test 2 seconds after reset, no backoff expected
         with mock.patch('github.GithubRetry._GithubRetry__utc_now', return_value=datetime.utcfromtimestamp(1644768014)):
             retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
-            with self.assertRaises(urllib3.exceptions.MaxRetryError):
-                retry.increment('TEST', 'URL', response())
+            test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_with_reset_and_exponential_backoff(self):
         retry = github.GithubRetry(total=3, backoff_factor=10)
@@ -110,8 +118,7 @@ class GithubRetry(unittest.TestCase):
         # test 2 seconds after reset, no backoff expected
         with mock.patch('github.GithubRetry._GithubRetry__utc_now', return_value=datetime.utcfromtimestamp(1644768014)):
             retry = test_increment(retry, response(), expected_total=0, expected_backoff=-2, expected_retry_backoff=40)
-            with self.assertRaises(urllib3.exceptions.MaxRetryError):
-                retry.increment('TEST', 'URL', response())
+            test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_without_reset(self):
         retry = github.GithubRetry(total=3)
@@ -122,8 +129,7 @@ class GithubRetry(unittest.TestCase):
         retry = test_increment(retry, response(), expected_total=2, expected_backoff=0)
         retry = test_increment(retry, response(), expected_total=1, expected_backoff=0)
         retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
-            retry.increment('TEST', 'URL', response())
+        test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_without_reset_with_exponential_backoff(self):
         retry = github.GithubRetry(total=3, backoff_factor=10)
@@ -134,8 +140,7 @@ class GithubRetry(unittest.TestCase):
         retry = test_increment(retry, response(), expected_total=2, expected_backoff=0, expected_retry_backoff=0)
         retry = test_increment(retry, response(), expected_total=1, expected_backoff=0, expected_retry_backoff=20)
         retry = test_increment(retry, response(), expected_total=0, expected_backoff=0, expected_retry_backoff=40)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
-            retry.increment('TEST', 'URL', response())
+        test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_with_reset(self):
         retry = github.GithubRetry(total=3)
@@ -150,8 +155,7 @@ class GithubRetry(unittest.TestCase):
         # test 2 seconds after reset, no backoff expected
         with mock.patch('github.GithubRetry._GithubRetry__utc_now', return_value=datetime.utcfromtimestamp(1644768014)):
             retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
-            with self.assertRaises(urllib3.exceptions.MaxRetryError):
-                retry.increment('TEST', 'URL', response())
+            test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_with_reset_and_exponential_backoff(self):
         retry = github.GithubRetry(total=3, backoff_factor=10, secondaryRateWait=15)
@@ -166,8 +170,7 @@ class GithubRetry(unittest.TestCase):
         # test 2 seconds after reset, no backoff expected
         with mock.patch('github.GithubRetry._GithubRetry__utc_now', return_value=datetime.utcfromtimestamp(1644768014)):
             retry = test_increment(retry, response(), expected_total=0, expected_backoff=-2, expected_retry_backoff=40)
-            with self.assertRaises(urllib3.exceptions.MaxRetryError):
-                retry.increment('TEST', 'URL', response())
+            test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_without_reset(self):
         retry = github.GithubRetry(total=3)
@@ -177,8 +180,7 @@ class GithubRetry(unittest.TestCase):
         retry = test_increment(retry, response(), expected_total=2, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
         retry = test_increment(retry, response(), expected_total=1, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
         retry = test_increment(retry, response(), expected_total=0, expected_backoff=DEFAULT_SECONDARY_RATE_WAIT)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
-            retry.increment('TEST', 'URL', response())
+        test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_without_reset_with_exponential_backoff(self):
         retry = github.GithubRetry(total=3, backoff_factor=10, secondaryRateWait=5)
@@ -188,8 +190,7 @@ class GithubRetry(unittest.TestCase):
         retry = test_increment(retry, response(), expected_total=2, expected_backoff=5)
         retry = test_increment(retry, response(), expected_total=1, expected_backoff=5, expected_retry_backoff=20)
         retry = test_increment(retry, response(), expected_total=0, expected_backoff=5, expected_retry_backoff=40)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
-            retry.increment('TEST', 'URL', response())
+        test_increment(retry, response(), expect_retry_error=True)
 
     def do_test_default_behaviour(self, retry, response):
         expected = Retry(total=retry.total, backoff_factor=retry.backoff_factor)

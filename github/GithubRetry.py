@@ -79,6 +79,10 @@ class GithubRetry(Retry):
 
                         if Requester.isRateLimitError(message):
                             self.__log(logging.DEBUG, f'Response body indicates retry-able rate limit error: {message}')
+
+                            # check early that we are retrying at all
+                            retry = super().increment(method, url, response, error, _pool, _stacktrace)
+
                             if Requester.isSecondaryRateLimitError(message):
                                 self.__log(logging.DEBUG, f'Secondary rate limit has backoff of {self.secondaryRateWait}s')
 
@@ -109,7 +113,6 @@ class GithubRetry(Retry):
                                 backoff = self.secondaryRateWait
 
                             # we backoff at least retry's next backoff
-                            retry = super().increment(method, url, response, error, _pool, _stacktrace)
                             retry_backoff = retry.get_backoff_time()
                             if retry_backoff > backoff:
                                 if backoff >= 0:
