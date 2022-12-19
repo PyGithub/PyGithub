@@ -568,6 +568,7 @@ class Requester:
 
         message = message.lower()
         return (message.startswith("you have exceeded a secondary rate limit") or
+                message.endswith("please retry your request again later.") or
                 message.endswith("please wait a few minutes before you try again."))
 
     def __structuredFromJson(self, data: str) -> Any:
