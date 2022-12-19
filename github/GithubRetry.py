@@ -66,9 +66,8 @@ class GithubRetry(Retry):
                 self.__log(logging.INFO, f'Request {method} {url} failed with {response.status}: {response.reason}')
                 if 'Retry-After' in response.headers:
                     # Sleeping 'Retry-After' seconds is implemented in urllib3.Retry.sleep() and called by urllib3
-                    self.__log(logging.DEBUG, f'Retrying after {response.headers.get("Retry-After")} seconds')
+                    self.__log(logging.INFO, f'Retrying after {response.headers.get("Retry-After")} seconds')
                 else:
-                    self.__log(logging.DEBUG, f'There is no Retry-After in the response header')
                     content = response.reason
 
                     # to identify retry-able methods, we inspect the response body
@@ -78,44 +77,41 @@ class GithubRetry(Retry):
                         message = content.get('message')
 
                         if Requester.isRateLimitError(message):
-                            self.__log(logging.DEBUG, f'Response body indicates retry-able rate limit error: {message}')
+                            if Requester.isPrimaryRateLimitError(message):
+                                self.__log(logging.DEBUG, f'Response body indicates retry-able primary rate limit error: {message}')
+                            else:
+                                self.__log(logging.DEBUG, f'Response body indicates retry-able secondary rate limit error: {message}')
 
                             # check early that we are retrying at all
                             retry = super().increment(method, url, response, error, _pool, _stacktrace)
 
-                            if Requester.isSecondaryRateLimitError(message):
-                                self.__log(logging.DEBUG, f'Secondary rate limit has backoff of {self.secondaryRateWait}s')
-
-                            # we backoff primary rate limit at least until X-RateLimit-Reset
-                            # we backoff secondary rate limit at least for secondaryRateWait seconds,
-                            # or X-RateLimit-Reset, whatever comes first
+                            # we backoff primary rate limit at least until X-RateLimit-Reset,
+                            # we backoff secondary rate limit at for secondaryRateWait seconds
                             backoff = 0
-                            if 'X-RateLimit-Reset' in response.headers:
-                                value = response.headers.get('X-RateLimit-Reset')
-                                if value and value.isdigit():
-                                    reset = datetime.datetime.utcfromtimestamp(int(value))
-                                    delta = reset - self.__utc_now()
-                                    resetBackoff = delta.total_seconds()
 
-                                    if resetBackoff > 0:
-                                        self.__log(
-                                            logging.DEBUG,
-                                            f'Reset occurs in {str(delta)} ({value} / {reset})'
-                                        )
+                            if Requester.isPrimaryRateLimitError(message):
+                                if 'X-RateLimit-Reset' in response.headers:
+                                    value = response.headers.get('X-RateLimit-Reset')
+                                    if value and value.isdigit():
+                                        reset = datetime.datetime.utcfromtimestamp(int(value))
+                                        delta = reset - self.__utc_now()
+                                        resetBackoff = delta.total_seconds()
 
-                                    # plus 1s as it is not clear when in that second the reset occurs
-                                    backoff = resetBackoff + 1
+                                        if resetBackoff > 0:
+                                            self.__log(
+                                                logging.DEBUG,
+                                                f'Reset occurs in {str(delta)} ({value} / {reset})'
+                                            )
 
-                                    # experience has shown that secondary rate limit clears on primary rate reset
-                                    if Requester.isSecondaryRateLimitError(message):
-                                        backoff = min(backoff, self.secondaryRateWait)
-                            elif Requester.isSecondaryRateLimitError(message):
+                                        # plus 1s as it is not clear when in that second the reset occurs
+                                        backoff = resetBackoff + 1
+                            else:
                                 backoff = self.secondaryRateWait
 
                             # we backoff at least retry's next backoff
                             retry_backoff = retry.get_backoff_time()
                             if retry_backoff > backoff:
-                                if backoff >= 0:
+                                if backoff > 0:
                                     self.__log(logging.DEBUG, f'Retry backoff of {retry_backoff}s exceeds '
                                                               f'required rate limit backoff of {backoff}s')
                                 backoff = retry.get_backoff_time()
@@ -123,7 +119,7 @@ class GithubRetry(Retry):
                             def get_backoff_time():
                                 return backoff
 
-                            self.__log(logging.DEBUG, f'Setting next backoff to {backoff}s')
+                            self.__log(logging.INFO, f'Setting next backoff to {backoff}s')
                             retry.get_backoff_time = get_backoff_time
                             return retry
 
