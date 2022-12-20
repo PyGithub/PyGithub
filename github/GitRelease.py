@@ -173,8 +173,6 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     @property
     def assets(self):
         """
-        Already returned assets info (no additional requests will be done).
-
         :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         self._completeIfNotSet(self._assets)
