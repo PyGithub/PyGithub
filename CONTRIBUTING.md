@@ -106,7 +106,7 @@ You may also want to investigate `tox` to run tests:
 
 ```
 pip install tox
-tox -epy36
+tox -epy310
 ```
 
 ## Build documentation locally

@@ -4,6 +4,91 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.57 (November 05, 2022)
+-----------------------------------
+
+**Breaking Changes**
+
+* Add support for Python 3.11, drop support for Python 3.6 (#2332) (1e2f10dc)
+
+**Bug Fixes & Improvements**
+
+* Speed up get requested reviewers and teams for pr (#2349) (6725eceb)
+* [WorkflowRun] - Add missing attributes (`run_started_at` & `run_attempt`), remove deprecated `unicode` type (#2273) (3a6235b5)
+* Add support for repository autolink references (#2016) (0fadd6be)
+* Add retry and pool_size to typing (#2151) (784a3efd)
+* Fix/types for repo topic team (#2341) (db9337a4)
+* Add class Artifact (#2313) (#2319) (437ff845)
+
+Version 1.56 (October 13, 2022)
+-----------------------------------
+
+**Important**
+
+This is the last release that will support Python 3.6.
+
+**Bug Fixes & Improvements**
+
+* Create repo from template (#2090) (b50283a7)
+* Improve signature of Repository.create_repo (#2118) (001970d4)
+* Add support for 'visibility' attribute preview for Repositories (#1872) (8d1397af)
+* Add Repository.rename_branch method (#2089) (6452ddfe)
+* Add function to delete pending reviews on a pull request (#1897) (c8a945bb)
+* Cover all code paths in search_commits (#2087) (f1faf941)
+* Correctly deal when PaginatedList's data is a dict (#2084) (93b92cd2)
+* Add two_factor_authentication in AuthenticatedUser. (#1972) (4f00cbf2)
+* Add ProjectCard.edit() to the type stub (#2080) (d417e4c4)
+* Add method to delete Workflow runs (#2078) (b1c8eec5)
+* Implement organization.cancel_invitation() (#2072) (53fb4988)
+* Feat: Add `html_url` property in Team Class. (#1983) (6570892a)
+* Add support for Python 3.10 (#2073) (aa694f8e)
+* Add github actions secrets to org (#2006) (bc5e5950)
+* Correct replay for Organization.create_project() test (#2075) (fcc12368)
+* Fix install command example (#2043) (99e00a28)
+* Fix: #1671 Convert Python Bool to API Parameter for Authenticated User Notifications (#2001) (1da600a3)
+* Do not transform requestHeaders when logging (#1965) (1265747e)
+* Add type to OrderedDict (#1954) (ed7d0fe9)
+* Add Commit.get_pulls() to pyi (#1958) (b4664705)
+* Adding headers in GithubException is a breaking change (#1931) (d1644e33)
+
+Version 1.55 (April 26, 2021)
+-----------------------------------
+**Breaking Changes**
+
+* Remove client_id/client_secret authentication (#1888) (901af8c8)
+* Adjust to Github API changes regarding emails (#1890) (2c77cfad)
+  - This impacts what AuthenticatedUser.get_emails() returns
+* PublicKey.key_id could be int on Github Enterprise (#1894) (ad124ef4)
+* Export headers in GithubException (#1887) (ddd437a7)
+
+**Bug Fixes & Improvements**
+
+* Do not import from unpackaged paths in typing (#1926) (27ba7838)
+* Implement hash for CompletableGithubObject (#1922) (4faff23c)
+* Use property decorator to improve typing compatibility (#1925) (e4168109)
+* Fix :rtype: directive (#1927) (54b6a97b)
+* Update most URLs to docs.github.com (#1896) (babcbcd0)
+* Tighten asserts for new Permission tests (#1893) (5aab6f5d)
+* Adding attributes "maintain" and "triage" to class "Permissions" (#1810) (76879613)
+* Add default arguments to Workflow method type annotations (#1857) (7d6bac9e)
+* Re-raise the exception when failing to parse JSON (#1892) (916da53b)
+* Allow adding attributes at the end of the list (#1807) (0245b758)
+* Updating links to Github documentation for deploy keys (#1850) (c27fb919)
+* Update PyJWT Version to 2.0+ (#1891) (a68577b7)
+* Use right variable in both get_check_runs() (#1889) (3003e065)
+* fix bad assertions in github.Project.edit (#1817) (6bae9e5c)
+* Test repr() for PublicKey (#1879) (e0acd8f4)
+* Add support for deleting repository secrets (#1868) (696793de)
+* Switch repository secrets to using f-strings (#1867) (aa240304)
+* Manually fixing paths for codecov.io to cover all project files (#1813) (b2232c89)
+* Add missing links to project metadata (#1789) (64f532ae)
+* No longer show username and password examples (#1866) (55d98373)
+* Adding github actions secrets (#1681) (c90c050e)
+* fix get_user_issues (#1842) (7db1b0c9)
+* Switch all string addition to using f-strings (#1774) (290b6272)
+* Enabling connection pool_size definition (a77d4f48)
+* Always define the session adapter (aaec0a0f)
+
 Version 1.54.1 (December 24, 2020)
 -----------------------------------
 

@@ -22,9 +22,9 @@ from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
 
-# from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
-TGithubObject = TypeVar('TGithubObject', bound=GithubObject)
+TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
 class Github:
     def __init__(
@@ -39,12 +39,17 @@ class Github:
         user_agent: str = ...,
         per_page: int = ...,
         verify: bool = ...,
-        retry: Any = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
     ) -> None: ...
-    def __get_FIX_REPO_GET_GIT_REF(self) -> bool: ...
-    def __set_FIX_REPO_GET_GIT_REF(self, value: bool) -> None: ...
-    def __get_per_page(self) -> int: ...
-    def __set_per_page(self, value: int) -> None: ...
+    @property
+    def FIX_REPO_GET_GIT_REF(self) -> bool: ...
+    @FIX_REPO_GET_GIT_REF.setter
+    def FIX_REPO_GET_GIT_REF(self, value: bool) -> None: ...
+    @property
+    def per_page(self) -> int: ...
+    @per_page.setter
+    def per_page(self, value: int) -> None: ...
     def create_from_raw_data(
         self,
         klass: Type[TGithubObject],
@@ -126,11 +131,7 @@ class Github:
         order: Union[str, _NotSetType] = ...,
         **qualifiers: Any
     ) -> PaginatedList[Repository]: ...
-    def search_topics(
-        self,
-        query: str,
-        **qualifiers: Any
-    ) -> PaginatedList[Topic]: ...
+    def search_topics(self, query: str, **qualifiers: Any) -> PaginatedList[Topic]: ...
     def search_users(
         self,
         query: str,
