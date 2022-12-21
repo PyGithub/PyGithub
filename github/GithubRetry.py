@@ -77,10 +77,8 @@ class GithubRetry(Retry):
                         message = content.get('message')
 
                         if Requester.isRateLimitError(message):
-                            if Requester.isPrimaryRateLimitError(message):
-                                self.__log(logging.DEBUG, f'Response body indicates retry-able primary rate limit error: {message}')
-                            else:
-                                self.__log(logging.DEBUG, f'Response body indicates retry-able secondary rate limit error: {message}')
+                            rate_type = 'primary' if Requester.isPrimaryRateLimitError(message) else 'secondary'
+                            self.__log(logging.DEBUG, f'Response body indicates retry-able {rate_type} rate limit error: {message}')
 
                             # check early that we are retrying at all
                             retry = super().increment(method, url, response, error, _pool, _stacktrace)
@@ -98,10 +96,7 @@ class GithubRetry(Retry):
                                         resetBackoff = delta.total_seconds()
 
                                         if resetBackoff > 0:
-                                            self.__log(
-                                                logging.DEBUG,
-                                                f'Reset occurs in {str(delta)} ({value} / {reset})'
-                                            )
+                                            self.__log(logging.DEBUG, f'Reset occurs in {str(delta)} ({value} / {reset})')
 
                                         # plus 1s as it is not clear when in that second the reset occurs
                                         backoff = resetBackoff + 1
