@@ -23,8 +23,8 @@
 from datetime import datetime
 from io import BytesIO
 import unittest
+from unittest import mock
 
-import mock
 import urllib3.response
 from urllib3 import Retry
 
