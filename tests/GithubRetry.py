@@ -403,10 +403,10 @@ class GithubRetry(unittest.TestCase):
                 (20, "Request TEST URL failed with 403: NOT GOOD"),
                 (30, "Failed to inspect response message"),
             ],
-            [call.args for call in log.mock_calls],
+            [call[1] for call in log.mock_calls],
         )
 
         self.assertListEqual(
             [{}, {"exc_info": "Unable to determine whether fp is closed."}],
-            [{k: str(v) for k, v in call.kwargs.items()} for call in log.mock_calls],
+            [{k: str(v) for k, v in call[2].items()} for call in log.mock_calls],
         )
