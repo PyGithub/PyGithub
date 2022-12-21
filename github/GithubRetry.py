@@ -43,8 +43,8 @@ class GithubRetry(Retry):
     This retries 403 responses if they are retry-able. Github requests are retry-able when
     the response provides a `"Retry-After"` header, or the content indicates a rate limit error.
 
-    By default, response codes defined in `Retry.RETRY_AFTER_STATUS_CODES` are retried,
-    as well as 403, and 500 up to 599. This can be configured via the `status_forcelist` argument.
+    By default, response codes 403, and 500 up to 599 are retried. This can be configured
+    via the `status_forcelist` argument.
 
     By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
     This can be configured via the `allowed_methods` argument.
@@ -62,8 +62,7 @@ class GithubRetry(Retry):
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
         kwargs["status_forcelist"] = kwargs.get(
-            "status_forcelist",
-            list(Retry.RETRY_AFTER_STATUS_CODES) + list(range(500, 600)),
+            "status_forcelist", list(range(500, 600))
         ) + [403]
         kwargs["allowed_methods"] = kwargs.get(
             "allowed_methods", Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
