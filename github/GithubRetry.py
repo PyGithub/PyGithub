@@ -33,7 +33,6 @@ from urllib3.exceptions import MaxRetryError
 from github import GithubException
 from github.Requester import Requester
 
-
 DEFAULT_SECONDARY_RATE_WAIT = 60
 
 
@@ -45,28 +44,38 @@ class GithubRetry(Retry):
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
-        kwargs['status_forcelist'] = kwargs.get('status_forcelist', list(Retry.RETRY_AFTER_STATUS_CODES)) + [403]
+        kwargs["status_forcelist"] = kwargs.get(
+            "status_forcelist", list(Retry.RETRY_AFTER_STATUS_CODES)
+        ) + [403]
         super().__init__(**kwargs)
 
     def new(self, **kw):
         kw.update(dict(secondaryRateWait=self.secondaryRateWait))
         return super().new(**kw)
 
-    def increment(self,
-                  method=None,
-                  url=None,
-                  response=None,
-                  error=None,
-                  _pool=None,
-                  _stacktrace=None):
+    def increment(
+        self,
+        method=None,
+        url=None,
+        response=None,
+        error=None,
+        _pool=None,
+        _stacktrace=None,
+    ):
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
             # or the body message does imply a rate limit error
             if response.status == 403:
-                self.__log(logging.INFO, f'Request {method} {url} failed with {response.status}: {response.reason}')
-                if 'Retry-After' in response.headers:
+                self.__log(
+                    logging.INFO,
+                    f"Request {method} {url} failed with {response.status}: {response.reason}",
+                )
+                if "Retry-After" in response.headers:
                     # Sleeping 'Retry-After' seconds is implemented in urllib3.Retry.sleep() and called by urllib3
-                    self.__log(logging.INFO, f'Retrying after {response.headers.get("Retry-After")} seconds')
+                    self.__log(
+                        logging.INFO,
+                        f'Retrying after {response.headers.get("Retry-After")} seconds',
+                    )
                 else:
                     content = response.reason
 
@@ -74,29 +83,43 @@ class GithubRetry(Retry):
                     try:
                         content = self.get_content(response, url)
                         content = json.loads(content)
-                        message = content.get('message')
+                        message = content.get("message")
 
                         if Requester.isRateLimitError(message):
-                            rate_type = 'primary' if Requester.isPrimaryRateLimitError(message) else 'secondary'
-                            self.__log(logging.DEBUG, f'Response body indicates retry-able {rate_type} rate limit error: {message}')
+                            rate_type = (
+                                "primary"
+                                if Requester.isPrimaryRateLimitError(message)
+                                else "secondary"
+                            )
+                            self.__log(
+                                logging.DEBUG,
+                                f"Response body indicates retry-able {rate_type} rate limit error: {message}",
+                            )
 
                             # check early that we are retrying at all
-                            retry = super().increment(method, url, response, error, _pool, _stacktrace)
+                            retry = super().increment(
+                                method, url, response, error, _pool, _stacktrace
+                            )
 
                             # we backoff primary rate limit at least until X-RateLimit-Reset,
                             # we backoff secondary rate limit at for secondaryRateWait seconds
                             backoff = 0
 
                             if Requester.isPrimaryRateLimitError(message):
-                                if 'X-RateLimit-Reset' in response.headers:
-                                    value = response.headers.get('X-RateLimit-Reset')
+                                if "X-RateLimit-Reset" in response.headers:
+                                    value = response.headers.get("X-RateLimit-Reset")
                                     if value and value.isdigit():
-                                        reset = datetime.datetime.utcfromtimestamp(int(value))
+                                        reset = datetime.datetime.utcfromtimestamp(
+                                            int(value)
+                                        )
                                         delta = reset - self.__utc_now()
                                         resetBackoff = delta.total_seconds()
 
                                         if resetBackoff > 0:
-                                            self.__log(logging.DEBUG, f'Reset occurs in {str(delta)} ({value} / {reset})')
+                                            self.__log(
+                                                logging.DEBUG,
+                                                f"Reset occurs in {str(delta)} ({value} / {reset})",
+                                            )
 
                                         # plus 1s as it is not clear when in that second the reset occurs
                                         backoff = resetBackoff + 1
@@ -107,23 +130,37 @@ class GithubRetry(Retry):
                             retry_backoff = retry.get_backoff_time()
                             if retry_backoff > backoff:
                                 if backoff > 0:
-                                    self.__log(logging.DEBUG, f'Retry backoff of {retry_backoff}s exceeds '
-                                                              f'required rate limit backoff of {backoff}s')
+                                    self.__log(
+                                        logging.DEBUG,
+                                        f"Retry backoff of {retry_backoff}s exceeds "
+                                        f"required rate limit backoff of {backoff}s",
+                                    )
                                 backoff = retry.get_backoff_time()
 
                             def get_backoff_time():
                                 return backoff
 
-                            self.__log(logging.INFO, f'Setting next backoff to {backoff}s')
+                            self.__log(
+                                logging.INFO, f"Setting next backoff to {backoff}s"
+                            )
                             retry.get_backoff_time = get_backoff_time
                             return retry
 
-                        self.__log(logging.DEBUG, 'Response message does not indicate retry-able error')
-                        raise Requester.createException(response.status, response.headers, content)
+                        self.__log(
+                            logging.DEBUG,
+                            "Response message does not indicate retry-able error",
+                        )
+                        raise Requester.createException(
+                            response.status, response.headers, content
+                        )
                     except (MaxRetryError, GithubException):
                         raise
                     except Exception as e:
-                        self.__log(logging.WARNING, 'Failed to inspect response message', exc_info=e)
+                        self.__log(
+                            logging.WARNING,
+                            "Failed to inspect response message",
+                            exc_info=e,
+                        )
 
                     raise GithubException(response.status, content, response.headers)
 
@@ -136,10 +173,10 @@ class GithubRetry(Retry):
         response = Response()
 
         # Fallback to None if there's no status_code, for whatever reason.
-        response.status_code = getattr(resp, 'status', None)
+        response.status_code = getattr(resp, "status", None)
 
         # Make headers case-insensitive.
-        response.headers = CaseInsensitiveDict(getattr(resp, 'headers', {}))
+        response.headers = CaseInsensitiveDict(getattr(resp, "headers", {}))
 
         # Set encoding.
         response.encoding = get_encoding_from_headers(response.headers)

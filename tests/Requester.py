@@ -184,29 +184,39 @@ class Requester(Framework.TestCase):
         "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later."
         "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.",
         "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
-        "Something else here. Please wait a few minutes before you try again."
+        "Something else here. Please wait a few minutes before you try again.",
     ]
-    OtherErrors = [
-        "User does not exist or is not a member of the organization"
-    ]
+    OtherErrors = ["User does not exist or is not a member of the organization"]
 
     def testIsRateLimitError(self):
         for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
-            self.assertTrue(github.Requester.Requester.isRateLimitError(message), message)
+            self.assertTrue(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
         for message in self.OtherErrors:
-            self.assertFalse(github.Requester.Requester.isRateLimitError(message), message)
+            self.assertFalse(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
 
     def testIsPrimaryRateLimitError(self):
         for message in self.PrimaryRateLimitErrors:
-            self.assertTrue(github.Requester.Requester.isPrimaryRateLimitError(message), message)
+            self.assertTrue(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
         for message in self.OtherErrors + self.SecondaryRateLimitErrors:
-            self.assertFalse(github.Requester.Requester.isPrimaryRateLimitError(message), message)
+            self.assertFalse(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
 
     def testIsSecondaryRateLimitError(self):
         for message in self.SecondaryRateLimitErrors:
-            self.assertTrue(github.Requester.Requester.isSecondaryRateLimitError(message), message)
+            self.assertTrue(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
         for message in self.OtherErrors + self.PrimaryRateLimitErrors:
-            self.assertFalse(github.Requester.Requester.isSecondaryRateLimitError(message), message)
+            self.assertFalse(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
 
     def assertException(self, exception, exception_type, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)

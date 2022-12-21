@@ -551,7 +551,9 @@ class Requester:
 
     @classmethod
     def isRateLimitError(cls, message: str) -> bool:
-        return cls.isPrimaryRateLimitError(message) or cls.isSecondaryRateLimitError(message)
+        return cls.isPrimaryRateLimitError(message) or cls.isSecondaryRateLimitError(
+            message
+        )
 
     @classmethod
     def isPrimaryRateLimitError(cls, message: str) -> bool:
@@ -567,9 +569,11 @@ class Requester:
             return False
 
         message = message.lower()
-        return (message.startswith("you have exceeded a secondary rate limit") or
-                message.endswith("please retry your request again later.") or
-                message.endswith("please wait a few minutes before you try again."))
+        return (
+            message.startswith("you have exceeded a secondary rate limit")
+            or message.endswith("please retry your request again later.")
+            or message.endswith("please wait a few minutes before you try again.")
+        )
 
     def __structuredFromJson(self, data: str) -> Any:
         if len(data) == 0:

@@ -4,12 +4,12 @@ from typing import Any
 
 from urllib3 import Retry, HTTPResponse
 
-
 DEFAULT_SECONDARY_RATE_WAIT: int
+
 class GithubRetry(Retry):
     secondaryRateWait: int
     __logger: Logger
-    def __init__(self, secondaryRateWait: int=..., **kwargs: Any) -> None: ...
+    def __init__(self, secondaryRateWait: int = ..., **kwargs: Any) -> None: ...
     def increment(
         self,
         method=None,
@@ -17,7 +17,7 @@ class GithubRetry(Retry):
         response=None,
         error=None,
         _pool=None,
-        _stacktrace=None
+        _stacktrace=None,
     ) -> Retry: ...
     @staticmethod
     def get_content(resp: HTTPResponse, url: str) -> str: ...
