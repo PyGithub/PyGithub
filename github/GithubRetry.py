@@ -37,16 +37,37 @@ DEFAULT_SECONDARY_RATE_WAIT = 60
 
 
 class GithubRetry(Retry):
+    """
+    A Github-specific implementation of `urllib3.Retry`
+
+    This retries 403 responses if they are retry-able. Github requests are retry-able when
+    the response provides a `"Retry-After"` header, or the content indicates a rate limit error.
+
+    By default, response codes defined in `Retry.RETRY_AFTER_STATUS_CODES` are retried,
+    as well as 403, and 500 up to 599. This can be configured via the `status_forcelist` argument.
+
+    By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
+    This can be configured via the `allowed_methods` argument.
+    """
+
     __logger = None
 
     def __init__(self, secondaryRateWait=DEFAULT_SECONDARY_RATE_WAIT, **kwargs):
+        """
+        :param secondaryRateWait: seconds to wait before retrying secondary rate limit errors
+        :param kwargs: see urllib3.Retry for more arguments
+        """
         self.secondaryRateWait = secondaryRateWait
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
         kwargs["status_forcelist"] = kwargs.get(
-            "status_forcelist", list(Retry.RETRY_AFTER_STATUS_CODES)
+            "status_forcelist",
+            list(Retry.RETRY_AFTER_STATUS_CODES) + list(range(500, 600)),
         ) + [403]
+        kwargs["allowed_methods"] = kwargs.get(
+            "allowed_methods", Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
+        )
         super().__init__(**kwargs)
 
     def new(self, **kw):
