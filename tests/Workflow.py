@@ -80,6 +80,13 @@ class Workflow(Framework.TestCase):
             [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
         )
 
+    def testGetRunsWithCreated(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(created="2022-12-24"),
+            lambda r: r.id,
+            [3770390952],
+        )
+
     def testCreateDispatchWithBranch(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(

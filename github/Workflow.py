@@ -137,6 +137,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         branch=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         status=github.GithubObject.NotSet,
+        created=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
@@ -144,6 +145,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string
         :param status: string
+        :param created: string Created filter, see https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
         assert (
@@ -158,6 +160,9 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert created is github.GithubObject.NotSet or isinstance(
+            created, str
+        ), created
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
             url_parameters["actor"] = (
@@ -173,6 +178,8 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
+        if created is not github.GithubObject.NotSet:
+            url_parameters["created"] = created
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,
