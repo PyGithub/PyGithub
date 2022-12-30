@@ -72,6 +72,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.pull_request.patch_url, None)
         self.assertEqual(self.issue.pull_request.html_url, None)
         self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
         self.assertEqual(
             self.issue.updated_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
@@ -120,6 +121,16 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.issue.edit(assignee=None)
         self.assertEqual(self.issue.assignee, None)
+
+    def testEditWithStateReasonNotPlanned(self):
+        self.issue.edit(state="closed", state_reason="not_planned")
+        self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "not_planned")
+
+    def testEditWithStateReasonReopened(self):
+        self.issue.edit(state="open", state_reason="reopened")
+        self.assertEqual(self.issue.state, "open")
+        self.assertEqual(self.issue.state_reason, "reopened")
 
     def testLock(self):
         self.issue.lock("resolved")
