@@ -59,6 +59,13 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
 
+    def required_linear_history(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._required_linear_history)
+        return self._required_linear_history.value
+    
     @property
     def required_pull_request_reviews(self):
         """
@@ -118,10 +125,6 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "required_linear_history" in attributes:  # pragma no branch
             self._required_linear_history = self._makeBoolAttribute(
                 attributes["required_linear_history"]["enabled"]
-            )
-        if "enforce_admins" in attributes:  # pragma no branch
-            self._enforce_admins = self._makeBoolAttribute(
-                attributes["enforce_admins"]["enabled"]
             )
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
