@@ -115,6 +115,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,
                 attributes["required_pull_request_reviews"],
             )
+        if "required_linear_history" in attributes:  # pragma no branch
+            self._required_linear_history = self._makeBoolAttribute(
+                attributes["required_linear_history"]["enabled"]
+            )
+        if "enforce_admins" in attributes:  # pragma no branch
+            self._enforce_admins = self._makeBoolAttribute(
+                attributes["enforce_admins"]["enabled"]
+            )
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
