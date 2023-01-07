@@ -59,6 +59,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
 
+    @property
     def required_linear_history(self):
         """
         :type: bool
