@@ -307,7 +307,7 @@ class Requester:
         if password is not None:
             login = login_or_token
             b64 = (
-                base64.b64encode((f"{login}:{password}").encode("utf-8"))
+                base64.b64encode((f"{login}:{password}").encode())
                 .decode("utf-8")
                 .replace("\n", "")
             )

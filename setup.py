@@ -44,7 +44,7 @@ import textwrap
 
 import setuptools
 
-version = "1.55"
+version = "1.57"
 
 
 if __name__ == "__main__":
@@ -96,17 +96,17 @@ if __name__ == "__main__":
             "Operating System :: OS Independent",
             "Programming Language :: Python",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
             "Topic :: Software Development",
         ],
-        python_requires=">=3.6",
+        python_requires=">=3.7",
         install_requires=[
             "deprecated",
-            "pyjwt>=2.0",
+            "pyjwt>=2.4.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
         ],

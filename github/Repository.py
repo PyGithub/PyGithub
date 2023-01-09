@@ -65,6 +65,8 @@
 # Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
 # Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -91,10 +93,13 @@ from base64 import b64encode
 
 from deprecated import deprecated
 
+import github.Artifact
+import github.Autolink
 import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
+import github.CodeScanAlert
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -152,6 +157,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def allow_forking(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_forking)
+        return self._allow_forking.value
 
     @property
     def allow_merge_commit(self):
@@ -474,6 +487,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_template(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_template)
+        return self._is_template.value
+
+    @property
     def issue_comment_url(self):
         """
         :type: string
@@ -764,6 +785,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._teams_url.value
 
     @property
+    def topics(self):
+        """
+        :type: list of strings
+        """
+        self._completeIfNotSet(self._topics)
+        return self._topics.value
+
+    @property
     def trees_url(self):
         """
         :type: string
@@ -900,6 +929,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_autolink(self, key_prefix, url_template):
+        """
+        :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
+        :param key_prefix: string
+        :param url_template: string
+        :rtype: :class:`github.Autolink.Autolink`
+        """
+        assert isinstance(key_prefix, str), key_prefix
+        assert isinstance(url_template, str), url_template
+
+        post_parameters = {"key_prefix": key_prefix, "url_template": url_template}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/autolinks", input=post_parameters
+        )
+        return github.Autolink.Autolink(self._requester, headers, data, completed=True)
+
     def create_git_blob(self, content, encoding):
         """
         :calls: `POST /repos/{owner}/{repo}/git/blobs <https://docs.github.com/en/rest/reference/git#blobs>`_
@@ -995,7 +1040,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
         :meth:`Repository.create_git_release`.
-
         :param tag: string
         :param tag_message: string
         :param release_name: string
@@ -1516,6 +1560,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         has_wiki=github.GithubObject.NotSet,
         has_downloads=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
+        allow_forking=github.GithubObject.NotSet,
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
@@ -1567,6 +1612,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert default_branch is github.GithubObject.NotSet or isinstance(
             default_branch, str
         ), default_branch
+        assert allow_forking is github.GithubObject.NotSet or isinstance(
+            allow_forking, bool
+        ), allow_forking
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(
             allow_squash_merge, bool
         ), allow_squash_merge
@@ -1603,6 +1651,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["default_branch"] = default_branch
         if allow_squash_merge is not github.GithubObject.NotSet:
             post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_forking is not github.GithubObject.NotSet:
+            post_parameters["allow_forking"] = allow_forking
         if allow_merge_commit is not github.GithubObject.NotSet:
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
@@ -2069,6 +2119,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             f"{self.url}/projects",
             url_parameters,
             {"Accept": Consts.mediaTypeProjectsPreview},
+        )
+
+    def get_autolinks(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Autolink.Autolink`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Autolink.Autolink, self._requester, f"{self.url}/autolinks", None
         )
 
     def create_file(
@@ -3492,6 +3551,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def remove_autolink(self, autolink):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :param autolink: int or :class:`github.Autolink.Autolink`
+        :rtype: None
+        """
+        is_autolink = isinstance(autolink, github.Autolink.Autolink)
+        assert is_autolink or isinstance(autolink, int), autolink
+
+        status, _, _ = self._requester.requestJson(
+            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
+        )
+        return status == 204
+
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
         """
         :calls: `POST /hub <https://docs.github.com/en/rest/reference/repos#pubsubhubbub>`_
@@ -3688,7 +3761,47 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
+    def get_artifacts(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            f"{self.url}/actions/artifacts",
+            None,
+            list_item="artifacts",
+        )
+
+    def get_artifact(self, artifact_id):
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#get-an-artifact>`_
+        :param artifact_id: int
+        :rtype: :class:`github.Artifact.Artifact`
+        """
+        assert isinstance(artifact_id, int), artifact_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/artifacts/{artifact_id}"
+        )
+
+        return github.Artifact.Artifact(self._requester, headers, data, completed=True)
+
+    def get_codescan_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.CodeScanAlert.CodeScanAlert,
+            self._requester,
+            f"{self.url}/code-scanning/alerts",
+            None,
+        )
+
     def _initAttributes(self):
+        self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
@@ -3729,6 +3842,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._hooks_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._is_template = github.GithubObject.NotSet
         self._issue_comment_url = github.GithubObject.NotSet
         self._issue_events_url = github.GithubObject.NotSet
         self._issues_url = github.GithubObject.NotSet
@@ -3765,6 +3879,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._svn_url = github.GithubObject.NotSet
         self._tags_url = github.GithubObject.NotSet
         self._teams_url = github.GithubObject.NotSet
+        self._topics = github.GithubObject.NotSet
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -3773,6 +3888,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "allow_forking" in attributes:  # pragma no branch
+            self._allow_forking = self._makeBoolAttribute(attributes["allow_forking"])
         if "allow_merge_commit" in attributes:  # pragma no branch
             self._allow_merge_commit = self._makeBoolAttribute(
                 attributes["allow_merge_commit"]
@@ -3871,6 +3988,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_template" in attributes:  # pragma no branch
+            self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
             self._issue_comment_url = self._makeStringAttribute(
                 attributes["issue_comment_url"]
@@ -3971,6 +4090,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
             self._trees_url = self._makeStringAttribute(attributes["trees_url"])
+        if "topics" in attributes:  # pragma no branch
+            self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
