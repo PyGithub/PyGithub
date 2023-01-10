@@ -45,6 +45,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def name(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
     def head_branch(self):
         """
         :type: string
@@ -280,6 +288,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
         self._head_sha = github.GithubObject.NotSet
         self._run_attempt = github.GithubObject.NotSet
@@ -308,6 +317,8 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
         if "head_branch" in attributes:  # pragma no branch
             self._head_branch = self._makeStringAttribute(attributes["head_branch"])
         if "head_sha" in attributes:  # pragma no branch
