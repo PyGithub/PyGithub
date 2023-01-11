@@ -69,6 +69,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         return self._head_sha.value
 
     @property
+    def display_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._display_title)
+        return self._display_title.value
+
+    @property
     def run_attempt(self):
         """
         :type: integer
@@ -291,6 +299,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
         self._head_sha = github.GithubObject.NotSet
+        self._display_title = github.GithubObject.NotSet
         self._run_attempt = github.GithubObject.NotSet
         self._run_number = github.GithubObject.NotSet
         self._event = github.GithubObject.NotSet
@@ -323,6 +332,8 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._head_branch = self._makeStringAttribute(attributes["head_branch"])
         if "head_sha" in attributes:  # pragma no branch
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
+        if "display_title" in attributes:  # pragma no branch
+            self._display_title = self._makeStringAttribute(attributes["display_title"])
         if "run_attempt" in attributes:  # pragma no branch
             self._run_attempt = self._makeIntAttribute(attributes["run_attempt"])
         if "run_number" in attributes:  # pragma no branch
