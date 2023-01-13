@@ -37,16 +37,18 @@ class WorkflowRun(Framework.TestCase):
             'WorkflowRun(url="https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935", id=3881497935)',
         )
         self.assertEqual(self.workflow_run.id, 3881497935)
-        self.assertEqual(self.workflow_run.name, "TEST PR")
-        self.assertEqual(self.workflow_run.head_branch, "nuang-ee:feat/workflow-run")
+        self.assertEqual(self.workflow_run.name, "CI")
+        self.assertEqual(self.workflow_run.head_branch, "feat/workflow-run")
         self.assertEqual(
             self.workflow_run.head_sha, "c6e5cac67a58a4eb11f1f28567a77a6e2cc8ee98"
         )
+        self.assertEqual(self.workflow_run.path, ".github/workflows/ci.yml")
+        self.assertEqual(self.workflow_run.display_title, "TEST PR")
         self.assertEqual(self.workflow_run.run_number, 930)
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
-        self.assertEqual(self.workflow_run.conclusion, "failure")
-        self.assertEqual(self.workflow_run.workflow_id, 3881497935)
+        self.assertEqual(self.workflow_run.conclusion, "success")
+        self.assertEqual(self.workflow_run.workflow_id, 1903133)
         self.assertEqual(
             self.workflow_run.url,
             "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935",
@@ -56,9 +58,9 @@ class WorkflowRun(Framework.TestCase):
             "https://github.com/PyGithub/PyGithub/actions/runs/3881497935",
         )
         self.assertEqual(self.workflow_run.pull_requests, [])
-        created_at = datetime.datetime(2020, 6, 26, 4, 51, 26)
+        created_at = datetime.datetime(2023, 1, 10, 8, 24, 19)
         self.assertEqual(self.workflow_run.created_at, created_at)
-        updated_at = datetime.datetime(2020, 6, 26, 4, 52, 59)
+        updated_at = datetime.datetime(2023, 1, 10, 8, 28, 20)
         self.assertEqual(self.workflow_run.updated_at, updated_at)
         self.assertEqual(
             self.workflow_run.jobs_url,
@@ -70,7 +72,7 @@ class WorkflowRun(Framework.TestCase):
         )
         self.assertEqual(
             self.workflow_run.check_suite_url,
-            "https://api.github.com/repos/PyGithub/PyGithub/check-suites/843925976",
+            "https://api.github.com/repos/PyGithub/PyGithub/check-suites/10279069747",
         )
         self.assertEqual(
             self.workflow_run.artifacts_url,
@@ -86,7 +88,7 @@ class WorkflowRun(Framework.TestCase):
         )
         self.assertEqual(
             self.workflow_run.workflow_url,
-            "https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390",
+            "https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1903133",
         )
         self.assertEqual(
             self.workflow_run.head_commit.message, "add attribute 'name' on WorkflowRun"
@@ -103,12 +105,12 @@ class WorkflowRun(Framework.TestCase):
         self.assertTrue(self.workflow_run.rerun())
 
     def test_rerun_with_successful_run(self):
-        wr = self.repo.get_workflow_run(3881497935)
+        wr = self.repo.get_workflow_run(145732882)
         self.assertFalse(wr.rerun())
 
     def test_cancel(self):
         self.assertTrue(self.workflow_run.cancel())
 
     def test_delete(self):
-        wr = self.repo.get_workflow_run(3881497935)
+        wr = self.repo.get_workflow_run(1327550476)
         self.assertTrue(wr.delete())
