@@ -1,10 +1,11 @@
 https
-POST
+GET
 api.github.com
 None
-/repos/PyGithub/PyGithub/actions/runs/148274629/rerun
+/repos/PyGithub/PyGithub/actions/runs/3910280755
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
-201
-[('Date', 'Fri, 26 Jun 2020 05:04:31 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Server', 'GitHub.com'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4949'), ('X-RateLimit-Reset', '1593150230'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', '"f4f61bef4e0189176324081da79fde4b"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, read:packages, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '9B54:4D5E:1A253C:1E86A7:5EF581DF')]
-{}
+404
+[('Server', 'GitHub.com'), ('Date', 'Fri, 13 Jan 2023 10:22:41 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '6'), ('X-RateLimit-Reset', '1673607610'), ('X-RateLimit-Used', '54'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'C912:7D78:112C7E:189A93:63C130F0')]
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/actions#get-a-workflow-run"}
+

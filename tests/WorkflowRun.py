@@ -102,15 +102,17 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(timing.run_duration_ms, 105000)
 
     def test_rerun(self):
-        self.assertTrue(self.workflow_run.rerun())
+        wr = self.repo.get_workflow_run(3910280793)
+        self.assertTrue(wr.rerun())
 
     def test_rerun_with_successful_run(self):
-        wr = self.repo.get_workflow_run(145732882)
+        wr = self.repo.get_workflow_run(3881497935)
         self.assertFalse(wr.rerun())
 
     def test_cancel(self):
-        self.assertTrue(self.workflow_run.cancel())
+        wr = self.repo.get_workflow_run(3910280755)
+        self.assertTrue(wr.cancel())
 
     def test_delete(self):
-        wr = self.repo.get_workflow_run(1327550476)
+        wr = self.repo.get_workflow_run(3881497935)
         self.assertTrue(wr.delete())
