@@ -98,8 +98,23 @@ class WorkflowRun(Framework.TestCase):
 
     def test_timing(self):
         timing = self.workflow_run.timing()
-        self.assertEqual(timing.billable, {})
-        self.assertEqual(timing.run_duration_ms, 105000)
+        self.assertEqual(
+            timing.billable,
+            {
+                "UBUNTU": {
+                    "job_runs": [
+                        {"duration_ms": 0, "job_id": 10545727758},
+                        {"duration_ms": 0, "job_id": 10545727888},
+                        {"duration_ms": 0, "job_id": 10545728039},
+                        {"duration_ms": 0, "job_id": 10545728190},
+                        {"duration_ms": 0, "job_id": 10545728356},
+                    ],
+                    "jobs": 5,
+                    "total_ms": 0,
+                }
+            },
+        )
+        self.assertEqual(timing.run_duration_ms, 241000)
 
     def test_rerun(self):
         wr = self.repo.get_workflow_run(3910280793)
@@ -110,7 +125,7 @@ class WorkflowRun(Framework.TestCase):
         self.assertFalse(wr.rerun())
 
     def test_cancel(self):
-        wr = self.repo.get_workflow_run(3910450632)
+        wr = self.repo.get_workflow_run(3911660493)
         self.assertTrue(wr.cancel())
 
     def test_delete(self):
