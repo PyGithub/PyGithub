@@ -110,7 +110,7 @@ class WorkflowRun(Framework.TestCase):
         self.assertFalse(wr.rerun())
 
     def test_cancel(self):
-        wr = self.repo.get_workflow_run(3910280755)
+        wr = self.repo.get_workflow_run(3910450632)
         self.assertTrue(wr.cancel())
 
     def test_delete(self):
