@@ -104,6 +104,7 @@ class Github:
         verify=True,
         retry=None,
         pool_size=None,
+        proxies=None,
     ):
         """
         :param login_or_token: string
@@ -115,6 +116,7 @@ class Github:
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         :param pool_size: int
+        :param proxies: dict
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -129,6 +131,7 @@ class Github:
             or isinstance(retry, (urllib3.util.Retry))
         )
         assert pool_size is None or isinstance(pool_size, (int)), pool_size
+        assert proxies is None or isinstance(proxies, (dict)), proxies
         self.__requester = Requester(
             login_or_token,
             password,
@@ -140,6 +143,7 @@ class Github:
             verify,
             retry,
             pool_size,
+            proxies,
         )
 
     @property

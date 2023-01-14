@@ -97,6 +97,7 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        self.session.proxies = kwargs.get("proxies", {})
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -156,6 +157,7 @@ class HTTPRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        self.session.proxies = kwargs.get("proxies", {})
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -301,6 +303,7 @@ class Requester:
         verify,
         retry,
         pool_size,
+        proxies,
     ):
         self._initializeDebugFeature()
 
@@ -348,6 +351,7 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+        self.__proxies = proxies
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -611,6 +615,7 @@ class Requester:
         kwds = {}
         kwds["timeout"] = self.__timeout
         kwds["verify"] = self.__verify
+        kwds["proxies"] = self.__proxies
 
         if self.__persist and self.__connection is not None:
             return self.__connection
