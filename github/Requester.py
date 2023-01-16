@@ -60,6 +60,7 @@ import re
 import time
 import urllib
 from io import IOBase
+from multiprocessing import RLock
 
 import requests
 
@@ -318,6 +319,8 @@ class Requester:
         self.__app_installation_id = app_installation_id
         self.__app_token_permissions = app_token_permissions
 
+        self.__auth_lock = RLock()
+
         if password is not None:
             login = login_or_token
             b64 = (
@@ -392,9 +395,10 @@ class Requester:
         """Get a new access token from the GitHub app installation if the one we have is about to expire"""
         if not self.__installation_authorization:
             return
-        if self._must_refresh_token():
-            logging.debug("Refreshing access token")
-            self._refresh_token()
+        with self.__auth_lock:
+            if self._must_refresh_token():
+                logging.debug("Refreshing access token")
+                self._refresh_token()
 
     def _refresh_token(self) -> None:
         """In the context of a GitHub app, refresh the access token"""
