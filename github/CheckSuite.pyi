@@ -1,10 +1,10 @@
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 from github.CheckRun import CheckRun
 from github.GitCommit import GitCommit
 from github.GithubApp import GithubApp
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import CompletableGithubObject
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
@@ -47,8 +47,5 @@ class CheckSuite(CompletableGithubObject):
     def url(self) -> str: ...
     def rerequest(self) -> bool: ...
     def get_check_runs(
-        self,
-        check_name: Union[str, _NotSetType] = ...,
-        status: Union[str, _NotSetType] = ...,
-        filter: Union[str, _NotSetType] = ...,
+        self, check_name: str, status: str, filter: str
     ) -> PaginatedList[CheckRun]: ...

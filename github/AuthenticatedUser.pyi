@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, NamedTuple, Union
+from typing import Any, Dict, List, Optional, Union, NamedTuple
 
 from github.Authorization import Authorization
 from github.Event import Event
@@ -85,7 +85,6 @@ class AuthenticatedUser(CompletableGithubObject):
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
-        delete_branch_on_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
     @property
     def created_at(self) -> datetime: ...
