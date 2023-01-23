@@ -38,7 +38,7 @@ import github.PaginatedList
 
 class Milestone(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Milestones. The reference can be found here http://docs.github.com/en/rest/reference/issues#milestones
+    This class represents Milestones. The reference can be found here https://docs.github.com/en/rest/reference/issues#milestones
     """
 
     def __repr__(self):
@@ -152,7 +152,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <http://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
@@ -165,7 +165,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         due_on=github.GithubObject.NotSet,
     ):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <http://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param title: string
         :param state: string
         :param description: string
@@ -196,7 +196,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <http://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(

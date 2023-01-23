@@ -38,7 +38,7 @@ import github.GithubObject
 
 class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
-    This class represents RepositoryKeys. The reference can be found here http://docs.github.com/en/rest/reference/repos#deploy-keys
+    This class represents RepositoryKeys. The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
     """
 
     def __repr__(self):
@@ -102,7 +102,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <http://docs.github.com/en/rest/reference/repos#deploy-keys>`_
+        :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)

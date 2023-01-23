@@ -195,6 +195,15 @@ class Search(Framework.TestCase):
         )
         self.assertEqual(commits.totalCount, 3)
 
+    def testSearchCommits(self):
+        commits = self.g.search_commits(
+            query="hash:1265747e992ba7d34a469b6b2f527809f8bf7067",
+            sort="author-date",
+            order="asc",
+            merge="false",
+        )
+        self.assertEqual(commits.totalCount, 2)
+
     def testSearchTopics(self):
         topics = self.g.search_topics("python", repositories=">950")
         self.assertListKeyBegin(

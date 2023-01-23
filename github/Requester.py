@@ -316,7 +316,7 @@ class Requester:
         if password is not None:
             login = login_or_token
             b64 = (
-                base64.b64encode((f"{login}:{password}").encode("utf-8"))
+                base64.b64encode((f"{login}:{password}").encode())
                 .decode("utf-8")
                 .replace("\n", "")
             )
@@ -355,7 +355,7 @@ class Requester:
 
         assert user_agent is not None, (
             "github now requires a user-agent. "
-            "See http://docs.github.com/en/rest/reference/#user-agent-required"
+            "See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required"
         )
         self.__userAgent = user_agent
         self.__verify = verify

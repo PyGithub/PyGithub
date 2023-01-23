@@ -7,7 +7,7 @@ from requests.models import Response
 from github.GithubObject import GithubObject
 from github.InstallationAuthorization import InstallationAuthorization
 
-# from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(
@@ -16,8 +16,8 @@ class HTTPRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Any = ...,
-        pool_size: int = None,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -33,8 +33,8 @@ class HTTPSRequestsConnectionClass:
         port: Optional[int] = ...,
         strict: bool = ...,
         timeout: Optional[int] = ...,
-        retry: Any = ...,
-        pool_size: int = None,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
         **kwargs: str
     ) -> None: ...
     def close(self) -> None: ...
@@ -56,20 +56,34 @@ class Requester:
     ) -> None: ...
     def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None: ...
     def __check(
-        self, status: int, responseHeaders: Dict[str, Any], output: str,
+        self,
+        status: int,
+        responseHeader: Dict[str, Any],
+        output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]: ...
-    def __addParametersToUrl(self, url: str, parameters: Dict[str, Any],) -> str: ...
+    def __addParametersToUrl(
+        self,
+        url: str,
+        parameters: Dict[str, Any],
+    ) -> str: ...
     def __authenticate(
-        self, url: str, requestHeaders: Dict[str, Any], parameters: Dict[str, Any],
+        self,
+        url: str,
+        responseHeader: Dict[str, Any],
+        parameters: Dict[str, Any],
     ) -> None: ...
     def __customConnection(
-        self, url: str,
+        self,
+        url: str,
     ) -> Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]]: ...
     def __createConnection(
         self,
     ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]: ...
     def __createException(
-        self, status: int, headers: Dict[str, Any], output: str,
+        self,
+        status: int,
+        headers: Dict[str, Any],
+        output: str,
     ) -> Any: ...
     def __log(
         self,
@@ -113,7 +127,7 @@ class Requester:
         user_agent: str,
         per_page: int,
         verify: bool,
-        retry: Any,
+        retry: Optional[Union[int, Retry]],
         pool_size: Optional[int],
     ) -> None: ...
     def _initializeDebugFeature(self) -> None: ...
