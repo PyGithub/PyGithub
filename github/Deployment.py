@@ -181,7 +181,10 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": self._get_accept_header()},
         )
         return github.DeploymentStatus.DeploymentStatus(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def create_status(
@@ -205,19 +208,24 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(state, str), state
         assert target_url is github.GithubObject.NotSet or isinstance(
-            target_url, str
+            target_url,
+            str,
         ), target_url
         assert description is github.GithubObject.NotSet or isinstance(
-            description, str
+            description,
+            str,
         ), description
         assert environment is github.GithubObject.NotSet or isinstance(
-            environment, str
+            environment,
+            str,
         ), environment
         assert environment_url is github.GithubObject.NotSet or isinstance(
-            environment_url, str
+            environment_url,
+            str,
         ), environment_url
         assert auto_inactive is github.GithubObject.NotSet or isinstance(
-            auto_inactive, bool
+            auto_inactive,
+            bool,
         ), auto_inactive
 
         post_parameters = {"state": state}
@@ -239,7 +247,10 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": self._get_accept_header()},
         )
         return github.DeploymentStatus.DeploymentStatus(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     @staticmethod
@@ -248,7 +259,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             [
                 github.Consts.deploymentEnhancementsPreview,
                 github.Consts.deploymentStatusEnhancementsPreview,
-            ]
+            ],
         )
 
     def _initAttributes(self):
@@ -273,11 +284,11 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "production_environment" in attributes:  # pragma no branch
             self._production_environment = self._makeBoolAttribute(
-                attributes["production_environment"]
+                attributes["production_environment"],
             )
         if "transient_environment" in attributes:  # pragma no branch
             self._transient_environment = self._makeBoolAttribute(
-                attributes["transient_environment"]
+                attributes["transient_environment"],
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
@@ -289,7 +300,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._payload = self._makeDictAttribute(attributes["payload"])
         if "original_environment" in attributes:  # pragma no branch
             self._original_environment = self._makeStringAttribute(
-                attributes["original_environment"]
+                attributes["original_environment"],
             )
         if "environment" in attributes:  # pragma no branch
             self._environment = self._makeStringAttribute(attributes["environment"])
@@ -297,7 +308,8 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
+                github.NamedUser.NamedUser,
+                attributes["creator"],
             )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
@@ -307,5 +319,5 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(
-                attributes["repository_url"]
+                attributes["repository_url"],
             )

@@ -35,7 +35,7 @@ class Issue87(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
 
     def testCreateIssueWithPercentInTitle(self):
         issue = self.repo.create_issue(
-            "Issue with percent % in title created by PyGithub"
+            "Issue with percent % in title created by PyGithub",
         )
         self.assertEqual(issue.number, 99)
 
@@ -45,12 +45,13 @@ class Issue87(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
 
     def testCreateIssueWithEscapedPercentInTitle(self):
         issue = self.repo.create_issue(
-            "Issue with escaped percent %25 in title created by PyGithub"
+            "Issue with escaped percent %25 in title created by PyGithub",
         )
         self.assertEqual(issue.number, 97)
 
     def testCreateIssueWithEscapedPercentInBody(self):
         issue = self.repo.create_issue(
-            "Issue created by PyGithub", "Escaped percent %25 in body"
+            "Issue created by PyGithub",
+            "Escaped percent %25 in body",
         )
         self.assertEqual(issue.number, 96)

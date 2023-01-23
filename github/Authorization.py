@@ -147,7 +147,8 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         ), remove_scopes
         assert note is github.GithubObject.NotSet or isinstance(note, str), note
         assert note_url is github.GithubObject.NotSet or isinstance(
-            note_url, str
+            note_url,
+            str,
         ), note_url
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
@@ -161,7 +162,9 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         if note_url is not github.GithubObject.NotSet:
             post_parameters["note_url"] = note_url
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 

@@ -28,9 +28,6 @@ from . import Framework
 
 
 class Search(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-
     def testSearchUsers(self):
         users = self.g.search_users("vincent", sort="followers", order="desc")
         self.assertEqual(users.totalCount, 2781)
@@ -120,7 +117,10 @@ class Search(Framework.TestCase):
 
     def testSearchRepos(self):
         repos = self.g.search_repositories(
-            "github", sort="stars", order="desc", language="Python"
+            "github",
+            sort="stars",
+            order="desc",
+            language="Python",
         )
         self.assertListKeyBegin(
             repos,
@@ -170,7 +170,10 @@ class Search(Framework.TestCase):
 
     def testSearchIssues(self):
         issues = self.g.search_issues(
-            "compile", sort="comments", order="desc", language="C++"
+            "compile",
+            sort="comments",
+            order="desc",
+            language="C++",
         )
         self.assertListKeyBegin(
             issues,
@@ -191,7 +194,7 @@ class Search(Framework.TestCase):
 
     def testPaginateSearchCommits(self):
         commits = self.g.search_commits(
-            query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2"
+            query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2",
         )
         self.assertEqual(commits.totalCount, 3)
 
@@ -246,20 +249,25 @@ class Search(Framework.TestCase):
 
     def testSearchHighlightingCode(self):
         files = self.g.search_code(
-            "toto", sort="indexed", order="asc", user="jacquev6", highlight=True
+            "toto",
+            sort="indexed",
+            order="asc",
+            user="jacquev6",
+            highlight=True,
         )
         self.assertTrue(files[0].text_matches)
 
     def testUrlquotingOfQualifiers(self):
         # Example taken from #236
         issues = self.g.search_issues(
-            "repo:saltstack/salt-api type:Issues", updated=">2014-03-04T18:28:11Z"
+            "repo:saltstack/salt-api type:Issues",
+            updated=">2014-03-04T18:28:11Z",
         )
         self.assertEqual(issues[0].id, 29138794)
 
     def testUrlquotingOfQuery(self):
         # Example taken from #236
         issues = self.g.search_issues(
-            "repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z"
+            "repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z",
         )
         self.assertEqual(issues[0].id, 29138794)

@@ -45,7 +45,8 @@ class GitTree(Framework.TestCase):
         self.assertEqual(self.tree.tree[0].mode, "100644")
         self.assertEqual(self.tree.tree[0].path, ".gitignore")
         self.assertEqual(
-            self.tree.tree[0].sha, "8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd"
+            self.tree.tree[0].sha,
+            "8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd",
         )
         self.assertEqual(self.tree.tree[0].size, 53)
         self.assertEqual(self.tree.tree[0].type, "blob")
@@ -56,7 +57,8 @@ class GitTree(Framework.TestCase):
         self.assertEqual(self.tree.tree[6].mode, "040000")
         self.assertEqual(self.tree.tree[6].path, "ReplayDataForIntegrationTest")
         self.assertEqual(
-            self.tree.tree[6].sha, "60b4602b2c2070246c5df078fb7a5150b45815eb"
+            self.tree.tree[6].sha,
+            "60b4602b2c2070246c5df078fb7a5150b45815eb",
         )
         self.assertEqual(self.tree.tree[6].size, None)
         self.assertEqual(self.tree.tree[6].type, "tree")

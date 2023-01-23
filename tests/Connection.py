@@ -67,7 +67,10 @@ class RecordingMockConnection(Framework.RecordingConnection):
     list(tuple(itertools.chain(*p)) for p in PARAMETERS),
 )
 def testRecordAndReplay(
-    replaying_connection_class, protocol, response_body, expected_recording
+    replaying_connection_class,
+    protocol,
+    response_body,
+    expected_recording,
 ):
     file = StringIO()
     host = "api.github.com"
@@ -85,7 +88,11 @@ def testRecordAndReplay(
 
     # write mock response to buffer
     recording_connection = RecordingMockConnection(
-        file, protocol, host, None, lambda *args, **kwds: connection
+        file,
+        protocol,
+        host,
+        None,
+        lambda *args, **kwds: connection,
     )
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()

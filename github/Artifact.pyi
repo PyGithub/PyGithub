@@ -1,6 +1,7 @@
-from github.WorkflowRun import WorkflowRun
 from datetime import datetime
+
 from github.GithubObject import NonCompletableGithubObject as NonCompletableGithubObject
+from github.WorkflowRun import WorkflowRun
 
 class Artifact(NonCompletableGithubObject):
     @property

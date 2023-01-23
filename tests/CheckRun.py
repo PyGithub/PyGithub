@@ -40,7 +40,8 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.app.slug, "github-actions")
         self.assertEqual(self.check_run.check_suite_id, 1110219217)
         self.assertEqual(
-            self.check_run.completed_at, datetime.datetime(2020, 8, 28, 4, 21, 21)
+            self.check_run.completed_at,
+            datetime.datetime(2020, 8, 28, 4, 21, 21),
         )
         self.assertEqual(self.check_run.conclusion, "success")
         self.assertEqual(
@@ -48,10 +49,12 @@ class CheckRun(Framework.TestCase):
             "https://github.com/PyGithub/PyGithub/runs/1039891953",
         )
         self.assertEqual(
-            self.check_run.external_id, "6b512fe7-587c-5ecc-c4a3-03b7358c152d"
+            self.check_run.external_id,
+            "6b512fe7-587c-5ecc-c4a3-03b7358c152d",
         )
         self.assertEqual(
-            self.check_run.head_sha, "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a"
+            self.check_run.head_sha,
+            "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a",
         )
         self.assertEqual(
             self.check_run.html_url,
@@ -63,7 +66,8 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.output.annotations_count, 0)
         self.assertEqual(len(self.check_run.pull_requests), 0)
         self.assertEqual(
-            self.check_run.started_at, datetime.datetime(2020, 8, 28, 4, 20, 27)
+            self.check_run.started_at,
+            datetime.datetime(2020, 8, 28, 4, 20, 27),
         )
         self.assertEqual(self.check_run.status, "completed")
         self.assertEqual(
@@ -71,7 +75,8 @@ class CheckRun(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891953",
         )
         self.assertEqual(
-            repr(self.check_run), 'CheckRun(id=1039891953, conclusion="success")'
+            repr(self.check_run),
+            'CheckRun(id=1039891953, conclusion="success")',
         )
 
     def testCheckRunOutputAttributes(self):
@@ -88,7 +93,8 @@ class CheckRun(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891917/annotations",
         )
         self.assertEqual(
-            repr(check_run_output), 'CheckRunOutput(title="test (Python 3.6)")'
+            repr(check_run_output),
+            'CheckRunOutput(title="test (Python 3.6)")',
         )
 
     def testGetCheckRunsForRef(self):
@@ -190,7 +196,7 @@ class CheckRun(Framework.TestCase):
                     {
                         "alt": "Test Image",
                         "image_url": "http://example.com/images/42",
-                    }
+                    },
                 ],
             },
             actions=[
@@ -198,19 +204,21 @@ class CheckRun(Framework.TestCase):
                     "label": "Fix",
                     "identifier": "fix_errors",
                     "description": "Allow us to fix these errors for you",
-                }
+                },
             ],
         )
         self.assertEqual(check_run.name, "completed_check_run")
         self.assertEqual(check_run.head_sha, "0283d46537193f1fed7d46859f15c5304b9836f9")
         self.assertEqual(check_run.status, "completed")
         self.assertEqual(
-            check_run.started_at, datetime.datetime(2020, 10, 20, 10, 30, 29)
-        ),
+            check_run.started_at,
+            datetime.datetime(2020, 10, 20, 10, 30, 29),
+        )
         self.assertEqual(check_run.conclusion, "success")
         self.assertEqual(
-            check_run.completed_at, datetime.datetime(2020, 10, 20, 11, 30, 50)
-        ),
+            check_run.completed_at,
+            datetime.datetime(2020, 10, 20, 11, 30, 50),
+        )
         self.assertEqual(check_run.output.annotations_count, 2)
 
     def testUpdateCheckRunSuccess(self):
@@ -272,7 +280,7 @@ class CheckRun(Framework.TestCase):
                         "end_line": 2,
                         "start_column": 17,
                         "end_column": 18,
-                    }
+                    },
                 ],
             },
             actions=[
@@ -280,7 +288,7 @@ class CheckRun(Framework.TestCase):
                     "label": "Fix",
                     "identifier": "fix_errors",
                     "description": "Allow us to fix these errors for you",
-                }
+                },
             ],
         )
         self.assertEqual(check_run.status, "completed")
@@ -301,7 +309,7 @@ class CheckRun(Framework.TestCase):
                     "label": "Hello World!",
                     "identifier": "identity",
                     "description": "Hey! This is a test",
-                }
+                },
             ],
         )
         self.assertEqual(check_run.name, "update_all_params")
@@ -309,10 +317,12 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.details_url, "https://www.example-url.com")
         self.assertEqual(check_run.external_id, "49")
         self.assertEqual(
-            check_run.started_at, datetime.datetime(2020, 10, 20, 1, 10, 20)
+            check_run.started_at,
+            datetime.datetime(2020, 10, 20, 1, 10, 20),
         )
         self.assertEqual(
-            check_run.completed_at, datetime.datetime(2020, 10, 20, 2, 20, 30)
+            check_run.completed_at,
+            datetime.datetime(2020, 10, 20, 2, 20, 30),
         )
 
     def testCheckRunAnnotationAttributes(self):
@@ -337,5 +347,6 @@ class CheckRun(Framework.TestCase):
         annotation_list = check_run.get_annotations()
         self.assertEqual(annotation_list.totalCount, 2)
         self.assertListEqual(
-            [annotation.start_line for annotation in annotation_list], [2, 4]
+            [annotation.start_line for annotation in annotation_list],
+            [2, 4],
         )

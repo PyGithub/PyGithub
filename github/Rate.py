@@ -39,7 +39,7 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
                 "limit": self._limit.value,
                 "remaining": self._remaining.value,
                 "reset": self._reset.value,
-            }
+            },
         )
 
     @property

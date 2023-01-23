@@ -61,7 +61,8 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(self.pullreview.user.login, "jzelinskie")
         self.assertEqual(self.pullreview.body, "")
         self.assertEqual(
-            self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc"
+            self.pullreview.commit_id,
+            "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc",
         )
         self.assertEqual(self.pullreview.state, "APPROVED")
         self.assertEqual(
@@ -73,7 +74,8 @@ class PullRequestReview(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/pulls/538",
         )
         self.assertEqual(
-            self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59)
+            self.pullreview.submitted_at,
+            datetime.datetime(2017, 3, 22, 19, 6, 59),
         )
         self.assertIn(self.created_pullreview.id, [r.id for r in self.pullreviews])
         self.assertEqual(

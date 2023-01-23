@@ -96,7 +96,8 @@ class RawData(Framework.TestCase):
 
     def testCreateObjectFromRawData(self):
         user = self.g.create_from_raw_data(
-            github.NamedUser.NamedUser, RawData.jacquev6RawData
+            github.NamedUser.NamedUser,
+            RawData.jacquev6RawData,
         )
         self.assertEqual(user._CompletableGithubObject__completed, True)
         self.assertEqual(user.name, "Vincent Jacques")

@@ -231,15 +231,15 @@ class Download(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "accesskeyid" in attributes:  # pragma no branch
             self._accesskeyid = self._makeStringAttribute(
-                attributes["accesskeyid"]
+                attributes["accesskeyid"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "acl" in attributes:  # pragma no branch
             self._acl = self._makeStringAttribute(
-                attributes["acl"]
+                attributes["acl"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "bucket" in attributes:  # pragma no branch
             self._bucket = self._makeStringAttribute(
-                attributes["bucket"]
+                attributes["bucket"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "content_type" in attributes:  # pragma no branch
             self._content_type = self._makeStringAttribute(attributes["content_type"])
@@ -251,7 +251,7 @@ class Download(github.GithubObject.CompletableGithubObject):
             self._download_count = self._makeIntAttribute(attributes["download_count"])
         if "expirationdate" in attributes:  # pragma no branch
             self._expirationdate = self._makeDatetimeAttribute(
-                attributes["expirationdate"]
+                attributes["expirationdate"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
@@ -259,33 +259,33 @@ class Download(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "mime_type" in attributes:  # pragma no branch
             self._mime_type = self._makeStringAttribute(
-                attributes["mime_type"]
+                attributes["mime_type"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(
-                attributes["path"]
+                attributes["path"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "policy" in attributes:  # pragma no branch
             self._policy = self._makeStringAttribute(
-                attributes["policy"]
+                attributes["policy"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "prefix" in attributes:  # pragma no branch
             self._prefix = self._makeStringAttribute(
-                attributes["prefix"]
+                attributes["prefix"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "redirect" in attributes:  # pragma no branch
             self._redirect = self._makeBoolAttribute(
-                attributes["redirect"]
+                attributes["redirect"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "s3_url" in attributes:  # pragma no branch
             self._s3_url = self._makeStringAttribute(
-                attributes["s3_url"]
+                attributes["s3_url"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "signature" in attributes:  # pragma no branch
             self._signature = self._makeStringAttribute(
-                attributes["signature"]
+                attributes["signature"],
             )  # pragma no cover (was covered only by create_download, which has been removed)
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])

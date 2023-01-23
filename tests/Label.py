@@ -40,13 +40,16 @@ class Label(Framework.TestCase):
         self.assertEqual(self.label.name, "Bug")
         self.assertIsNone(self.label.description)
         self.assertEqual(
-            self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug"
+            self.label.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug",
         )
         self.assertEqual(repr(self.label), 'Label(name="Bug")')
 
     def testEdit(self):
         self.label.edit(
-            "LabelEditedByPyGithub", "0000ff", "Description of LabelEditedByPyGithub"
+            "LabelEditedByPyGithub",
+            "0000ff",
+            "Description of LabelEditedByPyGithub",
         )
         self.assertEqual(self.label.color, "0000ff")
         self.assertEqual(self.label.description, "Description of LabelEditedByPyGithub")

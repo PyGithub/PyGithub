@@ -40,13 +40,15 @@ class Branch(Framework.TestCase):
         self.branch = self.repo.get_branch("topic/RewriteWithGeneratedCode")
         self.protected_branch = self.repo.get_branch("integrations")
         self.organization_branch = self.g.get_repo(
-            "PyGithub/PyGithub", lazy=True
+            "PyGithub/PyGithub",
+            lazy=True,
         ).get_branch("master")
 
     def testAttributes(self):
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
         self.assertEqual(
-            self.branch.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a"
+            self.branch.commit.sha,
+            "1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(
             self.branch.protection_url,
@@ -54,7 +56,8 @@ class Branch(Framework.TestCase):
         )
         self.assertFalse(self.branch.protected)
         self.assertEqual(
-            repr(self.branch), 'Branch(name="topic/RewriteWithGeneratedCode")'
+            repr(self.branch),
+            'Branch(name="topic/RewriteWithGeneratedCode")',
         )
 
     def testEditProtection(self):
@@ -68,10 +71,10 @@ class Branch(Framework.TestCase):
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(
-            branch_protection.required_pull_request_reviews.dismiss_stale_reviews
+            branch_protection.required_pull_request_reviews.dismiss_stale_reviews,
         )
         self.assertTrue(
-            branch_protection.required_pull_request_reviews.require_code_owner_reviews
+            branch_protection.required_pull_request_reviews.require_code_owner_reviews,
         )
         self.assertEqual(
             branch_protection.required_pull_request_reviews.required_approving_review_count,
@@ -88,7 +91,7 @@ class Branch(Framework.TestCase):
                 "documentation_url": "https://developer.github.com/v3/repos/branches/#update-branch-protection",
                 "message": "Validation Failed",
                 "errors": [
-                    "Only organization repositories can have users and team restrictions"
+                    "Only organization repositories can have users and team restrictions",
                 ],
             },
         )
@@ -96,7 +99,8 @@ class Branch(Framework.TestCase):
     def testEditProtectionPushRestrictionsWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_protection(
-                user_push_restrictions=["jacquev6"], team_push_restrictions=[]
+                user_push_restrictions=["jacquev6"],
+                team_push_restrictions=[],
             )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
@@ -105,14 +109,15 @@ class Branch(Framework.TestCase):
                 "documentation_url": "https://developer.github.com/v3/repos/branches/#update-branch-protection",
                 "message": "Validation Failed",
                 "errors": [
-                    "Only organization repositories can have users and team restrictions"
+                    "Only organization repositories can have users and team restrictions",
                 ],
             },
         )
 
     def testEditProtectionPushRestrictionsAndDismissalUser(self):
         self.organization_branch.edit_protection(
-            dismissal_users=["jacquev6"], user_push_restrictions=["jacquev6"]
+            dismissal_users=["jacquev6"],
+            user_push_restrictions=["jacquev6"],
         )
         branch_protection = self.organization_branch.get_protection()
         self.assertListKeyEqual(
@@ -131,7 +136,9 @@ class Branch(Framework.TestCase):
             ["jacquev6"],
         )
         self.assertListKeyEqual(
-            branch_protection.get_team_push_restrictions(), lambda u: u.slug, []
+            branch_protection.get_team_push_restrictions(),
+            lambda u: u.slug,
+            [],
         )
 
     def testRemoveProtection(self):
@@ -171,7 +178,8 @@ class Branch(Framework.TestCase):
 
     def testEditRequiredPullRequestReviews(self):
         self.protected_branch.edit_required_pull_request_reviews(
-            dismiss_stale_reviews=True, required_approving_review_count=2
+            dismiss_stale_reviews=True,
+            required_approving_review_count=2,
         )
         required_pull_request_reviews = (
             self.protected_branch.get_required_pull_request_reviews()
@@ -179,13 +187,14 @@ class Branch(Framework.TestCase):
         self.assertTrue(required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
-            required_pull_request_reviews.required_approving_review_count, 2
+            required_pull_request_reviews.required_approving_review_count,
+            2,
         )
 
     def testEditRequiredPullRequestReviewsWithTooLargeApprovingReviewCount(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(
-                required_approving_review_count=9
+                required_approving_review_count=9,
             )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
@@ -199,7 +208,7 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithUserBranchAndDismissalUsers(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(
-                dismissal_users=["jacquev6"]
+                dismissal_users=["jacquev6"],
             )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
@@ -218,7 +227,8 @@ class Branch(Framework.TestCase):
         self.assertFalse(required_pull_request_reviews.dismiss_stale_reviews)
         self.assertFalse(required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
-            required_pull_request_reviews.required_approving_review_count, 1
+            required_pull_request_reviews.required_approving_review_count,
+            1,
         )
 
     def testAdminEnforcement(self):

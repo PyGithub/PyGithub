@@ -119,9 +119,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.target_commitish, "master")
         self.assertEqual(
             release.upload_url,
-            "https://uploads.github.com/repos/{}/{}/releases/{}/assets{{?name,label}}".format(
-                user, repo_name, release_id
-            ),
+            f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
         )
         self.assertEqual(release.body, "Body")
         self.assertEqual(release.title, "Test")
@@ -129,9 +127,7 @@ class GitRelease(Framework.TestCase):
         self.assertFalse(release.prerelease)
         self.assertEqual(
             release.url,
-            "https://api.github.com/repos/{}/{}/releases/{}".format(
-                user, repo_name, release_id
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/releases/{release_id}",
         )
         self.assertEqual(release.author._rawData["login"], user)
         self.assertEqual(release.author.login, user)
@@ -145,15 +141,11 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.published_at, publish_date)
         self.assertEqual(
             release.tarball_url,
-            "https://api.github.com/repos/{}/{}/tarball/{}".format(
-                user, repo_name, tag
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/tarball/{tag}",
         )
         self.assertEqual(
             release.zipball_url,
-            "https://api.github.com/repos/{}/{}/zipball/{}".format(
-                user, repo_name, tag
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/zipball/{tag}",
         )
         self.assertEqual(repr(release), 'GitRelease(title="Test")')
 
@@ -199,7 +191,9 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.id, self.new_release_id)
 
         release.upload_asset(
-            self.artifact_path, "unit test artifact", "application/zip"
+            self.artifact_path,
+            "unit test artifact",
+            "application/zip",
         )
         self.tearDownNewRelease()
 
@@ -207,7 +201,9 @@ class GitRelease(Framework.TestCase):
         self.setUpNewRelease()
         release = self.new_release
         r = release.upload_asset(
-            self.artifact_path, name="foobar.zip", content_type="application/zip"
+            self.artifact_path,
+            name="foobar.zip",
+            content_type="application/zip",
         )
         self.assertEqual(r.name, "foobar.zip")
         self.tearDownNewRelease()
@@ -222,9 +218,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.author._rawData["login"], user)
         self.assertEqual(
             release.html_url,
-            "https://github.com/{}/{}/releases/tag/{}".format(
-                user, repo_name, self.new_tag
-            ),
+            f"https://github.com/{user}/{repo_name}/releases/tag/{self.new_tag}",
         )
         self.tearDownNewRelease()
 

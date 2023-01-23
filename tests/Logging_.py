@@ -87,7 +87,8 @@ class Logging(Framework.BasicTestCase):
 
     def testLoggingWithBasicAuthentication(self):
         self.assertEqual(
-            github.Github(self.login, self.password).get_user().name, "Vincent Jacques"
+            github.Github(self.login, self.password).get_user().name,
+            "Vincent Jacques",
         )
         url = "https://api.github.com/user"
         requestHeaders = {
@@ -116,7 +117,8 @@ class Logging(Framework.BasicTestCase):
 
     def testLoggingWithOAuthAuthentication(self):
         self.assertEqual(
-            github.Github(self.oauth_token).get_user().name, "Vincent Jacques"
+            github.Github(self.oauth_token).get_user().name,
+            "Vincent Jacques",
         )
         url = "https://api.github.com/user"
         requestHeaders = {

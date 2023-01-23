@@ -320,10 +320,11 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._event = self._makeStringAttribute(attributes["event"])
         if "run_started_at" in attributes:  # pragma no branch
             assert attributes["run_started_at"] is None or isinstance(
-                attributes["run_started_at"], str
+                attributes["run_started_at"],
+                str,
             ), attributes["run_started_at"]
             self._run_started_at = self._makeDatetimeAttribute(
-                attributes["run_started_at"]
+                attributes["run_started_at"],
             )
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
@@ -337,7 +338,8 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
-                github.PullRequest.PullRequest, attributes["pull_requests"]
+                github.PullRequest.PullRequest,
+                attributes["pull_requests"],
             )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
@@ -349,7 +351,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._logs_url = self._makeStringAttribute(attributes["logs_url"])
         if "check_suite_url" in attributes:  # pragma no branch
             self._check_suite_url = self._makeStringAttribute(
-                attributes["check_suite_url"]
+                attributes["check_suite_url"],
             )
         if "artifacts_url" in attributes:  # pragma no branch
             self._artifacts_url = self._makeStringAttribute(attributes["artifacts_url"])
@@ -361,13 +363,16 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
             self._head_commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["head_commit"]
+                github.GitCommit.GitCommit,
+                attributes["head_commit"],
             )
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                github.Repository.Repository,
+                attributes["repository"],
             )
         if "head_repository" in attributes:  # pragma no branch
             self._head_repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["head_repository"]
+                github.Repository.Repository,
+                attributes["head_repository"],
             )

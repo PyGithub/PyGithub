@@ -58,7 +58,8 @@ class CheckSuite(Framework.TestCase):
         self.assertEqual(len(cs.pull_requests), 1)
         self.assertEqual(cs.pull_requests[0].id, 462527907)
         self.assertEqual(
-            cs.repository.url, "https://api.github.com/repos/wrecker/PySample"
+            cs.repository.url,
+            "https://api.github.com/repos/wrecker/PySample",
         )
         self.assertEqual(cs.status, "completed")
         self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40))
@@ -162,7 +163,8 @@ class CheckSuite(Framework.TestCase):
                 setting = app["setting"]
         self.assertFalse(setting)
         self.assertEqual(
-            repo_preferences.repository.full_name, "dhruvmanila/pygithub-testing"
+            repo_preferences.repository.full_name,
+            "dhruvmanila/pygithub-testing",
         )
         data = [{"app_id": 85429, "setting": True}]
         repo_preferences = self.test_repo.update_check_suites_preferences(data)

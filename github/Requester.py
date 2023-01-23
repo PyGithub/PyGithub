@@ -352,24 +352,44 @@ class Requester:
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
             *self.requestJson(
-                verb, url, parameters, headers, input, self.__customConnection(url)
-            )
+                verb,
+                url,
+                parameters,
+                headers,
+                input,
+                self.__customConnection(url),
+            ),
         )
 
     def requestMultipartAndCheck(
-        self, verb, url, parameters=None, headers=None, input=None
+        self,
+        verb,
+        url,
+        parameters=None,
+        headers=None,
+        input=None,
     ):
         return self.__check(
             *self.requestMultipart(
-                verb, url, parameters, headers, input, self.__customConnection(url)
-            )
+                verb,
+                url,
+                parameters,
+                headers,
+                input,
+                self.__customConnection(url),
+            ),
         )
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
             *self.requestBlob(
-                verb, url, parameters, headers, input, self.__customConnection(url)
-            )
+                verb,
+                url,
+                parameters,
+                headers,
+                input,
+                self.__customConnection(url),
+            ),
         )
 
     def __check(self, status, responseHeaders, output):
@@ -416,7 +436,7 @@ class Requester:
         ):
             cls = GithubException.TwoFactorException
         elif status == 403 and output.get("message").startswith(
-            "Missing or invalid User Agent string"
+            "Missing or invalid User Agent string",
         ):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
@@ -446,7 +466,13 @@ class Requester:
                 return {"data": data}
 
     def requestJson(
-        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+        self,
+        verb,
+        url,
+        parameters=None,
+        headers=None,
+        input=None,
+        cnx=None,
     ):
         def encode(input):
             return "application/json", json.dumps(input)
@@ -454,7 +480,13 @@ class Requester:
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMultipart(
-        self, verb, url, parameters=None, headers=None, input=None, cnx=None
+        self,
+        verb,
+        url,
+        parameters=None,
+        headers=None,
+        input=None,
+        cnx=None,
     ):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
@@ -490,7 +522,13 @@ class Requester:
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMemoryBlobAndCheck(
-        self, verb, url, parameters, headers, file_like, cnx=None
+        self,
+        verb,
+        url,
+        parameters,
+        headers,
+        file_like,
+        cnx=None,
     ):
         # The expected signature of encode means that the argument is ignored.
         def encode(_):
@@ -500,12 +538,25 @@ class Requester:
             cnx = self.__customConnection(url)
         return self.__check(
             *self.__requestEncode(
-                cnx, verb, url, parameters, headers, file_like, encode
-            )
+                cnx,
+                verb,
+                url,
+                parameters,
+                headers,
+                file_like,
+                encode,
+            ),
         )
 
     def __requestEncode(
-        self, cnx, verb, url, parameters, requestHeaders, input, encode
+        self,
+        cnx,
+        verb,
+        url,
+        parameters,
+        requestHeaders,
+        input,
+        encode,
     ):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -526,7 +577,11 @@ class Requester:
         self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(
-            cnx, verb, url, requestHeaders, encoded_input
+            cnx,
+            verb,
+            url,
+            requestHeaders,
+            encoded_input,
         )
 
         if (

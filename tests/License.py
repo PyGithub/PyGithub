@@ -48,7 +48,8 @@ class License(Framework.TestCase):
         self.assertEqual(self.license.limitations, ["liability", "warranty"])
         self.assertEqual(self.license.url, "https://api.github.com/licenses/mit")
         self.assertEqual(
-            self.license.html_url, "http://choosealicense.com/licenses/mit/"
+            self.license.html_url,
+            "http://choosealicense.com/licenses/mit/",
         )
         self.assertEqual(
             self.license.implementation,

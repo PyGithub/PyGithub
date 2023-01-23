@@ -132,7 +132,9 @@ class Migration(github.GithubObject.CompletableGithubObject):
         :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", self.url, headers={"Accept": Consts.mediaTypeMigrationPreview}
+            "GET",
+            self.url,
+            headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
         self._useAttributes(data)
         return self.state
@@ -189,7 +191,8 @@ class Migration(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
             self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
+                github.NamedUser.NamedUser,
+                attributes["owner"],
             )
         if "guid" in attributes:
             self._guid = self._makeStringAttribute(attributes["guid"])
@@ -197,15 +200,16 @@ class Migration(github.GithubObject.CompletableGithubObject):
             self._state = self._makeStringAttribute(attributes["state"])
         if "lock_repositories" in attributes:
             self._lock_repositories = self._makeBoolAttribute(
-                attributes["lock_repositories"]
+                attributes["lock_repositories"],
             )
         if "exclude_attachments" in attributes:
             self._exclude_attachments = self._makeBoolAttribute(
-                attributes["exclude_attachments"]
+                attributes["exclude_attachments"],
             )
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
-                github.Repository.Repository, attributes["repositories"]
+                github.Repository.Repository,
+                attributes["repositories"],
             )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

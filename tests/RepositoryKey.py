@@ -49,13 +49,15 @@ class RepositoryKey(Framework.TestCase):
         )
         self.assertEqual(self.key.title, "PyGithub Test Key")
         self.assertEqual(
-            self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881"
+            self.key.url,
+            "https://api.github.com/repos/lra/mackup/keys/21870881",
         )
         self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
         self.assertTrue(self.key.read_only)
         self.assertEqual(
-            repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
+            repr(self.key),
+            'RepositoryKey(title="PyGithub Test Key", id=21870881)',
         )
 
     def testDelete(self):

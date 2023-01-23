@@ -60,7 +60,9 @@ class _BadAttribute:
     @property
     def value(self):
         raise GithubException.BadAttributeException(
-            self.__value, self.__expectedType, self.__exception
+            self.__value,
+            self.__expectedType,
+            self.__exception,
         )
 
 
@@ -166,7 +168,9 @@ class GithubObject:
     @staticmethod
     def _makeTimestampAttribute(value):
         return GithubObject.__makeTransformedAttribute(
-            value, int, datetime.datetime.utcfromtimestamp
+            value,
+            int,
+            datetime.datetime.utcfromtimestamp,
         )
 
     @staticmethod
@@ -178,7 +182,8 @@ class GithubObject:
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
                 return datetime.datetime.strptime(
-                    s, "%Y-%m-%dT%H:%M:%S.000Z"
+                    s,
+                    "%Y-%m-%dT%H:%M:%S.000Z",
                 )  # pragma no cover (This branch was used only when creating a download)
             elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
@@ -220,7 +225,7 @@ class GithubObject:
                 [
                     klass(self._requester, self._headers, element, completed=False)
                     for element in value
-                ]
+                ],
             )
         else:
             return _BadAttribute(value, [dict])
@@ -234,7 +239,7 @@ class GithubObject:
                 {
                     key: klass(self._requester, self._headers, element, completed=False)
                     for key, element in value.items()
-                }
+                },
             )
         else:
             return _BadAttribute(value, {str: dict})
@@ -267,10 +272,7 @@ class GithubObject:
                     v = f'"{v}"'
                 yield f"{k}={v}"
 
-        return "{class_name}({params})".format(
-            class_name=self.__class__.__name__,
-            params=", ".join(list(format_params(params))),
-        )
+        return f"{self.__class__.__name__}({', '.join(list(format_params(params)))})"
 
 
 class NonCompletableGithubObject(GithubObject):
@@ -303,7 +305,9 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         if self._url.value is None:
             raise GithubException.IncompletableObject(
-                400, "Returned object contains no URL", None
+                400,
+                "Returned object contains no URL",
+                None,
             )
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
@@ -323,13 +327,17 @@ class CompletableGithubObject(GithubObject):
             conditionalRequestHeader.update(additional_headers)
 
         status, responseHeaders, output = self._requester.requestJson(
-            "GET", self._url.value, headers=conditionalRequestHeader
+            "GET",
+            self._url.value,
+            headers=conditionalRequestHeader,
         )
         if status == 304:
             return False
         else:
             headers, data = self._requester._Requester__check(
-                status, responseHeaders, output
+                status,
+                responseHeaders,
+                output,
             )
             self._storeAndUseAttributes(headers, data)
             self.__completed = True

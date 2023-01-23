@@ -54,7 +54,8 @@ class InputGitTreeElement:
         assert isinstance(mode, str), mode
         assert isinstance(type, str), type
         assert content is github.GithubObject.NotSet or isinstance(
-            content, str
+            content,
+            str,
         ), content
         assert (
             sha is github.GithubObject.NotSet or sha is None or isinstance(sha, str)

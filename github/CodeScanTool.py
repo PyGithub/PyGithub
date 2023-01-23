@@ -35,7 +35,7 @@ class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
                 "guid": self.guid,
                 "name": self.name,
                 "version": self.version,
-            }
+            },
         )
 
     @property

@@ -30,7 +30,7 @@ from . import Framework
 
 
 class Issue134(
-    Framework.BasicTestCase
+    Framework.BasicTestCase,
 ):  # https://github.com/jacquev6/PyGithub/pull/134
     def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
         g = github.Github(self.oauth_token)

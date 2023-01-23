@@ -40,7 +40,7 @@ class Path(github.GithubObject.NonCompletableGithubObject):
                 "title": self._title.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
-            }
+            },
         )
 
     @property

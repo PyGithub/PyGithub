@@ -40,7 +40,7 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__(
-            {"name": self._name.value, "commit": self._commit.value}
+            {"name": self._name.value, "commit": self._commit.value},
         )
 
     @property
@@ -80,7 +80,8 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(
-                github.Commit.Commit, attributes["commit"]
+                github.Commit.Commit,
+                attributes["commit"],
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])

@@ -56,7 +56,8 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].change_status.deletions, 0)
         self.assertEqual(gist.history[0].change_status.total, 793)
         self.assertEqual(
-            gist.history[0].committed_at, datetime.datetime(2013, 8, 21, 16, 12, 27)
+            gist.history[0].committed_at,
+            datetime.datetime(2013, 8, 21, 16, 12, 27),
         )
         self.assertEqual(
             gist.history[0].url,
@@ -65,7 +66,8 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].user, None)
         self.assertEqual(gist.history[0].owner.login, "jacquev6")
         self.assertEqual(
-            gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2"
+            gist.history[0].version,
+            "c464aecd7fea16684e935607eeea7ae4f8caa0e2",
         )
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.id, "6296732")
@@ -80,7 +82,8 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.url, "https://api.github.com/gists/6296732")
         self.assertEqual(repr(gist), 'Gist(id="6296732")')
         self.assertEqual(
-            repr(gist.files["GithubAPI.lua"]), 'GistFile(filename="GithubAPI.lua")'
+            repr(gist.files["GithubAPI.lua"]),
+            'GistFile(filename="GithubAPI.lua")',
         )
 
     def testEditWithoutParameters(self):
@@ -111,9 +114,10 @@ class Gist(Framework.TestCase):
         gist.edit(
             files={
                 "bar.txt": github.InputFileContent(
-                    gist.files["bar.txt"].content, new_name="baz.txt"
-                )
-            }
+                    gist.files["bar.txt"].content,
+                    new_name="baz.txt",
+                ),
+            },
         )
         self.assertEqual(list(gist.files.keys()), ["baz.txt"])
 

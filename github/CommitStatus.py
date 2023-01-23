@@ -45,7 +45,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
                 "id": self._id.value,
                 "state": self._state.value,
                 "context": self._context.value,
-            }
+            },
         )
 
     @property
@@ -127,7 +127,8 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
+                github.NamedUser.NamedUser,
+                attributes["creator"],
             )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])

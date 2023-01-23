@@ -43,7 +43,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__(
-            {"number": self._number.value, "title": self._title.value}
+            {"number": self._number.value, "title": self._title.value},
         )
 
     @property
@@ -175,10 +175,12 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         assert isinstance(title, str), title
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert description is github.GithubObject.NotSet or isinstance(
-            description, str
+            description,
+            str,
         ), description
         assert due_on is github.GithubObject.NotSet or isinstance(
-            due_on, datetime.date
+            due_on,
+            datetime.date,
         ), due_on
         post_parameters = {
             "title": title,
@@ -190,7 +192,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 
@@ -200,7 +204,10 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, f"{self.url}/labels", None
+            github.Label.Label,
+            self._requester,
+            f"{self.url}/labels",
+            None,
         )
 
     @property
@@ -229,7 +236,8 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
+                github.NamedUser.NamedUser,
+                attributes["creator"],
             )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])

@@ -94,7 +94,8 @@ class Label(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(color, str), color
         assert description is github.GithubObject.NotSet or isinstance(
-            description, str
+            description,
+            str,
         ), description
         post_parameters = {
             "new_name": name,

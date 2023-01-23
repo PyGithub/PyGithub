@@ -34,7 +34,9 @@ from . import Framework
 class Enterprise(Framework.BasicTestCase):
     def testHttps(self):
         g = github.Github(
-            self.login, self.password, base_url="https://my.enterprise.com"
+            self.login,
+            self.password,
+            base_url="https://my.enterprise.com",
         )
         self.assertListKeyEqual(
             g.get_user().get_repos(),
@@ -61,7 +63,9 @@ class Enterprise(Framework.BasicTestCase):
 
     def testHttp(self):
         g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com"
+            self.login,
+            self.password,
+            base_url="http://my.enterprise.com",
         )
         self.assertListKeyEqual(
             g.get_user().get_repos(),
@@ -89,7 +93,9 @@ class Enterprise(Framework.BasicTestCase):
     def testUnknownUrlScheme(self):
         with self.assertRaises(AssertionError) as raisedexp:
             github.Github(
-                self.login, self.password, base_url="foobar://my.enterprise.com"
+                self.login,
+                self.password,
+                base_url="foobar://my.enterprise.com",
             )
         self.assertEqual(raisedexp.exception.args[0], "Unknown URL scheme")
 
@@ -126,7 +132,9 @@ class Enterprise(Framework.BasicTestCase):
 
     def testSpecificPort(self):
         g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com:8080"
+            self.login,
+            self.password,
+            base_url="http://my.enterprise.com:8080",
         )
         self.assertListKeyEqual(
             g.get_user().get_repos(),

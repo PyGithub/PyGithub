@@ -159,7 +159,10 @@ class ReplayingConnection:
 
     def request(self, verb, url, input, headers):
         full_url = Url(
-            scheme=self.__protocol, host=self.__host, port=self.__port, path=url
+            scheme=self.__protocol,
+            host=self.__host,
+            port=self.__port,
+            path=url,
         )
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
@@ -195,7 +198,10 @@ class ReplayingConnection:
 
     def __request_callback(self, request, uri, response_headers):
         self.__readNextRequest(
-            self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers
+            self.__cnx.verb,
+            self.__cnx.url,
+            self.__cnx.input,
+            self.__cnx.headers,
         )
 
         status = int(readLine(self.__file))
@@ -256,10 +262,14 @@ class BasicTestCase(unittest.TestCase):
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: RecordingHttpConnection(
-                    self.__openFile("w"), *args, **kwds
+                    self.__openFile("w"),
+                    *args,
+                    **kwds,
                 ),
                 lambda ignored, *args, **kwds: RecordingHttpsConnection(
-                    self.__openFile("w"), *args, **kwds
+                    self.__openFile("w"),
+                    *args,
+                    **kwds,
                 ),
             )
             import GithubCredentials  # type: ignore
@@ -271,10 +281,14 @@ class BasicTestCase(unittest.TestCase):
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
-                    self.__openFile("r"), *args, **kwds
+                    self.__openFile("r"),
+                    *args,
+                    **kwds,
                 ),
                 lambda ignored, *args, **kwds: ReplayingHttpsConnection(
-                    self.__openFile("r"), *args, **kwds
+                    self.__openFile("r"),
+                    *args,
+                    **kwds,
                 ),
             )
             self.login = "login"
@@ -349,15 +363,22 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(
-                self.oauth_token, retry=self.retry, pool_size=self.pool_size
+                self.oauth_token,
+                retry=self.retry,
+                pool_size=self.pool_size,
             )
         elif self.jwtAuthMode:
             self.g = github.Github(
-                jwt=self.jwt, retry=self.retry, pool_size=self.pool_size
+                jwt=self.jwt,
+                retry=self.retry,
+                pool_size=self.pool_size,
             )
         else:
             self.g = github.Github(
-                self.login, self.password, retry=self.retry, pool_size=self.pool_size
+                self.login,
+                self.password,
+                retry=self.retry,
+                pool_size=self.pool_size,
             )
 
 

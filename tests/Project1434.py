@@ -24,9 +24,6 @@ from . import Framework
 
 
 class Project1434(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-
     def testDelete(self):
         project = self.g.get_project(4102095)
         project.delete()

@@ -46,19 +46,24 @@ class Issue(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(
-            self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
+            self.issue.assignees,
+            lambda a: a.login,
+            ["jacquev6", "stuglaser"],
         )
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(
-            self.issue.closed_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
+            self.issue.closed_at,
+            datetime.datetime(2012, 5, 26, 14, 59, 33),
         )
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
         self.assertEqual(self.issue.comments, 0)
         self.assertEqual(
-            self.issue.created_at, datetime.datetime(2012, 5, 19, 10, 38, 23)
+            self.issue.created_at,
+            datetime.datetime(2012, 5, 19, 10, 38, 23),
         )
         self.assertEqual(
-            self.issue.html_url, "https://github.com/jacquev6/PyGithub/issues/28"
+            self.issue.html_url,
+            "https://github.com/jacquev6/PyGithub/issues/28",
         )
         self.assertEqual(self.issue.id, 4653757)
         self.assertListKeyEqual(
@@ -74,17 +79,20 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
         self.assertEqual(
-            self.issue.updated_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
+            self.issue.updated_at,
+            datetime.datetime(2012, 5, 26, 14, 59, 33),
         )
         self.assertEqual(
-            self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28"
+            self.issue.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/issues/28",
         )
         self.assertFalse(self.issue.locked)
         self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
         self.assertEqual(
-            repr(self.issue), 'Issue(title="Issue created by PyGithub", number=28)'
+            repr(self.issue),
+            'Issue(title="Issue created by PyGithub", number=28)',
         )
 
     def testEditWithoutParameters(self):
@@ -104,7 +112,9 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(
-            self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
+            self.issue.assignees,
+            lambda a: a.login,
+            ["jacquev6", "stuglaser"],
         )
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.state, "open")
@@ -133,7 +143,9 @@ class Issue(Framework.TestCase):
 
     def testGetComments(self):
         self.assertListKeyEqual(
-            self.issue.get_comments(), lambda c: c.user.login, ["jacquev6", "roskakori"]
+            self.issue.get_comments(),
+            lambda c: c.user.login,
+            ["jacquev6", "roskakori"],
         )
 
     def testGetCommentsSince(self):
@@ -145,7 +157,9 @@ class Issue(Framework.TestCase):
 
     def testGetEvents(self):
         self.assertListKeyEqual(
-            self.issue.get_events(), lambda e: e.id, [15819975, 15820048]
+            self.issue.get_events(),
+            lambda e: e.id,
+            [15819975, 15820048],
         )
 
     def testGetLabels(self):
@@ -159,7 +173,9 @@ class Issue(Framework.TestCase):
         user1 = "jayfk"
         user2 = self.g.get_user("jzelinskie")
         self.assertListKeyEqual(
-            self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
+            self.issue.assignees,
+            lambda a: a.login,
+            ["jacquev6", "stuglaser"],
         )
         self.issue.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
@@ -169,7 +185,9 @@ class Issue(Framework.TestCase):
         )
         self.issue.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(
-            self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
+            self.issue.assignees,
+            lambda a: a.login,
+            ["jacquev6", "stuglaser"],
         )
 
     def testAddAndRemoveLabels(self):
@@ -188,7 +206,9 @@ class Issue(Framework.TestCase):
         )
         self.issue.remove_from_labels(question)
         self.assertListKeyEqual(
-            self.issue.get_labels(), lambda l: l.name, ["Project management"]
+            self.issue.get_labels(),
+            lambda l: l.name,
+            ["Project management"],
         )
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
@@ -213,7 +233,9 @@ class Issue(Framework.TestCase):
         )
         self.issue.remove_from_labels(question)
         self.assertListKeyEqual(
-            self.issue.get_labels(), lambda l: l.name, ["Project management"]
+            self.issue.get_labels(),
+            lambda l: l.name,
+            ["Project management"],
         )
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
@@ -234,7 +256,9 @@ class Issue(Framework.TestCase):
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
         self.assertListKeyEqual(
-            self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"]
+            self.issue.get_labels(),
+            lambda l: l.name,
+            ["Bug", "Question"],
         )
 
     def testDeleteAndSetLabelsWithStringArguments(self):
@@ -249,7 +273,9 @@ class Issue(Framework.TestCase):
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
         self.assertListKeyEqual(
-            self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"]
+            self.issue.get_labels(),
+            lambda l: l.name,
+            ["Bug", "Question"],
         )
 
     def testGetReactions(self):
@@ -304,7 +330,8 @@ class Issue(Framework.TestCase):
                 self.assertEqual(event.source.type, "issue")
                 self.assertEqual(event.source.issue.number, 857)
                 self.assertEqual(
-                    repr(event.source), 'TimelineEventSource(type="issue")'
+                    repr(event.source),
+                    'TimelineEventSource(type="issue")',
                 )
             else:
                 self.assertIsNotNone(event.id)

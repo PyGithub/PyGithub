@@ -34,7 +34,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
                 "token": f"{self.token[:5]}...",
                 "scope": self.scope,
                 "type": self.type,
-            }
+            },
         )
 
     @property

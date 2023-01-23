@@ -210,10 +210,15 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/comments", input=post_parameters
+            "POST",
+            f"{self.url}/comments",
+            input=post_parameters,
         )
         return github.GistComment.GistComment(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def create_fork(self):
@@ -232,7 +237,9 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
-        self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet
+        self,
+        description=github.GithubObject.NotSet,
+        files=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
@@ -241,7 +248,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert description is github.GithubObject.NotSet or isinstance(
-            description, str
+            description,
+            str,
         ), description
         assert files is github.GithubObject.NotSet or all(
             element is None or isinstance(element, github.InputFileContent)
@@ -256,7 +264,9 @@ class Gist(github.GithubObject.CompletableGithubObject):
                 for key, value in files.items()
             }
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 
@@ -268,10 +278,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/comments/{id}"
+            "GET",
+            f"{self.url}/comments/{id}",
         )
         return github.GistComment.GistComment(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def get_comments(self):
@@ -300,7 +314,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/star"
+            "DELETE",
+            f"{self.url}/star",
         )
 
     def set_starred(self):
@@ -344,7 +359,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "files" in attributes:  # pragma no branch
             self._files = self._makeDictOfStringsToClassesAttribute(
-                github.GistFile.GistFile, attributes["files"]
+                github.GistFile.GistFile,
+                attributes["files"],
             )
         if "fork_of" in attributes:  # pragma no branch
             self._fork_of = self._makeClassAttribute(Gist, attributes["fork_of"])
@@ -358,7 +374,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._git_push_url = self._makeStringAttribute(attributes["git_push_url"])
         if "history" in attributes:  # pragma no branch
             self._history = self._makeListOfClassesAttribute(
-                github.GistHistoryState.GistHistoryState, attributes["history"]
+                github.GistHistoryState.GistHistoryState,
+                attributes["history"],
             )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
@@ -366,7 +383,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._id = self._makeStringAttribute(attributes["id"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
+                github.NamedUser.NamedUser,
+                attributes["owner"],
             )
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
@@ -376,5 +394,6 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )

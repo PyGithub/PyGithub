@@ -50,7 +50,7 @@ class Exceptions(Framework.TestCase):
                         "field": "key",
                         "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
                         "resource": "PublicKey",
-                    }
+                    },
                 ],
                 "message": "Validation Failed",
             },
@@ -113,7 +113,8 @@ class SpecificExceptions(Framework.TestCase):
 
     def testUnknownObject(self):
         self.assertRaises(
-            github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx")
+            github.UnknownObjectException,
+            lambda: self.g.get_user().get_repo("Xxx"),
         )
 
     def testBadUserAgent(self):

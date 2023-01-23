@@ -111,7 +111,8 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.pull_request_url}/reviews/{self.id}"
+            "DELETE",
+            f"{self.pull_request_url}/reviews/{self.id}",
         )
 
     def _initAttributes(self):
@@ -129,7 +130,8 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
@@ -141,7 +143,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(
-                attributes["pull_request_url"]
+                attributes["pull_request_url"],
             )
         if "submitted_at" in attributes:  # pragma no branch
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])

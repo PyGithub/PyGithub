@@ -40,7 +40,7 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
                 "start_column": self.start_column,
                 "end_line": self.end_line,
                 "end_column": self.end_column,
-            }
+            },
         )
 
     @property

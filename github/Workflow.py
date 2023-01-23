@@ -127,7 +127,9 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         if inputs is github.GithubObject.NotSet:
             inputs = {}
         status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
+            "POST",
+            f"{self.url}/dispatches",
+            input={"ref": ref, "inputs": inputs},
         )
         return status == 204
 

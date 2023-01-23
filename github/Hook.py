@@ -180,7 +180,9 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 
@@ -224,7 +226,8 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "last_response" in attributes:  # pragma no branch
             self._last_response = self._makeClassAttribute(
-                github.HookResponse.HookResponse, attributes["last_response"]
+                github.HookResponse.HookResponse,
+                attributes["last_response"],
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])

@@ -36,7 +36,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
                 "url": self._url.value,
                 "dismiss_stale_reviews": self._dismiss_stale_reviews.value,
                 "require_code_owner_reviews": self._require_code_owner_reviews.value,
-            }
+            },
         )
 
     @property
@@ -103,19 +103,20 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
                 )
             if "teams" in attributes["dismissal_restrictions"]:  # pragma no branch
                 self._teams = self._makeListOfClassesAttribute(
-                    github.Team.Team, attributes["dismissal_restrictions"]["teams"]
+                    github.Team.Team,
+                    attributes["dismissal_restrictions"]["teams"],
                 )
         if "dismiss_stale_reviews" in attributes:  # pragma no branch
             self._dismiss_stale_reviews = self._makeBoolAttribute(
-                attributes["dismiss_stale_reviews"]
+                attributes["dismiss_stale_reviews"],
             )
         if "require_code_owner_reviews" in attributes:  # pragma no branch
             self._require_code_owner_reviews = self._makeBoolAttribute(
-                attributes["require_code_owner_reviews"]
+                attributes["require_code_owner_reviews"],
             )
         if "required_approving_review_count" in attributes:  # pragma no branch
             self._required_approving_review_count = self._makeIntAttribute(
-                attributes["required_approving_review_count"]
+                attributes["required_approving_review_count"],
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
