@@ -477,6 +477,8 @@ class Repository(CompletableGithubObject):
         branch: Union[Branch, _NotSetType] = ...,
         event: Union[str, _NotSetType] = ...,
         status: Union[str, _NotSetType] = ...,
+        exclude_pull_requests: Union[bool, _NotSetType] = ...,
+        head_sha: Union[str, _NotSetType] = ...,
     ) -> PaginatedList[WorkflowRun]: ...
     def update_check_suites_preferences(
         self, auto_trigger_checks: List[Dict[str, Union[bool, int]]]

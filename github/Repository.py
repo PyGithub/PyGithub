@@ -67,6 +67,7 @@
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -3220,6 +3221,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         branch=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         status=github.GithubObject.NotSet,
+        exclude_pull_requests=github.GithubObject.NotSet,
+        head_sha=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3227,6 +3230,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string
         :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
+        :param exclude_pull_requests: bool
+        :param head_sha: string
 
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
@@ -3242,6 +3247,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
+            exclude_pull_requests, bool
+        ), exclude_pull_requests
+        assert head_sha is github.GithubObject.NotSet or isinstance(
+            head_sha, str
+        ), head_sha
 
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
@@ -3258,6 +3269,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
+        if (
+            exclude_pull_requests is not github.GithubObject.NotSet
+            and exclude_pull_requests
+        ):
+            url_parameters["exclude_pull_requests"] = 1
+        if head_sha is not github.GithubObject.NotSet:
+            url_parameters["head_sha"] = head_sha
 
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
