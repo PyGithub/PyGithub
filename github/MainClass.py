@@ -102,7 +102,7 @@ class Github:
         :param app_id: int or string
         :param app_private_key: string
         :param app_installation_id: int
-        :param app_token_scopes: dict
+        :param app_token_permissions: dict
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -794,3 +794,7 @@ class Github:
         else:
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+
+
+# Retrocompatibility
+GithubIntegration = github.GithubIntegration

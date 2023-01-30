@@ -143,6 +143,8 @@ class GithubIntegration:
     @deprecated.deprecated("Use get_repo_installation")
     def get_installation(self, owner, repo):
         """
+        Deprecated by get_repo_installation
+
         :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
         :param owner: str
         :param repo: str
