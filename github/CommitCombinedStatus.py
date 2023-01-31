@@ -108,9 +108,11 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                github.Repository.Repository,
+                attributes["repository"],
             )
         if "statuses" in attributes:  # pragma no branch
             self._statuses = self._makeListOfClassesAttribute(
-                github.CommitStatus.CommitStatus, attributes["statuses"]
+                github.CommitStatus.CommitStatus,
+                attributes["statuses"],
             )

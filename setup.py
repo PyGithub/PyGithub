@@ -84,7 +84,7 @@ if __name__ == "__main__":
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""
+            See http://pygithub.readthedocs.io/en/latest/""",
         ),
         packages=["github"],
         package_data={"github": ["py.typed", "*.pyi"]},

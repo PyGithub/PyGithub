@@ -57,20 +57,24 @@ class Project(Framework.TestCase):
         pid = 1682941
         proj = self.g.get_project(pid)
         self.assertEqual(
-            proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub"
+            proj.owner_url,
+            "https://api.github.com/repos/bbi-yggy/PyGithub",
         )
         self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
         self.assertEqual(
-            proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1"
+            proj.html_url,
+            "https://github.com/bbi-yggy/PyGithub/projects/1",
         )
         self.assertEqual(
-            proj.columns_url, "https://api.github.com/projects/1682941/columns"
+            proj.columns_url,
+            "https://api.github.com/projects/1682941/columns",
         )
         self.assertEqual(proj.id, pid)
         self.assertEqual(proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
         self.assertEqual(proj.name, "TestProject")
         self.assertEqual(
-            proj.body, "To be used for testing project access API for PyGithub."
+            proj.body,
+            "To be used for testing project access API for PyGithub.",
         )
         self.assertEqual(proj.number, 1)
         self.assertEqual(proj.state, "open")
@@ -88,7 +92,8 @@ class Project(Framework.TestCase):
         self.assertEqual(col.url, "https://api.github.com/projects/columns/3138830")
         self.assertEqual(col.project_url, "https://api.github.com/projects/1682941")
         self.assertEqual(
-            col.cards_url, "https://api.github.com/projects/columns/3138830/cards"
+            col.cards_url,
+            "https://api.github.com/projects/columns/3138830/cards",
         )
         self.assertEqual(col.created_at.year, 2018)
         self.assertTrue(col.updated_at >= col.created_at)
@@ -100,13 +105,16 @@ class Project(Framework.TestCase):
         col = proj.get_columns()[1]
         card = col.get_cards()[0]
         self.assertEqual(
-            card.url, "https://api.github.com/projects/columns/cards/11780055"
+            card.url,
+            "https://api.github.com/projects/columns/cards/11780055",
         )
         self.assertEqual(
-            card.column_url, "https://api.github.com/projects/columns/3138831"
+            card.column_url,
+            "https://api.github.com/projects/columns/3138831",
         )
         self.assertEqual(
-            card.content_url, "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1"
+            card.content_url,
+            "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1",
         )
         self.assertEqual(card.id, 11780055)
         self.assertEqual(card.node_id, "MDExOlByb2plY3RDYXJkMTE3ODAwNTU=")
@@ -126,7 +134,8 @@ class Project(Framework.TestCase):
         pull = pull_card.get_content("PullRequest")
         self.assertIsInstance(pull, github.PullRequest.PullRequest)
         self.assertEqual(
-            pull.title, "Work in progress on support for GitHub projects API."
+            pull.title,
+            "Work in progress on support for GitHub projects API.",
         )
         self.assertRaises(ValueError, pull_card.get_content, "foo")
 
@@ -167,7 +176,8 @@ class Project(Framework.TestCase):
 
     def testCreateColumn(self):
         project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
+            "Project created by PyGithub",
+            "Project Body",
         )
         column = project.create_column(
             "Project Column created by PyGithub",
@@ -176,7 +186,8 @@ class Project(Framework.TestCase):
 
     def testCreateCardWithNote(self):
         project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
+            "Project created by PyGithub",
+            "Project Body",
         )
         column = project.create_column(
             "Project Column created by PyGithub",
@@ -186,7 +197,8 @@ class Project(Framework.TestCase):
 
     def testCreateCardFromIssue(self):
         project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
+            "Project created by PyGithub",
+            "Project Body",
         )
         column = project.create_column(
             "Project Column created by PyGithub",

@@ -69,5 +69,6 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "on_behalf_of" in attributes:  # pragma no branch
             self._on_behalf_of = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["on_behalf_of"]
+                github.NamedUser.NamedUser,
+                attributes["on_behalf_of"],
             )

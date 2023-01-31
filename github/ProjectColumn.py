@@ -98,7 +98,8 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :param archived_state: string
         """
         assert archived_state is github.GithubObject.NotSet or isinstance(
-            archived_state, str
+            archived_state,
+            str,
         ), archived_state
 
         url_parameters = dict()
@@ -139,10 +140,16 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
+            "POST",
+            f"{self.url}/cards",
+            headers=import_header,
+            input=post_parameters,
         )
         return github.ProjectCard.ProjectCard(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def move(self, position):

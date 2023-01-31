@@ -76,7 +76,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_subscribed.actor.login, "jacquev6")
         self.assertEqual(self.event_subscribed.commit_id, None)
         self.assertEqual(
-            self.event_subscribed.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_subscribed.created_at,
+            datetime.datetime(2012, 5, 27, 5, 40, 15),
         )
         self.assertEqual(self.event_subscribed.event, "subscribed")
         self.assertEqual(self.event_subscribed.id, 16347479)
@@ -86,7 +87,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347479",
         )
         self.assertEqual(
-            self.event_subscribed.node_id, "MDE1OlN1YnNjcmliZWRFdmVudDE2MzQ3NDc5"
+            self.event_subscribed.node_id,
+            "MDE1OlN1YnNjcmliZWRFdmVudDE2MzQ3NDc5",
         )
         self.assertEqual(self.event_subscribed.commit_url, None)
         self.assertEqual(self.event_subscribed.label, None)
@@ -104,7 +106,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_assigned.actor.login, "jacquev6")
         self.assertEqual(self.event_assigned.commit_id, None)
         self.assertEqual(
-            self.event_assigned.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_assigned.created_at,
+            datetime.datetime(2012, 5, 27, 5, 40, 15),
         )
         self.assertEqual(self.event_assigned.event, "assigned")
         self.assertEqual(self.event_assigned.id, 16347480)
@@ -114,7 +117,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347480",
         )
         self.assertEqual(
-            self.event_assigned.node_id, "MDEzOkFzc2lnbmVkRXZlbnQxNjM0NzQ4MA=="
+            self.event_assigned.node_id,
+            "MDEzOkFzc2lnbmVkRXZlbnQxNjM0NzQ4MA==",
         )
         self.assertEqual(self.event_assigned.commit_url, None)
         self.assertEqual(self.event_assigned.label, None)
@@ -131,10 +135,12 @@ class IssueEvent(Framework.TestCase):
     def testEvent_referenced_Attributes(self):
         self.assertEqual(self.event_referenced.actor.login, "jacquev6")
         self.assertEqual(
-            self.event_referenced.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433"
+            self.event_referenced.commit_id,
+            "ed866fc43833802ab553e5ff8581c81bb00dd433",
         )
         self.assertEqual(
-            self.event_referenced.created_at, datetime.datetime(2012, 5, 27, 7, 29, 25)
+            self.event_referenced.created_at,
+            datetime.datetime(2012, 5, 27, 7, 29, 25),
         )
         self.assertEqual(self.event_referenced.event, "referenced")
         self.assertEqual(self.event_referenced.id, 16348656)
@@ -144,7 +150,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16348656",
         )
         self.assertEqual(
-            self.event_referenced.node_id, "MDE1OlJlZmVyZW5jZWRFdmVudDE2MzQ4NjU2"
+            self.event_referenced.node_id,
+            "MDE1OlJlZmVyZW5jZWRFdmVudDE2MzQ4NjU2",
         )
         self.assertEqual(
             self.event_referenced.commit_url,
@@ -165,7 +172,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_closed.actor.login, "jacquev6")
         self.assertEqual(self.event_closed.commit_id, None)
         self.assertEqual(
-            self.event_closed.created_at, datetime.datetime(2012, 5, 27, 11, 4, 25)
+            self.event_closed.created_at,
+            datetime.datetime(2012, 5, 27, 11, 4, 25),
         )
         self.assertEqual(self.event_closed.event, "closed")
         self.assertEqual(self.event_closed.id, 16351220)
@@ -191,7 +199,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_labeled.actor.login, "jacquev6")
         self.assertEqual(self.event_labeled.commit_id, None)
         self.assertEqual(
-            self.event_labeled.created_at, datetime.datetime(2014, 3, 2, 18, 55, 10)
+            self.event_labeled.created_at,
+            datetime.datetime(2014, 3, 2, 18, 55, 10),
         )
         self.assertEqual(self.event_labeled.event, "labeled")
         self.assertEqual(self.event_labeled.id, 98136337)
@@ -217,7 +226,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_mentioned.actor.login, "jzelinskie")
         self.assertEqual(self.event_mentioned.commit_id, None)
         self.assertEqual(
-            self.event_mentioned.created_at, datetime.datetime(2017, 3, 21, 17, 30, 14)
+            self.event_mentioned.created_at,
+            datetime.datetime(2017, 3, 21, 17, 30, 14),
         )
         self.assertEqual(self.event_mentioned.event, "mentioned")
         self.assertEqual(self.event_mentioned.id, 1009034767)
@@ -227,7 +237,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1009034767",
         )
         self.assertEqual(
-            self.event_mentioned.node_id, "MDE0Ok1lbnRpb25lZEV2ZW50MTAwOTAzNDc2Nw=="
+            self.event_mentioned.node_id,
+            "MDE0Ok1lbnRpb25lZEV2ZW50MTAwOTAzNDc2Nw==",
         )
         self.assertEqual(self.event_mentioned.commit_url, None)
         self.assertEqual(self.event_mentioned.label, None)
@@ -244,10 +255,12 @@ class IssueEvent(Framework.TestCase):
     def testEvent_merged_Attributes(self):
         self.assertEqual(self.event_merged.actor.login, "jzelinskie")
         self.assertEqual(
-            self.event_merged.commit_id, "2525515b094d7425f7018eb5b66171e21c5fbc10"
+            self.event_merged.commit_id,
+            "2525515b094d7425f7018eb5b66171e21c5fbc10",
         )
         self.assertEqual(
-            self.event_merged.created_at, datetime.datetime(2017, 3, 25, 16, 52, 49)
+            self.event_merged.created_at,
+            datetime.datetime(2017, 3, 25, 16, 52, 49),
         )
         self.assertEqual(self.event_merged.event, "merged")
         self.assertEqual(self.event_merged.id, 1015402964)
@@ -257,7 +270,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1015402964",
         )
         self.assertEqual(
-            self.event_merged.node_id, "MDExOk1lcmdlZEV2ZW50MTAxNTQwMjk2NA=="
+            self.event_merged.node_id,
+            "MDExOk1lcmdlZEV2ZW50MTAxNTQwMjk2NA==",
         )
         self.assertEqual(
             self.event_merged.commit_url,
@@ -297,10 +311,12 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.assignee, None)
         self.assertEqual(self.event_review_requested.assigner, None)
         self.assertEqual(
-            self.event_review_requested.review_requester.login, "jzelinskie"
+            self.event_review_requested.review_requester.login,
+            "jzelinskie",
         )
         self.assertEqual(
-            self.event_review_requested.requested_reviewer.login, "jzelinskie"
+            self.event_review_requested.requested_reviewer.login,
+            "jzelinskie",
         )
         self.assertEqual(self.event_review_requested.milestone, None)
         self.assertEqual(self.event_review_requested.rename, None)
@@ -312,7 +328,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_reopened.actor.login, "sfdye")
         self.assertEqual(self.event_reopened.commit_id, None)
         self.assertEqual(
-            self.event_reopened.created_at, datetime.datetime(2018, 8, 10, 13, 10, 9)
+            self.event_reopened.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 9),
         )
         self.assertEqual(self.event_reopened.event, "reopened")
         self.assertEqual(self.event_reopened.id, 1782463023)
@@ -322,7 +339,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463023",
         )
         self.assertEqual(
-            self.event_reopened.node_id, "MDEzOlJlb3BlbmVkRXZlbnQxNzgyNDYzMDIz"
+            self.event_reopened.node_id,
+            "MDEzOlJlb3BlbmVkRXZlbnQxNzgyNDYzMDIz",
         )
         self.assertEqual(self.event_reopened.commit_url, None)
         self.assertEqual(self.event_reopened.label, None)
@@ -340,7 +358,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unassigned.actor.login, "sfdye")
         self.assertEqual(self.event_unassigned.commit_id, None)
         self.assertEqual(
-            self.event_unassigned.created_at, datetime.datetime(2018, 8, 10, 13, 10, 21)
+            self.event_unassigned.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 21),
         )
         self.assertEqual(self.event_unassigned.event, "unassigned")
         self.assertEqual(self.event_unassigned.id, 1782463379)
@@ -350,7 +369,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463379",
         )
         self.assertEqual(
-            self.event_unassigned.node_id, "MDE1OlVuYXNzaWduZWRFdmVudDE3ODI0NjMzNzk="
+            self.event_unassigned.node_id,
+            "MDE1OlVuYXNzaWduZWRFdmVudDE3ODI0NjMzNzk=",
         )
         self.assertEqual(self.event_unassigned.commit_url, None)
         self.assertEqual(self.event_unassigned.label, None)
@@ -368,7 +388,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlabeled.actor.login, "sfdye")
         self.assertEqual(self.event_unlabeled.commit_id, None)
         self.assertEqual(
-            self.event_unlabeled.created_at, datetime.datetime(2018, 8, 10, 13, 10, 38)
+            self.event_unlabeled.created_at,
+            datetime.datetime(2018, 8, 10, 13, 10, 38),
         )
         self.assertEqual(self.event_unlabeled.event, "unlabeled")
         self.assertEqual(self.event_unlabeled.id, 1782463917)
@@ -378,7 +399,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463917",
         )
         self.assertEqual(
-            self.event_unlabeled.node_id, "MDE0OlVubGFiZWxlZEV2ZW50MTc4MjQ2MzkxNw=="
+            self.event_unlabeled.node_id,
+            "MDE0OlVubGFiZWxlZEV2ZW50MTc4MjQ2MzkxNw==",
         )
         self.assertEqual(self.event_unlabeled.commit_url, None)
         self.assertEqual(self.event_unlabeled.label.name, "improvement")
@@ -396,7 +418,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_renamed.actor.login, "sfdye")
         self.assertEqual(self.event_renamed.commit_id, None)
         self.assertEqual(
-            self.event_renamed.created_at, datetime.datetime(2018, 8, 10, 13, 15, 18)
+            self.event_renamed.created_at,
+            datetime.datetime(2018, 8, 10, 13, 15, 18),
         )
         self.assertEqual(self.event_renamed.event, "renamed")
         self.assertEqual(self.event_renamed.id, 1782472556)
@@ -406,7 +429,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782472556",
         )
         self.assertEqual(
-            self.event_renamed.node_id, "MDE3OlJlbmFtZWRUaXRsZUV2ZW50MTc4MjQ3MjU1Ng=="
+            self.event_renamed.node_id,
+            "MDE3OlJlbmFtZWRUaXRsZUV2ZW50MTc4MjQ3MjU1Ng==",
         )
         self.assertEqual(self.event_renamed.commit_url, None)
         self.assertEqual(self.event_renamed.label, None)
@@ -515,14 +539,16 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_restored.dismissed_review, None)
         self.assertEqual(self.event_head_ref_deleted.lock_reason, None)
         self.assertEqual(
-            repr(self.event_head_ref_restored), "IssueEvent(id=1782917299)"
+            repr(self.event_head_ref_restored),
+            "IssueEvent(id=1782917299)",
         )
 
     def testEvent_milestoned_Attributes(self):
         self.assertEqual(self.event_milestoned.actor.login, "sfdye")
         self.assertEqual(self.event_milestoned.commit_id, None)
         self.assertEqual(
-            self.event_milestoned.created_at, datetime.datetime(2018, 8, 11, 0, 46, 19)
+            self.event_milestoned.created_at,
+            datetime.datetime(2018, 8, 11, 0, 46, 19),
         )
         self.assertEqual(self.event_milestoned.event, "milestoned")
         self.assertEqual(self.event_milestoned.id, 1783596418)
@@ -532,7 +558,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596418",
         )
         self.assertEqual(
-            self.event_milestoned.node_id, "MDE1Ok1pbGVzdG9uZWRFdmVudDE3ODM1OTY0MTg="
+            self.event_milestoned.node_id,
+            "MDE1Ok1pbGVzdG9uZWRFdmVudDE3ODM1OTY0MTg=",
         )
         self.assertEqual(self.event_milestoned.commit_url, None)
         self.assertEqual(self.event_milestoned.label, None)
@@ -580,7 +607,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_locked.actor.login, "PyGithub")
         self.assertEqual(self.event_locked.commit_id, None)
         self.assertEqual(
-            self.event_locked.created_at, datetime.datetime(2018, 8, 11, 0, 46, 56)
+            self.event_locked.created_at,
+            datetime.datetime(2018, 8, 11, 0, 46, 56),
         )
         self.assertEqual(self.event_locked.event, "locked")
         self.assertEqual(self.event_locked.id, 1783596743)
@@ -590,7 +618,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596743",
         )
         self.assertEqual(
-            self.event_locked.node_id, "MDExOkxvY2tlZEV2ZW50MTc4MzU5Njc0Mw=="
+            self.event_locked.node_id,
+            "MDExOkxvY2tlZEV2ZW50MTc4MzU5Njc0Mw==",
         )
         self.assertEqual(self.event_locked.commit_url, None)
         self.assertEqual(self.event_locked.label, None)
@@ -608,7 +637,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlocked.actor.login, "PyGithub")
         self.assertEqual(self.event_unlocked.commit_id, None)
         self.assertEqual(
-            self.event_unlocked.created_at, datetime.datetime(2018, 8, 11, 0, 47, 7)
+            self.event_unlocked.created_at,
+            datetime.datetime(2018, 8, 11, 0, 47, 7),
         )
         self.assertEqual(self.event_unlocked.event, "unlocked")
         self.assertEqual(self.event_unlocked.id, 1783596818)
@@ -618,7 +648,8 @@ class IssueEvent(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596818",
         )
         self.assertEqual(
-            self.event_unlocked.node_id, "MDEzOlVubG9ja2VkRXZlbnQxNzgzNTk2ODE4"
+            self.event_unlocked.node_id,
+            "MDEzOlVubG9ja2VkRXZlbnQxNzgzNTk2ODE4",
         )
         self.assertEqual(self.event_unlocked.commit_url, None)
         self.assertEqual(self.event_unlocked.label, None)
@@ -677,7 +708,8 @@ class IssueEvent(Framework.TestCase):
             datetime.datetime(2018, 8, 11, 12, 32, 59),
         )
         self.assertEqual(
-            self.event_review_request_removed.event, "review_request_removed"
+            self.event_review_request_removed.event,
+            "review_request_removed",
         )
         self.assertEqual(self.event_review_request_removed.id, 1783779835)
         self.assertEqual(self.event_review_request_removed.issue.number, 857)
@@ -694,17 +726,20 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_request_removed.assignee, None)
         self.assertEqual(self.event_review_request_removed.assigner, None)
         self.assertEqual(
-            self.event_review_request_removed.review_requester.login, "sfdye"
+            self.event_review_request_removed.review_requester.login,
+            "sfdye",
         )
         self.assertEqual(
-            self.event_review_request_removed.requested_reviewer.login, "jasonwhite"
+            self.event_review_request_removed.requested_reviewer.login,
+            "jasonwhite",
         )
         self.assertEqual(self.event_review_request_removed.milestone, None)
         self.assertEqual(self.event_review_request_removed.rename, None)
         self.assertEqual(self.event_review_request_removed.dismissed_review, None)
         self.assertEqual(self.event_review_request_removed.lock_reason, None)
         self.assertEqual(
-            repr(self.event_review_request_removed), "IssueEvent(id=1783779835)"
+            repr(self.event_review_request_removed),
+            "IssueEvent(id=1783779835)",
         )
 
     def testEvent_marked_as_duplicate_Attributes(self):
@@ -736,7 +771,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_marked_as_duplicate.dismissed_review, None)
         self.assertEqual(self.event_marked_as_duplicate.lock_reason, None)
         self.assertEqual(
-            repr(self.event_marked_as_duplicate), "IssueEvent(id=1783779725)"
+            repr(self.event_marked_as_duplicate),
+            "IssueEvent(id=1783779725)",
         )
 
     def testEvent_unmarked_as_duplicate_Attributes(self):
@@ -747,7 +783,8 @@ class IssueEvent(Framework.TestCase):
             datetime.datetime(2018, 8, 15, 2, 57, 46),
         )
         self.assertEqual(
-            self.event_unmarked_as_duplicate.event, "unmarked_as_duplicate"
+            self.event_unmarked_as_duplicate.event,
+            "unmarked_as_duplicate",
         )
         self.assertEqual(self.event_unmarked_as_duplicate.id, 1789228962)
         self.assertEqual(self.event_unmarked_as_duplicate.issue.number, 857)
@@ -770,7 +807,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unmarked_as_duplicate.dismissed_review, None)
         self.assertEqual(self.event_unmarked_as_duplicate.lock_reason, None)
         self.assertEqual(
-            repr(self.event_unmarked_as_duplicate), "IssueEvent(id=1789228962)"
+            repr(self.event_unmarked_as_duplicate),
+            "IssueEvent(id=1789228962)",
         )
 
     def testEvent_added_to_project_Attributes(self):
@@ -811,7 +849,8 @@ class IssueEvent(Framework.TestCase):
             datetime.datetime(2018, 8, 16, 8, 13, 55),
         )
         self.assertEqual(
-            self.event_moved_columns_in_project.event, "moved_columns_in_project"
+            self.event_moved_columns_in_project.event,
+            "moved_columns_in_project",
         )
         self.assertEqual(self.event_moved_columns_in_project.id, 1791767766)
         self.assertEqual(self.event_moved_columns_in_project.issue.number, 857)
@@ -834,7 +873,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.dismissed_review, None)
         self.assertEqual(self.event_moved_columns_in_project.lock_reason, None)
         self.assertEqual(
-            repr(self.event_moved_columns_in_project), "IssueEvent(id=1791767766)"
+            repr(self.event_moved_columns_in_project),
+            "IssueEvent(id=1791767766)",
         )
 
     def testEvent_removed_from_project_Attributes(self):
@@ -866,7 +906,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_removed_from_project.dismissed_review, None)
         self.assertEqual(self.event_removed_from_project.lock_reason, None)
         self.assertEqual(
-            repr(self.event_removed_from_project), "IssueEvent(id=1791768212)"
+            repr(self.event_removed_from_project),
+            "IssueEvent(id=1791768212)",
         )
 
     def testEvent_converted_note_to_issue_Attributes(self):
@@ -877,7 +918,8 @@ class IssueEvent(Framework.TestCase):
             datetime.datetime(2018, 8, 16, 8, 14, 34),
         )
         self.assertEqual(
-            self.event_converted_note_to_issue.event, "converted_note_to_issue"
+            self.event_converted_note_to_issue.event,
+            "converted_note_to_issue",
         )
         self.assertEqual(self.event_converted_note_to_issue.id, 1791769149)
         self.assertEqual(self.event_converted_note_to_issue.issue.number, 866)
@@ -900,5 +942,6 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
         self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
         self.assertEqual(
-            repr(self.event_converted_note_to_issue), "IssueEvent(id=1791769149)"
+            repr(self.event_converted_note_to_issue),
+            "IssueEvent(id=1791769149)",
         )

@@ -16,7 +16,8 @@ class Artifact(Framework.TestCase):
         self.assertEqual(artifact.name, "vscode-codeql-extension")
         self.assertTrue(artifact.expired)
         self.assertEqual(
-            repr(artifact), 'Artifact(name="vscode-codeql-extension", id=10495898)'
+            repr(artifact),
+            'Artifact(name="vscode-codeql-extension", id=10495898)',
         )
 
     def testGetSingleArtifactFromRepo(self):
@@ -25,7 +26,8 @@ class Artifact(Framework.TestCase):
         self.assertEqual(artifact.name, "vscode-codeql-extension")
         self.assertFalse(artifact.expired)
         self.assertEqual(
-            repr(artifact), 'Artifact(name="vscode-codeql-extension", id=378970214)'
+            repr(artifact),
+            'Artifact(name="vscode-codeql-extension", id=378970214)',
         )
 
     def testGetArtifactsFromRepo(self):

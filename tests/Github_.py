@@ -150,8 +150,15 @@ class Github(Framework.TestCase):
         self.assertListKeyBegin(
             self.g.get_gists(
                 since=datetime.datetime(
-                    2018, 10, 2, 10, 38, 30, 00, tzinfo=Time.UTCtzinfo()
-                )
+                    2018,
+                    10,
+                    2,
+                    10,
+                    38,
+                    30,
+                    00,
+                    tzinfo=Time.UTCtzinfo(),
+                ),
             ),
             lambda g: g.id,
             [
@@ -184,7 +191,8 @@ class Github(Framework.TestCase):
         emojis = self.g.get_emojis()
         first = emojis.get("+1")
         self.assertEqual(
-            first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5"
+            first,
+            "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5",
         )
 
     def testGetHook(self):
@@ -432,7 +440,9 @@ class Github(Framework.TestCase):
 
     def testGetUsersSince(self):
         self.assertListKeyBegin(
-            self.g.get_users(since=1000), lambda u: u.login, ["sbecker"]
+            self.g.get_users(since=1000),
+            lambda u: u.login,
+            ["sbecker"],
         )
 
     def testGetOrganizations(self):

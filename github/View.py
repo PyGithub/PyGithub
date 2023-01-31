@@ -39,7 +39,7 @@ class View(github.GithubObject.NonCompletableGithubObject):
                 "timestamp": self._timestamp.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
-            }
+            },
         )
 
     @property

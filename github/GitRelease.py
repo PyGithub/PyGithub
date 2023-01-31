@@ -205,10 +205,12 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert tag_name is github.GithubObject.NotSet or isinstance(
-            tag_name, str
+            tag_name,
+            str,
         ), "tag_name must be a str/unicode object"
         assert target_commitish is github.GithubObject.NotSet or isinstance(
-            target_commitish, str
+            target_commitish,
+            str,
         ), "target_commitish must be a str/unicode object"
         assert isinstance(name, str), name
         assert isinstance(message, str), message
@@ -228,10 +230,15 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if target_commitish is not github.GithubObject.NotSet:
             post_parameters["target_commitish"] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         return github.GitRelease.GitRelease(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def upload_asset(
@@ -269,7 +276,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             input=path,
         )
         return github.GitReleaseAsset.GitReleaseAsset(
-            self._requester, resp_headers, data, completed=True
+            self._requester,
+            resp_headers,
+            data,
+            completed=True,
         )
 
     def upload_asset_from_memory(
@@ -310,7 +320,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             file_like=file_like,
         )
         return github.GitReleaseAsset.GitReleaseAsset(
-            self._requester, resp_headers, data, completed=True
+            self._requester,
+            resp_headers,
+            data,
+            completed=True,
         )
 
     def get_assets(self):
@@ -354,7 +367,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
         if "target_commitish" in attributes:
             self._target_commitish = self._makeStringAttribute(
-                attributes["target_commitish"]
+                attributes["target_commitish"],
             )
         if "draft" in attributes:
             self._draft = self._makeBoolAttribute(attributes["draft"])
@@ -362,7 +375,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
             self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
+                github.NamedUser.NamedUser,
+                attributes["author"],
             )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

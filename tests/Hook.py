@@ -48,10 +48,12 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.last_response.code, 200)
         self.assertEqual(self.hook.name, "web")
         self.assertEqual(
-            self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47)
+            self.hook.updated_at,
+            datetime.datetime(2012, 5, 29, 18, 49, 47),
         )
         self.assertEqual(
-            self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"
+            self.hook.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993",
         )
         self.assertEqual(
             self.hook.test_url,

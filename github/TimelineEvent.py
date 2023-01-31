@@ -139,7 +139,8 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["actor"]
+                github.NamedUser.NamedUser,
+                attributes["actor"],
             )
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
@@ -155,13 +156,14 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
             self._commit_url = self._makeStringAttribute(attributes["commit_url"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeClassAttribute(
-                github.TimelineEventSource.TimelineEventSource, attributes["source"]
+                github.TimelineEventSource.TimelineEventSource,
+                attributes["source"],
             )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeStringAttribute(
-                attributes["author_association"]
+                attributes["author_association"],
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

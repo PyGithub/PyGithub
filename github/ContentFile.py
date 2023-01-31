@@ -123,12 +123,15 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(
-                self.url.split("/")[:6]
+                self.url.split("/")[:6],
             )  # pragma no cover (Should be covered)
             self._repository = github.GithubObject._ValuedAttribute(
                 github.Repository.Repository(
-                    self._requester, self._headers, {"url": repo_url}, completed=False
-                )
+                    self._requester,
+                    self._headers,
+                    {"url": repo_url},
+                    completed=False,
+                ),
             )  # pragma no cover (Should be covered)
         return self._repository.value
 
@@ -200,7 +203,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "license" in attributes:  # pragma no branch
             self._license = self._makeClassAttribute(
-                github.License.License, attributes["license"]
+                github.License.License,
+                attributes["license"],
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
@@ -208,7 +212,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                github.Repository.Repository,
+                attributes["repository"],
             )
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
@@ -220,5 +225,5 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeListOfDictsAttribute(
-                attributes["text_matches"]
+                attributes["text_matches"],
             )

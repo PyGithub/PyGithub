@@ -47,7 +47,8 @@ class CommitCombinedStatus(Framework.TestCase):
         self.assertEqual(self.combined_status.statuses[1].id, 390603044)
         self.assertEqual(self.combined_status.statuses[2].state, "success")
         self.assertEqual(
-            self.combined_status.statuses[3].description, "Build finished."
+            self.combined_status.statuses[3].description,
+            "Build finished.",
         )
         self.assertEqual(
             self.combined_status.statuses[4].target_url,
@@ -62,7 +63,8 @@ class CommitCombinedStatus(Framework.TestCase):
             datetime.datetime(2015, 12, 14, 13, 23, 35),
         )
         self.assertEqual(
-            self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659"
+            self.combined_status.sha,
+            "74e70119a23fa3ffb3db19d4590eccfebd72b659",
         )
         self.assertEqual(self.combined_status.total_count, 6)
         self.assertEqual(self.combined_status.repository.id, 10391073)

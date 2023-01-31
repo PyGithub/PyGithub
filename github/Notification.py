@@ -127,7 +127,10 @@ class Notification(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def get_issue(self):
@@ -154,17 +157,19 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self._last_read_at = self._makeDatetimeAttribute(attributes["last_read_at"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                github.Repository.Repository,
+                attributes["repository"],
             )
         if "subject" in attributes:  # pragma no branch
             self._subject = self._makeClassAttribute(
-                github.NotificationSubject.NotificationSubject, attributes["subject"]
+                github.NotificationSubject.NotificationSubject,
+                attributes["subject"],
             )
         if "reason" in attributes:  # pragma no branch
             self._reason = self._makeStringAttribute(attributes["reason"])
         if "subscription_url" in attributes:  # pragma no branch
             self._subscription_url = self._makeStringAttribute(
-                attributes["subscription_url"]
+                attributes["subscription_url"],
             )
         if "unread" in attributes:  # pragma no branch
             self._unread = self._makeBoolAttribute(attributes["unread"])

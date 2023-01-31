@@ -40,19 +40,22 @@ class CommitStatus(Framework.TestCase):
             self.g.get_user()
             .get_repo("PyGithub")
             .get_commit("1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
-            .get_statuses()
+            .get_statuses(),
         )
 
     def testAttributes(self):
         self.assertEqual(
-            self.statuses[0].created_at, datetime.datetime(2012, 9, 8, 11, 30, 56)
+            self.statuses[0].created_at,
+            datetime.datetime(2012, 9, 8, 11, 30, 56),
         )
         self.assertEqual(
-            self.statuses[0].updated_at, datetime.datetime(2012, 9, 8, 11, 30, 56)
+            self.statuses[0].updated_at,
+            datetime.datetime(2012, 9, 8, 11, 30, 56),
         )
         self.assertEqual(self.statuses[0].creator.login, "jacquev6")
         self.assertEqual(
-            self.statuses[0].description, "Status successfuly created by PyGithub"
+            self.statuses[0].description,
+            "Status successfuly created by PyGithub",
         )
         self.assertEqual(self.statuses[1].description, None)
         self.assertEqual(self.statuses[0].id, 277040)

@@ -35,7 +35,8 @@ class ConditionalRequestUpdate(Framework.TestCase):
 
     def testDidNotUpdate(self):
         self.assertFalse(
-            self.repo.update(), msg="The repo is not changed. But update() != False"
+            self.repo.update(),
+            msg="The repo is not changed. But update() != False",
         )
 
     def testDidUpdate(self):

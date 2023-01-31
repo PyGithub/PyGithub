@@ -34,7 +34,8 @@ class GithubApp(Framework.TestCase):
         app = self.g.get_app(slug=self.app_slug)
         self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17))
         self.assertEqual(
-            app.description, "Automate your workflow from idea to production"
+            app.description,
+            "Automate your workflow from idea to production",
         )
         self.assertListEqual(
             app.events,

@@ -56,10 +56,12 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.parent, None)
         self.assertEqual(
-            repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
+            repr(self.team),
+            'Team(name="Team created by PyGithub", id=189850)',
         )
         self.assertEqual(
-            self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/core"
+            self.team.html_url,
+            "https://github.com/orgs/BeaverSoftware/teams/core",
         )
 
     def testDiscussions(self):
@@ -73,7 +75,8 @@ class Team(Framework.TestCase):
         self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
         self.assertEqual(d.comments_count, 0)
         self.assertEqual(
-            d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments"
+            d.comments_url,
+            "https://api.github.com/teams/189850/discussions/1/comments",
         )
         self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36))
         self.assertEqual(
@@ -97,7 +100,9 @@ class Team(Framework.TestCase):
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_to_members(user)
         self.assertListKeyEqual(
-            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+            self.team.get_members(),
+            lambda u: u.login,
+            ["jacquev6"],
         )
         self.assertTrue(self.team.has_in_members(user))
         self.team.remove_from_members(user)
@@ -113,7 +118,9 @@ class Team(Framework.TestCase):
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_membership(user)
         self.assertListKeyEqual(
-            self.team.get_members(), lambda u: u.login, ["jacquev6"]
+            self.team.get_members(),
+            lambda u: u.login,
+            ["jacquev6"],
         )
         self.assertTrue(self.team.has_in_members(user))
         membership_data = self.team.get_team_membership(user)
@@ -139,7 +146,9 @@ class Team(Framework.TestCase):
         self.assertIsNone(self.team.get_repo_permission(repo))
         self.team.add_to_repos(repo)
         self.assertListKeyEqual(
-            self.team.get_repos(), lambda r: r.name, ["FatherBeaver"]
+            self.team.get_repos(),
+            lambda r: r.name,
+            ["FatherBeaver"],
         )
         self.assertTrue(self.team.has_in_repos(repo))
         permissions = self.team.get_repo_permission(repo)
@@ -167,7 +176,9 @@ class Team(Framework.TestCase):
     def testGetTeams(self):
         nested_teams = self.team.get_teams()
         self.assertListKeyEqual(
-            nested_teams, lambda t: t.name, ["DummyTeam1", "DummyTeam2", "DummyTeam3"]
+            nested_teams,
+            lambda t: t.name,
+            ["DummyTeam1", "DummyTeam2", "DummyTeam3"],
         )
         parent = nested_teams[0].parent
         self.assertEqual(self.team.name, parent.name)

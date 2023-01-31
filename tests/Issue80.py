@@ -31,18 +31,23 @@ from . import Framework
 
 
 class Issue80(
-    Framework.BasicTestCase
+    Framework.BasicTestCase,
 ):  # https://github.com/jacquev6/PyGithub/issues/80
     def testIgnoreHttpsFromGithubEnterprise(self):
         g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com/some/prefix"
+            self.login,
+            self.password,
+            base_url="http://my.enterprise.com/some/prefix",
         )  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(
-            org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware"
+            org.url,
+            "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware",
         )  # https returned
         self.assertListKeyEqual(
-            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+            org.get_repos(),
+            lambda r: r.name,
+            ["FatherBeaver", "TestPyGithub"],
         )  # But still http in second request based on org.url
 
     def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
@@ -53,8 +58,11 @@ class Issue80(
         )  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(
-            org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware"
+            org.url,
+            "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware",
         )  # https returned
         self.assertListKeyEqual(
-            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+            org.get_repos(),
+            lambda r: r.name,
+            ["FatherBeaver", "TestPyGithub"],
         )  # But still http in second request based on org.url

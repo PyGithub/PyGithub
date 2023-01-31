@@ -3,10 +3,9 @@ from io import BufferedReader
 from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
 
 from requests.models import Response
+from urllib3.util import Retry
 
 from github.GithubObject import GithubObject
-
-from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(

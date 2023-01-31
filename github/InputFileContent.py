@@ -42,7 +42,8 @@ class InputFileContent:
 
         assert isinstance(content, str), content
         assert new_name is github.GithubObject.NotSet or isinstance(
-            new_name, str
+            new_name,
+            str,
         ), new_name
         self.__newName = new_name
         self.__content = content

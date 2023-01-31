@@ -166,7 +166,9 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         """
         request_headers = {"Accept": "application/vnd.github.v3+json"}
         status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/rerequest", headers=request_headers
+            "POST",
+            f"{self.url}/rerequest",
+            headers=request_headers,
         )
         return status == 201
 
@@ -184,7 +186,8 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRun.CheckRun`
         """
         assert check_name is github.GithubObject.NotSet or isinstance(
-            check_name, str
+            check_name,
+            str,
         ), check_name
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
         assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
@@ -227,13 +230,14 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
             self._after = self._makeStringAttribute(attributes["after"])
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
-                github.GithubApp.GithubApp, attributes["app"]
+                github.GithubApp.GithubApp,
+                attributes["app"],
             )
         if "before" in attributes:  # pragma no branch
             self._before = self._makeStringAttribute(attributes["before"])
         if "check_runs_url" in attributes:  # pragma no branch
             self._check_runs_url = self._makeStringAttribute(
-                attributes["check_runs_url"]
+                attributes["check_runs_url"],
             )
         if "conclusion" in attributes:  # pragma no branch
             self._conclusion = self._makeStringAttribute(attributes["conclusion"])
@@ -247,7 +251,8 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
             if "id" in attributes["head_commit"]:
                 attributes["head_commit"]["sha"] = attributes["head_commit"]["id"]
             self._head_commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["head_commit"]
+                github.GitCommit.GitCommit,
+                attributes["head_commit"],
             )
         if "head_sha" in attributes:  # pragma no branch
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
@@ -255,15 +260,17 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "latest_check_runs_count" in attributes:  # pragma no branch
             self._latest_check_runs_count = self._makeIntAttribute(
-                attributes["latest_check_runs_count"]
+                attributes["latest_check_runs_count"],
             )
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
-                github.PullRequest.PullRequest, attributes["pull_requests"]
+                github.PullRequest.PullRequest,
+                attributes["pull_requests"],
             )
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                github.Repository.Repository,
+                attributes["repository"],
             )
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])

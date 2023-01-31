@@ -40,7 +40,8 @@ class GitRef(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(
-            self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a"
+            self.ref.object.sha,
+            "1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(self.ref.object.type, "commit")
         self.assertEqual(
@@ -54,7 +55,8 @@ class GitRef(Framework.TestCase):
         )
 
         self.assertEqual(
-            repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")'
+            repr(self.ref),
+            'GitRef(ref="refs/heads/BranchCreatedByPyGithub")',
         )
         self.assertEqual(
             repr(self.ref.object),

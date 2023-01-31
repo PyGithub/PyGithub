@@ -141,18 +141,20 @@ class Artifact(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "archive_download_url" in attributes:  # pragma no branch
             self._archive_download_url = self._makeStringAttribute(
-                attributes["archive_download_url"]
+                attributes["archive_download_url"],
             )
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(
-                attributes["created_at"], (str,)
+                attributes["created_at"],
+                (str,),
             ), attributes["created_at"]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "expired" in attributes:  # pragma no branch
             self._expired = self._makeBoolAttribute(attributes["expired"])
         if "expires_at" in attributes:  # pragma no branch
             assert attributes["expires_at"] is None or isinstance(
-                attributes["expires_at"], (str,)
+                attributes["expires_at"],
+                (str,),
             ), attributes["expires_at"]
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "head_sha" in attributes:  # pragma no branch
@@ -167,12 +169,14 @@ class Artifact(github.GithubObject.NonCompletableGithubObject):
             self._size_in_bytes = self._makeIntAttribute(attributes["size_in_bytes"])
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(
-                attributes["updated_at"], (str,)
+                attributes["updated_at"],
+                (str,),
             ), attributes["updated_at"]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_run" in attributes:  # pragma no branch
             self._workflow_run = self._makeClassAttribute(
-                github.WorkflowRun.WorkflowRun, attributes["workflow_run"]
+                github.WorkflowRun.WorkflowRun,
+                attributes["workflow_run"],
             )

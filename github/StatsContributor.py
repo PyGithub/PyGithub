@@ -111,11 +111,13 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
+                github.NamedUser.NamedUser,
+                attributes["author"],
             )
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch
             self._weeks = self._makeListOfClassesAttribute(
-                self.Week, attributes["weeks"]
+                self.Week,
+                attributes["weeks"],
             )

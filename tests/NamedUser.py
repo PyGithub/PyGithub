@@ -50,7 +50,8 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.collaborators, None)
         self.assertEqual(self.user.company, "3rd Cloud")
         self.assertEqual(
-            self.user.created_at, datetime.datetime(2009, 5, 12, 21, 19, 38)
+            self.user.created_at,
+            datetime.datetime(2009, 5, 12, 21, 19, 38),
         )
         self.assertEqual(self.user.disk_usage, None)
         self.assertEqual(self.user.email, "vincent@3rdcloud.com")
@@ -106,7 +107,8 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.public_gists, 2)
         self.assertEqual(self.user.public_repos, 11)
         self.assertEqual(
-            self.user.suspended_at, datetime.datetime(2013, 8, 10, 7, 11, 7)
+            self.user.suspended_at,
+            datetime.datetime(2013, 8, 10, 7, 11, 7),
         )
         self.assertEqual(self.user.total_private_repos, 5)
         self.assertIsNone(self.user.twitter_username)
@@ -192,7 +194,9 @@ class NamedUser(Framework.TestCase):
 
     def testGetOrgs(self):
         self.assertListKeyEqual(
-            self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"]
+            self.user.get_orgs(),
+            lambda o: o.login,
+            ["BeaverSoftware"],
         )
 
     def testGetOrganizationMembership(self):
@@ -211,7 +215,8 @@ class NamedUser(Framework.TestCase):
         )
         self.assertEqual(membership.organization.login, "BeaverSoftware")
         self.assertEqual(
-            membership.organization_url, "https://api.github.com/orgs/BeaverSoftware"
+            membership.organization_url,
+            "https://api.github.com/orgs/BeaverSoftware",
         )
 
     def testGetOrganizationMembershipNotMember(self):

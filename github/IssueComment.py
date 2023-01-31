@@ -128,7 +128,9 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             "body": body,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 
@@ -207,5 +209,6 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )

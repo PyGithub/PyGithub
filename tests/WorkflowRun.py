@@ -39,7 +39,8 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.id, 148274629)
         self.assertEqual(self.workflow_run.head_branch, "more-precise-typing")
         self.assertEqual(
-            self.workflow_run.head_sha, "f91c729d786efcc93db47dd755313a26172c105e"
+            self.workflow_run.head_sha,
+            "f91c729d786efcc93db47dd755313a26172c105e",
         )
         self.assertEqual(self.workflow_run.run_number, 162)
         self.assertEqual(self.workflow_run.event, "pull_request")

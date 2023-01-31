@@ -85,10 +85,13 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
+            self.pull.assignees,
+            lambda a: a.login,
+            ["stuglaser", "jacquev6"],
         )
         self.assertEqual(
-            self.pull.base.label, "jacquev6:topic/RewriteWithGeneratedCode"
+            self.pull.base.label,
+            "jacquev6:topic/RewriteWithGeneratedCode",
         )
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "jacquev6")
@@ -100,15 +103,18 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.comments, 1)
         self.assertEqual(self.pull.commits, 3)
         self.assertEqual(
-            self.pull.created_at, datetime.datetime(2012, 5, 27, 9, 25, 36)
+            self.pull.created_at,
+            datetime.datetime(2012, 5, 27, 9, 25, 36),
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(
-            self.pull.diff_url, "https://github.com/jacquev6/PyGithub/pull/31.diff"
+            self.pull.diff_url,
+            "https://github.com/jacquev6/PyGithub/pull/31.diff",
         )
         self.assertEqual(self.pull.head.label, "BeaverSoftware:master")
         self.assertEqual(
-            self.pull.html_url, "https://github.com/jacquev6/PyGithub/pull/31"
+            self.pull.html_url,
+            "https://github.com/jacquev6/PyGithub/pull/31",
         )
         self.assertEqual(self.pull.id, 1436215)
         self.assertEqual(
@@ -123,16 +129,19 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
         self.assertEqual(
-            self.pull.patch_url, "https://github.com/jacquev6/PyGithub/pull/31.patch"
+            self.pull.patch_url,
+            "https://github.com/jacquev6/PyGithub/pull/31.patch",
         )
         self.assertEqual(self.pull.review_comments, 1)
         self.assertEqual(self.pull.state, "closed")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
-            self.pull.updated_at, datetime.datetime(2012, 11, 3, 8, 19, 40)
+            self.pull.updated_at,
+            datetime.datetime(2012, 11, 3, 8, 19, 40),
         )
         self.assertEqual(
-            self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"
+            self.pull.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/pulls/31",
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
         self.assertEqual(self.pull.draft, None)
@@ -150,7 +159,10 @@ class PullRequest(Framework.TestCase):
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 5
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
         )
         self.assertEqual(comment.id, 886298)
 
@@ -163,7 +175,9 @@ class PullRequest(Framework.TestCase):
 
     def testGetIssueComments(self):
         self.assertListKeyEqual(
-            self.pull.get_issue_comments(), lambda c: c.id, [8387331]
+            self.pull.get_issue_comments(),
+            lambda c: c.id,
+            [8387331],
         )
 
     def testGetIssueComment(self):
@@ -184,18 +198,23 @@ class PullRequest(Framework.TestCase):
 
     def testReviewRequests(self):
         self.pull.create_review_request(
-            reviewers="sfdye", team_reviewers="pygithub-owners"
+            reviewers="sfdye",
+            team_reviewers="pygithub-owners",
         )
         review_requests = self.pull.get_review_requests()
         self.assertListKeyEqual(review_requests[0], lambda c: c.login, ["sfdye"])
         self.assertListKeyEqual(
-            review_requests[1], lambda c: c.slug, ["pygithub-owners"]
+            review_requests[1],
+            lambda c: c.slug,
+            ["pygithub-owners"],
         )
         self.pull.delete_review_request(reviewers="sfdye")
         review_requests = self.pull.get_review_requests()
         self.assertEqual(list(review_requests[0]), [])
         self.assertListKeyEqual(
-            review_requests[1], lambda c: c.slug, ["pygithub-owners"]
+            review_requests[1],
+            lambda c: c.slug,
+            ["pygithub-owners"],
         )
 
     def testEditWithoutArguments(self):
@@ -281,7 +300,9 @@ class PullRequest(Framework.TestCase):
 
     def testGetLabels(self):
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["wip", "refactoring"],
         )
 
     def testAddAndRemoveLabels(self):
@@ -294,11 +315,15 @@ class PullRequest(Framework.TestCase):
         )
         self.pull.remove_from_labels(wip)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["refactoring", "improvement"],
         )
         self.pull.remove_from_labels(refactoring)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["improvement"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["improvement"],
         )
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
@@ -317,11 +342,15 @@ class PullRequest(Framework.TestCase):
         )
         self.pull.remove_from_labels(wip)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["refactoring", "improvement"],
         )
         self.pull.remove_from_labels(refactoring)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["improvement"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["improvement"],
         )
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
@@ -342,7 +371,9 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["wip", "refactoring"],
         )
 
     def testDeleteAndSetLabelsWithStringArguments(self):
@@ -357,7 +388,9 @@ class PullRequest(Framework.TestCase):
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
         self.assertListKeyEqual(
-            self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"]
+            self.pull.get_labels(),
+            lambda l: l.name,
+            ["wip", "refactoring"],
         )
 
     def testMerge(self):
@@ -374,14 +407,16 @@ class PullRequest(Framework.TestCase):
 
     def testMergeWithCommitMessage(self):
         self.g.get_user().get_repo("PyGithub").get_pull(39).merge(
-            "Custom commit message created by PyGithub"
+            "Custom commit message created by PyGithub",
         )
 
     def testAddAndRemoveAssignees(self):
         user1 = "jayfk"
         user2 = self.g.get_user("jzelinskie")
         self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
+            self.pull.assignees,
+            lambda a: a.login,
+            ["stuglaser", "jacquev6"],
         )
         url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
@@ -393,12 +428,14 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.url, url)
         self.pull.remove_from_assignees(user1, user2)
         self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
+            self.pull.assignees,
+            lambda a: a.login,
+            ["jacquev6", "stuglaser"],
         )
         self.assertEqual(self.pull.url, url)
 
     def testUpdateBranch(self):
         self.assertTrue(
-            self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
+            self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"),
         )
         self.assertTrue(self.pull.update_branch())

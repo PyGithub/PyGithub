@@ -114,13 +114,15 @@ class Membership(github.GithubObject.CompletableGithubObject):
             self._role = self._makeStringAttribute(attributes["role"])
         if "organization_url" in attributes:  # pragma no branch
             self._organization_url = self._makeStringAttribute(
-                attributes["organization_url"]
+                attributes["organization_url"],
             )
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(
-                github.Organization.Organization, attributes["organization"]
+                github.Organization.Organization,
+                attributes["organization"],
             )
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )

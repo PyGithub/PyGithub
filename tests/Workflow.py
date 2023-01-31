@@ -67,7 +67,10 @@ class Workflow(Framework.TestCase):
         master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
         self.assertListKeyEqual(
             self.workflow.get_runs(
-                actor=sfdye, branch=master, event="push", status="completed"
+                actor=sfdye,
+                branch=master,
+                event="push",
+                status="completed",
             ),
             lambda r: r.id,
             [100957683, 94845611, 93946842, 92714488],
@@ -83,17 +86,17 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchWithBranch(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
+            "manual_dispatch.yml",
         )
         branch = self.g.get_repo("wrecker/PyGithub").get_branch(
-            "workflow_dispatch_branch"
+            "workflow_dispatch_branch",
         )
         self.assertTrue(workflow.create_dispatch(branch, dispatch_inputs))
 
     def testCreateDispatchWithTag(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
+            "manual_dispatch.yml",
         )
         tags = self.g.get_repo("wrecker/PyGithub").get_tags()
         tag = [t for t in tags if t.name == "workflow_dispatch_tag"].pop()
@@ -102,7 +105,7 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchWithString(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
+            "manual_dispatch.yml",
         )
         ref_str = "main"
         self.assertTrue(workflow.create_dispatch(ref_str, dispatch_inputs))

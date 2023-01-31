@@ -90,11 +90,13 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "repo" in attributes:  # pragma no branch
             self._repo = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repo"]
+                github.Repository.Repository,
+                attributes["repo"],
             )
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )

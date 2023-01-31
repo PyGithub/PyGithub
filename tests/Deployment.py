@@ -40,7 +40,8 @@ class Deployment(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/deployments/263877258",
         )
         self.assertEqual(
-            self.deployment.sha, "743f5a58b0bce91c4eab744ff7e39dfca9e6e8a5"
+            self.deployment.sha,
+            "743f5a58b0bce91c4eab744ff7e39dfca9e6e8a5",
         )
         self.assertEqual(self.deployment.task, "deploy")
         self.assertEqual(self.deployment.payload, {"test": True})

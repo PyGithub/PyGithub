@@ -147,7 +147,10 @@ class PaginatedList(PaginatedListBase):
             # set per_page = 1 so the totalCount is just the number of pages
             params.update({"per_page": 1})
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET", self.__firstUrl, parameters=params, headers=self.__headers
+                "GET",
+                self.__firstUrl,
+                parameters=params,
+                headers=self.__headers,
             )
             if "link" not in headers:
                 if data and "total_count" in data:
@@ -169,7 +172,10 @@ class PaginatedList(PaginatedListBase):
 
     def _getLastPageUrl(self):
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers
+            "GET",
+            self.__firstUrl,
+            parameters=self.__nextParams,
+            headers=self.__headers,
         )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
@@ -199,7 +205,10 @@ class PaginatedList(PaginatedListBase):
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
+            "GET",
+            self.__nextUrl,
+            parameters=self.__nextParams,
+            headers=self.__headers,
         )
         data = data if data else []
 
@@ -244,7 +253,10 @@ class PaginatedList(PaginatedListBase):
         if self.__requester.per_page != 30:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=params, headers=self.__headers
+            "GET",
+            self.__firstUrl,
+            parameters=params,
+            headers=self.__headers,
         )
 
         if self.__list_item in data:

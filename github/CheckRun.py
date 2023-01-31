@@ -38,7 +38,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__(
-            {"id": self._id.value, "conclusion": self._conclusion.value}
+            {"id": self._id.value, "conclusion": self._conclusion.value},
         )
 
     @property
@@ -211,23 +211,29 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         """
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
         assert head_sha is github.GithubObject.NotSet or isinstance(
-            head_sha, str
+            head_sha,
+            str,
         ), head_sha
         assert details_url is github.GithubObject.NotSet or isinstance(
-            details_url, str
+            details_url,
+            str,
         ), details_url
         assert external_id is github.GithubObject.NotSet or isinstance(
-            external_id, str
+            external_id,
+            str,
         ), external_id
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
         assert started_at is github.GithubObject.NotSet or isinstance(
-            started_at, datetime.datetime
+            started_at,
+            datetime.datetime,
         ), started_at
         assert conclusion is github.GithubObject.NotSet or isinstance(
-            conclusion, str
+            conclusion,
+            str,
         ), conclusion
         assert completed_at is github.GithubObject.NotSet or isinstance(
-            completed_at, datetime.datetime
+            completed_at,
+            datetime.datetime,
         ), completed_at
         assert output is github.GithubObject.NotSet or isinstance(output, dict), output
         assert actions is github.GithubObject.NotSet or all(
@@ -249,7 +255,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
             post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
         if completed_at is not github.GithubObject.NotSet:
             post_parameters["completed_at"] = completed_at.strftime(
-                "%Y-%m-%dT%H:%M:%SZ"
+                "%Y-%m-%dT%H:%M:%SZ",
             )
         if conclusion is not github.GithubObject.NotSet:
             post_parameters["conclusion"] = conclusion
@@ -259,7 +265,9 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
             post_parameters["actions"] = actions
 
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+            "PATCH",
+            self.url,
+            input=post_parameters,
         )
         self._useAttributes(data)
 
@@ -284,14 +292,15 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
-                github.GithubApp.GithubApp, attributes["app"]
+                github.GithubApp.GithubApp,
+                attributes["app"],
             )
         # This only gives us a dictionary with `id` attribute of `check_suite`
         if (
             "check_suite" in attributes and "id" in attributes["check_suite"]
         ):  # pragma no branch
             self._check_suite_id = self._makeIntAttribute(
-                attributes["check_suite"]["id"]
+                attributes["check_suite"]["id"],
             )
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
@@ -313,11 +322,13 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "output" in attributes:  # pragma no branch
             self._output = self._makeClassAttribute(
-                github.CheckRunOutput.CheckRunOutput, attributes["output"]
+                github.CheckRunOutput.CheckRunOutput,
+                attributes["output"],
             )
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
-                github.PullRequest.PullRequest, attributes["pull_requests"]
+                github.PullRequest.PullRequest,
+                attributes["pull_requests"],
             )
         if "started_at" in attributes:  # pragma no branch
             self._started_at = self._makeDatetimeAttribute(attributes["started_at"])

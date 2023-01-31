@@ -232,7 +232,8 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "change_status" in attributes:  # pragma no branch
             self._change_status = self._makeClassAttribute(
-                github.CommitStats.CommitStats, attributes["change_status"]
+                github.CommitStats.CommitStats,
+                attributes["change_status"],
             )
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
@@ -248,11 +249,13 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "files" in attributes:  # pragma no branch
             self._files = self._makeDictOfStringsToClassesAttribute(
-                github.GistFile.GistFile, attributes["files"]
+                github.GistFile.GistFile,
+                attributes["files"],
             )
         if "forks" in attributes:  # pragma no branch
             self._forks = self._makeListOfClassesAttribute(
-                github.Gist.Gist, attributes["forks"]
+                github.Gist.Gist,
+                attributes["forks"],
             )
         if "forks_url" in attributes:  # pragma no branch
             self._forks_url = self._makeStringAttribute(attributes["forks_url"])
@@ -262,7 +265,8 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._git_push_url = self._makeStringAttribute(attributes["git_push_url"])
         if "history" in attributes:  # pragma no branch
             self._history = self._makeListOfClassesAttribute(
-                GistHistoryState, attributes["history"]
+                GistHistoryState,
+                attributes["history"],
             )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
@@ -270,7 +274,8 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._id = self._makeStringAttribute(attributes["id"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
+                github.NamedUser.NamedUser,
+                attributes["owner"],
             )
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
@@ -280,7 +285,8 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
+                github.NamedUser.NamedUser,
+                attributes["user"],
             )
         if "version" in attributes:  # pragma no branch
             self._version = self._makeStringAttribute(attributes["version"])

@@ -74,9 +74,11 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
         if "search" in attributes:  # pragma no branch
             self._search = self._makeClassAttribute(
-                github.Rate.Rate, attributes["search"]
+                github.Rate.Rate,
+                attributes["search"],
             )
         if "graphql" in attributes:  # pragma no branch
             self._graphql = self._makeClassAttribute(
-                github.Rate.Rate, attributes["graphql"]
+                github.Rate.Rate,
+                attributes["graphql"],
             )

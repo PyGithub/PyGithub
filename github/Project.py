@@ -144,7 +144,9 @@ class Project(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", self.url, headers={"Accept": Consts.mediaTypeProjectsPreview}
+            "DELETE",
+            self.url,
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def edit(
@@ -168,10 +170,12 @@ class Project(github.GithubObject.CompletableGithubObject):
         assert body is github.GithubObject.NotSet or isinstance(body, str), body
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert organization_permission is github.GithubObject.NotSet or isinstance(
-            organization_permission, str
+            organization_permission,
+            str,
         ), organization_permission
         assert private is github.GithubObject.NotSet or isinstance(
-            private, bool
+            private,
+            bool,
         ), private
         patch_parameters = dict()
         if name is not github.GithubObject.NotSet:
@@ -215,10 +219,16 @@ class Project(github.GithubObject.CompletableGithubObject):
         post_parameters = {"name": name}
         import_header = {"Accept": Consts.mediaTypeProjectsPreview}
         headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/columns", headers=import_header, input=post_parameters
+            "POST",
+            f"{self.url}/columns",
+            headers=import_header,
+            input=post_parameters,
         )
         return github.ProjectColumn.ProjectColumn(
-            self._requester, headers, data, completed=True
+            self._requester,
+            headers,
+            data,
+            completed=True,
         )
 
     def _initAttributes(self):
@@ -245,7 +255,8 @@ class Project(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
+                github.NamedUser.NamedUser,
+                attributes["creator"],
             )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])

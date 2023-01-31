@@ -39,7 +39,8 @@ class Milestone(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(
-            self.milestone.created_at, datetime.datetime(2012, 3, 8, 12, 22, 10)
+            self.milestone.created_at,
+            datetime.datetime(2012, 3, 8, 12, 22, 10),
         )
         self.assertEqual(self.milestone.description, "")
         self.assertEqual(self.milestone.due_on, datetime.datetime(2012, 3, 13, 7, 0, 0))
@@ -54,7 +55,8 @@ class Milestone(Framework.TestCase):
         )
         self.assertEqual(self.milestone.creator.login, "jacquev6")
         self.assertEqual(
-            repr(self.milestone), 'Milestone(title="Version 0.4", number=1)'
+            repr(self.milestone),
+            'Milestone(title="Version 0.4", number=1)',
         )
 
     def testEditWithMinimalParameters(self):

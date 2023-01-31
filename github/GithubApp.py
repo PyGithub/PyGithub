@@ -157,7 +157,8 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
+                github.NamedUser.NamedUser,
+                attributes["owner"],
             )
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])

@@ -35,34 +35,37 @@ class ApplicationOAuth(Framework.TestCase):
         sample_uri = "https://myapp.com/some/path"
         sample_uri_encoded = "https%3A%2F%2Fmyapp.com%2Fsome%2Fpath"
         self.assertEqual(
-            self.app.get_login_url(), f"{BASE_URL}?client_id={self.CLIENT_ID}"
+            self.app.get_login_url(),
+            f"{BASE_URL}?client_id={self.CLIENT_ID}",
         )
         self.assertTrue(
             f"redirect_uri={sample_uri_encoded}"
-            in self.app.get_login_url(redirect_uri=sample_uri)
+            in self.app.get_login_url(redirect_uri=sample_uri),
         )
         self.assertTrue(
             f"client_id={self.CLIENT_ID}"
-            in self.app.get_login_url(redirect_uri=sample_uri)
+            in self.app.get_login_url(redirect_uri=sample_uri),
         )
         self.assertTrue(
-            "state=123abc" in self.app.get_login_url(state="123abc", login="user")
+            "state=123abc" in self.app.get_login_url(state="123abc", login="user"),
         )
         self.assertTrue(
-            "login=user" in self.app.get_login_url(state="123abc", login="user")
+            "login=user" in self.app.get_login_url(state="123abc", login="user"),
         )
         self.assertTrue(
             f"client_id={self.CLIENT_ID}"
-            in self.app.get_login_url(state="123abc", login="user")
+            in self.app.get_login_url(state="123abc", login="user"),
         )
 
     def testGetAccessToken(self):
         access_token = self.app.get_access_token(
-            "oauth_code_removed", state="state_removed"
+            "oauth_code_removed",
+            state="state_removed",
         )
         # Test string representation
         self.assertEqual(
-            str(access_token), 'AccessToken(type="bearer", token="acces...", scope="")'
+            str(access_token),
+            'AccessToken(type="bearer", token="acces...", scope="")',
         )
         self.assertEqual(access_token.token, "access_token_removed")
         self.assertEqual(access_token.scope, "")

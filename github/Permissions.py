@@ -44,7 +44,7 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
                 "pull": self._pull.value,
                 "push": self._push.value,
                 "triage": self._triage.value,
-            }
+            },
         )
 
     @property

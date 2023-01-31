@@ -182,10 +182,14 @@ class PaginatedList(Framework.TestCase):
             [4772349, 4700182, 4604661, 4554058, 4507492],
         )
         self.assertListKeyEqual(
-            self.list[10:13], lambda i: i.id, [4539985, 4507572, 4507492]
+            self.list[10:13],
+            lambda i: i.id,
+            [4539985, 4507572, 4507492],
         )
         self.assertListKeyEqual(
-            self.list[5:13:3], lambda i: i.id, [4608132, 4557803, 4507572]
+            self.list[5:13:3],
+            lambda i: i.id,
+            [4608132, 4557803, 4507572],
         )
 
     def testSliceIndexingUntilFourthPage(self):

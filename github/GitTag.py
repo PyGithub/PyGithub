@@ -102,7 +102,8 @@ class GitTag(github.GithubObject.CompletableGithubObject):
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(
-                github.GitObject.GitObject, attributes["object"]
+                github.GitObject.GitObject,
+                attributes["object"],
             )
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
@@ -110,7 +111,8 @@ class GitTag(github.GithubObject.CompletableGithubObject):
             self._tag = self._makeStringAttribute(attributes["tag"])
         if "tagger" in attributes:  # pragma no branch
             self._tagger = self._makeClassAttribute(
-                github.GitAuthor.GitAuthor, attributes["tagger"]
+                github.GitAuthor.GitAuthor,
+                attributes["tagger"],
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

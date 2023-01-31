@@ -32,7 +32,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__(
-            {"number": self._number.value, "title": self._title.value}
+            {"number": self._number.value, "title": self._title.value},
         )
 
     @property
@@ -193,7 +193,8 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
+                github.NamedUser.NamedUser,
+                attributes["author"],
             )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
@@ -211,7 +212,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "last_edited_at" in attributes:  # pragma no branch
             self._last_edited_at = self._makeDatetimeAttribute(
-                attributes["last_edited_at"]
+                attributes["last_edited_at"],
             )
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])

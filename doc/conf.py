@@ -60,7 +60,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyGithub"
-copyright = "%d, Vincent Jacques" % datetime.date.today().year
+copyright = f"{datetime.date.today().year}, Vincent Jacques"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -361,6 +361,6 @@ with open("apis.rst", "w") as apis:
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
                 apis.write(
-                    "  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n"
+                    "  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n",
                 )
         apis.write("\n")

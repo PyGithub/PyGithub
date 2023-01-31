@@ -30,11 +30,11 @@ class Organization2072(Framework.TestCase):
 
     def testCancelInvitation(self):
         self.assertFalse(
-            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
+            any([i for i in self.org.invitations() if i.email == "foo@bar.org"]),
         )
         self.org.invite_user(email="foo@bar.org")
         self.assertTrue(
-            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
+            any([i for i in self.org.invitations() if i.email == "foo@bar.org"]),
         )
         invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
         self.assertTrue(self.org.cancel_invitation(invitation))

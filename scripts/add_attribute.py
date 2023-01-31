@@ -107,7 +107,7 @@ while not added:
             newLines.append('        """')
             if isCompletable:
                 newLines.append(
-                    "        self._completeIfNotSet(self._" + attributeName + ")"
+                    "        self._completeIfNotSet(self._" + attributeName + ")",
                 )
             newLines.append("        return self._" + attributeName + ".value")
             newLines.append("")
@@ -131,7 +131,7 @@ while not added:
                 attrName = line[14:-29]
             if not line or attrName > attributeName:
                 newLines.append(
-                    "        self._" + attributeName + " = github.GithubObject.NotSet"
+                    "        self._" + attributeName + " = github.GithubObject.NotSet",
                 )
                 added = True
     newLines.append(line)
@@ -155,7 +155,7 @@ while not added:
                 newLines.append(
                     '        if "'
                     + attributeName
-                    + '" in attributes:  # pragma no branch'
+                    + '" in attributes:  # pragma no branch',
                 )
                 if attributeAssertType:
                     newLines.append(
@@ -167,10 +167,10 @@ while not added:
                         + attributeAssertType
                         + '), attributes["'
                         + attributeName
-                        + '"]'
+                        + '"]',
                     )
                 newLines.append(
-                    "            self._" + attributeName + " = " + attributeValue
+                    "            self._" + attributeName + " = " + attributeValue,
                 )
                 added = True
     newLines.append(line)

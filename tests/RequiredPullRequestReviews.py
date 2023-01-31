@@ -37,7 +37,8 @@ class RequiredPullRequestReviews(Framework.TestCase):
         self.assertTrue(self.required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(self.required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
-            self.required_pull_request_reviews.required_approving_review_count, 3
+            self.required_pull_request_reviews.required_approving_review_count,
+            3,
         )
         self.assertEqual(
             self.required_pull_request_reviews.url,

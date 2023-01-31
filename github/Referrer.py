@@ -39,7 +39,7 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
                 "referrer": self._referrer.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
-            }
+            },
         )
 
     @property
