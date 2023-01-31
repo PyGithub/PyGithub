@@ -2,6 +2,7 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
+from github.AppAuthentication import AppAuthentication
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -30,10 +31,7 @@ class Github:
         login_or_token: Optional[str] = ...,
         password: Optional[str] = ...,
         jwt: Optional[str] = ...,
-        app_id: Optional[Union[int, str]] = ...,
-        app_private_key: Optional[str] = ...,
-        app_installation_id: Optional[int] = ...,
-        app_token_permissions: Optional[Dict[str, str]] = ...,
+        app_auth: Optional[AppAuthentication] = ...,
         base_url: str = ...,
         timeout: int = ...,
         user_agent: str = ...,

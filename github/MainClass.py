@@ -83,10 +83,7 @@ class Github:
         login_or_token=None,
         password=None,
         jwt=None,
-        app_id=None,
-        app_private_key=None,
-        app_installation_id=None,
-        app_token_permissions=None,
+        app_auth=None,
         base_url=Consts.DEFAULT_BASE_URL,
         timeout=Consts.DEFAULT_TIMEOUT,
         user_agent="PyGithub/Python",
@@ -124,25 +121,12 @@ class Github:
             or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
-        assert app_id is None or isinstance(app_id, (int, str)), app_id
-        assert app_private_key is None or isinstance(
-            app_private_key, str
-        ), app_private_key
-        assert app_installation_id is None or isinstance(
-            app_installation_id, int
-        ), app_installation_id
-        assert app_token_permissions is None or isinstance(
-            app_token_permissions, dict
-        ), app_token_permissions
 
         self.__requester = Requester(
             login_or_token,
             password,
             jwt,
-            app_id,
-            app_private_key,
-            app_installation_id,
-            app_token_permissions,
+            app_auth,
             base_url,
             timeout,
             user_agent,
