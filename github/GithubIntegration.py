@@ -72,14 +72,10 @@ class GithubIntegration:
         :param url: str
         :rtype: :class:`github.Installation.Installation`
         """
-        try:
-            headers, response = self.__requester.requestJsonAndCheck(
-                "GET", url, headers=self._get_headers()
-            )
-        except UnknownObjectException:
-            raise
-        except GithubException:
-            raise
+        headers, response = self.__requester.requestJsonAndCheck(
+            "GET", url, headers=self._get_headers()
+        )
+
         return Installation(
             requester=self.__requester,
             headers=headers,
@@ -119,16 +115,11 @@ class GithubIntegration:
             )
 
         body = {"permissions": permissions}
-        try:
-            headers, response = self.__requester.requestJsonAndCheck(
-                "POST",
-                f"/app/installations/{installation_id}/access_tokens",
-                input=body,
-            )
-        except UnknownObjectException:
-            raise
-        except GithubException:
-            raise
+        headers, response = self.__requester.requestJsonAndCheck(
+            "POST",
+            f"/app/installations/{installation_id}/access_tokens",
+            input=body,
+        )
 
         return InstallationAuthorization(
             requester=self.__requester,
