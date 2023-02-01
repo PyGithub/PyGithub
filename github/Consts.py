@@ -142,4 +142,9 @@ DEFAULT_PER_PAGE = 30
 
 # JWT expiry in seconds. Could be set for max 600 seconds (10 minutes).
 # https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
-JWT_EXPIRY = 60
+DEFAULT_JWT_EXPIRY = 300
+MIN_JWT_EXPIRY = 15
+MAX_JWT_EXPIRY = 600
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
+# "The time the JWT was created. To protect against clock drift, we recommend you set this 60 seconds in the past."
+DEFAULT_JWT_ISSUED_AT = -60

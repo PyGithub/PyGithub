@@ -57,7 +57,7 @@ class GithubIntegration(Framework.BasicTestCase):
             options={"verify_exp": False},
         )
         self.assertDictEqual(
-            payload, {"iat": 1550055331, "exp": 1550055391, "iss": APP_ID}
+            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
         )
         sys.modules["time"].time = self.origin_time
 

@@ -54,7 +54,7 @@ class Authentication(Framework.BasicTestCase):
 
     def testAppAuthentication(self):
         g = github.Github(
-            app_auth=github.AppAuthentication.AppAuthentication(
+            app_auth=github.AppAuthentication(
                 app_id=self.app_id,
                 private_key=self.app_private_key,
                 installation_id=29782936,

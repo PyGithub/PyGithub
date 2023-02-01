@@ -4,7 +4,7 @@ import deprecated
 import jwt
 
 from github import Consts
-from github.GithubException import GithubException, UnknownObjectException
+from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
@@ -21,24 +21,31 @@ class GithubIntegration:
         integration_id,
         private_key,
         base_url=Consts.DEFAULT_BASE_URL,
-        jwt_expiry=Consts.JWT_EXPIRY,
+        jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
+        jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
     ):
         """
         :param integration_id: int
         :param private_key: string
         :param base_url: string
-        :param jwt_expiry: int
+        :param jwt_expiry: int. Expiry of the JWT used to get the information about this integration.
+          The default expiration is in 5 minutes and is capped at 10 minutes according to GitHub documentation
+          https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
+        :param jwt_issued_at: int. Number of seconds, relative to now, to set for the "iat" (issued at) parameter.
+          The default value is -60 to protect against clock drift
         """
         assert isinstance(integration_id, (int, str)), integration_id
-        assert isinstance(private_key, str), private_key
+        assert isinstance(private_key, str), "supplied private key should be a string"
         assert isinstance(base_url, str), base_url
         assert isinstance(jwt_expiry, int), jwt_expiry
-        assert 15 <= jwt_expiry <= 600, jwt_expiry
+        assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
+        assert isinstance(jwt_issued_at, int)
 
         self.base_url = base_url
         self.integration_id = integration_id
         self.private_key = private_key
         self.jwt_expiry = jwt_expiry
+        self.jwt_issued_at = jwt_issued_at
         self.__requester = Requester(
             login_or_token=None,
             password=None,
@@ -85,13 +92,17 @@ class GithubIntegration:
 
     def create_jwt(self):
         """
-        Creates a signed JWT, valid for 60 seconds by default. Could be set to a maximum of 600 seconds.
+        Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
 
         :return string:
         """
         now = int(time.time())
-        payload = {"iat": now, "exp": now + self.jwt_expiry, "iss": self.integration_id}
+        payload = {
+            "iat": now + self.jwt_issued_at,
+            "exp": now + self.jwt_expiry,
+            "iss": self.integration_id,
+        }
         encrypted = jwt.encode(payload, key=self.private_key, algorithm="RS256")
 
         if isinstance(encrypted, bytes):
