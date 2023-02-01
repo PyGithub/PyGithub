@@ -29,6 +29,10 @@ class AppAuthentication:
         installation_id,
         token_permissions=None,
     ):
+        assert isinstance(app_id, (int, str)), app_id
+        assert isinstance(private_key, str)
+        assert isinstance(installation_id, int), installation_id
+        assert isinstance(token_permissions, int), token_permissions
         self.app_id = app_id
         self.private_key = private_key
         self.installation_id = installation_id
