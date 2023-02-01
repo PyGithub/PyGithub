@@ -393,7 +393,6 @@ class Requester:
 
     def _refresh_token(self) -> None:
         """In the context of a GitHub app, refresh the access token"""
-        assert self.__app_auth is not None
         self.__installation_authorization = self._get_installation_authorization()
         self.__authorizationHeader = f"token {self.__installation_authorization.token}"
 
