@@ -30,11 +30,18 @@
 import os.path
 import sys
 
+attributeClassType = ""
+attributeListType = ""
+
 className, attributeName, attributeType = sys.argv[1:4]
 if len(sys.argv) > 4:
-    attributeClassType = sys.argv[4]
-else:
-    attributeClassType = ""
+    if attributeType == "class":
+        attributeClassType = sys.argv[4]
+    elif attributeType == "list":
+        attributeListType = sys.argv[4]
+        attributeClassType = sys.argv[5]
+    else:
+        raise ValueError(f'attribute type {attributeType} does not require a fourth argument')
 
 
 types = {
@@ -69,7 +76,22 @@ types = {
     ),
 }
 
-attributeDocType, attributeAssertType, attributeValue = types[attributeType]
+listTypes = {
+    "class": (
+        "list of :class:`" + attributeClassType + "`",
+        None,
+        "self._makeListOfClassesAttribute("
+        + attributeClassType
+        + ', attributes["'
+        + attributeName
+        + '"])',
+    ),
+}
+
+if attributeType == "list":
+    attributeDocType, attributeAssertType, attributeValue = listTypes[attributeListType]
+else:
+    attributeDocType, attributeAssertType, attributeValue = types[attributeType]
 
 
 fileName = os.path.join("github", className + ".py")
