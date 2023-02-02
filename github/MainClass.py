@@ -96,10 +96,7 @@ class Github:
         :param login_or_token: string
         :param password: string
         :param jwt: string
-        :param app_id: int or string
-        :param app_private_key: string
-        :param app_installation_id: int
-        :param app_token_permissions: dict
+        :param app_auth: github.AppAuthentication
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
