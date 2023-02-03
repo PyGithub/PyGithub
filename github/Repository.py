@@ -160,6 +160,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"full_name": self._full_name.value})
 
     @property
+    def allow_forking(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_forking)
+        return self._allow_forking.value
+
+    @property
     def allow_merge_commit(self):
         """
         :type: bool
@@ -1589,6 +1597,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         has_wiki=github.GithubObject.NotSet,
         has_downloads=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
+        allow_forking=github.GithubObject.NotSet,
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
@@ -1640,6 +1649,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert default_branch is github.GithubObject.NotSet or isinstance(
             default_branch, str
         ), default_branch
+        assert allow_forking is github.GithubObject.NotSet or isinstance(
+            allow_forking, bool
+        ), allow_forking
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(
             allow_squash_merge, bool
         ), allow_squash_merge
@@ -1676,6 +1688,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["default_branch"] = default_branch
         if allow_squash_merge is not github.GithubObject.NotSet:
             post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_forking is not github.GithubObject.NotSet:
+            post_parameters["allow_forking"] = allow_forking
         if allow_merge_commit is not github.GithubObject.NotSet:
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
@@ -3824,6 +3838,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
+        self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
@@ -3910,6 +3925,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "allow_forking" in attributes:  # pragma no branch
+            self._allow_forking = self._makeBoolAttribute(attributes["allow_forking"])
         if "allow_merge_commit" in attributes:  # pragma no branch
             self._allow_merge_commit = self._makeBoolAttribute(
                 attributes["allow_merge_commit"]
