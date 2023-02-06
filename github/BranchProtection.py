@@ -90,6 +90,38 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
+    @property
+    def required_linear_history(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._required_linear_history)
+        return self._required_linear_history.value
+
+    @property
+    def allow_force_pushes(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_force_pushes)
+        return self._allow_force_pushes.value
+
+    @property
+    def allow_deletions(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_deletions)
+        return self._allow_deletions.value
+    
+    @property
+    def required_conversation_resolution(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._required_conversation_resolution)
+        return self._required_conversation_resolution.value
+
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
@@ -97,6 +129,10 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._required_pull_request_reviews = github.GithubObject.NotSet
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
+        self._required_linear_history = github.GithubObject.NotSet
+        self._allow_force_pushes = github.GithubObject.NotSet
+        self._allow_deletions = github.GithubObject.NotSet
+        self._required_conversation_resolution = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "url" in attributes:  # pragma no branch
@@ -118,3 +154,19 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
+        if "required_linear_history" in attributes: # pragma no branch
+            self._required_linear_history = self._makeBoolAttribute(
+                attributes["required_linear_history"]["enabled"]
+            )
+        if "allow_force_pushes" in attributes: # pragma no branch
+            self._allow_force_pushes = self._makeBoolAttribute(
+                attributes["allow_force_pushes"]["enabled"]
+            )
+        if "allow_deletions" in attributes: # pragma no branch
+            self._allow_deletions = self._makeBoolAttribute(
+                attributes["allow_deletions"]["enabled"]
+            )
+        if "required_conversation_resolution" in attributes: # pragma no branch
+            self._required_conversation_resolution = self._makeBoolAttribute(
+                attributes["required_conversation_resolution"]["enabled"]
+            )

@@ -49,6 +49,7 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import github.AuditLog
 
 from . import Consts
 
@@ -846,6 +847,15 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Event.Event, self._requester, f"{self.url}/events", None
+        )
+
+    def get_audit_log(self):
+        """
+        :calls: `GET /orgs/{org}/audit-log <https://docs.github.com/en/rest/orgs/orgs#get-the-audit-log-for-an-organization>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.AuditLog.AuditLog`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.AuditLog.AuditLog, self._requester, f"{self.url}/audit-log", None
         )
 
     def get_hook(self, id):

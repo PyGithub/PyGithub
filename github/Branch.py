@@ -121,6 +121,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_approving_review_count=github.GithubObject.NotSet,
         user_push_restrictions=github.GithubObject.NotSet,
         team_push_restrictions=github.GithubObject.NotSet,
+        required_linear_history=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -134,6 +135,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_approving_review_count: int
         :user_push_restrictions: list of strings
         :team_push_restrictions: list of strings
+        :required_linear_history: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -162,6 +164,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             required_approving_review_count is github.GithubObject.NotSet
             or isinstance(required_approving_review_count, int)
         ), (required_approving_review_count)
+        assert required_linear_history is github.GithubObject.NotSet or isinstance(
+            required_linear_history, bool
+        ), (required_linear_history)
 
         post_parameters = {}
         if (
@@ -235,6 +240,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             }
         else:
             post_parameters["restrictions"] = None
+        
+        if required_linear_history is not github.GithubObject.NotSet:
+            post_parameters["required_linear_history"] = required_linear_history
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
