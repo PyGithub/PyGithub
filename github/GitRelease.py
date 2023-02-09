@@ -105,14 +105,6 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._prerelease)
         return self._prerelease.value
-    
-    @property
-    def generate_release_notes(self):
-        """
-        :type: bool
-        """
-        self._completeIfNotSet(self._generate_release_notes)
-        return self._generate_release_notes.value
 
     @property
     def author(self):
