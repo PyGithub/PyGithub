@@ -182,7 +182,7 @@ class Repository(CompletableGithubObject):
         tagger: Union[InputGitAuthor, _NotSetType] = ...,
         draft: bool = ...,
         prerelease: bool = ...,
-        generate_release_notes: bool = ...
+        generate_release_notes: bool = ...,
     ) -> GitRelease: ...
     def create_git_tree(
         self,

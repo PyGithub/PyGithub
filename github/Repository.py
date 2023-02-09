@@ -1053,7 +1053,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         tagger=github.GithubObject.NotSet,
         draft=False,
         prerelease=False,
-        generate_release_notes=False
+        generate_release_notes=False,
     ):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and

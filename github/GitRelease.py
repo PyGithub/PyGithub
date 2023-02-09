@@ -362,7 +362,9 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "generate_release_notes" in attributes:
-            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
+            self._generate_release_notes = self._makeBoolAttribute(
+                attributes["generate_release_notes"]
+            )
         if "author" in attributes:
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]
