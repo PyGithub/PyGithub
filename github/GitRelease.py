@@ -105,6 +105,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._prerelease)
         return self._prerelease.value
+    
+    @property
+    def generate_release_notes(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._generate_release_notes)
+        return self._generate_release_notes.value
 
     @property
     def author(self):
@@ -333,6 +341,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._target_commitish = github.GithubObject.NotSet
         self._draft = github.GithubObject.NotSet
         self._prerelease = github.GithubObject.NotSet
+        self._generate_release_notes = github.GithubObject.NotSet
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
@@ -360,6 +369,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._draft = self._makeBoolAttribute(attributes["draft"])
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
+        if "generate_release_notes" in attributes:
+            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
         if "author" in attributes:
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]
