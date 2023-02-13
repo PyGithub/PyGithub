@@ -1582,7 +1582,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
-        :param archived: bool. Unarchiving repositories is currently not supported through API (https://docs.github.com/en/rest/reference/repos#update-a-repository)
+        :param archived: bool
         :rtype: None
         """
         if name is None:
@@ -1627,8 +1627,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
-        assert archived is github.GithubObject.NotSet or (
-            isinstance(archived, bool) and archived is True
+        assert archived is github.GithubObject.NotSet or isinstance(
+            archived, bool
         ), archived
         post_parameters = {
             "name": name,
