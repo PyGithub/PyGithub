@@ -102,6 +102,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
+        self._required_linear_history = github.GithubObject.NotSet
         self._required_pull_request_reviews = github.GithubObject.NotSet
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
