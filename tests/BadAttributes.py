@@ -26,8 +26,9 @@
 
 import datetime
 
-import github
+from dateutil.parser import ParserError
 
+import github
 from . import Framework
 
 
@@ -55,11 +56,11 @@ class BadAttributes(Framework.TestCase):
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, str)
         self.assertEqual(
-            raisedexp.exception.transformation_exception.__class__, ValueError
+            raisedexp.exception.transformation_exception.__class__, ParserError
         )
         self.assertEqual(
             raisedexp.exception.transformation_exception.args,
-            ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",),
+            ("Unknown string format: %s", "foobar"),
         )
 
     def testBadTransformedAttribute(self):
