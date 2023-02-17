@@ -34,28 +34,57 @@ class GithubObject(unittest.TestCase):
     def testMakeDatetimeAttribute(self):
         for value, expected in [
             (None, None),
-
-            ("2021-01-23T12:34:56Z", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc)),
-            ("2021-01-23T12:34:56.000Z", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc)),
-            ("2021-01-23T12:34:56.000Z", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc)),
-
-            ("2021-01-23T12:34:56+00:00", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc)),
-            ("2021-01-23T12:34:56+01:00", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=1)))),
-            ("2021-01-23T12:34:56-06:30", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=-6, minutes=-30)))),
-
-            ("2021-01-23T12:34:56.000+00:00", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc)),
-            ("2021-01-23T12:34:56.000+01:00", datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=1)))),
-            ("2021-01-23T12:34:56.000-06:00", datetime(2021, 1, 23, 12, 34, 56, tzinfo=tzoffset(None, -21600)))
+            (
+                "2021-01-23T12:34:56Z",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
+            ),
+            (
+                "2021-01-23T12:34:56.000Z",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
+            ),
+            (
+                "2021-01-23T12:34:56.000Z",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
+            ),
+            (
+                "2021-01-23T12:34:56+00:00",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
+            ),
+            (
+                "2021-01-23T12:34:56+01:00",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=1))),
+            ),
+            (
+                "2021-01-23T12:34:56-06:30",
+                datetime(
+                    2021,
+                    1,
+                    23,
+                    12,
+                    34,
+                    56,
+                    tzinfo=timezone(timedelta(hours=-6, minutes=-30)),
+                ),
+            ),
+            (
+                "2021-01-23T12:34:56.000+00:00",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
+            ),
+            (
+                "2021-01-23T12:34:56.000+01:00",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=1))),
+            ),
+            (
+                "2021-01-23T12:34:56.000-06:00",
+                datetime(2021, 1, 23, 12, 34, 56, tzinfo=tzoffset(None, -21600)),
+            ),
         ]:
             actual = gho.GithubObject._makeDatetimeAttribute(value)
             self.assertEqual(gho._ValuedAttribute, type(actual), value)
             self.assertEqual(expected, actual.value, value)
 
     def testMakeDatetimeAttributeBadValues(self):
-        for value in [
-            "not a timestamp",
-            1234
-        ]:
+        for value in ["not a timestamp", 1234]:
             actual = gho.GithubObject._makeDatetimeAttribute(value)
 
             self.assertEqual(gho._BadAttribute, type(actual))
@@ -75,13 +104,12 @@ class GithubObject(unittest.TestCase):
 
         actual = gho.GithubObject._makeTimestampAttribute(1611405296)
         self.assertEqual(gho._ValuedAttribute, type(actual))
-        self.assertEqual(datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc), actual.value)
+        self.assertEqual(
+            datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc), actual.value
+        )
 
     def testMakeTimetsampAttributeBadValues(self):
-        for value in [
-            "1611405296",
-            1234.567
-        ]:
+        for value in ["1611405296", 1234.567]:
             actual = gho.GithubObject._makeTimestampAttribute(value)
 
             self.assertEqual(gho._BadAttribute, type(actual))

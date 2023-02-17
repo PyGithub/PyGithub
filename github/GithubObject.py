@@ -31,8 +31,9 @@
 ################################################################################
 
 import datetime
-from dateutil import parser
 from operator import itemgetter
+
+from dateutil import parser
 
 from . import Consts, GithubException
 

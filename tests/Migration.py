@@ -50,6 +50,7 @@ import datetime
 from dateutil.tz.tz import tzoffset
 
 import github
+
 from . import Framework
 
 
@@ -73,9 +74,7 @@ class Migration(Framework.TestCase):
         )
         self.assertEqual(
             self.migration.created_at,
-            datetime.datetime(
-                2018, 9, 14, 1, 35, 35, tzinfo=tzoffset(None, 19800)
-            ),
+            datetime.datetime(2018, 9, 14, 1, 35, 35, tzinfo=tzoffset(None, 19800)),
         )
         self.assertEqual(
             self.migration.updated_at,
