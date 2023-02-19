@@ -37,7 +37,7 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 from importlib.metadata import version  # noqa: E402, isort:skip
 
-setupVersion = version("PyGithub")
+setupVersion = version("github")
 
 # -- General configuration -----------------------------------------------------
 
