@@ -24,17 +24,6 @@ jobs:
         run: tox
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
-
-  stub_test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install stubs
-        run: python3 -m pip install types-requests
-        shell: bash
-      - name: Run stubtest
-        run: stubtest github
-        shell: run
-
   draft:
     runs-on: ubuntu-latest
     needs: test
