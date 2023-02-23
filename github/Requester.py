@@ -312,6 +312,7 @@ class Requester:
 
         self.__installation_authorization = None
         self.__app_auth = app_auth
+        self.__base_url = base_url
 
         self.__auth_lock = RLock()
 
@@ -333,7 +334,6 @@ class Requester:
         else:
             self.__authorizationHeader = None
 
-        self.__base_url = base_url
         o = urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
@@ -375,7 +375,9 @@ class Requester:
     def _get_installation_authorization(self):
         assert self.__app_auth is not None
         integration = GithubIntegration.GithubIntegration(
-            self.__app_auth.app_id, self.__app_auth.private_key
+            self.__app_auth.app_id,
+            self.__app_auth.private_key,
+            base_url=self.__base_url,
         )
         return integration.get_access_token(
             self.__app_auth.installation_id,
