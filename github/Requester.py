@@ -314,7 +314,8 @@ class Requester:
         self.__app_auth = app_auth
         self.__base_url = base_url
 
-        self.__auth_lock = RLock()
+        if self.__app_auth is not None:
+            self.__auth_lock = RLock()
 
         if password is not None:
             login = login_or_token
