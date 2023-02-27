@@ -314,7 +314,7 @@ class Requester:
         self.__app_auth = app_auth
         self.__base_url = base_url
 
-        self.__auth_lock = RLock()
+        self.__init_auth_lock()
 
         if password is not None:
             login = login_or_token
@@ -361,6 +361,19 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+
+    def __init_auth_lock(self):
+        self.__auth_lock = RLock()
+
+    def __getstate__(self):
+        # do not serialize the lock
+        state = self.__dict__.copy()
+        del state['_Requester__auth_lock']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.__init_auth_lock()
 
     def _must_refresh_token(self) -> bool:
         """Check if it is time to refresh the API token gotten from the GitHub app installation"""

@@ -260,6 +260,7 @@ class ReplayingHttpsConnection(ReplayingConnection):
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
+    appAuthMode = False
     jwtAuthMode = False
     retry = None
     pool_size = None
@@ -285,6 +286,7 @@ class BasicTestCase(unittest.TestCase):
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
+            self.app_auth = GithubCredentials.app_auth
             self.jwt = GithubCredentials.jwt
             self.app_id = GithubCredentials.app_id
             self.app_private_key = GithubCredentials.app_private_key
