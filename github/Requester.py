@@ -368,7 +368,7 @@ class Requester:
     def __getstate__(self):
         # do not serialize the lock
         state = self.__dict__.copy()
-        del state['_Requester__auth_lock']
+        del state["_Requester__auth_lock"]
         return state
 
     def __setstate__(self, state):
