@@ -99,7 +99,9 @@ class GithubIntegration:
         """
         if expiration is not None:
             assert isinstance(expiration, int), expiration
-            assert Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY, expiration
+            assert (
+                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
+            ), expiration
 
         now = int(time.time())
         payload = {

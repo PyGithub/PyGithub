@@ -65,7 +65,10 @@ class GithubIntegration(Framework.BasicTestCase):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
         github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30
+            integration_id=APP_ID,
+            private_key=PRIVATE_KEY,
+            jwt_expiry=120,
+            jwt_issued_at=-30,
         )
         token = github_integration.create_jwt(60)
         payload = jwt.decode(
