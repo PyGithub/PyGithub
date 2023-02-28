@@ -45,6 +45,8 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.path, ".github/workflows/ci.yml")
         self.assertEqual(self.workflow_run.display_title, "TEST PR")
         self.assertEqual(self.workflow_run.run_number, 930)
+        self.assertEqual(self.workflow_run.run_attempt, 1)
+        self.assertEqual(self.workflow_run.run_started_at, "2023-01-10T08:24:19Z")
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
         self.assertEqual(self.workflow_run.conclusion, "success")
