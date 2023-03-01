@@ -104,6 +104,7 @@ if __name__ == "__main__":
         python_requires=">=3.7",
         install_requires=[
             "deprecated",
+            "jwt",
             "pyjwt>=2.4.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
