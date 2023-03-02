@@ -51,6 +51,7 @@
 ################################################################################
 
 import base64
+import datetime
 import json
 import logging
 import mimetypes
@@ -59,10 +60,14 @@ import re
 import time
 import urllib
 from io import IOBase
+from multiprocessing import RLock
 
 import requests
 
-from . import Consts, GithubException
+from . import Consts, GithubException, GithubIntegration
+
+# For App authentication, time remaining before token expiration to request a new one
+ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 
 class manualAuthHandler(requests.auth.AuthBase):
     def __init__(self, auth_header_data):
@@ -302,6 +307,7 @@ class Requester:
         login_or_token,
         password,
         jwt,
+        app_auth,
         base_url,
         timeout,
         user_agent,
@@ -311,6 +317,12 @@ class Requester:
         pool_size,
     ):
         self._initializeDebugFeature()
+
+        self.__installation_authorization = None
+        self.__app_auth = app_auth
+        self.__base_url = base_url
+
+        self.__auth_lock = RLock()
 
         if password is not None:
             login = login_or_token
@@ -325,10 +337,11 @@ class Requester:
             self.__authorizationHeader = f"token {token}"
         elif jwt is not None:
             self.__authorizationHeader = f"Bearer {jwt}"
+        elif self.__app_auth is not None:
+            self._refresh_token()
         else:
             self.__authorizationHeader = None
 
-        self.__base_url = base_url
         o = urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
@@ -356,6 +369,42 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+
+    def _must_refresh_token(self) -> bool:
+        """Check if it is time to refresh the API token gotten from the GitHub app installation"""
+        if not self.__installation_authorization:
+            return False
+        return (
+            self.__installation_authorization.expires_at
+            < datetime.datetime.utcnow()
+            + datetime.timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS)
+        )
+
+    def _get_installation_authorization(self):
+        assert self.__app_auth is not None
+        integration = GithubIntegration.GithubIntegration(
+            self.__app_auth.app_id,
+            self.__app_auth.private_key,
+            base_url=self.__base_url,
+        )
+        return integration.get_access_token(
+            self.__app_auth.installation_id,
+            permissions=self.__app_auth.token_permissions,
+        )
+
+    def _refresh_token_if_needed(self) -> None:
+        """Get a new access token from the GitHub app installation if the one we have is about to expire"""
+        if not self.__installation_authorization:
+            return
+        with self.__auth_lock:
+            if self._must_refresh_token():
+                logging.debug("Refreshing access token")
+                self._refresh_token()
+
+    def _refresh_token(self) -> None:
+        """In the context of a GitHub app, refresh the access token"""
+        self.__installation_authorization = self._get_installation_authorization()
+        self.__authorizationHeader = f"token {self.__installation_authorization.token}"
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -586,6 +635,7 @@ class Requester:
         return status, responseHeaders, output
 
     def __authenticate(self, url, requestHeaders, parameters):
+        self._refresh_token_if_needed()
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
 
