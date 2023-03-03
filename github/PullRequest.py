@@ -419,7 +419,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(body, str), body
-        assert isinstance(commit, github.Commit.Commit), commit_id
+        assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
         assert isinstance(position, int), position
         post_parameters = {
