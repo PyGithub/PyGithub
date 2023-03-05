@@ -44,13 +44,11 @@ import textwrap
 
 import setuptools
 
-version = "1.57"
-
-
 if __name__ == "__main__":
     setuptools.setup(
         name="PyGithub",
-        version=version,
+        use_scm_version=True,
+        setup_requires=["setuptools_scm"],
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
