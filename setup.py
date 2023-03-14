@@ -108,6 +108,6 @@ if __name__ == "__main__":
             "pynacl>=1.4.0",
             "requests>=2.14.0",
         ],
-        extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=1.0.3"],
+        extras_require={"integrations": []},
+        tests_require=["httpretty>=1.0.3"],
     )
