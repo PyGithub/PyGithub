@@ -21,6 +21,7 @@ class GithubIntegration:
         integration_id,
         private_key,
         base_url=Consts.DEFAULT_BASE_URL,
+        verify=True,
         jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
     ):
@@ -55,7 +56,7 @@ class GithubIntegration:
             timeout=Consts.DEFAULT_TIMEOUT,
             user_agent="PyGithub/Python",
             per_page=Consts.DEFAULT_PER_PAGE,
-            verify=True,
+            verify=verify,
             retry=None,
             pool_size=None,
         )
