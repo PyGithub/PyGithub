@@ -312,6 +312,7 @@ class Requester:
         self.__installation_authorization = None
         self.__app_auth = app_auth
         self.__base_url = base_url
+        self.__verify = verify
 
         if password is not None:
             login = login_or_token
@@ -357,7 +358,6 @@ class Requester:
             "See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required"
         )
         self.__userAgent = user_agent
-        self.__verify = verify
 
     def _must_refresh_token(self) -> bool:
         """Check if it is time to refresh the API token gotten from the GitHub app installation"""
@@ -375,6 +375,7 @@ class Requester:
             self.__app_auth.app_id,
             self.__app_auth.private_key,
             base_url=self.__base_url,
+            verify=self.__verify
         )
         return integration.get_access_token(
             self.__app_auth.installation_id,
