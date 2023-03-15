@@ -375,7 +375,7 @@ class Requester:
             self.__app_auth.app_id,
             self.__app_auth.private_key,
             base_url=self.__base_url,
-            verify=self.__verify
+            verify=self.__verify,
         )
         return integration.get_access_token(
             self.__app_auth.installation_id,
