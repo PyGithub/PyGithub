@@ -29,35 +29,35 @@ class WorkflowJob(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
-        self.job = self.repo.get_workflow_run(826874646).jobs()[0]
+        self.job = self.repo.get_workflow_run(4205440316).jobs()[0]
 
     def testAttributes(self):
-        self.assertEqual(self.job.id, 2542493927)
-        self.assertEqual(self.job.run_id, 826874646)
+        self.assertEqual(self.job.id, 11421878319)
+        self.assertEqual(self.job.run_id, 4205440316)
         self.assertEqual(
             self.job.run_url,
-            "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/826874646",
+            "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/4205440316",
         )
-        self.assertEqual(self.job.node_id, "MDg6Q2hlY2tSdW4yNTQyNDkzOTI3")
-        self.assertEqual(self.job.head_sha, "59d8f95751de5e7cc107a043d8aac99da5445d45")
+        self.assertEqual(self.job.node_id, "CR_kwDOGpsAJ88AAAACqMwILw")
+        self.assertEqual(self.job.head_sha, "06ec040b2eeef6c0316dd5abcda0608525a3f205")
         self.assertEqual(
             self.job.url,
-            "https://api.github.com/repos/PyGithub/PyGithub/actions/jobs/2542493927",
+            "https://api.github.com/repos/PyGithub/PyGithub/actions/jobs/11421878319",
         )
         self.assertEqual(
             self.job.html_url,
-            "https://github.com/PyGithub/PyGithub/actions/runs/826874646/jobs/791692136",
+            "https://github.com/PyGithub/PyGithub/actions/runs/4205440316/jobs/7297536068",
         )
         self.assertEqual(self.job.status, "completed")
         self.assertEqual(self.job.conclusion, "success")
-        started_at = datetime.datetime(2021, 5, 10, 5, 23, 10)
+        started_at = datetime.datetime(2023, 2, 17, 16, 3, 46)
         self.assertEqual(self.job.started_at, started_at)
-        completed_at = datetime.datetime(2021, 5, 10, 5, 25, 27)
+        completed_at = datetime.datetime(2023, 2, 17, 16, 4, 52)
         self.assertEqual(self.job.completed_at, completed_at)
-        self.assertEqual(self.job.name, "test (Python 3.6)")
+        self.assertEqual(self.job.name, "test (Python 3.7)")
         self.assertEqual(
             self.job.check_run_url,
-            "https://api.github.com/repos/PyGithub/PyGithub/check-runs/2542493927",
+            "https://api.github.com/repos/PyGithub/PyGithub/check-runs/11421878319",
         )
         self.assertListKeyEqual(
             self.job.steps,
@@ -69,7 +69,12 @@ class WorkflowJob(Framework.TestCase):
                 "Install tox",
                 "Run tests",
                 "Upload coverage to Codecov",
+                "Post Set up Python",
                 "Post Run actions/checkout@v2",
                 "Complete job",
             ],
+        )
+        self.assertEqual(
+            self.job.logs_url(),
+            "https://pipelines.actions.githubusercontent.com/serviceHosts/d560a817-28d4-4544-a539-eb35c2a56899/_apis/pipelines/1/runs/5/signedlogcontent/5?urlExpires=2023-03-15T17%3A02%3A58.1305046Z&urlSigningMethod=HMACV1&urlSignature=abcdefghijklmn",
         )
