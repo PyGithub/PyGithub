@@ -18,7 +18,7 @@ class GithubIntegration:
         integration_id: Union[int, str],
         private_key: str,
         base_url: str = ...,
-        verify: Union[bool, str] = ...
+        verify: Union[bool, str] = ...,
         jwt_expiry: int = ...,
         jwt_issued_at: int = ...,
     ) -> None: ...
