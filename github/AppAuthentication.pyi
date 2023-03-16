@@ -1,4 +1,6 @@
 from typing import Optional, Dict, Union
+from github.Requester import Requester
+
 
 class AppAuthentication:
     def __init__(
@@ -8,3 +10,5 @@ class AppAuthentication:
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = ...,
     ): ...
+
+    def get_access_token(self, requester: Requester, permissions: dict = ...): ...

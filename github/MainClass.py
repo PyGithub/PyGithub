@@ -133,6 +133,9 @@ class Github:
             pool_size,
         )
 
+    def get_integration(self, integration_id, private_key):
+        return GithubIntegration(integration_id, private_key, self.__requester)
+
     @property
     def FIX_REPO_GET_GIT_REF(self):
         """
