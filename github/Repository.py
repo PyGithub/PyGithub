@@ -964,12 +964,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def create_git_commit(
-            self,
-            message,
-            tree,
-            parents,
-            author=github.GithubObject.NotSet,
-            committer=github.GithubObject.NotSet,
+        self,
+        message,
+        tree,
+        parents,
+        author=github.GithubObject.NotSet,
+        committer=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/git/commits <https://docs.github.com/en/rest/reference/git#commits>`_
@@ -1026,16 +1026,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
     def create_git_tag_and_release(
-            self,
-            tag,
-            tag_message,
-            release_name,
-            release_message,
-            object,
-            type,
-            tagger=github.GithubObject.NotSet,
-            draft=False,
-            prerelease=False,
+        self,
+        tag,
+        tag_message,
+        release_name,
+        release_message,
+        object,
+        type,
+        tagger=github.GithubObject.NotSet,
+        draft=False,
+        prerelease=False,
     ):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
@@ -1062,13 +1062,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_git_release(
-            self,
-            tag,
-            name,
-            message,
-            draft=False,
-            prerelease=False,
-            target_commitish=github.GithubObject.NotSet,
+        self,
+        tag,
+        name,
+        message,
+        draft=False,
+        prerelease=False,
+        target_commitish=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
@@ -1106,7 +1106,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         elif isinstance(target_commitish, github.Branch.Branch):
             post_parameters["target_commitish"] = target_commitish.name
         elif isinstance(
-                target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)
+            target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)
         ):
             post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck(
@@ -1117,7 +1117,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_git_tag(
-            self, tag, message, object, type, tagger=github.GithubObject.NotSet
+        self, tag, message, object, type, tagger=github.GithubObject.NotSet
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/git/tags <https://docs.github.com/en/rest/reference/git#tags>`_
@@ -1172,11 +1172,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
     def create_hook(
-            self,
-            name,
-            config,
-            events=github.GithubObject.NotSet,
-            active=github.GithubObject.NotSet,
+        self,
+        name,
+        config,
+        events=github.GithubObject.NotSet,
+        active=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/hooks <https://docs.github.com/en/rest/reference/repos#webhooks>`_
@@ -1206,13 +1206,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def create_issue(
-            self,
-            title,
-            body=github.GithubObject.NotSet,
-            assignee=github.GithubObject.NotSet,
-            milestone=github.GithubObject.NotSet,
-            labels=github.GithubObject.NotSet,
-            assignees=github.GithubObject.NotSet,
+        self,
+        title,
+        body=github.GithubObject.NotSet,
+        assignee=github.GithubObject.NotSet,
+        milestone=github.GithubObject.NotSet,
+        labels=github.GithubObject.NotSet,
+        assignees=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -1227,9 +1227,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(title, str), title
         assert body is github.GithubObject.NotSet or isinstance(body, str), body
         assert (
-                assignee is github.GithubObject.NotSet
-                or isinstance(assignee, github.NamedUser.NamedUser)
-                or isinstance(assignee, str)
+            assignee is github.GithubObject.NotSet
+            or isinstance(assignee, github.NamedUser.NamedUser)
+            or isinstance(assignee, str)
         ), assignee
         assert assignees is github.GithubObject.NotSet or all(
             isinstance(element, github.NamedUser.NamedUser) or isinstance(element, str)
@@ -1323,11 +1323,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Label.Label(self._requester, headers, data, completed=True)
 
     def create_milestone(
-            self,
-            title,
-            state=github.GithubObject.NotSet,
-            description=github.GithubObject.NotSet,
-            due_on=github.GithubObject.NotSet,
+        self,
+        title,
+        state=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+        due_on=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
@@ -1402,13 +1402,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return self.__create_pull_2(*args, **kwds)
 
     def __create_pull_1(
-            self,
-            title,
-            body,
-            base,
-            head,
-            maintainer_can_modify=github.GithubObject.NotSet,
-            draft=False,
+        self,
+        title,
+        body,
+        base,
+        head,
+        maintainer_can_modify=github.GithubObject.NotSet,
+        draft=False,
     ):
         assert isinstance(title, str), title
         assert isinstance(body, str), body
@@ -1449,7 +1449,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_repository_dispatch(
-            self, event_type, client_payload=github.GithubObject.NotSet
+        self, event_type, client_payload=github.GithubObject.NotSet
     ):
         """
         :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event>
@@ -1502,11 +1502,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return status == 204
 
     def create_source_import(
-            self,
-            vcs,
-            vcs_url,
-            vcs_username=github.GithubObject.NotSet,
-            vcs_password=github.GithubObject.NotSet,
+        self,
+        vcs,
+        vcs_url,
+        vcs_username=github.GithubObject.NotSet,
+        vcs_password=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/import <https://docs.github.com/en/rest/reference/migrations#start-an-import>`_
@@ -1550,22 +1550,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
-            self,
-            name=None,
-            description=github.GithubObject.NotSet,
-            homepage=github.GithubObject.NotSet,
-            private=github.GithubObject.NotSet,
-            has_issues=github.GithubObject.NotSet,
-            has_projects=github.GithubObject.NotSet,
-            has_wiki=github.GithubObject.NotSet,
-            has_downloads=github.GithubObject.NotSet,
-            default_branch=github.GithubObject.NotSet,
-            allow_forking=github.GithubObject.NotSet,
-            allow_squash_merge=github.GithubObject.NotSet,
-            allow_merge_commit=github.GithubObject.NotSet,
-            allow_rebase_merge=github.GithubObject.NotSet,
-            delete_branch_on_merge=github.GithubObject.NotSet,
-            archived=github.GithubObject.NotSet,
+        self,
+        name=None,
+        description=github.GithubObject.NotSet,
+        homepage=github.GithubObject.NotSet,
+        private=github.GithubObject.NotSet,
+        has_issues=github.GithubObject.NotSet,
+        has_projects=github.GithubObject.NotSet,
+        has_wiki=github.GithubObject.NotSet,
+        has_downloads=github.GithubObject.NotSet,
+        default_branch=github.GithubObject.NotSet,
+        allow_forking=github.GithubObject.NotSet,
+        allow_squash_merge=github.GithubObject.NotSet,
+        allow_merge_commit=github.GithubObject.NotSet,
+        allow_rebase_merge=github.GithubObject.NotSet,
+        delete_branch_on_merge=github.GithubObject.NotSet,
+        archived=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -1744,7 +1744,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if affiliation is not github.GithubObject.NotSet:
             assert isinstance(affiliation, str), affiliation
             assert (
-                    affiliation in allowed_affiliations
+                affiliation in allowed_affiliations
             ), f"Affiliation can be one of {', '.join(allowed_affiliations)}"
             url_parameters["affiliation"] = affiliation
 
@@ -1794,12 +1794,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def get_commits(
-            self,
-            sha=github.GithubObject.NotSet,
-            path=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
-            until=github.GithubObject.NotSet,
-            author=github.GithubObject.NotSet,
+        self,
+        sha=github.GithubObject.NotSet,
+        path=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+        until=github.GithubObject.NotSet,
+        author=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/commits <https://docs.github.com/en/rest/reference/repos#commits>`_
@@ -1837,11 +1837,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
         if author is not github.GithubObject.NotSet:
             if isinstance(
-                    author,
-                    (
-                            github.NamedUser.NamedUser,
-                            github.AuthenticatedUser.AuthenticatedUser,
-                    ),
+                author,
+                (
+                    github.NamedUser.NamedUser,
+                    github.AuthenticatedUser.AuthenticatedUser,
+                ),
             ):
                 url_parameters["author"] = author.login
             else:
@@ -1891,11 +1891,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_deployments(
-            self,
-            sha=github.GithubObject.NotSet,
-            ref=github.GithubObject.NotSet,
-            task=github.GithubObject.NotSet,
-            environment=github.GithubObject.NotSet,
+        self,
+        sha=github.GithubObject.NotSet,
+        ref=github.GithubObject.NotSet,
+        task=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
@@ -1945,16 +1945,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_deployment(
-            self,
-            ref,
-            task=github.GithubObject.NotSet,
-            auto_merge=github.GithubObject.NotSet,
-            required_contexts=github.GithubObject.NotSet,
-            payload=github.GithubObject.NotSet,
-            environment=github.GithubObject.NotSet,
-            description=github.GithubObject.NotSet,
-            transient_environment=github.GithubObject.NotSet,
-            production_environment=github.GithubObject.NotSet,
+        self,
+        ref,
+        task=github.GithubObject.NotSet,
+        auto_merge=github.GithubObject.NotSet,
+        required_contexts=github.GithubObject.NotSet,
+        payload=github.GithubObject.NotSet,
+        environment=github.GithubObject.NotSet,
+        description=github.GithubObject.NotSet,
+        transient_environment=github.GithubObject.NotSet,
+        production_environment=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
@@ -2057,7 +2057,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or list of :class:`github.View.View`
         """
         assert per is github.GithubObject.NotSet or (
-                isinstance(per, str) and (per == "day" or per == "week")
+            isinstance(per, str) and (per == "day" or per == "week")
         ), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
@@ -2066,9 +2066,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/traffic/views", parameters=url_parameters
         )
         if (
-                (isinstance(data, dict))
-                and ("views" in data)
-                and (isinstance(data["views"], list))
+            (isinstance(data, dict))
+            and ("views" in data)
+            and (isinstance(data["views"], list))
         ):
             data["views"] = [
                 github.View.View(self._requester, headers, item, completed=True)
@@ -2083,7 +2083,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None or list of :class:`github.Clones.Clones`
         """
         assert per is github.GithubObject.NotSet or (
-                isinstance(per, str) and (per == "day" or per == "week")
+            isinstance(per, str) and (per == "day" or per == "week")
         ), "per must be day or week, day by default"
         url_parameters = dict()
         if per is not github.GithubObject.NotSet:
@@ -2092,9 +2092,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
         if (
-                (isinstance(data, dict))
-                and ("clones" in data)
-                and (isinstance(data["clones"], list))
+            (isinstance(data, dict))
+            and ("clones" in data)
+            and (isinstance(data["clones"], list))
         ):
             data["clones"] = [
                 github.Clones.Clones(self._requester, headers, item, completed=True)
@@ -2131,13 +2131,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_file(
-            self,
-            path,
-            message,
-            content,
-            branch=github.GithubObject.NotSet,
-            committer=github.GithubObject.NotSet,
-            author=github.GithubObject.NotSet,
+        self,
+        path,
+        message,
+        content,
+        branch=github.GithubObject.NotSet,
+        committer=github.GithubObject.NotSet,
+        author=github.GithubObject.NotSet,
     ):
         """Create a file in this repository.
 
@@ -2191,14 +2191,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         }
 
     def update_file(
-            self,
-            path,
-            message,
-            content,
-            sha,
-            branch=github.GithubObject.NotSet,
-            committer=github.GithubObject.NotSet,
-            author=github.GithubObject.NotSet,
+        self,
+        path,
+        message,
+        content,
+        sha,
+        branch=github.GithubObject.NotSet,
+        committer=github.GithubObject.NotSet,
+        author=github.GithubObject.NotSet,
     ):
         """This method updates a file in a repository
 
@@ -2255,13 +2255,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         }
 
     def delete_file(
-            self,
-            path,
-            message,
-            sha,
-            branch=github.GithubObject.NotSet,
-            committer=github.GithubObject.NotSet,
-            author=github.GithubObject.NotSet,
+        self,
+        path,
+        message,
+        sha,
+        branch=github.GithubObject.NotSet,
+        committer=github.GithubObject.NotSet,
+        author=github.GithubObject.NotSet,
     ):
         """This method deletes a file in a repository
 
@@ -2530,16 +2530,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def get_issues(
-            self,
-            milestone=github.GithubObject.NotSet,
-            state=github.GithubObject.NotSet,
-            assignee=github.GithubObject.NotSet,
-            mentioned=github.GithubObject.NotSet,
-            labels=github.GithubObject.NotSet,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
-            creator=github.GithubObject.NotSet,
+        self,
+        milestone=github.GithubObject.NotSet,
+        state=github.GithubObject.NotSet,
+        assignee=github.GithubObject.NotSet,
+        mentioned=github.GithubObject.NotSet,
+        labels=github.GithubObject.NotSet,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+        creator=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -2555,16 +2555,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         assert (
-                milestone is github.GithubObject.NotSet
-                or milestone == "*"
-                or milestone == "none"
-                or isinstance(milestone, github.Milestone.Milestone)
+            milestone is github.GithubObject.NotSet
+            or milestone == "*"
+            or milestone == "none"
+            or isinstance(milestone, github.Milestone.Milestone)
         ), milestone
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         assert (
-                assignee is github.GithubObject.NotSet
-                or isinstance(assignee, github.NamedUser.NamedUser)
-                or isinstance(assignee, str)
+            assignee is github.GithubObject.NotSet
+            or isinstance(assignee, github.NamedUser.NamedUser)
+            or isinstance(assignee, str)
         ), assignee
         assert mentioned is github.GithubObject.NotSet or isinstance(
             mentioned, github.NamedUser.NamedUser
@@ -2581,9 +2581,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             since, datetime.datetime
         ), since
         assert (
-                creator is github.GithubObject.NotSet
-                or isinstance(creator, github.NamedUser.NamedUser)
-                or isinstance(creator, str)
+            creator is github.GithubObject.NotSet
+            or isinstance(creator, github.NamedUser.NamedUser)
+            or isinstance(creator, str)
         ), creator
         url_parameters = dict()
         if milestone is not github.GithubObject.NotSet:
@@ -2623,10 +2623,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_issues_comments(
-            self,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
+        self,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
@@ -2770,10 +2770,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_milestones(
-            self,
-            state=github.GithubObject.NotSet,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
+        self,
+        state=github.GithubObject.NotSet,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
@@ -2840,12 +2840,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_pulls(
-            self,
-            state=github.GithubObject.NotSet,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            base=github.GithubObject.NotSet,
-            head=github.GithubObject.NotSet,
+        self,
+        state=github.GithubObject.NotSet,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        base=github.GithubObject.NotSet,
+        head=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
@@ -2882,10 +2882,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def get_pulls_comments(
-            self,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
+        self,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`_
@@ -2897,10 +2897,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.get_pulls_review_comments(sort, direction, since)
 
     def get_pulls_review_comments(
-            self,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
+        self,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -3215,11 +3215,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
-            self,
-            actor=github.GithubObject.NotSet,
-            branch=github.GithubObject.NotSet,
-            event=github.GithubObject.NotSet,
-            status=github.GithubObject.NotSet,
+        self,
+        actor=github.GithubObject.NotSet,
+        branch=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3231,14 +3231,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
         assert (
-                actor is github.GithubObject.NotSet
-                or isinstance(actor, github.NamedUser.NamedUser)
-                or isinstance(actor, str)
+            actor is github.GithubObject.NotSet
+            or isinstance(actor, github.NamedUser.NamedUser)
+            or isinstance(actor, str)
         ), actor
         assert (
-                branch is github.GithubObject.NotSet
-                or isinstance(branch, github.Branch.Branch)
-                or isinstance(branch, str)
+            branch is github.GithubObject.NotSet
+            or isinstance(branch, github.Branch.Branch)
+            or isinstance(branch, str)
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
@@ -3360,11 +3360,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ]
 
     def get_notifications(
-            self,
-            all=github.GithubObject.NotSet,
-            participating=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet,
-            before=github.GithubObject.NotSet,
+        self,
+        all=github.GithubObject.NotSet,
+        participating=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+        before=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
@@ -3670,17 +3670,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def create_check_run(
-            self,
-            name,
-            head_sha,
-            details_url=github.GithubObject.NotSet,
-            external_id=github.GithubObject.NotSet,
-            status=github.GithubObject.NotSet,
-            started_at=github.GithubObject.NotSet,
-            conclusion=github.GithubObject.NotSet,
-            completed_at=github.GithubObject.NotSet,
-            output=github.GithubObject.NotSet,
-            actions=github.GithubObject.NotSet,
+        self,
+        name,
+        head_sha,
+        details_url=github.GithubObject.NotSet,
+        external_id=github.GithubObject.NotSet,
+        status=github.GithubObject.NotSet,
+        started_at=github.GithubObject.NotSet,
+        conclusion=github.GithubObject.NotSet,
+        completed_at=github.GithubObject.NotSet,
+        output=github.GithubObject.NotSet,
+        actions=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`_
@@ -3770,8 +3770,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
 
-        param = {key: value for key, value in {'name': name}.items() if
-                 value is not github.GithubObject.NotSet}
+        param = {
+            key: value
+            for key, value in {"name": name}.items()
+            if value is not github.GithubObject.NotSet
+        }
 
         return github.PaginatedList.PaginatedList(
             github.Artifact.Artifact,
