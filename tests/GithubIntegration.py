@@ -5,6 +5,7 @@ import jwt
 import requests  # NOQA
 
 import github
+from github.GithubIntegration import create_jwt
 
 from . import Framework
 
@@ -46,10 +47,7 @@ class GithubIntegration(Framework.BasicTestCase):
     def testCreateJWT(self):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
-        token = github_integration.create_jwt()
+        token = create_jwt(integration_id=APP_ID, private_key=PRIVATE_KEY)
         payload = jwt.decode(
             token,
             key=PUBLIC_KEY,
@@ -64,13 +62,12 @@ class GithubIntegration(Framework.BasicTestCase):
     def testCreateJWTWithExpiration(self):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
-        github_integration = github.GithubIntegration(
+        token = create_jwt(
             integration_id=APP_ID,
             private_key=PRIVATE_KEY,
-            jwt_expiry=120,
-            jwt_issued_at=-30,
+            expiration=60,
+            issued_at=-30,
         )
-        token = github_integration.create_jwt(60)
         payload = jwt.decode(
             token,
             key=PUBLIC_KEY,
@@ -83,7 +80,7 @@ class GithubIntegration(Framework.BasicTestCase):
         sys.modules["time"].time = self.origin_time
 
     def testGetInstallations(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         installations = github_integration.get_installations()
@@ -93,7 +90,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installations[1].id, self.repo_installation_id)
 
     def testGetAccessToken(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
 
@@ -151,7 +148,7 @@ class GithubIntegration(Framework.BasicTestCase):
         )
 
     def testGetUserInstallation(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         installation = github_integration.get_user_installation(username="ammarmallik")
@@ -159,7 +156,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.user_installation_id)
 
     def testGetOrgInstallation(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         installation = github_integration.get_org_installation(org="GithubApp-Test-Org")
@@ -167,7 +164,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.org_installation_id)
 
     def testGetRepoInstallation(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         installation = github_integration.get_repo_installation(
@@ -177,7 +174,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.repo_installation_id)
 
     def testGetAppInstallation(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         installation = github_integration.get_app_installation(
@@ -187,7 +184,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.org_installation_id)
 
     def testGetInstallationNotFound(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.UnknownObjectException) as raisedexp:
@@ -196,7 +193,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetInstallationWithExpiredJWT(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -205,7 +202,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenWithExpiredJWT(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -214,7 +211,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenForNoInstallation(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.UnknownObjectException) as raisedexp:
@@ -223,7 +220,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAccessTokenWithInvalidPermissions(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -234,7 +231,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetAccessTokenWithInvalidData(self):
-        github_integration = github.GithubIntegration(
+        github_integration = github.Github().get_integration(
             integration_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.GithubException) as raisedexp:

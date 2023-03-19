@@ -1,49 +1,16 @@
-import time
-
 import deprecated
-import jwt
 
 from github import Consts
+from github.AppAuthentication import AppAuthentication, create_jwt
 from github.Installation import Installation
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 
 
-def create_jwt(
-        integration_id,
-        private_key,
-        expiration=Consts.DEFAULT_JWT_EXPIRY,
-        issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
-):
-    """
-    Create a signed JWT
-    https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
-
-    :return string:
-    """
-    if expiration is not None:
-        assert isinstance(expiration, int), expiration
-        assert (
-                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
-        ), expiration
-
-    now = int(time.time())
-    payload = {
-        "iat": now + issued_at,
-        "exp": now + expiration,
-        "iss": integration_id,
-    }
-    encrypted = jwt.encode(payload, key=private_key, algorithm="RS256")
-
-    if isinstance(encrypted, bytes):
-        encrypted = encrypted.decode("utf-8")
-
-    return encrypted
-
-
 class GithubIntegration:
     """
     Class to obtain tokens for a GitHub integration.
+    Use Github().integration(integration_id, private_key) to obtain an instance of this class.
     """
     def __init__(
         self,
@@ -64,6 +31,10 @@ class GithubIntegration:
 
     def create_jwt(self):
         return create_jwt(self.integration_id, self.private_key)
+
+    def get_access_token(self, installation_id, permissions=None):
+        app_auth = AppAuthentication(self.integration_id, self.private_key, installation_id)
+        return app_auth.get_access_token(self.__requester, permissions)
 
     def _get_installed_app(self, url):
         """

@@ -21,14 +21,48 @@
 ################################################################################
 
 import datetime
+import time
+
+import jwt
 
 from github import Consts
 from github import GithubException
 from github.InstallationAuthorization import InstallationAuthorization
-from github.GithubIntegration import create_jwt
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
+
+
+def create_jwt(
+        integration_id,
+        private_key,
+        expiration=Consts.DEFAULT_JWT_EXPIRY,
+        issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
+):
+    """
+    Create a signed JWT
+    https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
+
+    :return string:
+    """
+    if expiration is not None:
+        assert isinstance(expiration, int), expiration
+        assert (
+                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
+        ), expiration
+
+    now = int(time.time())
+    payload = {
+        "iat": now + issued_at,
+        "exp": now + expiration,
+        "iss": integration_id,
+    }
+    encrypted = jwt.encode(payload, key=private_key, algorithm="RS256")
+
+    if isinstance(encrypted, bytes):
+        encrypted = encrypted.decode("utf-8")
+
+    return encrypted
 
 
 class AppAuthentication:
@@ -82,7 +116,7 @@ class AppAuthentication:
             permissions = {}
 
         if not isinstance(permissions, dict):
-            raise GithubException(
+            raise GithubException.GithubException(
                 status=400, data={"message": "Invalid permissions"}, headers=None
             )
 
@@ -93,14 +127,15 @@ class AppAuthentication:
             def jwt():
                 return create_jwt(self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at)
 
-            headers, response = requester.with_jwt(jwt).requestJsonAndCheck(
+            jwt_requester = requester.with_jwt(jwt)
+            headers, response = jwt_requester.requestJsonAndCheck(
                 "POST",
                 f"/app/installations/{self.installation_id}/access_tokens",
                 input=body,
             )
 
             self.auth = InstallationAuthorization(
-                requester=requester,
+                requester=jwt_requester,
                 headers=headers,
                 attributes=response,
                 completed=True,

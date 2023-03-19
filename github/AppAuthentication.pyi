@@ -2,6 +2,8 @@ from typing import Optional, Dict, Union
 from github.Requester import Requester
 
 
+def create_jwt(integration_id: int = ..., private_key: str = ..., expiration: int = ..., issued_at: int = ...) -> str: ...
+
 class AppAuthentication:
     def __init__(
         self,
