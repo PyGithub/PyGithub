@@ -89,7 +89,10 @@ class AppAuthentication:
         if self.auth is None or permissions != self.auth_permissions or \
                 self.auth.expires_at < datetime.datetime.utcnow() - datetime.timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS):
             body = {"permissions": permissions}
-            jwt = create_jwt(self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at)
+
+            def jwt():
+                return create_jwt(self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at)
+
             headers, response = requester.with_jwt(jwt).requestJsonAndCheck(
                 "POST",
                 f"/app/installations/{self.installation_id}/access_tokens",
