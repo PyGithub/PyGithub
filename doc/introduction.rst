@@ -37,9 +37,6 @@ This package is in the `Python Package Index
 be enough.  You can also clone it on `Github
 <http://github.com/PyGithub/PyGithub>`__.
 
-If you wish to use GitHub Integrations, you'll want to be sure to install the
-'integrations' option: ``pip install PyGithub['integrations']``
-
 Licensing
 ---------
 

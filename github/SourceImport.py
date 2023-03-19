@@ -26,7 +26,7 @@ from github import Consts
 
 class SourceImport(github.GithubObject.CompletableGithubObject):
     """
-    This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migration#source_imports
+    This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
     """
 
     def __repr__(self):

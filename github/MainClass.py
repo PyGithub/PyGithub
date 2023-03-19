@@ -49,10 +49,7 @@
 
 import datetime
 import pickle
-import time
 
-import jwt
-import requests
 import urllib3
 
 import github.ApplicationOAuth
@@ -68,23 +65,12 @@ from . import (
     AuthenticatedUser,
     Consts,
     GithubApp,
-    GithubException,
     GitignoreTemplate,
     HookDescription,
-    Installation,
-    InstallationAuthorization,
     RateLimit,
     Repository,
 )
 from .Requester import Requester
-
-DEFAULT_BASE_URL = "https://api.github.com"
-DEFAULT_STATUS_URL = "https://status.github.com"
-# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
-# Thus, the timeout should be slightly > 10s to account for network/front-end
-# latency.
-DEFAULT_TIMEOUT = 15
-DEFAULT_PER_PAGE = 30
 
 
 class Github:
@@ -97,10 +83,11 @@ class Github:
         login_or_token=None,
         password=None,
         jwt=None,
-        base_url=DEFAULT_BASE_URL,
-        timeout=DEFAULT_TIMEOUT,
+        app_auth=None,
+        base_url=Consts.DEFAULT_BASE_URL,
+        timeout=Consts.DEFAULT_TIMEOUT,
         user_agent="PyGithub/Python",
-        per_page=DEFAULT_PER_PAGE,
+        per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
         retry=None,
         pool_size=None,
@@ -108,6 +95,8 @@ class Github:
         """
         :param login_or_token: string
         :param password: string
+        :param jwt: string
+        :param app_auth: github.AppAuthentication
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -125,14 +114,16 @@ class Github:
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert (
             retry is None
-            or isinstance(retry, (int))
-            or isinstance(retry, (urllib3.util.Retry))
-        )
-        assert pool_size is None or isinstance(pool_size, (int)), pool_size
+            or isinstance(retry, int)
+            or isinstance(retry, urllib3.util.Retry)
+        ), retry
+        assert pool_size is None or isinstance(pool_size, int), pool_size
+
         self.__requester = Requester(
             login_or_token,
             password,
             jwt,
+            app_auth,
             base_url,
             timeout,
             user_agent,
@@ -195,7 +186,7 @@ class Github:
         """
         Rate limit status for different resources (core/search/graphql).
 
-        :calls: `GET /rate_limit <http://docs.github.com/en/rest/reference/rate_limit>`_
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
         :rtype: :class:`github.RateLimit.RateLimit`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
@@ -210,7 +201,7 @@ class Github:
 
     def get_license(self, key=github.GithubObject.NotSet):
         """
-        :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-an-individual-license>`_
+        :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-a-license>`_
         :param key: string
         :rtype: :class:`github.License.License`
         """
@@ -221,7 +212,7 @@ class Github:
 
     def get_licenses(self):
         """
-        :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#list-all-licenses>`_
+        :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#get-all-commonly-used-licenses>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.License.License`
         """
 
@@ -233,7 +224,7 @@ class Github:
 
     def get_events(self):
         """
-        :calls: `GET /events <https://docs.github.com/en/rest/reference/activity/events#list-public-events>`_
+        :calls: `GET /events <https://docs.github.com/en/rest/reference/activity#list-public-events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
 
@@ -243,7 +234,7 @@ class Github:
 
     def get_user(self, login=github.GithubObject.NotSet):
         """
-        :calls: `GET /users/{user} <http://docs.github.com/en/rest/reference/users>`_ or `GET /user <http://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         :param login: string
         :rtype: :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         """
@@ -262,7 +253,7 @@ class Github:
 
     def get_user_by_id(self, user_id):
         """
-        :calls: `GET /user/{id} <http://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /user/{id} <https://docs.github.com/en/rest/reference/users>`_
         :param user_id: int
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -274,7 +265,7 @@ class Github:
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /users <http://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /users <https://docs.github.com/en/rest/reference/users>`_
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -288,7 +279,7 @@ class Github:
 
     def get_organization(self, login):
         """
-        :calls: `GET /orgs/{org} <http://docs.github.com/en/rest/reference/orgs>`_
+        :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         :param login: string
         :rtype: :class:`github.Organization.Organization`
         """
@@ -300,7 +291,7 @@ class Github:
 
     def get_organizations(self, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /organizations <http://docs.github.com/en/rest/reference/orgs#list-all-organizations>`_
+        :calls: `GET /organizations <https://docs.github.com/en/rest/reference/orgs#list-organizations>`_
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
         """
@@ -317,7 +308,7 @@ class Github:
 
     def get_repo(self, full_name_or_id, lazy=False):
         """
-        :calls: `GET /repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <http://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
@@ -334,7 +325,7 @@ class Github:
         self, since=github.GithubObject.NotSet, visibility=github.GithubObject.NotSet
     ):
         """
-        :calls: `GET /repositories <http://docs.github.com/en/rest/reference/repos#list-all-public-repositories>`_
+        :calls: `GET /repositories <https://docs.github.com/en/rest/reference/repos#list-public-repositories>`_
         :param since: integer
         :param visibility: string ('all','public')
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -368,7 +359,7 @@ class Github:
 
     def get_project_column(self, id):
         """
-        :calls: `GET /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects/columns#get-a-project-column>`_
+        :calls: `GET /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#get-a-project-column>`_
         :rtype: :class:`github.ProjectColumn.ProjectColumn`
         :param id: integer
         """
@@ -383,7 +374,7 @@ class Github:
 
     def get_gist(self, id):
         """
-        :calls: `GET /gists/{id} <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         :param id: string
         :rtype: :class:`github.Gist.Gist`
         """
@@ -393,7 +384,7 @@ class Github:
 
     def get_gists(self, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /gists/public <http://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
         :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
@@ -415,7 +406,7 @@ class Github:
         **qualifiers,
     ):
         """
-        :calls: `GET /search/repositories <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/repositories <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('stars', 'forks', 'updated')
         :param order: string ('asc', 'desc')
@@ -460,7 +451,7 @@ class Github:
         **qualifiers,
     ):
         """
-        :calls: `GET /search/users <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/users <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('followers', 'repositories', 'joined')
         :param order: string ('asc', 'desc')
@@ -501,7 +492,7 @@ class Github:
         **qualifiers,
     ):
         """
-        :calls: `GET /search/issues <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/issues <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('comments', 'created', 'updated')
         :param order: string ('asc', 'desc')
@@ -540,7 +531,7 @@ class Github:
         **qualifiers,
     ):
         """
-        :calls: `GET /search/code <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/code <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('indexed')
         :param order: string ('asc', 'desc')
@@ -589,7 +580,7 @@ class Github:
         **qualifiers,
     ):
         """
-        :calls: `GET /search/commits <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/commits <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('author-date', 'committer-date')
         :param order: string ('asc', 'desc')
@@ -598,19 +589,15 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:
             assert sort in ("author-date", "committer-date"), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
         query_chunks = []
-        if query:  # pragma no branch (Should be covered)
+        if query:
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
@@ -629,7 +616,7 @@ class Github:
 
     def search_topics(self, query, **qualifiers):
         """
-        :calls: `GET /search/topics <http://docs.github.com/en/rest/reference/search>`_
+        :calls: `GET /search/topics <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Topic.Topic`
@@ -657,7 +644,7 @@ class Github:
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
-        :calls: `POST /markdown <http://docs.github.com/en/rest/reference/markdown>`_
+        :calls: `POST /markdown <https://docs.github.com/en/rest/reference/markdown>`_
         :param text: string
         :param context: :class:`github.Repository.Repository`
         :rtype: string
@@ -677,7 +664,7 @@ class Github:
 
     def get_hook(self, name):
         """
-        :calls: `GET /hooks/{name} <http://docs.github.com/en/rest/reference/repos#hooks>`_
+        :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param name: string
         :rtype: :class:`github.HookDescription.HookDescription`
         """
@@ -691,7 +678,7 @@ class Github:
 
     def get_hooks(self):
         """
-        :calls: `GET /hooks <http://docs.github.com/en/rest/reference/repos#hooks>`_
+        :calls: `GET /hooks <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
@@ -704,7 +691,7 @@ class Github:
 
     def get_gitignore_templates(self):
         """
-        :calls: `GET /gitignore/templates <http://docs.github.com/en/rest/reference/gitignore>`_
+        :calls: `GET /gitignore/templates <https://docs.github.com/en/rest/reference/gitignore>`_
         :rtype: list of string
         """
         headers, data = self.__requester.requestJsonAndCheck(
@@ -714,7 +701,7 @@ class Github:
 
     def get_gitignore_template(self, name):
         """
-        :calls: `GET /gitignore/templates/{name} <http://docs.github.com/en/rest/reference/gitignore>`_
+        :calls: `GET /gitignore/templates/{name} <https://docs.github.com/en/rest/reference/gitignore>`_
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
         assert isinstance(name, str), name
@@ -727,7 +714,7 @@ class Github:
 
     def get_emojis(self):
         """
-        :calls: `GET /emojis <http://docs.github.com/en/rest/reference/emojis>`_
+        :calls: `GET /emojis <https://docs.github.com/en/rest/reference/emojis>`_
         :rtype: dictionary of type => url for emoji`
         """
         headers, attributes = self.__requester.requestJsonAndCheck("GET", "/emojis")
@@ -753,7 +740,7 @@ class Github:
 
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <http://docs.python.org/2.7/library/pickle.html#data-stream-format>`_
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
         """
         pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
 
@@ -790,95 +777,5 @@ class Github:
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
 
-class GithubIntegration:
-    """
-    Main class to obtain tokens for a GitHub integration.
-    """
-
-    def __init__(self, integration_id, private_key, base_url=DEFAULT_BASE_URL):
-        """
-        :param base_url: string
-        :param integration_id: int
-        :param private_key: string
-        """
-        self.base_url = base_url
-        self.integration_id = integration_id
-        self.private_key = private_key
-        assert isinstance(base_url, str), base_url
-
-    def create_jwt(self, expiration=60):
-        """
-        Creates a signed JWT, valid for 60 seconds by default.
-        The expiration can be extended beyond this, to a maximum of 600 seconds.
-
-        :param expiration: int
-        :return string:
-        """
-        now = int(time.time())
-        payload = {"iat": now, "exp": now + expiration, "iss": self.integration_id}
-        encrypted = jwt.encode(payload, key=self.private_key, algorithm="RS256")
-
-        if isinstance(encrypted, bytes):
-            encrypted = encrypted.decode("utf-8")
-
-        return encrypted
-
-    def get_access_token(self, installation_id, user_id=None):
-        """
-        Get an access token for the given installation id.
-        POSTs https://api.github.com/app/installations/<installation_id>/access_tokens
-        :param user_id: int
-        :param installation_id: int
-        :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
-        """
-        body = {}
-        if user_id:
-            body = {"user_id": user_id}
-        response = requests.post(
-            f"{self.base_url}/app/installations/{installation_id}/access_tokens",
-            headers={
-                "Authorization": f"Bearer {self.create_jwt()}",
-                "Accept": Consts.mediaTypeIntegrationPreview,
-                "User-Agent": "PyGithub/Python",
-            },
-            json=body,
-        )
-
-        if response.status_code == 201:
-            return InstallationAuthorization.InstallationAuthorization(
-                requester=None,  # not required, this is a NonCompletableGithubObject
-                headers={},  # not required, this is a NonCompletableGithubObject
-                attributes=response.json(),
-                completed=True,
-            )
-        elif response.status_code == 403:
-            raise GithubException.BadCredentialsException(
-                status=response.status_code, data=response.text
-            )
-        elif response.status_code == 404:
-            raise GithubException.UnknownObjectException(
-                status=response.status_code, data=response.text
-            )
-        raise GithubException.GithubException(
-            status=response.status_code, data=response.text
-        )
-
-    def get_installation(self, owner, repo):
-        """
-        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation>`_
-        :param owner: str
-        :param repo: str
-        :rtype: :class:`github.Installation.Installation`
-        """
-        headers = {
-            "Authorization": f"Bearer {self.create_jwt()}",
-            "Accept": Consts.mediaTypeIntegrationPreview,
-            "User-Agent": "PyGithub/Python",
-        }
-
-        response = requests.get(
-            f"{self.base_url}/repos/{owner}/{repo}/installation",
-            headers=headers,
-        )
-        response_dict = response.json()
-        return Installation.Installation(None, headers, response_dict, True)
+# Retrocompatibility
+GithubIntegration = github.GithubIntegration
