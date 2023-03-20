@@ -146,6 +146,7 @@ class Repository(Framework.TestCase):
             self.repo.description, "Python library implementing the full Github API v3"
         )
         self.assertFalse(self.repo.archived)
+        self.assertFalse(self.repo.allow_update_branch)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
