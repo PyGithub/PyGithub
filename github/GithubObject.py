@@ -359,7 +359,7 @@ class CompletableGithubObject(GithubObject):
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
 
-    def update(self, additional_headers=None) -> bool:
+    def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
         """
         Check and update the object with conditional request
         :rtype: Boolean value indicating whether the object is changed
