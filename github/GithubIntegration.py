@@ -12,6 +12,7 @@ class GithubIntegration:
     Class to obtain tokens for a GitHub integration.
     Use Github().integration(integration_id, private_key) to obtain an instance of this class.
     """
+
     def __init__(
         self,
         integration_id,
@@ -33,7 +34,9 @@ class GithubIntegration:
         return create_jwt(self.integration_id, self.private_key)
 
     def get_access_token(self, installation_id, permissions=None):
-        app_auth = AppAuthentication(self.integration_id, self.private_key, installation_id)
+        app_auth = AppAuthentication(
+            self.integration_id, self.private_key, installation_id
+        )
         return app_auth.get_access_token(self.__requester, permissions)
 
     def _get_installed_app(self, url):

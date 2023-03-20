@@ -25,8 +25,7 @@ import time
 
 import jwt
 
-from github import Consts
-from github import GithubException
+from github import Consts, GithubException
 from github.InstallationAuthorization import InstallationAuthorization
 
 # For App authentication, time remaining before token expiration to request a new one
@@ -34,10 +33,10 @@ ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 
 
 def create_jwt(
-        integration_id,
-        private_key,
-        expiration=Consts.DEFAULT_JWT_EXPIRY,
-        issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
+    integration_id,
+    private_key,
+    expiration=Consts.DEFAULT_JWT_EXPIRY,
+    issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
 ):
     """
     Create a signed JWT
@@ -47,9 +46,7 @@ def create_jwt(
     """
     if expiration is not None:
         assert isinstance(expiration, int), expiration
-        assert (
-                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
-        ), expiration
+        assert Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY, expiration
 
     now = int(time.time())
     payload = {
@@ -104,6 +101,9 @@ class AppAuthentication:
 
         self.auth = None
         self.auth_permissions = None
+        self.threshold = datetime.timedelta(
+            seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS
+        )
 
     def get_access_token(self, requester, permissions=None):
         """
@@ -120,12 +120,17 @@ class AppAuthentication:
                 status=400, data={"message": "Invalid permissions"}, headers=None
             )
 
-        if self.auth is None or permissions != self.auth_permissions or \
-                self.auth.expires_at < datetime.datetime.utcnow() - datetime.timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS):
+        if (
+            self.auth is None
+            or permissions != self.auth_permissions
+            or (self.auth.expires_at < datetime.datetime.utcnow() - self.threshold)
+        ):
             body = {"permissions": permissions}
 
             def jwt():
-                return create_jwt(self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at)
+                return create_jwt(
+                    self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at
+                )
 
             jwt_requester = requester.with_jwt(jwt)
             headers, response = jwt_requester.requestJsonAndCheck(

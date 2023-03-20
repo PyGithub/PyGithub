@@ -366,7 +366,7 @@ class Requester:
             per_page=self.per_page,
             verify=self.__verify,
             retry=self.__retry,
-            pool_size=self.__pool_size
+            pool_size=self.__pool_size,
         )
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
@@ -601,7 +601,9 @@ class Requester:
         if self.__jwt is not None and not isinstance(self.__jwt, str):
             self.__authorizationHeader = f"Bearer {self.__jwt()}"
         if self.__app_auth is not None:
-            self.__authorizationHeader = f"token {self.__app_auth.get_access_token(self).token}"
+            self.__authorizationHeader = (
+                f"token {self.__app_auth.get_access_token(self).token}"
+            )
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
 
