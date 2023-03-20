@@ -51,7 +51,6 @@
 ################################################################################
 
 import base64
-import datetime
 import json
 import logging
 import mimetypes
@@ -63,7 +62,7 @@ from io import IOBase
 
 import requests
 
-from . import Consts, GithubException, GithubIntegration
+from . import Consts, GithubException
 
 
 class RequestsResponse:
