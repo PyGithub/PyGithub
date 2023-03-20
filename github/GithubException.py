@@ -39,14 +39,12 @@ class GithubException(Exception):
     Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
     """
 
-    def __init__(
-        self, status: Union[int, str], data: Any, headers: Optional[Dict[str, str]]
-    ):
+    def __init__(self, status: int, data: Any, headers: Optional[Dict[str, str]]):
         super().__init__()
         self.__status = status
         self.__data = data
         self.__headers = headers
-        self.args = [status, data, headers]
+        self.args = (status, data, headers)
 
     @property
     def status(self) -> int:
