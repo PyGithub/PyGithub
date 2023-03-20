@@ -32,11 +32,13 @@
 
 import datetime
 from operator import itemgetter
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Type, Union
 
 from . import Consts, GithubException
-from .GistFile import GistFile
-from .Requester import Requester
+
+if TYPE_CHECKING:
+    from .GistFile import GistFile
+    from .Requester import Requester
 
 
 class _NotSetType:
@@ -85,7 +87,7 @@ class GithubObject:
 
     def __init__(
         self,
-        requester: Optional[Requester],
+        requester: Optional["Requester"],
         headers: Dict[str, Union[str, int]],
         attributes: Any,
         completed: bool,
@@ -262,7 +264,7 @@ class GithubObject:
 
     def _makeDictOfStringsToClassesAttribute(
         self,
-        klass: Type[GistFile],
+        klass: "Type[GistFile]",
         value: Dict[
             str,
             Union[int, Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]],
@@ -323,7 +325,7 @@ class NonCompletableGithubObject(GithubObject):
 class CompletableGithubObject(GithubObject):
     def __init__(
         self,
-        requester: Requester,
+        requester: "Requester",
         headers: Dict[str, Union[str, int]],
         attributes: Dict[str, Any],
         completed: bool,
