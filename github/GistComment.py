@@ -111,7 +111,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     def _initAttributes(self):
-        self._body = github.GithubObject.NotSet
+        self._body = github.GithubObject.NtoSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
