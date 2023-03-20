@@ -178,8 +178,9 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
         if check_suite_id is not github.GithubObject.NotSet:
-            url_parameters["check_suite_id "] = check_suite_id
+            url_parameters["check_suite_id"] = check_suite_id
 
+        print(f"{self.url}/runs", url_parameters)
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,
