@@ -29,6 +29,7 @@
 ################################################################################
 
 import json
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 
 class GithubException(Exception):
@@ -38,7 +39,9 @@ class GithubException(Exception):
     Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
     """
 
-    def __init__(self, status, data, headers):
+    def __init__(
+        self, status: Union[int, str], data: Any, headers: Optional[Dict[str, str]]
+    ):
         super().__init__()
         self.__status = status
         self.__data = data
@@ -46,27 +49,27 @@ class GithubException(Exception):
         self.args = [status, data, headers]
 
     @property
-    def status(self):
+    def status(self) -> int:
         """
         The status returned by the Github API
         """
         return self.__status
 
     @property
-    def data(self):
+    def data(self) -> Dict[str, Union[str, List[str], List[Dict[str, str]]]]:
         """
         The (decoded) data returned by the Github API
         """
         return self.__data
 
     @property
-    def headers(self):
+    def headers(self) -> Union[None, Dict[str, str]]:
         """
         The headers returned by the Github API
         """
         return self.__headers
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.status} {json.dumps(self.data)}"
 
 
@@ -99,27 +102,44 @@ class BadAttributeException(Exception):
     Exception raised when Github returns an attribute with the wrong type.
     """
 
-    def __init__(self, actualValue, expectedType, transformationException):
+    def __init__(
+        self,
+        actualValue: Any,
+        expectedType: Union[
+            Dict[Tuple[Type[str], Type[str]], Type[dict]],
+            Tuple[Type[str], Type[str]],
+            List[Type[dict]],
+            List[Tuple[Type[str], Type[str]]],
+        ],
+        transformationException: Optional[ValueError],
+    ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
         self.__transformationException = transformationException
 
     @property
-    def actual_value(self):
+    def actual_value(self) -> Any:
         """
         The value returned by Github
         """
         return self.__actualValue
 
     @property
-    def expected_type(self):
+    def expected_type(
+        self,
+    ) -> Union[
+        List[Type[dict]],
+        Tuple[Type[str], Type[str]],
+        Dict[Tuple[Type[str], Type[str]], Type[dict]],
+        List[Tuple[Type[str], Type[str]]],
+    ]:
         """
         The type PyGithub expected
         """
         return self.__expectedType
 
     @property
-    def transformation_exception(self):
+    def transformation_exception(self) -> Optional[ValueError]:
         """
         The exception raised when PyGithub tried to parse the value
         """
