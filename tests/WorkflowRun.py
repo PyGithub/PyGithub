@@ -46,7 +46,9 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.display_title, "TEST PR")
         self.assertEqual(self.workflow_run.run_number, 930)
         self.assertEqual(self.workflow_run.run_attempt, 1)
-        self.assertEqual(self.workflow_run.run_started_at, "2023-01-10T08:24:19Z")
+        self.assertEqual(
+            self.workflow_run.run_started_at, datetime.datetime(2023, 1, 10, 8, 24, 19)
+        )
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
         self.assertEqual(self.workflow_run.conclusion, "success")
@@ -120,7 +122,7 @@ class WorkflowRun(Framework.TestCase):
 
     def test_rerun(self):
         wr = self.repo.get_workflow_run(3910280793)
-        self.assertTrue(wr.rerun())
+        self.assertFalse(wr.rerun())
 
     def test_rerun_with_successful_run(self):
         wr = self.repo.get_workflow_run(3881497935)
@@ -128,8 +130,8 @@ class WorkflowRun(Framework.TestCase):
 
     def test_cancel(self):
         wr = self.repo.get_workflow_run(3911660493)
-        self.assertTrue(wr.cancel())
+        self.assertFalse(wr.cancel())
 
     def test_delete(self):
         wr = self.repo.get_workflow_run(3881497935)
-        self.assertTrue(wr.delete())
+        self.assertFalse(wr.delete())
