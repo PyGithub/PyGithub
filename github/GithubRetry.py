@@ -30,7 +30,7 @@ from requests.utils import get_encoding_from_headers
 from urllib3 import Retry
 from urllib3.exceptions import MaxRetryError
 
-from github import GithubException
+from github.GithubException import GithubException
 from github.Requester import Requester
 
 DEFAULT_SECONDARY_RATE_WAIT = 60
