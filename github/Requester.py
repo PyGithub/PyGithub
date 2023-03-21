@@ -302,8 +302,8 @@ class Requester:
         verify,
         retry,
         pool_size,
-        seconds_between_requests=None,
-        seconds_between_writes=None,
+        seconds_between_requests,
+        seconds_between_writes,
     ):
         self._initializeDebugFeature()
 

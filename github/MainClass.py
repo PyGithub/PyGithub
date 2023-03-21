@@ -97,8 +97,8 @@ class Github:
         verify=True,
         retry=None,
         pool_size=None,
-        seconds_between_requests=None,
-        seconds_between_writes=None,
+        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         auth=None,
     ):
         """

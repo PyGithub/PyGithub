@@ -45,7 +45,7 @@ from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
 import github
-from github.Consts import DEFAULT_PER_PAGE
+from github import Consts
 
 APP_PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
@@ -263,7 +263,7 @@ class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
     jwtAuthMode = False
-    per_page = DEFAULT_PER_PAGE
+    per_page = Consts.DEFAULT_PER_PAGE
     retry = None
     pool_size = None
     seconds_between_requests = None

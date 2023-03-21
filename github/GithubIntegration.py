@@ -83,6 +83,8 @@ class GithubIntegration:
             verify=True,
             retry=None,
             pool_size=None,
+            seconds_between_requests=None,
+            seconds_between_writes=None,
         )
 
     def _get_headers(self):
