@@ -1795,29 +1795,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_commits(
         self,
-        milestone=github.GithubObject.NotSet,
         sha=github.GithubObject.NotSet,
         path=github.GithubObject.NotSet,
         since=github.GithubObject.NotSet,
         until=github.GithubObject.NotSet,
         author=github.GithubObject.NotSet,
+        milestone=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/commits <https://docs.github.com/en/rest/reference/repos#commits>`_
-        :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
         :param sha: string
         :param path: string
         :param since: datetime.datetime
         :param until: datetime.datetime
         :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
+        :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
-        assert (
-            milestone is github.GithubObject.NotSet
-            or milestone == "*"
-            or milestone == "none"
-            or isinstance(milestone, github.Milestone.Milestone)
-        ), milestone
         assert sha is github.GithubObject.NotSet or isinstance(sha, str), sha
         assert path is github.GithubObject.NotSet or isinstance(path, str), path
         assert since is github.GithubObject.NotSet or isinstance(
@@ -1834,6 +1828,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 github.AuthenticatedUser.AuthenticatedUser,
             ),
         ), author
+        assert (
+            milestone is github.GithubObject.NotSet
+            or milestone == "*"
+            or milestone == "none"
+            or isinstance(milestone, github.Milestone.Milestone)
+        ), milestone
         url_parameters = dict()
         if milestone is not github.GithubObject.NotSet:
             if isinstance(milestone, str):
