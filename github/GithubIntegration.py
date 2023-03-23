@@ -4,6 +4,7 @@ import deprecated
 import jwt
 
 from github import Consts
+from github.GithubApp import GithubApp
 from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
@@ -84,6 +85,24 @@ class GithubIntegration:
         )
 
         return Installation(
+            requester=self.__requester,
+            headers=headers,
+            attributes=response,
+            completed=True,
+        )
+
+    def _get_app(self):
+        """
+        Get app.
+
+        :param url: str
+        :rtype: :class:`github.GithubApp.GithubApp`
+        """
+        headers, response = self.__requester.requestJsonAndCheck(
+            "GET", "/app", headers=self._get_headers()
+        )
+
+        return GithubApp(
             requester=self.__requester,
             headers=headers,
             attributes=response,

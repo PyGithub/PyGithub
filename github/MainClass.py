@@ -769,9 +769,7 @@ class Github:
         """
         assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
         if slug is github.GithubObject.NotSet:
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": "/app"}, completed=False
-            )
+            return self.__requester.get_app()
         else:
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
