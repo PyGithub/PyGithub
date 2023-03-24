@@ -3,41 +3,120 @@ import deprecated
 from github import Consts
 from github.AppAuthentication import AppAuthentication, create_jwt
 from github.Installation import Installation
+from github.MainClass import Github
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 
 
 class GithubIntegration:
     """
-    Class to obtain tokens for a GitHub integration.
-    Use Github().integration(integration_id, private_key) to obtain an instance of this class.
+    Main class to obtain tokens for a GitHub integration.
     """
-
     def __init__(
         self,
-        integration_id,
+        app_id,
         private_key,
-        requester: Requester,
+        base_url=Consts.DEFAULT_BASE_URL,
+        timeout=Consts.DEFAULT_TIMEOUT,
+        user_agent="PyGithub/Python",
+        per_page=Consts.DEFAULT_PER_PAGE,
+        verify=True,
+        retry=None,
+        pool_size=None,
     ):
         """
-        :param integration_id: int
+        :param app_id: int
         :param private_key: string
+        :param base_url: string
+        :param timeout: integer
+        :param user_agent: string
+        :param per_page: int
+        :param verify: boolean or string
+        :param retry: int or urllib3.util.retry.Retry object
+        :param pool_size: int
         """
-        assert isinstance(integration_id, (int, str)), integration_id
+        assert isinstance(app_id, (int, str)), app_id
         assert isinstance(private_key, str), "supplied private key should be a string"
 
-        self.integration_id = integration_id
+        self.app_id = app_id
         self.private_key = private_key
-        self.__requester = requester.with_jwt(self.create_jwt)
+        self.__base_url = base_url
+        self.__timeout = timeout
+        self.__user_agent = user_agent
+        self.__per_page = per_page
+        self.__verify = verify
+        self.__retry = retry
+        self.__pool_size = pool_size
+        self.__requester = Requester(
+            login_or_token=None,
+            password=None,
+            jwt=self.create_jwt,
+            app_auth=None,
+            base_url=base_url,
+            timeout=timeout,
+            user_agent=user_agent,
+            per_page=per_page,
+            verify=verify,
+            retry=retry,
+            pool_size=pool_size,
+        )
 
     def create_jwt(self):
-        return create_jwt(self.integration_id, self.private_key)
+        return create_jwt(self.app_id, self.private_key)
 
-    def get_access_token(self, installation_id, permissions=None):
+    def get_app_installation_authentication(
+        self,
+        installation_id,
+        permissions=None,
+        jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
+        jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
+    ):
+        """
+        Get an app installation authentication.
+
+        :param installation_id: int. App installation id
+        :param permissions: Dict[str, str]
+        :param jwt_expiry: int
+        :param jwt_issued_at: int
+        :rtype: :class:`github.Github`
+        """
+        return AppAuthentication(
+            self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
+        )._get_access_token_func(self.__requester)()
+
+    def get_github_for_installation(
+        self,
+        installation_id,
+        permissions=None,
+        jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
+        jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
+    ):
+        """
+        Get a Github instance authenticated as installation with this installation id.
+
+        :param installation_id: int. App installation id
+        :param permissions: Dict[str, str]
+        :param jwt_expiry: int
+        :param jwt_issued_at: int
+        :rtype: :class:`github.Github`
+        """
         app_auth = AppAuthentication(
-            self.integration_id, self.private_key, installation_id
+            self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
         )
-        return app_auth.get_access_token(self.__requester, permissions)
+
+        return Github(
+            login_or_token=None,
+            password=None,
+            jwt=None,
+            app_auth=app_auth,
+            base_url=self.__base_url,
+            timeout=self.__timeout,
+            user_agent=self.__user_agent,
+            per_page=self.__per_page,
+            verify=self.__verify,
+            retry=self.__retry,
+            pool_size=self.__pool_size,
+        )
 
     def _get_installed_app(self, url):
         """

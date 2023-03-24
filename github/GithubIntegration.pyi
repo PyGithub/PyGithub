@@ -1,12 +1,13 @@
 from typing import Union, Optional, Dict
 
+import github
+from github.AppAuthentication import AppAuthentication
 from github.Installation import Installation
-from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 
 class GithubIntegration:
-    integration_id: Union[int, str] = ...
+    app_id: Union[int, str] = ...
     private_key: str = ...
     base_url: str = ...
     jwt_expiry: int = ...
@@ -14,7 +15,7 @@ class GithubIntegration:
     __requester: Requester = ...
     def __init__(
         self,
-        integration_id: Union[int, str],
+        app_id: Union[int, str],
         private_key: str,
         requester: Requester = ...,
     ) -> None: ...
@@ -23,9 +24,20 @@ class GithubIntegration:
     def create_jwt(
         self, expiration: Optional[int] = ..., issued_at: Optional[int] = ...
     ) -> str: ...
-    def get_access_token(
-        self, installation_id: int, permissions: Optional[Dict[str, str]] = ...
-    ) -> InstallationAuthorization: ...
+    def get_app_installation_authentication(
+        self,
+        installation_id: int,
+        permissions: Optional[Dict[str, str]] = ...,
+        jwt_expiry: int = ...,
+        jwt_issued_at: int = ...,
+    ): AppAuthentication
+    def get_github_for_installation(
+        self,
+        installation_id: int,
+        permissions: Optional[Dict[str, str]] = ...,
+        jwt_expiry: int = ...,
+        jwt_issued_at: int = ...,
+    ): github.Github
     def get_app_installation(self, installation_id: int) -> Installation: ...
     def get_installation(self, owner: str, repo: str) -> Installation: ...
     def get_installations(self) -> PaginatedList[Installation]: ...

@@ -25,15 +25,18 @@ import time
 
 import jwt
 
-from github import Consts, GithubException
+from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
+ACCESS_TOKEN_REFRESH_THRESHOLD_DELTA = datetime.timedelta(
+    seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS
+)
 
 
 def create_jwt(
-    integration_id,
+    app_id,
     private_key,
     expiration=Consts.DEFAULT_JWT_EXPIRY,
     issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
@@ -52,7 +55,7 @@ def create_jwt(
     payload = {
         "iat": now + issued_at,
         "exp": now + expiration,
-        "iss": integration_id,
+        "iss": app_id,
     }
     encrypted = jwt.encode(payload, key=private_key, algorithm="RS256")
 
@@ -95,56 +98,55 @@ class AppAuthentication:
         self.app_id = app_id
         self.private_key = private_key
         self.installation_id = installation_id
-        self.token_permissions = token_permissions
+        self.token_permissions = {} if token_permissions is None else token_permissions
         self.jwt_expiry = jwt_expiry
         self.jwt_issued_at = jwt_issued_at
 
         self.auth = None
         self.auth_permissions = None
-        self.threshold = datetime.timedelta(
-            seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS
-        )
 
-    def get_access_token(self, requester, permissions=None):
+    def __get_access_token(self, requester):
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
-        :param requester: Requester
-        :param permissions: dict
+        :param requester: Requester. The requester has to have JWT authentication
         :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
-        if permissions is None:
-            permissions = {}
+        body = {"permissions": self.token_permissions}
 
-        if not isinstance(permissions, dict):
-            raise GithubException.GithubException(
-                status=400, data={"message": "Invalid permissions"}, headers=None
+        headers, response = requester.requestJsonAndCheck(
+            "POST",
+            f"/app/installations/{self.installation_id}/access_tokens",
+            input=body,
+        )
+
+        return InstallationAuthorization(
+            requester=requester,
+            headers=headers,
+            attributes=response,
+            completed=True,
+        )
+
+    def _get_access_token_func(self, requester):
+        """
+        Returns a function that, when called, provides a working access token.
+        :param requester: Requester. This requester is used to fetch new tokens.
+                                     The authentication provided by this method.
+        """
+        def jwt():
+            return create_jwt(
+                self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at
             )
 
-        if (
-            self.auth is None
-            or permissions != self.auth_permissions
-            or (self.auth.expires_at < datetime.datetime.utcnow() - self.threshold)
-        ):
-            body = {"permissions": permissions}
+        # this requester can fetch access tokens as it provides a jwt (created each request)
+        jwt_requester = requester.with_jwt(jwt)
 
-            def jwt():
-                return create_jwt(
-                    self.app_id, self.private_key, self.jwt_expiry, self.jwt_issued_at
-                )
+        # this stores the latest access token we have fetched, fetch now to fail early
+        auth = [self.__get_access_token(jwt_requester)]
 
-            jwt_requester = requester.with_jwt(jwt)
-            headers, response = jwt_requester.requestJsonAndCheck(
-                "POST",
-                f"/app/installations/{self.installation_id}/access_tokens",
-                input=body,
-            )
+        # this function fetches a new token when expired, and returns the latest token
+        def func():
+            if auth[0].expires_at < datetime.datetime.utcnow() - ACCESS_TOKEN_REFRESH_THRESHOLD_DELTA:
+                auth[0] = self.__get_access_token(jwt_requester)
+            return auth[0]
 
-            self.auth = InstallationAuthorization(
-                requester=jwt_requester,
-                headers=headers,
-                attributes=response,
-                completed=True,
-            )
-            self.auth_permissions = permissions.copy()
-
-        return self.auth
+        return func

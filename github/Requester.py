@@ -306,7 +306,6 @@ class Requester:
         self._initializeDebugFeature()
 
         self.__jwt = jwt
-        self.__app_auth = app_auth
         self.__base_url = base_url
 
         if password is not None:
@@ -352,6 +351,9 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+
+        # app_auth.get_access_token_func uses this requester, so call this AFTER self is all setup
+        self.__app_auth = app_auth._get_access_token_func(self) if app_auth else None
 
     def with_jwt(self, jwt):
         return Requester(
@@ -600,9 +602,7 @@ class Requester:
         if self.__jwt is not None and not isinstance(self.__jwt, str):
             self.__authorizationHeader = f"Bearer {self.__jwt()}"
         if self.__app_auth is not None:
-            self.__authorizationHeader = (
-                f"token {self.__app_auth.get_access_token(self).token}"
-            )
+            self.__authorizationHeader = f"token {self.__app_auth().token}"
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
 
