@@ -778,4 +778,4 @@ class Github:
 
 
 # Retrocompatibility
-#GithubIntegration = github.GithubIntegration
+# GithubIntegration = github.GithubIntegration

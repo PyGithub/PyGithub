@@ -13,6 +13,7 @@ class GithubIntegration:
     """
     Main class to obtain tokens for a GitHub integration.
     """
+
     def __init__(
         self,
         app_id,
@@ -76,7 +77,9 @@ class GithubIntegration:
         if expiration is None:
             return self.app_auth.create_jwt()
         else:
-            app_auth = AppAuthentication(self.app_id, self.private_key, jwt_expiry=expiration)
+            app_auth = AppAuthentication(
+                self.app_id, self.private_key, jwt_expiry=expiration
+            )
             return app_auth.create_jwt()
 
     def get_app_installation_authentication(
@@ -96,7 +99,12 @@ class GithubIntegration:
         :rtype: :class:`github.Github`
         """
         return AppInstallationAuthentication(
-            self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
+            self.app_id,
+            self.private_key,
+            installation_id,
+            permissions,
+            jwt_expiry,
+            jwt_issued_at,
         )._get_access_token_func(self.__requester)()
 
     def get_github_for_installation(
@@ -116,7 +124,12 @@ class GithubIntegration:
         :rtype: :class:`github.Github`
         """
         app_auth = AppInstallationAuthentication(
-            self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
+            self.app_id,
+            self.private_key,
+            installation_id,
+            permissions,
+            jwt_expiry,
+            jwt_issued_at,
         )
 
         return Github(

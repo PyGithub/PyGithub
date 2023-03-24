@@ -7,7 +7,6 @@ from github.Installation import Installation
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 
-
 class GithubIntegration:
     app_id: Union[int, str] = ...
     private_key: str = ...
@@ -33,14 +32,16 @@ class GithubIntegration:
         permissions: Optional[Dict[str, str]] = ...,
         jwt_expiry: int = ...,
         jwt_issued_at: int = ...,
-    ): AppInstallationAuthentication
+    ):
+        AppInstallationAuthentication
     def get_github_for_installation(
         self,
         installation_id: int,
         permissions: Optional[Dict[str, str]] = ...,
         jwt_expiry: int = ...,
         jwt_issued_at: int = ...,
-    ): github.Github
+    ):
+        github.Github
     def get_app_installation(self, installation_id: int) -> Installation: ...
     def get_installation(self, owner: str, repo: str) -> Installation: ...
     def get_installations(self) -> PaginatedList[Installation]: ...

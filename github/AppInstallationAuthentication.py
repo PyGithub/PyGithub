@@ -109,7 +109,10 @@ class AppInstallationAuthentication:
 
         # this function fetches a new token when expired, and returns the latest token
         def func():
-            if auth[0].expires_at < datetime.datetime.utcnow() - ACCESS_TOKEN_REFRESH_THRESHOLD_DELTA:
+            if (
+                auth[0].expires_at
+                < datetime.datetime.utcnow() - ACCESS_TOKEN_REFRESH_THRESHOLD_DELTA
+            ):
                 auth[0] = self.__get_access_token(jwt_requester)
             return auth[0]
 

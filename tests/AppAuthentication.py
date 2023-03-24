@@ -25,15 +25,18 @@ import sys
 import jwt
 
 import github
-from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
+
 from . import Framework
+from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
 
 
 class AppAuthentication(Framework.TestCase):
     def testCreateJWT(self):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
-        token = github.AppAuthentication(app_id=APP_ID, private_key=PRIVATE_KEY).create_jwt()
+        token = github.AppAuthentication(
+            app_id=APP_ID, private_key=PRIVATE_KEY
+        ).create_jwt()
         payload = jwt.decode(
             token,
             key=PUBLIC_KEY,

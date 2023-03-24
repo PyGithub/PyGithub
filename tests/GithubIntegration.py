@@ -3,6 +3,7 @@ import time  # NOQA
 import requests  # NOQA
 
 import github
+
 from . import Framework
 
 APP_ID = 243473
@@ -56,8 +57,10 @@ class GithubIntegration(Framework.BasicTestCase):
         )
 
         # Get repo installation access token
-        repo_installation_authorization = github_integration.get_app_installation_authentication(
-            self.repo_installation_id
+        repo_installation_authorization = (
+            github_integration.get_app_installation_authentication(
+                self.repo_installation_id
+            )
         )
         self.assertEqual(
             repo_installation_authorization.token,
@@ -72,8 +75,10 @@ class GithubIntegration(Framework.BasicTestCase):
         )
 
         # Get org installation access token
-        org_installation_authorization = github_integration.get_app_installation_authentication(
-            self.org_installation_id
+        org_installation_authorization = (
+            github_integration.get_app_installation_authentication(
+                self.org_installation_id
+            )
         )
         self.assertEqual(
             org_installation_authorization.token,
@@ -93,8 +98,10 @@ class GithubIntegration(Framework.BasicTestCase):
         )
 
         # Get user installation access token
-        user_installation_authorization = github_integration.get_app_installation_authentication(
-            self.user_installation_id
+        user_installation_authorization = (
+            github_integration.get_app_installation_authentication(
+                self.user_installation_id
+            )
         )
         self.assertEqual(
             user_installation_authorization.token,
@@ -167,7 +174,9 @@ class GithubIntegration(Framework.BasicTestCase):
             app_id=APP_ID, private_key=PRIVATE_KEY
         )
         with self.assertRaises(github.GithubException) as raisedexp:
-            github_integration.get_app_installation_authentication(self.repo_installation_id)
+            github_integration.get_app_installation_authentication(
+                self.repo_installation_id
+            )
 
         self.assertEqual(raisedexp.exception.status, 401)
 
@@ -200,4 +209,4 @@ class GithubIntegration(Framework.BasicTestCase):
                 self.repo_installation_id, permissions="invalid_data"
             )
 
-        self.assertEqual(raisedexp.exception.args, ("invalid_data", ))
+        self.assertEqual(raisedexp.exception.args, ("invalid_data",))
