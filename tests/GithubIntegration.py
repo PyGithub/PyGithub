@@ -1,12 +1,8 @@
-import sys
 import time  # NOQA
 
-import jwt
 import requests  # NOQA
 
 import github
-from github.AppInstallationAuthentication import create_jwt
-
 from . import Framework
 
 APP_ID = 243473
@@ -43,41 +39,6 @@ class GithubIntegration(Framework.BasicTestCase):
         self.org_installation_id = 30614487
         self.repo_installation_id = 30614431
         self.user_installation_id = 30614431
-
-    def testCreateJWT(self):
-        self.origin_time = sys.modules["time"].time
-        sys.modules["time"].time = lambda: 1550055331.7435968
-        token = create_jwt(app_id=APP_ID, private_key=PRIVATE_KEY)
-        payload = jwt.decode(
-            token,
-            key=PUBLIC_KEY,
-            algorithms=["RS256"],
-            options={"verify_exp": False},
-        )
-        self.assertDictEqual(
-            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
-        )
-        sys.modules["time"].time = self.origin_time
-
-    def testCreateJWTWithExpiration(self):
-        self.origin_time = sys.modules["time"].time
-        sys.modules["time"].time = lambda: 1550055331.7435968
-        token = create_jwt(
-            app_id=APP_ID,
-            private_key=PRIVATE_KEY,
-            expiration=60,
-            issued_at=-30,
-        )
-        payload = jwt.decode(
-            token,
-            key=PUBLIC_KEY,
-            algorithms=["RS256"],
-            options={"verify_exp": False},
-        )
-        self.assertDictEqual(
-            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
-        )
-        sys.modules["time"].time = self.origin_time
 
     def testGetInstallations(self):
         github_integration = github.GithubIntegration(

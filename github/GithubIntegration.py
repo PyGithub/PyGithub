@@ -1,7 +1,8 @@
 import deprecated
 
 from github import Consts
-from github.AppInstallationAuthentication import AppInstallationAuthentication, create_jwt
+from github.AppAuthentication import AppAuthentication
+from github.AppInstallationAuthentication import AppInstallationAuthentication
 from github.Installation import Installation
 from github.MainClass import Github
 from github.PaginatedList import PaginatedList
@@ -40,6 +41,7 @@ class GithubIntegration:
 
         self.app_id = app_id
         self.private_key = private_key
+        self.app_auth = AppAuthentication(app_id, private_key)
         self.__base_url = base_url
         self.__timeout = timeout
         self.__user_agent = user_agent
@@ -50,7 +52,7 @@ class GithubIntegration:
         self.__requester = Requester(
             login_or_token=None,
             password=None,
-            jwt=self.create_jwt,
+            jwt=self.app_auth.create_jwt,
             app_auth=None,
             base_url=base_url,
             timeout=timeout,
@@ -61,8 +63,21 @@ class GithubIntegration:
             pool_size=pool_size,
         )
 
-    def create_jwt(self):
-        return create_jwt(self.app_id, self.private_key)
+    # only here for backward compatibility
+    @deprecated.deprecated(
+        reason="""
+        GithubIntegration.create_jwt() is deprecated, use
+          GithubIntegration.app_auth.create_jwt() or
+          AppAuthentication(app_id, private_key, jwt_expiry=expiration) or
+          Github(jwt=AppAuthentication(app_id, private_key).create_jwt) instead.
+        """
+    )
+    def create_jwt(self, expiration=None):
+        if expiration is None:
+            return self.app_auth.create_jwt()
+        else:
+            app_auth = AppAuthentication(self.app_id, self.private_key, jwt_expiry=expiration)
+            return app_auth.create_jwt()
 
     def get_app_installation_authentication(
         self,
