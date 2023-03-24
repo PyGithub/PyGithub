@@ -24,7 +24,7 @@ $ pip install PyGithub
 ## Simple Demo
 
 ```python
-from github import Github
+from github import Github, GithubIntegration
 
 # First create a Github instance:
 
@@ -33,6 +33,10 @@ g = Github("access_token")
 
 # Github Enterprise with custom hostname
 g = Github(base_url="https://{hostname}/api/v3", login_or_token="access_token")
+
+# authenticating as a Github App installation
+i = GithubIntegration("app_id", "private_key")
+g = i.get_github_for_installation("installation_id")
 
 # Then play with your Github objects:
 for repo in g.get_user().get_repos():

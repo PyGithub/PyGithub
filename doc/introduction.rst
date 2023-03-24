@@ -13,10 +13,14 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 
 First create a Github instance::
 
-    from github import Github
-    
+   from github import Github, GithubIntegration
+
     # using an access token
     g = Github("access_token")
+
+    # authenticating as a Github App installation
+    i = GithubIntegration("app_id", "private_key")
+    g = i.get_github_for_installation("installation_id")
 
     # Github Enterprise with custom hostname
     g = Github(base_url="https://{hostname}/api/v3", login_or_token="access_token")
