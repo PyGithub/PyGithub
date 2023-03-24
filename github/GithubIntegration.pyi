@@ -1,7 +1,7 @@
 from typing import Union, Optional, Dict
 
 import github
-from github.AppAuthentication import AppAuthentication
+from github.AppInstallationAuthentication import AppInstallationAuthentication
 from github.Installation import Installation
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
@@ -30,7 +30,7 @@ class GithubIntegration:
         permissions: Optional[Dict[str, str]] = ...,
         jwt_expiry: int = ...,
         jwt_issued_at: int = ...,
-    ): AppAuthentication
+    ): AppInstallationAuthentication
     def get_github_for_installation(
         self,
         installation_id: int,

@@ -52,9 +52,9 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(user_agent="PyGithubTester")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
-    def testAppAuthentication(self):
+    def testAppInstallationAuthentication(self):
         g = github.Github(
-            app_auth=github.AppAuthentication(
+            app_auth=github.AppInstallationAuthentication(
                 app_id=self.app_id,
                 private_key=self.app_private_key,
                 installation_id=29782936,

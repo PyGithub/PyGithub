@@ -65,7 +65,7 @@ def create_jwt(
     return encrypted
 
 
-class AppAuthentication:
+class AppInstallationAuthentication:
     def __init__(
         self,
         app_id,

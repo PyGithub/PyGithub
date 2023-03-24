@@ -1,7 +1,7 @@
 import deprecated
 
 from github import Consts
-from github.AppAuthentication import AppAuthentication, create_jwt
+from github.AppInstallationAuthentication import AppInstallationAuthentication, create_jwt
 from github.Installation import Installation
 from github.MainClass import Github
 from github.PaginatedList import PaginatedList
@@ -80,7 +80,7 @@ class GithubIntegration:
         :param jwt_issued_at: int
         :rtype: :class:`github.Github`
         """
-        return AppAuthentication(
+        return AppInstallationAuthentication(
             self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
         )._get_access_token_func(self.__requester)()
 
@@ -100,7 +100,7 @@ class GithubIntegration:
         :param jwt_issued_at: int
         :rtype: :class:`github.Github`
         """
-        app_auth = AppAuthentication(
+        app_auth = AppInstallationAuthentication(
             self.app_id, self.private_key, installation_id, permissions, jwt_expiry, jwt_issued_at
         )
 

@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
 
 from requests.models import Response
 
-from github.AppAuthentication import AppAuthentication
+from github.AppInstallationAuthentication import AppInstallationAuthentication
 from github.GithubObject import GithubObject
 from github.InstallationAuthorization import InstallationAuthorization
 
@@ -119,7 +119,7 @@ class Requester:
         login_or_token: Optional[str],
         password: Optional[str],
         jwt: Optional[Union[str, Callable[[], str]]],
-        app_auth: Optional[AppAuthentication],
+        app_auth: Optional[AppInstallationAuthentication],
         base_url: str,
         timeout: int,
         user_agent: str,

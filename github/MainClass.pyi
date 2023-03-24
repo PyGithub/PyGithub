@@ -2,7 +2,7 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
-from github.AppAuthentication import AppAuthentication
+from github.AppInstallationAuthentication import AppInstallationAuthentication
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -31,7 +31,7 @@ class Github:
         login_or_token: Optional[str] = ...,
         password: Optional[str] = ...,
         jwt: Optional[str] = ...,
-        app_auth: Optional[AppAuthentication] = ...,
+        app_auth: Optional[AppInstallationAuthentication] = ...,
         base_url: str = ...,
         timeout: int = ...,
         user_agent: str = ...,

@@ -5,7 +5,7 @@ import jwt
 import requests  # NOQA
 
 import github
-from github.AppAuthentication import create_jwt
+from github.AppInstallationAuthentication import create_jwt
 
 from . import Framework
 
