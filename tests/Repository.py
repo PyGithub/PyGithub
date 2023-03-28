@@ -134,6 +134,7 @@ class Repository(Framework.TestCase):
             has_projects=False,
             has_wiki=False,
             has_downloads=True,
+            allow_auto_merge=True,
             allow_forking=True,
             allow_squash_merge=True,
             allow_merge_commit=True,
@@ -150,6 +151,7 @@ class Repository(Framework.TestCase):
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
         self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
         self.assertTrue(self.repo.allow_merge_commit)
