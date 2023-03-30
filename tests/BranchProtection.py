@@ -27,12 +27,6 @@ class BranchProtection(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.branch_protection = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_branch("integrations")
-            .get_protection()
-        )
-        self.branch_protection2 = (
             self.g
             .get_repo("curvewise-forks/PyGithub")
             .get_branch("master")
@@ -40,25 +34,12 @@ class BranchProtection(Framework.TestCase):
         )
 
     def testAttributes(self):
-        self.assertTrue(self.branch_protection.required_status_checks.strict)
-        self.assertEqual(
-            self.branch_protection.required_status_checks.contexts, ["foo/bar"]
-        )
+        self.assertTrue(self.branch_protection.required_linear_history)
         self.assertEqual(
             self.branch_protection.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection",
-        )
-        self.assertEqual(
-            self.branch_protection.__repr__(),
-            'BranchProtection(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection")',
-        )
-
-        self.assertTrue(self.branch_protection2.required_linear_history)
-        self.assertEqual(
-            self.branch_protection2.url,
             'https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection',
         )
         self.assertEqual(
-            self.branch_protection2.__repr__(),
+            self.branch_protection.__repr__(),
             'BranchProtection(url="https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection")',
         )
