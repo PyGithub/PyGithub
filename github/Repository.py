@@ -2419,10 +2419,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             Repository, self._requester, f"{self.url}/forks", None
         )
 
-    def create_fork(self, organization=github.GithubObject.NotSet):
+    def create_fork(
+        self,
+        organization=github.GithubObject.NotSet,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param organization: :class:`github.Organization.Organization` or string
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         post_parameters = {}
@@ -2432,6 +2439,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["organization"] = organization
         else:
             assert organization is github.GithubObject.NotSet, organization
+        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+        assert default_branch_only is github.GithubObject.NotSet or isinstance(
+            default_branch_only, bool
+        ), default_branch_only
+        if name is not github.GithubObject.NotSet:
+            post_parameters["name"] = name
+        if default_branch_only is not github.GithubObject.NotSet:
+            post_parameters["default_branch_only"] = default_branch_only
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/forks",
