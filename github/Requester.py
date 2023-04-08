@@ -120,23 +120,17 @@ class HTTPSRequestsConnectionClass:
         self.session.mount("https://", self.adapter)
 
     def request(self, verb, url, input, headers):
-        self.verb = verb
-        self.url = url
-        self.input = input
-        self.headers = headers
-
-    def getresponse(self):
-        verb = getattr(self.session, self.verb.lower())
-        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
+        verb = getattr(self.session, verb.lower())
+        url = f"{self.protocol}://{self.host}:{self.port}{url}"
         r = verb(
             url,
-            headers=self.headers,
-            data=self.input,
+            headers=headers,
+            data=input,
             timeout=self.timeout,
             verify=self.verify,
             allow_redirects=False,
         )
-        return RequestsResponse(r)
+        return RequestsResponse(r)       
 
     def close(self):
         return
@@ -179,18 +173,12 @@ class HTTPRequestsConnectionClass:
         self.session.mount("http://", self.adapter)
 
     def request(self, verb, url, input, headers):
-        self.verb = verb
-        self.url = url
-        self.input = input
-        self.headers = headers
-
-    def getresponse(self):
-        verb = getattr(self.session, self.verb.lower())
-        url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
+        verb = getattr(self.session, verb.lower())
+        url = f"{self.protocol}://{self.host}:{self.port}{url}"
         r = verb(
             url,
-            headers=self.headers,
-            data=self.input,
+            headers=headers,
+            data=input,
             timeout=self.timeout,
             verify=self.verify,
             allow_redirects=False,
@@ -596,8 +584,7 @@ class Requester:
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        cnx.request(verb, url, input, requestHeaders)
-        response = cnx.getresponse()
+        response = cnx.request(verb, url, input, requestHeaders)
 
         status = response.status
         responseHeaders = {k.lower(): v for k, v in response.getheaders()}
