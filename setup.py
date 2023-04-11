@@ -104,10 +104,11 @@ if __name__ == "__main__":
         python_requires=">=3.7",
         install_requires=[
             "deprecated",
-            "pyjwt>=2.4.0",
+            "pyjwt[crypto]>=2.4.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
         ],
-        extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=1.0.3"],
+        # can be removed, still here to avoid breaking user code
+        extras_require={"integrations": []},
+        tests_require=["httpretty>=1.0.3"],
     )
