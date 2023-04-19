@@ -101,6 +101,7 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
+import github.CodeScanningAnalysis
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -3847,6 +3848,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
             github.CodeScanAlert.CodeScanAlert,
             self._requester,
             f"{self.url}/code-scanning/alerts",
+            None,
+        )
+
+    def get_code_scanning_analyses(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/analyses <https://docs.github.com/en/rest/code-scanning#list-code-scanning-analyses-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanningAnalysis.CodeScanningAnalysis`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.CodeScanningAnalysis.CodeScanningAnalysis,
+            self._requester,
+            f"{self.url}/code-scanning/analyses",
             None,
         )
 
