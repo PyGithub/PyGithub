@@ -3851,16 +3851,23 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_code_scanning_analyses(self):
+    def get_code_scanning_analyses(self, ref=github.GithubObject.NotSet):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/analyses <https://docs.github.com/en/rest/code-scanning#list-code-scanning-analyses-for-a-repository>`_
+        :param: ref: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanningAnalysis.CodeScanningAnalysis`
         """
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        parameters = {}
+
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
+
         return github.PaginatedList.PaginatedList(
             github.CodeScanningAnalysis.CodeScanningAnalysis,
             self._requester,
             f"{self.url}/code-scanning/analyses",
-            None,
+            parameters,
         )
 
     def _initAttributes(self):
