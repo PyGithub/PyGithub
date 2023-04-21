@@ -4,6 +4,17 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.58.0 (February 19, 2023)
+-----------------------------------
+
+**Bug Fixes & Improvements**
+
+- Add unarchiving support @Tsuesun (#2391)
+- Support full GitHub app authentication @dblanchette (#1986)
+- Continue the PR #1899 @Felixoid (#2386)
+- feat: add allow\_forking to Repository @IbrahimAH (#2380)
+- Add code scanning alerts @eric-nieuwland (#2227)
+
 Version 1.57 (November 05, 2022)
 -----------------------------------
 

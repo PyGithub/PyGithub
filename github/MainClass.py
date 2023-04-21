@@ -83,8 +83,7 @@ class Github:
         login_or_token=None,
         password=None,
         jwt=None,
-        app_id=None,
-        app_private_key=None,
+        app_auth=None,
         base_url=Consts.DEFAULT_BASE_URL,
         timeout=Consts.DEFAULT_TIMEOUT,
         user_agent="PyGithub/Python",
@@ -97,8 +96,7 @@ class Github:
         :param login_or_token: string
         :param password: string
         :param jwt: string
-        :param app_id: int or string
-        :param app_private_key: string
+        :param app_auth: github.AppAuthentication
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -116,16 +114,16 @@ class Github:
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert (
             retry is None
-            or isinstance(retry, (int))
-            or isinstance(retry, (urllib3.util.Retry))
-        )
-        assert pool_size is None or isinstance(pool_size, (int)), pool_size
+            or isinstance(retry, int)
+            or isinstance(retry, urllib3.util.Retry)
+        ), retry
+        assert pool_size is None or isinstance(pool_size, int), pool_size
+
         self.__requester = Requester(
             login_or_token,
             password,
             jwt,
-            app_id,
-            app_private_key,
+            app_auth,
             base_url,
             timeout,
             user_agent,
@@ -785,3 +783,7 @@ class Github:
         else:
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+
+
+# Retrocompatibility
+GithubIntegration = github.GithubIntegration

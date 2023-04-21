@@ -1,3 +1,5 @@
+from github.AppAuthentication import AppAuthentication as AppAuthentication
+from github.GithubIntegration import GithubIntegration as GithubIntegration
 from github.MainClass import Github as Github
 from github.GithubIntegration import GithubIntegration as GithubIntegration
 

@@ -1,14 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Nic Dahlquist <nic@snapchat.com>                              #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
-# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Denis Blanchette <denisblanchette@gmail.com>                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,24 +20,22 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
-.eggs/
-.python-version
 
-/GithubCredentials.py
-/scripts/TwitterCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/coverage.xml
-/.idea
-/developer.github.com/
-/gh-pages/
-/doc/doctrees/
-.vscode*
-.venv
-venv
-.tox/
-.mypy_cache/
+class AppAuthentication:
+    def __init__(
+        self,
+        app_id,
+        private_key,
+        installation_id,
+        token_permissions=None,
+    ):
+        assert isinstance(app_id, (int, str)), app_id
+        assert isinstance(private_key, str)
+        assert isinstance(installation_id, int), installation_id
+        assert token_permissions is None or isinstance(
+            token_permissions, dict
+        ), token_permissions
+        self.app_id = app_id
+        self.private_key = private_key
+        self.installation_id = installation_id
+        self.token_permissions = token_permissions

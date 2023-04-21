@@ -132,7 +132,6 @@ deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json
 # https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
 repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
-
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
 # As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
@@ -140,3 +139,12 @@ DEFAULT_STATUS_URL = "https://status.github.com"
 # latency.
 DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
+
+# JWT expiry in seconds. Could be set for max 600 seconds (10 minutes).
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
+DEFAULT_JWT_EXPIRY = 300
+MIN_JWT_EXPIRY = 15
+MAX_JWT_EXPIRY = 600
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
+# "The time the JWT was created. To protect against clock drift, we recommend you set this 60 seconds in the past."
+DEFAULT_JWT_ISSUED_AT = -60

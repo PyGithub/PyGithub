@@ -4,6 +4,7 @@ from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
 
 from requests.models import Response
 
+from github.AppAuthentication import AppAuthentication
 from github.GithubObject import GithubObject
 from github.InstallationAuthorization import InstallationAuthorization
 
@@ -48,9 +49,8 @@ class HTTPSRequestsConnectionClass:
     ) -> None: ...
 
 class Requester:
-    __installation_authorization: Optional[InstallationAuthorization]
-    __app_id: Optional[Union[int, str]]
-    __app_private_key: Optional[str]
+    __installation_authorization: Optional[InstallationAuthorization] = ...
+    __app_auth: Optional[AppAuthentication] = ...
     def DEBUG_ON_RESPONSE(
         self, statusCode: int, responseHeader: Dict[str, str], data: str
     ) -> None: ...
@@ -58,7 +58,7 @@ class Requester:
     def __check(
         self,
         status: int,
-        responseHeader: Dict[str, Any],
+        responseHeaders: Dict[str, Any],
         output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]: ...
     def __addParametersToUrl(
@@ -69,7 +69,7 @@ class Requester:
     def __authenticate(
         self,
         url: str,
-        responseHeader: Dict[str, Any],
+        requestHeaders: Dict[str, Any],
         parameters: Dict[str, Any],
     ) -> None: ...
     def __customConnection(
@@ -120,8 +120,7 @@ class Requester:
         login_or_token: Optional[str],
         password: Optional[str],
         jwt: Optional[str],
-        app_id: Optional[Union[int, str]],
-        app_private_key: Optional[str],
+        app_auth: Optional[AppAuthentication],
         base_url: str,
         timeout: int,
         user_agent: str,
@@ -136,8 +135,6 @@ class Requester:
     def _get_installation_authorization(self) -> InstallationAuthorization: ...
     def _refresh_token_if_needed(self) -> None: ...
     def _refresh_token(self) -> None: ...
-    @property
-    def clone_credentials(self) -> Optional[Tuple[str, str]]: ...
     @classmethod
     def injectConnectionClasses(
         cls, httpConnectionClass: Callable, httpsConnectionClass: Callable
