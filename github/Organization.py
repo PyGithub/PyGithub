@@ -999,18 +999,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters,
         )
 
-    def get_public_key(self):
-        """
-        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
-        :rtype: :class:`github.PublicKey.PublicKey`
-        """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/secrets/public-key"
-        )
-        return github.PublicKey.PublicKey(
-            self._requester, headers, data, completed=True
-        )
-
     def create_or_update_secret(
         self, secret_name, secret_value, visibility, selected_repository_ids=None
     ):
@@ -1141,17 +1129,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
         _headers, _data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/actions/secrets/{secret_name}/repositories/{repository_id}",
-        )
-
-    def delete_secret(self, secret_name):
-        """
-        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-an-organization-secret>`_
-        :param secret_name: string
-        """
-        assert isinstance(secret_name, str)
-
-        _headers, _data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
         )
 
     def get_self_hosted_runner(self, runner_id):
