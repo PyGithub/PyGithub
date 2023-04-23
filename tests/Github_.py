@@ -204,6 +204,46 @@ class Github(Framework.TestCase):
         )
         self.assertEqual(repr(hook), 'HookDescription(name="activecollab")')
 
+    def testGetHookDelivery(self):
+        delivery = self.g.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(delivery.delivered_at, "2012-05-27T06:00:32Z")
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(
+            delivery.response, github.HookDelivery.HookDeliveryResponse
+        )
+        self.assertEqual(
+            delivery.response.headers, {"content-type": "text/html;charset=utf-8"}
+        )
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = self.g.get_hook_deliveries(257993)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(deliveries[0].delivered_at, "2012-05-27T06:00:32Z")
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
+
     def testGetRepoFromFullName(self):
         self.assertEqual(
             self.g.get_repo("jacquev6/PyGithub").description,

@@ -211,7 +211,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
-    def _makeFloatAttribute(value):
+    def _makeFloatAttribute(value: Optional[float]) -> Attribute[float]:
         return GithubObject.__makeSimpleAttribute(value, float)
 
     @staticmethod

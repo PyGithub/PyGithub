@@ -50,6 +50,7 @@
 import datetime
 import pickle
 import warnings
+from typing import List
 
 import urllib3
 
@@ -68,10 +69,12 @@ from . import (
     Consts,
     GithubApp,
     GitignoreTemplate,
+    HookDelivery,
     HookDescription,
     RateLimit,
     Repository,
 )
+from .HookDelivery import HookDeliverySummary
 from .Requester import Requester
 
 
@@ -720,6 +723,39 @@ class Github:
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
         return [
             HookDescription.HookDescription(
+                self.__requester, headers, attributes, completed=True
+            )
+            for attributes in data
+        ]
+
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET", f"/hooks/{hook_id}/deliveries/{delivery_id}"
+        )
+        return HookDelivery.HookDelivery(
+            self.__requester, headers, attributes, completed=True
+        )
+
+    def get_hook_deliveries(self, hook_id: int) -> List[HookDeliverySummary]:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :rtype: list of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", f"/hooks/{hook_id}/deliveries"
+        )
+        return [
+            HookDelivery.HookDeliverySummary(
                 self.__requester, headers, attributes, completed=True
             )
             for attributes in data
