@@ -131,6 +131,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         users_bypass_pull_request_allowances=github.GithubObject.NotSet,
         teams_bypass_pull_request_allowances=github.GithubObject.NotSet,
         apps_bypass_pull_request_allowances=github.GithubObject.NotSet,
+        block_creations=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -154,6 +155,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :users_bypass_pull_request_allowances: list of strings
         :teams_bypass_pull_request_allowances: list of strings
         :apps_bypass_pull_request_allowances: list of strings
+        :block_creations: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -343,6 +345,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             }
         else:
             post_parameters["bypass_pull_request_allowances"] = None
+        if block_creations is not github.GithubObject.NotSet:
+            post_parameters["block_creations"] = block_creations
+        else:
+            post_parameters["block_creations"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
