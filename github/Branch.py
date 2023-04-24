@@ -128,6 +128,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         required_conversation_resolution=github.GithubObject.NotSet,
         lock_branch=github.GithubObject.NotSet,
         allow_fork_syncing=github.GithubObject.NotSet,
+        users_bypass_pull_request_allowances=github.GithubObject.NotSet,
+        teams_bypass_pull_request_allowances=github.GithubObject.NotSet,
+        apps_bypass_pull_request_allowances=github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -148,6 +151,10 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :required_conversation_resolution: bool
         :lock_branch: bool
         :allow_fork_syncing: bool
+        :users_bypass_pull_request_allowances: list of strings
+        :teams_bypass_pull_request_allowances: list of strings
+        :apps_bypass_pull_request_allowances: list of strings
+
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -195,6 +202,23 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert allow_fork_syncing is github.GithubObject.NotSet or isinstance(
             allow_fork_syncing, bool
         ), allow_fork_syncing
+        assert (
+            users_bypass_pull_request_allowances is github.GithubObject.NotSet
+            or all(
+                isinstance(element, str)
+                for element in users_bypass_pull_request_allowances
+            )
+        ), (users_bypass_pull_request_allowances)
+        assert (
+            teams_bypass_pull_request_allowances is github.GithubObject.NotSet
+            or all(
+                isinstance(element, str)
+                for element in teams_bypass_pull_request_allowances
+            )
+        ), (teams_bypass_pull_request_allowances)
+        assert apps_bypass_pull_request_allowances is github.GithubObject.NotSet or all(
+            isinstance(element, str) for element in apps_bypass_pull_request_allowances
+        ), apps_bypass_pull_request_allowances
 
         post_parameters = {}
         if (
@@ -306,6 +330,27 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["allow_fork_syncing"] = allow_fork_syncing
         else:
             post_parameters["allow_fork_syncing"] = None
+        if (
+            users_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            or teams_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
+        ):
+            post_parameters["bypass_pull_request_allowances"] = {}
+
+            if users_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                post_parameters["bypass_pull_request_allowances"][
+                    "users"
+                ] = users_bypass_pull_request_allowances
+            if teams_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                post_parameters["bypass_pull_request_allowances"][
+                    "teams"
+                ] = teams_bypass_pull_request_allowances
+            if apps_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                post_parameters["bypass_pull_request_allowances"][
+                    "apps"
+                ] = apps_bypass_pull_request_allowances
+        else:
+            post_parameters["bypass_pull_request_allowances"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
