@@ -155,7 +155,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :teams_bypass_pull_request_allowances: list of strings
         :apps_bypass_pull_request_allowances: list of strings
 
-
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
         changing. Use edit_required_status_checks() to avoid this.
@@ -304,10 +303,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             }
         else:
             post_parameters["restrictions"] = None
-        if app_push_restrictions is not github.GithubObject.NotSet:
-            post_parameters["app_push_restrictions"] = app_push_restrictions
-        else:
-            post_parameters["app_push_restrictions"] = None
         if required_linear_history is not github.GithubObject.NotSet:
             post_parameters["required_linear_history"] = required_linear_history
         else:
@@ -335,20 +330,17 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             or teams_bypass_pull_request_allowances is not github.GithubObject.NotSet
             or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
         ):
-            post_parameters["bypass_pull_request_allowances"] = {}
-
-            if users_bypass_pull_request_allowances is not github.GithubObject.NotSet:
-                post_parameters["bypass_pull_request_allowances"][
-                    "users"
-                ] = users_bypass_pull_request_allowances
-            if teams_bypass_pull_request_allowances is not github.GithubObject.NotSet:
-                post_parameters["bypass_pull_request_allowances"][
-                    "teams"
-                ] = teams_bypass_pull_request_allowances
-            if apps_bypass_pull_request_allowances is not github.GithubObject.NotSet:
-                post_parameters["bypass_pull_request_allowances"][
-                    "apps"
-                ] = apps_bypass_pull_request_allowances
+            if users_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                users_bypass_pull_request_allowances = []
+            if teams_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                teams_bypass_pull_request_allowances = []
+            if apps_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                apps_bypass_pull_request_allowances = []
+            post_parameters["bypass_pull_request_allowances"] = {
+                "users": users_bypass_pull_request_allowances,
+                "teams": teams_bypass_pull_request_allowances,
+                "apps": apps_bypass_pull_request_allowances,
+            }
         else:
             post_parameters["bypass_pull_request_allowances"] = None
 
