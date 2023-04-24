@@ -249,6 +249,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             or dismiss_stale_reviews is not github.GithubObject.NotSet
             or require_code_owner_reviews is not github.GithubObject.NotSet
             or required_approving_review_count is not github.GithubObject.NotSet
+            or users_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            or teams_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
         ):
             post_parameters["required_pull_request_reviews"] = {}
             if dismiss_stale_reviews is not github.GithubObject.NotSet:
@@ -285,6 +288,33 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["apps"] = dismissal_apps
+
+            if (
+                users_bypass_pull_request_allowances is not github.GithubObject.NotSet
+                or teams_bypass_pull_request_allowances
+                is not github.GithubObject.NotSet
+                or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            ):
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = {}
+                if users_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                    users_bypass_pull_request_allowances = []
+                if teams_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                    teams_bypass_pull_request_allowances = []
+                if apps_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                    apps_bypass_pull_request_allowances = []
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = {
+                    "users": users_bypass_pull_request_allowances,
+                    "teams": teams_bypass_pull_request_allowances,
+                    "apps": apps_bypass_pull_request_allowances,
+                }
+            else:
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = None
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
@@ -327,24 +357,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             post_parameters["allow_fork_syncing"] = allow_fork_syncing
         else:
             post_parameters["allow_fork_syncing"] = None
-        if (
-            users_bypass_pull_request_allowances is not github.GithubObject.NotSet
-            or teams_bypass_pull_request_allowances is not github.GithubObject.NotSet
-            or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
-        ):
-            if users_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                users_bypass_pull_request_allowances = []
-            if teams_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                teams_bypass_pull_request_allowances = []
-            if apps_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                apps_bypass_pull_request_allowances = []
-            post_parameters["bypass_pull_request_allowances"] = {
-                "users": users_bypass_pull_request_allowances,
-                "teams": teams_bypass_pull_request_allowances,
-                "apps": apps_bypass_pull_request_allowances,
-            }
-        else:
-            post_parameters["bypass_pull_request_allowances"] = None
         if block_creations is not github.GithubObject.NotSet:
             post_parameters["block_creations"] = block_creations
         else:
