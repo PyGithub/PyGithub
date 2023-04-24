@@ -1,7 +1,6 @@
 from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Union, overload
 
-from github import CodeScanningAnalysis
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Autolink import Autolink
@@ -9,21 +8,24 @@ from github.Branch import Branch
 from github.CheckRun import CheckRun
 from github.CheckSuite import CheckSuite
 from github.Clones import Clones
+from github.CodeScanAlert import CodeScanAlert
+from github.CodeScanningAnalysis import CodeScanningAnalysis
 from github.Commit import Commit
 from github.CommitComment import CommitComment
 from github.Comparison import Comparison
 from github.ContentFile import ContentFile
+from github.DependabotAlert import DependabotAlert
 from github.Deployment import Deployment
 from github.Download import Download
 from github.Event import Event
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitRef import GitRef
 from github.GitRelease import GitRelease
 from github.GitReleaseAsset import GitReleaseAsset
 from github.GitTag import GitTag
 from github.GitTree import GitTree
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Hook import Hook
 from github.InputGitAuthor import InputGitAuthor
 from github.InputGitTreeElement import InputGitTreeElement
@@ -48,6 +50,7 @@ from github.Referrer import Referrer
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.Secret import Secret
+from github.SecretScanningAlert import SecretScanningAlert
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.SelfHostedActionsRunnerRegistrationToken import (
     SelfHostedActionsRunnerRegistrationToken,
@@ -332,6 +335,7 @@ class Repository(CompletableGithubObject):
     def get_collaborator_permission(
         self, collaborator: Union[str, NamedUser]
     ) -> str: ...
+    def get_codescan_alerts(self) -> PaginatedList[CodeScanAlert]: ...
     def get_code_scanning_analyses(
         self, ref: Union[str, _NotSetType]
     ) -> PaginatedList[CodeScanningAnalysis]: ...
@@ -355,6 +359,7 @@ class Repository(CompletableGithubObject):
     def get_contributors(
         self, anon: Union[str, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
+    def get_dependabot_alerts(self) -> PaginatedList[DependabotAlert]: ...
     def get_deployment(self, id_: int) -> Deployment: ...
     def get_deployments(
         self,
@@ -457,6 +462,7 @@ class Repository(CompletableGithubObject):
     def get_release(self, id: Union[int, str]) -> GitRelease: ...
     def get_release_asset(self, id: int) -> GitReleaseAsset: ...
     def get_releases(self) -> PaginatedList[GitRelease]: ...
+    def get_secret_scanning_alerts(self) -> PaginatedList[SecretScanningAlert]: ...
     def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner: ...
     def get_self_hosted_action_runner_registration_token(
         self,

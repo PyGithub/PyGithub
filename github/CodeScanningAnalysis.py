@@ -1,8 +1,8 @@
 import github.AdvancedSecurity
+import github.CodeScanTool
 import github.GithubObject
 import github.SecretScanning
 import github.SecretScanningPushProtection
-import github.Tool
 
 
 class CodeScanningAnalysis(github.GithubObject.NonCompletableGithubObject):
@@ -179,7 +179,9 @@ class CodeScanningAnalysis(github.GithubObject.NonCompletableGithubObject):
         if "sarif_id" in attributes:  # pragma no branch
             self._sarif_id = self._makeStringAttribute(attributes["sarif_id"])
         if "tool" in attributes:  # pragma no branch
-            self._tool = self._makeClassAttribute(github.Tool.Tool, attributes["tool"])
+            self._tool = self._makeClassAttribute(
+                github.CodeScanTool.CodeScanTool, attributes["tool"]
+            )
         if "deletable" in attributes:  # pragma no branch
             self._deletable = self._makeBoolAttribute(attributes["deletable"])
         if "warning" in attributes:  # pragma no branch
