@@ -101,6 +101,7 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
+import github.CodeScanningAnalysis
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -135,6 +136,7 @@ import github.Referrer
 import github.Repository
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.SecurityAndAnalysis
 import github.SelfHostedActionsRunner
 import github.SelfHostedActionsRunnerRegistrationToken
 import github.SourceImport
@@ -688,6 +690,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._releases_url)
         return self._releases_url.value
+
+    @property
+    def security_and_analysis(self):
+        """
+        :type: :class:``
+        """
+        self._completeIfNotSet(self._security_and_analysis)
+        return self._security_and_analysis.value
 
     @property
     def size(self):
@@ -3841,6 +3851,25 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
         )
 
+    def get_code_scanning_analyses(self, ref=github.GithubObject.NotSet):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/analyses <https://docs.github.com/en/rest/code-scanning#list-code-scanning-analyses-for-a-repository>`_
+        :param: ref: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanningAnalysis.CodeScanningAnalysis`
+        """
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        parameters = {}
+
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
+
+        return github.PaginatedList.PaginatedList(
+            github.CodeScanningAnalysis.CodeScanningAnalysis,
+            self._requester,
+            f"{self.url}/code-scanning/analyses",
+            parameters,
+        )
+
     def _initAttributes(self):
         self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
@@ -3908,6 +3937,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._pulls_url = github.GithubObject.NotSet
         self._pushed_at = github.GithubObject.NotSet
         self._releases_url = github.GithubObject.NotSet
+        self._security_and_analysis = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
@@ -4095,6 +4125,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
         if "releases_url" in attributes:  # pragma no branch
             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
+        if "security_and_analysis" in attributes:  # pragma no branch
+            self._security_and_analysis = self._makeClassAttribute(
+                github.SecurityAndAnalysis.SecurityAndAnalysis,
+                attributes["security_and_analysis"],
+            )
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch

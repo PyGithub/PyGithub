@@ -122,6 +122,14 @@ class Repository(Framework.TestCase):
         # Allow None or any boolean value for backwards compatibility
         self.assertIn(self.repo.permissions.maintain, [None, False, True])
         self.assertIn(self.repo.permissions.triage, [None, False, True])
+        self.assertIn(
+            "enabled", self.repo.security_and_analysis.advanced_security.status
+        )
+        self.assertIn("enabled", self.repo.security_and_analysis.secret_scanning.status)
+        self.assertIn(
+            "disabled",
+            self.repo.security_and_analysis.secret_scanning_push_protection.status,
+        )
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -1858,6 +1866,12 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.4", refs[3].ref)
         self.assertEqual("refs/tags/v0.5", refs[4].ref)
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
+
+    def testGetCodeScanAnalyses(self):
+        analyses = self.repo.get_code_scanning_analyses()
+        analysis = analyses.get_page(0)[0]
+
+        self.assertIn("refs/heads/main", analysis.ref)
 
 
 class LazyRepository(Framework.TestCase):
