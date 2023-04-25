@@ -1873,6 +1873,18 @@ class Repository(Framework.TestCase):
 
         self.assertIn("refs/heads/main", analysis.ref)
 
+    def testGetDependabotAlerts(self):
+        alerts = self.repo.get_dependabot_alerts()
+        alert = alerts.get_page(0)[0]
+
+        self.assertEqual(2, alert.number)
+
+    def testGetSecretScanningAlerts(self):
+        alerts = self.repo.get_secret_scanning_alerts()
+        alert = alerts.get_page(0)[0]
+
+        self.assertEqual(2, alert.number)
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):

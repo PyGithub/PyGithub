@@ -168,7 +168,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         if "locations_url" in attributes:  # pragma no branch
             self._locations_url = self._makeStringAttribute(attributes["locations_url"])
         if "number" in attributes:  # pragma no branch
-            self._commit = self._makeIntAttribute(attributes["number"])
+            self._number = self._makeIntAttribute(attributes["number"])
         if "push_protection_bypassed" in attributes:  # pragma no branch
             self._push_protection_bypassed = self._makeBoolAttribute(
                 attributes["push_protection_bypassed"]

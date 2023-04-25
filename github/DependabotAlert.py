@@ -23,7 +23,7 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
                 "number": self._number.value,
                 "security_vulnerability": self._security_vulnerability.value,
                 "state": self._state.value,
-                "update_at": self._update_at.value,
+                "updated_at": self._updated_at.value,
                 "url": self._url.value,
             }
         )
@@ -106,11 +106,11 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def update_at(self):
+    def updated_at(self):
         """
         :type: string
         """
-        return self._update_at.value
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -130,7 +130,7 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
         self._number = github.GithubObject.NotSet
         self._security_vulnerability = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
-        self._update_at = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -159,7 +159,7 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "number" in attributes:  # pragma no branch
-            self._commit = self._makeIntAttribute(attributes["number"])
+            self._number = self._makeIntAttribute(attributes["number"])
         if "security_vulnerability" in attributes:  # pragma no branch
             self._security_vulnerability = self._makeClassAttribute(
                 github.SecurityVulnerability.SecurityVulnerability,
@@ -167,7 +167,7 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
             )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
-        if "update_at" in attributes:  # pragma no branch
-            self._update_at = self._makeStringAttribute(attributes["update_at"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeStringAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
