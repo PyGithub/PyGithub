@@ -50,6 +50,7 @@ from github.Referrer import Referrer
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.Secret import Secret
+from github.SecurityAndAnalysis import SecurityAndAnalysis
 from github.SecretScanningAlert import SecretScanningAlert
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.SelfHostedActionsRunnerRegistrationToken import (
@@ -593,6 +594,8 @@ class Repository(CompletableGithubObject):
     ) -> bool: ...
     def remove_invitation(self, invite_id: int) -> None: ...
     def replace_topics(self, topics: List[str]) -> None: ...
+    @property
+    def security_and_analysis(self) -> SecurityAndAnalysis: ...
     @property
     def size(self) -> int: ...
     @property
