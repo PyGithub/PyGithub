@@ -4,7 +4,7 @@ import github.GithubObject
 
 class Package(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Package. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts?#list-dependabot-alerts-for-a-repository
+    This class represents Package. The reference can be found here in the alert https://docs.github.com/en/rest/dependabot/alerts?#list-dependabot-alerts-for-a-repository
     """
 
     def __repr__(self):

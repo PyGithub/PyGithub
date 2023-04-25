@@ -5,7 +5,7 @@ import github.Package
 
 class Dependency(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Dependency. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository
+    This class represents Dependency. The reference can be found in the alert here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository
     """
 
     def __repr__(self):
