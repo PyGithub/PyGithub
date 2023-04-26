@@ -3841,16 +3841,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         return github.Artifact.Artifact(self._requester, headers, data, completed=True)
 
-    def get_codescan_alerts(self):
+    def get_codescan_alerts(self, ref=github.GithubObject.NotSet):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :param: ref: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        parameters = {}
+
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
         return github.PaginatedList.PaginatedList(
             github.CodeScanAlert.CodeScanAlert,
             self._requester,
             f"{self.url}/code-scanning/alerts",
-            None,
+            parameters,
         )
 
     def get_code_scanning_analyses(self, ref=github.GithubObject.NotSet):
