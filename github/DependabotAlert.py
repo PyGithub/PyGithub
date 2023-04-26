@@ -13,9 +13,11 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__(
             {
+                "auto_dismissed_at": self._auto_dismissed_at.value,
                 "created_at": self._created_at.value,
                 "dependency": self._dependency.value,
                 "dismissed_at": self._dismissed_at.value,
+                "dismissed_by": self._dismissed_at.value,
                 "dismissed_comment": self._dismissed_comment.value,
                 "dismissed_reason": self._dismissed_reason.value,
                 "fixed_at": self._fixed_at.value,
@@ -27,6 +29,13 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
                 "url": self._url.value,
             }
         )
+
+    @property
+    def auto_dismissed_at(self):
+        """
+        :type: string
+        """
+        return self._auto_dismissed_at.value
 
     @property
     def created_at(self):
@@ -120,11 +129,13 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
         return self._url.value
 
     def _initAttributes(self):
+        self._auto_dismissed_at = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._dependency = github.GithubObject.NotSet
         self._dismissed_at = github.GithubObject.NotSet
         self._dismissed_comment = github.GithubObject.NotSet
         self._dismissed_reason = github.GithubObject.NotSet
+        self._dismissed_by = github.GithubObject.NotSet
         self._fixed_at = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
@@ -134,6 +145,10 @@ class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "auto_dismissed_at" in attributes:  # pragma no branch
+            self._auto_dismissed_at = self._makeStringAttribute(
+                attributes["auto_dismissed_at"]
+            )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeStringAttribute(attributes["created_at"])
         if "dependency" in attributes:  # pragma no branch

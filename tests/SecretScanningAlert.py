@@ -34,3 +34,4 @@ class SecretScanningAlert(Framework.TestCase):
         self.assertEqual(True, alert.push_protection_bypassed)
         self.assertIn("2020-11-06T21:48:51Z", alert.push_protection_bypassed_at)
         self.assertIn("Example comment", alert.resolution_comment)
+        self.assertIn("2020-11-06T18:48:51Z", alert.updated_at)

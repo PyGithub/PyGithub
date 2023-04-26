@@ -19,6 +19,9 @@ class DependabotAlert(Framework.TestCase):
         self.assertIn(
             ">= 2.0.0, < 2.0.2", alert.security_vulnerability.vulnerable_version_range
         )
+        self.assertIn(
+            "2.0.2", alert.security_vulnerability.first_patched_version.identifier
+        )
         self.assertIn("2022-08-23T14:29:47Z", alert.dismissed_at)
         self.assertIn(
             "This alert is accurate but we use a sanitizer.", alert.dismissed_comment
@@ -37,4 +40,5 @@ class DependabotAlert(Framework.TestCase):
             alert.url,
         )
         self.assertIn("octocat", alert.dismissed_by.login)
+        self.assertEqual(None, alert.auto_dismissed_at)
         self.assertIn("high", alert.security_vulnerability.severity)

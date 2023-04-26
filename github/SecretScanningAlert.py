@@ -26,6 +26,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
                 "secret_type": self._secret_type.value,
                 "secret_type_display_name": self._secret_type_display_name.value,
                 "state": self._state.value,
+                "updated_at": self._updated_at,
                 "url": self._url.value,
             }
         )
@@ -136,6 +137,13 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         return self._state.value
 
     @property
+    def updated_at(self):
+        """
+        :type: string
+        """
+        return self._updated_at.value
+
+    @property
     def url(self):
         """
         :type: string
@@ -158,6 +166,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         self._secret_type = github.GithubObject.NotSet
         self._secret_type_display_name = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -203,5 +212,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
             )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeStringAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
