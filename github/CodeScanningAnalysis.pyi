@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-import github.Tool
+from github.CodeScanTool import CodeScanTool
 from github.GithubObject import NonCompletableGithubObject
 
 class CodeScanningAnalysis(NonCompletableGithubObject):
@@ -32,7 +32,7 @@ class CodeScanningAnalysis(NonCompletableGithubObject):
     @property
     def sarif_id(self) -> str: ...
     @property
-    def tool(self) -> github.Tool.Tool: ...
+    def tool(self) -> CodeScanTool: ...
     @property
     def deletable(self) -> bool: ...
     @property

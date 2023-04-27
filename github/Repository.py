@@ -106,6 +106,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.DependabotAlert
 import github.Deployment
 import github.Download
 import github.Event
@@ -136,6 +137,7 @@ import github.Referrer
 import github.Repository
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.SecretScanningAlert
 import github.SecurityAndAnalysis
 import github.SelfHostedActionsRunner
 import github.SelfHostedActionsRunnerRegistrationToken
@@ -3839,16 +3841,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         return github.Artifact.Artifact(self._requester, headers, data, completed=True)
 
-    def get_codescan_alerts(self):
+    def get_codescan_alerts(self, ref=github.GithubObject.NotSet):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :param: ref: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
+        assert ref is github.GithubObject.NotSet or isinstance(ref, str), ref
+        parameters = {}
+
+        if ref is not github.GithubObject.NotSet:
+            parameters["ref"] = ref
         return github.PaginatedList.PaginatedList(
             github.CodeScanAlert.CodeScanAlert,
             self._requester,
             f"{self.url}/code-scanning/alerts",
-            None,
+            parameters,
         )
 
     def get_code_scanning_analyses(self, ref=github.GithubObject.NotSet):
@@ -3868,6 +3876,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             f"{self.url}/code-scanning/analyses",
             parameters,
+        )
+
+    def get_dependabot_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.DependabotAlert.DependabotAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            None,
+        )
+
+    def get_secret_scanning_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning#list-secret-scanning-alerts-for-a-repository>
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SecretScanningAlert.SecretScanningAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.SecretScanningAlert.SecretScanningAlert,
+            self._requester,
+            f"{self.url}/secret-scanning/alerts",
+            None,
         )
 
     def _initAttributes(self):
