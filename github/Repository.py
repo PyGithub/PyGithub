@@ -311,6 +311,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._delete_branch_on_merge.value
 
     @property
+    def allow_auto_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_auto_merge)
+        return self._allow_auto_merge.value
+
+    @property
     def deployments_url(self):
         """
         :type: string
@@ -1566,6 +1574,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
+        allow_auto_merge=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -1583,6 +1592,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
         :param archived: bool
+        :param allow_auto_merge: bool
         :rtype: None
         """
         if name is None:
@@ -1630,6 +1640,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert archived is github.GithubObject.NotSet or isinstance(
             archived, bool
         ), archived
+        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(
+            allow_auto_merge, bool
+        ), allow_auto_merge
         post_parameters = {
             "name": name,
         }
@@ -1661,6 +1674,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
+        if allow_auto_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_auto_merge"] = allow_auto_merge
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
@@ -3886,6 +3901,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
+        self._allow_auto_merge = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "allow_forking" in attributes:  # pragma no branch

@@ -139,6 +139,7 @@ class Repository(Framework.TestCase):
             allow_merge_commit=True,
             allow_rebase_merge=True,
             delete_branch_on_merge=True,
+            allow_auto_merge=False,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -155,6 +156,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.allow_merge_commit)
         self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
+        self.assertFalse(self.repo.allow_auto_merge)
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)

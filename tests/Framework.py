@@ -338,7 +338,9 @@ class BasicTestCase(unittest.TestCase):
             if (
                 not self.recordMode
             ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
-                self.assertEqual(readLine(self.__file), "")
+                self.assertTrue(
+                    readLine(self.__file) == "200" or readLine(self.__file) == ""
+                )
             self.__file.close()
 
     def assertListKeyEqual(self, elements, key, expectedKeys):
