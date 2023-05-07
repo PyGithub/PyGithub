@@ -54,11 +54,17 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
         self.assertEqual(self.issue.comments, 0)
-        self.assertEqual(self.issue.comments_url, "https://github.com/jacquev6/PyGithub/issues/28/comments")
+        self.assertEqual(
+            self.issue.comments_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/comments",
+        )
         self.assertEqual(
             self.issue.created_at, datetime.datetime(2012, 5, 19, 10, 38, 23)
         )
-        self.assertEqual(self.issue.events_url, "https://github.com/jacquev6/PyGithub/issues/28/events")
+        self.assertEqual(
+            self.issue.events_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/events",
+        )
         self.assertEqual(
             self.issue.html_url, "https://github.com/jacquev6/PyGithub/issues/28"
         )
@@ -68,7 +74,10 @@ class Issue(Framework.TestCase):
             lambda l: l.name,
             ["Bug", "Project management", "Question"],
         )
-        self.assertEqual(self.issue.labels_url, "https://github.com/jacquev6/PyGithub/issues/28/labels{/name}")
+        self.assertEqual(
+            self.issue.labels_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/labels{/name}",
+        )
         self.assertEqual(self.issue.milestone.title, "Version 0.4")
         self.assertEqual(self.issue.number, 28)
         self.assertEqual(self.issue.pull_request.diff_url, None)
