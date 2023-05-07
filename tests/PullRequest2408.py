@@ -1,14 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Nic Dahlquist <nic@snapchat.com>                              #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
-# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,24 +20,19 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
-.eggs/
-.python-version
+from . import Framework
 
-/GithubCredentials.py
-/scripts/TwitterCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/coverage.xml
-/.idea
-/developer.github.com/
-/gh-pages/
-/doc/doctrees/
-.vscode*
-.venv
-venv
-.tox/
-.mypy_cache/
+
+class PullRequest2408(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
+
+    def test_get_workflow_runs(self):
+        runs = self.repo.get_workflow_runs(
+            head_sha="7aab33f4294ba5141f17bed0aeb1a929f7afc155"
+        )
+        self.assertEqual(720994709, runs[0].id)
+
+        runs = self.repo.get_workflow_runs(exclude_pull_requests=True)
+        self.assertEqual(3519037359, runs[0].id)
