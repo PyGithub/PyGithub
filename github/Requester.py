@@ -79,9 +79,9 @@ import requests
 import requests.adapters
 from urllib3 import Retry
 
+import github.Consts as Consts
 import github.GithubException as GithubException
-
-from . import Consts, GithubIntegration
+import github.GithubIntegration as GithubIntegration
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -107,6 +107,8 @@ class RequestsResponse:
 
 
 class HTTPSRequestsConnectionClass:
+    retry: Union[int, Retry]
+
     # mimic the httplib connection object
     def __init__(
         self,
@@ -116,7 +118,7 @@ class HTTPSRequestsConnectionClass:
         timeout: Optional[int] = None,
         retry: Optional[Union[int, Retry]] = None,
         pool_size: Optional[int] = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         self.port = port if port else 443
         self.host = host
@@ -181,7 +183,7 @@ class HTTPRequestsConnectionClass:
         timeout: Optional[int] = None,
         retry: Optional[Union[int, Retry]] = None,
         pool_size: Optional[int] = None,
-        **kwargs: str,
+        **kwargs: Any,
     ):
         self.port = port if port else 80
         self.host = host
@@ -193,7 +195,7 @@ class HTTPRequestsConnectionClass:
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
         else:
-            self.retry = retry
+            self.retry = retry  # type: ignore
 
         if pool_size is None:
             self.pool_size = requests.adapters.DEFAULT_POOLSIZE
@@ -330,6 +332,11 @@ class Requester:
         self._frameBuffer = []
 
     #############################################################
+
+    _frameCount: int
+    __connectionClass: Union[
+        Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]
+    ]
 
     def __init__(
         self,
@@ -522,7 +529,7 @@ class Requester:
         self,
         status: int,
         headers: Dict[str, Any],
-        output: str,
+        output: Dict[str, Any],
     ) -> Any:
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
