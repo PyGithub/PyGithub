@@ -22,7 +22,7 @@ class BadAttributeException(GithubException):
             List[Type[dict]],
             List[Tuple[Type[str], Type[str]]],
         ],
-        transformationException: Optional[ValueError],
+        transformationException: Optional[Exception],
     ) -> None: ...
     @property
     def actual_value(self) -> Any: ...

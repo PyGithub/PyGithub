@@ -37,6 +37,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    Generic,
     List,
     Optional,
     Type,
@@ -44,7 +45,8 @@ from typing import (
     Union,
 )
 
-from . import Consts, GithubException
+from . import Consts
+from .GithubException import BadAttributeException, IncompletableObject
 
 if TYPE_CHECKING:
     from .GistFile import GistFile
@@ -60,20 +62,21 @@ class _NotSetType:
 
 NotSet = _NotSetType()
 
-
 T = TypeVar("T")
 
 Opt = Union[T, _NotSetType]
 
 
-class _ValuedAttribute:
-    def __init__(self, value: Any):
+class _ValuedAttribute(Generic[T]):
+    value: T
+
+    def __init__(self, value: T):
         self.value = value
 
 
 class _BadAttribute:
     def __init__(
-        self, value: Any, expectedType: Any, exception: Optional[ValueError] = None
+        self, value: Any, expectedType: Any, exception: Optional[Exception] = None
     ):
         self.__value = value
         self.__expectedType = expectedType
@@ -81,9 +84,7 @@ class _BadAttribute:
 
     @property
     def value(self) -> Any:
-        raise GithubException.BadAttributeException(
-            self.__value, self.__expectedType, self.__exception
-        )
+        raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject:
@@ -95,6 +96,7 @@ class GithubObject:
     A global debug flag to enable header validation by requester for all objects
     """
     CHECK_AFTER_INIT_FLAG = False
+    _url: _ValuedAttribute[str]
 
     @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
@@ -102,7 +104,7 @@ class GithubObject:
 
     def __init__(
         self,
-        requester: Optional["Requester"],
+        requester: "Requester",
         headers: Dict[str, Union[str, int]],
         attributes: Any,
         completed: bool,
@@ -146,38 +148,34 @@ class GithubObject:
         return "/".join(url.split("/")[:-1])
 
     @staticmethod
-    def __makeSimpleAttribute(
-        value: Any, type: type
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def __makeSimpleAttribute(value: Any, type: Type[T]) -> _ValuedAttribute[T]:
         if value is None or isinstance(value, type):
-            return _ValuedAttribute(value)
+            return _ValuedAttribute(value)  # type: ignore
         else:
-            return _BadAttribute(value, type)
+            return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def __makeSimpleListAttribute(
-        value: list, type: type
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def __makeSimpleListAttribute(value: list, type: Type[T]) -> _ValuedAttribute[T]:
         if isinstance(value, list) and all(
             isinstance(element, type) for element in value
         ):
-            return _ValuedAttribute(value)
+            return _ValuedAttribute(value)  # type: ignore
         else:
-            return _BadAttribute(value, [type])
+            return _BadAttribute(value, [type])  # type: ignore
 
     @staticmethod
     def __makeTransformedAttribute(
-        value: Any, type: type, transform: Callable[..., Any]
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+        value: Any, type: Type[T], transform: Callable[..., Any]
+    ) -> _ValuedAttribute[T]:
         if value is None:
-            return _ValuedAttribute(None)
+            return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
             try:
                 return _ValuedAttribute(transform(value))
             except Exception as e:
-                return _BadAttribute(value, type, e)
+                return _BadAttribute(value, type, e)  # type: ignore
         else:
-            return _BadAttribute(value, type)
+            return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
     def _makeStringAttribute(
@@ -196,15 +194,15 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, float)
 
     @staticmethod
-    def _makeBoolAttribute(value: Optional[bool]) -> _ValuedAttribute:
+    def _makeBoolAttribute(value: Optional[bool]) -> _ValuedAttribute[bool]:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> _ValuedAttribute:
+    def _makeDictAttribute(value: Dict[str, Any]) -> _ValuedAttribute[dict]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> _ValuedAttribute:
+    def _makeTimestampAttribute(value: int) -> _ValuedAttribute[int]:
         return GithubObject.__makeTransformedAttribute(
             value, int, datetime.datetime.utcfromtimestamp
         )
@@ -303,14 +301,14 @@ class GithubObject:
         """
         :type: str
         """
-        return self._headers.get(Consts.RES_ETAG)
+        return self._headers.get(Consts.RES_ETAG)  # type: ignore
 
     @property
     def last_modified(self) -> Optional[str]:
         """
         :type: str
         """
-        return self._headers.get(Consts.RES_LAST_MODIFIED)
+        return self._headers.get(Consts.RES_LAST_MODIFIED)  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
         """
@@ -330,6 +328,15 @@ class GithubObject:
             class_name=self.__class__.__name__,
             params=", ".join(list(format_params(params))),
         )
+
+    def _initAttributes(self):
+        raise NotImplementedError("BUG: Not Implemented _initAttributes")
+
+    def _useAttributes(self, attributes):
+        raise NotImplementedError("BUG: Not Implemented _useAttributes")
+
+    def _completeIfNeeded(self):
+        raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
 
 
 class NonCompletableGithubObject(GithubObject):
@@ -369,9 +376,7 @@ class CompletableGithubObject(GithubObject):
 
     def __complete(self):
         if self._url.value is None:
-            raise GithubException.IncompletableObject(
-                400, "Returned object contains no URL", None
-            )
+            raise IncompletableObject(400, "Returned object contains no URL", None)
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
@@ -395,7 +400,7 @@ class CompletableGithubObject(GithubObject):
         if status == 304:
             return False
         else:
-            headers, data = self._requester._Requester__check(
+            headers, data = self._requester._Requester__check(  # type: ignore
                 status, responseHeaders, output
             )
             self._storeAndUseAttributes(headers, data)
