@@ -70,9 +70,9 @@ from typing import (
     ItemsView,
     List,
     Optional,
-    OrderedDict,
     Tuple,
     Type,
+    TypeVar,
     Union,
 )
 
@@ -88,6 +88,8 @@ if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
     from .GithubObject import GithubObject
     from .InstallationAuthorization import InstallationAuthorization
+
+T = TypeVar("T")
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -327,7 +329,7 @@ class Requester:
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]
-                frame = self._frameBuffer[frame_index]
+                frame = self._frameBuffer[frame_index]  # type: ignore
             self.ON_CHECK_ME(obj, frame)
 
     def _initializeDebugFeature(self):
@@ -515,7 +517,7 @@ class Requester:
             ):  # issue80
                 if o.scheme == "http":
                     cnx = self.__httpConnectionClass(
-                        o.hostname,
+                        o.hostname,  # type: ignore
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
@@ -535,7 +537,8 @@ class Requester:
         headers: Dict[str, Any],
         output: Dict[str, Any],
     ) -> Any:
-        if status == 401 and output.get("message") == "Bad credentials":
+        message: str = output.get("message")  # type: ignore
+        if status == 401 and "message" == "Bad credentials":
             cls = GithubException.BadCredentialsException
         elif (
             status == 401
@@ -543,18 +546,18 @@ class Requester:
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
             cls = GithubException.TwoFactorException
-        elif status == 403 and output.get("message").startswith(
+        elif status == 403 and message.startswith(  # type: ignore
             "Missing or invalid User Agent string"
         ):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded")
-            or output.get("message")
-            .lower()
-            .endswith("please wait a few minutes before you try again.")
+            message.lower().startswith("api rate limit exceeded")
+            or message.lower().endswith(
+                "please wait a few minutes before you try again."
+            )
         ):
             cls = GithubException.RateLimitExceededException
-        elif status == 404 and output.get("message") == "Not Found":
+        elif status == 404 and message == "Not Found":
             cls = GithubException.UnknownObjectException
         else:
             cls = GithubException.GithubException
@@ -595,7 +598,7 @@ class Requester:
         url: str,
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, Any]] = None,
-        input: Optional[OrderedDict[str, str]] = None,
+        input: Optional[Dict[str, str]] = None,
         cnx: Optional[
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
@@ -629,11 +632,11 @@ class Requester:
         if headers is None:
             headers = {}
 
-        def encode(local_path):
-            if "Content-Type" in headers:
-                mime_type = headers["Content-Type"]
+        def encode(local_path: str):
+            if "Content-Type" in headers:  # type: ignore
+                mime_type = headers["Content-Type"]  # type: ignore
             else:
-                guessed_type = mimetypes.guess_type(input)
+                guessed_type = mimetypes.guess_type(local_path)
                 mime_type = (
                     guessed_type[0]
                     if guessed_type[0] is not None
@@ -666,16 +669,16 @@ class Requester:
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],
         verb: str,
         url: str,
-        parameters: Dict[str, str],
-        requestHeaders: Dict[str, str],
-        input: Optional[str],
-        encode: Callable[[str], Tuple[str, Any]],
+        parameters: Optional[Dict[str, str]],
+        requestHeaders: Optional[Dict[str, str]],
+        input: Optional[T],
+        encode: Callable[[T], Tuple[str, Any]],
     ) -> Tuple[int, Dict[str, Any], str]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
-            parameters = dict()
+            parameters = {}
         if requestHeaders is None:
-            requestHeaders = dict()
+            requestHeaders = {}
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
@@ -813,7 +816,7 @@ class Requester:
         verb: str,
         url: str,
         requestHeaders: Dict[str, str],
-        input: Optional[str],
+        input: Optional[Any],
         status: Optional[int],
         responseHeaders: Dict[str, Any],
         output: Optional[str],
