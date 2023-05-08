@@ -1,0 +1,69 @@
+[tool.poetry]
+name = "PyGithub"
+version = "1.58.1"
+description = "Use the full Github API v3"
+authors = ["Vincent Jacques <vincent@vincent-jacques.net>"]
+readme = "README.md"
+homepage = "https://github.com/pygithub/pygithub"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Software Development",
+]
+
+include = ["COPYING*"]
+packages = [{ include = "github" }]
+
+[tool.poetry.urls]
+Documentation = "http://pygithub.readthedocs.io/en/latest/"
+Source = "https://github.com/pygithub/pygithub"
+Tracker = "https://github.com/pygithub/pygithub/issues"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+pynacl = ">=1.4.0"
+requests = ">=2.14.0"
+pyjwt = { version = ">=2.4.0", extras = ["crypto"] }
+deprecated = "^1.2.13"
+
+[tool.poetry.group.dev.dependencies]
+sphinx = "<3"
+sphinx-rtd-theme = "<1.1"
+httpretty = ">=1.0.3"
+pytest = ">=5.3"
+pytest-cov = ">=2.8"
+pre-commit = { version = "^3.3.1", python = ">=3.9" }
+mypy = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+known_first_party = 'github'
+known_third_party = ["deprecated", "httpretty", "jwt", "nacl", "pytest", "requests", "urllib3"]
+
+
+[tool.mypy]
+python_version = 3.7
+ignore_missing_imports = true
+namespace_packages = true
+
+[tool.pytest.ini_options]
+python_files = 'tests/*.py'
