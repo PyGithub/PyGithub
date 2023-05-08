@@ -7,7 +7,6 @@ on:
 jobs:
   mypy:
     runs-on: ubuntu-latest
-    name: mypy
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -26,7 +25,6 @@ jobs:
 
   pre-commit:
     runs-on: ubuntu-latest
-    name: mypy
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
