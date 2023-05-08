@@ -32,7 +32,17 @@
 
 import datetime
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Type, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 from . import Consts, GithubException
 
@@ -49,6 +59,11 @@ class _NotSetType:
 
 
 NotSet = _NotSetType()
+
+
+T = TypeVar("T")
+
+Opt = Union[T, _NotSetType]
 
 
 class _ValuedAttribute:

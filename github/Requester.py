@@ -52,16 +52,19 @@
 
 import base64
 import datetime
+import io
 import json
 import logging
 import mimetypes
 import os
 import re
 import time
+import typing as t
 import urllib
 from io import IOBase
 
 import requests
+from urllib3 import Retry
 
 from . import Consts, GithubException, GithubIntegration
 
@@ -71,15 +74,15 @@ ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 
 class RequestsResponse:
     # mimic the httplib response object
-    def __init__(self, r):
+    def __init__(self, r: requests.Response):
         self.status = r.status_code
         self.headers = r.headers
         self.text = r.text
 
-    def getheaders(self):
+    def getheaders(self) -> t.ItemsView[str, str]:
         return self.headers.items()
 
-    def read(self):
+    def read(self) -> str:
         return self.text
 
 
@@ -88,11 +91,11 @@ class HTTPSRequestsConnectionClass:
     def __init__(
         self,
         host,
-        port=None,
-        strict=False,
-        timeout=None,
-        retry=None,
-        pool_size=None,
+        port: t.Optional[int] = None,
+        strict: bool = False,
+        timeout: t.Optional[int] = None,
+        retry: t.Optional[t.Union[int, Retry]] = None,
+        pool_size: t.Optional[int] = None,
         **kwargs,
     ):
         self.port = port if port else 443
@@ -119,13 +122,19 @@ class HTTPSRequestsConnectionClass:
         )
         self.session.mount("https://", self.adapter)
 
-    def request(self, verb, url, input, headers):
+    def request(
+        self,
+        verb: str,
+        url: str,
+        input: t.Optional[t.Union[str, io.BufferedReader]],
+        headers: t.Dict[str, str],
+    ):
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
 
-    def getresponse(self):
+    def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
         url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
@@ -146,13 +155,13 @@ class HTTPRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
         self,
-        host,
-        port=None,
-        strict=False,
-        timeout=None,
-        retry=None,
-        pool_size=None,
-        **kwargs,
+        host: str,
+        port: t.Optional[int] = None,
+        strict: bool = False,
+        timeout: t.Optional[int] = None,
+        retry: t.Optional[t.Union[int, Retry]] = None,
+        pool_size: t.Optional[int] = None,
+        **kwargs: str,
     ):
         self.port = port if port else 80
         self.host = host
@@ -178,13 +187,13 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb, url, input, headers):
+    def request(self, verb: str, url: str, input: None, headers: t.Dict[str, str]):
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
 
-    def getresponse(self):
+    def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
         url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
@@ -197,7 +206,7 @@ class HTTPRequestsConnectionClass:
         )
         return RequestsResponse(r)
 
-    def close(self):
+    def close(self) -> None:
         return
 
 
@@ -246,7 +255,7 @@ class Requester:
 
     ON_CHECK_ME = None
 
-    def NEW_DEBUG_FRAME(self, requestHeader):
+    def NEW_DEBUG_FRAME(self, requestHeader: t.Dict[str, str]) -> None:
         """
         Initialize a debug frame with requestHeader
         Frame count is updated and will be attached to respond header
@@ -264,7 +273,9 @@ class Requester:
 
             self._frameCount = len(self._frameBuffer) - 1
 
-    def DEBUG_ON_RESPONSE(self, statusCode, responseHeader, data):
+    def DEBUG_ON_RESPONSE(
+        self, statusCode: int, responseHeader: t.Dict[str, str], data: str
+    ):
         """
         Update current frame with response
         Current frame index will be attached to responseHeader
@@ -671,7 +682,16 @@ class Requester:
 
         return self.__connection
 
-    def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
+    def __log(
+        self,
+        verb: str,
+        url: str,
+        requestHeaders: t.Dict[str, str],
+        input: t.Optional[str],
+        status: t.Optional[int],
+        responseHeaders: t.Dict[str, t.Any],
+        output: t.Optional[str],
+    ) -> None:
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(logging.DEBUG):

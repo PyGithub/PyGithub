@@ -10,51 +10,10 @@ from github.InstallationAuthorization import InstallationAuthorization
 
 from urllib3.util import Retry
 
-class HTTPRequestsConnectionClass:
-    def __init__(
-        self,
-        host: str,
-        port: Optional[int] = ...,
-        strict: bool = ...,
-        timeout: Optional[int] = ...,
-        retry: Optional[Union[int, Retry]] = ...,
-        pool_size: Optional[int] = ...,
-        **kwargs: str
-    ) -> None: ...
-    def close(self) -> None: ...
-    def getresponse(self) -> RequestsResponse: ...
-    def request(
-        self, verb: str, url: str, input: None, headers: Dict[str, str]
-    ) -> None: ...
-
-class HTTPSRequestsConnectionClass:
-    def __init__(
-        self,
-        host: str,
-        port: Optional[int] = ...,
-        strict: bool = ...,
-        timeout: Optional[int] = ...,
-        retry: Optional[Union[int, Retry]] = ...,
-        pool_size: Optional[int] = ...,
-        **kwargs: str
-    ) -> None: ...
-    def close(self) -> None: ...
-    def getresponse(self) -> RequestsResponse: ...
-    def request(
-        self,
-        verb: str,
-        url: str,
-        input: Optional[Union[str, BufferedReader]],
-        headers: Dict[str, str],
-    ) -> None: ...
-
 class Requester:
     __installation_authorization: Optional[InstallationAuthorization] = ...
     __app_auth: Optional[AppAuthentication] = ...
-    def DEBUG_ON_RESPONSE(
-        self, statusCode: int, responseHeader: Dict[str, str], data: str
-    ) -> None: ...
-    def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None: ...
+
     def __check(
         self,
         status: int,
@@ -85,16 +44,6 @@ class Requester:
         headers: Dict[str, Any],
         output: str,
     ) -> Any: ...
-    def __log(
-        self,
-        verb: str,
-        url: str,
-        requestHeaders: Dict[str, str],
-        input: Optional[str],
-        status: Optional[int],
-        responseHeaders: Dict[str, Any],
-        output: Optional[str],
-    ) -> None: ...
     def __makeAbsoluteUrl(self, url: str) -> str: ...
     def __structuredFromJson(self, data: str) -> Optional[Dict[str, Any]]: ...
     def __requestEncode(
@@ -202,8 +151,3 @@ class Requester:
     def setDebugFlag(cls, flag: bool) -> None: ...
     @classmethod
     def setOnCheckMe(cls, onCheckMe: Callable) -> None: ...
-
-class RequestsResponse:
-    def __init__(self, r: Response) -> None: ...
-    def getheaders(self) -> Iterator[Any]: ...
-    def read(self) -> str: ...
