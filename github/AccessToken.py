@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -28,7 +30,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     This class represents access tokens.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "token": f"{self.token[:5]}...",
@@ -38,32 +40,32 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def token(self):
+    def token(self) -> str:
         """
         :type: string
         """
         return self._token.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def scope(self):
+    def scope(self) -> str:
         """
         :type: string
         """
         return self._scope.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._token = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._scope = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "access_token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["access_token"])
         if "token_type" in attributes:  # pragma no branch
