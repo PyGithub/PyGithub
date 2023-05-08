@@ -114,7 +114,7 @@ class BadAttributeException(Exception):
             List[Type[dict]],
             List[Tuple[Type[str], Type[str]]],
         ],
-        transformationException: Optional[ValueError],
+        transformationException: Optional[Exception],
     ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
