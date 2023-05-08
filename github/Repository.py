@@ -192,6 +192,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._allow_squash_merge.value
 
     @property
+    def allow_update_branch(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_update_branch)
+        return self._allow_update_branch.value
+
+    @property
     def archived(self):
         """
         :type: bool
@@ -1566,6 +1574,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        allow_update_branch=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
         """
@@ -1583,6 +1592,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param allow_update_branch: bool
         :param archived: bool
         :rtype: None
         """
@@ -1628,6 +1638,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert allow_update_branch is github.GithubObject.NotSet or isinstance(
+            allow_update_branch, bool
+        ), allow_update_branch
         assert archived is github.GithubObject.NotSet or isinstance(
             archived, bool
         ), archived
@@ -1660,6 +1673,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if allow_update_branch is not github.GithubObject.NotSet:
+            post_parameters["allow_update_branch"] = allow_update_branch
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
@@ -3823,6 +3838,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
+        self._allow_update_branch = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -3919,6 +3935,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "allow_squash_merge" in attributes:  # pragma no branch
             self._allow_squash_merge = self._makeBoolAttribute(
                 attributes["allow_squash_merge"]
+            )
+        if "allow_update_branch" in attributes:  # pragma no branch
+            self._allow_update_branch = self._makeBoolAttribute(
+                attributes["allow_update_branch"]
             )
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
