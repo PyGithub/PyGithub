@@ -48,10 +48,12 @@
 ################################################################################
 
 import datetime
+import logging
 import pickle
 
 import urllib3
 
+from github import Auth
 import github.ApplicationOAuth
 import github.Event
 import github.Gist
@@ -78,6 +80,10 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
+    # v2: remove login_or_token, password, jwt and app_auth
+    # v2: move auth to the front of arguments
+    # v2: add * before first argument so all arguments must be named,
+    #     allows to reorder / add new arguments without breaking user code
     def __init__(
         self,
         login_or_token=None,
@@ -91,6 +97,7 @@ class Github:
         verify=True,
         retry=None,
         pool_size=None,
+        auth=None,
     ):
         """
         :param login_or_token: string
@@ -103,6 +110,7 @@ class Github:
         :param per_page: int
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
+        :param auth: authentication method
         :param pool_size: int
         """
 
@@ -118,12 +126,29 @@ class Github:
             or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert auth is None or isinstance(auth, Auth.Auth), auth
+
+        logger = logging.getLogger("github")
+        if password is not None:
+            logger.warning("Arguments login_or_token and password are deprecated, please use "
+                           "auth=github.Auth.Login(...) instead")
+            auth = Auth.Login(login_or_token, password)
+        elif login_or_token is not None:
+            logger.warning("Argument login_or_token is deprecated, please use "
+                           "auth=github.Auth.Token(...) instead")
+            auth = Auth.Token(login_or_token)
+        elif jwt is not None:
+            logger.warning("Argument jwt is deprecated, please use "
+                           "auth=github.Auth.AppAuth(...) or "
+                           "auth=github.Auth.AppAuthToken(...) instead")
+            auth = Auth.AppAuthToken(jwt)
+        elif app_auth is not None:
+            logger.warning("Argument app_auth is deprecated, please use "
+                           "auth=github.Auth.AppInstallationAuth(...) instead")
+            auth = app_auth
 
         self.__requester = Requester(
-            login_or_token,
-            password,
-            jwt,
-            app_auth,
+            auth,
             base_url,
             timeout,
             user_agent,

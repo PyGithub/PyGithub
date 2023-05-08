@@ -4,6 +4,7 @@ import deprecated
 import jwt
 
 from github import Consts
+from github.Auth import AppAuth
 from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
@@ -23,6 +24,7 @@ class GithubIntegration:
         base_url=Consts.DEFAULT_BASE_URL,
         jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
+        jwt_algorithm=Consts.DEFAULT_JWT_ALGORITHM,
     ):
         """
         :param integration_id: int
@@ -46,11 +48,12 @@ class GithubIntegration:
         self.private_key = private_key
         self.jwt_expiry = jwt_expiry
         self.jwt_issued_at = jwt_issued_at
+
+        auth = AppAuth(
+            integration_id, private_key, jwt_expiry=jwt_expiry, jwt_issued_at=jwt_issued_at, jwt_algorithm=jwt_algorithm
+        )
         self.__requester = Requester(
-            login_or_token=None,
-            password=None,
-            jwt=self.create_jwt(),
-            app_auth=None,
+            auth=auth,
             base_url=self.base_url,
             timeout=Consts.DEFAULT_TIMEOUT,
             user_agent="PyGithub/Python",

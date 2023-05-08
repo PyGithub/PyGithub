@@ -14,12 +14,18 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 First create a Github instance::
 
     from github import Github
-    
+
+    # Authentication is defined via github.Auth
+    from github import Auth
+
     # using an access token
-    g = Github("access_token")
+    auth = Auth.Token("access_token")
+
+    # Public Web Github
+    g = Github(auth=auth)
 
     # Github Enterprise with custom hostname
-    g = Github(base_url="https://{hostname}/api/v3", login_or_token="access_token")
+    g = Github(base_url="https://{hostname}/api/v3", auth=auth)
 
 Then play with your Github objects::
 
