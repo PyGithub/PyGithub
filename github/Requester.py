@@ -79,7 +79,9 @@ import requests
 import requests.adapters
 from urllib3 import Retry
 
-from . import Consts, GithubException, GithubIntegration
+import github.GithubException as GithubException
+
+from . import Consts, GithubIntegration
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -653,7 +655,7 @@ class Requester:
         parameters: Dict[str, str],
         requestHeaders: Dict[str, str],
         input: Optional[str],
-        encode: Callable[[str], str],
+        encode: Callable[[str], Tuple[str, Any]],
     ) -> Tuple[int, Dict[str, Any], str]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -701,7 +703,7 @@ class Requester:
         verb: str,
         url: str,
         requestHeaders: Dict[str, str],
-        input: Optional[str],
+        input: Optional[Any],
     ) -> Tuple[int, Dict[str, Any], str]:
         original_cnx = cnx
         if cnx is None:
