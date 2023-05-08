@@ -68,6 +68,7 @@ from typing import (
     Callable,
     Dict,
     ItemsView,
+    List,
     Optional,
     OrderedDict,
     Tuple,
@@ -242,6 +243,8 @@ class Requester:
     __persist = True
     __logger = None
 
+    _frameBuffer: List[Any]
+
     @classmethod
     def injectConnectionClasses(
         cls,
@@ -303,7 +306,7 @@ class Requester:
             self._frameCount = len(self._frameBuffer) - 1
 
     def DEBUG_ON_RESPONSE(
-        self, statusCode: int, responseHeader: Dict[str, str], data: str
+        self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str
     ):
         """
         Update current frame with response
@@ -337,6 +340,7 @@ class Requester:
     __connectionClass: Union[
         Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]
     ]
+    __hostname: str
 
     def __init__(
         self,
@@ -377,7 +381,7 @@ class Requester:
             self.__authorizationHeader = None
 
         o = urllib.parse.urlparse(base_url)
-        self.__hostname = o.hostname
+        self.__hostname = o.hostname  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
@@ -477,7 +481,7 @@ class Requester:
         cnx: Optional[
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
-    ) -> Tuple[int, Dict[str, Any], str]:
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         return self.__check(
             *self.requestBlob(
                 verb, url, parameters, headers, input, self.__customConnection(url)
@@ -490,10 +494,10 @@ class Requester:
         responseHeaders: Dict[str, Any],
         output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-        output = self.__structuredFromJson(output)
+        data = self.__structuredFromJson(output)
         if status >= 400:
-            raise self.__createException(status, responseHeaders, output)
-        return responseHeaders, output
+            raise self.__createException(status, responseHeaders, data)
+        return responseHeaders, data
 
     def __customConnection(
         self, url: str
@@ -556,7 +560,7 @@ class Requester:
             cls = GithubException.GithubException
         return cls(status, output, headers)
 
-    def __structuredFromJson(self, data: str) -> Optional[Dict[str, Any]]:
+    def __structuredFromJson(self, data: str) -> Any:
         if len(data) == 0:
             return None
         else:
@@ -622,6 +626,9 @@ class Requester:
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        if headers is None:
+            headers = {}
+
         def encode(local_path):
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
@@ -656,7 +663,7 @@ class Requester:
 
     def __requestEncode(
         self,
-        cnx: Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass],
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],
         verb: str,
         url: str,
         parameters: Dict[str, str],
@@ -706,7 +713,7 @@ class Requester:
 
     def __requestRaw(
         self,
-        cnx: Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass],
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],
         verb: str,
         url: str,
         requestHeaders: Dict[str, str],
