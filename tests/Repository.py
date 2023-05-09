@@ -136,6 +136,7 @@ class Repository(Framework.TestCase):
             has_downloads=True,
             allow_auto_merge=True,
             allow_forking=True,
+            allow_update_branch=True,
             allow_squash_merge=True,
             allow_merge_commit=True,
             allow_rebase_merge=True,
@@ -147,6 +148,7 @@ class Repository(Framework.TestCase):
             self.repo.description, "Python library implementing the full Github API v3"
         )
         self.assertFalse(self.repo.archived)
+        self.assertTrue(self.repo.allow_update_branch)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)

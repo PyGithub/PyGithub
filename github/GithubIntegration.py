@@ -135,6 +135,7 @@ class GithubIntegration:
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
+            headers=self._get_headers(),
             input=body,
         )
 
