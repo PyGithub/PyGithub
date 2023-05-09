@@ -4,8 +4,17 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.58.2 (May 09, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+- Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
+
 Version 1.58.1 (March 18, 2023)
 -----------------------------------
+
+**Bug Fixes**
 
 * Add expiration argument back to GithubIntegration.create_jwt (#2439) (822fc05c)
 * Add crypto extras to pyjwt, which pulls in cryptogaphy package (#2443) (554b2b28)
