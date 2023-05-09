@@ -42,7 +42,7 @@ class Requester(Framework.TestCase):
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo('EnricoMi/test').name, "test-renamed")
         self.logger.info.assert_called_once_with(
-            'Following redirection from /repos/EnricoMi/test to /repositories/638123443'
+            'Following Github server redirection from /repos/EnricoMi/test to /repositories/638123443'
         )
 
     def testBaseUrlSchemeRedirection(self):
@@ -83,5 +83,5 @@ class Requester(Framework.TestCase):
         gh = github.Github(base_url="https://api.github.com/api/v3")
         self.assertEqual(gh.get_repo('PyGithub/PyGithub').name, "PyGithub")
         self.logger.info.assert_called_once_with(
-            'Following redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub'
+            'Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub'
         )

@@ -632,7 +632,7 @@ class Requester:
                                    f"you may need to correct your Github server URL "
                                    f"via base_url: Github(base_url=...)")
             if self._logger.isEnabledFor(logging.INFO):
-                self._logger.info(f"Following redirection from {url} to {o.path}")
+                self._logger.info(f"Following Github server redirection from {url} to {o.path}")
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
