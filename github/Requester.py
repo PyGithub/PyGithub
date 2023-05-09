@@ -620,19 +620,27 @@ class Requester:
             location = responseHeaders["location"]
             o = urllib.parse.urlparse(location)
             if o.scheme != self.__scheme:
-                raise RuntimeError(f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
-                                   f"please correct your Github server URL via base_url: Github(base_url=...)")
+                raise RuntimeError(
+                    f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
+                    f"please correct your Github server URL via base_url: Github(base_url=...)"
+                )
             if o.hostname != self.__hostname:
-                raise RuntimeError(f"Github server redirected from host {self.__hostname} to {o.hostname}, "
-                                   f"please correct your Github server URL via base_url: Github(base_url=...)")
+                raise RuntimeError(
+                    f"Github server redirected from host {self.__hostname} to {o.hostname}, "
+                    f"please correct your Github server URL via base_url: Github(base_url=...)"
+                )
             if o.path == url:
                 port = ":" + str(self.__port) if self.__port is not None else ""
                 requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
-                raise RuntimeError(f"Requested {requested_location} but server redirected to {location}, "
-                                   f"you may need to correct your Github server URL "
-                                   f"via base_url: Github(base_url=...)")
+                raise RuntimeError(
+                    f"Requested {requested_location} but server redirected to {location}, "
+                    f"you may need to correct your Github server URL "
+                    f"via base_url: Github(base_url=...)"
+                )
             if self._logger.isEnabledFor(logging.INFO):
-                self._logger.info(f"Following Github server redirection from {url} to {o.path}")
+                self._logger.info(
+                    f"Following Github server redirection from {url} to {o.path}"
+                )
             return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output

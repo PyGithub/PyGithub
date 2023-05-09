@@ -72,7 +72,6 @@ from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
 
-
 # set log level to INFO for github
 logger = logging.getLogger("github")
 logger.setLevel(logging.INFO)
