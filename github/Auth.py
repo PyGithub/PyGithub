@@ -154,15 +154,19 @@ class AppAuth(JWT):
         return self.create_jwt()
 
     def get_installation_auth(
-        self, installation_id: int, token_permissions: Optional[Dict[str, str]] = None
+        self,
+        installation_id: int,
+        token_permissions: Optional[Dict[str, str]] = None,
+        requester: Optional[Requester] = None,
     ) -> "AppInstallationAuth":
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
-        :param installation_id:
-        :param token_permissions:
+        :param installation_id: installation id
+        :param token_permissions: optional permissions
+        :param requester: optional requester with app authentication
         :return:
         """
-        return AppInstallationAuth(self, installation_id, token_permissions)
+        return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
     def create_jwt(self, expiration=None) -> str:
         """
@@ -217,6 +221,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         app_auth: AppAuth,
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = None,
+        requester: Optional[Requester] = None,
     ):
         super().__init__()
 
@@ -235,19 +240,24 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         self.__integration: Optional[GithubIntegration] = None
         self.__installation_authorization: Optional[InstallationAuthorization] = None
 
-    def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        if requester is not None:
+            self._setRequester(requester)
+
+    def _setRequester(self, requester: Optional[Requester]):
         from github.GithubIntegration import GithubIntegration
 
-        requester = requester.withAuth(self.__app_auth)
+        self._requester = requester
         self.__integration = GithubIntegration(
             self.__app_auth.app_id,
             self.__app_auth.private_key,
-            base_url=requester.base_url,
+            base_url=self._requester.base_url,
             jwt_expiry=self.__app_auth._jwt_expiry,
             jwt_issued_at=self.__app_auth._jwt_issued_at,
             jwt_algorithm=self.__app_auth._jwt_algorithm,
         )
 
+    def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        self._setRequester(requester.withAuth(self.__app_auth))
         return self
 
     @property
