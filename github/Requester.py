@@ -58,7 +58,7 @@ import re
 import time
 import urllib
 from io import IOBase
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar
 
 import requests
 
@@ -696,8 +696,8 @@ class WithRequester(Generic[T]):
     Mixin class that allows to set a requester.
     """
     def __init__(self):
-        self.__requester = None
+        self.__requester: Optional[Requester] = None
 
-    def withRequester(self, requester):
+    def withRequester(self, requester: Requester) -> T:
         self.__requester = requester
         return self

@@ -1,15 +1,24 @@
 from collections import OrderedDict
 from io import BufferedReader
 from logging import Logger
-from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union, Generic, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Optional,
+    Tuple,
+    Union,
+    Generic,
+    TypeVar,
+)
 
 from requests.models import Response
+from urllib3.util import Retry
 
 from github.Auth import Auth
 from github.GithubObject import GithubObject
 from github.InstallationAuthorization import InstallationAuthorization
-
-from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(
@@ -205,9 +214,10 @@ class Requester:
     @classmethod
     def setOnCheckMe(cls, onCheckMe: Callable) -> None: ...
 
-T = TypeVar('T')
-class WithRequester(Generic[T], T):
-    def __init__(self): ...
+T = TypeVar("T")
+
+class WithRequester(Generic[T]):
+    __requester: Optional[Requester]
     def withRequester(self, requester: Requester) -> T: ...
 
 class RequestsResponse:
