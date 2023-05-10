@@ -525,7 +525,9 @@ class Requester:
             requestHeaders = dict()
 
         if self.__auth is not None:
-            requestHeaders["Authorization"] = f"{self.__auth.token_type} {self.__auth.token}"
+            requestHeaders[
+                "Authorization"
+            ] = f"{self.__auth.token_type} {self.__auth.token}"
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -692,13 +694,14 @@ class Requester:
             )
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class WithRequester(Generic[T]):
     """
     Mixin class that allows to set a requester.
     """
+
     def __init__(self):
         self.__requester: Optional[Requester] = None
 

@@ -150,4 +150,4 @@ MAX_JWT_EXPIRY = 600
 DEFAULT_JWT_ISSUED_AT = -60
 # https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
 # "Your JWT must be signed using the RS256 algorithm"
-DEFAULT_JWT_ALGORITHM = 'RS256'
+DEFAULT_JWT_ALGORITHM = "RS256"

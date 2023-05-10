@@ -25,7 +25,7 @@ from typing import Dict, Optional, Union
 
 import deprecated
 
-from github.Auth import AppInstallationAuth, AppAuth
+from github.Auth import AppAuth, AppInstallationAuth
 
 
 @deprecated.deprecated("Use app.Auth.AppInstallationAuth instead")
@@ -40,5 +40,5 @@ class AppAuthentication(AppInstallationAuth):
         super().__init__(
             app_auth=AppAuth(app_id, private_key),
             installation_id=installation_id,
-            token_permissions=token_permissions
+            token_permissions=token_permissions,
         )

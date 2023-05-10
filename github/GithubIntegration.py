@@ -50,7 +50,11 @@ class GithubIntegration:
         self.jwt_issued_at = jwt_issued_at
 
         auth = AppAuth(
-            integration_id, private_key, jwt_expiry=jwt_expiry, jwt_issued_at=jwt_issued_at, jwt_algorithm=jwt_algorithm
+            integration_id,
+            private_key,
+            jwt_expiry=jwt_expiry,
+            jwt_issued_at=jwt_issued_at,
+            jwt_algorithm=jwt_algorithm,
         )
         self.__requester = Requester(
             auth=auth,

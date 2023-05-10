@@ -35,13 +35,16 @@ from github.Requester import Requester, WithRequester
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
-TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS)
+TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(
+    seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS
+)
 
 
 class Auth:
     """
     This class is the base class of all authentication methods for Requester.
     """
+
     @property
     @abc.abstractmethod
     def token_type(self) -> str:
@@ -65,6 +68,7 @@ class Login(Auth):
     """
     This class is used to authenticate Requester with login and password.
     """
+
     def __init__(self, login: str, password: str):
         self._login = login
         self.__password = password
@@ -79,15 +83,18 @@ class Login(Auth):
 
     @property
     def token(self) -> str:
-        return base64.b64encode(
-            f"{self.login}:{self.__password}".encode()
-        ).decode("utf-8").replace("\n", "")
+        return (
+            base64.b64encode(f"{self.login}:{self.__password}".encode())
+            .decode("utf-8")
+            .replace("\n", "")
+        )
 
 
 class Token(Auth):
     """
     This class is used to authenticate Requester with a single constant token.
     """
+
     def __init__(self, token: str):
         self.__token = token
 
@@ -105,6 +112,7 @@ class JWT(Auth):
     This class is the base class to authenticate with a JSON Web Token (JWT).
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
     """
+
     @property
     def token_type(self) -> str:
         return "Bearer"
@@ -115,6 +123,7 @@ class AppAuth(JWT):
     This class is used to authenticate Requester as a GitHub App.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
     """
+
     def __init__(
         self,
         app_id: Union[int, str],
@@ -165,7 +174,7 @@ class AppAuth(JWT):
         if expiration is not None:
             assert isinstance(expiration, int), expiration
             assert (
-                    Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
+                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
             ), expiration
 
         now = int(time.time())
@@ -174,7 +183,9 @@ class AppAuth(JWT):
             "exp": now + (expiration if expiration is not None else self._jwt_expiry),
             "iss": self._app_id,
         }
-        encrypted = jwt.encode(payload, key=self.private_key, algorithm=self._jwt_algorithm)
+        encrypted = jwt.encode(
+            payload, key=self.private_key, algorithm=self._jwt_algorithm
+        )
 
         if isinstance(encrypted, bytes):
             return encrypted.decode("utf-8")
@@ -186,6 +197,7 @@ class AppAuthToken(JWT):
     This class is used to authenticate Requester as a GitHub App with a single constant JWT.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
     """
+
     def __init__(self, token: str):
         self.__token = token
 
@@ -199,10 +211,13 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     This class is used to authenticate Requester as a GitHub App Installation.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
     """
-    def __init__(self,
-                 app_auth: AppAuth,
-                 installation_id: int,
-                 token_permissions: Optional[Dict[str, str]] = None):
+
+    def __init__(
+        self,
+        app_auth: AppAuth,
+        installation_id: int,
+        token_permissions: Optional[Dict[str, str]] = None,
+    ):
         super().__init__()
 
         assert isinstance(app_auth, AppAuth), app_auth
@@ -264,11 +279,16 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     @property
     def _is_expired(self) -> bool:
         assert self.__installation_authorization is not None
-        token_expires_at = self.__installation_authorization.expires_at - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
+        token_expires_at = (
+            self.__installation_authorization.expires_at
+            - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
+        )
         return token_expires_at < datetime.datetime.utcnow()
 
     def _get_installation_authorization(self) -> InstallationAuthorization:
-        assert self.__integration is not None, "Method withRequester(Requester) must be called first"
+        assert (
+            self.__integration is not None
+        ), "Method withRequester(Requester) must be called first"
         return self.__integration.get_access_token(
             self._installation_id,
             permissions=self._token_permissions,
@@ -280,6 +300,7 @@ class AppUserAuth(Auth):
     This class is used to authenticate Requester as a GitHub App Installation on behalf of a user.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
     """
+
     def __init__(self):
         raise NotImplementedError
 

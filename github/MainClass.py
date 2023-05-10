@@ -53,7 +53,6 @@ import pickle
 
 import urllib3
 
-from github import Auth
 import github.ApplicationOAuth
 import github.Event
 import github.Gist
@@ -62,6 +61,7 @@ import github.License
 import github.NamedUser
 import github.PaginatedList
 import github.Topic
+from github import Auth
 
 from . import (
     AuthenticatedUser,
@@ -130,21 +130,29 @@ class Github:
 
         logger = logging.getLogger("github")
         if password is not None:
-            logger.warning("Arguments login_or_token and password are deprecated, please use "
-                           "auth=github.Auth.Login(...) instead")
+            logger.warning(
+                "Arguments login_or_token and password are deprecated, please use "
+                "auth=github.Auth.Login(...) instead"
+            )
             auth = Auth.Login(login_or_token, password)
         elif login_or_token is not None:
-            logger.warning("Argument login_or_token is deprecated, please use "
-                           "auth=github.Auth.Token(...) instead")
+            logger.warning(
+                "Argument login_or_token is deprecated, please use "
+                "auth=github.Auth.Token(...) instead"
+            )
             auth = Auth.Token(login_or_token)
         elif jwt is not None:
-            logger.warning("Argument jwt is deprecated, please use "
-                           "auth=github.Auth.AppAuth(...) or "
-                           "auth=github.Auth.AppAuthToken(...) instead")
+            logger.warning(
+                "Argument jwt is deprecated, please use "
+                "auth=github.Auth.AppAuth(...) or "
+                "auth=github.Auth.AppAuthToken(...) instead"
+            )
             auth = Auth.AppAuthToken(jwt)
         elif app_auth is not None:
-            logger.warning("Argument app_auth is deprecated, please use "
-                           "auth=github.Auth.AppInstallationAuth(...) instead")
+            logger.warning(
+                "Argument app_auth is deprecated, please use "
+                "auth=github.Auth.AppInstallationAuth(...) instead"
+            )
             auth = app_auth
 
         self.__requester = Requester(
