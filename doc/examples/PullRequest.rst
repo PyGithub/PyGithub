@@ -50,8 +50,8 @@ Add and modify Pull Request comment
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> pr = repo.get_pull(666)
-    >>> last_commit = pr.get_commits[pr.commits - 1]
+    >>> pr = repo.get_pull(2390)
+    >>> last_commit = pr.get_commits()[pr.commits - 1]
     >>> comment = pr.create_comment("This is a comment", last_commit, "file.txt", 0)
     >>> comment
     PullRequestComment(user=NamedUser(login="anonymous"), id=1057297855)
