@@ -287,10 +287,12 @@ class Repository(CompletableGithubObject):
         has_wiki: Union[bool, _NotSetType] = ...,
         has_downloads: Union[bool, _NotSetType] = ...,
         default_branch: Union[str, _NotSetType] = ...,
+        allow_forking: Union[bool, _NotSetType] = ...,
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
         delete_branch_on_merge: Union[bool, _NotSetType] = ...,
+        allow_update_branch: Union[bool, _NotSetType] = ...,
         archived: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
