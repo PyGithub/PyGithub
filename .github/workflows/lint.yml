@@ -40,6 +40,8 @@ jobs:
         with:
           python-version: "3.8"
 
-      - run: pip install tox
+      - run: |
+          pip install tox
+          pip install -e .
 
       - run: tox -e docs
