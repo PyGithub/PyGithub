@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from io import BufferedReader
+from logging import Logger
 from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
 
 from requests.models import Response
@@ -51,6 +52,7 @@ class HTTPSRequestsConnectionClass:
 class Requester:
     __installation_authorization: Optional[InstallationAuthorization] = ...
     __app_auth: Optional[AppAuthentication] = ...
+    __logger: Logger
     def DEBUG_ON_RESPONSE(
         self, statusCode: int, responseHeader: Dict[str, str], data: str
     ) -> None: ...
@@ -85,6 +87,8 @@ class Requester:
         headers: Dict[str, Any],
         output: str,
     ) -> Any: ...
+    @property
+    def _logger(self) -> Logger: ...
     def __log(
         self,
         verb: str,
