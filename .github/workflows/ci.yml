@@ -20,6 +20,13 @@ jobs:
           python-version: "${{ matrix.python-version }}"
           cache: 'poetry'
 
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+
       - run: poetry install --sync
 
       - name: Run tests
