@@ -31,7 +31,6 @@ jobs:
           python-version: "3.x"
       - uses: pre-commit/action@v3.0.0
 
-
   docs:
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +40,5 @@ jobs:
           python-version: "3.8"
 
       - run: pip install tox
-
 
       - run: tox -e docs --skip_install=true
