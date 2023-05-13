@@ -39,9 +39,11 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+          cache: pip
 
       - run: |
           pip install tox
+          pip install -r requirements.txt
           pip install -e .
 
       - run: tox -e docs
