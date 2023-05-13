@@ -36,6 +36,7 @@ pynacl = ">=1.4.0"
 requests = ">=2.14.0"
 pyjwt = { version = ">=2.4.0", extras = ["crypto"] }
 deprecated = "^1.2.13"
+jinja2 = "<3.1"
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "<3"
@@ -45,6 +46,9 @@ pytest = ">=5.3"
 pytest-cov = ">=2.8"
 pre-commit = { version = "^3.3.1", python = ">=3.9" }
 mypy = "^1.2.0"
+types-jwt = "^0.1.3"
+types-requests = "^2.30.0.0"
+tox-gh-actions = "^3.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -58,7 +62,6 @@ use_parentheses = true
 line_length = 88
 known_first_party = 'github'
 known_third_party = ["deprecated", "httpretty", "jwt", "nacl", "pytest", "requests", "urllib3"]
-
 
 [tool.mypy]
 python_version = 3.7
