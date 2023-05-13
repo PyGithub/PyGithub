@@ -287,10 +287,12 @@ class Repository(CompletableGithubObject):
         has_wiki: Union[bool, _NotSetType] = ...,
         has_downloads: Union[bool, _NotSetType] = ...,
         default_branch: Union[str, _NotSetType] = ...,
+        allow_forking: Union[bool, _NotSetType] = ...,
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
         delete_branch_on_merge: Union[bool, _NotSetType] = ...,
+        allow_update_branch: Union[bool, _NotSetType] = ...,
         archived: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
@@ -310,7 +312,7 @@ class Repository(CompletableGithubObject):
     def get_archive_link(
         self, archive_format: str, ref: Union[str, _NotSetType] = ...
     ) -> str: ...
-    def get_artifact(self) -> Artifact: ...
+    def get_artifact(self, artifact_id: int) -> Artifact: ...
     def get_artifacts(
         self, name: Union[str, _NotSetType] = ...
     ) -> PaginatedList[Artifact]: ...
@@ -479,6 +481,8 @@ class Repository(CompletableGithubObject):
         branch: Union[Branch, _NotSetType] = ...,
         event: Union[str, _NotSetType] = ...,
         status: Union[str, _NotSetType] = ...,
+        exclude_pull_requests: Union[bool, _NotSetType] = ...,
+        head_sha: Union[str, _NotSetType] = ...,
     ) -> PaginatedList[WorkflowRun]: ...
     def update_check_suites_preferences(
         self, auto_trigger_checks: List[Dict[str, Union[bool, int]]]

@@ -67,6 +67,7 @@
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -189,6 +190,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._allow_squash_merge)
         return self._allow_squash_merge.value
+
+    @property
+    def allow_update_branch(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_update_branch)
+        return self._allow_update_branch.value
 
     @property
     def archived(self):
@@ -1565,6 +1574,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        allow_update_branch=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
         """
@@ -1578,10 +1588,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
+        :param allow_forking: bool
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param allow_update_branch: bool
         :param archived: bool
         :rtype: None
         """
@@ -1627,6 +1639,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert allow_update_branch is github.GithubObject.NotSet or isinstance(
+            allow_update_branch, bool
+        ), allow_update_branch
         assert archived is github.GithubObject.NotSet or isinstance(
             archived, bool
         ), archived
@@ -1659,6 +1674,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if allow_update_branch is not github.GithubObject.NotSet:
+            post_parameters["allow_update_branch"] = allow_update_branch
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
@@ -3220,6 +3237,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         branch=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         status=github.GithubObject.NotSet,
+        exclude_pull_requests=github.GithubObject.NotSet,
+        head_sha=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3227,6 +3246,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string
         :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
+        :param exclude_pull_requests: bool
+        :param head_sha: string
 
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
@@ -3242,6 +3263,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
+            exclude_pull_requests, bool
+        ), exclude_pull_requests
+        assert head_sha is github.GithubObject.NotSet or isinstance(
+            head_sha, str
+        ), head_sha
 
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
@@ -3258,6 +3285,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
+        if (
+            exclude_pull_requests is not github.GithubObject.NotSet
+            and exclude_pull_requests
+        ):
+            url_parameters["exclude_pull_requests"] = 1
+        if head_sha is not github.GithubObject.NotSet:
+            url_parameters["head_sha"] = head_sha
 
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
@@ -3814,6 +3848,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
+        self._allow_update_branch = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -3910,6 +3945,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "allow_squash_merge" in attributes:  # pragma no branch
             self._allow_squash_merge = self._makeBoolAttribute(
                 attributes["allow_squash_merge"]
+            )
+        if "allow_update_branch" in attributes:  # pragma no branch
+            self._allow_update_branch = self._makeBoolAttribute(
+                attributes["allow_update_branch"]
             )
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
