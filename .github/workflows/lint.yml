@@ -20,7 +20,7 @@ jobs:
         with:
           action: add
           linters: mypy
-      - run: mypy --show-column-numbers --python-version 3.7 github tests
+      - run: mypy --show-column-numbers github tests
 
   pre-commit:
     runs-on: ubuntu-latest
