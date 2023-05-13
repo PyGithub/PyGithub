@@ -54,15 +54,6 @@ tox-gh-actions = "^3.1.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 88
-known_first_party = 'github'
-known_third_party = ["deprecated", "httpretty", "jwt", "nacl", "pytest", "requests", "urllib3"]
-
 [tool.mypy]
 python_version = 3.7
 ignore_missing_imports = true
