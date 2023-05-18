@@ -1597,6 +1597,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
+        :param allow_forking: bool
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
