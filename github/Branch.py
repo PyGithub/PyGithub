@@ -289,32 +289,24 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
                     "dismissal_restrictions"
                 ]["apps"] = dismissal_apps
 
-            if (
-                users_bypass_pull_request_allowances is not github.GithubObject.NotSet
-                or teams_bypass_pull_request_allowances
-                is not github.GithubObject.NotSet
-                or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
-            ):
+            bypass_pull_request_allowances = {}
+            if users_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                bypass_pull_request_allowances[
+                    "users"
+                ] = users_bypass_pull_request_allowances
+            if teams_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                bypass_pull_request_allowances[
+                    "teams"
+                ] = teams_bypass_pull_request_allowances
+            if apps_bypass_pull_request_allowances is not github.GithubObject.NotSet:
+                bypass_pull_request_allowances[
+                    "apps"
+                ] = apps_bypass_pull_request_allowances
+
+            if bypass_pull_request_allowances:
                 post_parameters["required_pull_request_reviews"][
                     "bypass_pull_request_allowances"
-                ] = {}
-                if users_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                    users_bypass_pull_request_allowances = []
-                if teams_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                    teams_bypass_pull_request_allowances = []
-                if apps_bypass_pull_request_allowances is github.GithubObject.NotSet:
-                    apps_bypass_pull_request_allowances = []
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = {
-                    "users": users_bypass_pull_request_allowances,
-                    "teams": teams_bypass_pull_request_allowances,
-                    "apps": apps_bypass_pull_request_allowances,
-                }
-            else:
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = None
+                ] = bypass_pull_request_allowances
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
