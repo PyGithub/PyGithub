@@ -540,18 +540,18 @@ class Requester:
         headers: Dict[str, Any],
         output: Dict[str, Any],
     ) -> Any:
+        cls = GithubException.GithubException
+
         message: str = output.get("message")  # type: ignore
         if status == 401 and message == "Bad credentials":
-            cls: Type[
-                GithubException.GithubException
-            ] = GithubException.BadCredentialsException
+            cls = GithubException.BadCredentialsException
         elif (
             status == 401
             and Consts.headerOTP in headers
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
             cls = GithubException.TwoFactorException
-        elif status == 403 and message.startswith(  # type: ignore
+        elif status == 403 and message.startswith(
             "Missing or invalid User Agent string"
         ):
             cls = GithubException.BadUserAgentException
@@ -564,8 +564,7 @@ class Requester:
             cls = GithubException.RateLimitExceededException
         elif status == 404 and message == "Not Found":
             cls = GithubException.UnknownObjectException
-        else:
-            cls = GithubException.GithubException
+
         return cls(status, output, headers)
 
     def __structuredFromJson(self, data: str) -> Any:
