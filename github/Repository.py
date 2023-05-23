@@ -160,6 +160,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"full_name": self._full_name.value})
 
     @property
+    def allow_auto_merge(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_auto_merge)
+        return self._allow_auto_merge.value
+
+    @property
     def allow_forking(self):
         """
         :type: bool
@@ -190,6 +198,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._allow_squash_merge)
         return self._allow_squash_merge.value
+
+    @property
+    def allow_update_branch(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._allow_update_branch)
+        return self._allow_update_branch.value
 
     @property
     def archived(self):
@@ -1037,6 +1053,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         tagger=github.GithubObject.NotSet,
         draft=False,
         prerelease=False,
+        generate_release_notes=False,
     ):
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and
@@ -1050,6 +1067,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param tagger: :class:github.InputGitAuthor.InputGitAuthor
         :param draft: bool
         :param prerelease: bool
+        :param generate_release_notes: bool
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         self.create_git_tag(tag, tag_message, object, type, tagger)
@@ -1059,6 +1077,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             release_message,
             draft,
             prerelease,
+            generate_release_notes,
             target_commitish=object,
         )
 
@@ -1069,6 +1088,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         message,
         draft=False,
         prerelease=False,
+        generate_release_notes=False,
         target_commitish=github.GithubObject.NotSet,
     ):
         """
@@ -1078,6 +1098,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param message: string
         :param draft: bool
         :param prerelease: bool
+        :param generate_release_notes: bool
         :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
         :rtype: :class:`github.GitRelease.GitRelease`
         """
@@ -1086,6 +1107,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert target_commitish is github.GithubObject.NotSet or isinstance(
             target_commitish,
             (
@@ -1101,6 +1123,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
+            "generate_release_notes": generate_release_notes,
         }
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
@@ -1561,11 +1584,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         has_wiki=github.GithubObject.NotSet,
         has_downloads=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
+        allow_auto_merge=github.GithubObject.NotSet,
         allow_forking=github.GithubObject.NotSet,
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        allow_update_branch=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
     ):
         """
@@ -1579,10 +1604,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param default_branch: string
+        :param allow_forking: bool
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param allow_update_branch: bool
         :param archived: bool
         :rtype: None
         """
@@ -1613,6 +1640,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert default_branch is github.GithubObject.NotSet or isinstance(
             default_branch, str
         ), default_branch
+        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(
+            allow_auto_merge, bool
+        ), allow_auto_merge
         assert allow_forking is github.GithubObject.NotSet or isinstance(
             allow_forking, bool
         ), allow_forking
@@ -1628,6 +1658,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert allow_update_branch is github.GithubObject.NotSet or isinstance(
+            allow_update_branch, bool
+        ), allow_update_branch
         assert archived is github.GithubObject.NotSet or isinstance(
             archived, bool
         ), archived
@@ -1652,6 +1685,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["default_branch"] = default_branch
         if allow_squash_merge is not github.GithubObject.NotSet:
             post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_auto_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_auto_merge"] = allow_auto_merge
         if allow_forking is not github.GithubObject.NotSet:
             post_parameters["allow_forking"] = allow_forking
         if allow_merge_commit is not github.GithubObject.NotSet:
@@ -1660,6 +1695,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if allow_update_branch is not github.GithubObject.NotSet:
+            post_parameters["allow_update_branch"] = allow_update_branch
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
         headers, data = self._requester.requestJsonAndCheck(
@@ -2382,10 +2419,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             Repository, self._requester, f"{self.url}/forks", None
         )
 
-    def create_fork(self, organization=github.GithubObject.NotSet):
+    def create_fork(
+        self,
+        organization=github.GithubObject.NotSet,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param organization: :class:`github.Organization.Organization` or string
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         post_parameters = {}
@@ -2395,6 +2439,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["organization"] = organization
         else:
             assert organization is github.GithubObject.NotSet, organization
+        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+        assert default_branch_only is github.GithubObject.NotSet or isinstance(
+            default_branch_only, bool
+        ), default_branch_only
+        if name is not github.GithubObject.NotSet:
+            post_parameters["name"] = name
+        if default_branch_only is not github.GithubObject.NotSet:
+            post_parameters["default_branch_only"] = default_branch_only
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/forks",
@@ -3819,10 +3871,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self):
+        self._allow_auto_merge = github.GithubObject.NotSet
         self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
         self._allow_rebase_merge = github.GithubObject.NotSet
         self._allow_squash_merge = github.GithubObject.NotSet
+        self._allow_update_branch = github.GithubObject.NotSet
         self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
@@ -3906,6 +3960,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "allow_auto_merge" in attributes:  # pragma no branch
+            self._allow_auto_merge = self._makeBoolAttribute(
+                attributes["allow_auto_merge"]
+            )
         if "allow_forking" in attributes:  # pragma no branch
             self._allow_forking = self._makeBoolAttribute(attributes["allow_forking"])
         if "allow_merge_commit" in attributes:  # pragma no branch
@@ -3919,6 +3977,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if "allow_squash_merge" in attributes:  # pragma no branch
             self._allow_squash_merge = self._makeBoolAttribute(
                 attributes["allow_squash_merge"]
+            )
+        if "allow_update_branch" in attributes:  # pragma no branch
+            self._allow_update_branch = self._makeBoolAttribute(
+                attributes["allow_update_branch"]
             )
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
