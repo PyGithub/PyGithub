@@ -42,7 +42,7 @@ class GithubException(Exception):
     def __init__(
         self,
         status: int,
-        data: Dict[str, Union[str, List[str], List[Dict[str, str]]]],
+        data: Union[str, Dict[str, Union[str, List[str], List[Dict[str, str]]]]],
         headers: Optional[Dict[str, str]],
     ):
         super().__init__()
