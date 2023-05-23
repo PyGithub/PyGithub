@@ -59,6 +59,14 @@ class _NotSetType:
 
     value = None
 
+    @staticmethod
+    def filter_unset(data: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            key: value
+            for key, value in data.items()
+            if not isinstance(value, _NotSetType)
+        }
+
 
 NotSet = _NotSetType()
 

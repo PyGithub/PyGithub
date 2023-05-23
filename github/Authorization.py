@@ -28,12 +28,12 @@
 #                                                                              #
 ################################################################################
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 import github.AuthorizationApplication
 import github.GithubObject
 
-from .GithubObject import Opt, _NotSetType, _ValuedAttribute
+from .GithubObject import NotSet, Opt, _NotSetType, _ValuedAttribute
 
 if TYPE_CHECKING:
     from .AuthorizationApplication import AuthorizationApplication
@@ -113,11 +113,11 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        scopes: Opt[List[str]] = github.GithubObject.NotSet,
-        add_scopes: Opt[List[str]] = github.GithubObject.NotSet,
-        remove_scopes: Opt[List[str]] = github.GithubObject.NotSet,
-        note: Opt[str] = github.GithubObject.NotSet,
-        note_url: Opt[str] = github.GithubObject.NotSet,
+        scopes: Opt[List[str]] = NotSet,
+        add_scopes: Opt[List[str]] = NotSet,
+        remove_scopes: Opt[List[str]] = NotSet,
+        note: Opt[str] = NotSet,
+        note_url: Opt[str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
@@ -140,17 +140,15 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         assert isinstance(note, (_NotSetType, str)), note
         assert isinstance(note_url, (_NotSetType, str)), note_url
 
-        post_parameters: Dict[str, Any] = {
-            key: value
-            for key, value in {
+        post_parameters = NotSet.filter_unset(
+            {
                 "scopes": scopes,
                 "add_scopes": add_scopes,
                 "remove_scopes": remove_scopes,
                 "note": note,
                 "note_url": note_url,
-            }.items()
-            if not isinstance(ValueError, _NotSetType)
-        }
+            }
+        )
 
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
@@ -158,15 +156,15 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     def _initAttributes(self):
-        self._app = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._note = github.GithubObject.NotSet
-        self._note_url = github.GithubObject.NotSet
-        self._scopes = github.GithubObject.NotSet
-        self._token = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._app = NotSet
+        self._created_at = NotSet
+        self._id = NotSet
+        self._note = NotSet
+        self._note_url = NotSet
+        self._scopes = NotSet
+        self._token = NotSet
+        self._updated_at = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
