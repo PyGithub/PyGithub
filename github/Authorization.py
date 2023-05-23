@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 import github.AuthorizationApplication
 import github.GithubObject
 
-from .GithubObject import Opt, _ValuedAttribute
+from .GithubObject import Opt, _NotSetType, _ValuedAttribute
 
 if TYPE_CHECKING:
     from .AuthorizationApplication import AuthorizationApplication
@@ -128,24 +128,30 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        post_parameters: Dict[str, Any] = {}
-        if not isinstance(scopes, github.GithubObject._NotSetType):
-            assert all(isinstance(element, str) for element in scopes), scopes
-            post_parameters["scopes"] = scopes
-        if not isinstance(add_scopes, github.GithubObject._NotSetType):
-            assert all(isinstance(element, str) for element in add_scopes), add_scopes
-            post_parameters["add_scopes"] = add_scopes
-        if not isinstance(remove_scopes, github.GithubObject._NotSetType):
-            assert all(
-                isinstance(element, str) for element in remove_scopes
-            ), remove_scopes
-            post_parameters["remove_scopes"] = remove_scopes
-        if not isinstance(note, github.GithubObject._NotSetType):
-            assert isinstance(note, str), note
-            post_parameters["note"] = note
-        if not isinstance(note_url, github.GithubObject._NotSetType):
-            assert isinstance(note_url, str), note_url
-            post_parameters["note_url"] = note_url
+        assert isinstance(scopes, _NotSetType) or all(
+            isinstance(element, str) for element in scopes
+        ), scopes
+        assert isinstance(add_scopes, _NotSetType) or all(
+            isinstance(element, str) for element in add_scopes
+        ), add_scopes
+        assert isinstance(remove_scopes, _NotSetType) or all(
+            isinstance(element, str) for element in remove_scopes
+        ), remove_scopes
+        assert isinstance(note, (_NotSetType, str)), note
+        assert isinstance(note_url, (_NotSetType, str)), note_url
+
+        post_parameters: Dict[str, Any] = {
+            key: value
+            for key, value in {
+                "scopes": scopes,
+                "add_scopes": add_scopes,
+                "remove_scopes": remove_scopes,
+                "note": note,
+                "note_url": note_url,
+            }.items()
+            if not isinstance(ValueError, _NotSetType)
+        }
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
