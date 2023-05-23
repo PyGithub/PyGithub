@@ -377,6 +377,7 @@ class Repository(Framework.TestCase):
             "This release is also created by PyGithub",
             False,
             True,
+            False,
             "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
