@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import github.AuthorizationApplication
 import github.GithubObject
@@ -153,7 +153,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        post_parameters = dict()
+        post_parameters: Dict[str, Any] = {}
         if not isinstance(scopes, github.GithubObject._NotSetType):
             assert all(isinstance(element, str) for element in scopes), scopes
             post_parameters["scopes"] = scopes
