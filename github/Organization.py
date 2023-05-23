@@ -384,23 +384,24 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/public_members/{public_member._identity}"
         )
 
-    def create_fork(self, repo):
+    def create_fork(
+        self,
+        repo,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param repo: :class:`github.Repository.Repository`
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        url_parameters = {
-            "org": self.login,
-        }
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            f"/repos/{repo.owner.login}/{repo.name}/forks",
-            parameters=url_parameters,
-        )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
+        return repo.create_fork(
+            self,
+            name=name,
+            default_branch_only=default_branch_only,
         )
 
     def create_repo_from_template(
