@@ -538,7 +538,7 @@ class Requester:
         output: Dict[str, Any],
     ) -> Any:
         message: str = output.get("message")  # type: ignore
-        if status == 401 and "message" == "Bad credentials":
+        if status == 401 and message == "Bad credentials":
             cls = GithubException.BadCredentialsException
         elif (
             status == 401
