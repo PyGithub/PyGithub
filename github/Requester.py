@@ -287,7 +287,7 @@ class Requester:
 
     DEBUG_HEADER_KEY = "DEBUG_FRAME"
 
-    ON_CHECK_ME = None
+    ON_CHECK_ME: Optional[Callable] = None
 
     def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None:
         """
@@ -343,6 +343,7 @@ class Requester:
         Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]
     ]
     __hostname: str
+    __authorizationHeader: Optional[str]
 
     def __init__(
         self,
@@ -504,7 +505,9 @@ class Requester:
     def __customConnection(
         self, url: str
     ) -> Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]]:
-        cnx = None
+        cnx: Optional[
+            Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
+        ] = None
         if not url.startswith("/"):
             o = urllib.parse.urlparse(url)
             if (
@@ -539,7 +542,9 @@ class Requester:
     ) -> Any:
         message: str = output.get("message")  # type: ignore
         if status == 401 and message == "Bad credentials":
-            cls = GithubException.BadCredentialsException
+            cls: Type[
+                GithubException.GithubException
+            ] = GithubException.BadCredentialsException
         elif (
             status == 401
             and Consts.headerOTP in headers
@@ -817,10 +822,6 @@ class Requester:
     def __createConnection(
         self,
     ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]:
-        kwds = {}
-        kwds["timeout"] = self.__timeout
-        kwds["verify"] = self.__verify
-
         if self.__persist and self.__connection is not None:
             return self.__connection
 
@@ -829,7 +830,8 @@ class Requester:
             self.__port,
             retry=self.__retry,
             pool_size=self.__pool_size,
-            **kwds,
+            timeout=self.__timeout,
+            verify=self.__verify,
         )
 
         return self.__connection

@@ -315,7 +315,7 @@ class BasicTestCase(unittest.TestCase):
         github.Requester.Requester.resetConnectionClasses()
 
     def __openFile(self, mode):
-        for (_, _, functionName, _) in traceback.extract_stack():
+        for _, _, functionName, _ in traceback.extract_stack():
             if (
                 functionName.startswith("test")
                 or functionName == "setUp"
