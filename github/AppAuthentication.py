@@ -21,13 +21,21 @@
 ################################################################################
 
 
+from typing import Dict, Optional, Union
+
+
 class AppAuthentication:
+    app_id: Union[int, str]
+    private_key: str
+    installation_id: int
+    token_permissions: Optional[Dict[str, str]]
+
     def __init__(
         self,
-        app_id,
-        private_key,
-        installation_id,
-        token_permissions=None,
+        app_id: Union[int, str],
+        private_key: str,
+        installation_id: int,
+        token_permissions: Optional[Dict[str, str]] = None,
     ):
         assert isinstance(app_id, (int, str)), app_id
         assert isinstance(private_key, str)
