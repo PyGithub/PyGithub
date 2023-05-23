@@ -153,29 +153,23 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert scopes is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in scopes
-        ), scopes
-        assert add_scopes is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in add_scopes
-        ), add_scopes
-        assert remove_scopes is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in remove_scopes
-        ), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, str), note
-        assert note_url is github.GithubObject.NotSet or isinstance(
-            note_url, str
-        ), note_url
         post_parameters = dict()
-        if scopes is not github.GithubObject.NotSet:
+        if not isinstance(scopes, github.GithubObject._NotSetType):
+            assert all(isinstance(element, str) for element in scopes), scopes
             post_parameters["scopes"] = scopes
-        if add_scopes is not github.GithubObject.NotSet:
+        if not isinstance(add_scopes, github.GithubObject._NotSetType):
+            assert all(isinstance(element, str) for element in add_scopes), add_scopes
             post_parameters["add_scopes"] = add_scopes
-        if remove_scopes is not github.GithubObject.NotSet:
+        if not isinstance(remove_scopes, github.GithubObject._NotSetType):
+            assert all(
+                isinstance(element, str) for element in remove_scopes
+            ), remove_scopes
             post_parameters["remove_scopes"] = remove_scopes
-        if note is not github.GithubObject.NotSet:
+        if not isinstance(note, github.GithubObject._NotSetType):
+            assert isinstance(note, str), note
             post_parameters["note"] = note
-        if note_url is not github.GithubObject.NotSet:
+        if not isinstance(note_url, github.GithubObject._NotSetType):
+            assert isinstance(note_url, str), note_url
             post_parameters["note_url"] = note_url
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
