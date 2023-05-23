@@ -58,15 +58,12 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"scopes": self._scopes.value})
 
     @property
-    def app(self):
-        """
-        :type: :class:`github.AuthorizationApplication.AuthorizationApplication`
-        """
+    def app(self) -> "AuthorizationApplication":
         self._completeIfNotSet(self._app)
         return self._app.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -74,65 +71,43 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def note(self):
-        """
-        :type: string
-        """
+    def note(self) -> Optional[str]:
         self._completeIfNotSet(self._note)
         return self._note.value
 
     @property
-    def note_url(self):
-        """
-        :type: string
-        """
+    def note_url(self) -> Optional[str]:
         self._completeIfNotSet(self._note_url)
         return self._note_url.value
 
     @property
-    def scopes(self):
-        """
-        :type: list of string
-        """
+    def scopes(self) -> List[str]:
         self._completeIfNotSet(self._scopes)
         return self._scopes.value
 
     @property
-    def token(self):
-        """
-        :type: string
-        """
+    def token(self) -> str:
         self._completeIfNotSet(self._token)
         return self._token.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -143,7 +118,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         remove_scopes: Opt[List[str]] = github.GithubObject.NotSet,
         note: Opt[str] = github.GithubObject.NotSet,
         note_url: Opt[str] = github.GithubObject.NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         :param scopes: list of string
