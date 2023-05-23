@@ -27,9 +27,16 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
+from typing import TYPE_CHECKING, List, Optional
 
 import github.AuthorizationApplication
 import github.GithubObject
+
+from .GithubObject import Opt, _ValuedAttribute
+
+if TYPE_CHECKING:
+    from .AuthorizationApplication import AuthorizationApplication
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):
@@ -37,7 +44,17 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    def __repr__(self):
+    _app: _ValuedAttribute["AuthorizationApplication"]
+    _created_at: _ValuedAttribute[datetime]
+    _id: _ValuedAttribute[int]
+    _note: _ValuedAttribute[Optional[str]]
+    _note_url: _ValuedAttribute[Optional[str]]
+    _scopes: _ValuedAttribute[List[str]]
+    _token: _ValuedAttribute[str]
+    _updated_at: _ValuedAttribute[datetime]
+    _url: _ValuedAttribute[str]
+
+    def __repr__(self) -> str:
         return self.get__repr__({"scopes": self._scopes.value})
 
     @property
@@ -121,11 +138,11 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        scopes=github.GithubObject.NotSet,
-        add_scopes=github.GithubObject.NotSet,
-        remove_scopes=github.GithubObject.NotSet,
-        note=github.GithubObject.NotSet,
-        note_url=github.GithubObject.NotSet,
+        scopes: Opt[List[str]] = github.GithubObject.NotSet,
+        add_scopes: Opt[List[str]] = github.GithubObject.NotSet,
+        remove_scopes: Opt[List[str]] = github.GithubObject.NotSet,
+        note: Opt[List[str]] = github.GithubObject.NotSet,
+        note_url: Opt[List[str]] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_

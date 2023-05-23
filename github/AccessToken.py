@@ -22,13 +22,19 @@
 
 import github.GithubObject
 
+from .GithubObject import _ValuedAttribute
+
 
 class AccessToken(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents access tokens.
     """
 
-    def __repr__(self):
+    _token: _ValuedAttribute[str]
+    _type: _ValuedAttribute[str]
+    _scope: _ValuedAttribute[str]
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "token": f"{self.token[:5]}...",
@@ -38,21 +44,21 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def token(self):
+    def token(self) -> str:
         """
         :type: string
         """
         return self._token.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def scope(self):
+    def scope(self) -> str:
         """
         :type: string
         """

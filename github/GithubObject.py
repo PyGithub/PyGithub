@@ -60,11 +60,11 @@ class _NotSetType:
     value = None
 
 
-NotSet = _NotSetType()
+NotSet: Any = _NotSetType()
 
 T = TypeVar("T")
 
-Opt = Union[T, _NotSetType]
+Opt = Union[T, NotSet]
 
 
 class _ValuedAttribute(Generic[T]):
