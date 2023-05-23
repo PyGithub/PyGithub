@@ -140,7 +140,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         assert isinstance(note, (_NotSetType, str)), note
         assert isinstance(note_url, (_NotSetType, str)), note_url
 
-        post_parameters = NotSet.filter_unset(
+        post_parameters = NotSet.remove_unset_items(
             {
                 "scopes": scopes,
                 "add_scopes": add_scopes,
