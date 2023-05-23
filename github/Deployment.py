@@ -44,6 +44,14 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def ref(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._ref)
+        return self._ref.value
+
+    @property
     def url(self):
         """
         :type: string
@@ -254,6 +262,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._production_environment = github.GithubObject.NotSet
+        self._ref = github.GithubObject.NotSet
         self._transient_environment = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -275,6 +284,8 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             self._production_environment = self._makeBoolAttribute(
                 attributes["production_environment"]
             )
+        if "ref" in attributes:  # pragma no branch
+            self._ref = self._makeStringAttribute(attributes["ref"])
         if "transient_environment" in attributes:  # pragma no branch
             self._transient_environment = self._makeBoolAttribute(
                 attributes["transient_environment"]
