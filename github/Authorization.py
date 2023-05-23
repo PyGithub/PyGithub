@@ -141,8 +141,8 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         scopes: Opt[List[str]] = github.GithubObject.NotSet,
         add_scopes: Opt[List[str]] = github.GithubObject.NotSet,
         remove_scopes: Opt[List[str]] = github.GithubObject.NotSet,
-        note: Opt[List[str]] = github.GithubObject.NotSet,
-        note_url: Opt[List[str]] = github.GithubObject.NotSet,
+        note: Opt[str] = github.GithubObject.NotSet,
+        note_url: Opt[str] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
