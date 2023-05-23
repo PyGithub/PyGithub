@@ -20,20 +20,13 @@ jobs:
           python-version: "${{ matrix.python-version }}"
           cache: 'poetry'
 
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-
       - run: poetry install --sync
 
       - name: Run tests
         run: poetry run tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.3
+        uses: codecov/codecov-action@v3
 
   draft:
     runs-on: ubuntu-latest
