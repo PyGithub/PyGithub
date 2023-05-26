@@ -860,6 +860,23 @@ class Repository(Framework.TestCase):
             ["ab674dfcbc86c70bc32d9ecbe171b48a5694c337"],
         )
 
+    def testGetCommitHeadBranches(self):
+        head_branches = self.repo.get_commit_head_branches(
+            "c1440bdf20bfeb62684c6d1779448719dce9d2df"
+        )
+        self.assertEqual(head_branches[0].name, "master")
+        self.assertIsInstance(
+            head_branches[0].commit, github.CommitHeadBranch.HeadCommit
+        )
+        self.assertEqual(
+            head_branches[0].commit.sha, "c1440bdf20bfeb62684c6d1779448719dce9d2df"
+        )
+        self.assertEqual(
+            head_branches[0].commit.url,
+            "https://github.com/PyGithub/PyGithub/commit/c1440bdf20bfeb62684c6d1779448719dce9d2df",
+        )
+        self.assertEqual(head_branches[0].protected, False)
+
     def testGetDownloads(self):
         self.assertListKeyEqual(self.repo.get_downloads(), lambda d: d.id, [245143])
 
