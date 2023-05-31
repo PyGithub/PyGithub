@@ -4,7 +4,6 @@ import github.GithubObject
 import github.EnvironmentProtectionRule
 import github.EnvironmentDeploymentBranchPolicy
 
-
 class Environment(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self) -> datetime.datetime: ...
@@ -17,10 +16,14 @@ class Environment(github.GithubObject.CompletableGithubObject):
     @property
     def node_id(self) -> str: ...
     @property
-    def protection_rules(self) -> List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]: ...
+    def protection_rules(
+        self,
+    ) -> List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]: ...
     @property
     def updated_at(self) -> datetime.datetime: ...
     @property
     def url(self) -> str: ...
     @property
-    def deployment_branch_policy(self) -> github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy
+    def deployment_branch_policy(
+        self,
+    ) -> github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy: ...

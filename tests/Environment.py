@@ -22,7 +22,7 @@
 
 import datetime
 
-import pytest
+import pytest  # type: ignore
 
 import github
 import github.EnvironmentDeploymentBranchPolicy
