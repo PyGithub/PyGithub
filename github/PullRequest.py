@@ -409,25 +409,34 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         return self.create_review_comment(body, commit_id, path, position)
 
-    def create_review_comment(self, body, commit_id, path, position):
+    def create_review_comment(self, body, commit, path, line, start_line=None, as_suggestion=False):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
-        :param commit_id: :class:`github.Commit.Commit`
+        :param commit: :class:`github.Commit.Commit`
         :param path: string
-        :param position: integer
+        :param line: integer
+        :param start_line: integer
+        :param as_suggestion: bool
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(body, str), body
-        assert isinstance(commit_id, github.Commit.Commit), commit_id
+        assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
-        assert isinstance(position, int), position
+        assert isinstance(line, int), line
+        assert start_line is None or isinstance(start_line, int), start_line
+        assert isinstance(as_suggestion, bool), as_suggestion
+
+        if as_suggestion:
+            body = f"```suggestion\n{body}\n```"
         post_parameters = {
             "body": body,
-            "commit_id": commit_id._identity,
+            "commit_id": commit._identity,
             "path": path,
-            "position": position,
+            "line": line,
         }
+        if start_line is not None:
+            post_parameters["start_line"] = start_line
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/comments", input=post_parameters
         )
