@@ -19,7 +19,7 @@ class Artifact(Framework.TestCase):
             repr(artifact), 'Artifact(name="vscode-codeql-extension", id=10495898)'
         )
 
-    def testGetArtifactsFromWorkflowWithName(self):
+    def testGetArtifactsFromRepoWithName(self):
         artifacts = self.repo.get_artifacts(name="vscode-codeql-extension")
         self.assertEqual(artifacts.totalCount, 5420)
         artifact = artifacts[0]
