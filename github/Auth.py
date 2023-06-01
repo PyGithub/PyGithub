@@ -246,11 +246,15 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     def _setRequester(self, requester: Optional[Requester]):
         from github.GithubIntegration import GithubIntegration
 
+        base_url = (
+            requester.base_url if requester is not None else Consts.DEFAULT_BASE_URL
+        )
+
         self._requester = requester
         self.__integration = GithubIntegration(
             self.__app_auth.app_id,
             self.__app_auth.private_key,
-            base_url=self._requester.base_url,
+            base_url=base_url,
             jwt_expiry=self.__app_auth._jwt_expiry,
             jwt_issued_at=self.__app_auth._jwt_issued_at,
             jwt_algorithm=self.__app_auth._jwt_algorithm,
