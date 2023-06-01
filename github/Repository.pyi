@@ -160,6 +160,7 @@ class Repository(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
         target_commitish: Union[str, _NotSetType] = ...,
     ) -> GitRelease: ...
     def create_git_tag(
@@ -181,6 +182,7 @@ class Repository(CompletableGithubObject):
         tagger: Union[InputGitAuthor, _NotSetType] = ...,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
     ) -> GitRelease: ...
     def create_git_tree(
         self,
@@ -365,7 +367,10 @@ class Repository(CompletableGithubObject):
     def get_events(self) -> PaginatedList[Event]: ...
     def get_forks(self) -> PaginatedList[Repository]: ...
     def create_fork(
-        self, organization: Union[Organization, str, _NotSetType] = ...
+        self,
+        organization: Union[Organization, str, _NotSetType] = ...,
+        name: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[str, _NotSetType] = ...,
     ) -> Repository: ...
     def get_git_blob(self, sha: str) -> GitBlob: ...
     def get_git_commit(self, sha: str) -> GitCommit: ...
