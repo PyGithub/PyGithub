@@ -1742,7 +1742,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def rename_branch(self, branch, new_name):
         """
-        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`_
         :param branch: :class:`github.Branch.Branch` or string
         :param new_name: string
         :rtype: bool
@@ -2506,7 +2506,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_git_matching_refs(self, ref):
         """
-        :calls: `GET /repos/{owner}/{repo}/git/matching-refs/{ref} <https://docs.github.com/en/rest/reference/git#list-matching-references>`
+        :calls: `GET /repos/{owner}/{repo}/git/matching-refs/{ref} <https://docs.github.com/en/rest/reference/git#list-matching-references>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
