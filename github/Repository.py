@@ -1742,7 +1742,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def rename_branch(self, branch, new_name):
         """
-        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`_
         :param branch: :class:`github.Branch.Branch` or string
         :param new_name: string
         :rtype: bool
@@ -2506,7 +2506,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_git_matching_refs(self, ref):
         """
-        :calls: `GET /repos/{owner}/{repo}/git/matching-refs/{ref} <https://docs.github.com/en/rest/reference/git#list-matching-references>`
+        :calls: `GET /repos/{owner}/{repo}/git/matching-refs/{ref} <https://docs.github.com/en/rest/reference/git#list-matching-references>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
@@ -3831,17 +3831,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
-    def get_artifacts(self):
+    def get_artifacts(self, name=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
+        :param name: str
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Artifact.Artifact`
         """
+
+        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+
+        param = {
+            key: value
+            for key, value in {"name": name}.items()
+            if value is not github.GithubObject.NotSet
+        }
 
         return github.PaginatedList.PaginatedList(
             github.Artifact.Artifact,
             self._requester,
             f"{self.url}/actions/artifacts",
-            None,
+            firstParams=param,
             list_item="artifacts",
         )
 
