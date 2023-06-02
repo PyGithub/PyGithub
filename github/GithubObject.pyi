@@ -119,8 +119,10 @@ class _BadAttribute:
 
 class _NotSetType:
     def __repr__(self) -> str: ...
+    value = None
 
 class _ValuedAttribute:
-    def __init__(self, value: Any) -> None: ...
+    def __init__(self, value: Any) -> None:
+        self.value = value
 
 NotSet: _NotSetType

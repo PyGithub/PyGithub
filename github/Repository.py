@@ -103,6 +103,7 @@ import github.Clones
 import github.CodeScanAlert
 import github.Commit
 import github.CommitComment
+import github.CommitHeadBranch
 import github.Comparison
 import github.ContentFile
 import github.Deployment
@@ -1830,6 +1831,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET", f"{self.url}/commits/{sha}"
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
+
+    def get_commit_head_branches(
+        self, sha: str
+    ) -> github.PaginatedList.PaginatedList[github.CommitHeadBranch.CommitHeadBranch]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/branches-where-head <https://docs.github.com/en/rest/reference/repos#list-branches-for-head-commit>`_
+        :param sha: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitHeadBranch.CommitHeadBranch`
+        """
+        assert isinstance(sha, str), sha
+        return github.PaginatedList.PaginatedList(
+            github.CommitHeadBranch.CommitHeadBranch,
+            self._requester,
+            f"{self.url}/commits/{sha}/branches-where-head",
+            None,
+        )
 
     def get_commits(
         self,

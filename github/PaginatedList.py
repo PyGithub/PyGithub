@@ -35,7 +35,11 @@
 #                                                                              #
 ################################################################################
 
+
+from typing import Generic, TypeVar
 from urllib.parse import parse_qs
+
+T = TypeVar("T")
 
 
 class PaginatedListBase:
@@ -88,7 +92,7 @@ class PaginatedListBase:
             return self.__stop is not None and index >= self.__stop
 
 
-class PaginatedList(PaginatedListBase):
+class PaginatedList(PaginatedListBase, Generic[T]):
     """
     This class abstracts the `pagination of the API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_.
 
