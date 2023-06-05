@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.GithubObject
 import github.NamedUser
 import github.Team
@@ -38,7 +40,7 @@ class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithub
         return self._type.value
 
     @property
-    def reviewer(self):
+    def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
         return self._reviewer.value
 
     def _initAttributes(self):
