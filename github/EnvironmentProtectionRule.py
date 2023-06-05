@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import List
+
 import github.EnvironmentProtectionRuleReviewer
 import github.GithubObject
 
@@ -33,38 +35,27 @@ class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def node_id(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
         return self._node_id.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
-    def reviewers(self):
-        """
-        :type: List[:class:`github.ProtectionRuleReviewer.ProtectionRuleReviewer`]
-        """
+    def reviewers(
+        self,
+    ) -> List[
+        github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer
+    ]:
         return self._reviewers.value
 
     @property
-    def wait_timer(self):
-        """
-        :type: integer
-        """
+    def wait_timer(self) -> int:
         return self._wait_timer.value
 
     def _initAttributes(self):

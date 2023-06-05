@@ -34,17 +34,11 @@ class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithub
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
     def reviewer(self):
-        """
-        :type: Union[:class:`github.NamedUser.NamedUser`, :class:`github.Team.Team`]
-        """
         return self._reviewer.value
 
     def _initAttributes(self):
@@ -71,13 +65,13 @@ class ReviewerParams:
     This class presents reviewers as can be configured for an Environment.
     """
 
-    def __init__(self, type_, id_):
+    def __init__(self, type_: str, id_: int):
         assert isinstance(type_, str) and type_ in ("User", "Team")
         assert isinstance(id_, int)
         self.type = type_
         self.id = id_
 
-    def _asdict(self):
+    def _asdict(self) -> dict:
         return {
             "type": self.type,
             "id": self.id,

@@ -20,6 +20,9 @@
 #                                                                              #
 ################################################################################
 
+import datetime
+from typing import List
+
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 import github.GithubObject
@@ -34,74 +37,51 @@ class Environment(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime.datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def node_id(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
     @property
-    def protection_rules(self):
-        """
-        :type: List[:class:`github.EnvironmentProtectionRule.ProtectionRule`]
-        """
+    def protection_rules(
+        self,
+    ) -> List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]:
         self._completeIfNotSet(self._protection_rules)
         return self._protection_rules.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime.datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def deployment_branch_policy(self):
-        """
-        :type: :class:`github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy`
-        """
+    def deployment_branch_policy(
+        self,
+    ) -> github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy:
         self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
 

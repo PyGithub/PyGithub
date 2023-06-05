@@ -33,17 +33,11 @@ class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithub
         return self.get__repr__({})
 
     @property
-    def protected_branches(self):
-        """
-        :type: bool
-        """
+    def protected_branches(self) -> bool:
         return self._protected_branches.value
 
     @property
-    def custom_branch_policies(self):
-        """
-        :type: bool
-        """
+    def custom_branch_policies(self) -> bool:
         return self._custom_branch_policies.value
 
     def _initAttributes(self):
@@ -63,16 +57,18 @@ class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithub
 
 class EnvironmentDeploymentBranchPolicyParams:
     """
-    This class presents the deployment branch policy as can be configured for an Environment.
+    This class presents the deployment branch policy parameters as can be configured for an Environment.
     """
 
-    def __init__(self, protected_branches=False, custom_branch_policies=False):
+    def __init__(
+        self, protected_branches: bool = False, custom_branch_policies: bool = False
+    ):
         assert isinstance(protected_branches, bool)
         assert isinstance(custom_branch_policies, bool)
         self.protected_branches = protected_branches
         self.custom_branch_policies = custom_branch_policies
 
-    def _asdict(self):
+    def _asdict(self) -> dict:
         return {
             "protected_branches": self.protected_branches,
             "custom_branch_policies": self.custom_branch_policies,
