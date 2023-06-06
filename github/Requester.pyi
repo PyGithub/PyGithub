@@ -220,6 +220,8 @@ T = TypeVar("T")
 
 class WithRequester(Generic[T]):
     __requester: Optional[Requester]
+    @property
+    def requester(self) -> Requester: ...
     def withRequester(self, requester: Requester) -> T: ...
 
 class RequestsResponse:

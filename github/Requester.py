@@ -705,6 +705,10 @@ class WithRequester(Generic[T]):
     def __init__(self):
         self.__requester: Optional[Requester] = None
 
+    @property
+    def requester(self) -> Requester:
+        return self.__requester
+
     def withRequester(self, requester: Requester) -> T:
         self.__requester = requester
         return self

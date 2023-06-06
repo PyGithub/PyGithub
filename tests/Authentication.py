@@ -37,22 +37,22 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testBasicAuthentication(self):
-        g = github.Github(self.login, self.password)
+        g = github.Github(self.login.login, self.login.password)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testOAuthAuthentication(self):
-        g = github.Github(self.oauth_token)
+        g = github.Github(self.oauth_token.token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testJWTAuthentication(self):
-        g = github.Github(jwt=self.jwt)
+        g = github.Github(jwt=self.jwt.token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testAppAuthentication(self):
         g = github.Github(
             app_auth=github.AppAuthentication(
-                app_id=self.app_id,
-                private_key=self.app_private_key,
+                app_id=self.app_auth.app_id,
+                private_key=self.app_auth.private_key,
                 installation_id=29782936,
             ),
         )
@@ -60,26 +60,22 @@ class Authentication(Framework.BasicTestCase):
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity
-        auth = github.Auth.Login(self.login, self.password)
-        g = github.Github(auth=auth)
+        g = github.Github(auth=self.login)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testTokenAuthentication(self):
         # test data copied from testOAuthAuthentication to test parity
-        auth = github.Auth.Token(self.oauth_token)
-        g = github.Github(auth=auth)
+        g = github.Github(auth=self.oauth_token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testAppAuthTokenAuthentication(self):
         # test data copied from testJWTAuthentication to test parity
-        auth = github.Auth.AppAuthToken(self.jwt)
-        g = github.Github(auth=auth)
+        g = github.Github(auth=self.app_auth)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testAppInstallationAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
-        app_auth = github.Auth.AppAuth(self.app_id, self.app_private_key)
-        installation_auth = github.Auth.AppInstallationAuth(app_auth, 29782936)
+        installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
 
@@ -89,12 +85,12 @@ class Authentication(Framework.BasicTestCase):
 
     def testAuthorizationHeaderWithLogin(self):
         # See special case in Framework.fixAuthorizationHeader
-        g = github.Github("fake_login", "fake_password")
+        g = github.Github(auth=github.Auth.Login("fake_login", "fake_password"))
         with self.assertRaises(github.GithubException):
             g.get_user().name
 
     def testAuthorizationHeaderWithToken(self):
         # See special case in Framework.fixAuthorizationHeader
-        g = github.Github("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk")
+        g = github.Github(auth=github.Auth.Token("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"))
         with self.assertRaises(github.GithubException):
             g.get_user().name

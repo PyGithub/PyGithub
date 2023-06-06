@@ -71,11 +71,15 @@ class Login(Auth):
 
     def __init__(self, login: str, password: str):
         self._login = login
-        self.__password = password
+        self._password = password
 
     @property
     def login(self) -> str:
         return self._login
+
+    @property
+    def password(self) -> str:
+        return self._password
 
     @property
     def token_type(self) -> str:
@@ -84,7 +88,7 @@ class Login(Auth):
     @property
     def token(self) -> str:
         return (
-            base64.b64encode(f"{self.login}:{self.__password}".encode())
+            base64.b64encode(f"{self.login}:{self.password}".encode())
             .decode("utf-8")
             .replace("\n", "")
         )
@@ -96,7 +100,7 @@ class Token(Auth):
     """
 
     def __init__(self, token: str):
-        self.__token = token
+        self._token = token
 
     @property
     def token_type(self) -> str:
@@ -104,7 +108,7 @@ class Token(Auth):
 
     @property
     def token(self) -> str:
-        return self.__token
+        return self._token
 
 
 class JWT(Auth):
@@ -203,11 +207,11 @@ class AppAuthToken(JWT):
     """
 
     def __init__(self, token: str):
-        self.__token = token
+        self._token = token
 
     @property
     def token(self) -> str:
-        return self.__token
+        return self._token
 
 
 class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
@@ -231,7 +235,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             token_permissions, dict
         ), token_permissions
 
-        self.__app_auth = app_auth
+        self._app_auth = app_auth
         self._installation_id = installation_id
         self._token_permissions = token_permissions
 
@@ -243,34 +247,31 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         if requester is not None:
             self._setRequester(requester)
 
-    def _setRequester(self, requester: Optional[Requester]):
+    def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        self._setRequester(requester.withAuth(self._app_auth))
+        return self
+
+    def _setRequester(self, requester: Requester):
+        super().withRequester(requester)
+
         from github.GithubIntegration import GithubIntegration
 
-        base_url = (
-            requester.base_url if requester is not None else Consts.DEFAULT_BASE_URL
-        )
-
-        self._requester = requester
         self.__integration = GithubIntegration(
-            self.__app_auth.app_id,
-            self.__app_auth.private_key,
-            base_url=base_url,
-            jwt_expiry=self.__app_auth._jwt_expiry,
-            jwt_issued_at=self.__app_auth._jwt_issued_at,
-            jwt_algorithm=self.__app_auth._jwt_algorithm,
+            self._app_auth.app_id,
+            self._app_auth.private_key,
+            base_url=requester.base_url,
+            jwt_expiry=self._app_auth._jwt_expiry,
+            jwt_issued_at=self._app_auth._jwt_issued_at,
+            jwt_algorithm=self._app_auth._jwt_algorithm,
         )
-
-    def withRequester(self, requester: Requester) -> "AppInstallationAuth":
-        self._setRequester(requester.withAuth(self.__app_auth))
-        return self
 
     @property
     def app_id(self) -> Union[int, str]:
-        return self.__app_auth.app_id
+        return self._app_auth.app_id
 
     @property
     def private_key(self) -> str:
-        return self.__app_auth.private_key
+        return self._app_auth.private_key
 
     @property
     def installation_id(self) -> int:

@@ -84,7 +84,7 @@ class Exceptions(Framework.TestCase):
 
     def testBadAuthentication(self):
         with self.assertRaises(github.GithubException) as raisedexp:
-            github.Github("BadUser", "BadPassword").get_user().login
+            github.Github(auth=github.Auth.Login("BadUser", "BadPassword")).get_user().login
         self.assertEqual(raisedexp.exception.status, 401)
         self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
         self.assertEqual(str(raisedexp.exception), '401 {"message": "Bad credentials"}')
@@ -102,13 +102,13 @@ class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
         self.assertRaises(
             github.BadCredentialsException,
-            lambda: github.Github("BadUser", "BadPassword").get_user().login,
+            lambda: github.Github(auth=github.Auth.Login("BadUser", "BadPassword")).get_user().login,
         )
 
     def test2FARequired(self):
         self.assertRaises(
             github.TwoFactorException,
-            lambda: github.Github("2fauser", "password").get_user().login,
+            lambda: github.Github(auth=github.Auth.Login("2fauser", "password")).get_user().login,
         )
 
     def testUnknownObject(self):
@@ -119,7 +119,7 @@ class SpecificExceptions(Framework.TestCase):
     def testBadUserAgent(self):
         self.assertRaises(
             github.BadUserAgentException,
-            lambda: github.Github(self.login, self.password, user_agent="")
+            lambda: github.Github(auth=self.login, user_agent="")
             .get_user()
             .name,
         )
