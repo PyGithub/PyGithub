@@ -48,8 +48,8 @@
 ################################################################################
 
 import datetime
-import logging
 import pickle
+import warnings
 
 import urllib3
 
@@ -128,30 +128,33 @@ class Github:
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert auth is None or isinstance(auth, Auth.Auth), auth
 
-        logger = logging.getLogger("github")
         if password is not None:
-            logger.warning(
+            warnings.warn(
                 "Arguments login_or_token and password are deprecated, please use "
-                "auth=github.Auth.Login(...) instead"
+                "auth=github.Auth.Login(...) instead",
+                category=DeprecationWarning,
             )
             auth = Auth.Login(login_or_token, password)
         elif login_or_token is not None:
-            logger.warning(
+            warnings.warn(
                 "Argument login_or_token is deprecated, please use "
-                "auth=github.Auth.Token(...) instead"
+                "auth=github.Auth.Token(...) instead",
+                category=DeprecationWarning,
             )
             auth = Auth.Token(login_or_token)
         elif jwt is not None:
-            logger.warning(
+            warnings.warn(
                 "Argument jwt is deprecated, please use "
                 "auth=github.Auth.AppAuth(...) or "
-                "auth=github.Auth.AppAuthToken(...) instead"
+                "auth=github.Auth.AppAuthToken(...) instead",
+                category=DeprecationWarning,
             )
             auth = Auth.AppAuthToken(jwt)
         elif app_auth is not None:
-            logger.warning(
+            warnings.warn(
                 "Argument app_auth is deprecated, please use "
-                "auth=github.Auth.AppInstallationAuth(...) instead"
+                "auth=github.Auth.AppInstallationAuth(...) instead",
+                category=DeprecationWarning,
             )
             auth = app_auth
 
