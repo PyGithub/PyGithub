@@ -1,8 +1,6 @@
-import time
 import warnings
 
 import deprecated
-import jwt
 
 from github import Consts
 from github.Auth import AppAuth
@@ -30,7 +28,7 @@ class GithubIntegration:
         jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm=Consts.DEFAULT_JWT_ALGORITHM,
-        auth=None
+        auth=None,
     ):
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -43,7 +41,9 @@ class GithubIntegration:
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
         if private_key is not None:
-            assert isinstance(private_key, str), "supplied private key should be a string"
+            assert isinstance(
+                private_key, str
+            ), "supplied private key should be a string"
         assert isinstance(base_url, str), base_url
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
@@ -51,8 +51,13 @@ class GithubIntegration:
 
         self.base_url = base_url
 
-        if integration_id is not None or private_key is not None or jwt_expiry != Consts.DEFAULT_JWT_EXPIRY or \
-                jwt_issued_at != Consts.DEFAULT_JWT_ISSUED_AT or jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
+        if (
+            integration_id is not None
+            or private_key is not None
+            or jwt_expiry != Consts.DEFAULT_JWT_EXPIRY
+            or jwt_issued_at != Consts.DEFAULT_JWT_ISSUED_AT
+            or jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM
+        ):
             warnings.warn(
                 "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
                 "please use auth=github.Auth.AppAuth(...) instead",

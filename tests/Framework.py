@@ -283,10 +283,14 @@ class BasicTestCase(unittest.TestCase):
             )
             import GithubCredentials  # type: ignore
 
-            self.login = github.Auth.Login(GithubCredentials.login, GithubCredentials.password)
+            self.login = github.Auth.Login(
+                GithubCredentials.login, GithubCredentials.password
+            )
             self.oauth_token = github.Auth.Token(GithubCredentials.oauth_token)
             self.jwt = github.Auth.AppAuthToken(GithubCredentials.jwt)
-            self.app_auth = github.Auth.AppAuth( GithubCredentials.app_id, GithubCredentials.app_private_key)
+            self.app_auth = github.Auth.AppAuth(
+                GithubCredentials.app_id, GithubCredentials.app_private_key
+            )
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(

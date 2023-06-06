@@ -63,7 +63,9 @@ class GithubIntegration(Framework.BasicTestCase):
     def testCreateJWTWithExpiration(self):
         self.origin_time = sys.modules["time"].time
         sys.modules["time"].time = lambda: 1550055331.7435968
-        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
+        auth = github.Auth.AppAuth(
+            APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30
+        )
         github_integration = github.GithubIntegration(auth=auth)
         token = github_integration.create_jwt(60)
         payload = jwt.decode(
