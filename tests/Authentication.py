@@ -48,10 +48,6 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(jwt=self.jwt)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
-    def testUserAgent(self):
-        g = github.Github(user_agent="PyGithubTester")
-        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
-
     def testAppAuthentication(self):
         g = github.Github(
             app_auth=github.AppAuthentication(
@@ -61,6 +57,35 @@ class Authentication(Framework.BasicTestCase):
             ),
         )
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
+    def testLoginAuthentication(self):
+        # test data copied from testBasicAuthentication to test parity
+        auth = github.Auth.Login(self.login, self.password)
+        g = github.Github(auth=auth)
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    def testTokenAuthentication(self):
+        # test data copied from testOAuthAuthentication to test parity
+        auth = github.Auth.Token(self.oauth_token)
+        g = github.Github(auth=auth)
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    def testAppAuthTokenAuthentication(self):
+        # test data copied from testJWTAuthentication to test parity
+        auth = github.Auth.AppAuthToken(self.jwt)
+        g = github.Github(auth=auth)
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    def testAppInstallationAuthAuthentication(self):
+        # test data copied from testAppAuthentication to test parity
+        app_auth = github.Auth.AppAuth(self.app_id, self.app_private_key)
+        installation_auth = github.Auth.AppInstallationAuth(app_auth, 29782936)
+        g = github.Github(auth=installation_auth)
+        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
+    def testUserAgent(self):
+        g = github.Github(user_agent="PyGithubTester")
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testAuthorizationHeaderWithLogin(self):
         # See special case in Framework.fixAuthorizationHeader
