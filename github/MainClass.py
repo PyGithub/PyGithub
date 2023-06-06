@@ -83,7 +83,7 @@ class Github:
     # v2: remove login_or_token, password, jwt and app_auth
     # v2: move auth to the front of arguments
     # v2: add * before first argument so all arguments must be named,
-    #     allows to reorder / add new arguments without breaking user code
+    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
         login_or_token=None,
@@ -100,18 +100,18 @@ class Github:
         auth=None,
     ):
         """
-        :param login_or_token: string
-        :param password: string
-        :param jwt: string
-        :param app_auth: github.AppAuthentication
+        :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
+        :param password: string deprecated, use auth=github.Auth.Login(...) instead
+        :param jwt: string deprecated, use auth=github.Auth.AppAuthToken(...) instead
+        :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
-        :param auth: authentication method
         :param pool_size: int
+        :param auth: authentication method
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token

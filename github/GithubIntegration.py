@@ -1,4 +1,5 @@
 import time
+import warnings
 
 import deprecated
 import jwt
@@ -17,45 +18,57 @@ class GithubIntegration:
     Main class to obtain tokens for a GitHub integration.
     """
 
+    # v2: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
+    # v2: move auth to the front of arguments
+    # v2: add * before first argument so all arguments must be named,
+    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
-        integration_id,
-        private_key,
+        integration_id=None,
+        private_key=None,
         base_url=Consts.DEFAULT_BASE_URL,
         jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm=Consts.DEFAULT_JWT_ALGORITHM,
+        auth=None
     ):
         """
-        :param integration_id: int
-        :param private_key: string
+        :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
+        :param private_key: string deprecated, use auth=github.Auth.AppAuth(...) instead
         :param base_url: string
-        :param jwt_expiry: int. Expiry of the JWT used to get the information about this integration.
-          The default expiration is in 5 minutes and is capped at 10 minutes according to GitHub documentation
-          https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
-        :param jwt_issued_at: int. Number of seconds, relative to now, to set for the "iat" (issued at) parameter.
-          The default value is -60 to protect against clock drift
+        :param jwt_expiry: int deprecated, use auth=github.Auth.AppAuth(...) instead
+        :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
+        :param auth: authentication method
         """
-        assert isinstance(integration_id, (int, str)), integration_id
-        assert isinstance(private_key, str), "supplied private key should be a string"
+        if integration_id is not None:
+            assert isinstance(integration_id, (int, str)), integration_id
+        if private_key is not None:
+            assert isinstance(private_key, str), "supplied private key should be a string"
         assert isinstance(base_url, str), base_url
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
 
         self.base_url = base_url
-        self.integration_id = integration_id
-        self.private_key = private_key
-        self.jwt_expiry = jwt_expiry
-        self.jwt_issued_at = jwt_issued_at
 
-        auth = AppAuth(
-            integration_id,
-            private_key,
-            jwt_expiry=jwt_expiry,
-            jwt_issued_at=jwt_issued_at,
-            jwt_algorithm=jwt_algorithm,
-        )
+        if integration_id is not None or private_key is not None or jwt_expiry != Consts.DEFAULT_JWT_EXPIRY or \
+                jwt_issued_at != Consts.DEFAULT_JWT_ISSUED_AT or jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
+            warnings.warn(
+                "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
+                "please use auth=github.Auth.AppAuth(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = AppAuth(
+                integration_id,
+                private_key,
+                jwt_expiry=jwt_expiry,
+                jwt_issued_at=jwt_issued_at,
+                jwt_algorithm=jwt_algorithm,
+            )
+
+        assert auth is not None
+        self.auth = auth
+
         self.__requester = Requester(
             auth=auth,
             base_url=self.base_url,
@@ -104,24 +117,7 @@ class GithubIntegration:
 
         :return string:
         """
-        if expiration is not None:
-            assert isinstance(expiration, int), expiration
-            assert (
-                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
-            ), expiration
-
-        now = int(time.time())
-        payload = {
-            "iat": now + self.jwt_issued_at,
-            "exp": now + (expiration if expiration is not None else self.jwt_expiry),
-            "iss": self.integration_id,
-        }
-        encrypted = jwt.encode(payload, key=self.private_key, algorithm="RS256")
-
-        if isinstance(encrypted, bytes):
-            encrypted = encrypted.decode("utf-8")
-
-        return encrypted
+        return self.auth.create_jwt(expiration)
 
     def get_access_token(self, installation_id, permissions=None):
         """

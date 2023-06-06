@@ -45,7 +45,8 @@ when authenticated as a Github App:
 
 .. code-block:: python
 
-    >>> gi = GithubIntegration(1234, private_key)
+    >>> auth = Auth.AppAuth(123456, private_key)
+    >>> gi = GithubIntegration(auth=auth)
     >>> for installation in gi.get_installations():
     ...     installation.id
     '1234567'
@@ -60,8 +61,7 @@ expiration timeout. The access token is refreshed automatically.
 
 .. code-block:: python
 
-    >>> app_auth = Auth.AppAuth(123456, private_key)
-    >>> auth = Auth.AppInstallationAuth(app_auth, installation.id)
+    >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
     >>> g = Github(auth=auth)
     >>> g.get_repo("user/repo").name
     'repo'
