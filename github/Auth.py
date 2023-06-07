@@ -40,7 +40,7 @@ TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(
 )
 
 
-class Auth:
+class Auth(abc.ABC):
     """
     This class is the base class of all authentication methods for Requester.
     """
