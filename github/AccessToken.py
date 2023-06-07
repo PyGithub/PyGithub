@@ -23,7 +23,6 @@
 from datetime import datetime, timedelta
 
 import github.GithubObject
-from github.Auth import AppUserAuth
 
 
 class AccessToken(github.GithubObject.NonCompletableGithubObject):
@@ -76,7 +75,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def expires_in(self):
         """
-        :type: int
+        :type: Optional[int]
         """
         if self._expires_in is not github.GithubObject.NotSet:
             return self._expires_in.value
@@ -84,7 +83,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def expires_at(self):
         """
-        :type: datetime
+        :type: Optional[datetime]
         """
         seconds = self.expires_in
         if seconds is not None:
@@ -93,7 +92,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def refresh_token(self):
         """
-        :type: string
+        :type: Optional[string]
         """
         if self._refresh_token is not github.GithubObject.NotSet:
             return self._refresh_token.value
@@ -101,7 +100,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def refresh_expires_in(self):
         """
-        :type: int
+        :type: Optional[int]
         """
         if self._refresh_expires_in is not github.GithubObject.NotSet:
             return self._refresh_expires_in.value
@@ -109,24 +108,11 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def refresh_expires_at(self):
         """
-        :type: datetime
+        :type: Optional[datetime]
         """
         seconds = self.refresh_expires_in
         if seconds is not None:
             return self._created + timedelta(seconds=seconds)
-
-    @property
-    def as_app_user_auth(self):
-        """
-        :type: AppUserAuth
-        """
-        return AppUserAuth(
-            token=self.token,
-            token_type=self.type,
-            expires_at=self.expires_at,
-            refresh_token=self.refresh_token,
-            refresh_expires_at=self.refresh_expires_at,
-        )
 
     def _initAttributes(self):
         self._token = github.GithubObject.NotSet

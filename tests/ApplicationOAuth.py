@@ -21,7 +21,8 @@
 ################################################################################
 
 import datetime
-import mock
+
+from unittest import mock
 
 import github
 
@@ -69,7 +70,7 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertEqual(
             str(access_token),
             'AccessToken(type="bearer", token="acces...", scope="", '
-            'refresh_token_expires_in=None, refresh_token=None, expires_in=None)'
+            "refresh_token_expires_in=None, refresh_token=None, expires_in=None)",
         )
         self.assertEqual(access_token.token, "access_token_removed")
         self.assertEqual(access_token.type, "bearer")
@@ -82,7 +83,9 @@ class ApplicationOAuth(Framework.TestCase):
 
     def testGetAccessTokenWithExpiry(self):
         with mock.patch("github.AccessToken.datetime") as dt:
-            dt.utcnow = mock.Mock(return_value=datetime.datetime(2023, 6, 7, 12, 0, 0, 123))
+            dt.utcnow = mock.Mock(
+                return_value=datetime.datetime(2023, 6, 7, 12, 0, 0, 123)
+            )
             access_token = self.app.get_access_token(
                 "oauth_code_removed", state="state_removed"
             )
@@ -90,16 +93,50 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertEqual(
             str(access_token),
             'AccessToken(type="bearer", token="acces...", scope="", '
-            'refresh_token_expires_in=15811200, refresh_token="refre...", expires_in=28800)'
+            'refresh_token_expires_in=15811200, refresh_token="refre...", expires_in=28800)',
         )
         self.assertEqual(access_token.token, "access_token_removed")
         self.assertEqual(access_token.type, "bearer")
         self.assertEqual(access_token.scope, "")
         self.assertEqual(access_token.expires_in, 28800)
-        self.assertEqual(access_token.expires_at, datetime.datetime(2023, 6, 7, 20, 0, 0, 123))
+        self.assertEqual(
+            access_token.expires_at, datetime.datetime(2023, 6, 7, 20, 0, 0, 123)
+        )
         self.assertEqual(access_token.refresh_token, "refresh_token_removed")
         self.assertEqual(access_token.refresh_expires_in, 15811200)
-        self.assertEqual(access_token.refresh_expires_at, datetime.datetime(2023, 12, 7, 12, 0, 0, 123))
+        self.assertEqual(
+            access_token.refresh_expires_at,
+            datetime.datetime(2023, 12, 7, 12, 0, 0, 123),
+        )
+
+    def testRefreshAccessToken(self):
+        access_token = self.app.get_access_token(
+            "oauth_code_removed", state="state_removed"
+        )
+        with mock.patch("github.AccessToken.datetime") as dt:
+            dt.utcnow = mock.Mock(
+                return_value=datetime.datetime(2023, 6, 7, 12, 0, 0, 123)
+            )
+            self.app.refresh_access_token(access_token.refresh_token)
+        # Test string representation
+        self.assertEqual(
+            str(access_token),
+            'AccessToken(type="bearer", token="acces...", scope="", '
+            'refresh_token_expires_in=15811200, refresh_token="refre...", expires_in=28800)',
+        )
+        self.assertEqual(access_token.token, "access_token_removed")
+        self.assertEqual(access_token.type, "bearer")
+        self.assertEqual(access_token.scope, "")
+        self.assertEqual(access_token.expires_in, 28800)
+        self.assertEqual(
+            access_token.expires_at, datetime.datetime(2023, 6, 7, 20, 0, 0, 123)
+        )
+        self.assertEqual(access_token.refresh_token, "refresh_token_removed")
+        self.assertEqual(access_token.refresh_expires_in, 15811200)
+        self.assertEqual(
+            access_token.refresh_expires_at,
+            datetime.datetime(2023, 12, 7, 12, 0, 0, 123),
+        )
 
     def testGetAccessTokenBadCode(self):
         with self.assertRaises(github.GithubException) as exc:

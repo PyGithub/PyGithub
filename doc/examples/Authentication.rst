@@ -65,3 +65,33 @@ expiration timeout. The access token is refreshed automatically.
     >>> g = Github(auth=auth)
     >>> g.get_repo("user/repo").name
     'repo'
+
+App user authentication
+-----------------------
+
+A Github App can authenticate on behalf of a user. For this, the user has to `generate a user access token for a Github App <https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user>`__.
+This process completes with a one-time ``code``. Together with the ``client_id`` and ``client_secret`` of the app,
+a Github App user token can be generated once:
+
+    >>> g = Github()
+    >>> app = g.get_oauth_application(client_id, client_secret)
+    >>> token = app.get_access_token(code)
+
+Memorize the ``token.refresh_token``, as this can be used to create a fresh token. The ``token.token``
+expires after 8 hours and the ``token.refresh_token`` after 6 months of creation.
+
+A token can be refreshed as follows. This invalidates the old token and refresh token and creates
+a new set of token and refresh token:
+
+    >>> g = Github()
+    >>> app = g.get_oauth_application(client_id, client_secret)
+    >>> token = app.refresh_access_token(refresh_token)
+
+You can authenticate with Github using this token:
+
+   >>> auth = app.get_app_user_auth(token)
+   >>> g = Github(auth=auth)
+   >>> g.get_user().login
+   'user_login'
+
+The ``auth`` instance will refresh the token automatically when ``auth.token`` is accessed.
