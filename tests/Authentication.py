@@ -25,6 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import warnings
 
 import github
 
@@ -36,27 +37,54 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github()
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
+    def assertWarning(self, warning, expected):
+        self.assertEqual(len(warning.warnings), 1)
+        message = warning.warnings[0]
+        self.assertIsInstance(message, warnings.WarningMessage)
+        self.assertIsInstance(message.message, DeprecationWarning)
+        self.assertEqual(message.message.args, (expected,))
+
     def testBasicAuthentication(self):
-        g = github.Github(self.login.login, self.login.password)
+        with self.assertWarns(DeprecationWarning) as warning:
+            g = github.Github(self.login.login, self.login.password)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+        self.assertWarning(
+            warning,
+            "Arguments login_or_token and password are deprecated, please use auth=github.Auth.Login(...) instead",
+        )
 
     def testOAuthAuthentication(self):
-        g = github.Github(self.oauth_token.token)
+        with self.assertWarns(DeprecationWarning) as warning:
+            g = github.Github(self.oauth_token.token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+        self.assertWarning(
+            warning,
+            "Argument login_or_token is deprecated, please use auth=github.Auth.Token(...) instead",
+        )
 
     def testJWTAuthentication(self):
-        g = github.Github(jwt=self.jwt.token)
+        with self.assertWarns(DeprecationWarning) as warning:
+            g = github.Github(jwt=self.jwt.token)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+        self.assertWarning(
+            warning,
+            "Argument jwt is deprecated, please use auth=github.Auth.AppAuth(...) or "
+            "auth=github.Auth.AppAuthToken(...) instead",
+        )
 
     def testAppAuthentication(self):
-        g = github.Github(
-            app_auth=github.AppAuthentication(
-                app_id=self.app_auth.app_id,
-                private_key=self.app_auth.private_key,
-                installation_id=29782936,
-            ),
+        app_auth = github.AppAuthentication(
+            app_id=self.app_auth.app_id,
+            private_key=self.app_auth.private_key,
+            installation_id=29782936,
         )
+        with self.assertWarns(DeprecationWarning) as warning:
+            g = github.Github(app_auth=app_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+        self.assertWarning(
+            warning,
+            "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
+        )
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity

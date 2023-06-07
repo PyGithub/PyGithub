@@ -115,7 +115,9 @@ class GithubIntegration:
             completed=True,
         )
 
-    @deprecated.deprecated("Use github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead")
+    @deprecated.deprecated(
+        "Use github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
+    )
     def create_jwt(self, expiration=None):
         """
         Create a signed JWT

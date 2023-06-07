@@ -70,6 +70,11 @@ class Login(Auth):
     """
 
     def __init__(self, login: str, password: str):
+        assert isinstance(login, str)
+        assert len(login) > 0
+        assert isinstance(password, str)
+        assert len(password) > 0
+
         self._login = login
         self._password = password
 
@@ -100,6 +105,8 @@ class Token(Auth):
     """
 
     def __init__(self, token: str):
+        assert isinstance(token, str)
+        assert len(token) > 0
         self._token = token
 
     @property
@@ -137,7 +144,12 @@ class AppAuth(JWT):
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
     ):
         assert isinstance(app_id, (int, str)), app_id
+        if isinstance(app_id, str):
+            assert len(app_id) > 0, "app_id must not be empty"
         assert isinstance(private_key, str)
+        assert len(private_key) > 0, "private_key must not be empty"
+        assert isinstance(jwt_expiry, int), jwt_expiry
+        assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
 
         self._app_id = app_id
         self._private_key = private_key
@@ -207,6 +219,8 @@ class AppAuthToken(JWT):
     """
 
     def __init__(self, token: str):
+        assert isinstance(token, str)
+        assert len(token) > 0
         self._token = token
 
     @property
@@ -219,6 +233,13 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     This class is used to authenticate Requester as a GitHub App Installation.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
     """
+
+    # imported here to avoid circular import, needed for typing only
+    from github.GithubIntegration import GithubIntegration
+
+    # used to fetch live access token when calling self.token
+    __integration: Optional[GithubIntegration] = None
+    __installation_authorization: Optional[InstallationAuthorization] = None
 
     def __init__(
         self,
@@ -239,15 +260,12 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         self._installation_id = installation_id
         self._token_permissions = token_permissions
 
-        from github.GithubIntegration import GithubIntegration
-
-        self.__integration: Optional[GithubIntegration] = None
-        self.__installation_authorization: Optional[InstallationAuthorization] = None
-
         if requester is not None:
+            assert isinstance(requester, Requester), requester
             self._setRequester(requester)
 
     def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        assert isinstance(requester, Requester), requester
         self._setRequester(requester.withAuth(self._app_auth))
         return self
 
