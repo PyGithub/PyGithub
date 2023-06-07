@@ -181,7 +181,9 @@ class PullRequest(Framework.TestCase):
 
     def testGetReviewComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
-        comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
+        comments = self.pull.get_review_comments(
+            sort="updated", direction="desc", since=epoch
+        )
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testReviewRequests(self):

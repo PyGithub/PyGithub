@@ -624,10 +624,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
 
     def get_comments(
-            self,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet):
+        self,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+    ):
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
@@ -641,11 +642,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     # v2: remove *, added here to force named parameters because order has changed
     def get_review_comments(
-            self,
-            *,
-            sort=github.GithubObject.NotSet,
-            direction=github.GithubObject.NotSet,
-            since=github.GithubObject.NotSet):
+        self,
+        *,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+    ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
