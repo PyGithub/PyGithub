@@ -37,7 +37,7 @@ from . import Framework
 class PullRequest(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
 
         marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
@@ -155,7 +155,9 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(comment.id, 886298)
 
     def testGetComments(self):
-        self.assertListKeyEqual(self.pull.get_comments(), lambda c: c.id, [886298])
+        epoch = datetime.datetime(1970, 1, 1, 0, 0)
+        comments = self.pull.get_comments(sort="updated", direction="desc", since=epoch)
+        self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testCreateIssueComment(self):
         comment = self.pull.create_issue_comment("Issue comment created by PyGithub")
@@ -179,8 +181,8 @@ class PullRequest(Framework.TestCase):
 
     def testGetReviewComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
-        comments = self.pull.get_review_comments(since=epoch)
-        self.assertListKeyEqual(comments, lambda c: c.id, [238127783])
+        comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
+        self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testReviewRequests(self):
         self.pull.create_review_request(

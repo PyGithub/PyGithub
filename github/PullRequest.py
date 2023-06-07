@@ -623,25 +623,48 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def get_comments(self):
+    def get_comments(
+            self,
+            sort=github.GithubObject.NotSet,
+            direction=github.GithubObject.NotSet,
+            since=github.GithubObject.NotSet):
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param sort: string 'created' or 'updated'
+        :param direction: string 'asc' or 'desc'
+        :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        return self.get_review_comments()
+        return self.get_review_comments(sort=sort, direction=direction, since=since)
 
-    def get_review_comments(self, since=github.GithubObject.NotSet):
+    # v2: remove *, added here to force named parameters because order has changed
+    def get_review_comments(
+            self,
+            *,
+            sort=github.GithubObject.NotSet,
+            direction=github.GithubObject.NotSet,
+            since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param sort: string 'created' or 'updated'
+        :param direction: string 'asc' or 'desc'
+        :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
+        assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, str
+        ), direction
         assert since is github.GithubObject.NotSet or isinstance(
             since, datetime.datetime
         ), since
         url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
