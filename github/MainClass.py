@@ -805,9 +805,16 @@ class Github:
         """
         assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
 
-        url = "/app" if slug is github.GithubObject.NotSet else f"/apps/{slug}"
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+        if slug is github.GithubObject.NotSet:
+            # with no slug given, calling /app returns the authenticated app,
+            # including the actual /apps/{slug}
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
+            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+        else:
+            # with a slug given, we can lazily load the GithubApp
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
+            )
 
 
 # Retrocompatibility
