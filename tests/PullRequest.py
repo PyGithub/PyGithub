@@ -84,9 +84,7 @@ class PullRequest(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
-        self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["jacquev6"]
-        )
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(
             self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode"
         )
@@ -377,16 +375,12 @@ class PullRequest(Framework.TestCase):
         )
 
     def testMergeWithCommitMessage(self):
-        self.repo.get_pull(39).merge(
-            "Custom commit message created by PyGithub"
-        )
+        self.repo.get_pull(39).merge("Custom commit message created by PyGithub")
 
     def testAddAndRemoveAssignees(self):
         user1 = "jayfk"
         user2 = self.g.get_user("jzelinskie")
-        self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["jacquev6"]
-        )
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
         url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
