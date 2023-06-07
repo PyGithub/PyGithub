@@ -4,6 +4,27 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.58.2 (May 09, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+- Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
+
+Version 1.58.1 (March 18, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+* Add expiration argument back to GithubIntegration.create_jwt (#2439) (822fc05c)
+* Add crypto extras to pyjwt, which pulls in cryptogaphy package (#2443) (554b2b28)
+* Remove RLock from Requester (#2446) (45f3d723)
+* Move CI to Python 3.11 release and 3.12 dev (#2434) (e414c322)
+* pass requester base URL to integration (#2420) (bdceae2f)
+* RTD: install current project (def5223c)
+* Add current dir sys.path as well (9c96faa7)
+* Use use_scm_version to get current version from git tag (#2429) (3ea91a3a)
+
 Version 1.58.0 (February 19, 2023)
 -----------------------------------
 

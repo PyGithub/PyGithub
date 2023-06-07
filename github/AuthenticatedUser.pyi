@@ -55,7 +55,12 @@ class AuthenticatedUser(CompletableGithubObject):
         client_secret: Union[str, _NotSetType] = ...,
         onetime_password: Union[str, None] = ...,
     ) -> Authorization: ...
-    def create_fork(self, repo: Repository) -> Repository: ...
+    @staticmethod
+    def create_fork(
+        repo: Repository,
+        name: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[str, _NotSetType] = ...,
+    ) -> Repository: ...
     def create_gist(
         self,
         public: bool,
