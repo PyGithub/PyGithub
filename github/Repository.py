@@ -2957,8 +2957,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
-        :param sort: string
-        :param direction: string
+        :param sort: string 'created', 'updated', 'created_at'
+        :param direction: string 'asc' or 'desc'
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
