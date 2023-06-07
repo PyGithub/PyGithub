@@ -107,10 +107,13 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             input=post_parameters,
         )
 
+        # error is not reported by HTTP status but payload
+        if "error" in data:
+            raise github.GithubException(200, data, headers)
+
         return AccessToken(
             requester=self._requester,
-            # not required, this is a NonCompletableGithubObject
-            headers={},
+            headers=headers,
             attributes=data,
             completed=False,
         )

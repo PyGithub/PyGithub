@@ -326,17 +326,83 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 
 class AppUserAuth(Auth):
     """
-    This class is used to authenticate Requester as a GitHub App Installation on behalf of a user.
+    This class is used to authenticate Requester as a GitHub App on behalf of a user.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
     """
 
-    def __init__(self):
-        raise NotImplementedError
+    _token: str
+    _type: Optional[str]
+    _scope: Optional[str]
+    _expires_at: Optional[datetime.datetime]
+    _refresh_token: Optional[str]
+    _refresh_expires_at: Optional[datetime.datetime]
+
+    def __init__(
+        self,
+        token: str,
+        token_type: Optional[str] = None,
+        expires_at: Optional[datetime.datetime] = None,
+        refresh_token=None,
+        refresh_expires_at=None,
+    ):
+        assert isinstance(token, str)
+        if token_type is not None:
+            assert isinstance(token_type, str)
+            assert len(token_type) > 0
+        if expires_at is not None:
+            assert isinstance(expires_at, datetime.datetime)
+        if refresh_token is not None:
+            assert isinstance(refresh_token, str)
+            assert len(refresh_token) > 0
+        if refresh_expires_at is not None:
+            assert isinstance(refresh_expires_at, datetime.datetime)
+
+        self._token = token
+        self._type = token_type or "bearer"
+        self._expires_at = expires_at
+        self._refresh_token = refresh_token
+        self._refresh_expires_at = refresh_expires_at
 
     @property
     def token_type(self) -> str:
-        raise NotImplementedError
+        return self._type
 
     @property
     def token(self) -> str:
-        raise NotImplementedError
+        if self._is_expired:
+            self._token = self._refresh()
+        return self._token
+
+    @property
+    def _is_expired(self) -> bool:
+        return (
+            self._expires_at is not None
+            and self._expires_at < datetime.datetime.utcnow()
+        )
+
+    def _refresh(self) -> str:
+        if self._refresh_token is None:
+            raise RuntimeError(
+                "Cannot refresh expired token because no refresh token has been provided"
+            )
+        if (
+            self._refresh_expires_at is not None
+            and self._refresh_expires_at < datetime.datetime.utcnow()
+        ):
+            raise RuntimeError(
+                "Cannot refresh expired token because refresh token also expired"
+            )
+        # TODO: call refresh API
+        raise NotImplementedError()
+
+    @property
+    def expires_at(self) -> Optional[datetime.datetime]:
+        return self._expires_at
+
+    @property
+    def refresh_token(self) -> Optional[str]:
+        return self._refresh_token
+
+    @property
+    def refresh_expires_at(self) -> Optional[datetime.datetime]:
+        return self._refresh_expires_at
