@@ -804,13 +804,17 @@ class Github:
         :rtype: :class:`github.GithubApp.GithubApp`
         """
         assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
+
         if slug is github.GithubObject.NotSet:
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": "/app"}, completed=False
-            )
-        else:
-            headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
+            # with no slug given, calling /app returns the authenticated app,
+            # including the actual /apps/{slug}
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+        else:
+            # with a slug given, we can lazily load the GithubApp
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
+            )
 
 
 # Retrocompatibility
