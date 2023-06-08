@@ -25,11 +25,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import sys
 import warnings
+
+import jwt
 
 import github
 
 from . import Framework
+from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
 
 
 class Authentication(Framework.BasicTestCase):
@@ -106,6 +110,40 @@ class Authentication(Framework.BasicTestCase):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
+    def testCreateJWT(self):
+        self.origin_time = sys.modules["time"].time
+        sys.modules["time"].time = lambda: 1550055331.7435968
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        token = auth.create_jwt()
+        payload = jwt.decode(
+            token,
+            key=PUBLIC_KEY,
+            algorithms=["RS256"],
+            options={"verify_exp": False},
+        )
+        self.assertDictEqual(
+            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
+        )
+        sys.modules["time"].time = self.origin_time
+
+    def testCreateJWTWithExpiration(self):
+        self.origin_time = sys.modules["time"].time
+        sys.modules["time"].time = lambda: 1550055331.7435968
+        auth = github.Auth.AppAuth(
+            APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30
+        )
+        token = auth.create_jwt(60)
+        payload = jwt.decode(
+            token,
+            key=PUBLIC_KEY,
+            algorithms=["RS256"],
+            options={"verify_exp": False},
+        )
+        self.assertDictEqual(
+            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
+        )
+        sys.modules["time"].time = self.origin_time
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
