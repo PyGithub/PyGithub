@@ -348,6 +348,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         expires_at: Optional[datetime] = None,
         refresh_token=None,
         refresh_expires_at=None,
+        requester: Optional[Requester] = None,
     ):
         assert isinstance(client_id, str)
         assert len(client_id) > 0
@@ -377,6 +378,9 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         self._expires_at = expires_at
         self._refresh_token = refresh_token
         self._refresh_expires_at = refresh_expires_at
+
+        if requester is not None:
+            self.withRequester(requester)
 
     @property
     def token_type(self) -> str:

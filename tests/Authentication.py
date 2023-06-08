@@ -31,8 +31,6 @@ from unittest import mock
 
 import jwt
 
-from unittest import mock
-
 import github
 
 from . import Framework

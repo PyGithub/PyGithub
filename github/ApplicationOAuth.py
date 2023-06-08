@@ -130,7 +130,8 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             expires_at=token.expires_at,
             refresh_token=token.refresh_token,
             refresh_expires_at=token.refresh_expires_at,
-        ).withRequester(self._requester)
+            requester=self._requester,
+        )
 
     def refresh_access_token(self, refresh_token):
         """
