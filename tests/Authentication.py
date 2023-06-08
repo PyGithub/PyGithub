@@ -25,7 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-import mock
+from unittest import mock
 import warnings
 
 import jwt
@@ -42,11 +42,14 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def assertWarning(self, warning, expected):
-        self.assertEqual(len(warning.warnings), 1)
-        message = warning.warnings[0]
-        self.assertIsInstance(message, warnings.WarningMessage)
-        self.assertIsInstance(message.message, DeprecationWarning)
-        self.assertEqual(message.message.args, (expected,))
+        self.assertWarnings(warning, expected)
+
+    def assertWarnings(self, warning, *expecteds):
+        self.assertEqual(len(warning.warnings), len(expecteds))
+        for message, expected in zip(warning.warnings, expecteds):
+            self.assertIsInstance(message, warnings.WarningMessage)
+            self.assertIsInstance(message.message, DeprecationWarning)
+            self.assertEqual(message.message.args, (expected,))
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
@@ -77,16 +80,17 @@ class Authentication(Framework.BasicTestCase):
         )
 
     def testAppAuthentication(self):
-        app_auth = github.AppAuthentication(
-            app_id=self.app_auth.app_id,
-            private_key=self.app_auth.private_key,
-            installation_id=29782936,
-        )
         with self.assertWarns(DeprecationWarning) as warning:
+            app_auth = github.AppAuthentication(
+                app_id=self.app_auth.app_id,
+                private_key=self.app_auth.private_key,
+                installation_id=29782936,
+            )
             g = github.Github(app_auth=app_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertWarning(
+        self.assertWarnings(
             warning,
+            "Call to deprecated class AppAuthentication. (Use app.Auth.AppInstallationAuth instead)",
             "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
         )
 

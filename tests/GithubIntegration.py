@@ -1,4 +1,5 @@
 import time  # NOQA
+import warnings
 
 import requests  # NOQA
 
@@ -41,13 +42,30 @@ class GithubIntegration(Framework.BasicTestCase):
         self.repo_installation_id = 30614431
         self.user_installation_id = 30614431
 
+    def assertWarning(self, warning, expected):
+        self.assertWarnings(warning, expected)
+
+    def assertWarnings(self, warning, *expecteds):
+        self.assertEqual(len(warning.warnings), len(expecteds))
+        for message, expected in zip(warning.warnings, expecteds):
+            self.assertIsInstance(message, warnings.WarningMessage)
+            self.assertIsInstance(message.message, DeprecationWarning)
+            self.assertEqual(message.message.args, (expected,))
+
     def testDeprecatedAppAuth(self):
         # Replay data copied from testGetInstallations to test authentication only
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        with self.assertWarns(DeprecationWarning) as warning:
+            github_integration = github.GithubIntegration(
+                integration_id=APP_ID, private_key=PRIVATE_KEY
+            )
         installations = github_integration.get_installations()
         self.assertEqual(len(list(installations)), 2)
+        self.assertWarning(
+            warning,
+            "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and "
+            "jwt_algorithm are deprecated, please use auth=github.Auth.AppAuth(...) "
+            "instead",
+        )
 
     def testAppAuth(self):
         # Replay data copied from testDeprecatedAppAuth to test parity
