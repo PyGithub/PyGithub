@@ -92,9 +92,7 @@ class GithubIntegration:
         :return: dict
         """
         return {
-            "Authorization": f"Bearer {self.create_jwt()}",
             "Accept": Consts.mediaTypeIntegrationPreview,
-            "User-Agent": "PyGithub/Python",
         }
 
     def _get_installed_app(self, url):
