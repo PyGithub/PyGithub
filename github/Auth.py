@@ -328,7 +328,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     _client_id: str
     _client_secret: str
     _token: str
-    _type: Optional[str]
+    _type: str
     _scope: Optional[str]
     _expires_at: Optional[datetime]
     _refresh_token: Optional[str]

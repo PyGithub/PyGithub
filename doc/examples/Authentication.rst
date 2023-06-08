@@ -77,11 +77,11 @@ a Github App user token can be generated once:
     >>> app = g.get_oauth_application(client_id, client_secret)
     >>> token = app.get_access_token(code)
 
-Memorize the ``token.refresh_token``, as this can be used to create a fresh token. The ``token.token``
-expires after 8 hours and the ``token.refresh_token`` after 6 months of creation.
+Memorize the ``token.refresh_token``, as only this can be used to create new tokens for this user.
+The ``token.token`` expires 8 hours, and the ``token.refresh_token`` expires 6 months after creation.
 
-A token can be refreshed as follows. This invalidates the old token and refresh token and creates
-a new set of token and refresh token:
+A token can be refreshed as follows. This invalidates the old token and old refresh token, and creates
+a new set of token and refresh tokens:
 
     >>> g = Github()
     >>> app = g.get_oauth_application(client_id, client_secret)
