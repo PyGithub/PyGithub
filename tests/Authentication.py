@@ -25,8 +25,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from unittest import mock
 import warnings
+from unittest import mock
 
 import jwt
 
@@ -128,10 +128,14 @@ class Authentication(Framework.BasicTestCase):
             algorithms=["RS256"],
             options={"verify_exp": False},
         )
-        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID})
+        self.assertDictEqual(
+            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
+        )
 
     def testCreateJWTWithExpiration(self):
-        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
+        auth = github.Auth.AppAuth(
+            APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30
+        )
 
         with mock.patch("github.Auth.time") as t:
             t.time = mock.Mock(return_value=1550055331.7435968)
@@ -143,7 +147,9 @@ class Authentication(Framework.BasicTestCase):
             algorithms=["RS256"],
             options={"verify_exp": False},
         )
-        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID})
+        self.assertDictEqual(
+            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
+        )
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
