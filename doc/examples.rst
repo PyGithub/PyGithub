@@ -3,6 +3,7 @@ Examples
 
 
 .. toctree::
+  examples/Authentication
   examples/MainClass
   examples/Repository
   examples/Branch

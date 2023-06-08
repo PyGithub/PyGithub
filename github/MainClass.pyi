@@ -2,6 +2,7 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
+from github.Auth import Auth
 from github.AppAuthentication import AppAuthentication
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
@@ -39,6 +40,7 @@ class Github:
         verify: bool = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
+        auth: Optional[Auth] = ...,
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...
