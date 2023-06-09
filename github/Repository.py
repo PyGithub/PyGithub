@@ -27,7 +27,7 @@
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                  #
+# Copyright 2016 Per Øyvind Karlsen <proyvind@moondrake.org>                   #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sylvus <Sylvus@users.noreply.github.com>                      #
 # Copyright 2016 fukatani <nannyakannya@gmail.com>                             #
@@ -39,34 +39,69 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                #
+# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Aaron L. Levine <allevin@sandia.gov>                          #
+# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
 # Copyright 2018 Brian Torres-Gil <btorres-gil@paloaltonetworks.com>           #
 # Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Ilya Konstantinov <ilya.konstantinov@gmail.com>               #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 John Hui <j-hui@users.noreply.github.com>                     #
+# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
 # Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
 # Copyright 2018 Michael Behrisch <oss@behrisch.de>                            #
 # Copyright 2018 Nicholas Buse <NicholasBuse@users.noreply.github.com>         #
+# Copyright 2018 Philip May <eniak.info@gmail.com>                             #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Vinay Hegde <hegde.vi@husky.neu.edu>                          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sechastain <sechastain@gmail.com>                             #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
-# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
-# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
-# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
-# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
-# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Alex <alexmusa@users.noreply.github.com>                      #
+# Copyright 2019 Kevin LaFlamme <k@lamfl.am>                                   #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Will Li <cuichen.li94@gmail.com>                              #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Chris de Graaf <chrisadegraaf@gmail.com>                      #
+# Copyright 2020 Dhruv Manilawala <dhruvmanila@gmail.com>                      #
+# Copyright 2020 Dominic Davis-Foster <dominic@davis-foster.co.uk>             #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Huw Jones <huwcbjones@outlook.com>                            #
+# Copyright 2020 Mark Bromell <markbromell.business@gmail.com>                 #
+# Copyright 2020 Max Wittig <max.wittig@siemens.com>                           #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
-# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Floyd Hightower <floyd.hightower27@gmail.com>                 #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2021 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2022 Aleksei Fedotov <lexa@cfotr.com>                              #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -89,6 +124,7 @@
 
 import collections
 import datetime
+import typing
 import urllib.parse
 from base64 import b64encode
 
@@ -132,6 +168,9 @@ import github.PublicKey
 import github.PullRequest
 import github.Referrer
 import github.Repository
+import github.RepositoryAdvisory
+import github.RepositoryAdvisoryCredit
+import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.SelfHostedActionsRunner
@@ -1472,6 +1511,162 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def create_repository_advisory(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: typing.Optional[str] = None,
+        vulnerabilities: typing.Optional[
+            typing.Iterable[
+                github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability
+            ]
+        ] = None,
+        cwe_ids: typing.Optional[typing.Iterable[str]] = None,
+        credits: typing.Optional[
+            typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]
+        ] = None,
+    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        """
+        :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :param summary: string
+        :param description: string
+        :param severity_or_cvss_vector_string: string
+        :param cve_id: string
+        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param cwe_ids: iterable of string
+        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
+        """
+        return self.__create_repository_advisory(
+            summary=summary,
+            description=description,
+            severity_or_cvss_vector_string=severity_or_cvss_vector_string,
+            cve_id=cve_id,
+            vulnerabilities=vulnerabilities,
+            cwe_ids=cwe_ids,
+            credits=credits,
+            private_vulnerability_reporting=False,
+        )
+
+    def report_security_vulnerability(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: typing.Optional[str] = None,
+        vulnerabilities: typing.Optional[
+            typing.Iterable[
+                github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability
+            ]
+        ] = None,
+        cwe_ids: typing.Optional[typing.Iterable[str]] = None,
+        credits: typing.Optional[
+            typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]
+        ] = None,
+    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        """
+        :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
+        :param summary: string
+        :param description: string
+        :param severity_or_cvss_vector_string: string
+        :param cve_id: string
+        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param cwe_ids: iterable of string
+        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
+        """
+        return self.__create_repository_advisory(
+            summary=summary,
+            description=description,
+            severity_or_cvss_vector_string=severity_or_cvss_vector_string,
+            cve_id=cve_id,
+            vulnerabilities=vulnerabilities,
+            cwe_ids=cwe_ids,
+            credits=credits,
+            private_vulnerability_reporting=True,
+        )
+
+    def __create_repository_advisory(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: typing.Optional[str],
+        vulnerabilities: typing.Optional[
+            typing.Iterable[
+                github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability
+            ]
+        ],
+        cwe_ids: typing.Optional[typing.Iterable[str]],
+        credits: typing.Optional[
+            typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]
+        ],
+        private_vulnerability_reporting: bool,
+    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        if vulnerabilities is None:
+            vulnerabilities = []
+        if cwe_ids is None:
+            cwe_ids = []
+        assert isinstance(summary, str), summary
+        assert isinstance(description, str), description
+        assert isinstance(
+            severity_or_cvss_vector_string, str
+        ), severity_or_cvss_vector_string
+        assert isinstance(cve_id, (str, type(None))), cve_id
+        assert isinstance(vulnerabilities, typing.Iterable), vulnerabilities
+        for vulnerability in vulnerabilities:
+            # noinspection PyProtectedMember
+            github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
+                vulnerability
+            )
+        assert isinstance(cwe_ids, typing.Iterable), cwe_ids
+        assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
+        assert isinstance(credits, (typing.Iterable, type(None))), credits
+        if credits is not None:
+            for credit in credits:
+                # noinspection PyProtectedMember
+                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(
+                    credit
+                )
+        # noinspection PyProtectedMember
+        post_parameters = {
+            "summary": summary,
+            "description": description,
+            "vulnerabilities": [
+                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
+                    vulnerability
+                )
+                for vulnerability in vulnerabilities
+            ],
+            "cwe_ids": list(cwe_ids),
+        }
+        if cve_id is not None:
+            post_parameters["cve_id"] = cve_id
+        if credits is not None:
+            # noinspection PyProtectedMember
+            post_parameters["credits"] = [
+                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(
+                    credit
+                )
+                for credit in credits
+            ]
+        if severity_or_cvss_vector_string.startswith("CVSS:"):
+            post_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
+        else:
+            post_parameters["severity"] = severity_or_cvss_vector_string
+        if private_vulnerability_reporting:
+            headers, data = self._requester.requestJsonAndCheck(
+                "POST", f"{self.url}/security-advisories/reports", input=post_parameters
+            )
+        else:
+            headers, data = self._requester.requestJsonAndCheck(
+                "POST", f"{self.url}/security-advisories", input=post_parameters
+            )
+        return github.RepositoryAdvisory.RepositoryAdvisory(
+            self._requester, headers, data, completed=True
+        )
+
     def create_repository_dispatch(
         self, event_type, client_payload=github.GithubObject.NotSet
     ):
@@ -2227,6 +2422,35 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self._requester, headers, data["commit"], completed=True
             ),
         }
+
+    def get_repository_advisories(
+        self,
+    ) -> "github.PaginatedList.PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]":
+        """
+        :calls: `GET /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryAdvisory.RepositoryAdvisory`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.RepositoryAdvisory.RepositoryAdvisory,
+            self._requester,
+            f"{self.url}/security-advisories",
+            None,
+        )
+
+    def get_repository_advisory(
+        self, ghsa: str
+    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        """
+        :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :param ghsa: string
+        :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/security-advisories/{ghsa}"
+        )
+        return github.RepositoryAdvisory.RepositoryAdvisory(
+            self._requester, headers, data, completed=True
+        )
 
     def update_file(
         self,

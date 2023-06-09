@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Union, overload
+from typing import Any, Dict, List, Optional, Union, overload, Iterable
 
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
@@ -43,6 +43,12 @@ from github.PublicKey import PublicKey
 from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
+from github.RepositoryAdvisory import RepositoryAdvisory
+from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
+from github.RepositoryAdvisoryVulnerability import (
+    RepositoryAdvisoryVulnerability,
+    AdvisoryVulnerability,
+)
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
@@ -134,6 +140,8 @@ class Repository(CompletableGithubObject):
         transient_environment: Union[bool, _NotSetType] = ...,
         production_environment: Union[bool, _NotSetType] = ...,
     ) -> Deployment: ...
+    def get_repository_advisories(self) -> PaginatedList[RepositoryAdvisory]: ...
+    def get_repository_advisory(self, ghsa: str) -> RepositoryAdvisory: ...
     def create_file(
         self,
         path: str,
@@ -242,6 +250,26 @@ class Repository(CompletableGithubObject):
         maintainer_can_modify: _NotSetType,
         issue: Issue,
     ) -> PullRequest: ...
+    def create_repository_advisory(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: Optional[str] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        cwe_ids: Optional[Iterable[str]] = ...,
+        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+    ) -> RepositoryAdvisory: ...
+    def report_security_vulnerability(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: Optional[str] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        cwe_ids: Optional[Iterable[str]] = ...,
+        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+    ) -> RepositoryAdvisory: ...
     def create_repository_dispatch(
         self, event_type: str, client_payload: Union[Dict[str, Any], _NotSetType] = ...
     ) -> bool: ...

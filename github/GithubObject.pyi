@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Type, Union, TypeVar
 
 from github.Commit import Commit
 from github.GistFile import GistFile
@@ -96,6 +96,7 @@ class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self) -> None: ...
 
 class CompletableGithubObject(GithubObject):
+    _requester: Requester
     def __eq__(self, other: Any) -> bool: ...
     def __init__(
         self,
@@ -120,8 +121,14 @@ class _BadAttribute:
 
 class _NotSetType:
     def __repr__(self) -> str: ...
+    @property
+    def value(self) -> Any: ...
+
+NotSet: _NotSetType
+
+T = TypeVar("T")
+
+OptionallySet = Union[T, _NotSetType]
 
 class _ValuedAttribute:
     def __init__(self, value: Any) -> None: ...
-
-NotSet: _NotSetType
