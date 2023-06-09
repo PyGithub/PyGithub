@@ -55,7 +55,15 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
         self.assertEqual(self.issue.comments, 0)
         self.assertEqual(
+            self.issue.comments_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/comments",
+        )
+        self.assertEqual(
             self.issue.created_at, datetime.datetime(2012, 5, 19, 10, 38, 23)
+        )
+        self.assertEqual(
+            self.issue.events_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/events",
         )
         self.assertEqual(
             self.issue.html_url, "https://github.com/jacquev6/PyGithub/issues/28"
@@ -66,12 +74,17 @@ class Issue(Framework.TestCase):
             lambda l: l.name,
             ["Bug", "Project management", "Question"],
         )
+        self.assertEqual(
+            self.issue.labels_url,
+            "https://github.com/jacquev6/PyGithub/issues/28/labels{/name}",
+        )
         self.assertEqual(self.issue.milestone.title, "Version 0.4")
         self.assertEqual(self.issue.number, 28)
         self.assertEqual(self.issue.pull_request.diff_url, None)
         self.assertEqual(self.issue.pull_request.patch_url, None)
         self.assertEqual(self.issue.pull_request.html_url, None)
         self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
         self.assertEqual(
             self.issue.updated_at, datetime.datetime(2012, 5, 26, 14, 59, 33)
@@ -120,6 +133,16 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.issue.edit(assignee=None)
         self.assertEqual(self.issue.assignee, None)
+
+    def testEditWithStateReasonNotPlanned(self):
+        self.issue.edit(state="closed", state_reason="not_planned")
+        self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "not_planned")
+
+    def testEditWithStateReasonReopened(self):
+        self.issue.edit(state="open", state_reason="reopened")
+        self.assertEqual(self.issue.state, "open")
+        self.assertEqual(self.issue.state_reason, "reopened")
 
     def testLock(self):
         self.issue.lock("resolved")

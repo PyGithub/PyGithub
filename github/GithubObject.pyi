@@ -9,6 +9,7 @@ from github.PullRequestReview import PullRequestReview
 from github.Requester import Requester
 
 class GithubObject:
+    _requester: Optional[Requester]
     def __init__(
         self,
         requester: Optional[Requester],
@@ -122,3 +123,5 @@ class _NotSetType:
 
 class _ValuedAttribute:
     def __init__(self, value: Any) -> None: ...
+
+NotSet: _NotSetType

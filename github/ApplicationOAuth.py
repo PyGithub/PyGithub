@@ -32,6 +32,11 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
     The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
     """
 
+    def __init__(self, requester, headers, attributes, completed):
+        # this object requires a request without authentication
+        requester = requester.withAuth(auth=None)
+        super().__init__(requester, headers, attributes, completed)
+
     def __repr__(self):
         return self.get__repr__({"client_id": self._client_id.value})
 
@@ -91,7 +96,6 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         if state is not None:
             post_parameters["state"] = state
 
-        self._requester._Requester__authorizationHeader = None
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "https://github.com/login/oauth/access_token",

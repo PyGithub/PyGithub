@@ -2,6 +2,7 @@ from typing import Any, Dict, Optional
 
 from github.AccessToken import AccessToken
 from github.GithubObject import NonCompletableGithubObject
+from github.Requester import Requester
 
 class ApplicationOAuth(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
