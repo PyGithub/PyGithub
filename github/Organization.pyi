@@ -35,7 +35,12 @@ class Organization(CompletableGithubObject):
     @property
     def company(self) -> Optional[str]: ...
     def convert_to_outside_collaborator(self, member: NamedUser) -> None: ...
-    def create_fork(self, repo: Repository) -> Repository: ...
+    def create_fork(
+        self,
+        repo: Repository,
+        name: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[str, _NotSetType] = ...,
+    ) -> Repository: ...
     def create_hook(
         self,
         name: str,
