@@ -26,7 +26,6 @@
 #                                                                              #
 ################################################################################
 import datetime
-import warnings
 from unittest import mock
 
 import jwt
@@ -41,16 +40,6 @@ class Authentication(Framework.BasicTestCase):
     def testNoAuthentication(self):
         g = github.Github()
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
-
-    def assertWarning(self, warning, expected):
-        self.assertWarnings(warning, expected)
-
-    def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
-        for message, expected in zip(warning.warnings, expecteds):
-            self.assertIsInstance(message, warnings.WarningMessage)
-            self.assertIsInstance(message.message, DeprecationWarning)
-            self.assertEqual(message.message.args, (expected,))
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:

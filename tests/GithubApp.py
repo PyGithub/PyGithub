@@ -22,7 +22,10 @@
 
 from datetime import datetime
 
+import github
+
 from . import Framework
+from .GithubIntegration import APP_ID, PRIVATE_KEY
 
 
 class GithubApp(Framework.TestCase):
@@ -98,15 +101,19 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12))
         self.assertEqual(app.url, "/apps/github-actions")
 
-
-class GithubAppAuth(Framework.TestCase):
-    def setUp(self):
-        self.jwtAuthMode = True
-        super().setUp()
-
     def testGetAuthenticatedApp(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        g = github.Github(auth=auth)
 
-        app = self.g.get_app()
+        with self.assertWarns(DeprecationWarning) as warning:
+            app = g.get_app()
+
+            self.assertWarning(
+                warning,
+                "Argument slug is mandatory, calling this method without the slug argument is deprecated, "
+                "please use github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
+            )
+
         self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46))
         self.assertEqual(app.description, "Sample App to test PyGithub")
         self.assertListEqual(

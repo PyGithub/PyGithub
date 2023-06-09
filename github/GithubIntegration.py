@@ -72,7 +72,10 @@ class GithubIntegration:
                 jwt_algorithm=jwt_algorithm,
             )
 
-        assert auth is not None
+        assert isinstance(
+            auth, AppAuth
+        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+
         self.auth = auth
 
         self.__requester = Requester(
