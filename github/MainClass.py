@@ -808,6 +808,7 @@ class Github:
         if slug is github.GithubObject.NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}
+            assert self.__requester._Requester__auth.token_type == 'Bearer', "Only AppAuth authentication support get_app without a slug."
             headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
         else:

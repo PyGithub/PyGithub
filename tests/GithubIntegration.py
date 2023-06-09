@@ -227,3 +227,11 @@ class GithubIntegration(Framework.BasicTestCase):
             )
 
         self.assertEqual(raisedexp.exception.status, 400)
+
+    def testGetApp(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        app = github_integration.get_app()
+
+        self.assertEqual(app.name, "PyGithubTest")
+        self.assertEqual(app.url, "/apps/pygithubtest")

@@ -98,8 +98,14 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12))
         self.assertEqual(app.url, "/apps/github-actions")
 
+
+class GithubAppAuth(Framework.TestCase):
+    def setUp(self):
+        self.jwtAuthMode = True
+        super().setUp()
+
     def testGetAuthenticatedApp(self):
-        # For this to work correctly in record mode, this test must be run with --auth_with_jwt
+
         app = self.g.get_app()
         self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46))
         self.assertEqual(app.description, "Sample App to test PyGithub")
