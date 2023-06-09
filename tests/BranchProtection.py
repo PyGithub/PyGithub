@@ -27,8 +27,7 @@ class BranchProtection(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.branch_protection = (
-            self.g
-            .get_repo("curvewise-forks/PyGithub")
+            self.g.get_repo("curvewise-forks/PyGithub")
             .get_branch("master")
             .get_protection()
         )
@@ -41,7 +40,7 @@ class BranchProtection(Framework.TestCase):
         self.assertTrue(self.branch_protection.required_linear_history)
         self.assertEqual(
             self.branch_protection.url,
-            'https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection',
+            "https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection",
         )
         self.assertEqual(
             self.branch_protection.__repr__(),

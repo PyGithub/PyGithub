@@ -66,7 +66,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._required_linear_history)
         return self._required_linear_history.value
-    
+
     @property
     def required_pull_request_reviews(self):
         """
