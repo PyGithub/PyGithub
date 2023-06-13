@@ -20,8 +20,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.            #
 #                                                                             #
 ###############################################################################
-
 import urllib
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
+if TYPE_CHECKING:
+    from github.Auth import AppUserAuth
 
 import github.GithubObject
 from github.AccessToken import AccessToken
@@ -38,28 +41,33 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         requester = requester.withAuth(auth=None)
         super().__init__(requester, headers, attributes, completed)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"client_id": self._client_id.value})
 
     @property
-    def client_id(self):
+    def client_id(self) -> str:
         return self._client_id.value
 
     @property
-    def client_secret(self):
+    def client_secret(self) -> str:
         return self._client_secret.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._client_id = github.GithubObject.NotSet
         self._client_secret = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "client_id" in attributes:  # pragma no branch
             self._client_id = self._makeStringAttribute(attributes["client_id"])
         if "client_secret" in attributes:  # pragma no branch
             self._client_secret = self._makeStringAttribute(attributes["client_secret"])
 
-    def get_login_url(self, redirect_uri=None, state=None, login=None):
+    def get_login_url(
+        self,
+        redirect_uri: Optional[str] = None,
+        state: Optional[str] = None,
+        login: Optional[str] = None,
+    ) -> str:
         """
         Return the URL you need to redirect a user to in order to authorize
         your App.
@@ -81,7 +89,7 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         base_url = "https://github.com/login/oauth/authorize"
         return f"{base_url}?{parameters}"
 
-    def get_access_token(self, code, state=None):
+    def get_access_token(self, code: str, state: Optional[str] = None) -> AccessToken:
         """
         :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
         :param code: string
@@ -115,7 +123,7 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             completed=False,
         )
 
-    def get_app_user_auth(self, token):
+    def get_app_user_auth(self, token: AccessToken) -> "AppUserAuth":
         """
         :param token: AccessToken
         """
@@ -133,7 +141,7 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             requester=self._requester,
         )
 
-    def refresh_access_token(self, refresh_token):
+    def refresh_access_token(self, refresh_token: str) -> AccessToken:
         """
         :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
         :param refresh_token: string
