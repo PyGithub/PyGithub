@@ -97,16 +97,14 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         if state is not None:
             post_parameters["state"] = state
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            "https://github.com/login/oauth/access_token",
-            headers={"Accept": "application/json"},
-            input=post_parameters,
+        headers, data = self._checkError(
+            *self._requester.requestJsonAndCheck(
+                "POST",
+                "https://github.com/login/oauth/access_token",
+                headers={"Accept": "application/json"},
+                input=post_parameters,
+            )
         )
-
-        # error is not reported by HTTP status but payload
-        if "error" in data:
-            raise github.GithubException(200, data, headers)
 
         return AccessToken(
             requester=self._requester,
@@ -146,16 +144,14 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             "refresh_token": refresh_token,
         }
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            "https://github.com/login/oauth/access_token",
-            headers={"Accept": "application/json"},
-            input=post_parameters,
+        headers, data = self._checkError(
+            *self._requester.requestJsonAndCheck(
+                "POST",
+                "https://github.com/login/oauth/access_token",
+                headers={"Accept": "application/json"},
+                input=post_parameters,
+            )
         )
-
-        # error is not reported by HTTP status but payload
-        if "error" in data:
-            raise github.GithubException(200, data, headers)
 
         return AccessToken(
             requester=self._requester,
@@ -163,3 +159,12 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
             attributes=data,
             completed=False,
         )
+
+    @staticmethod
+    def _checkError(headers, data):
+        if isinstance(data, dict) and "error" in data:
+            if data["error"] == "bad_verification_code":
+                raise github.BadCredentialsException(200, data, headers)
+            raise github.GithubException(200, data, headers)
+
+        return headers, data

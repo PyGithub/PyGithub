@@ -24,6 +24,7 @@ import datetime
 from unittest import mock
 
 import github
+from github.ApplicationOAuth import ApplicationOAuth as aoa
 
 from . import Framework
 
@@ -146,8 +147,53 @@ class ApplicationOAuth(Framework.TestCase):
         )
 
     def testGetAccessTokenBadCode(self):
-        with self.assertRaises(github.GithubException) as exc:
+        with self.assertRaises(github.BadCredentialsException) as exc:
             self.app.get_access_token("oauth_code_removed", state="state_removed")
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "bad_verification_code")
+
+    def testGetAccessTokenUnknownError(self):
+        with self.assertRaises(github.GithubException) as exc:
+            self.app.get_access_token("oauth_code_removed", state="state_removed")
+        self.assertEqual(exc.exception.status, 200)
+        self.assertIn("error", exc.exception.data)
+        self.assertEqual(exc.exception.data["error"], "some_unknown_error")
+
+    def testRefreshAccessTokenBadCode(self):
+        with self.assertRaises(github.BadCredentialsException) as exc:
+            self.app.refresh_access_token("oauth_code_removed")
+        self.assertEqual(exc.exception.status, 200)
+        self.assertIn("error", exc.exception.data)
+        self.assertEqual(exc.exception.data["error"], "bad_verification_code")
+
+    def testRefreshAccessTokenUnknownError(self):
+        with self.assertRaises(github.GithubException) as exc:
+            self.app.refresh_access_token("oauth_code_removed")
+        self.assertEqual(exc.exception.status, 200)
+        self.assertIn("error", exc.exception.data)
+        self.assertEqual(exc.exception.data["error"], "some_unknown_error")
+
+    def testCheckError(self):
+        expected_header = {"header": True}
+        expected_data = {"data": True}
+
+        header, data = aoa._checkError(expected_header, None)
+        self.assertEqual(header, expected_header)
+        self.assertIsNone(data)
+
+        header, data = aoa._checkError(expected_header, expected_data)
+        self.assertEqual(header, expected_header)
+        self.assertEqual(data, expected_data)
+
+        with self.assertRaises(github.BadCredentialsException) as exc:
+            aoa._checkError({}, {"error": "bad_verification_code"})
+        self.assertEqual(exc.exception.status, 200)
+        self.assertIn("error", exc.exception.data)
+        self.assertEqual(exc.exception.data["error"], "bad_verification_code")
+
+        with self.assertRaises(github.GithubException) as exc:
+            aoa._checkError({}, {"error": "other"})
+        self.assertEqual(exc.exception.status, 200)
+        self.assertIn("error", exc.exception.data)
+        self.assertEqual(exc.exception.data["error"], "other")

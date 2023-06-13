@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from github.AccessToken import AccessToken
 from github.GithubObject import NonCompletableGithubObject
@@ -23,3 +23,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
     ) -> AccessToken: ...
     def get_app_user_auth(self, token: AccessToken) -> AppUserAuth: ...
     def refresh_access_token(self, refresh_token: str) -> AccessToken: ...
+    @staticmethod
+    def _checkError(
+        header: Dict[str, Any], data: Optional[Dict[str, Any]]
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...
