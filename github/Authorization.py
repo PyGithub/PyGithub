@@ -32,7 +32,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 import github.AuthorizationApplication
 import github.GithubObject
-
 from github.GithubObject import Attribute, NotSet, Opt, _NotSetType
 
 if TYPE_CHECKING:
