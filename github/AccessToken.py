@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
 import github.GithubObject
@@ -80,6 +80,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         """
         if self._expires_in is not github.GithubObject.NotSet:
             return self._expires_in.value
+        return None
 
     @property
     def expires_at(self) -> Optional[datetime]:
@@ -89,6 +90,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         seconds = self.expires_in
         if seconds is not None:
             return self._created + timedelta(seconds=seconds)
+        return None
 
     @property
     def refresh_token(self) -> Optional[str]:
@@ -97,6 +99,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         """
         if self._refresh_token is not github.GithubObject.NotSet:
             return self._refresh_token.value
+        return None
 
     @property
     def refresh_expires_in(self) -> Optional[int]:
@@ -105,6 +108,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         """
         if self._refresh_expires_in is not github.GithubObject.NotSet:
             return self._refresh_expires_in.value
+        return None
 
     @property
     def refresh_expires_at(self) -> Optional[datetime]:
@@ -114,6 +118,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         seconds = self.refresh_expires_in
         if seconds is not None:
             return self._created + timedelta(seconds=seconds)
+        return None
 
     def _initAttributes(self) -> None:
         self._token = github.GithubObject.NotSet
