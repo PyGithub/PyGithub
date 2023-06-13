@@ -370,6 +370,8 @@ class Requester:
             verify=self.__verify,
             retry=self.__retry,
             pool_size=self.__pool_size,
+            seconds_between_requests=self.__seconds_between_requests,
+            seconds_between_writes=self.__seconds_between_writes,
         )
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
