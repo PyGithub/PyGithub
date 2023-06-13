@@ -10,7 +10,15 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 h.shi <10385628+AnYeMoWang@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +39,7 @@
 ################################################################################
 
 import datetime
+import typing
 from operator import itemgetter
 from typing import (
     TYPE_CHECKING,
@@ -41,7 +50,6 @@ from typing import (
     List,
     Optional,
     Type,
-    TypeVar,
     Union,
 )
 
@@ -52,12 +60,22 @@ if TYPE_CHECKING:
     from .GistFile import GistFile
     from .Requester import Requester
 
+T = typing.TypeVar("T")
 
-class _NotSetType:
+
+class Attr(Generic[T]):
+    @property
+    def value(self) -> T:
+        raise NotImplementedError
+
+
+class _NotSetType(Attr):
     def __repr__(self):
         return "NotSet"
 
-    value = None
+    @property
+    def value(self):
+        return None
 
     @staticmethod
     def remove_unset_items(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -70,19 +88,19 @@ class _NotSetType:
 
 NotSet = _NotSetType()
 
-T = TypeVar("T")
-
 Opt = Union[T, _NotSetType]
 
 
-class _ValuedAttribute(Generic[T]):
-    value: T
-
+class _ValuedAttribute(Attr):
     def __init__(self, value: T):
-        self.value = value
+        self._value = value
+
+    @property
+    def value(self):
+        return self._value
 
 
-class _BadAttribute:
+class _BadAttribute(Attr):
     def __init__(
         self, value: Any, expectedType: Any, exception: Optional[Exception] = None
     ):
@@ -91,7 +109,7 @@ class _BadAttribute:
         self.__exception = exception
 
     @property
-    def value(self) -> Any:
+    def value(self):
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
@@ -104,7 +122,7 @@ class GithubObject:
     A global debug flag to enable header validation by requester for all objects
     """
     CHECK_AFTER_INIT_FLAG = False
-    _url: _ValuedAttribute[str]
+    _url: Attr[str]
 
     @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
@@ -156,14 +174,14 @@ class GithubObject:
         return "/".join(url.split("/")[:-1])
 
     @staticmethod
-    def __makeSimpleAttribute(value: Any, type: Type[T]) -> _ValuedAttribute[T]:
+    def __makeSimpleAttribute(value: Any, type: Type[T]) -> Attr[T]:
         if value is None or isinstance(value, type):
             return _ValuedAttribute(value)  # type: ignore
         else:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def __makeSimpleListAttribute(value: list, type: Type[T]) -> _ValuedAttribute[T]:
+    def __makeSimpleListAttribute(value: list, type: Type[T]) -> Attr[T]:
         if isinstance(value, list) and all(
             isinstance(element, type) for element in value
         ):
@@ -174,7 +192,7 @@ class GithubObject:
     @staticmethod
     def __makeTransformedAttribute(
         value: Any, type: Type[T], transform: Callable[..., Any]
-    ) -> _ValuedAttribute[T]:
+    ) -> Attr[T]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -186,15 +204,11 @@ class GithubObject:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def _makeStringAttribute(
-        value: Optional[Union[int, str]]
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeStringAttribute(value: Optional[Union[int, str]]) -> Attr[str]:
         return GithubObject.__makeSimpleAttribute(value, str)
 
     @staticmethod
-    def _makeIntAttribute(
-        value: Optional[Union[int, str]]
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeIntAttribute(value: Optional[Union[int, str]]) -> Attr[int]:
         return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
@@ -202,23 +216,21 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, float)
 
     @staticmethod
-    def _makeBoolAttribute(value: Optional[bool]) -> _ValuedAttribute[bool]:
+    def _makeBoolAttribute(value: Optional[bool]) -> Attr[bool]:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> _ValuedAttribute[dict]:
+    def _makeDictAttribute(value: Dict[str, Any]) -> Attr[dict]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> _ValuedAttribute[int]:
+    def _makeTimestampAttribute(value: int) -> Attr[int]:
         return GithubObject.__makeTransformedAttribute(
             value, int, datetime.datetime.utcfromtimestamp
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(
-        value: Optional[Union[int, str]]
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attr:
         def parseDatetime(s):
             if (
                 len(s) == 24
@@ -237,9 +249,7 @@ class GithubObject:
 
         return GithubObject.__makeTransformedAttribute(value, str, parseDatetime)
 
-    def _makeClassAttribute(
-        self, klass: Any, value: Any
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeClassAttribute(self, klass: Any, value: Any) -> Attr:
         return GithubObject.__makeTransformedAttribute(
             value,
             dict,
@@ -249,23 +259,23 @@ class GithubObject:
     @staticmethod
     def _makeListOfStringsAttribute(
         value: Union[List[List[str]], List[str], List[Union[str, int]]]
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    ) -> Attr:
         return GithubObject.__makeSimpleListAttribute(value, str)
 
     @staticmethod
-    def _makeListOfIntsAttribute(value: List[int]) -> _ValuedAttribute:
+    def _makeListOfIntsAttribute(value: List[int]) -> Attr:
         return GithubObject.__makeSimpleListAttribute(value, int)
 
     @staticmethod
     def _makeListOfDictsAttribute(
         value: List[Dict[str, Union[str, List[Dict[str, Union[str, List[int]]]]]]]
-    ) -> _ValuedAttribute:
+    ) -> Attr:
         return GithubObject.__makeSimpleListAttribute(value, dict)
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(
         value: List[List[str]],
-    ) -> _ValuedAttribute:
+    ) -> Attr:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
     def _makeListOfClassesAttribute(
@@ -372,10 +382,8 @@ class CompletableGithubObject(GithubObject):
     def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def _completeIfNotSet(
-        self, value: Union[_ValuedAttribute, _BadAttribute, _NotSetType]
-    ) -> None:
-        if value is NotSet:
+    def _completeIfNotSet(self, value: Attr) -> None:
+        if isinstance(value, _NotSetType):
             self._completeIfNeeded()
 
     def _completeIfNeeded(self) -> None:
