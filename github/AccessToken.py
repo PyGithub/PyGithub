@@ -22,7 +22,7 @@
 
 import github.GithubObject
 
-from .GithubObject import Attr
+from .GithubObject import Attribute
 
 
 class AccessToken(github.GithubObject.NonCompletableGithubObject):
@@ -30,9 +30,9 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     This class represents access tokens.
     """
 
-    _token: Attr[str]
-    _type: Attr[str]
-    _scope: Attr[str]
+    _token: Attribute[str]
+    _type: Attribute[str]
+    _scope: Attribute[str]
 
     def __repr__(self) -> str:
         return self.get__repr__(

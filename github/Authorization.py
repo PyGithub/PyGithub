@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, List, Optional
 import github.AuthorizationApplication
 import github.GithubObject
 
-from .GithubObject import Attr, NotSet, Opt, _NotSetType
+from .GithubObject import Attribute, NotSet, Opt, _NotSetType
 
 if TYPE_CHECKING:
     from .AuthorizationApplication import AuthorizationApplication
@@ -44,15 +44,15 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    _app: Attr["AuthorizationApplication"]
-    _created_at: Attr[datetime]
-    _id: Attr[int]
-    _note: Attr[Optional[str]]
-    _note_url: Attr[Optional[str]]
-    _scopes: Attr[List[str]]
-    _token: Attr[str]
-    _updated_at: Attr[datetime]
-    _url: Attr[str]
+    _app: Attribute["AuthorizationApplication"]
+    _created_at: Attribute[datetime]
+    _id: Attribute[int]
+    _note: Attribute[Optional[str]]
+    _note_url: Attribute[Optional[str]]
+    _scopes: Attribute[List[str]]
+    _token: Attribute[str]
+    _updated_at: Attribute[datetime]
+    _url: Attribute[str]
 
     def __repr__(self) -> str:
         return self.get__repr__({"scopes": self._scopes.value})

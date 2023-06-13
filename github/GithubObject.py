@@ -63,13 +63,13 @@ if TYPE_CHECKING:
 T = typing.TypeVar("T")
 
 
-class Attr(Generic[T]):
+class Attribute(Generic[T]):
     @property
     def value(self) -> T:
         raise NotImplementedError
 
 
-class _NotSetType(Attr):
+class _NotSetType(Attribute):
     def __repr__(self):
         return "NotSet"
 
@@ -91,7 +91,7 @@ NotSet = _NotSetType()
 Opt = Union[T, _NotSetType]
 
 
-class _ValuedAttribute(Attr):
+class _ValuedAttribute(Attribute):
     def __init__(self, value: T):
         self._value = value
 
@@ -100,7 +100,7 @@ class _ValuedAttribute(Attr):
         return self._value
 
 
-class _BadAttribute(Attr):
+class _BadAttribute(Attribute):
     def __init__(
         self, value: Any, expectedType: Any, exception: Optional[Exception] = None
     ):
@@ -122,7 +122,7 @@ class GithubObject:
     A global debug flag to enable header validation by requester for all objects
     """
     CHECK_AFTER_INIT_FLAG = False
-    _url: Attr[str]
+    _url: Attribute[str]
 
     @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
@@ -174,14 +174,14 @@ class GithubObject:
         return "/".join(url.split("/")[:-1])
 
     @staticmethod
-    def __makeSimpleAttribute(value: Any, type: Type[T]) -> Attr[T]:
+    def __makeSimpleAttribute(value: Any, type: Type[T]) -> Attribute[T]:
         if value is None or isinstance(value, type):
             return _ValuedAttribute(value)  # type: ignore
         else:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def __makeSimpleListAttribute(value: list, type: Type[T]) -> Attr[T]:
+    def __makeSimpleListAttribute(value: list, type: Type[T]) -> Attribute[T]:
         if isinstance(value, list) and all(
             isinstance(element, type) for element in value
         ):
@@ -192,7 +192,7 @@ class GithubObject:
     @staticmethod
     def __makeTransformedAttribute(
         value: Any, type: Type[T], transform: Callable[..., Any]
-    ) -> Attr[T]:
+    ) -> Attribute[T]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -204,11 +204,11 @@ class GithubObject:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def _makeStringAttribute(value: Optional[Union[int, str]]) -> Attr[str]:
+    def _makeStringAttribute(value: Optional[Union[int, str]]) -> Attribute[str]:
         return GithubObject.__makeSimpleAttribute(value, str)
 
     @staticmethod
-    def _makeIntAttribute(value: Optional[Union[int, str]]) -> Attr[int]:
+    def _makeIntAttribute(value: Optional[Union[int, str]]) -> Attribute[int]:
         return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
@@ -216,21 +216,21 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, float)
 
     @staticmethod
-    def _makeBoolAttribute(value: Optional[bool]) -> Attr[bool]:
+    def _makeBoolAttribute(value: Optional[bool]) -> Attribute[bool]:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> Attr[dict]:
+    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[dict]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attr[int]:
+    def _makeTimestampAttribute(value: int) -> Attribute[int]:
         return GithubObject.__makeTransformedAttribute(
             value, int, datetime.datetime.utcfromtimestamp
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attr:
+    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attribute:
         def parseDatetime(s):
             if (
                 len(s) == 24
@@ -249,7 +249,7 @@ class GithubObject:
 
         return GithubObject.__makeTransformedAttribute(value, str, parseDatetime)
 
-    def _makeClassAttribute(self, klass: Any, value: Any) -> Attr:
+    def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
         return GithubObject.__makeTransformedAttribute(
             value,
             dict,
@@ -259,23 +259,23 @@ class GithubObject:
     @staticmethod
     def _makeListOfStringsAttribute(
         value: Union[List[List[str]], List[str], List[Union[str, int]]]
-    ) -> Attr:
+    ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, str)
 
     @staticmethod
-    def _makeListOfIntsAttribute(value: List[int]) -> Attr:
+    def _makeListOfIntsAttribute(value: List[int]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, int)
 
     @staticmethod
     def _makeListOfDictsAttribute(
         value: List[Dict[str, Union[str, List[Dict[str, Union[str, List[int]]]]]]]
-    ) -> Attr:
+    ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, dict)
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(
         value: List[List[str]],
-    ) -> Attr:
+    ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
     def _makeListOfClassesAttribute(
@@ -382,7 +382,7 @@ class CompletableGithubObject(GithubObject):
     def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def _completeIfNotSet(self, value: Attr) -> None:
+    def _completeIfNotSet(self, value: Attribute) -> None:
         if isinstance(value, _NotSetType):
             self._completeIfNeeded()
 
