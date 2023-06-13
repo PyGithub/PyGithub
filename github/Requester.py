@@ -422,7 +422,9 @@ class Requester:
         return cnx
 
     def __createException(self, status, headers, output):
-        if status == 401 and output.get("message") == "Bad credentials":
+        message = output.get("message", "").lower() if output is not None else ""
+
+        if status == 401 and message == "bad credentials":
             cls = GithubException.BadCredentialsException
         elif (
             status == 401
@@ -430,18 +432,16 @@ class Requester:
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
             cls = GithubException.TwoFactorException
-        elif status == 403 and output.get("message").startswith(
-            "Missing or invalid User Agent string"
+        elif status == 403 and message.startswith(
+            "missing or invalid user agent string"
         ):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded")
-            or output.get("message")
-            .lower()
-            .endswith("please wait a few minutes before you try again.")
+            message.startswith("api rate limit exceeded")
+            or message.endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
-        elif status == 404 and output.get("message") == "Not Found":
+        elif status == 404 and message == "not found":
             cls = GithubException.UnknownObjectException
         else:
             cls = GithubException.GithubException
