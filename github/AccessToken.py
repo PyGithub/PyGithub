@@ -21,7 +21,6 @@
 ################################################################################
 
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
 
 import github.GithubObject
 
@@ -31,7 +30,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     This class represents access tokens.
     """
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return self.get__repr__(
             {
                 "token": f"{self.token[:5]}...",
@@ -46,35 +45,35 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def token(self) -> str:
+    def token(self):
         """
         :type: string
         """
         return self._token.value
 
     @property
-    def type(self) -> str:
+    def type(self):
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def scope(self) -> str:
+    def scope(self):
         """
         :type: string
         """
         return self._scope.value
 
     @property
-    def created(self) -> datetime:
+    def created(self):
         """
         :type: datetime
         """
         return self._created
 
     @property
-    def expires_in(self) -> Optional[int]:
+    def expires_in(self):
         """
         :type: Optional[int]
         """
@@ -83,7 +82,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def expires_at(self) -> Optional[datetime]:
+    def expires_at(self):
         """
         :type: Optional[datetime]
         """
@@ -93,7 +92,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def refresh_token(self) -> Optional[str]:
+    def refresh_token(self):
         """
         :type: Optional[string]
         """
@@ -102,7 +101,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def refresh_expires_in(self) -> Optional[int]:
+    def refresh_expires_in(self):
         """
         :type: Optional[int]
         """
@@ -111,7 +110,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def refresh_expires_at(self) -> Optional[datetime]:
+    def refresh_expires_at(self):
         """
         :type: Optional[datetime]
         """
@@ -120,7 +119,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
             return self._created + timedelta(seconds=seconds)
         return None
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._token = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._scope = github.GithubObject.NotSet
@@ -128,7 +127,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         self._refresh_token = github.GithubObject.NotSet
         self._refresh_expires_in = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes):
         self._created = datetime.utcnow()
         if "access_token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["access_token"])
