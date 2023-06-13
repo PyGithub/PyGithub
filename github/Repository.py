@@ -100,6 +100,7 @@
 # Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
 # Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
@@ -143,6 +144,10 @@ import github.Comparison
 import github.ContentFile
 import github.Deployment
 import github.Download
+import github.Environment
+import github.EnvironmentDeploymentBranchPolicy
+import github.EnvironmentProtectionRule
+import github.EnvironmentProtectionRuleReviewer
 import github.Event
 import github.GitBlob
 import github.GitCommit
@@ -4101,6 +4106,95 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             f"{self.url}/code-scanning/alerts",
             None,
+        )
+
+    def get_environments(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Environment.Environment`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Environment.Environment,
+            self._requester,
+            f"{self.url}/environments",
+            None,
+            list_item="environments",
+        )
+
+    def get_environment(self, environment_name):
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :rtype: :class:`github.Environment.Environment`
+        """
+        assert isinstance(environment_name, str), environment_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/environments/{environment_name}"
+        )
+        return github.Environment.Environment(
+            self._requester, headers, data, completed=True
+        )
+
+    def create_environment(
+        self,
+        environment_name,
+        wait_timer=0,
+        reviewers=[],
+        deployment_branch_policy=None,
+    ):
+        """
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :param environment_name: string
+        :param wait_timer: int
+        :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param deployment_branch_policy: Optional[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams`]
+        :rtype: :class:`github.Environment.Environment`
+        """
+        assert isinstance(environment_name, str), environment_name
+        assert isinstance(wait_timer, int)
+        assert isinstance(reviewers, list)
+        assert all(
+            [
+                isinstance(
+                    reviewer, github.EnvironmentProtectionRuleReviewer.ReviewerParams
+                )
+                for reviewer in reviewers
+            ]
+        )
+        assert (
+            isinstance(
+                deployment_branch_policy,
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams,
+            )
+            or deployment_branch_policy is None
+        )
+
+        put_parameters = {
+            "wait_timer": wait_timer,
+            "reviewers": [reviewer._asdict() for reviewer in reviewers],
+            "deployment_branch_policy": deployment_branch_policy._asdict()
+            if deployment_branch_policy
+            else None,
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/environments/{environment_name}", input=put_parameters
+        )
+        return github.Environment.Environment(
+            self._requester, headers, data, completed=True
+        )
+
+    update_environment = create_environment
+
+    def delete_environment(self, environment_name):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :param environment_name: string
+        :rtype: None
+        """
+        assert isinstance(environment_name, str), environment_name
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.url}/environments/{environment_name}"
         )
 
     def _initAttributes(self):
