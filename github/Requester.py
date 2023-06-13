@@ -470,10 +470,10 @@ class Requester:
         responseHeaders: Dict[str, Any],
         output: str,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-        output = self.__structuredFromJson(output)
+        data = self.__structuredFromJson(output)
         if status >= 400:
-            raise self.__createException(status, responseHeaders, output)
-        return responseHeaders, output
+            raise self.__createException(status, responseHeaders, data)
+        return responseHeaders, data
 
     def __customConnection(
         self, url: str
