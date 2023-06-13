@@ -343,6 +343,10 @@ class Requester:
     def base_url(self):
         return self.__base_url
 
+    @property
+    def auth(self):
+        return self.__auth
+
     def withAuth(self, auth):
         """
         Create a new requester instance with identical configuration but the given authentication method.
