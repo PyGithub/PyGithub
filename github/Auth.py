@@ -399,7 +399,8 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         from github.ApplicationOAuth import ApplicationOAuth
 
         self.__app = ApplicationOAuth(
-            requester,
+            # take requester given to super().withRequester, not given to this method
+            super().requester,
             headers={},
             attributes={
                 "client_id": self._client_id,
