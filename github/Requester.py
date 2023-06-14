@@ -859,5 +859,6 @@ class WithRequester(Generic[T]):
         return self.__requester
 
     def withRequester(self, requester: Requester) -> "WithRequester[T]":
+        assert isinstance(requester, Requester), requester
         self.__requester = requester
         return self

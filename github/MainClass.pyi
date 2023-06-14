@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overl
 
 from github.Auth import Auth
 from github.AppAuthentication import AppAuthentication
+from github.ApplicationOAuth import ApplicationOAuth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -94,6 +95,9 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
+    def get_oauth_application(
+        self, client_id: str, client_secret: str
+    ) -> ApplicationOAuth: ...
     @property
     def oauth_scopes(self) -> Optional[List[str]]: ...
     @property
