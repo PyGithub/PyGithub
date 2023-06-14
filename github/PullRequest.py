@@ -410,7 +410,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self.create_review_comment(body, commit_id, path, position)
 
     def create_review_comment(
-        self, body, commit, path, line, start_line=None, as_suggestion=False
+        # line replaces deprecated position argument, so we put it between path and side
+        self, body, commit, path, line=None, side=None, start_line=None, start_side=None, in_reply_to=None, subject_type=None, as_suggestion=False
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
