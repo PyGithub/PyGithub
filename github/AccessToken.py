@@ -111,7 +111,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return self._refresh_expires_in.value
 
     @property
-    def refresh_expires_at(self) -> Optional[datetime.datetime]:
+    def refresh_expires_at(self) -> Optional[datetime]:
         """
         :type: Optional[datetime]
         """
