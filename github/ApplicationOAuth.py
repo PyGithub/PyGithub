@@ -1,6 +1,7 @@
 ############################ Copyrights and license ###########################
 #                                                                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>               #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                     #
 #                                                                             #
 # This file is part of PyGithub.                                              #
 # http://pygithub.readthedocs.io/                                             #
@@ -96,21 +97,74 @@ class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
         if state is not None:
             post_parameters["state"] = state
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            "https://github.com/login/oauth/access_token",
-            headers={
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "User-Agent": "PyGithub/Python",
-            },
-            input=post_parameters,
+        headers, data = self._checkError(
+            *self._requester.requestJsonAndCheck(
+                "POST",
+                "https://github.com/login/oauth/access_token",
+                headers={"Accept": "application/json"},
+                input=post_parameters,
+            )
         )
 
         return AccessToken(
             requester=self._requester,
-            # not required, this is a NonCompletableGithubObject
-            headers={},
+            headers=headers,
             attributes=data,
             completed=False,
         )
+
+    def get_app_user_auth(self, token):
+        """
+        :param token: AccessToken
+        """
+        # imported here to avoid circular import
+        from github.Auth import AppUserAuth
+
+        return AppUserAuth(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            token=token.token,
+            token_type=token.type,
+            expires_at=token.expires_at,
+            refresh_token=token.refresh_token,
+            refresh_expires_at=token.refresh_expires_at,
+            requester=self._requester,
+        )
+
+    def refresh_access_token(self, refresh_token):
+        """
+        :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
+        :param refresh_token: string
+        """
+        assert isinstance(refresh_token, str)
+        post_parameters = {
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token,
+        }
+
+        headers, data = self._checkError(
+            *self._requester.requestJsonAndCheck(
+                "POST",
+                "https://github.com/login/oauth/access_token",
+                headers={"Accept": "application/json"},
+                input=post_parameters,
+            )
+        )
+
+        return AccessToken(
+            requester=self._requester,
+            headers=headers,
+            attributes=data,
+            completed=False,
+        )
+
+    @staticmethod
+    def _checkError(headers, data):
+        if isinstance(data, dict) and "error" in data:
+            if data["error"] == "bad_verification_code":
+                raise github.BadCredentialsException(200, data, headers)
+            raise github.GithubException(200, data, headers)
+
+        return headers, data

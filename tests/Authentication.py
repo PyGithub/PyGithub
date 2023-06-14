@@ -25,6 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import datetime
 import warnings
 from unittest import mock
 
@@ -114,6 +115,54 @@ class Authentication(Framework.BasicTestCase):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
+    def testAppUserAuthentication(self):
+        client_id = "removed client id"
+        client_secret = "removed client secret"
+        refresh_token = "removed refresh token"
+
+        g = github.Github()
+        app = g.get_oauth_application(client_id, client_secret)
+        with mock.patch("github.AccessToken.datetime") as dt:
+            dt.utcnow = mock.Mock(
+                return_value=datetime.datetime(2023, 6, 7, 12, 0, 0, 123)
+            )
+            token = app.refresh_access_token(refresh_token)
+        self.assertEqual(token.token, "fresh access token")
+        self.assertEqual(token.type, "bearer")
+        self.assertEqual(token.scope, "")
+        self.assertEqual(token.expires_in, 28800)
+        self.assertEqual(token.expires_at, datetime.datetime(2023, 6, 7, 20, 0, 0, 123))
+        self.assertEqual(token.refresh_token, "fresh refresh token")
+        self.assertEqual(token.refresh_expires_in, 15811200)
+        self.assertEqual(
+            token.refresh_expires_at, datetime.datetime(2023, 12, 7, 12, 0, 0, 123)
+        )
+
+        auth = app.get_app_user_auth(token)
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.utcnow = mock.Mock(
+                return_value=datetime.datetime(2023, 6, 7, 20, 0, 0, 123)
+            )
+            self.assertEqual(auth._is_expired, False)
+            self.assertEqual(auth.token, "fresh access token")
+        self.assertEqual(auth.token_type, "bearer")
+        self.assertEqual(auth.refresh_token, "fresh refresh token")
+
+        # expire auth token
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.utcnow = mock.Mock(
+                return_value=datetime.datetime(2023, 6, 7, 20, 0, 1, 123)
+            )
+            self.assertEqual(auth._is_expired, True)
+            self.assertEqual(auth.token, "another access token")
+            self.assertEqual(auth._is_expired, False)
+        self.assertEqual(auth.token_type, "bearer")
+        self.assertEqual(auth.refresh_token, "another refresh token")
+
+        g = github.Github(auth=auth)
+        user = g.get_user()
+        self.assertEqual(user.login, "EnricoMi")
 
     def testCreateJWT(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
