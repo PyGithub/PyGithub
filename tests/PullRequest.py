@@ -155,37 +155,61 @@ class PullRequest(Framework.TestCase):
     def testCreateReviewCommentInReplyTo(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 5, in_reply_to=42
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            in_reply_to=42,
         )
         self.assertEqual(comment.id, 886298)
 
     def testCreateReviewCommentSubjectType(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 5, subject_type="FILE"
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            subject_type="FILE",
         )
         self.assertEqual(comment.id, 886298)
 
     def testCreateMultilineReviewComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 10, start_line=5
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
         )
         self.assertEqual(comment.id, 886298)
 
     def testCreateMultilineReviewCommentAsSuggestion(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 10, start_line=5, as_suggestion=True
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            as_suggestion=True,
         )
         self.assertEqual(comment.id, 886298)
-        self.assertEqual(comment.body, "```suggestion\nComment created by PyGithub\n```")
+        self.assertEqual(
+            comment.body, "```suggestion\nComment created by PyGithub\n```"
+        )
 
     def testCreateMultilineReviewCommentChoosingSide(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 10, start_line=5,
-            side="RIGHT", start_side="RIGHT"
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            side="RIGHT",
+            start_side="RIGHT",
         )
         self.assertEqual(comment.id, 886298)
 

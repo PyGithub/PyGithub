@@ -411,8 +411,17 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_review_comment(
         # line replaces deprecated position argument, so we put it between path and side
-        self, body, commit, path, line=None, side=None, start_line=None, start_side=None, in_reply_to=None,
-            subject_type=None, as_suggestion=False
+        self,
+        body,
+        commit,
+        path,
+        line=None,
+        side=None,
+        start_line=None,
+        start_side=None,
+        in_reply_to=None,
+        subject_type=None,
+        as_suggestion=False,
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -436,7 +445,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert start_line is None or isinstance(start_line, int), start_line
         assert start_side is None or start_side in ["LEFT", "RIGHT"], side
         assert in_reply_to is None or isinstance(in_reply_to, int), in_reply_to
-        assert subject_type is None or subject_type in ["LINE", "FILE", "side"], subject_type
+        assert subject_type is None or subject_type in [
+            "LINE",
+            "FILE",
+            "side",
+        ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
         if as_suggestion:
