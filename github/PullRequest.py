@@ -411,7 +411,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_review_comment(
         # line replaces deprecated position argument, so we put it between path and side
-        self, body, commit, path, line=None, side=None, start_line=None, start_side=None, in_reply_to=None, subject_type=None, as_suggestion=False
+        self, body, commit, path, line=None, side=None, start_line=None, start_side=None, in_reply_to=None,
+            subject_type=None, as_suggestion=False
     ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -419,7 +420,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param commit: :class:`github.Commit.Commit`
         :param path: string
         :param line: integer
+        :param side: string
         :param start_line: integer
+        :param start_side: string
+        :param in_reply_to: integer
+        :param subject_type: string
         :param as_suggestion: bool interprets the body as suggested code and modifies it accordingly
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -427,7 +432,11 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
         assert isinstance(line, int), line
+        assert side is None or side in ["LEFT", "RIGHT"], side
         assert start_line is None or isinstance(start_line, int), start_line
+        assert start_side is None or start_side in ["LEFT", "RIGHT"], side
+        assert in_reply_to is None or isinstance(in_reply_to, int), in_reply_to
+        assert subject_type is None or subject_type in ["LINE", "FILE", "side"], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
         if as_suggestion:
@@ -438,8 +447,16 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "path": path,
             "line": line,
         }
+        if side is not None:
+            post_parameters["side"] = side
         if start_line is not None:
             post_parameters["start_line"] = start_line
+        if start_side is not None:
+            post_parameters["start_side"] = start_side
+        if in_reply_to is not None:
+            post_parameters["in_reply_to"] = in_reply_to
+        if subject_type is not None:
+            post_parameters["subject_type"] = subject_type
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/comments", input=post_parameters
         )
