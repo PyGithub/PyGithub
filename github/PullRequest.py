@@ -420,7 +420,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param path: string
         :param line: integer
         :param start_line: integer
-        :param as_suggestion: bool
+        :param as_suggestion: bool interprets the body as suggested code and modifies it accordingly
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(body, str), body
