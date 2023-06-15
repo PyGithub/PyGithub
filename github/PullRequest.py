@@ -415,12 +415,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         body,
         commit,
         path,
-        line=None,
-        side=None,
-        start_line=None,
-        start_side=None,
-        in_reply_to=None,
-        subject_type=None,
+        line=github.GithubObject.NotSet,
+        side=github.GithubObject.NotSet,
+        start_line=github.GithubObject.NotSet,
+        start_side=github.GithubObject.NotSet,
+        in_reply_to=github.GithubObject.NotSet,
+        subject_type=github.GithubObject.NotSet,
         as_suggestion=False,
     ):
         """
