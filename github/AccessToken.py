@@ -36,6 +36,10 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     _token: Attribute[str]
     _type: Attribute[str]
     _scope: Attribute[str]
+    _created: Optional[datetime]
+    _expires_in: Attribute[int]
+    _refresh_token: Attribute[str]
+    _refresh_expires_in: Attribute[int]
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -123,6 +127,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
     def _initAttributes(self):
         self._token = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
+        self._created = github.GithubObject.NotSet
         self._scope = github.GithubObject.NotSet
         self._expires_in = github.GithubObject.NotSet
         self._refresh_token = github.GithubObject.NotSet
