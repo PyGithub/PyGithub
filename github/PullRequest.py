@@ -398,23 +398,23 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_comment(self, body, commit_id, path, position):
+    def create_comment(self, body, commit, path, position):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
-        :param commit_id: :class:`github.Commit.Commit`
+        :param commit: :class:`github.Commit.Commit`
         :param path: string
         :param position: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
-        return self.create_review_comment(body, commit_id, path, position)
+        return self.create_review_comment(body, commit, path, position)
 
     def create_review_comment(
-        # line replaces deprecated position argument, so we put it between path and side
         self,
         body,
         commit,
         path,
+        # line replaces deprecated position argument, so we put it between path and side
         line=github.GithubObject.NotSet,
         side=github.GithubObject.NotSet,
         start_line=github.GithubObject.NotSet,
