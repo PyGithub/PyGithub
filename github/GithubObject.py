@@ -90,12 +90,12 @@ NotSet = _NotSetType()
 Opt = Union[T, _NotSetType]
 
 
-class _ValuedAttribute(Attribute):
+class _ValuedAttribute(Attribute, Generic[T]):
     def __init__(self, value: T):
         self._value = value
 
     @property
-    def value(self):
+    def value(self) -> T:
         return self._value
 
 
