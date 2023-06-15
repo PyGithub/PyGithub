@@ -458,17 +458,18 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "body": body,
             "commit_id": commit._identity,
             "path": path,
-            "line": line,
         }
-        if side is not None:
+        if line is not github.GithubObject.NotSet:
+            post_parameters["line"] = line
+        if side is not github.GithubObject.NotSet:
             post_parameters["side"] = side
-        if start_line is not None:
+        if start_line is not github.GithubObject.NotSet:
             post_parameters["start_line"] = start_line
-        if start_side is not None:
+        if start_side is not github.GithubObject.NotSet:
             post_parameters["start_side"] = start_side
-        if in_reply_to is not None:
+        if in_reply_to is not github.GithubObject.NotSet:
             post_parameters["in_reply_to"] = in_reply_to
-        if subject_type is not None:
+        if subject_type is not github.GithubObject.NotSet:
             post_parameters["subject_type"] = subject_type
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/comments", input=post_parameters
