@@ -440,12 +440,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(body, str), body
         assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
-        assert isinstance(line, int), line
-        assert side is None or side in ["LEFT", "RIGHT"], side
-        assert start_line is None or isinstance(start_line, int), start_line
-        assert start_side is None or start_side in ["LEFT", "RIGHT"], side
-        assert in_reply_to is None or isinstance(in_reply_to, int), in_reply_to
-        assert subject_type is None or subject_type in [
+        assert line is github.GithubObject.NotSet or isinstance(line, int), line
+        assert side is github.GithubObject.NotSet or side in ["LEFT", "RIGHT"], side
+        assert start_line is github.GithubObject.NotSet or isinstance(start_line, int), start_line
+        assert start_side is github.GithubObject.NotSet or start_side in ["LEFT", "RIGHT"], start_side
+        assert in_reply_to is github.GithubObject.NotSet or isinstance(in_reply_to, int), in_reply_to
+        assert subject_type is github.GithubObject.NotSet or subject_type in [
             "LINE",
             "FILE",
             "side",
