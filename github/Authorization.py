@@ -85,7 +85,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self._note_url.value
 
     @property
-    def scopes(self) -> List[str]:
+    def scopes(self) -> str:
         self._completeIfNotSet(self._scopes)
         return self._scopes.value
 
