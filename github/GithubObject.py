@@ -95,7 +95,7 @@ class _ValuedAttribute(Attribute):
         self._value = value
 
     @property
-    def value(self) -> T:
+    def value(self):
         return self._value
 
 
