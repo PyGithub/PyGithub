@@ -294,7 +294,7 @@ class GithubObject:
 
     def _makeDictOfStringsToClassesAttribute(
         self,
-        klass: Type["CompletableGithubObject"],
+        klass: Type["NonCompletableGithubObject"],
         value: Dict[
             str,
             Union[int, Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]],
