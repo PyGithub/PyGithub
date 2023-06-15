@@ -191,7 +191,7 @@ class GithubObject:
 
     @staticmethod
     def __makeTransformedAttribute(
-        value: Any, type: Type[T], transform: Callable[..., Any]
+        value: T, type: Type[T], transform: Callable[[T], Any]
     ) -> Attribute[T]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
