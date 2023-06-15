@@ -57,7 +57,6 @@ from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
 
 if TYPE_CHECKING:
-    from .GistFile import GistFile
     from .Requester import Requester
 
 T = typing.TypeVar("T")
@@ -295,7 +294,7 @@ class GithubObject:
 
     def _makeDictOfStringsToClassesAttribute(
         self,
-        klass: "Type[GistFile]",
+        klass: Type["CompletableGithubObject"],
         value: Dict[
             str,
             Union[int, Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]],
