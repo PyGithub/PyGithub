@@ -21,14 +21,23 @@
 #                                                                              #
 ################################################################################
 
-from collections import namedtuple
+from datetime import datetime
+from typing import Dict, NamedTuple
 
-import github.Artifact
-import github.GithubObject
-import github.PullRequest
+from github.Artifact import Artifact
+from github.GitCommit import GitCommit
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
+from github.PullRequest import PullRequest
+from github.Repository import Repository
 
 
-class WorkflowRun(github.GithubObject.CompletableGithubObject):
+class TimingData(NamedTuple):
+    billable: Dict[str, Dict[str, int]]
+    run_duration_ms: int
+
+
+class WorkflowRun(CompletableGithubObject):
     """
     This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
     """
@@ -36,99 +45,87 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
+    _id: Attribute[int]
+
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
+    _name: Attribute[str]
+
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
+    _head_branch: Attribute[str]
+
     @property
-    def head_branch(self):
-        """
-        :type: string
-        """
+    def head_branch(self) -> str:
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
 
+    _head_sha: Attribute[str]
+
     @property
-    def head_sha(self):
-        """
-        :type: string
-        """
+    def head_sha(self) -> str:
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
 
+    _display_title: Attribute[str]
+
     @property
-    def display_title(self):
-        """
-        :type: string
-        """
+    def display_title(self) -> str:
         self._completeIfNotSet(self._display_title)
         return self._display_title.value
 
+    _path: Attribute[str]
+
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
 
+    _run_attempt: Attribute[int]
+
     @property
-    def run_attempt(self):
-        """
-        :type: integer
-        """
+    def run_attempt(self) -> int:
         self._completeIfNotSet(self._run_attempt)
         return self._run_attempt.value
 
+    _run_number: Attribute[int]
+
     @property
-    def run_number(self):
-        """
-        :type: int
-        """
+    def run_number(self) -> int:
         self._completeIfNotSet(self._run_number)
         return self._run_number.value
 
+    _event: Attribute[str]
+
     @property
-    def event(self):
-        """
-        :type: string
-        """
+    def event(self) -> str:
         self._completeIfNotSet(self._event)
         return self._event.value
 
+    _run_started_at: Attribute[datetime]
+
     @property
-    def run_started_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def run_started_at(self) -> datetime:
         self._completeIfNotSet(self._run_started_at)
         return self._run_started_at.value
 
+    _status: Attribute[str]
+
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
 
+    _conclusion: Attribute[str]
+
     @property
-    def conclusion(self):
-        """
-        :type: string
-        """
+    def conclusion(self) -> str:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
@@ -140,197 +137,180 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._workflow_id)
         return self._workflow_id.value
 
+    _url: Attribute[str]
+
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    _html_url: Attribute[str]
+
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
+    _pull_requests: Attribute[PullRequest]
+
     @property
-    def pull_requests(self):
-        """
-        :type: list of :class:`github.PullRequest.PullRequest`
-        """
+    def pull_requests(self) -> PullRequest:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
+    _created_at: Attribute[datetime]
+
     @property
     def created_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
+    _updated_at: Attribute[datetime]
+
     @property
     def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
+    _jobs_url: Attribute[str]
+
     @property
-    def jobs_url(self):
-        """
-        :type: string
-        """
+    def jobs_url(self) -> str:
         self._completeIfNotSet(self._jobs_url)
         return self._jobs_url.value
 
+    _logs_url: Attribute[str]
+
     @property
-    def logs_url(self):
-        """
-        :type: string
-        """
+    def logs_url(self) -> str:
         self._completeIfNotSet(self._logs_url)
         return self._logs_url.value
 
+    _check_suite_url: Attribute[str]
+
     @property
-    def check_suite_url(self):
-        """
-        :type: string
-        """
+    def check_suite_url(self) -> str:
         self._completeIfNotSet(self._check_suite_url)
         return self._check_suite_url.value
 
+    _artifacts_url: Attribute[str]
+
     @property
-    def artifacts_url(self):
-        """
-        :type: string
-        """
+    def artifacts_url(self) -> str:
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
-    def get_artifacts(self):
-        return github.PaginatedList.PaginatedList(
-            github.Artifact.Artifact,
+    def get_artifacts(self) -> PaginatedList[Artifact]:
+        return PaginatedList(
+            Artifact,
             self._requester,
             self._artifacts_url.value,
             None,
             list_item="artifacts",
         )
 
+    _cancel_url: Attribute[str]
+
     @property
-    def cancel_url(self):
-        """
-        :type: string
-        """
+    def cancel_url(self) -> str:
         self._completeIfNotSet(self._cancel_url)
         return self._cancel_url.value
 
+    _rerun_url: Attribute[str]
+
     @property
-    def rerun_url(self):
-        """
-        :type: string
-        """
+    def rerun_url(self) -> str:
         self._completeIfNotSet(self._rerun_url)
         return self._rerun_url.value
 
+    _workflow_url: Attribute[str]
+
     @property
-    def workflow_url(self):
+    def workflow_url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
+    _head_commit: Attribute[GitCommit]
+
     @property
-    def head_commit(self):
-        """
-        :type: :class:`github.GitCommit.GitCommit`
-        """
+    def head_commit(self) -> GitCommit:
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
+    _repository: Attribute[Repository]
+
     @property
-    def repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
+    _head_repository: Attribute[Repository]
+
     @property
-    def head_repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def head_repository(self) -> Repository:
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 
-    def cancel(self):
+    def cancel(self) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
-        :rtype: bool
         """
         status, _, _ = self._requester.requestJson("POST", self.cancel_url)
         return status == 202
 
-    def rerun(self):
+    def rerun(self) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
-        :rtype: bool
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
         return status == 201
 
-    def timing(self):
+    def timing(self) -> TimingData:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
-        :rtype: namedtuple with billable and run_duration_ms members
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
-        timingdata = namedtuple("TimingData", data.keys())
-        return timingdata._make(data.values())
+        return TimingData(*data.values())
 
-    def delete(self):
+    def delete(self) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
-        :rtype: bool
         """
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
 
     def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._head_branch = github.GithubObject.NotSet
-        self._head_sha = github.GithubObject.NotSet
-        self._display_title = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._run_attempt = github.GithubObject.NotSet
-        self._run_number = github.GithubObject.NotSet
-        self._event = github.GithubObject.NotSet
-        self._run_started_at = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._conclusion = github.GithubObject.NotSet
-        self._workflow_id = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._pull_requests = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._jobs_url = github.GithubObject.NotSet
-        self._logs_url = github.GithubObject.NotSet
-        self._check_suite_url = github.GithubObject.NotSet
-        self._artifacts_url = github.GithubObject.NotSet
-        self._cancel_url = github.GithubObject.NotSet
-        self._rerun_url = github.GithubObject.NotSet
-        self._workflow_url = github.GithubObject.NotSet
-        self._head_commit = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-        self._head_repository = github.GithubObject.NotSet
+        self._id = NotSet
+        self._name = NotSet
+        self._head_branch = NotSet
+        self._head_sha = NotSet
+        self._display_title = NotSet
+        self._path = NotSet
+        self._run_attempt = NotSet
+        self._run_number = NotSet
+        self._event = NotSet
+        self._run_started_at = NotSet
+        self._status = NotSet
+        self._conclusion = NotSet
+        self._workflow_id = NotSet
+        self._url = NotSet
+        self._html_url = NotSet
+        self._pull_requests = NotSet
+        self._created_at = NotSet
+        self._updated_at = NotSet
+        self._jobs_url = NotSet
+        self._logs_url = NotSet
+        self._check_suite_url = NotSet
+        self._artifacts_url = NotSet
+        self._cancel_url = NotSet
+        self._rerun_url = NotSet
+        self._workflow_url = NotSet
+        self._head_commit = NotSet
+        self._repository = NotSet
+        self._head_repository = NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -370,7 +350,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
-                github.PullRequest.PullRequest, attributes["pull_requests"]
+                PullRequest, attributes["pull_requests"]
             )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
@@ -394,13 +374,13 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
             self._head_commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["head_commit"]
+                GitCommit, attributes["head_commit"]
             )
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
+                Repository, attributes["repository"]
             )
         if "head_repository" in attributes:  # pragma no branch
             self._head_repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["head_repository"]
+                Repository, attributes["head_repository"]
             )
