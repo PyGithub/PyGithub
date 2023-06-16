@@ -273,7 +273,9 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
-        return TimingData(*data.values())
+        return TimingData(
+            billable=data["billable"], run_duration_ms=data["run_duration_ms"]
+        )
 
     def delete(self) -> bool:
         """
