@@ -39,6 +39,7 @@ import json
 import os
 import traceback
 import unittest
+import warnings
 
 import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
@@ -327,6 +328,21 @@ class BasicTestCase(unittest.TestCase):
         httpretty.reset()
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
+
+    def assertWarning(self, warning, expected):
+        self.assertWarnings(warning, expected)
+
+    def assertWarnings(self, warning, *expecteds):
+        self.assertEqual(len(warning.warnings), len(expecteds))
+        actual = [
+            (type(message), type(message.message), message.message.args)
+            for message in warning.warnings
+        ]
+        expected = [
+            (warnings.WarningMessage, DeprecationWarning, (expected,))
+            for expected in expecteds
+        ]
+        self.assertSequenceEqual(actual, expected)
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
