@@ -4,6 +4,7 @@ import deprecated
 
 from github import Consts
 from github.Auth import AppAuth
+from github.GithubApp import GithubApp
 from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
@@ -71,7 +72,10 @@ class GithubIntegration:
                 jwt_algorithm=jwt_algorithm,
             )
 
-        assert auth is not None
+        assert isinstance(
+            auth, AppAuth
+        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+
         self.auth = auth
 
         self.__requester = Requester(
@@ -213,3 +217,16 @@ class GithubIntegration:
         :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/app/installations/{installation_id}")
+
+    def get_app(self):
+        """
+        :calls: `GET /app <https://docs.github.com/en/rest/reference/apps#get-the-authenticated-app>`_
+        :rtype: :class:`github.GithubApp.GithubApp`
+        """
+
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", "/app", headers=self._get_headers()
+        )
+        return GithubApp(
+            requester=self.__requester, headers=headers, attributes=data, completed=True
+        )

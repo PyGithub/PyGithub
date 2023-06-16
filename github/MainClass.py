@@ -808,8 +808,12 @@ class Github:
         if slug is github.GithubObject.NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}
-            headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
-            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+            warnings.warn(
+                "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
+                "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
+                category=DeprecationWarning,
+            )
+            return GithubIntegration(auth=self.__requester.auth).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
             return GithubApp.GithubApp(

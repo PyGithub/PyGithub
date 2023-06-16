@@ -23,7 +23,7 @@
 import abc
 import base64
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional, Union
 
 import jwt
@@ -307,7 +307,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             self.__installation_authorization.expires_at
             - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
         )
-        return token_expires_at < datetime.utcnow()
+        return token_expires_at < datetime.now(timezone.utc)
 
     def _get_installation_authorization(self) -> InstallationAuthorization:
         assert (
@@ -413,7 +413,9 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
 
     @property
     def _is_expired(self) -> bool:
-        return self._expires_at is not None and self._expires_at < datetime.utcnow()
+        return self._expires_at is not None and self._expires_at < datetime.now(
+            timezone.utc
+        )
 
     def _refresh(self):
         if self._refresh_token is None:
@@ -422,7 +424,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
             )
         if (
             self._refresh_expires_at is not None
-            and self._refresh_expires_at < datetime.utcnow()
+            and self._refresh_expires_at < datetime.now(timezone.utc)
         ):
             raise RuntimeError(
                 "Cannot refresh expired token because refresh token also expired"
