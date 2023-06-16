@@ -24,12 +24,12 @@
 from datetime import datetime
 from typing import Dict, NamedTuple
 
-from github.Artifact import Artifact
-from github.GitCommit import GitCommit
+import github.Artifact
+import github.GitCommit
+import github.PullRequest
+import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
-from github.PullRequest import PullRequest
-from github.Repository import Repository
 
 
 class TimingData(NamedTuple):
@@ -151,10 +151,10 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
-    _pull_requests: Attribute[PullRequest]
+    _pull_requests: Attribute[github.PullRequest.PullRequest]
 
     @property
-    def pull_requests(self) -> PullRequest:
+    def pull_requests(self) -> github.PullRequest.PullRequest:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
@@ -200,9 +200,9 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
-    def get_artifacts(self) -> PaginatedList[Artifact]:
+    def get_artifacts(self) -> "PaginatedList[github.Artifact.Artifact]":
         return PaginatedList(
-            Artifact,
+            github.Artifact.Artifact,
             self._requester,
             self._artifacts_url.value,
             None,
@@ -233,24 +233,24 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
-    _head_commit: Attribute[GitCommit]
+    _head_commit: Attribute[github.GitCommit.GitCommit]
 
     @property
-    def head_commit(self) -> GitCommit:
+    def head_commit(self) -> github.GitCommit.GitCommit:
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
-    _repository: Attribute[Repository]
+    _repository: "Attribute[github.Repository.Repository]"
 
     @property
-    def repository(self) -> Repository:
+    def repository(self) -> "github.Repository.Repository":
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
-    _head_repository: Attribute[Repository]
+    _head_repository: "Attribute[github.Repository.Repository]"
 
     @property
-    def head_repository(self) -> Repository:
+    def head_repository(self) -> "github.Repository.Repository":
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 
@@ -274,7 +274,7 @@ class WorkflowRun(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
         return TimingData(
-            billable=data["billable"], run_duration_ms=data["run_duration_ms"]
+            billable=data["billable"], run_duration_ms=data["run_duration_ms"]  # type: ignore
         )
 
     def delete(self) -> bool:
@@ -352,7 +352,7 @@ class WorkflowRun(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
-                PullRequest, attributes["pull_requests"]
+                github.PullRequest.PullRequest, attributes["pull_requests"]
             )
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
@@ -376,13 +376,13 @@ class WorkflowRun(CompletableGithubObject):
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
             self._head_commit = self._makeClassAttribute(
-                GitCommit, attributes["head_commit"]
+                github.GitCommit.GitCommit, attributes["head_commit"]
             )
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
-                Repository, attributes["repository"]
+                github.Repository.Repository, attributes["repository"]
             )
         if "head_repository" in attributes:  # pragma no branch
             self._head_repository = self._makeClassAttribute(
-                Repository, attributes["head_repository"]
+                github.Repository.Repository, attributes["head_repository"]
             )
