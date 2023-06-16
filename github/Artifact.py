@@ -48,72 +48,42 @@ class Artifact(NonCompletableGithubObject):
 
     @property
     def archive_download_url(self) -> str:
-        """
-        :type: string
-        """
         return self._archive_download_url.value
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         return self._created_at.value
 
     @property
     def expired(self) -> bool:
-        """
-        :type: bool
-        """
         return self._expired.value
 
     @property
     def expires_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         return self._expires_at.value
 
     @property
     def head_sha(self) -> str:
-        """
-        :type: string
-        """
         return self._head_sha.value
 
     @property
     def id(self) -> int:
-        """
-        :type: string
-        """
         return self._id.value
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         return self._name.value
 
     @property
     def node_id(self) -> str:
-        """
-        :type: string
-        """
         return self._node_id.value
 
     @property
     def size_in_bytes(self) -> int:
-        """
-        :type: integer
-        """
         return self._size_in_bytes.value
 
     @property
     def updated_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         return self._updated_at.value
 
     @property
@@ -127,7 +97,6 @@ class Artifact(NonCompletableGithubObject):
     def delete(self) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#delete-an-artifact>`_
-        :rtype: bool
         """
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
         return status == 204
