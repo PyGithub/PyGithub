@@ -326,24 +326,22 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
 
     def edit(
         self,
-        summary: github.GithubObject.OptionallySet[str] = github.GithubObject.NotSet,
-        description: github.GithubObject.OptionallySet[
+        summary: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
+        description: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
+        severity_or_cvss_vector_string: github.GithubObject.Opt[
             str
         ] = github.GithubObject.NotSet,
-        severity_or_cvss_vector_string: github.GithubObject.OptionallySet[
-            str
-        ] = github.GithubObject.NotSet,
-        cve_id: github.GithubObject.OptionallySet[str] = github.GithubObject.NotSet,
-        vulnerabilities: github.GithubObject.OptionallySet[
+        cve_id: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
+        vulnerabilities: github.GithubObject.Opt[
             typing.Iterable[AdvisoryVulnerability]
         ] = github.GithubObject.NotSet,
-        cwe_ids: github.GithubObject.OptionallySet[
+        cwe_ids: github.GithubObject.Opt[
             typing.Iterable[str]
         ] = github.GithubObject.NotSet,
-        credits: github.GithubObject.OptionallySet[
+        credits: github.GithubObject.Opt[
             typing.Iterable[Credit]
         ] = github.GithubObject.NotSet,
-        state: github.GithubObject.OptionallySet[str] = github.GithubObject.NotSet,
+        state: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
     ) -> "RepositoryAdvisory":
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
