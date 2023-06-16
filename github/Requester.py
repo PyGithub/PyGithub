@@ -426,7 +426,7 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
-    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    ) -> Tuple[Dict[str, Any], Any]:
         return self.__check(
             *self.requestJson(
                 verb, url, parameters, headers, input, self.__customConnection(url)
@@ -469,7 +469,7 @@ class Requester:
         status: int,
         responseHeaders: Dict[str, Any],
         output: str,
-    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    ) -> Tuple[Dict[str, Any], Any]:
         data = self.__structuredFromJson(output)
         if status >= 400:
             raise self.__createException(status, responseHeaders, data)
