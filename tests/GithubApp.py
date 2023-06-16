@@ -106,9 +106,14 @@ class GithubApp(Framework.TestCase):
         g = github.Github(auth=auth)
 
         with self.assertWarns(DeprecationWarning) as warning:
+            # we ignore warnings from httpretty dependency
+            import warnings
+
+            warnings.filterwarnings("ignore", module="httpretty")
+
             app = g.get_app()
 
-            self.assertWarningIn(
+            self.assertWarning(
                 warning,
                 "Argument slug is mandatory, calling this method without the slug argument is deprecated, "
                 "please use github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",

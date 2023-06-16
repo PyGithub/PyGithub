@@ -332,23 +332,17 @@ class BasicTestCase(unittest.TestCase):
     def assertWarning(self, warning, expected):
         self.assertWarnings(warning, expected)
 
-    def assertWarningIn(self, warning, expected):
-        for message in warning.warnings:
-            if (
-                isinstance(message, warnings.WarningMessage)
-                and isinstance(message.message, DeprecationWarning)
-                and message.message.args == (expected,)
-            ):
-                return
-
-        assert False, f"Warning *{expected}* not found in *{warning.warnings}*"
-
     def assertWarnings(self, warning, *expecteds):
         self.assertEqual(len(warning.warnings), len(expecteds))
-        for message, expected in zip(warning.warnings, expecteds):
-            self.assertIsInstance(message, warnings.WarningMessage)
-            self.assertIsInstance(message.message, DeprecationWarning)
-            self.assertEqual(message.message.args, (expected,))
+        actual = [
+            (type(message), type(message.message), message.message.args)
+            for message in warning.warnings
+        ]
+        expected = [
+            (warnings.WarningMessage, DeprecationWarning, (expected,))
+            for expected in expecteds
+        ]
+        self.assertSequenceEqual(actual, expected)
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
