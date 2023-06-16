@@ -19,101 +19,109 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 
-import github.GithubObject
-import github.WorkflowRun
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.WorkflowRun import WorkflowRun
 
 
-class Artifact(github.GithubObject.NonCompletableGithubObject):
+class Artifact(NonCompletableGithubObject):
     """
     This class represents an Artifact of Github Run
     """
+
+    _archive_download_url: Attribute[str]
+    _created_at: Attribute[datetime]
+    _expired: Attribute[bool]
+    _expires_at: Attribute[datetime]
+    _head_sha: Attribute[str]
+    _id: Attribute[int]
+    _name: Attribute[str]
+    _node_id: Attribute[str]
+    _size_in_bytes: Attribute[int]
+    _updated_at: Attribute[datetime]
+    _url: Attribute[str]
+    _workflow_run: Attribute[WorkflowRun]
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
 
     @property
-    def archive_download_url(self):
+    def archive_download_url(self) -> str:
         """
         :type: string
         """
         return self._archive_download_url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def expired(self):
+    def expired(self) -> bool:
         """
         :type: bool
         """
         return self._expired.value
 
     @property
-    def expires_at(self):
+    def expires_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._expires_at.value
 
     @property
-    def head_sha(self):
+    def head_sha(self) -> str:
         """
         :type: string
         """
         return self._head_sha.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: string
         """
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
         return self._node_id.value
 
     @property
-    def size_in_bytes(self):
+    def size_in_bytes(self) -> int:
         """
         :type: integer
         """
         return self._size_in_bytes.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
     @property
-    def workflow_run(self):
-        """
-        :type: :class:``
-        """
+    def workflow_run(self) -> WorkflowRun:
         return self._workflow_run.value
 
     def delete(self) -> bool:
@@ -125,18 +133,18 @@ class Artifact(github.GithubObject.NonCompletableGithubObject):
         return status == 204
 
     def _initAttributes(self):
-        self._archive_download_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._expired = github.GithubObject.NotSet
-        self._expires_at = github.GithubObject.NotSet
-        self._head_sha = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._size_in_bytes = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._workflow_run = github.GithubObject.NotSet
+        self._archive_download_url = NotSet
+        self._created_at = NotSet
+        self._expired = NotSet
+        self._expires_at = NotSet
+        self._head_sha = NotSet
+        self._id = NotSet
+        self._name = NotSet
+        self._node_id = NotSet
+        self._size_in_bytes = NotSet
+        self._updated_at = NotSet
+        self._url = NotSet
+        self._workflow_run = NotSet
 
     def _useAttributes(self, attributes):
         if "archive_download_url" in attributes:  # pragma no branch
@@ -174,5 +182,5 @@ class Artifact(github.GithubObject.NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_run" in attributes:  # pragma no branch
             self._workflow_run = self._makeClassAttribute(
-                github.WorkflowRun.WorkflowRun, attributes["workflow_run"]
+                WorkflowRun, attributes["workflow_run"]
             )
