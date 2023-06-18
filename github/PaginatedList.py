@@ -76,7 +76,7 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> Any:
+    def _grow(self) -> Iterable[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
@@ -249,7 +249,7 @@ class PaginatedList(PaginatedListBase[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page: int) -> List[Any]:
+    def get_page(self, page: int) -> List[T]:
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
