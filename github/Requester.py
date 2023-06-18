@@ -344,6 +344,7 @@ class Requester:
     __hostname: str
     __authorizationHeader: Optional[str]
 
+    # keep arguments in-sync with github.MainClass and GithubIntegration
     def __init__(
         self,
         auth: Optional["Auth"],
@@ -393,6 +394,24 @@ class Requester:
         # provide auth implementations that require a requester with this requester
         if isinstance(self.__auth, WithRequester):
             self.__auth.withRequester(self)
+
+    @property
+    def kwargs(self):
+        """
+        Returns arguments required to recreate this Requester with Requester.__init__, as well as
+        with MainClass.__init__ and GithubIntegration.__init__.
+        :return:
+        """
+        return dict(
+            auth=self.__auth,
+            base_url=self.__base_url,
+            timeout=self.__timeout,
+            user_agent=self.__userAgent,
+            per_page=self.per_page,
+            verify=self.__verify,
+            retry=self.__retry,
+            pool_size=self.__pool_size,
+        )
 
     @property
     def base_url(self) -> str:

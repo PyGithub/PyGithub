@@ -4,6 +4,7 @@ import deprecated
 
 import urllib3
 
+import github
 from github import Consts
 from github.Auth import AppAuth
 from github.GithubApp import GithubApp
@@ -19,7 +20,7 @@ class GithubIntegration:
     Main class to obtain tokens for a GitHub integration.
     """
 
-    # keep non-deprecated arguments in-sync with MainClass
+    # keep non-deprecated arguments in-sync with Requester
     # v2: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
     # v2: move auth to the front of arguments
     # v2: add * before first argument so all arguments must be named,
@@ -114,6 +115,11 @@ class GithubIntegration:
             retry=retry,
             pool_size=pool_size,
         )
+
+    def get_github_for_installation(self, installation_id):
+        # The installation has to authenticate as an installation, not an app
+        auth = self.auth.get_installation_auth(installation_id, requester=self.__requester)
+        return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self):
         """
