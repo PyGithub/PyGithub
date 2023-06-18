@@ -82,7 +82,7 @@ class PaginatedListBase(Generic[T]):
         return newElements
 
     class _Slice:
-        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice) -> None:
+        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice):
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop
