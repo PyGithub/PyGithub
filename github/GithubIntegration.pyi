@@ -1,5 +1,8 @@
 from typing import Union, Optional, Dict
 
+from urllib3 import Retry
+
+import github
 from github.Auth import AppAuth
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
@@ -15,11 +18,18 @@ class GithubIntegration:
         integration_id: Optional[Union[int, str]] = ...,
         private_key: Optional[str] = ...,
         base_url: str = ...,
+        timeout: int = ...,
+        user_agent: str = ...,
+        per_page: int = ...,
+        verify: bool = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
         jwt_expiry: int = ...,
         jwt_issued_at: int = ...,
         jwt_algorithm: str = ...,
         auth: Optional[AppAuth] = ...,
     ) -> None: ...
+    def get_github_for_installation(self, installation_id: int) -> github.Github: ...
     def _get_installed_app(self, url: str) -> Installation: ...
     def _get_headers(self) -> Dict[str, str]: ...
     def create_jwt(self, expiration: Optional[int] = ...) -> str: ...

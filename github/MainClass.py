@@ -83,6 +83,7 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
+    # keep non-deprecated arguments in-sync with GithubIntegration
     # v2: remove login_or_token, password, jwt and app_auth
     # v2: move auth to the front of arguments
     # v2: add * before first argument so all arguments must be named,
@@ -123,6 +124,8 @@ class Github:
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
+        assert isinstance(per_page, int), per_page
+        assert isinstance(verify, bool), verify
         assert (
             retry is None
             or isinstance(retry, int)
