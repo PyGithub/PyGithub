@@ -49,7 +49,7 @@ class PaginatedListBase(Generic[T]):
     def _couldGrow(self) -> bool:
         raise NotImplementedError
 
-    def _fetchNextPage(self) -> Any:
+    def _fetchNextPage(self) -> List[T]:
         raise NotImplementedError
 
     def __init__(self):
@@ -76,7 +76,7 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> Iterator[T]:
+    def _grow(self) -> List[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
@@ -209,11 +209,11 @@ class PaginatedList(PaginatedListBase[T]):
     def _couldGrow(self):
         return self.__nextUrl is not None
 
-    def _fetchNextPage(self):
+    def _fetchNextPage(self) -> List[T]:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
-        data = data if data else []
+        data: list = data if data else []
 
         self.__nextUrl = None
         if len(data) > 0:
