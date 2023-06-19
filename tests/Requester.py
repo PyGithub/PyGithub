@@ -71,8 +71,8 @@ class Requester(Framework.TestCase):
                 per_page=123,
                 verify=False,
                 retry=3,
-                pool_size=5
-            )
+                pool_size=5,
+            ),
         )
 
         # create a copy Requester, assert identity via kwargs
@@ -119,8 +119,8 @@ class Requester(Framework.TestCase):
                 per_page=123,
                 verify=False,
                 retry=3,
-                pool_size=5
-            )
+                pool_size=5,
+            ),
         )
 
     def testLoggingRedirection(self):

@@ -1,7 +1,6 @@
 import warnings
 
 import deprecated
-
 import urllib3
 
 import github
@@ -68,9 +67,9 @@ class GithubIntegration:
         assert isinstance(per_page, int), per_page
         assert isinstance(verify, (bool, str)), verify
         assert (
-                retry is None
-                or isinstance(retry, int)
-                or isinstance(retry, urllib3.util.Retry)
+            retry is None
+            or isinstance(retry, int)
+            or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert isinstance(jwt_expiry, int), jwt_expiry
@@ -118,7 +117,9 @@ class GithubIntegration:
 
     def get_github_for_installation(self, installation_id):
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(installation_id, requester=self.__requester)
+        auth = self.auth.get_installation_auth(
+            installation_id, requester=self.__requester
+        )
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self):
