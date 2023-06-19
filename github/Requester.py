@@ -520,7 +520,7 @@ class Requester:
         return cnx
 
     @classmethod
-    def __createException(
+    def createException(
         cls,
         status: int,
         headers: Dict[str, Any],

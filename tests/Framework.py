@@ -411,7 +411,9 @@ class TestCase(BasicTestCase):
 
     def get_github(self, retry, pool_size):
         if self.tokenAuthMode:
-            return github.Github(auth=self.oauth_token, retry=retry, pool_size=pool_size)
+            return github.Github(
+                auth=self.oauth_token, retry=retry, pool_size=pool_size
+            )
         elif self.jwtAuthMode:
             return github.Github(auth=self.jwt, retry=retry, pool_size=pool_size)
         else:

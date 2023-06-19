@@ -19,7 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
+import contextlib
 import unittest
 from datetime import datetime
 from io import BytesIO
@@ -85,7 +85,7 @@ class GithubRetry(unittest.TestCase):
                         retry.get_backoff_time(),
                     )
                     self.assertEqual(
-                        orig_retry.secondaryRateWait, retry.secondaryRateWait
+                        orig_retry.secondary_rate_wait, retry.secondary_rate_wait
                     )
 
                 # fmt: off
@@ -120,14 +120,20 @@ class GithubRetry(unittest.TestCase):
 
         return response
 
+    @contextlib.contextmanager
+    def mock_retry_now(self, now):
+        with mock.patch("github.GithubRetry._GithubRetry__datetime") as dt:
+            dt.now = mock.Mock(return_value=datetime.utcfromtimestamp(now))
+            dt.utcfromtimestamp = datetime.utcfromtimestamp
+            yield
+
     def test_primary_rate_error_with_reset(self):
         retry = github.GithubRetry(total=3)
         response = self.response_func(PrimaryRateLimitJson, 1644768012)
         test_increment = self.get_test_increment_func(PrimaryRateLimitMessage)
 
         # test 12 seconds before reset, note backoff will be 12+1 second
-        utc_now = datetime.utcfromtimestamp(1644768000)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -135,7 +141,7 @@ class GithubRetry(unittest.TestCase):
                 expected_backoff=12.0 + 1,
                 has_reset=True,
             )
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -145,8 +151,7 @@ class GithubRetry(unittest.TestCase):
             )
 
         # test 2 seconds after reset, no backoff expected
-        utc_now = datetime.utcfromtimestamp(1644768014)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768014):
             retry = test_increment(
                 retry, response(), expected_total=0, expected_backoff=0
             )
@@ -158,8 +163,7 @@ class GithubRetry(unittest.TestCase):
         test_increment = self.get_test_increment_func(PrimaryRateLimitMessage)
 
         # test 12 seconds before reset, note backoff will be 12+1 second
-        utc_now = datetime.utcfromtimestamp(1644768000)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -167,7 +171,7 @@ class GithubRetry(unittest.TestCase):
                 expected_backoff=12.0 + 1,
                 has_reset=True,
             )
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -178,8 +182,7 @@ class GithubRetry(unittest.TestCase):
             )
 
         # test 2 seconds after reset, no backoff expected
-        utc_now = datetime.utcfromtimestamp(1644768014)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768014):
             retry = test_increment(
                 retry,
                 response(),
@@ -235,8 +238,7 @@ class GithubRetry(unittest.TestCase):
         test_increment = self.get_test_increment_func(SecondaryRateLimitMessage)
 
         # test 12 seconds before reset, expect secondary wait seconds of 60
-        utc_now = datetime.utcfromtimestamp(1644768000)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -244,7 +246,7 @@ class GithubRetry(unittest.TestCase):
                 expected_backoff=60,
                 has_reset=False,
             )
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -254,21 +256,19 @@ class GithubRetry(unittest.TestCase):
             )
 
         # test 2 seconds after reset, still expect secondary wait seconds of 60
-        utc_now = datetime.utcfromtimestamp(1644768014)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768014):
             retry = test_increment(
                 retry, response(), expected_total=0, expected_backoff=60
             )
             test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_with_reset_and_exponential_backoff(self):
-        retry = github.GithubRetry(total=3, backoff_factor=10, secondaryRateWait=15)
+        retry = github.GithubRetry(total=3, backoff_factor=10, secondary_rate_wait=15)
         response = self.response_func(SecondaryRateLimitJson, 1644768012)
         test_increment = self.get_test_increment_func(SecondaryRateLimitMessage)
 
         # test 12 seconds before reset, expect secondary wait seconds of 15
-        utc_now = datetime.utcfromtimestamp(1644768000)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -276,7 +276,7 @@ class GithubRetry(unittest.TestCase):
                 expected_backoff=15,
                 has_reset=False,
             )
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768000):
             retry = test_increment(
                 retry,
                 response(),
@@ -287,8 +287,7 @@ class GithubRetry(unittest.TestCase):
             )
 
         # test 2 seconds after reset, exponential backoff exceeds secondary wait seconds of 15
-        utc_now = datetime.utcfromtimestamp(1644768014)
-        with mock.patch.object(retry, "_GithubRetry__utc_now", return_value=utc_now):
+        with self.mock_retry_now(1644768014):
             retry = test_increment(
                 retry,
                 response(),
@@ -324,7 +323,7 @@ class GithubRetry(unittest.TestCase):
         test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_without_reset_with_exponential_backoff(self):
-        retry = github.GithubRetry(total=3, backoff_factor=10, secondaryRateWait=5)
+        retry = github.GithubRetry(total=3, backoff_factor=10, secondary_rate_wait=5)
         response = self.response_func(SecondaryRateLimitJson, reset=None)
         test_increment = self.get_test_increment_func(SecondaryRateLimitMessage)
 

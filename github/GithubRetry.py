@@ -20,20 +20,21 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import json
 import logging
+from datetime import datetime, timezone
+from logging import Logger
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
-from urllib3 import Retry
+from urllib3 import HTTPResponse, Retry
 from urllib3.exceptions import MaxRetryError
 
 from github.GithubException import GithubException
 from github.Requester import Requester
 
-DEFAULT_SECONDARY_RATE_WAIT = 60
+DEFAULT_SECONDARY_RATE_WAIT: int = 60
 
 
 class GithubRetry(Retry):
@@ -50,14 +51,20 @@ class GithubRetry(Retry):
     This can be configured via the `allowed_methods` argument.
     """
 
-    __logger = None
+    __logger: Logger = None
 
-    def __init__(self, secondaryRateWait=DEFAULT_SECONDARY_RATE_WAIT, **kwargs):
+    # used to mock datetime, mock.patch("github.GithubRetry.date") does not work as this
+    # references the class, not the module (due to re-exporting in github/__init__.py)
+    __datetime = datetime
+
+    def __init__(
+        self, secondary_rate_wait: int = DEFAULT_SECONDARY_RATE_WAIT, **kwargs
+    ):
         """
-        :param secondaryRateWait: seconds to wait before retrying secondary rate limit errors
+        :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
         :param kwargs: see urllib3.Retry for more arguments
         """
-        self.secondaryRateWait = secondaryRateWait
+        self.secondary_rate_wait = secondary_rate_wait
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
@@ -70,7 +77,7 @@ class GithubRetry(Retry):
         super().__init__(**kwargs)
 
     def new(self, **kw):
-        kw.update(dict(secondaryRateWait=self.secondaryRateWait))
+        kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)
 
     def increment(
@@ -81,7 +88,7 @@ class GithubRetry(Retry):
         error=None,
         _pool=None,
         _stacktrace=None,
-    ):
+    ) -> Retry:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
             # or the body message does imply a rate limit error
@@ -122,17 +129,19 @@ class GithubRetry(Retry):
                             )
 
                             # we backoff primary rate limit at least until X-RateLimit-Reset,
-                            # we backoff secondary rate limit at for secondaryRateWait seconds
+                            # we backoff secondary rate limit at for secondary_rate_wait seconds
                             backoff = 0
 
                             if Requester.isPrimaryRateLimitError(message):
                                 if "X-RateLimit-Reset" in response.headers:
                                     value = response.headers.get("X-RateLimit-Reset")
                                     if value and value.isdigit():
-                                        reset = datetime.datetime.utcfromtimestamp(
+                                        reset = self.__datetime.utcfromtimestamp(
                                             int(value)
                                         )
-                                        delta = reset - self.__utc_now()
+                                        delta = reset - self.__datetime.now(
+                                            timezone.utc
+                                        )
                                         resetBackoff = delta.total_seconds()
 
                                         if resetBackoff > 0:
@@ -144,7 +153,7 @@ class GithubRetry(Retry):
                                         # plus 1s as it is not clear when in that second the reset occurs
                                         backoff = resetBackoff + 1
                             else:
-                                backoff = self.secondaryRateWait
+                                backoff = self.secondary_rate_wait
 
                             # we backoff at least retry's next backoff
                             retry_backoff = retry.get_backoff_time()
@@ -188,7 +197,7 @@ class GithubRetry(Retry):
         return super().increment(method, url, response, error, _pool, _stacktrace)
 
     @staticmethod
-    def get_content(resp, url):
+    def get_content(resp: HTTPResponse, url: str) -> bytes:
         # logic taken from HTTPAdapter.build_response (requests.adapters)
         response = Response()
 
@@ -207,11 +216,7 @@ class GithubRetry(Retry):
 
         return response.content
 
-    def __utc_now(self):
-        """Used to inject time for testing"""
-        return datetime.datetime.utcnow()
-
-    def __log(self, level, message, **kwargs):
+    def __log(self, level: int, message: str, **kwargs) -> None:
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(level):
