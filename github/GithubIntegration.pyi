@@ -21,7 +21,7 @@ class GithubIntegration:
         timeout: int = ...,
         user_agent: str = ...,
         per_page: int = ...,
-        verify: bool = ...,
+        verify: Union[bool, str] = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
         jwt_expiry: int = ...,

@@ -125,7 +125,7 @@ class Github:
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert isinstance(per_page, int), per_page
-        assert isinstance(verify, bool), verify
+        assert isinstance(verify, (bool, str)), verify
         assert (
             retry is None
             or isinstance(retry, int)
