@@ -163,7 +163,7 @@ class GithubRetry(Retry):
                                     self.__log(
                                         logging.DEBUG,
                                         f"Retry backoff of {retry_backoff}s exceeds "
-                                        f"required rate limit backoff of {backoff}s",
+                                        f"required rate limit backoff of {backoff}s".replace(".0s", "s"),
                                     )
                                 backoff = retry_backoff
 
@@ -171,7 +171,7 @@ class GithubRetry(Retry):
                                 return backoff
 
                             self.__log(
-                                logging.INFO, f"Setting next backoff to {backoff}s"
+                                logging.INFO, f"Setting next backoff to {backoff}s".replace(".0s", "s")
                             )
                             retry.get_backoff_time = get_backoff_time  # type: ignore
                             return retry

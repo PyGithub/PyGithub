@@ -138,7 +138,7 @@ class GithubRetry(unittest.TestCase):
                 retry,
                 response(),
                 expected_total=2,
-                expected_backoff=12.0 + 1,
+                expected_backoff=12 + 1,
                 has_reset=True,
             )
         with self.mock_retry_now(1644768000):
@@ -146,7 +146,7 @@ class GithubRetry(unittest.TestCase):
                 retry,
                 response(),
                 expected_total=1,
-                expected_backoff=12.0 + 1,
+                expected_backoff=12 + 1,
                 has_reset=True,
             )
 
@@ -168,7 +168,7 @@ class GithubRetry(unittest.TestCase):
                 retry,
                 response(),
                 expected_total=2,
-                expected_backoff=12.0 + 1,
+                expected_backoff=12 + 1,
                 has_reset=True,
             )
         with self.mock_retry_now(1644768000):
@@ -176,7 +176,7 @@ class GithubRetry(unittest.TestCase):
                 retry,
                 response(),
                 expected_total=1,
-                expected_backoff=12.0 + 1,
+                expected_backoff=12 + 1,
                 expected_retry_backoff=20,
                 has_reset=True,
             )
@@ -199,13 +199,13 @@ class GithubRetry(unittest.TestCase):
 
         # test without reset
         retry = test_increment(
-            retry, response(), expected_total=2, expected_backoff=0.0
+            retry, response(), expected_total=2, expected_backoff=0
         )
         retry = test_increment(
-            retry, response(), expected_total=1, expected_backoff=0.0
+            retry, response(), expected_total=1, expected_backoff=0
         )
         retry = test_increment(
-            retry, response(), expected_total=0, expected_backoff=0.0
+            retry, response(), expected_total=0, expected_backoff=0
         )
         test_increment(retry, response(), expect_retry_error=True)
 
@@ -219,21 +219,21 @@ class GithubRetry(unittest.TestCase):
             retry,
             response(),
             expected_total=2,
-            expected_backoff=0.0,
-            expected_retry_backoff=0.0,
+            expected_backoff=0,
+            expected_retry_backoff=0,
         )
         retry = test_increment(
             retry,
             response(),
             expected_total=1,
-            expected_backoff=0.0,
+            expected_backoff=0,
             expected_retry_backoff=20,
         )
         retry = test_increment(
             retry,
             response(),
             expected_total=0,
-            expected_backoff=0.0,
+            expected_backoff=0,
             expected_retry_backoff=40,
         )
         test_increment(retry, response(), expect_retry_error=True)
