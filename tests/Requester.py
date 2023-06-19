@@ -39,6 +39,54 @@ class Requester(Framework.TestCase):
         github.Requester.Requester.resetLogger()
         super().tearDown()
 
+    def testRecreation(self):
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        # create a Requester with non-default arguments
+        auth = TestAuth(123, "key")
+        requester = github.Requester.Requester(
+            auth=auth,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+        )
+        kwargs = requester.kwargs
+
+        # assert kwargs consists of ALL constructor arguments
+        self.assertEqual(
+            kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys()
+        )
+        self.assertEqual(
+            kwargs,
+            dict(
+                auth=auth,
+                base_url="https://base.url",
+                timeout=1,
+                user_agent="user agent",
+                per_page=123,
+                verify=False,
+                retry=3,
+                pool_size=5
+            )
+        )
+
+        # create a copy Requester, assert identity via kwargs
+        copy = github.Requester.Requester(**kwargs)
+        self.assertEqual(copy.kwargs, kwargs)
+
+        # create Github instance, assert identity requester
+        gh = github.Github(**kwargs)
+        self.assertEqual(gh._Github__requester.kwargs, kwargs)
+
+        # create GithubIntegration instance, assert identity requester
+        gi = github.GithubIntegration(**kwargs)
+        self.assertEqual(gi._GithubIntegration__requester.kwargs, kwargs)
+
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
         self.logger.info.assert_called_once_with(

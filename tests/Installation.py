@@ -21,7 +21,8 @@
 ################################################################################
 
 import github
-from github.Auth import AppAuth
+from github import Consts
+from github.Auth import AppAuth, AppInstallationAuth
 
 from . import Framework, GithubIntegration
 
@@ -44,3 +45,33 @@ class Installation(Framework.BasicTestCase):
         self.assertListEqual(
             [repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"]
         )
+
+    def testGetGithubForInstallation(self):
+        self.auth = AppAuth(319953, GithubIntegration.PRIVATE_KEY)
+        self.integration = github.GithubIntegration(
+            auth=self.auth,
+            base_url="https://api.github.com",
+            timeout=Consts.DEFAULT_TIMEOUT + 10,
+            user_agent="PyGithub/Python-Test",
+            per_page=Consts.DEFAULT_PER_PAGE + 10,
+            verify=False,
+            retry=3,
+            pool_size=10,
+        )
+        self.assertEqual(len(self.installations), 1)
+        installations = list(self.integration.get_installations())
+        installation = installations[0]
+
+        g = installation.get_github_for_installation()
+
+        self.assertIsInstance(g._Github__requester.auth, AppInstallationAuth)
+        self.assertEqual(g._Github__requester._Requester__base_url, "https://api.github.com")
+        self.assertEqual(g._Github__requester._Requester__timeout, Consts.DEFAULT_TIMEOUT + 10)
+        self.assertEqual(g._Github__requester._Requester__userAgent, "PyGithub/Python-Test")
+        self.assertEqual(g._Github__requester.per_page, Consts.DEFAULT_PER_PAGE + 10)
+        self.assertEqual(g._Github__requester._Requester__verify, False)
+        self.assertEqual(g._Github__requester._Requester__retry, 3)
+        self.assertEqual(g._Github__requester._Requester__pool_size, 10)
+
+        repo = g.get_repo("PyGithub/PyGithub")
+        self.assertEqual(repo.full_name, "PyGithub/PyGithub")
