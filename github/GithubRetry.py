@@ -173,7 +173,7 @@ class GithubRetry(Retry):
                             self.__log(
                                 logging.INFO, f"Setting next backoff to {backoff}s"
                             )
-                            retry.get_backoff_time = get_backoff_time
+                            retry.get_backoff_time = get_backoff_time  # type: ignore
                             return retry
 
                         self.__log(
@@ -203,7 +203,7 @@ class GithubRetry(Retry):
         response = Response()
 
         # Fallback to None if there's no status_code, for whatever reason.
-        response.status_code = getattr(resp, "status", None)
+        response.status_code = getattr(resp, "status", None)  # type: ignore
 
         # Make headers case-insensitive.
         response.headers = CaseInsensitiveDict(getattr(resp, "headers", {}))
@@ -211,7 +211,7 @@ class GithubRetry(Retry):
         # Set encoding.
         response.encoding = get_encoding_from_headers(response.headers)
         response.raw = resp
-        response.reason = response.raw.reason
+        response.reason = response.raw.reason  # type: ignore
 
         response.url = url
 
