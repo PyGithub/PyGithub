@@ -96,7 +96,7 @@ class Github:
         app_auth=None,
         base_url=Consts.DEFAULT_BASE_URL,
         timeout=Consts.DEFAULT_TIMEOUT,
-        user_agent="PyGithub/Python",
+        user_agent=Consts.DEFAULT_USER_AGENT,
         per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
         retry=None,
