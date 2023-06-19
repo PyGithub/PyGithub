@@ -20,6 +20,7 @@
 #                                                                              #
 ################################################################################
 import contextlib
+import sys
 import unittest
 from datetime import datetime
 from io import BytesIO
@@ -122,7 +123,15 @@ class GithubRetry(unittest.TestCase):
 
     @contextlib.contextmanager
     def mock_retry_now(self, now):
-        with mock.patch("github.GithubRetry._GithubRetry__datetime") as dt:
+        if (
+            sys.version_info[0] > 3
+            or sys.version_info[0] == 3
+            and sys.version_info[1] >= 11
+        ):
+            attr = "github.GithubRetry.GithubRetry._GithubRetry__datetime"
+        else:
+            attr = "github.GithubRetry._GithubRetry__datetime"
+        with mock.patch(attr) as dt:
             dt.now = mock.Mock(return_value=datetime.utcfromtimestamp(now))
             dt.utcfromtimestamp = datetime.utcfromtimestamp
             yield
@@ -198,15 +207,9 @@ class GithubRetry(unittest.TestCase):
         test_increment = self.get_test_increment_func(PrimaryRateLimitMessage)
 
         # test without reset
-        retry = test_increment(
-            retry, response(), expected_total=2, expected_backoff=0
-        )
-        retry = test_increment(
-            retry, response(), expected_total=1, expected_backoff=0
-        )
-        retry = test_increment(
-            retry, response(), expected_total=0, expected_backoff=0
-        )
+        retry = test_increment(retry, response(), expected_total=2, expected_backoff=0)
+        retry = test_increment(retry, response(), expected_total=1, expected_backoff=0)
+        retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
         test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_without_reset_with_exponential_backoff(self):
