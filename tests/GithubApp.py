@@ -106,12 +106,9 @@ class GithubApp(Framework.TestCase):
         g = github.Github(auth=auth)
 
         with self.assertWarns(DeprecationWarning) as warning:
-            # we ignore warnings from httpretty dependency
-            import warnings
-
-            warnings.filterwarnings("ignore", module="httpretty")
-
-            app = g.get_app()
+            # httpretty has some deprecation warnings in Python 3.12
+            with self.ignoreWarning(category=DeprecationWarning, module="httpretty"):
+                app = g.get_app()
 
             self.assertWarning(
                 warning,

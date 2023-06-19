@@ -34,6 +34,7 @@
 #                                                                              #
 ################################################################################
 
+import contextlib
 import io
 import json
 import os
@@ -343,6 +344,13 @@ class BasicTestCase(unittest.TestCase):
             for expected in expecteds
         ]
         self.assertSequenceEqual(actual, expected)
+
+    @contextlib.contextmanager
+    def ignoreWarning(self, category=Warning, module=""):
+        with warnings.catch_warnings():
+            # we ignore InsecureRequestWarning from urllib3.connectionpool
+            warnings.filterwarnings("ignore", category=category, module=module)
+            yield
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
