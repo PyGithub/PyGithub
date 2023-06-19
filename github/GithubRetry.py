@@ -59,7 +59,7 @@ class GithubRetry(Retry):
     __datetime = datetime
 
     def __init__(
-        self, secondary_rate_wait: int = DEFAULT_SECONDARY_RATE_WAIT, **kwargs
+        self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs
     ):
         """
         :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
@@ -165,7 +165,7 @@ class GithubRetry(Retry):
                                         f"Retry backoff of {retry_backoff}s exceeds "
                                         f"required rate limit backoff of {backoff}s",
                                     )
-                                backoff = retry.get_backoff_time()
+                                backoff = retry_backoff
 
                             def get_backoff_time():
                                 return backoff
