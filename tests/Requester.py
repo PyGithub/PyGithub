@@ -229,7 +229,7 @@ class Requester(Framework.TestCase):
         self.assertEqual(str(exception), string)
 
     def testShouldCreateBadCredentialsException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401, {"header": "value"}, {"message": "Bad credentials"}
         )
         self.assertException(
@@ -242,7 +242,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateTwoFactorException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401,
             {"x-github-otp": "required; app"},
             {
@@ -263,7 +263,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateBadUserAgentException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             403,
             {"header": "value"},
             {"message": "Missing or invalid User Agent string"},
@@ -280,7 +280,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateRateLimitExceededException(self):
         for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
             with self.subTest(message=message):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     403, {"header": "value"}, {"message": message}
                 )
                 self.assertException(
@@ -293,7 +293,7 @@ class Requester(Framework.TestCase):
                 )
 
     def testShouldCreateUnknownObjectException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             404, {"header": "value"}, {"message": "Not Found"}
         )
         self.assertException(
@@ -308,7 +308,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateGithubException(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     status, {"header": "value"}, {"message": "Something unknown"}
                 )
                 self.assertException(
@@ -323,7 +323,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, {})
+                exc = self.g._Github__requester.createException(status, {}, {})
                 self.assertException(
                     exc, github.GithubException, status, {}, {}, f"{status} {{}}"
                 )
@@ -331,7 +331,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, None)
+                exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(
                     exc, github.GithubException, status, None, {}, f"{status} null"
                 )

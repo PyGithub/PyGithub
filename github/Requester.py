@@ -528,6 +528,7 @@ class Requester:
     ) -> Any:
         message = output.get("message", "").lower() if output is not None else ""
 
+        exc = GithubException.GithubException
         if status == 401 and message == "bad credentials":
             exc = GithubException.BadCredentialsException
         elif (
@@ -544,8 +545,6 @@ class Requester:
             exc = GithubException.RateLimitExceededException
         elif status == 404 and message == "not found":
             exc = GithubException.UnknownObjectException
-        else:
-            exc = GithubException.GithubException
 
         return exc(status, output, headers)
 

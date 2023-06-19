@@ -198,9 +198,15 @@ class GithubRetry(unittest.TestCase):
         test_increment = self.get_test_increment_func(PrimaryRateLimitMessage)
 
         # test without reset
-        retry = test_increment(retry, response(), expected_total=2, expected_backoff=0)
-        retry = test_increment(retry, response(), expected_total=1, expected_backoff=0)
-        retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
+        retry = test_increment(
+            retry, response(), expected_total=2, expected_backoff=0.0
+        )
+        retry = test_increment(
+            retry, response(), expected_total=1, expected_backoff=0.0
+        )
+        retry = test_increment(
+            retry, response(), expected_total=0, expected_backoff=0.0
+        )
         test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_without_reset_with_exponential_backoff(self):
@@ -213,21 +219,21 @@ class GithubRetry(unittest.TestCase):
             retry,
             response(),
             expected_total=2,
-            expected_backoff=0,
-            expected_retry_backoff=0,
+            expected_backoff=0.0,
+            expected_retry_backoff=0.0,
         )
         retry = test_increment(
             retry,
             response(),
             expected_total=1,
-            expected_backoff=0,
+            expected_backoff=0.0,
             expected_retry_backoff=20,
         )
         retry = test_increment(
             retry,
             response(),
             expected_total=0,
-            expected_backoff=0,
+            expected_backoff=0.0,
             expected_retry_backoff=40,
         )
         test_increment(retry, response(), expect_retry_error=True)
