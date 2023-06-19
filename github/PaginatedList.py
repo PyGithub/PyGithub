@@ -213,9 +213,9 @@ class PaginatedList(PaginatedListBase[T]):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
-        data: list = data if data else []
+        data = data if data else []
 
-        self.__nextUrl = None
+        self.__nextUrl = None  # type: ignore
         if len(data) > 0:
             links = self.__parseLinkHeader(headers)
             if self._reversed:
