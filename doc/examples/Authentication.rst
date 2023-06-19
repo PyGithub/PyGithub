@@ -51,6 +51,15 @@ when authenticated as a Github App:
     ...     installation.id
     '1234567'
 
+Get a ``github.Github`` instance authenticated as an App installation:
+
+.. code-block:: python
+
+    >>> installation = gi.get_installations()[0]
+    >>> g = installation.get_github_for_installation()
+    >>> g.get_repo("user/repo").name
+    'repo'
+
 App installation authentication
 -------------------------------
 
