@@ -211,7 +211,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(delivery.response.payload, "ok")
 
     def testGetHookDeliveries(self):
-        deliveries = self.org.get_hook_deliveries(257993)
+        deliveries = list(self.org.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
         self.assertEqual(deliveries[0].id, 12345)
         self.assertEqual(deliveries[0].guid, "abcde-12345")
         self.assertEqual(deliveries[0].delivered_at, "2012-05-27T06:00:32Z")
