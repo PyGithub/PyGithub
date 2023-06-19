@@ -87,6 +87,42 @@ class Requester(Framework.TestCase):
         gi = github.GithubIntegration(**kwargs)
         self.assertEqual(gi._GithubIntegration__requester.kwargs, kwargs)
 
+    def testWithAuth(self):
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        # create a Requester with non-default arguments
+        auth = TestAuth(123, "key")
+        requester = github.Requester.Requester(
+            auth=auth,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+        )
+
+        # create a copy with different auth
+        auth2 = TestAuth(456, "key2")
+        copy = requester.withAuth(auth2)
+
+        # assert kwargs of copy
+        self.assertEqual(
+            copy.kwargs,
+            dict(
+                auth=auth2,
+                base_url="https://base.url",
+                timeout=1,
+                user_agent="user agent",
+                per_page=123,
+                verify=False,
+                retry=3,
+                pool_size=5
+            )
+        )
+
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
         self.logger.info.assert_called_once_with(

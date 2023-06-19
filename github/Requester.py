@@ -425,18 +425,11 @@ class Requester:
         """
         Create a new requester instance with identical configuration but the given authentication method.
         :param auth: authentication method
-        :return: new Reqester implementation
+        :return: new Requester implementation
         """
-        return Requester(
-            auth=auth,
-            base_url=self.__base_url,
-            timeout=self.__timeout,
-            user_agent=self.__userAgent,
-            per_page=self.per_page,
-            verify=self.__verify,
-            retry=self.__retry,
-            pool_size=self.__pool_size,
-        )
+        kwargs = self.kwargs
+        kwargs.update(auth=auth)
+        return Requester(**kwargs)
 
     def requestJsonAndCheck(
         self,
