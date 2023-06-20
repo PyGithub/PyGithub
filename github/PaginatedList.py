@@ -34,17 +34,28 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Generic, TypeVar
+from typing import Any, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
 from urllib.parse import parse_qs
 
-T = TypeVar("T")
+from github.GithubObject import GithubObject
+from github.Requester import Requester
+
+T = TypeVar("T", bound=GithubObject)
 
 
-class PaginatedListBase:
+class PaginatedListBase(Generic[T]):
+    __elements: List[T]
+
+    def _couldGrow(self) -> bool:
+        raise NotImplementedError
+
+    def _fetchNextPage(self) -> List[T]:
+        raise NotImplementedError
+
     def __init__(self):
-        self.__elements = list()
+        self.__elements = []
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: Union[int, slice]) -> Any:
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
             self.__fetchToIndex(index)
@@ -52,32 +63,32 @@ class PaginatedListBase:
         else:
             return self._Slice(self, index)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[T]:
         yield from self.__elements
         while self._couldGrow():
             newElements = self._grow()
             yield from newElements
 
-    def _isBiggerThan(self, index):
+    def _isBiggerThan(self, index: int) -> bool:
         return len(self.__elements) > index or self._couldGrow()
 
     def __fetchToIndex(self, index):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self):
+    def _grow(self) -> List[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
 
     class _Slice:
-        def __init__(self, theList, theSlice):
+        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice):
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop
             self.__step = theSlice.step or 1
 
-        def __iter__(self):
+        def __iter__(self) -> Iterator[T]:
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):
@@ -86,11 +97,11 @@ class PaginatedListBase:
                 else:
                     return
 
-        def __finished(self, index):
+        def __finished(self, index: int) -> bool:
             return self.__stop is not None and index >= self.__stop
 
 
-class PaginatedList(PaginatedListBase, Generic[T]):
+class PaginatedList(PaginatedListBase[T]):
     """
     This class abstracts the `pagination of the API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_.
 
@@ -121,12 +132,12 @@ class PaginatedList(PaginatedListBase, Generic[T]):
 
     def __init__(
         self,
-        contentClass,
-        requester,
-        firstUrl,
-        firstParams,
-        headers=None,
-        list_item="items",
+        contentClass: Type[T],
+        requester: Requester,
+        firstUrl: str,
+        firstParams: Any,
+        headers: Optional[Dict[str, str]] = None,
+        list_item: str = "items",
     ):
         super().__init__()
         self.__requester = requester
@@ -140,10 +151,10 @@ class PaginatedList(PaginatedListBase, Generic[T]):
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self.__totalCount = None
+        self.__totalCount: Optional[int] = None
 
     @property
-    def totalCount(self):
+    def totalCount(self) -> int:
         if not self.__totalCount:
             params = {} if self.__nextParams is None else self.__nextParams.copy()
             # set per_page = 1 so the totalCount is just the number of pages
@@ -167,18 +178,17 @@ class PaginatedList(PaginatedListBase, Generic[T]):
                     self.__totalCount = int(parse_qs(lastUrl)["page"][0])
                 else:
                     self.__totalCount = 0
-        return self.__totalCount
+        return self.__totalCount  # type: ignore
 
-    def _getLastPageUrl(self):
+    def _getLastPageUrl(self) -> Optional[str]:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers
         )
         links = self.__parseLinkHeader(headers)
-        lastUrl = links.get("last")
-        return lastUrl
+        return links.get("last")
 
     @property
-    def reversed(self):
+    def reversed(self) -> "PaginatedList[T]":
         r = PaginatedList(
             self.__contentClass,
             self.__requester,
@@ -199,13 +209,13 @@ class PaginatedList(PaginatedListBase, Generic[T]):
     def _couldGrow(self):
         return self.__nextUrl is not None
 
-    def _fetchNextPage(self):
+    def _fetchNextPage(self) -> List[T]:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
         data = data if data else []
 
-        self.__nextUrl = None
+        self.__nextUrl = None  # type: ignore
         if len(data) > 0:
             links = self.__parseLinkHeader(headers)
             if self._reversed:
@@ -228,7 +238,7 @@ class PaginatedList(PaginatedListBase, Generic[T]):
             return content[::-1]
         return content
 
-    def __parseLinkHeader(self, headers):
+    def __parseLinkHeader(self, headers: Dict[str, str]) -> Dict[str, str]:
         links = {}
         if "link" in headers:
             linkHeaders = headers["link"].split(", ")
@@ -239,7 +249,7 @@ class PaginatedList(PaginatedListBase, Generic[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page):
+    def get_page(self, page: int) -> List[T]:
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
