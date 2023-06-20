@@ -1,10 +1,12 @@
 from datetime import datetime
-from typing import Any, Dict, NamedTuple, List
+from typing import Any, Dict, NamedTuple, List, Union
 
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
+from github.WorkflowJob import WorkflowJob
 
 class TimingData(NamedTuple):
     billable: Dict[str, Dict[str, int]]
@@ -71,5 +73,8 @@ class WorkflowRun(CompletableGithubObject):
     @property
     def head_repository(self) -> Repository: ...
     def cancel(self) -> bool: ...
+    def jobs(
+        self, _filter: Union[str, _NotSetType] = ...
+    ) -> PaginatedList[WorkflowJob]: ...
     def rerun(self) -> bool: ...
     def timing(self) -> TimingData: ...
