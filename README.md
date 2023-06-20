@@ -47,7 +47,7 @@ for repo in g.get_user().get_repos():
 
 ## Documentation
 
-More information can be found on the [PyGitHub documentation site.](https://pygithub.readthedocs.io/en/latest/introduction.html)
+More information can be found on the [PyGitHub documentation site.](https://pygithub.readthedocs.io/en/stable/introduction.html)
 
 ## Development
 

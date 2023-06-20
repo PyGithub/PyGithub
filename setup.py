@@ -54,7 +54,7 @@ if __name__ == "__main__":
         author_email="vincent@vincent-jacques.net",
         url="https://github.com/pygithub/pygithub",
         project_urls={
-            "Documentation": "http://pygithub.readthedocs.io/en/latest/",
+            "Documentation": "http://pygithub.readthedocs.io/en/stable/",
             "Source": "https://github.com/pygithub/pygithub",
             "Tracker": "https://github.com/pygithub/pygithub/issues",
         },
