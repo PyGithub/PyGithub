@@ -110,7 +110,7 @@ class Authentication(Framework.BasicTestCase):
         self.assertFalse(installation_auth._is_expired)
         self.assertEqual(
             installation_auth._AppInstallationAuth__installation_authorization.expires_at,
-            datetime.datetime(2024, 11, 25, 1, 0, 2)
+            datetime.datetime(2024, 11, 25, 1, 0, 2),
         )
 
         # forward the clock so token expires
@@ -137,7 +137,7 @@ class Authentication(Framework.BasicTestCase):
             self.assertFalse(installation_auth._is_expired)
             self.assertEqual(
                 installation_auth._AppInstallationAuth__installation_authorization.expires_at,
-                datetime.datetime(2025, 11, 25, 1, 0, 2)
+                datetime.datetime(2025, 11, 25, 1, 0, 2),
             )
 
         # use the token
