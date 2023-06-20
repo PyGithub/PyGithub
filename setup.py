@@ -67,22 +67,30 @@ if __name__ == "__main__":
 
                 from github import Github
 
-                # using username and password
-                g = Github("user", "password")
+                # Authentication is defined via github.Auth
+                from github import Auth
 
-                # or using an access token
-                g = Github("access_token")
+                # using an access token
+                auth = Auth.Token("access_token")
+
+                # Public Web Github
+                g = Github(auth=auth)
+
+                # Github Enterprise with custom hostname
+                g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
             Then play with your Github objects::
 
                 for repo in g.get_user().get_repos():
                     print(repo.name)
                     repo.edit(has_wiki=False)
+                    # to see all the available attributes and methods
+                    print(dir(repo))
 
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""
+            See http://pygithub.readthedocs.io/en/stable/"""
         ),
         packages=["github"],
         package_data={"github": ["py.typed", "*.pyi"]},
