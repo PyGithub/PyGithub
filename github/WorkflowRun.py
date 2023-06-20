@@ -26,6 +26,7 @@ from collections import namedtuple
 import github.Artifact
 import github.GithubObject
 import github.PullRequest
+import github.WorkflowJob
 
 
 class WorkflowRun(github.GithubObject.CompletableGithubObject):
@@ -301,6 +302,28 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
+
+    def jobs(self, _filter=github.GithubObject.NotSet):
+        """
+        :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
+        :param _filter: string `latest`, or `all`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowJob.WorkflowJob`
+        """
+        assert _filter is github.GithubObject.NotSet or isinstance(
+            _filter, str
+        ), _filter
+
+        url_parameters = dict()
+        if _filter is not github.GithubObject.NotSet:
+            url_parameters["filter"] = _filter
+
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowJob.WorkflowJob,
+            self._requester,
+            self.jobs_url,
+            url_parameters,
+            list_item="jobs",
+        )
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
