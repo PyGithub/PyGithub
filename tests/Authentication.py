@@ -103,7 +103,46 @@ class Authentication(Framework.BasicTestCase):
         # test data copied from testAppAuthentication to test parity
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
+
+        # test token expiry
+        # token expires 2024-11-25 01:00:02
+        token = installation_auth.token
+        self.assertFalse(installation_auth._is_expired)
+        self.assertEqual(
+            installation_auth._AppInstallationAuth__installation_authorization.expires_at,
+            datetime.datetime(2024, 11, 25, 1, 0, 2)
+        )
+
+        # forward the clock so token expires
+        with mock.patch("github.Auth.datetime") as dt:
+            # just before expiry
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2024, 11, 25, 0, 59, 3, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertFalse(installation_auth._is_expired)
+
+            # just after expiry
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2024, 11, 25, 1, 0, 3, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertTrue(installation_auth._is_expired)
+
+            # expect refreshing the token
+            refreshed_token = installation_auth.token
+            self.assertNotEqual(refreshed_token, token)
+            self.assertFalse(installation_auth._is_expired)
+            self.assertEqual(
+                installation_auth._AppInstallationAuth__installation_authorization.expires_at,
+                datetime.datetime(2025, 11, 25, 1, 0, 2)
+            )
+
+        # use the token
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
 
     def testAppUserAuthentication(self):
         client_id = "removed client id"
