@@ -27,6 +27,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 import github.GithubObject
@@ -56,9 +57,9 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         return self._guid.value
 
     @property
-    def delivered_at(self) -> Optional[str]:
+    def delivered_at(self) -> Optional[datetime]:
         """
-        :type: string
+        :type: datetime
         """
         return self._delivered_at.value
 
@@ -128,7 +129,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._guid: Attribute[str] = NotSet
-        self._delivered_at: Attribute[int] = NotSet
+        self._delivered_at: Attribute[datetime] = NotSet
         self._redelivery: Attribute[bool] = NotSet
         self._duration: Attribute[float] = NotSet
         self._status: Attribute[str] = NotSet
@@ -145,7 +146,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         if "guid" in attributes:  # pragma no branch
             self._guid = self._makeStringAttribute(attributes["guid"])
         if "delivered_at" in attributes:  # pragma no branch
-            self._delivered_at = self._makeStringAttribute(attributes["delivered_at"])
+            self._delivered_at = self._makeDatetimeAttribute(attributes["delivered_at"])
         if "redelivery" in attributes:  # pragma no branch
             self._redelivery = self._makeBoolAttribute(attributes["redelivery"])
         if "duration" in attributes:  # pragma no branch
