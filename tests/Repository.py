@@ -939,7 +939,9 @@ class Repository(Framework.TestCase):
         delivery = self.repo.get_hook_delivery(257993, 12345)
         self.assertEqual(delivery.id, 12345)
         self.assertEqual(delivery.guid, "abcde-12345")
-        self.assertEqual(delivery.delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32))
+        self.assertEqual(
+            delivery.delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+        )
         self.assertEqual(delivery.redelivery, False)
         self.assertEqual(delivery.duration, 0.27)
         self.assertEqual(delivery.status, "OK")
@@ -965,7 +967,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(deliveries), 1)
         self.assertEqual(deliveries[0].id, 12345)
         self.assertEqual(deliveries[0].guid, "abcde-12345")
-        self.assertEqual(deliveries[0].delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32))
+        self.assertEqual(
+            deliveries[0].delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+        )
         self.assertEqual(deliveries[0].redelivery, False)
         self.assertEqual(deliveries[0].duration, 0.27)
         self.assertEqual(deliveries[0].status, "OK")
