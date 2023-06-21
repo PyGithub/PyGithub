@@ -38,7 +38,7 @@ class Github:
         timeout: int = ...,
         user_agent: str = ...,
         per_page: int = ...,
-        verify: bool = ...,
+        verify: Union[bool, str] = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
         auth: Optional[Auth] = ...,
@@ -95,6 +95,8 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
+    # argument slug is deprecated, not included here
+    def get_app(self): ...
     def get_oauth_application(
         self, client_id: str, client_secret: str
     ) -> ApplicationOAuth: ...
