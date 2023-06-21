@@ -384,23 +384,24 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/public_members/{public_member._identity}"
         )
 
-    def create_fork(self, repo):
+    def create_fork(
+        self,
+        repo,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param repo: :class:`github.Repository.Repository`
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        url_parameters = {
-            "org": self.login,
-        }
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            f"/repos/{repo.owner.login}/{repo.name}/forks",
-            parameters=url_parameters,
-        )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
+        return repo.create_fork(
+            self,
+            name=name,
+            default_branch_only=default_branch_only,
         )
 
     def create_repo_from_template(
@@ -517,6 +518,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        allow_update_branch=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -536,6 +538,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param allow_update_branch: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -587,6 +590,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert allow_update_branch is github.GithubObject.NotSet or isinstance(
+            allow_update_branch, bool
+        ), allow_update_branch
         post_parameters = {
             "name": name,
         }
@@ -622,6 +628,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if allow_update_branch is not github.GithubObject.NotSet:
+            post_parameters["allow_update_branch"] = allow_update_branch
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/repos",
@@ -867,6 +875,40 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Hook.Hook, self._requester, f"{self.url}/hooks", None
+        )
+
+    def get_hook_delivery(
+        self, hook_id: int, delivery_id: int
+    ) -> github.HookDelivery.HookDelivery:
+        """
+        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
+        )
+        return github.HookDelivery.HookDelivery(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_hook_deliveries(
+        self, hook_id: int
+    ) -> github.PaginatedList.PaginatedList[github.HookDelivery.HookDeliverySummary]:
+        """
+        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
+        :param hook_id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+        return github.PaginatedList.PaginatedList(
+            github.HookDelivery.HookDeliverySummary,
+            self._requester,
+            f"{self.url}/hooks/{hook_id}/deliveries",
+            None,
         )
 
     def get_issues(

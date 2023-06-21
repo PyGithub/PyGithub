@@ -495,18 +495,24 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def create_fork(self, repo):
+    @staticmethod
+    def create_fork(
+        repo,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <http://docs.github.com/en/rest/reference/repos#forks>`_
         :param repo: :class:`github.Repository.Repository`
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"/repos/{repo.owner.login}/{repo.name}/forks"
-        )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
+        return repo.create_fork(
+            organization=github.GithubObject.NotSet,
+            name=name,
+            default_branch_only=default_branch_only,
         )
 
     def create_repo_from_template(
@@ -1082,7 +1088,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         direction=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /user/repos <http://docs.github.com/en/rest/reference/repos>`
+        :calls: `GET /user/repos <http://docs.github.com/en/rest/reference/repos>`_
         :param visibility: string
         :param affiliation: string
         :param type: string
@@ -1223,7 +1229,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return status == 200
 
-    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+    def mark_notifications_as_read(
+        self, last_read_at=datetime.datetime.now(datetime.timezone.utc)
+    ):
         """
         :calls: `PUT /notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         :param last_read_at: datetime
@@ -1293,7 +1301,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def accept_invitation(self, invitation):
         """
-        :calls: `PATCH /user/repository_invitations/{invitation_id} <https://docs.github.com/en/rest/reference/repos/invitations#>`
+        :calls: `PATCH /user/repository_invitations/{invitation_id} <https://docs.github.com/en/rest/reference/repos/invitations#>`_
         :param invitation: :class:`github.Invitation.Invitation` or int
         :rtype: None
         """

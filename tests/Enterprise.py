@@ -33,9 +33,7 @@ from . import Framework
 # Replay data for this test case is forged, because I don't have access to a real Github Enterprise install
 class Enterprise(Framework.BasicTestCase):
     def testHttps(self):
-        g = github.Github(
-            self.login, self.password, base_url="https://my.enterprise.com"
-        )
+        g = github.Github(auth=self.login, base_url="https://my.enterprise.com")
         self.assertListKeyEqual(
             g.get_user().get_repos(),
             lambda r: r.name,
@@ -60,9 +58,7 @@ class Enterprise(Framework.BasicTestCase):
         )
 
     def testHttp(self):
-        g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com"
-        )
+        g = github.Github(auth=self.login, base_url="http://my.enterprise.com")
         self.assertListKeyEqual(
             g.get_user().get_repos(),
             lambda r: r.name,
@@ -88,16 +84,12 @@ class Enterprise(Framework.BasicTestCase):
 
     def testUnknownUrlScheme(self):
         with self.assertRaises(AssertionError) as raisedexp:
-            github.Github(
-                self.login, self.password, base_url="foobar://my.enterprise.com"
-            )
+            github.Github(auth=self.login, base_url="foobar://my.enterprise.com")
         self.assertEqual(raisedexp.exception.args[0], "Unknown URL scheme")
 
     def testLongUrl(self):
         g = github.Github(
-            self.login,
-            self.password,
-            base_url="http://my.enterprise.com/path/to/github",
+            auth=self.login, base_url="http://my.enterprise.com/path/to/github"
         )
         repos = g.get_user().get_repos()
         self.assertListKeyEqual(
@@ -125,9 +117,7 @@ class Enterprise(Framework.BasicTestCase):
         self.assertEqual(repos[0].owner.name, "Vincent Jacques")
 
     def testSpecificPort(self):
-        g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com:8080"
-        )
+        g = github.Github(auth=self.login, base_url="http://my.enterprise.com:8080")
         self.assertListKeyEqual(
             g.get_user().get_repos(),
             lambda r: r.name,

@@ -1,10 +1,11 @@
-import sys
 import time  # NOQA
 
-import jwt
 import requests  # NOQA
+from urllib3.exceptions import InsecureRequestWarning
 
 import github
+from github import Consts
+from github.Auth import AppInstallationAuth
 
 from . import Framework
 
@@ -43,59 +44,94 @@ class GithubIntegration(Framework.BasicTestCase):
         self.repo_installation_id = 30614431
         self.user_installation_id = 30614431
 
-    def testCreateJWT(self):
-        self.origin_time = sys.modules["time"].time
-        sys.modules["time"].time = lambda: 1550055331.7435968
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
+    def testDeprecatedAppAuth(self):
+        # Replay data copied from testGetInstallations to test authentication only
+        with self.assertWarns(DeprecationWarning) as warning:
+            github_integration = github.GithubIntegration(
+                integration_id=APP_ID, private_key=PRIVATE_KEY
+            )
+        installations = github_integration.get_installations()
+        self.assertEqual(len(list(installations)), 2)
+        self.assertWarning(
+            warning,
+            "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and "
+            "jwt_algorithm are deprecated, please use auth=github.Auth.AppAuth(...) "
+            "instead",
         )
-        token = github_integration.create_jwt()
-        payload = jwt.decode(
-            token,
-            key=PUBLIC_KEY,
-            algorithms=["RS256"],
-            options={"verify_exp": False},
-        )
-        self.assertDictEqual(
-            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
-        )
-        sys.modules["time"].time = self.origin_time
 
-    def testCreateJWTWithExpiration(self):
-        self.origin_time = sys.modules["time"].time
-        sys.modules["time"].time = lambda: 1550055331.7435968
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID,
-            private_key=PRIVATE_KEY,
-            jwt_expiry=120,
-            jwt_issued_at=-30,
-        )
-        token = github_integration.create_jwt(60)
-        payload = jwt.decode(
-            token,
-            key=PUBLIC_KEY,
-            algorithms=["RS256"],
-            options={"verify_exp": False},
-        )
-        self.assertDictEqual(
-            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
-        )
-        sys.modules["time"].time = self.origin_time
+    def testRequiredAppAuth(self):
+        # GithubIntegration requires AppAuth authentication.
+        for auth in [self.oauth_token, self.jwt, self.login]:
+            with self.assertRaises(AssertionError) as r:
+                github.GithubIntegration(auth=auth)
+            self.assertEqual(
+                str(r.exception),
+                f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}",
+            )
+
+    def testAppAuth(self):
+        # Replay data copied from testDeprecatedAppAuth to test parity
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        installations = github_integration.get_installations()
+        self.assertEqual(len(list(installations)), 2)
+
+    def testNoneAppAuth(self):
+        with self.assertRaises(AssertionError):
+            github.GithubIntegration(auth=None)
 
     def testGetInstallations(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         installations = github_integration.get_installations()
 
         self.assertEqual(len(list(installations)), 2)
         self.assertEqual(installations[0].id, self.org_installation_id)
         self.assertEqual(installations[1].id, self.repo_installation_id)
 
+    def testGetGithubForInstallation(self):
+        # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
+        # we ignore InsecureRequestWarning from urllib3.connectionpool
+        with self.ignoreWarning(
+            category=InsecureRequestWarning, module="urllib3.connectionpool"
+        ):
+            auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+            github_integration = github.GithubIntegration(
+                auth=auth,
+                base_url="https://api.github.com",
+                timeout=Consts.DEFAULT_TIMEOUT + 10,
+                user_agent="PyGithub/Python-Test",
+                per_page=Consts.DEFAULT_PER_PAGE + 10,
+                verify=False,
+                retry=3,
+                pool_size=10,
+            )
+
+            g = github_integration.get_github_for_installation(36541767)
+
+            self.assertIsInstance(g._Github__requester.auth, AppInstallationAuth)
+            self.assertEqual(
+                g._Github__requester._Requester__base_url, "https://api.github.com"
+            )
+            self.assertEqual(
+                g._Github__requester._Requester__timeout, Consts.DEFAULT_TIMEOUT + 10
+            )
+            self.assertEqual(
+                g._Github__requester._Requester__userAgent, "PyGithub/Python-Test"
+            )
+            self.assertEqual(
+                g._Github__requester.per_page, Consts.DEFAULT_PER_PAGE + 10
+            )
+            self.assertEqual(g._Github__requester._Requester__verify, False)
+            self.assertEqual(g._Github__requester._Requester__retry, 3)
+            self.assertEqual(g._Github__requester._Requester__pool_size, 10)
+
+            repo = g.get_repo("PyGithub/PyGithub")
+            self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+
     def testGetAccessToken(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
 
         # Get repo installation access token
         repo_installation_authorization = github_integration.get_access_token(
@@ -151,25 +187,22 @@ class GithubIntegration(Framework.BasicTestCase):
         )
 
     def testGetUserInstallation(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         installation = github_integration.get_user_installation(username="ammarmallik")
 
         self.assertEqual(installation.id, self.user_installation_id)
 
     def testGetOrgInstallation(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         installation = github_integration.get_org_installation(org="GithubApp-Test-Org")
 
         self.assertEqual(installation.id, self.org_installation_id)
 
     def testGetRepoInstallation(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         installation = github_integration.get_repo_installation(
             owner="ammarmallik", repo="test-runner"
         )
@@ -177,9 +210,8 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.repo_installation_id)
 
     def testGetAppInstallation(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         installation = github_integration.get_app_installation(
             installation_id=self.org_installation_id
         )
@@ -187,45 +219,40 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(installation.id, self.org_installation_id)
 
     def testGetInstallationNotFound(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.UnknownObjectException) as raisedexp:
             github_integration.get_org_installation(org="GithubApp-Test-Org-404")
 
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetInstallationWithExpiredJWT(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_org_installation(org="GithubApp-Test-Org")
 
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenWithExpiredJWT(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id)
 
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenForNoInstallation(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.UnknownObjectException) as raisedexp:
             github_integration.get_access_token(40432121)
 
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAccessTokenWithInvalidPermissions(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(
                 self.repo_installation_id, permissions={"test-permissions": "read"}
@@ -234,12 +261,19 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetAccessTokenWithInvalidData(self):
-        github_integration = github.GithubIntegration(
-            integration_id=APP_ID, private_key=PRIVATE_KEY
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(
                 self.repo_installation_id, permissions="invalid_data"
             )
 
         self.assertEqual(raisedexp.exception.status, 400)
+
+    def testGetApp(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        app = github_integration.get_app()
+
+        self.assertEqual(app.name, "PyGithubTest")
+        self.assertEqual(app.url, "/apps/pygithubtest")

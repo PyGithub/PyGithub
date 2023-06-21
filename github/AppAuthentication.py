@@ -21,21 +21,24 @@
 ################################################################################
 
 
-class AppAuthentication:
+from typing import Dict, Optional, Union
+
+import deprecated
+
+from github.Auth import AppAuth, AppInstallationAuth
+
+
+@deprecated.deprecated("Use app.Auth.AppInstallationAuth instead")
+class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,
-        app_id,
-        private_key,
-        installation_id,
-        token_permissions=None,
+        app_id: Union[int, str],
+        private_key: str,
+        installation_id: int,
+        token_permissions: Optional[Dict[str, str]] = None,
     ):
-        assert isinstance(app_id, (int, str)), app_id
-        assert isinstance(private_key, str)
-        assert isinstance(installation_id, int), installation_id
-        assert token_permissions is None or isinstance(
-            token_permissions, dict
-        ), token_permissions
-        self.app_id = app_id
-        self.private_key = private_key
-        self.installation_id = installation_id
-        self.token_permissions = token_permissions
+        super().__init__(
+            app_auth=AppAuth(app_id, private_key),
+            installation_id=installation_id,
+            token_permissions=token_permissions,
+        )

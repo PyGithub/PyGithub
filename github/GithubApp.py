@@ -109,6 +109,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._slug)
         return self._slug.value
 
     @property
