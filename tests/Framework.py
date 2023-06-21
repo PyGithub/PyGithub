@@ -348,7 +348,6 @@ class BasicTestCase(unittest.TestCase):
     @contextlib.contextmanager
     def ignoreWarning(self, category=Warning, module=""):
         with warnings.catch_warnings():
-            # we ignore InsecureRequestWarning from urllib3.connectionpool
             warnings.filterwarnings("ignore", category=category, module=module)
             yield
 
