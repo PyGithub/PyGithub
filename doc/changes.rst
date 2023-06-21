@@ -9,33 +9,36 @@ Version 1.59.0 (June XX, 2023)
 
 **Important**
 
-This release introduces new way of authentication. All authentication-related arguments `github.Github(login_or_token=…, password=…, jwt=…, app_auth=…)`
-and `github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)` are replaced by a single `auth=…` argument.
-Module `github.Auth` provides classes for all supported ways of authentication: `Login`, `Token`, `AppAuth`, `AppAuthToken`, `AppInstallationAuth`, `AppUserAuth`.
+This release introduces new way of authentication. All authentication-related arguments ``github.Github(login_or_token=…, password=…, jwt=…, app_auth=…)``
+and ``github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`` are replaced by a single ``auth=…`` argument.
+Module ``github.Auth`` provides classes for all supported ways of authentication: ``Login``, ``Token``, ``AppAuth``, ``AppAuthToken``, ``AppInstallationAuth``, ``AppUserAuth``.
 Old arguments are deprecated but continue to work. They are scheduled for removal for version 2.0 release.
+
+This project has decided to move all typing information from ``.pyi`` files into the respective ``.py`` source files.
+This will happen gradually over time.
 
 **Breaking Changes**
 
-* The `position` argument in `github.PullRequest.create_review_comment(position=…)` has been renamed to `line`.
-  This breaks user code that calls `create_review_comment` with keyword argument `position`. Call with `line=…` instead.
+* The ``position`` argument in ``github.PullRequest.create_review_comment(position=…)`` has been renamed to ``line``.
+  This breaks user code that calls ``create_review_comment`` with keyword argument ``position``. Call with ``line=…`` instead.
   Calling this method with positional arguments is not breaking.
-* The `jwt_expiry`, `jwt_issued_at` and `jwt_algorithm` arguments in `github.GithubIntegration()` have changed their position.
-  User code calling `github.GithubIntegration(…)` with these arguments as positional arguments breaks.
-  Please use keyword arguments: `github.GithubIntegration(…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`.
-* The `since` argument in `github.PullRequest.get_review_comments(…)` has changed position.`
-  User code calling `github.PullRequest.get_review_comments(…)` with this argument as positional argument breaks.
-  Please use keyword argument: `github.PullRequest.get_review_comments(since=…)`.
+* The ``jwt_expiry``, ``jwt_issued_at`` and ``jwt_algorithm`` arguments in ``github.GithubIntegration()`` have changed their position.
+  User code calling ``github.GithubIntegration(…)`` with these arguments as positional arguments breaks.
+  Please use keyword arguments: ``github.GithubIntegration(…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)``.
+* The ``since`` argument in ``github.PullRequest.get_review_comments(…)`` has changed position.``
+  User code calling ``github.PullRequest.get_review_comments(…)`` with this argument as positional argument breaks.
+  Please use keyword argument: ``github.PullRequest.get_review_comments(since=…)``.
 
 **Deprecations**
 
-* The use of `github.Github(login_or_token=…)` is deprecated, use `github.Github(auth=github.Auth.Login(…))` or `github.Github(auth=github.Auth.Token(…))` instead.
-* The use of `github.Github(password=…)` is deprecated, use `github.Github(auth=github.Auth.Login(…))` instead.
-* The use of `github.Github(jwt=…)` is deprecated, use `github.Github(auth=github.AppAuth(…))` or `github.Github(auth=github.AppAuthToken(…))` instead.
-* The use of `github.Github(app_auth=…)` is deprecated, use `github.Github(auth=github.Auth.AppInstallationAuth(…))` instead.
-* The use of `github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)` is deprecated, use `github.GithubIntegration(auth=github.Auth.AppAuth(…))` instead.
-* The use of `github.GithubIntegration.create_jwt` is deprecated, use `github.Github(auth=github.Auth.AppAuth)`, `github.Auth.AppAuth.token` or `github.Auth.AppAuth.create_jwt(expiration)` instead.
-* The use of `AppAuthentication` is deprecated, use `github.Auth.AppInstallationAuth` instead.
-* The use of `github.Github.get_app()` without providing argument `slug` is deprecated, use `github.GithubIntegration(auth=github.Auth.AppAuth(…)).get_app()`.
+* The use of ``github.Github(login_or_token=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` or ``github.Github(auth=github.Auth.Token(…))`` instead.
+* The use of ``github.Github(password=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` instead.
+* The use of ``github.Github(jwt=…)`` is deprecated, use ``github.Github(auth=github.AppAuth(…))`` or ``github.Github(auth=github.AppAuthToken(…))`` instead.
+* The use of ``github.Github(app_auth=…)`` is deprecated, use ``github.Github(auth=github.Auth.AppInstallationAuth(…))`` instead.
+* The use of ``github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`` is deprecated, use ``github.GithubIntegration(auth=github.Auth.AppAuth(…))`` instead.
+* The use of ``github.GithubIntegration.create_jwt`` is deprecated, use ``github.Github(auth=github.Auth.AppAuth)``, ``github.Auth.AppAuth.token`` or ``github.Auth.AppAuth.create_jwt(expiration)`` instead.
+* The use of ``AppAuthentication`` is deprecated, use ``github.Auth.AppInstallationAuth`` instead.
+* The use of ``github.Github.get_app()`` without providing argument ``slug`` is deprecated, use ``github.GithubIntegration(auth=github.Auth.AppAuth(…)).get_app()``.
 
 **Bug Fixes**
 
