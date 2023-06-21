@@ -106,7 +106,7 @@ class Github:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
         :param password: string deprecated, use auth=github.Auth.Login(...) instead
-        :param jwt: string deprecated, use auth=github.Auth.AppAuthToken(...) instead
+        :param jwt: string deprecated, use auth=github.Auth.AppAuth(...) or auth=github.Auth.AppAuthToken(...) instead
         :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
         :param base_url: string
         :param timeout: integer

@@ -22,13 +22,15 @@ class GithubIntegration:
     # keep non-deprecated arguments in-sync with Requester
     # v2: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
     # v2: move auth to the front of arguments
-    # v2: add * before first argument so all arguments must be named,
+    # v2: move * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
+    #     added here to force named parameters because new parameters have been added
     def __init__(
         self,
         integration_id=None,
         private_key=None,
         base_url=Consts.DEFAULT_BASE_URL,
+        *,
         timeout=Consts.DEFAULT_TIMEOUT,
         user_agent=Consts.DEFAULT_USER_AGENT,
         per_page=Consts.DEFAULT_PER_PAGE,
@@ -151,7 +153,7 @@ class GithubIntegration:
         )
 
     @deprecated.deprecated(
-        "Use github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
+        "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
     def create_jwt(self, expiration=None):
         """
