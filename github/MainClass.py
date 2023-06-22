@@ -47,9 +47,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import pickle
 import warnings
+from datetime import datetime
 from typing import List
 
 import urllib3
@@ -440,12 +440,10 @@ class Github:
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")

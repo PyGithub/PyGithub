@@ -38,8 +38,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import typing
+from datetime import datetime, timezone
 from operator import itemgetter
 from typing import (
     TYPE_CHECKING,
@@ -229,7 +229,7 @@ class GithubObject:
         return GithubObject.__makeTransformedAttribute(
             value,
             int,
-            lambda t: datetime.datetime.fromtimestamp(t, tz=datetime.timezone.utc),
+            lambda t: datetime.fromtimestamp(t, tz=timezone.utc),
         )
 
     @staticmethod
