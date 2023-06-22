@@ -80,7 +80,7 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
         self.assertWarnings(
             warning,
-            "Call to deprecated class AppAuthentication. (Use app.Auth.AppInstallationAuth instead)",
+            "Call to deprecated class AppAuthentication. (Use github.Auth.AppInstallationAuth instead)",
             "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
         )
 
