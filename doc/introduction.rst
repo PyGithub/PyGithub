@@ -25,7 +25,7 @@ First create a Github instance::
     g = Github(auth=auth)
 
     # Github Enterprise with custom hostname
-    g = Github(base_url="https://{hostname}/api/v3", auth=auth)
+    g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
 Then play with your Github objects::
 

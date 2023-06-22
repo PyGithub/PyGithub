@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
 ![CI](https://github.com/PyGithub/PyGithub/workflows/CI/badge.svg)
-[![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://pygithub.readthedocs.io/en/latest/?badge=latest)
+[![readthedocs](https://img.shields.io/badge/docs-stable-brightgreen.svg?style=flat)](https://pygithub.readthedocs.io/en/stable/?badge=stable)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
 [![Slack](https://img.shields.io/badge/Slack%20channel-%20%20-blue.svg)](https://join.slack.com/t/pygithub-project/shared_invite/zt-duj89xtx-uKFZtgAg209o6Vweqm8xeQ)
 [![Open Source Helpers](https://www.codetriage.com/pygithub/pygithub/badges/users.svg)](https://www.codetriage.com/pygithub/pygithub)
@@ -47,7 +47,7 @@ for repo in g.get_user().get_repos():
 
 ## Documentation
 
-More information can be found on the [PyGitHub documentation site.](https://pygithub.readthedocs.io/en/latest/introduction.html)
+More information can be found on the [PyGitHub documentation site.](https://pygithub.readthedocs.io/en/stable/introduction.html)
 
 ## Development
 

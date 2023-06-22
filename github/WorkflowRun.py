@@ -28,7 +28,14 @@ import github.Artifact
 import github.GitCommit
 import github.PullRequest
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+import github.WorkflowJob
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+)
 from github.PaginatedList import PaginatedList
 
 
@@ -283,6 +290,26 @@ class WorkflowRun(CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
+
+    def jobs(
+        self, _filter: Opt[str] = NotSet
+    ) -> "github.PaginatedList.PaginatedList[github.WorkflowJob.WorkflowJob]":
+        """
+        :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
+        :param _filter: string `latest`, or `all`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowJob.WorkflowJob`
+        """
+        assert isinstance(_filter, (_NotSetType, str)), _filter
+
+        url_parameters = NotSet.remove_unset_items({"filter": _filter})
+
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowJob.WorkflowJob,
+            self._requester,
+            self.jobs_url,
+            url_parameters,
+            list_item="jobs",
+        )
 
     def _initAttributes(self):
         self._id = NotSet

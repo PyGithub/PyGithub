@@ -344,6 +344,7 @@ class Requester:
     __hostname: str
     __authorizationHeader: Optional[str]
 
+    # keep arguments in-sync with github.MainClass and GithubIntegration
     def __init__(
         self,
         auth: Optional["Auth"],
@@ -351,7 +352,7 @@ class Requester:
         timeout: int,
         user_agent: str,
         per_page: int,
-        verify: bool,
+        verify: Union[bool, str],
         retry: Optional[Union[int, Retry]],
         pool_size: Optional[int],
     ):
@@ -395,6 +396,24 @@ class Requester:
             self.__auth.withRequester(self)
 
     @property
+    def kwargs(self):
+        """
+        Returns arguments required to recreate this Requester with Requester.__init__, as well as
+        with MainClass.__init__ and GithubIntegration.__init__.
+        :return:
+        """
+        return dict(
+            auth=self.__auth,
+            base_url=self.__base_url,
+            timeout=self.__timeout,
+            user_agent=self.__userAgent,
+            per_page=self.per_page,
+            verify=self.__verify,
+            retry=self.__retry,
+            pool_size=self.__pool_size,
+        )
+
+    @property
     def base_url(self) -> str:
         return self.__base_url
 
@@ -406,18 +425,11 @@ class Requester:
         """
         Create a new requester instance with identical configuration but the given authentication method.
         :param auth: authentication method
-        :return: new Reqester implementation
+        :return: new Requester implementation
         """
-        return Requester(
-            auth=auth,
-            base_url=self.__base_url,
-            timeout=self.__timeout,
-            user_agent=self.__userAgent,
-            per_page=self.per_page,
-            verify=self.__verify,
-            retry=self.__retry,
-            pool_size=self.__pool_size,
-        )
+        kwargs = self.kwargs
+        kwargs.update(auth=auth)
+        return Requester(**kwargs)
 
     def requestJsonAndCheck(
         self,
@@ -426,7 +438,7 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
-    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+    ) -> Tuple[Dict[str, Any], Any]:
         return self.__check(
             *self.requestJson(
                 verb, url, parameters, headers, input, self.__customConnection(url)
@@ -469,7 +481,7 @@ class Requester:
         status: int,
         responseHeaders: Dict[str, Any],
         output: str,
-    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    ) -> Tuple[Dict[str, Any], Any]:
         data = self.__structuredFromJson(output)
         if status >= 400:
             raise self.__createException(status, responseHeaders, data)
