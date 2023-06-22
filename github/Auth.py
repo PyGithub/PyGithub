@@ -307,7 +307,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             self.__installation_authorization.expires_at
             - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
         )
-        return token_expires_at < datetime.now(timezone.utc)
+        # to be fixed by https://github.com/PyGithub/PyGithub/pull/1831
+        return token_expires_at < datetime.now(timezone.utc).replace(tzinfo=None)
 
     def _get_installation_authorization(self) -> InstallationAuthorization:
         assert (
