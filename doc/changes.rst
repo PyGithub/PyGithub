@@ -4,7 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.59.0 (June XX, 2023)
+Version 1.59.0 (June 22, 2023)
 -----------------------------------
 
 **Important**
@@ -42,6 +42,7 @@ This will happen gradually over time.
 
 **Bug Fixes**
 
+* Test and fix UTC issue with AppInstallationAuth (#2561) (ff3b80f8)
 * Make Requester.__createException robust against missing message and body (#2159) (7be3f763)
 * Fix auth issues with `Installation.get_repos` (#2547) (64075120)
 * Fix broken urls in docstrings (#2393) (f82ad61c)
@@ -81,6 +82,7 @@ This will happen gradually over time.
 
 **Maintenance**
 
+* Add type stub for MainClass.get_project_column (#2502) (d514222c)
 * Sync GithubIntegration __init__ arguments with github.Github (#2556) (ea45237d)
 * Update MAINTAINERS (#2545) (f4e9dcb3)
 * Link to stable docs, update introduction in package used by pypi, move auth arg front (#2557) (006766f9)
