@@ -293,17 +293,16 @@ class WorkflowRun(CompletableGithubObject):
 
     def jobs(
         self, _filter: Opt[str] = NotSet
-    ) -> "github.PaginatedList.PaginatedList[github.WorkflowJob.WorkflowJob]":
+    ) -> "PaginatedList[github.WorkflowJob.WorkflowJob]":
         """
         :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
         :param _filter: string `latest`, or `all`
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowJob.WorkflowJob`
         """
         assert isinstance(_filter, (_NotSetType, str)), _filter
 
         url_parameters = NotSet.remove_unset_items({"filter": _filter})
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.WorkflowJob.WorkflowJob,
             self._requester,
             self.jobs_url,
