@@ -4,12 +4,107 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.59.0 (June 22, 2023)
+-----------------------------------
+
+**Important**
+
+This release introduces new way of authentication. All authentication-related arguments ``github.Github(login_or_token=…, password=…, jwt=…, app_auth=…)``
+and ``github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`` are replaced by a single ``auth=…`` argument.
+Module ``github.Auth`` provides classes for all supported ways of authentication: ``Login``, ``Token``, ``AppAuth``, ``AppAuthToken``, ``AppInstallationAuth``, ``AppUserAuth``.
+Old arguments are deprecated but continue to work. They are scheduled for removal for version 2.0 release.
+
+This project has decided to move all typing information from ``.pyi`` files into the respective ``.py`` source files.
+This will happen gradually over time.
+
+**Breaking Changes**
+
+* The ``position`` argument in ``github.PullRequest.create_review_comment(position=…)`` has been renamed to ``line``.
+  This breaks user code that calls ``create_review_comment`` with keyword argument ``position``. Call with ``line=…`` instead.
+  Calling this method with positional arguments is not breaking.
+* The ``jwt_expiry``, ``jwt_issued_at`` and ``jwt_algorithm`` arguments in ``github.GithubIntegration()`` have changed their position.
+  User code calling ``github.GithubIntegration(…)`` with these arguments as positional arguments breaks.
+  Please use keyword arguments: ``github.GithubIntegration(…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)``.
+* The ``since`` argument in ``github.PullRequest.get_review_comments(…)`` has changed position.``
+  User code calling ``github.PullRequest.get_review_comments(…)`` with this argument as positional argument breaks.
+  Please use keyword argument: ``github.PullRequest.get_review_comments(since=…)``.
+
+**Deprecations**
+
+* The use of ``github.Github(login_or_token=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` or ``github.Github(auth=github.Auth.Token(…))`` instead.
+* The use of ``github.Github(password=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` instead.
+* The use of ``github.Github(jwt=…)`` is deprecated, use ``github.Github(auth=github.AppAuth(…))`` or ``github.Github(auth=github.AppAuthToken(…))`` instead.
+* The use of ``github.Github(app_auth=…)`` is deprecated, use ``github.Github(auth=github.Auth.AppInstallationAuth(…))`` instead.
+* The use of ``github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`` is deprecated, use ``github.GithubIntegration(auth=github.Auth.AppAuth(…))`` instead.
+* The use of ``github.GithubIntegration.create_jwt`` is deprecated, use ``github.Github(auth=github.Auth.AppAuth)``, ``github.Auth.AppAuth.token`` or ``github.Auth.AppAuth.create_jwt(expiration)`` instead.
+* The use of ``AppAuthentication`` is deprecated, use ``github.Auth.AppInstallationAuth`` instead.
+* The use of ``github.Github.get_app()`` without providing argument ``slug`` is deprecated, use ``github.GithubIntegration(auth=github.Auth.AppAuth(…)).get_app()``.
+
+**Bug Fixes**
+
+* Test and fix UTC issue with AppInstallationAuth (#2561) (ff3b80f8)
+* Make Requester.__createException robust against missing message and body (#2159) (7be3f763)
+* Fix auth issues with `Installation.get_repos` (#2547) (64075120)
+* Fix broken urls in docstrings (#2393) (f82ad61c)
+* Raise error on unsupported redirects, log supported redirects (#2524) (17cd0b79)
+* Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
+* Add expiration argument back to GithubIntegration.create_jwt (#2439) (822fc05c)
+* Add crypto extras to pyjwt, which pulls in cryptogaphy package (#2443) (554b2b28)
+* Remove RLock from Requester (#2446) (45f3d723)
+* Move CI to Python 3.11 release and 3.12 dev (#2434) (e414c322)
+* Pass Requester base URL to integration (#2420) (bdceae2f)
+
+**Improvements**
+
+* Add Webhook Deliveries (#2508) (517ad336)
+* Add support for workflow jobs and steps (#1951) (804c3107)
+* Add support for get_app() with App authentication (#2549) (6d4b6d14)
+* Allow multiline comments in PullRequest (#2540) (6a21761e)
+* Implement `AppUserAuth` for Github App user tokens (#2546) (f291a368)
+* Add support for environments (#2223) (0384e2fd)
+* Add support for new RepositoryAdvisories API :tada: (#2483) (daf62bd4)
+* Make `MainClass.get_app` return completed `GithubApp` when slug is given (#2543) (84912a67)
+* Add authentication classes, move auth logic there (#2528) (fc2d0e15)
+* Add sort order and direction for getting comments (#2544) (a8e7c423)
+* Add `name` filter to `Repository.get_artifacts()` (#2459) (9f52e948)
+* Add `name`, `display_title` and `path` attributes to `WorkflowRun` (#2397) (10816389)
+* Add new `create_fork` arguments (#2493) (b94a83cb)
+* add `ref` to Deployment (#2489) (e8075c41)
+* Add query `check_suite_id` integer to `Workflow.get_runs` (#2466) (a4854519)
+* Add `generate_release_notes` parameter to `create_git_release` and `create_git_tag_and_release` (#2417) (49b3ae16)
+* Add example for Pull Request comments to documentation (#2390) (c2f12bdc)
+* Add allow_auto_merge support to Repository (#2477) (8c4b9465)
+* Add `artifact_id` argument to `Repository.get_artifact()` (#2458) (4fa0a5f3)
+* Add missing attributes to Branch (#2512) (e296dbdb)
+* Add allow_update_branch option to Organization (#2465) (bab4180f)
+* Add support for Issue.state_reason #2370 (#2392) (5aa544a1)
+* Add parameters to Repository.get_workflow_runs (#2408) (4198dbfb)
+
+**Maintenance**
+
+* Add type stub for MainClass.get_project_column (#2502) (d514222c)
+* Sync GithubIntegration __init__ arguments with github.Github (#2556) (ea45237d)
+* Update MAINTAINERS (#2545) (f4e9dcb3)
+* Link to stable docs, update introduction in package used by pypi, move auth arg front (#2557) (006766f9)
+* Merge PaginatedList.pyi back to source (#2555) (cb50dec5)
+* Merge GithubObject.pyi/Requester.pyi stubs back to source (#2463) (b6258f4b)
+* [CI] Moving linting into separate workflow (#2522) (52fc1077)
+* Merging 1.58.x patch release notes into master (#2525) (217d4241)
+* Merge AppAuthentication.pyi to source (#2519) (8e8cfb30)
+* Merge GithubException.pyi stubs back to source (#2464) (03a2f696)
+* Add missing fields from `GithubCredentials.py` to CONTRIBUTING.md (#2482) (297317ba)
+* Update docstring and typing for allow_forking and allow_update_branch (Repository) (#2529) (600217f0)
+* Bump actions/checkout from 2 to 3.1.0 (#2327) (300c5015)
+* RTD: install current project (def5223c)
+* Add current dir sys.path as well (9c96faa7)
+* Use use_scm_version to get current version from git tag (#2429) (3ea91a3a)
+
 Version 1.58.2 (May 09, 2023)
 -----------------------------------
 
 **Bug Fixes**
 
-- Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
+* Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
 
 Version 1.58.1 (March 18, 2023)
 -----------------------------------
@@ -30,11 +125,11 @@ Version 1.58.0 (February 19, 2023)
 
 **Bug Fixes & Improvements**
 
-- Add unarchiving support @Tsuesun (#2391)
-- Support full GitHub app authentication @dblanchette (#1986)
-- Continue the PR #1899 @Felixoid (#2386)
-- feat: add allow\_forking to Repository @IbrahimAH (#2380)
-- Add code scanning alerts @eric-nieuwland (#2227)
+* Add unarchiving support @Tsuesun (#2391)
+* Support full GitHub app authentication @dblanchette (#1986)
+* Continue the PR #1899 @Felixoid (#2386)
+* feat: add allow\_forking to Repository @IbrahimAH (#2380)
+* Add code scanning alerts @eric-nieuwland (#2227)
 
 Version 1.57 (November 05, 2022)
 -----------------------------------

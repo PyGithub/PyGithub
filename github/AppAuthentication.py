@@ -28,7 +28,7 @@ import deprecated
 from github.Auth import AppAuth, AppInstallationAuth
 
 
-@deprecated.deprecated("Use app.Auth.AppInstallationAuth instead")
+@deprecated.deprecated("Use github.Auth.AppInstallationAuth instead")
 class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,
