@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import date, datetime, timezone
 
 from . import Framework
 
@@ -40,12 +40,12 @@ class Milestone(Framework.TestCase):
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(
             self.milestone.created_at,
-            datetime.datetime(2012, 3, 8, 12, 22, 10, tzinfo=datetime.timezone.utc),
+            datetime(2012, 3, 8, 12, 22, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(self.milestone.description, "")
         self.assertEqual(
             self.milestone.due_on,
-            datetime.datetime(2012, 3, 13, 7, 0, 0, tzinfo=datetime.timezone.utc),
+            datetime(2012, 3, 13, 7, 0, 0, tzinfo=timezone.utc),
         )
         self.assertEqual(self.milestone.id, 93546)
         self.assertEqual(self.milestone.number, 1)
@@ -70,14 +70,14 @@ class Milestone(Framework.TestCase):
             "Title edited twice by PyGithub",
             "closed",
             "Description edited by PyGithub",
-            due_on=datetime.date(2012, 6, 16),
+            due_on=date(2012, 6, 16),
         )
         self.assertEqual(self.milestone.title, "Title edited twice by PyGithub")
         self.assertEqual(self.milestone.state, "closed")
         self.assertEqual(self.milestone.description, "Description edited by PyGithub")
         self.assertEqual(
             self.milestone.due_on,
-            datetime.datetime(2012, 6, 16, 7, 0, 0, tzinfo=datetime.timezone.utc),
+            datetime(2012, 6, 16, 7, 0, 0, tzinfo=timezone.utc),
         )
 
     def testGetLabels(self):

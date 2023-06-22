@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -46,11 +46,11 @@ class CommitStatus(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(
             self.statuses[0].created_at,
-            datetime.datetime(2012, 9, 8, 11, 30, 56, tzinfo=datetime.timezone.utc),
+            datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.statuses[0].updated_at,
-            datetime.datetime(2012, 9, 8, 11, 30, 56, tzinfo=datetime.timezone.utc),
+            datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(self.statuses[0].creator.login, "jacquev6")
         self.assertEqual(

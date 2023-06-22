@@ -29,7 +29,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -52,11 +52,11 @@ class PullRequest(Framework.TestCase):
     def testAttributesIssue256(self):
         self.assertEqual(
             self.pullIssue256Closed.closed_at,
-            datetime.datetime(2018, 5, 22, 14, 50, 43, tzinfo=datetime.timezone.utc),
+            datetime(2018, 5, 22, 14, 50, 43, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.pullIssue256Merged.closed_at,
-            datetime.datetime(2018, 5, 22, 14, 53, 13, tzinfo=datetime.timezone.utc),
+            datetime(2018, 5, 22, 14, 53, 13, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pullIssue256Conflict.closed_at, None)
         self.assertEqual(self.pullIssue256Uncached.closed_at, None)
@@ -96,13 +96,13 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.changed_files, 45)
         self.assertEqual(
             self.pull.closed_at,
-            datetime.datetime(2012, 5, 27, 10, 29, 7, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 27, 10, 29, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.comments, 1)
         self.assertEqual(self.pull.commits, 3)
         self.assertEqual(
             self.pull.created_at,
-            datetime.datetime(2012, 5, 27, 9, 25, 36, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 27, 9, 25, 36, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(
@@ -123,7 +123,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.merged)
         self.assertEqual(
             self.pull.merged_at,
-            datetime.datetime(2012, 5, 27, 10, 29, 7, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 27, 10, 29, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
@@ -135,7 +135,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
             self.pull.updated_at,
-            datetime.datetime(2018, 6, 25, 12, 54, 43, tzinfo=datetime.timezone.utc),
+            datetime(2018, 6, 25, 12, 54, 43, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.pull.url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"
@@ -222,7 +222,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(comment.id, 886298)
 
     def testGetComments(self):
-        epoch = datetime.datetime(1970, 1, 1, 0, 0)
+        epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
@@ -247,7 +247,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testGetReviewComments(self):
-        epoch = datetime.datetime(1970, 1, 1, 0, 0)
+        epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(
             sort="updated", direction="desc", since=epoch
         )

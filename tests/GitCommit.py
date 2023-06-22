@@ -27,7 +27,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -46,15 +46,13 @@ class GitCommit(Framework.TestCase):
         self.assertEqual(self.commit.author.email, "vincent@vincent-jacques.net")
         self.assertEqual(
             self.commit.author.date,
-            datetime.datetime(
-                2012, 4, 17, 17, 55, 16, tzinfo=datetime.timezone(datetime.timedelta(0))
-            ),
+            datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
         self.assertEqual(self.commit.committer.name, "Vincent Jacques")
         self.assertEqual(self.commit.committer.email, "vincent@vincent-jacques.net")
         self.assertEqual(
             self.commit.committer.date,
-            datetime.datetime(2012, 4, 17, 17, 55, 16, tzinfo=datetime.timezone.utc),
+            datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
         self.assertEqual(self.commit.message, "Merge branch 'develop'\n")
         self.assertEqual(len(self.commit.parents), 2)

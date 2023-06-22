@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -70,7 +70,7 @@ class Traffic(Framework.TestCase):
         self.assertEqual(view_obj.uniques, 4)
         self.assertEqual(
             view_obj.timestamp,
-            datetime.datetime(2018, 11, 27, 0, 0, tzinfo=datetime.timezone.utc),
+            datetime(2018, 11, 27, 0, 0, tzinfo=timezone.utc),
         )
         self.assertEqual(view_obj.count, 56)
         self.assertEqual(
@@ -87,7 +87,7 @@ class Traffic(Framework.TestCase):
         self.assertEqual(clone_obj.uniques, 4)
         self.assertEqual(
             clone_obj.timestamp,
-            datetime.datetime(2018, 11, 27, 0, 0, tzinfo=datetime.timezone.utc),
+            datetime(2018, 11, 27, 0, 0, tzinfo=timezone.utc),
         )
         self.assertEqual(clone_obj.count, 4)
         self.assertEqual(

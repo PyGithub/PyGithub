@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -43,7 +43,7 @@ class Download(Framework.TestCase):
         self.assertEqual(self.download.content_type, "text/plain")
         self.assertEqual(
             self.download.created_at,
-            datetime.datetime(2012, 5, 22, 18, 58, 32, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 22, 18, 58, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(self.download.description, None)
         self.assertEqual(self.download.download_count, 0)

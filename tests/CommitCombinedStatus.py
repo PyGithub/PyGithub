@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -55,11 +55,11 @@ class CommitCombinedStatus(Framework.TestCase):
         )
         self.assertEqual(
             self.combined_status.statuses[4].created_at,
-            datetime.datetime(2015, 12, 14, 13, 24, 18, tzinfo=datetime.timezone.utc),
+            datetime(2015, 12, 14, 13, 24, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.combined_status.statuses[3].updated_at,
-            datetime.datetime(2015, 12, 14, 13, 23, 35, tzinfo=datetime.timezone.utc),
+            datetime(2015, 12, 14, 13, 23, 35, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659"

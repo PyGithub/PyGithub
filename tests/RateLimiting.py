@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -55,5 +55,5 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(rateLimit.core.remaining, 4929)
         self.assertEqual(
             rateLimit.core.reset,
-            datetime.datetime(2018, 9, 5, 4, 55, 56, tzinfo=datetime.timezone.utc),
+            datetime(2018, 9, 5, 4, 55, 56, tzinfo=timezone.utc),
         )

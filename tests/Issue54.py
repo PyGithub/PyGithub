@@ -25,7 +25,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -43,7 +43,5 @@ class Issue54(Framework.TestCase):
         )
         self.assertEqual(
             commit.author.date,
-            datetime.datetime(
-                2012, 7, 13, 18, 47, 10, tzinfo=datetime.timezone(datetime.timedelta(0))
-            ),
+            datetime(2012, 7, 13, 18, 47, 10, tzinfo=timezone.utc),
         )

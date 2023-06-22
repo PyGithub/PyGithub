@@ -30,7 +30,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
@@ -148,7 +148,7 @@ class Github(Framework.TestCase):
 
     def testGetGistsWithSince(self):
         self.assertListKeyBegin(
-            self.g.get_gists(since=datetime.datetime(2018, 10, 2, 10, 38, 30, 00)),
+            self.g.get_gists(since=datetime(2018, 10, 2, 10, 38, 30, 00)),
             lambda g: g.id,
             [
                 "69b8a5831b74946db944c5451017fa40",
@@ -206,7 +206,7 @@ class Github(Framework.TestCase):
         self.assertEqual(delivery.guid, "abcde-12345")
         self.assertEqual(
             delivery.delivered_at,
-            datetime.datetime(2012, 5, 27, 6, 0, 32, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(delivery.redelivery, False)
         self.assertEqual(delivery.duration, 0.27)
@@ -235,7 +235,7 @@ class Github(Framework.TestCase):
         self.assertEqual(deliveries[0].guid, "abcde-12345")
         self.assertEqual(
             deliveries[0].delivered_at,
-            datetime.datetime(2012, 5, 27, 6, 0, 32, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(deliveries[0].redelivery, False)
         self.assertEqual(deliveries[0].duration, 0.27)

@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
@@ -39,7 +39,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.comments, 0)
         self.assertEqual(
             gist.created_at,
-            datetime.datetime(2013, 8, 21, 16, 28, 24, tzinfo=datetime.timezone.utc),
+            datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
         )
         self.assertEqual(gist.description, "Github API")
         self.assertEqual(list(gist.files.keys()), ["GithubAPI.lua"])
@@ -60,7 +60,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].change_status.total, 793)
         self.assertEqual(
             gist.history[0].committed_at,
-            datetime.datetime(2013, 8, 21, 16, 12, 27, tzinfo=datetime.timezone.utc),
+            datetime(2013, 8, 21, 16, 12, 27, tzinfo=timezone.utc),
         )
         self.assertEqual(
             gist.history[0].url,
@@ -76,7 +76,7 @@ class Gist(Framework.TestCase):
         self.assertTrue(gist.public)
         self.assertEqual(
             gist.updated_at,
-            datetime.datetime(2013, 8, 21, 16, 28, 24, tzinfo=datetime.timezone.utc),
+            datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
         )
         self.assertEqual(gist.url, "https://api.github.com/gists/6296732")
         self.assertEqual(gist.user, None)
@@ -96,7 +96,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.description, "Gist created by PyGithub")
         self.assertEqual(
             gist.updated_at,
-            datetime.datetime(2012, 5, 19, 7, 0, 58, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 19, 7, 0, 58, tzinfo=timezone.utc),
         )
 
     def testEditWithAllParameters(self):
@@ -108,7 +108,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.description, "Description edited by PyGithub")
         self.assertEqual(
             gist.updated_at,
-            datetime.datetime(2012, 5, 19, 7, 6, 10, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 19, 7, 6, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(set(gist.files.keys()), {"foobar.txt", "barbaz.txt"})
 

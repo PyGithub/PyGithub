@@ -22,7 +22,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -48,11 +48,11 @@ class ReleaseAsset(Framework.TestCase):
         self.assertEqual(self.asset.download_count, 2)
         self.assertEqual(
             self.asset.created_at,
-            datetime.datetime(2017, 2, 1, 22, 40, 58, tzinfo=datetime.timezone.utc),
+            datetime(2017, 2, 1, 22, 40, 58, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.asset.updated_at,
-            datetime.datetime(2017, 2, 1, 22, 44, 58, tzinfo=datetime.timezone.utc),
+            datetime(2017, 2, 1, 22, 44, 58, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.asset.browser_download_url,

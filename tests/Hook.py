@@ -27,7 +27,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -42,7 +42,7 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.config, {"url": "http://foobar.com"})
         self.assertEqual(
             self.hook.created_at,
-            datetime.datetime(2012, 5, 19, 6, 1, 45, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 19, 6, 1, 45, tzinfo=timezone.utc),
         )
         self.assertEqual(self.hook.events, ["push"])
         self.assertEqual(self.hook.id, 257993)
@@ -52,7 +52,7 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.name, "web")
         self.assertEqual(
             self.hook.updated_at,
-            datetime.datetime(2012, 5, 29, 18, 49, 47, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 29, 18, 49, 47, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"
@@ -77,7 +77,7 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.config, {"url": "http://foobar.com/hook"})
         self.assertEqual(
             self.hook.updated_at,
-            datetime.datetime(2012, 5, 19, 5, 8, 16, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 19, 5, 8, 16, tzinfo=timezone.utc),
         )
 
     def testDelete(self):

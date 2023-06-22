@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -45,7 +45,7 @@ class CommitComment(Framework.TestCase):
         )
         self.assertEqual(
             self.comment.created_at,
-            datetime.datetime(2012, 5, 22, 18, 40, 18, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 22, 18, 40, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.html_url,
@@ -57,7 +57,7 @@ class CommitComment(Framework.TestCase):
         self.assertEqual(self.comment.position, None)
         self.assertEqual(
             self.comment.updated_at,
-            datetime.datetime(2012, 5, 22, 18, 40, 18, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 22, 18, 40, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.url,

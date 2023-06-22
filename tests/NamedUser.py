@@ -29,7 +29,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -51,7 +51,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.company, "3rd Cloud")
         self.assertEqual(
             self.user.created_at,
-            datetime.datetime(2009, 5, 12, 21, 19, 38, tzinfo=datetime.timezone.utc),
+            datetime(2009, 5, 12, 21, 19, 38, tzinfo=timezone.utc),
         )
         self.assertEqual(self.user.disk_usage, None)
         self.assertEqual(self.user.email, "vincent@3rdcloud.com")
@@ -88,7 +88,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.company, "Criteo")
         self.assertEqual(
             self.user.created_at,
-            datetime.datetime(2010, 7, 9, 6, 10, 6, tzinfo=datetime.timezone.utc),
+            datetime(2010, 7, 9, 6, 10, 6, tzinfo=timezone.utc),
         )
         self.assertEqual(self.user.disk_usage, 17080)
         self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
@@ -111,7 +111,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.public_repos, 11)
         self.assertEqual(
             self.user.suspended_at,
-            datetime.datetime(2013, 8, 10, 7, 11, 7, tzinfo=datetime.timezone.utc),
+            datetime(2013, 8, 10, 7, 11, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.user.total_private_repos, 5)
         self.assertIsNone(self.user.twitter_username)
@@ -133,7 +133,7 @@ class NamedUser(Framework.TestCase):
             ],
         )
         self.assertListKeyEqual(
-            self.user.get_gists(since=datetime.datetime(2012, 3, 1, 17, 0, 0)),
+            self.user.get_gists(since=datetime(2012, 3, 1, 17, 0, 0)),
             lambda g: g.description,
             ["Gist created by PyGithub", "FairThreadPoolPool.cpp"],
         )

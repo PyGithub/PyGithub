@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -40,7 +40,7 @@ class Event(Framework.TestCase):
         self.assertEqual(self.event.actor.login, "jacquev6")
         self.assertEqual(
             self.event.created_at,
-            datetime.datetime(2012, 5, 26, 10, 1, 39, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 26, 10, 1, 39, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event.id, "1556114751")
         self.assertEqual(self.event.org, None)

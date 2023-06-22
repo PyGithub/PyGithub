@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import pytest  # type: ignore
 
@@ -55,11 +55,11 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             self.environment.created_at,
-            datetime.datetime(2022, 4, 13, 15, 6, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 13, 15, 6, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.environment.updated_at,
-            datetime.datetime(2022, 4, 13, 15, 6, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 13, 15, 6, 32, tzinfo=timezone.utc),
         )
         self.assertTrue(self.environment.deployment_branch_policy.protected_branches)
         self.assertFalse(
@@ -125,11 +125,11 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             environment.created_at,
-            datetime.datetime(2022, 4, 19, 14, 4, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(
             environment.updated_at,
-            datetime.datetime(2022, 4, 19, 14, 4, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(len(environment.protection_rules), 0)
         self.assertIsNone(environment.deployment_branch_policy)
@@ -160,11 +160,11 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             environment.created_at,
-            datetime.datetime(2022, 4, 19, 14, 4, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(
             environment.updated_at,
-            datetime.datetime(2022, 4, 19, 14, 4, 32, tzinfo=datetime.timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(len(environment.protection_rules), 3)
         self.assertEqual(environment.protection_rules[0].type, "required_reviewers")

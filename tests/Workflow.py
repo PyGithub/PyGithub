@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -39,9 +39,7 @@ class Workflow(Framework.TestCase):
         self.assertEqual(self.workflow.name, "check")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
-        timestamp = datetime.datetime(
-            2020, 4, 15, 0, 48, 32, tzinfo=datetime.timezone.utc
-        )
+        timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
         self.assertEqual(self.workflow.created_at, timestamp)
         self.assertEqual(self.workflow.updated_at, timestamp)
         self.assertEqual(

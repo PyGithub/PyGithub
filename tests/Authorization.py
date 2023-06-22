@@ -25,7 +25,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -43,7 +43,7 @@ class Authorization(Framework.TestCase):
         self.assertEqual(self.authorization.app.name, "GitHub API")
         self.assertEqual(
             self.authorization.created_at,
-            datetime.datetime(2012, 5, 22, 18, 3, 17, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 22, 18, 3, 17, tzinfo=timezone.utc),
         )
         self.assertEqual(self.authorization.id, 372259)
         self.assertEqual(self.authorization.note, None)
@@ -54,7 +54,7 @@ class Authorization(Framework.TestCase):
         )
         self.assertEqual(
             self.authorization.updated_at,
-            datetime.datetime(2012, 5, 22, 18, 3, 17, tzinfo=datetime.timezone.utc),
+            datetime(2012, 5, 22, 18, 3, 17, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.authorization.url, "https://api.github.com/authorizations/372259"

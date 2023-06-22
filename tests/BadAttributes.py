@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from dateutil.parser import ParserError
 
@@ -39,7 +39,7 @@ class BadAttributes(Framework.TestCase):
         user = self.g.get_user("klmitch")
         self.assertEqual(
             user.created_at,
-            datetime.datetime(2011, 3, 23, 15, 42, 9, tzinfo=datetime.timezone.utc),
+            datetime(2011, 3, 23, 15, 42, 9, tzinfo=timezone.utc),
         )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:

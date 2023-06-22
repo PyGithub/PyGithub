@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -48,7 +48,7 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.run_attempt, 1)
         self.assertEqual(
             self.workflow_run.run_started_at,
-            datetime.datetime(2023, 1, 10, 8, 24, 19, tzinfo=datetime.timezone.utc),
+            datetime(2023, 1, 10, 8, 24, 19, tzinfo=timezone.utc),
         )
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
@@ -63,13 +63,9 @@ class WorkflowRun(Framework.TestCase):
             "https://github.com/PyGithub/PyGithub/actions/runs/3881497935",
         )
         self.assertEqual(self.workflow_run.pull_requests, [])
-        created_at = datetime.datetime(
-            2023, 1, 10, 8, 24, 19, tzinfo=datetime.timezone.utc
-        )
+        created_at = datetime(2023, 1, 10, 8, 24, 19, tzinfo=timezone.utc)
         self.assertEqual(self.workflow_run.created_at, created_at)
-        updated_at = datetime.datetime(
-            2023, 1, 10, 8, 28, 20, tzinfo=datetime.timezone.utc
-        )
+        updated_at = datetime(2023, 1, 10, 8, 28, 20, tzinfo=timezone.utc)
         self.assertEqual(self.workflow_run.updated_at, updated_at)
         self.assertEqual(
             self.workflow_run.jobs_url,
