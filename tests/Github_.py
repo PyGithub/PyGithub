@@ -34,7 +34,7 @@ import datetime
 
 import github
 
-from . import Framework, Time
+from . import Framework
 
 
 class Github(Framework.TestCase):
@@ -148,11 +148,7 @@ class Github(Framework.TestCase):
 
     def testGetGistsWithSince(self):
         self.assertListKeyBegin(
-            self.g.get_gists(
-                since=datetime.datetime(
-                    2018, 10, 2, 10, 38, 30, 00, tzinfo=Time.UTCtzinfo()
-                )
-            ),
+            self.g.get_gists(since=datetime.datetime(2018, 10, 2, 10, 38, 30, 00)),
             lambda g: g.id,
             [
                 "69b8a5831b74946db944c5451017fa40",
