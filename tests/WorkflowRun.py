@@ -135,3 +135,10 @@ class WorkflowRun(Framework.TestCase):
     def test_delete(self):
         wr = self.repo.get_workflow_run(3881497935)
         self.assertFalse(wr.delete())
+
+    def test_jobs(self):
+        self.assertListKeyEqual(
+            self.workflow_run.jobs(),
+            lambda j: j.id,
+            [10545727758, 10545727888, 10545728039, 10545728190, 10545728356],
+        )
