@@ -111,24 +111,20 @@ class Authentication(Framework.BasicTestCase):
         self.assertFalse(installation_auth._is_expired)
         self.assertEqual(
             installation_auth._AppInstallationAuth__installation_authorization.expires_at,
-            datetime.datetime(2024, 11, 25, 1, 0, 2),
+            datetime(2024, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
         )
 
         # forward the clock so token expires
         with mock.patch("github.Auth.datetime") as dt:
             # just before expiry
             dt.now = mock.Mock(
-                return_value=datetime.datetime(
-                    2024, 11, 25, 0, 59, 3, tzinfo=datetime.timezone.utc
-                )
+                return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc)
             )
             self.assertFalse(installation_auth._is_expired)
 
             # just after expiry
             dt.now = mock.Mock(
-                return_value=datetime.datetime(
-                    2024, 11, 25, 1, 0, 3, tzinfo=datetime.timezone.utc
-                )
+                return_value=datetime(2024, 11, 25, 1, 0, 3, tzinfo=timezone.utc)
             )
             self.assertTrue(installation_auth._is_expired)
 
@@ -138,7 +134,7 @@ class Authentication(Framework.BasicTestCase):
             self.assertFalse(installation_auth._is_expired)
             self.assertEqual(
                 installation_auth._AppInstallationAuth__installation_authorization.expires_at,
-                datetime.datetime(2025, 11, 25, 1, 0, 2),
+                datetime(2025, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
             )
 
         # use the token
