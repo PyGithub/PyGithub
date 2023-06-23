@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: master
+    branches: main
   pull_request:
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
   draft:
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: release-drafter/release-drafter@v5
         env:
