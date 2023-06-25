@@ -32,6 +32,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 
 import github.GithubObject
 
@@ -45,7 +46,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -53,7 +54,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -61,7 +62,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -69,7 +70,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -77,7 +78,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -85,7 +86,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def verified(self):
+    def verified(self) -> bool:
         """
         :type: bool
         """
@@ -93,14 +94,14 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._verified.value
 
     @property
-    def read_only(self):
+    def read_only(self) -> bool:
         """
         :type: bool
         """
         self._completeIfNotSet(self._read_only)
         return self._read_only.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :rtype: None

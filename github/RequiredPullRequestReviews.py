@@ -20,9 +20,17 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.NamedUser
 import github.Team
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Team import Team
 
 
 class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
@@ -40,7 +48,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def dismiss_stale_reviews(self):
+    def dismiss_stale_reviews(self) -> bool:
         """
         :type: bool
         """
@@ -48,7 +56,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._dismiss_stale_reviews.value
 
     @property
-    def require_code_owner_reviews(self):
+    def require_code_owner_reviews(self) -> bool:
         """
         :type: bool
         """
@@ -56,7 +64,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._require_code_owner_reviews.value
 
     @property
-    def required_approving_review_count(self):
+    def required_approving_review_count(self) -> int:
         """
         :type: int
         """
@@ -64,7 +72,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._required_approving_review_count.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -72,7 +80,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def dismissal_users(self):
+    def dismissal_users(self) -> NamedUser:
         """
         :type: list of :class:`github.NamedUser.NamedUser`
         """
@@ -80,7 +88,7 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._users.value
 
     @property
-    def dismissal_teams(self):
+    def dismissal_teams(self) -> Team:
         """
         :type: list of :class:`github.Team.Team`
         """
