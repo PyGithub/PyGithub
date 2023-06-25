@@ -39,6 +39,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.Artifact import Artifact
     from github.GitCommit import GitCommit
+    from github.PullRequest import PullRequest
     from github.Repository import Repository
     from github.WorkflowJob import WorkflowJob
 
@@ -66,7 +67,7 @@ class WorkflowRun(CompletableGithubObject):
     _run_number: Attribute[int]
     _created_at: Attribute[datetime]
     _updated_at: Attribute[datetime]
-    _pull_requests: Attribute[List[github.PullRequest.PullRequest]]
+    _pull_requests: Attribute[List["PullRequest"]]
     _status: Attribute[str]
     _conclusion: Attribute[str]
     _html_url: Attribute[str]
@@ -163,7 +164,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def pull_requests(self) -> List[github.PullRequest.PullRequest]:
+    def pull_requests(self) -> List["PullRequest"]:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
