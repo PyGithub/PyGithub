@@ -60,13 +60,21 @@ import github.Reaction
 import github.Repository
 import github.TimelineEvent
 from github import Consts
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _NotSetType
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+)
 
 if TYPE_CHECKING:
+    from github.IssueComment import IssueComment
     from github.IssuePullRequest import IssuePullRequest
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
+    from github.PaginatedList import PaginatedList
     from github.PullRequest import PullRequest
     from github.Repository import Repository
 
@@ -202,7 +210,7 @@ class Issue(CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        if self._repository is NotSet:
+        if isinstance(self._repository, _NotSetType):
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:-2])
             self._repository = github.GithubObject._ValuedAttribute(
@@ -267,12 +275,9 @@ class Issue(CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    ### WIP ###
-    def add_to_assignees(self, *assignees):
+    def add_to_assignees(self, *assignees: NamedUser | str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
-        :param assignee: :class:`github.NamedUser.NamedUser` or string
-        :rtype: None
         """
         assert all(
             isinstance(element, (github.NamedUser.NamedUser, str))
@@ -291,11 +296,9 @@ class Issue(CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def add_to_labels(self, *labels):
+    def add_to_labels(self, *labels: Label | str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param label: :class:`github.Label.Label` or string
-        :rtype: None
         """
         assert all(
             isinstance(element, (github.Label.Label, str)) for element in labels
@@ -308,11 +311,9 @@ class Issue(CompletableGithubObject):
             "POST", f"{self.url}/labels", input=post_parameters
         )
 
-    def create_comment(self, body):
+    def create_comment(self, body: str) -> IssueComment:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param body: string
-        :rtype: :class:`github.IssueComment.IssueComment`
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -325,10 +326,9 @@ class Issue(CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def delete_labels(self):
+    def delete_labels(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/labels"
@@ -336,87 +336,70 @@ class Issue(CompletableGithubObject):
 
     def edit(
         self,
-        title=NotSet,
-        body=NotSet,
-        assignee=NotSet,
-        state=NotSet,
-        milestone=NotSet,
-        labels=NotSet,
-        assignees=NotSet,
-        state_reason=NotSet,
+        title: Opt[str] = NotSet,
+        body: Opt[str] = NotSet,
+        assignee: Opt[str | NamedUser] = NotSet,
+        state: Opt[str] = NotSet,
+        milestone: Opt[Milestone] = NotSet,
+        labels: Opt[list[str]] = NotSet,
+        assignees: Opt[list[str]] = NotSet,
+        state_reason: Opt[str] = NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
-        :param title: string
-        :param body: string
-        :param assignee: string or :class:`github.NamedUser.NamedUser` or None
-        :param state: string
-        :param milestone: :class:`github.Milestone.Milestone` or None
-        :param labels: list of string
-        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
-        :param state_reason: string
-        :rtype: None
         """
         assert isinstance(title, (str, _NotSetType)), title
         assert isinstance(body, (str, _NotSetType)), body
-        assert (
-            assignee is NotSet
-            or assignee is None
-            or isinstance(assignee, github.NamedUser.NamedUser)
-            or isinstance(assignee, str)
+        assert assignee is None or isinstance(
+            assignee, (github.NamedUser.NamedUser, str, _NotSetType)
         ), assignee
-        assert assignees is NotSet or all(
-            isinstance(element, github.NamedUser.NamedUser) or isinstance(element, str)
+        assert isinstance(assignees, _NotSetType) or all(
+            isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees
-        assert state is NotSet or isinstance(state, str), state
-        assert (
-            milestone is NotSet
-            or milestone is None
-            or isinstance(milestone, github.Milestone.Milestone)
+        assert isinstance(state, (_NotSetType, str)), state
+        assert milestone is None or isinstance(
+            milestone, (_NotSetType, github.Milestone.Milestone)
         ), milestone
-        assert labels is NotSet or all(
+        assert isinstance(labels, _NotSetType) or all(
             isinstance(element, str) for element in labels
         ), labels
-        post_parameters = dict()
-        if title is not NotSet:
-            post_parameters["title"] = title
-        if body is not NotSet:
-            post_parameters["body"] = body
-        if assignee is not NotSet:
+
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "title": title,
+                "body": body,
+                "state": state,
+                "state_reason": state_reason,
+                "milestone": milestone._identity if milestone else "",
+                "labels": labels,
+            }
+        )
+
+        if not isinstance(assignee, _NotSetType):
             if isinstance(assignee, str):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ""
-        if assignees is not NotSet:
+        if not isinstance(assignees, _NotSetType):
             post_parameters["assignees"] = [
                 element._identity
                 if isinstance(element, github.NamedUser.NamedUser)
                 else element
                 for element in assignees
             ]
-        if state is not NotSet:
-            post_parameters["state"] = state
-        if state_reason is not NotSet:
-            post_parameters["state_reason"] = state_reason
-        if milestone is not NotSet:
-            post_parameters["milestone"] = milestone._identity if milestone else ""
-        if labels is not NotSet:
-            post_parameters["labels"] = labels
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
-    def lock(self, lock_reason):
+    def lock(self, lock_reason: str):
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{issue_number}/lock <https://docs.github.com/en/rest/reference/issues>`_
-        :param lock_reason: string
-        :rtype: None
         """
         assert isinstance(lock_reason, str), lock_reason
-        put_parameters = dict()
-        put_parameters["lock_reason"] = lock_reason
+        put_parameters = {"lock_reason": lock_reason}
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             f"{self.url}/lock",
@@ -424,20 +407,17 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    def unlock(self):
+    def unlock(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/lock <https://docs.github.com/en/rest/reference/issues>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/lock"
         )
 
-    def get_comment(self, id):
+    def get_comment(self, id: int) -> IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param id: integer
-        :rtype: :class:`github.IssueComment.IssueComment`
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck(
@@ -447,16 +427,17 @@ class Issue(CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def get_comments(self, since=NotSet):
+    def get_comments(
+        self, since: Opt[datetime] = NotSet
+    ) -> PaginatedList[IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is NotSet or isinstance(since, datetime), since
-        url_parameters = dict()
-        if since is not NotSet:
+        url_parameters = {}
+        if not isinstance(since, _NotSetType):
+            assert isinstance(since, datetime), since
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
