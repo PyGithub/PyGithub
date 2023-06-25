@@ -21,8 +21,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import TYPE_CHECKING, Dict, List, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import github.GitCommit
 import github.PullRequest
@@ -45,7 +47,7 @@ if TYPE_CHECKING:
 
 
 class TimingData(NamedTuple):
-    billable: Dict[str, Dict[str, int]]
+    billable: dict[str, dict[str, int]]
     run_duration_ms: int
 
 
@@ -67,7 +69,7 @@ class WorkflowRun(CompletableGithubObject):
     _run_number: Attribute[int]
     _created_at: Attribute[datetime]
     _updated_at: Attribute[datetime]
-    _pull_requests: Attribute[List["PullRequest"]]
+    _pull_requests: Attribute[list[PullRequest]]
     _status: Attribute[str]
     _conclusion: Attribute[str]
     _html_url: Attribute[str]
@@ -81,9 +83,9 @@ class WorkflowRun(CompletableGithubObject):
     _rerun_url: Attribute[str]
     _artifacts_url: Attribute[str]
     _workflow_url: Attribute[str]
-    _head_commit: Attribute["GitCommit"]
-    _repository: Attribute["Repository"]
-    _head_repository: Attribute["Repository"]
+    _head_commit: Attribute[GitCommit]
+    _repository: Attribute[Repository]
+    _head_repository: Attribute[Repository]
 
     @property
     def id(self) -> int:
@@ -164,7 +166,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def pull_requests(self) -> List["PullRequest"]:
+    def pull_requests(self) -> list[PullRequest]:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
@@ -198,7 +200,7 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
-    def get_artifacts(self) -> PaginatedList["Artifact"]:
+    def get_artifacts(self) -> PaginatedList[Artifact]:
         return PaginatedList(
             github.Artifact.Artifact,
             self._requester,
@@ -226,17 +228,17 @@ class WorkflowRun(CompletableGithubObject):
         return self._workflow_url.value
 
     @property
-    def head_commit(self) -> "GitCommit":
+    def head_commit(self) -> GitCommit:
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
     @property
-    def repository(self) -> "Repository":
+    def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
-    def head_repository(self) -> "Repository":
+    def head_repository(self) -> Repository:
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 
@@ -270,7 +272,7 @@ class WorkflowRun(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
 
-    def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList["WorkflowJob"]:
+    def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList[WorkflowJob]:
         """
         :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
         :param _filter: string `latest`, or `all`
