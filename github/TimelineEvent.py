@@ -26,6 +26,7 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
+import github.TimelineEventSource
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
