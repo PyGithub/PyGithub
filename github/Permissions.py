@@ -48,35 +48,35 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def admin(self):
+    def admin(self) -> bool:
         """
         :type: bool
         """
         return self._admin.value
 
     @property
-    def maintain(self):
+    def maintain(self) -> bool:
         """
         :type: bool
         """
         return self._maintain.value
 
     @property
-    def pull(self):
+    def pull(self) -> bool:
         """
         :type: bool
         """
         return self._pull.value
 
     @property
-    def push(self):
+    def push(self) -> bool:
         """
         :type: bool
         """
         return self._push.value
 
     @property
-    def triage(self):
+    def triage(self) -> bool:
         """
         :type: bool
         """

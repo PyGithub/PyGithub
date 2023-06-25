@@ -29,6 +29,8 @@
 ################################################################################
 
 # https://docs.github.com/en/rest/reference/actions#example-encrypting-a-secret-using-python
+from __future__ import annotations
+
 from base64 import b64encode
 
 from nacl import encoding, public
@@ -55,7 +57,7 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -63,7 +65,7 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def key_id(self):
+    def key_id(self) -> str | int:
         """
         :type: string or int
         """
@@ -83,5 +85,5 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])
 
-    def encrypt(self, unencrypted_value):
+    def encrypt(self, unencrypted_value: str) -> str:
         return encrypt(self._key.value, unencrypted_value)

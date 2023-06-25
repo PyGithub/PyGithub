@@ -21,11 +21,18 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
 
 from . import Consts
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class Reaction(github.GithubObject.CompletableGithubObject):
@@ -37,7 +44,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def content(self):
+    def content(self) -> str:
         """
         :type: string
         """
@@ -45,7 +52,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._content.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -53,7 +60,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -61,14 +68,14 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_
         :rtype: None

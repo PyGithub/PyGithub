@@ -27,10 +27,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
 import github.Repository
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Repository import Repository
 
 
 class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
@@ -42,35 +49,35 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def label(self):
+    def label(self) -> str:
         """
         :type: string
         """
         return self._label.value
 
     @property
-    def ref(self):
+    def ref(self) -> str:
         """
         :type: string
         """
         return self._ref.value
 
     @property
-    def repo(self):
+    def repo(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
         return self._repo.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
