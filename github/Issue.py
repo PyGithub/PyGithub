@@ -70,13 +70,16 @@ from github.GithubObject import (
 
 if TYPE_CHECKING:
     from github.IssueComment import IssueComment
+    from github.IssueEvent import IssueEvent
     from github.IssuePullRequest import IssuePullRequest
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.PaginatedList import PaginatedList
     from github.PullRequest import PullRequest
+    from github.Reaction import Reaction
     from github.Repository import Repository
+    from github.TimelineEvent import TimelineEvent
 
 
 class Issue(CompletableGithubObject):
@@ -394,7 +397,7 @@ class Issue(CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def lock(self, lock_reason: str):
+    def lock(self, lock_reason: str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{issue_number}/lock <https://docs.github.com/en/rest/reference/issues>`_
         """
@@ -445,10 +448,9 @@ class Issue(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_events(self):
+    def get_events(self) -> PaginatedList[IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
         """
         return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
@@ -458,20 +460,17 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    def get_labels(self):
+    def get_labels(self) -> PaginatedList[Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
             github.Label.Label, self._requester, f"{self.url}/labels", None
         )
 
-    def remove_from_assignees(self, *assignees):
+    def remove_from_assignees(self, *assignees: NamedUser | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
-        :param assignee: :class:`github.NamedUser.NamedUser` or string
-        :rtype: None
         """
         assert all(
             isinstance(element, (github.NamedUser.NamedUser, str))
@@ -490,11 +489,9 @@ class Issue(CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def remove_from_labels(self, label):
+    def remove_from_labels(self, label: Label | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param label: :class:`github.Label.Label` or string
-        :rtype: None
         """
         assert isinstance(label, (github.Label.Label, str)), label
         if isinstance(label, github.Label.Label):
@@ -505,11 +502,9 @@ class Issue(CompletableGithubObject):
             "DELETE", f"{self.url}/labels/{label}"
         )
 
-    def set_labels(self, *labels):
+    def set_labels(self, *labels: Label | str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param labels: list of :class:`github.Label.Label` or strings
-        :rtype: None
         """
         assert all(
             isinstance(element, (github.Label.Label, str)) for element in labels
@@ -522,10 +517,9 @@ class Issue(CompletableGithubObject):
             "PUT", f"{self.url}/labels", input=post_parameters
         )
 
-    def get_reactions(self):
+    def get_reactions(self) -> PaginatedList[Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue>`_
-        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
         return github.PaginatedList.PaginatedList(
             github.Reaction.Reaction,
@@ -535,11 +529,9 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def create_reaction(self, reaction_type):
+    def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
-        :param reaction_type: string
-        :rtype: :class:`github.Reaction.Reaction`
         """
         assert isinstance(reaction_type, str), reaction_type
         post_parameters = {
@@ -553,11 +545,9 @@ class Issue(CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
-    def delete_reaction(self, reaction_id):
+    def delete_reaction(self, reaction_id: int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id} <https://docs.github.com/en/rest/reference/reactions#delete-an-issue-reaction>`_
-        :param reaction_id: integer
-        :rtype: bool
         """
         assert isinstance(reaction_id, int), reaction_id
         status, _, _ = self._requester.requestJson(
@@ -567,7 +557,7 @@ class Issue(CompletableGithubObject):
         )
         return status == 204
 
-    def get_timeline(self):
+    def get_timeline(self) -> PaginatedList[TimelineEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/timeline <https://docs.github.com/en/rest/reference/issues#list-timeline-events-for-an-issue>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent.TimelineEvent`
