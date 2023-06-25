@@ -44,17 +44,14 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def referrer(self) -> str:
-        """ """
         return self._referrer.value
 
     @property
     def count(self) -> int:
-        """ """
         return self._count.value
 
     @property
     def uniques(self) -> int:
-        """ """
         return self._uniques.value
 
     def _initAttributes(self):
