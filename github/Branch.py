@@ -112,27 +112,27 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def edit_protection(
         self,
-        strict=github.GithubObject.NotSet,
-        contexts=github.GithubObject.NotSet,
-        enforce_admins=github.GithubObject.NotSet,
-        dismissal_users=github.GithubObject.NotSet,
-        dismissal_teams=github.GithubObject.NotSet,
-        dismissal_apps=github.GithubObject.NotSet,
-        dismiss_stale_reviews=github.GithubObject.NotSet,
-        require_code_owner_reviews=github.GithubObject.NotSet,
-        required_approving_review_count=github.GithubObject.NotSet,
-        user_push_restrictions=github.GithubObject.NotSet,
-        team_push_restrictions=github.GithubObject.NotSet,
-        app_push_restrictions=github.GithubObject.NotSet,
-        required_linear_history=github.GithubObject.NotSet,
-        allow_force_pushes=github.GithubObject.NotSet,
-        required_conversation_resolution=github.GithubObject.NotSet,
-        lock_branch=github.GithubObject.NotSet,
-        allow_fork_syncing=github.GithubObject.NotSet,
-        users_bypass_pull_request_allowances=github.GithubObject.NotSet,
-        teams_bypass_pull_request_allowances=github.GithubObject.NotSet,
-        apps_bypass_pull_request_allowances=github.GithubObject.NotSet,
-        block_creations=github.GithubObject.NotSet,
+        strict: Opt[bool] = NotSet,
+        contexts: Opt[list[str]] = NotSet,
+        enforce_admins: Opt[bool] = NotSet,
+        dismissal_users: Opt[list[str]] = NotSet,
+        dismissal_teams: Opt[list[str]] = NotSet,
+        dismissal_apps: Opt[list[str]] = NotSet,
+        dismiss_stale_reviews: Opt[bool] = NotSet,
+        require_code_owner_reviews: Opt[bool] = NotSet,
+        required_approving_review_count: Opt[int] = NotSet,
+        user_push_restrictions: Opt[list[str]] = NotSet,
+        team_push_restrictions: Opt[list[str]] = NotSet,
+        app_push_restrictions: Opt[list[str]] = NotSet,
+        required_linear_history: Opt[bool] = NotSet,
+        allow_force_pushes: Opt[bool] = NotSet,
+        required_conversation_resolution: Opt[bool] = NotSet,
+        lock_branch: Opt[bool] = NotSet,
+        allow_fork_syncing: Opt[bool] = NotSet,
+        users_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
+        teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
+        apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
+        block_creations: Opt[bool] = NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -212,7 +212,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             isinstance(element, str) for element in apps_bypass_pull_request_allowances
         ), apps_bypass_pull_request_allowances
 
-        post_parameters = {}
+        post_parameters: dict[str, Any] = {}
         if not isinstance(strict, _NotSetType) or not isinstance(contexts, _NotSetType):
             if isinstance(strict, _NotSetType):
                 strict = False
