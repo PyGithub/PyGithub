@@ -19,10 +19,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
-import github.TimelineEventSource
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.TimelineEventSource import TimelineEventSource
 
 
 class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
@@ -34,56 +41,47 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self):
+    def actor(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._actor.value
 
     @property
-    def commit_id(self):
-        """
-        :type: string
-        """
+    def commit_id(self) -> str:
         return self._commit_id.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def event(self):
-        """
-        :type: string
-        """
+    def event(self) -> str:
         return self._event.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
         return self._node_id.value
 
     @property
-    def commit_url(self):
+    def commit_url(self) -> str:
         """
         :type: string
         """
         return self._commit_url.value
 
     @property
-    def source(self):
+    def source(self) -> TimelineEventSource | None:
         """
         :type: :class:`github.TimelineEventSource.TimelineEventSource`
         """
@@ -96,19 +94,13 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def body(self):
-        """
-        :type string
-        """
+    def body(self) -> str | None:
         if self.event == "commented" and self._body is not github.GithubObject.NotSet:
             return self._body.value
         return None
 
     @property
-    def author_association(self):
-        """
-        :type string
-        """
+    def author_association(self) -> str:
         if (
             self.event == "commented"
             and self._author_association is not github.GithubObject.NotSet
@@ -117,10 +109,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
     def _initAttributes(self):

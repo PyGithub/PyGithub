@@ -41,7 +41,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -49,7 +49,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -57,7 +57,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -65,7 +65,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -73,14 +73,14 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def verified(self):
+    def verified(self) -> bool:
         """
         :type: bool
         """
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /user/keys/{id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: None
