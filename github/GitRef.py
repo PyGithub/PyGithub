@@ -28,8 +28,16 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.GitObject
+from github.GithubObject import Opt, _NotSetType
+
+if TYPE_CHECKING:
+    from github.GitObject import GitObject
 
 
 class GitRef(github.GithubObject.CompletableGithubObject):
@@ -41,7 +49,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"ref": self._ref.value})
 
     @property
-    def object(self):
+    def object(self) -> GitObject:
         """
         :type: :class:`github.GitObject.GitObject`
         """
@@ -49,7 +57,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         return self._object.value
 
     @property
-    def ref(self):
+    def ref(self) -> str:
         """
         :type: string
         """
@@ -57,21 +65,21 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         return self._ref.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha, force=github.GithubObject.NotSet):
+    def edit(self, sha: str, force: Opt[bool] = github.GithubObject.NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :param sha: string
@@ -79,12 +87,8 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(sha, str), sha
-        assert force is github.GithubObject.NotSet or isinstance(force, bool), force
-        post_parameters = {
-            "sha": sha,
-        }
-        if force is not github.GithubObject.NotSet:
-            post_parameters["force"] = force
+        assert isinstance(force, (_NotSetType, bool)), force
+        post_parameters = _NotSetType.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
