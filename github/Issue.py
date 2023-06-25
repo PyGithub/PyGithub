@@ -94,8 +94,8 @@ class Issue(CompletableGithubObject):
     _body: Attribute[str]
     _closed_at: Attribute[datetime]
     _closed_by: Attribute[NamedUser]
-    _comments: Attribute[urllib]
-    _comments_url: Attribute[url]
+    _comments: Attribute[int]
+    _comments_url: Attribute[str]
     _created_at: Attribute[datetime]
     _events_url: Attribute[str]
     _html_url: Attribute[str]
@@ -374,10 +374,12 @@ class Issue(CompletableGithubObject):
                 "body": body,
                 "state": state,
                 "state_reason": state_reason,
-                "milestone": milestone._identity if milestone else "",
                 "labels": labels,
             }
         )
+
+        if not isinstance(milestone, _NotSetType):
+            post_parameters["milestone"] = (milestone._identity if milestone else "",)
 
         if not isinstance(assignee, _NotSetType):
             if isinstance(assignee, str):
