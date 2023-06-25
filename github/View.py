@@ -24,10 +24,12 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from datetime import datetime
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class View(github.GithubObject.NonCompletableGithubObject):
+class View(NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
@@ -42,31 +44,26 @@ class View(github.GithubObject.NonCompletableGithubObject):
             }
         )
 
+    _timestamp: Attribute[datetime]
+    _count: Attribute[int]
+    _uniques: Attribute[int]
+
     @property
-    def timestamp(self):
-        """
-        :type: datetime.datetime
-        """
+    def timestamp(self) -> datetime:
         return self._timestamp.value
 
     @property
-    def count(self):
-        """
-        :type: integer
-        """
+    def count(self) -> int:
         return self._count.value
 
     @property
-    def uniques(self):
-        """
-        :type: integer
-        """
+    def uniques(self) -> int:
         return self._uniques.value
 
     def _initAttributes(self):
-        self._timestamp = github.GithubObject.NotSet
-        self._count = github.GithubObject.NotSet
-        self._uniques = github.GithubObject.NotSet
+        self._timestamp = NotSet
+        self._count = NotSet
+        self._uniques = NotSet
 
     def _useAttributes(self, attributes):
         if "timestamp" in attributes:  # pragma no branch

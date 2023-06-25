@@ -20,11 +20,18 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.Issue
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Issue import Issue
 
 
-class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
+class TimelineEventSource(NonCompletableGithubObject):
     """
     This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
@@ -32,23 +39,20 @@ class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"type": self._type.value})
 
+    _type: Attribute[str]
+    _issue: Attribute[Issue]
+
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
-    def issue(self):
-        """
-        :type: :class:`github.Issue.Issue`
-        """
+    def issue(self) -> Issue:
         return self._issue.value
 
     def _initAttributes(self):
-        self._type = github.GithubObject.NotSet
-        self._issue = github.GithubObject.NotSet
+        self._type = NotSet
+        self._issue = NotSet
 
     def _useAttributes(self, attributes):
         if "type" in attributes:  # pragma no branch
