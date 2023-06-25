@@ -100,7 +100,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def author_association(self) -> str:
+    def author_association(self) -> str | None:
         if (
             self.event == "commented"
             and self._author_association is not github.GithubObject.NotSet

@@ -25,19 +25,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Optional
-
-from typing_extensions import NotRequired, TypedDict
+from __future__ import annotations
 
 from github.GithubObject import NotSet, Opt, _NotSetType
-
-
-class Identity(TypedDict):
-    path: str
-    mode: str
-    type: str
-    sha: NotRequired[str]
-    content: NotRequired[str]
 
 
 class InputGitTreeElement:
@@ -70,11 +60,11 @@ class InputGitTreeElement:
         self.__mode = mode
         self.__type = type
         self.__content = content
-        self.__sha: Optional[Opt[str]] = sha
+        self.__sha: Opt[str] | None = sha
 
     @property
-    def _identity(self) -> Identity:
-        identity: Identity = {
+    def _identity(self) -> dict[str, str]:
+        identity: dict[str, str] = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,

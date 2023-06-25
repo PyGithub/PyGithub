@@ -28,16 +28,10 @@
 #                                                                              #
 ################################################################################
 
-from typing_extensions import NotRequired, TypedDict
+from __future__ import annotations
 
 import github.GithubObject
 from github.GithubObject import Opt, _NotSetType
-
-
-class Identity(TypedDict):
-    name: str
-    email: str
-    date: NotRequired[str]
 
 
 class InputGitAuthor:
@@ -66,8 +60,8 @@ class InputGitAuthor:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property
-    def _identity(self) -> Identity:
-        identity: Identity = {
+    def _identity(self) -> dict[str, str]:
+        identity: dict[str, str] = {
             "name": self.__name,
             "email": self.__email,
         }

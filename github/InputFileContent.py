@@ -27,14 +27,9 @@
 ################################################################################
 
 
-from typing_extensions import NotRequired, TypedDict
+from __future__ import annotations
 
 from github.GithubObject import NotSet, Opt, _NotSetType
-
-
-class Identity(TypedDict):
-    content: str
-    filename: NotRequired[str]
 
 
 class InputFileContent:
@@ -54,8 +49,8 @@ class InputFileContent:
         self.__content = content
 
     @property
-    def _identity(self):
-        identity: Identity = {
+    def _identity(self) -> dict[str, str]:
+        identity: dict[str, str] = {
             "content": self.__content,
         }
         if not isinstance(self.__newName, _NotSetType):
