@@ -36,21 +36,21 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def diff_url(self):
+    def diff_url(self) -> str:
         """
         :type: string
         """
         return self._diff_url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
         return self._html_url.value
 
     @property
-    def patch_url(self):
+    def patch_url(self) -> str:
         """
         :type: string
         """
