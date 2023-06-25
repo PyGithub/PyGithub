@@ -22,7 +22,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Dict, NamedTuple
+from typing import Dict, List, NamedTuple
 
 import github.Artifact
 import github.GitCommit
@@ -53,83 +53,87 @@ class WorkflowRun(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     _id: Attribute[int]
+    _url: Attribute[str]
+    _name: Attribute[str]
+    _path: Attribute[str]
+    _head_branch: Attribute[str]
+    _head_sha: Attribute[str]
+    _run_attempt: Attribute[int]
+    _run_number: Attribute[int]
+    _created_at: Attribute[datetime]
+    _updated_at: Attribute[datetime]
+    _pull_requests: Attribute[List[github.PullRequest.PullRequest]]
+    _status: Attribute[str]
+    _conclusion: Attribute[str]
+    _html_url: Attribute[str]
+    _jobs_url: Attribute[str]
+    _logs_url: Attribute[str]
+    _display_title: Attribute[str]
+    _event: Attribute[str]
+    _run_started_at: Attribute[datetime]
+    _check_suite_url: Attribute[str]
+    _cancel_url: Attribute[str]
+    _rerun_url: Attribute[str]
+    _artifacts_url: Attribute[str]
+    _workflow_url: Attribute[str]
+    _head_commit: Attribute[github.GitCommit.GitCommit]
+    _repository: Attribute["github.Repository.Repository"]
+    _head_repository: Attribute["github.Repository.Repository"]
 
     @property
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
-    _name: Attribute[str]
-
     @property
     def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
-
-    _head_branch: Attribute[str]
 
     @property
     def head_branch(self) -> str:
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
 
-    _head_sha: Attribute[str]
-
     @property
     def head_sha(self) -> str:
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
-
-    _display_title: Attribute[str]
 
     @property
     def display_title(self) -> str:
         self._completeIfNotSet(self._display_title)
         return self._display_title.value
 
-    _path: Attribute[str]
-
     @property
     def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
-
-    _run_attempt: Attribute[int]
 
     @property
     def run_attempt(self) -> int:
         self._completeIfNotSet(self._run_attempt)
         return self._run_attempt.value
 
-    _run_number: Attribute[int]
-
     @property
     def run_number(self) -> int:
         self._completeIfNotSet(self._run_number)
         return self._run_number.value
-
-    _event: Attribute[str]
 
     @property
     def event(self) -> str:
         self._completeIfNotSet(self._event)
         return self._event.value
 
-    _run_started_at: Attribute[datetime]
-
     @property
     def run_started_at(self) -> datetime:
         self._completeIfNotSet(self._run_started_at)
         return self._run_started_at.value
 
-    _status: Attribute[str]
-
     @property
     def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
-
-    _conclusion: Attribute[str]
 
     @property
     def conclusion(self) -> str:
@@ -144,63 +148,45 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._workflow_id)
         return self._workflow_id.value
 
-    _url: Attribute[str]
-
     @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    _html_url: Attribute[str]
 
     @property
     def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
-    _pull_requests: Attribute[github.PullRequest.PullRequest]
-
     @property
-    def pull_requests(self) -> github.PullRequest.PullRequest:
+    def pull_requests(self) -> List[github.PullRequest.PullRequest]:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
-
-    _created_at: Attribute[datetime]
 
     @property
     def created_at(self):
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
-    _updated_at: Attribute[datetime]
-
     @property
     def updated_at(self):
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
-
-    _jobs_url: Attribute[str]
 
     @property
     def jobs_url(self) -> str:
         self._completeIfNotSet(self._jobs_url)
         return self._jobs_url.value
 
-    _logs_url: Attribute[str]
-
     @property
     def logs_url(self) -> str:
         self._completeIfNotSet(self._logs_url)
         return self._logs_url.value
 
-    _check_suite_url: Attribute[str]
-
     @property
     def check_suite_url(self) -> str:
         self._completeIfNotSet(self._check_suite_url)
         return self._check_suite_url.value
-
-    _artifacts_url: Attribute[str]
 
     @property
     def artifacts_url(self) -> str:
@@ -216,21 +202,15 @@ class WorkflowRun(CompletableGithubObject):
             list_item="artifacts",
         )
 
-    _cancel_url: Attribute[str]
-
     @property
     def cancel_url(self) -> str:
         self._completeIfNotSet(self._cancel_url)
         return self._cancel_url.value
 
-    _rerun_url: Attribute[str]
-
     @property
     def rerun_url(self) -> str:
         self._completeIfNotSet(self._rerun_url)
         return self._rerun_url.value
-
-    _workflow_url: Attribute[str]
 
     @property
     def workflow_url(self) -> str:
@@ -240,21 +220,15 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
-    _head_commit: Attribute[github.GitCommit.GitCommit]
-
     @property
     def head_commit(self) -> github.GitCommit.GitCommit:
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
-    _repository: "Attribute[github.Repository.Repository]"
-
     @property
     def repository(self) -> "github.Repository.Repository":
         self._completeIfNotSet(self._repository)
         return self._repository.value
-
-    _head_repository: "Attribute[github.Repository.Repository]"
 
     @property
     def head_repository(self) -> "github.Repository.Repository":
