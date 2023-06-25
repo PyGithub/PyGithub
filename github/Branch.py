@@ -36,11 +36,10 @@ from typing import TYPE_CHECKING, Any
 
 import github.BranchProtection
 import github.Commit
-import github.GithubObject
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 from github import Consts
-from github.GithubObject import NotSet, Opt, _NotSetType
+from github.GithubObject import NonCompletableGithubObject, NotSet, Opt, _NotSetType
 
 if TYPE_CHECKING:
     from github.BranchProtection import BranchProtection
@@ -52,7 +51,7 @@ if TYPE_CHECKING:
     from github.Team import Team
 
 
-class Branch(github.GithubObject.NonCompletableGithubObject):
+class Branch(NonCompletableGithubObject):
     """
     This class represents Branches. The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
     """
