@@ -27,6 +27,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import List
 
 import github.GithubObject
 
@@ -40,28 +41,28 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def events(self):
+    def events(self) -> str:
         """
         :type: list of string
         """
         return self._events.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def schema(self):
+    def schema(self) -> List[List[str]]:
         """
         :type: list of list of string
         """
         return self._schema.value
 
     @property
-    def supported_events(self):
+    def supported_events(self) -> List[str]:
         """
         :type: list of string
         """

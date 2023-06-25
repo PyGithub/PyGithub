@@ -28,7 +28,16 @@
 #                                                                              #
 ################################################################################
 
+from typing_extensions import NotRequired, TypedDict
+
 import github.GithubObject
+from github.GithubObject import Opt, _NotSetType
+
+
+class Identity(TypedDict):
+    name: str
+    email: str
+    date: NotRequired[str]
 
 
 class InputGitAuthor:
@@ -36,7 +45,9 @@ class InputGitAuthor:
     This class represents InputGitAuthors
     """
 
-    def __init__(self, name, email, date=github.GithubObject.NotSet):
+    def __init__(
+        self, name: str, email: str, date: Opt[str] = github.GithubObject.NotSet
+    ):
         """
         :param name: string
         :param email: string
@@ -45,23 +56,21 @@ class InputGitAuthor:
 
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert date is github.GithubObject.NotSet or isinstance(
-            date, str
-        ), date  # @todo Datetime?
+        assert isinstance(date, (_NotSetType, str)), date  # @todo Datetime?
 
-        self.__name = name
-        self.__email = email
-        self.__date = date
+        self.__name: str = name
+        self.__email: str = email
+        self.__date: Opt[str] = date
 
     def __repr__(self):
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property
-    def _identity(self):
-        identity = {
+    def _identity(self) -> Identity:
+        identity: Identity = {
             "name": self.__name,
             "email": self.__email,
         }
-        if self.__date is not github.GithubObject.NotSet:
+        if not isinstance(self.__date, _NotSetType):
             identity["date"] = self.__date
         return identity

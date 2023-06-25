@@ -40,21 +40,21 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"status": self._status.value})
 
     @property
-    def code(self):
+    def code(self) -> int:
         """
         :type: integer
         """
         return self._code.value
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: string
         """
         return self._message.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """

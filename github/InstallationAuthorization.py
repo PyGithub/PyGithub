@@ -22,10 +22,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
@@ -37,35 +44,35 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"expires_at": self._expires_at.value})
 
     @property
-    def token(self):
+    def token(self) -> str:
         """
         :type: string
         """
         return self._token.value
 
     @property
-    def expires_at(self):
+    def expires_at(self) -> datetime:
         """
         :type: datetime
         """
         return self._expires_at.value
 
     @property
-    def on_behalf_of(self):
+    def on_behalf_of(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._on_behalf_of.value
 
     @property
-    def permissions(self):
+    def permissions(self) -> dict:
         """
         :type: dict
         """
         return self._permissions.value
 
     @property
-    def repository_selection(self):
+    def repository_selection(self) -> str:
         """
         :type: string
         """

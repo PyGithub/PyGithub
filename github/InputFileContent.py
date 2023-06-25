@@ -26,7 +26,15 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+
+from typing_extensions import NotRequired, TypedDict
+
+from github.GithubObject import NotSet, Opt, _NotSetType
+
+
+class Identity(TypedDict):
+    content: str
+    filename: NotRequired[str]
 
 
 class InputFileContent:
@@ -34,24 +42,22 @@ class InputFileContent:
     This class represents InputFileContents
     """
 
-    def __init__(self, content, new_name=github.GithubObject.NotSet):
+    def __init__(self, content: str, new_name: Opt[str] = NotSet):
         """
         :param content: string
         :param new_name: string
         """
 
         assert isinstance(content, str), content
-        assert new_name is github.GithubObject.NotSet or isinstance(
-            new_name, str
-        ), new_name
+        assert isinstance(new_name, (_NotSetType, str)), new_name
         self.__newName = new_name
         self.__content = content
 
     @property
     def _identity(self):
-        identity = {
+        identity: Identity = {
             "content": self.__content,
         }
-        if self.__newName is not github.GithubObject.NotSet:
+        if not isinstance(self.__newName, _NotSetType):
             identity["filename"] = self.__newName
         return identity
