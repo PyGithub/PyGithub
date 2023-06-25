@@ -23,9 +23,16 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
@@ -39,28 +46,28 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
         """
 
         @property
-        def w(self):
+        def w(self) -> datetime:
             """
             :type: datetime.datetime
             """
             return self._w.value
 
         @property
-        def a(self):
+        def a(self) -> int:
             """
             :type: int
             """
             return self._a.value
 
         @property
-        def d(self):
+        def d(self) -> int:
             """
             :type: int
             """
             return self._d.value
 
         @property
-        def c(self):
+        def c(self) -> int:
             """
             :type: int
             """
@@ -83,24 +90,15 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
                 self._c = self._makeIntAttribute(attributes["c"])
 
     @property
-    def author(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def author(self) -> NamedUser:
         return self._author.value
 
     @property
-    def total(self):
-        """
-        :type: int
-        """
+    def total(self) -> int:
         return self._total.value
 
     @property
-    def weeks(self):
-        """
-        :type: list of :class:`.Week`
-        """
+    def weeks(self) -> list[Week]:
         return self._weeks.value
 
     def _initAttributes(self):

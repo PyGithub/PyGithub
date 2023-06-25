@@ -28,9 +28,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import github.Commit
 import github.GithubObject
+
+if TYPE_CHECKING:
+    from github.Commit import Commit
 
 
 class Tag(github.GithubObject.NonCompletableGithubObject):
@@ -44,31 +50,19 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def commit(self):
-        """
-        :type: :class:`github.Commit.Commit`
-        """
+    def commit(self) -> Commit:
         return self._commit.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def tarball_url(self):
-        """
-        :type: string
-        """
+    def tarball_url(self) -> str:
         return self._tarball_url.value
 
     @property
-    def zipball_url(self):
-        """
-        :type: string
-        """
+    def zipball_url(self) -> str:
         return self._zipball_url.value
 
     def _initAttributes(self):
