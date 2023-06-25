@@ -41,9 +41,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import datetime
 import urllib.parse
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.IssueComment
@@ -53,17 +55,52 @@ import github.Label
 import github.Milestone
 import github.NamedUser
 import github.PaginatedList
+import github.PullRequest
 import github.Reaction
 import github.Repository
 import github.TimelineEvent
+from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _NotSetType
 
-from . import Consts
+if TYPE_CHECKING:
+    from github.IssuePullRequest import IssuePullRequest
+    from github.Label import Label
+    from github.Milestone import Milestone
+    from github.NamedUser import NamedUser
+    from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
-class Issue(github.GithubObject.CompletableGithubObject):
+class Issue(CompletableGithubObject):
     """
     This class represents Issues. The reference can be found here https://docs.github.com/en/rest/reference/issues
     """
+
+    _id: Attribute[int]
+    _active_lock_reason: Attribute[str | None]
+    _assignee: Attribute[NamedUser | None]
+    _assignees: Attribute[list[NamedUser]]
+    _body: Attribute[str]
+    _closed_at: Attribute[datetime]
+    _closed_by: Attribute[NamedUser]
+    _comments: Attribute[urllib]
+    _comments_url: Attribute[url]
+    _created_at: Attribute[datetime]
+    _events_url: Attribute[str]
+    _html_url: Attribute[str]
+    _labels: Attribute[list[Label]]
+    _labels_url: Attribute[str]
+    _locked: Attribute[bool]
+    _milestone: Attribute[Milestone]
+    _number: Attribute[int]
+    _pull_request: Attribute[IssuePullRequest]
+    _repository: Attribute[Repository]
+    _state: Attribute[str]
+    _state_reason: Attribute[str | None]
+    _title: Attribute[str]
+    _updated_at: Attribute[datetime]
+    _url: Attribute[str]
+    _user: Attribute[NamedUser]
 
     def __repr__(self):
         return self.get__repr__(
@@ -71,103 +108,67 @@ class Issue(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def assignee(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def assignee(self) -> NamedUser | None:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    def assignees(self):
-        """
-        :type: list of :class:`github.NamedUser.NamedUser`
-        """
+    def assignees(self) -> list[NamedUser]:
         self._completeIfNotSet(self._assignees)
         return self._assignees.value
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def closed_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def closed_at(self) -> datetime:
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
 
     @property
-    def closed_by(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def closed_by(self) -> NamedUser | None:
         self._completeIfNotSet(self._closed_by)
         return self._closed_by.value
 
     @property
-    def comments(self):
-        """
-        :type: integer
-        """
+    def comments(self) -> int:
         self._completeIfNotSet(self._comments)
         return self._comments.value
 
     @property
-    def comments_url(self):
-        """
-        :type: string
-        """
+    def comments_url(self) -> str:
         self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def events_url(self):
-        """
-        :type: string
-        """
+    def events_url(self) -> str:
         self._completeIfNotSet(self._events_url)
         return self._events_url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def labels(self):
-        """
-        :type: list of :class:`github.Label.Label`
-        """
+    def labels(self) -> list[Label]:
         self._completeIfNotSet(self._labels)
         return self._labels.value
 
     @property
-    def labels_url(self):
+    def labels_url(self) -> str:
         """
         :type: string
         """
@@ -175,7 +176,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._labels_url.value
 
     @property
-    def milestone(self):
+    def milestone(self) -> Milestone:
         """
         :type: :class:`github.Milestone.Milestone`
         """
@@ -183,15 +184,12 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._milestone.value
 
     @property
-    def number(self):
-        """
-        :type: integer
-        """
+    def number(self) -> int:
         self._completeIfNotSet(self._number)
         return self._number.value
 
     @property
-    def pull_request(self):
+    def pull_request(self) -> IssuePullRequest:
         """
         :type: :class:`github.IssuePullRequest.IssuePullRequest`
         """
@@ -199,12 +197,12 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._pull_request.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        if self._repository is github.GithubObject.NotSet:
+        if self._repository is NotSet:
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:-2])
             self._repository = github.GithubObject._ValuedAttribute(
@@ -215,70 +213,49 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._repository.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def state_reason(self):
-        """
-        :type: string
-        """
+    def state_reason(self) -> str | None:
         self._completeIfNotSet(self._state_reason)
         return self._state_reason.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
     @property
-    def locked(self):
-        """
-        :type: bool
-        """
+    def locked(self) -> bool:
         self._completeIfNotSet(self._locked)
         return self._locked.value
 
     @property
-    def active_lock_reason(self):
+    def active_lock_reason(self) -> str | None:
         """
         :type: string
         """
         self._completeIfNotSet(self._active_lock_reason)
         return self._active_lock_reason.value
 
-    def as_pull_request(self):
+    def as_pull_request(self) -> PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
         :rtype: :class:`github.PullRequest.PullRequest`
@@ -290,6 +267,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    ### WIP ###
     def add_to_assignees(self, *assignees):
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
@@ -358,14 +336,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        title=github.GithubObject.NotSet,
-        body=github.GithubObject.NotSet,
-        assignee=github.GithubObject.NotSet,
-        state=github.GithubObject.NotSet,
-        milestone=github.GithubObject.NotSet,
-        labels=github.GithubObject.NotSet,
-        assignees=github.GithubObject.NotSet,
-        state_reason=github.GithubObject.NotSet,
+        title=NotSet,
+        body=NotSet,
+        assignee=NotSet,
+        state=NotSet,
+        milestone=NotSet,
+        labels=NotSet,
+        assignees=NotSet,
+        state_reason=NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
@@ -379,51 +357,51 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param state_reason: string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, str), title
-        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        assert isinstance(title, (str, _NotSetType)), title
+        assert isinstance(body, (str, _NotSetType)), body
         assert (
-            assignee is github.GithubObject.NotSet
+            assignee is NotSet
             or assignee is None
             or isinstance(assignee, github.NamedUser.NamedUser)
             or isinstance(assignee, str)
         ), assignee
-        assert assignees is github.GithubObject.NotSet or all(
+        assert assignees is NotSet or all(
             isinstance(element, github.NamedUser.NamedUser) or isinstance(element, str)
             for element in assignees
         ), assignees
-        assert state is github.GithubObject.NotSet or isinstance(state, str), state
+        assert state is NotSet or isinstance(state, str), state
         assert (
-            milestone is github.GithubObject.NotSet
+            milestone is NotSet
             or milestone is None
             or isinstance(milestone, github.Milestone.Milestone)
         ), milestone
-        assert labels is github.GithubObject.NotSet or all(
+        assert labels is NotSet or all(
             isinstance(element, str) for element in labels
         ), labels
         post_parameters = dict()
-        if title is not github.GithubObject.NotSet:
+        if title is not NotSet:
             post_parameters["title"] = title
-        if body is not github.GithubObject.NotSet:
+        if body is not NotSet:
             post_parameters["body"] = body
-        if assignee is not github.GithubObject.NotSet:
+        if assignee is not NotSet:
             if isinstance(assignee, str):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ""
-        if assignees is not github.GithubObject.NotSet:
+        if assignees is not NotSet:
             post_parameters["assignees"] = [
                 element._identity
                 if isinstance(element, github.NamedUser.NamedUser)
                 else element
                 for element in assignees
             ]
-        if state is not github.GithubObject.NotSet:
+        if state is not NotSet:
             post_parameters["state"] = state
-        if state_reason is not github.GithubObject.NotSet:
+        if state_reason is not NotSet:
             post_parameters["state_reason"] = state_reason
-        if milestone is not github.GithubObject.NotSet:
+        if milestone is not NotSet:
             post_parameters["milestone"] = milestone._identity if milestone else ""
-        if labels is not github.GithubObject.NotSet:
+        if labels is not NotSet:
             post_parameters["labels"] = labels
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
@@ -469,17 +447,15 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def get_comments(self, since=github.GithubObject.NotSet):
+    def get_comments(self, since=NotSet):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is NotSet or isinstance(since, datetime), since
         url_parameters = dict()
-        if since is not github.GithubObject.NotSet:
+        if since is not NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
@@ -624,35 +600,35 @@ class Issue(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def _identity(self):
+    def _identity(self) -> int:
         return self.number
 
     def _initAttributes(self):
-        self._active_lock_reason = github.GithubObject.NotSet
-        self._assignee = github.GithubObject.NotSet
-        self._assignees = github.GithubObject.NotSet
-        self._body = github.GithubObject.NotSet
-        self._closed_at = github.GithubObject.NotSet
-        self._closed_by = github.GithubObject.NotSet
-        self._comments = github.GithubObject.NotSet
-        self._comments_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._events_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._labels = github.GithubObject.NotSet
-        self._labels_url = github.GithubObject.NotSet
-        self._locked = github.GithubObject.NotSet
-        self._milestone = github.GithubObject.NotSet
-        self._number = github.GithubObject.NotSet
-        self._pull_request = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._state_reason = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
+        self._active_lock_reason = NotSet
+        self._assignee = NotSet
+        self._assignees = NotSet
+        self._body = NotSet
+        self._closed_at = NotSet
+        self._closed_by = NotSet
+        self._comments = NotSet
+        self._comments_url = NotSet
+        self._created_at = NotSet
+        self._events_url = NotSet
+        self._html_url = NotSet
+        self._id = NotSet
+        self._labels = NotSet
+        self._labels_url = NotSet
+        self._locked = NotSet
+        self._milestone = NotSet
+        self._number = NotSet
+        self._pull_request = NotSet
+        self._repository = NotSet
+        self._state = NotSet
+        self._state_reason = NotSet
+        self._title = NotSet
+        self._updated_at = NotSet
+        self._url = NotSet
+        self._user = NotSet
 
     def _useAttributes(self, attributes):
         if "active_lock_reason" in attributes:  # pragma no branch
