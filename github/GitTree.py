@@ -28,8 +28,15 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.GitTreeElement
+
+if TYPE_CHECKING:
+    from github.GitTreeElement import GitTreeElement
 
 
 class GitTree(github.GithubObject.CompletableGithubObject):
@@ -41,31 +48,22 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def tree(self):
-        """
-        :type: list of :class:`github.GitTreeElement.GitTreeElement`
-        """
+    def tree(self) -> list[GitTreeElement]:
         self._completeIfNotSet(self._tree)
         return self._tree.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return self.sha
 
     def _initAttributes(self):

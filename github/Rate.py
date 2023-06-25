@@ -24,6 +24,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 
 import github.GithubObject
 
@@ -43,24 +44,15 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def limit(self):
-        """
-        :type: integer
-        """
+    def limit(self) -> int:
         return self._limit.value
 
     @property
-    def remaining(self):
-        """
-        :type: integer
-        """
+    def remaining(self) -> int:
         return self._remaining.value
 
     @property
-    def reset(self):
-        """
-        :type: datetime.datetime
-        """
+    def reset(self) -> datetime:
         return self._reset.value
 
     def _initAttributes(self):

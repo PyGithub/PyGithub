@@ -25,8 +25,15 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.Rate
+
+if TYPE_CHECKING:
+    from github.Rate import Rate
 
 
 class RateLimit(github.GithubObject.NonCompletableGithubObject):
@@ -38,7 +45,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"core": self._core.value})
 
     @property
-    def core(self):
+    def core(self) -> Rate:
         """
         Rate limit for the non-search-related API
 
@@ -47,7 +54,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         return self._core.value
 
     @property
-    def search(self):
+    def search(self) -> Rate:
         """
         Rate limit for the Search API.
 
@@ -56,7 +63,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         return self._search.value
 
     @property
-    def graphql(self):
+    def graphql(self) -> Rate:
         """
         (Experimental) Rate limit for GraphQL API, use with caution.
 

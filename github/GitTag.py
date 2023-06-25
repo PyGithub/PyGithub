@@ -28,9 +28,18 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitObject
+import github.GitTreeElement
+
+if TYPE_CHECKING:
+    from github.GitAuthor import GitAuthor
+    from github.GitObject import GitObject
 
 
 class GitTag(github.GithubObject.CompletableGithubObject):
@@ -42,7 +51,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: string
         """
@@ -50,7 +59,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._message.value
 
     @property
-    def object(self):
+    def object(self) -> GitObject:
         """
         :type: :class:`github.GitObject.GitObject`
         """
@@ -58,7 +67,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._object.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -66,7 +75,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def tag(self):
+    def tag(self) -> str:
         """
         :type: string
         """
@@ -74,7 +83,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._tag.value
 
     @property
-    def tagger(self):
+    def tagger(self) -> GitAuthor:
         """
         :type: :class:`github.GitAuthor.GitAuthor`
         """
@@ -82,10 +91,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._tagger.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 

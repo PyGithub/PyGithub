@@ -36,24 +36,15 @@ class CommitStats(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def additions(self):
-        """
-        :type: integer
-        """
+    def additions(self) -> int:
         return self._additions.value
 
     @property
-    def deletions(self):
-        """
-        :type: integer
-        """
+    def deletions(self) -> int:
         return self._deletions.value
 
     @property
-    def total(self):
-        """
-        :type: integer
-        """
+    def total(self) -> int:
         return self._total.value
 
     def _initAttributes(self):

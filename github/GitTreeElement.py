@@ -40,42 +40,42 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
 
     @property
-    def mode(self):
+    def mode(self) -> str:
         """
         :type: string
         """
         return self._mode.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
         return self._path.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :type: integer
         """
         return self._size.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """

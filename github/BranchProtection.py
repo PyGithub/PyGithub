@@ -20,11 +20,22 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.RequiredPullRequestReviews import RequiredPullRequestReviews
+    from github.RequiredStatusChecks import RequiredStatusChecks
+    from github.Team import Team
 
 
 class BranchProtection(github.GithubObject.CompletableGithubObject):
@@ -36,51 +47,36 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def required_status_checks(self):
-        """
-        :type: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
-        """
+    def required_status_checks(self) -> RequiredStatusChecks:
         self._completeIfNotSet(self._required_status_checks)
         return self._required_status_checks.value
 
     @property
-    def enforce_admins(self):
-        """
-        :type: bool
-        """
+    def enforce_admins(self) -> bool:
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
 
     @property
-    def required_pull_request_reviews(self):
-        """
-        :type: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
-        """
+    def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
-    def get_user_push_restrictions(self):
-        """
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
-        """
+    def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
         if self._user_push_restrictions is github.GithubObject.NotSet:
             return None
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self._user_push_restrictions,
             None,
         )
 
-    def get_team_push_restrictions(self):
+    def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
