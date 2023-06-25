@@ -20,9 +20,13 @@
 #                                                                              #
 ################################################################################
 from datetime import datetime
+from typing import TYPE_CHECKING
 
+import github.WorkflowRun
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-from github.WorkflowRun import WorkflowRun
+
+if TYPE_CHECKING:
+    from github.WorkflowRun import WorkflowRun
 
 
 class Artifact(NonCompletableGithubObject):
@@ -41,7 +45,7 @@ class Artifact(NonCompletableGithubObject):
     _size_in_bytes: Attribute[int]
     _updated_at: Attribute[datetime]
     _url: Attribute[str]
-    _workflow_run: Attribute[WorkflowRun]
+    _workflow_run: Attribute["WorkflowRun"]
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -91,7 +95,7 @@ class Artifact(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def workflow_run(self) -> WorkflowRun:
+    def workflow_run(self) -> "WorkflowRun":
         return self._workflow_run.value
 
     def delete(self) -> bool:
@@ -151,5 +155,5 @@ class Artifact(NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_run" in attributes:  # pragma no branch
             self._workflow_run = self._makeClassAttribute(
-                WorkflowRun, attributes["workflow_run"]
+                github.WorkflowRun.WorkflowRun, attributes["workflow_run"]
             )
