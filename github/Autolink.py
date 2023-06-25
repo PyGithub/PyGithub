@@ -20,38 +20,42 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Autolink(github.GithubObject.NonCompletableGithubObject):
+class Autolink(NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
+    _id: Attribute[int]
+    _key_prefix: Attribute[str]
+    _url_template: Attribute[str]
+
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def key_prefix(self):
+    def key_prefix(self) -> str:
         """
         :type: string
         """
         return self._key_prefix.value
 
     @property
-    def url_template(self):
+    def url_template(self) -> str:
         """
         :type: string
         """
         return self._url_template.value
 
     def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._key_prefix = github.GithubObject.NotSet
-        self._url_template = github.GithubObject.NotSet
+        self._id = NotSet
+        self._key_prefix = NotSet
+        self._url_template = NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
