@@ -23,11 +23,19 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github
+from github.GithubObject import NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
-class Stargazer(github.GithubObject.NonCompletableGithubObject):
+class Stargazer(NonCompletableGithubObject):
     """
     This class represents Stargazers. The reference can be found here https://docs.github.com/en/rest/reference/activity#starring
     """
@@ -36,23 +44,17 @@ class Stargazer(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"user": self._user.value._login.value})
 
     @property
-    def starred_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def starred_at(self) -> datetime:
         return self._starred_at.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser`
-        """
+    def user(self) -> NamedUser:
         return self._user.value
 
     def _initAttributes(self):
-        self._starred_at = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._starred_at = NotSet
+        self._user = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "starred_at" in attributes:

@@ -20,8 +20,15 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.Repository
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
@@ -31,14 +38,14 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def preferences(self):
+    def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
         """
         :type: dict
         """
         return self._preferences.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """

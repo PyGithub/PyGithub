@@ -23,6 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 
 import github.GithubObject
 
@@ -33,24 +34,15 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def week(self):
-        """
-        :type: datetime.datetime
-        """
+    def week(self) -> datetime:
         return self._week.value
 
     @property
-    def total(self):
-        """
-        :type: int
-        """
+    def total(self) -> int:
         return self._total.value
 
     @property
-    def days(self):
-        """
-        :type: list of int
-        """
+    def days(self) -> int:
         return self._days.value
 
     def _initAttributes(self):

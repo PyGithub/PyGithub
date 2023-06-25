@@ -23,6 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import List
 
 import github.GithubObject
 
@@ -33,14 +34,14 @@ class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def all(self):
+    def all(self) -> List[int]:
         """
         :type: list of int
         """
         return self._all.value
 
     @property
-    def owner(self):
+    def owner(self) -> List[int]:
         """
         :type: list of int
         """
