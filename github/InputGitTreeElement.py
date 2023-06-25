@@ -27,6 +27,8 @@
 ################################################################################
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import NotSet, Opt, _NotSetType
 
 
@@ -63,13 +65,13 @@ class InputGitTreeElement:
         self.__sha: Opt[str] | None = sha
 
     @property
-    def _identity(self) -> dict[str, str]:
-        identity: dict[str, str] = {
+    def _identity(self) -> dict[str, Any]:
+        identity: dict[str, Any] = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,
         }
-        if not isinstance(self.__sha, _NotSetType) and self.__sha is not None:
+        if not isinstance(self.__sha, _NotSetType):
             identity["sha"] = self.__sha
         if not isinstance(self.__content, _NotSetType):
             identity["content"] = self.__content
