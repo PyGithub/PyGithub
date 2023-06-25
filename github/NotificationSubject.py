@@ -38,31 +38,19 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
     @property
-    def latest_comment_url(self):
-        """
-        :type: string
-        """
+    def latest_comment_url(self) -> str:
         return self._latest_comment_url.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     def _initAttributes(self):

@@ -27,6 +27,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
 
 import github.GithubObject
 
@@ -40,24 +41,15 @@ class GitAuthor(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def date(self):
-        """
-        :type: datetime.datetime
-        """
+    def date(self) -> datetime:
         return self._date.value
 
     @property
-    def email(self):
-        """
-        :type: string
-        """
+    def email(self) -> str:
         return self._email.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     def _initAttributes(self):

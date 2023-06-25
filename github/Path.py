@@ -44,31 +44,19 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         return self._path.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
     @property
-    def count(self):
-        """
-        :type: integer
-        """
+    def count(self) -> int:
         return self._count.value
 
     @property
-    def uniques(self):
-        """
-        :type: integer
-        """
+    def uniques(self) -> int:
         return self._uniques.value
 
     def _initAttributes(self):

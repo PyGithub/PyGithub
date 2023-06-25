@@ -32,26 +32,17 @@ class RequiredStatusChecks(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
 
     @property
-    def strict(self):
-        """
-        :type: bool
-        """
+    def strict(self) -> bool:
         self._completeIfNotSet(self._strict)
         return self._strict.value
 
     @property
-    def contexts(self):
-        """
-        :type: list of string
-        """
+    def contexts(self) -> list[str]:
         self._completeIfNotSet(self._contexts)
         return self._contexts.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 

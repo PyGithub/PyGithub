@@ -40,45 +40,27 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def collaborators(self):
-        """
-        :type: integer
-        """
+    def collaborators(self) -> int:
         return self._collaborators.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def private_repos(self):
-        """
-        :type: integer
-        """
+    def private_repos(self) -> int:
         return self._private_repos.value
 
     @property
-    def space(self):
-        """
-        :type: integer
-        """
+    def space(self) -> int:
         return self._space.value
 
     @property
-    def filled_seats(self):
-        """
-        :type: integer
-        """
+    def filled_seats(self) -> int:
         return self._filled_seats.value
 
     @property
-    def seats(self):
-        """
-        :type: integer
-        """
+    def seats(self) -> int:
         return self._seats.value
 
     def _initAttributes(self):

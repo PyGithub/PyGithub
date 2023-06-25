@@ -41,24 +41,15 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
 
     @property
-    def merged(self):
-        """
-        :type: bool
-        """
+    def merged(self) -> bool:
         return self._merged.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     def _initAttributes(self):

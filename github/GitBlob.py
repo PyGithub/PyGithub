@@ -40,42 +40,27 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def content(self):
-        """
-        :type: string
-        """
+    def content(self) -> str:
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
-    def encoding(self):
-        """
-        :type: string
-        """
+    def encoding(self) -> str:
         self._completeIfNotSet(self._encoding)
         return self._encoding.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def size(self):
-        """
-        :type: integer
-        """
+    def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 

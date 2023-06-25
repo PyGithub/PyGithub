@@ -39,17 +39,11 @@ class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def source(self):
-        """
-        :type: string
-        """
+    def source(self) -> str:
         return self._source.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     def _initAttributes(self):
