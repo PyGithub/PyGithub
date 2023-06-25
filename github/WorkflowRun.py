@@ -22,12 +22,10 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Dict, List, NamedTuple
+from typing import TYPE_CHECKING, Dict, List, NamedTuple
 
-import github.Artifact
 import github.GitCommit
 import github.PullRequest
-import github.Repository
 import github.WorkflowJob
 from github.GithubObject import (
     Attribute,
@@ -37,6 +35,12 @@ from github.GithubObject import (
     _NotSetType,
 )
 from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.Artifact import Artifact
+    from github.GitCommit import GitCommit
+    from github.Repository import Repository
+    from github.WorkflowJob import WorkflowJob
 
 
 class TimingData(NamedTuple):
@@ -76,9 +80,9 @@ class WorkflowRun(CompletableGithubObject):
     _rerun_url: Attribute[str]
     _artifacts_url: Attribute[str]
     _workflow_url: Attribute[str]
-    _head_commit: Attribute[github.GitCommit.GitCommit]
-    _repository: Attribute["github.Repository.Repository"]
-    _head_repository: Attribute["github.Repository.Repository"]
+    _head_commit: Attribute["GitCommit"]
+    _repository: Attribute["Repository"]
+    _head_repository: Attribute["Repository"]
 
     @property
     def id(self) -> int:
@@ -193,7 +197,7 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
-    def get_artifacts(self) -> "PaginatedList[github.Artifact.Artifact]":
+    def get_artifacts(self) -> PaginatedList["Artifact"]:
         return PaginatedList(
             github.Artifact.Artifact,
             self._requester,
@@ -221,17 +225,17 @@ class WorkflowRun(CompletableGithubObject):
         return self._workflow_url.value
 
     @property
-    def head_commit(self) -> github.GitCommit.GitCommit:
+    def head_commit(self) -> "GitCommit":
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
     @property
-    def repository(self) -> "github.Repository.Repository":
+    def repository(self) -> "Repository":
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
-    def head_repository(self) -> "github.Repository.Repository":
+    def head_repository(self) -> "Repository":
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 
@@ -265,9 +269,7 @@ class WorkflowRun(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
 
-    def jobs(
-        self, _filter: Opt[str] = NotSet
-    ) -> "PaginatedList[github.WorkflowJob.WorkflowJob]":
+    def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList["WorkflowJob"]:
         """
         :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
         :param _filter: string `latest`, or `all`
