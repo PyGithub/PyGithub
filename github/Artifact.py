@@ -19,6 +19,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -45,7 +47,7 @@ class Artifact(NonCompletableGithubObject):
     _size_in_bytes: Attribute[int]
     _updated_at: Attribute[datetime]
     _url: Attribute[str]
-    _workflow_run: Attribute["WorkflowRun"]
+    _workflow_run: Attribute[WorkflowRun]
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -95,7 +97,7 @@ class Artifact(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def workflow_run(self) -> "WorkflowRun":
+    def workflow_run(self) -> WorkflowRun:
         return self._workflow_run.value
 
     def delete(self) -> bool:
