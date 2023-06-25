@@ -85,10 +85,10 @@ class ApplicationOAuth(NonCompletableGithubObject):
             assert isinstance(login, str), login
             parameters["login"] = login
 
-        parameters = urllib.parse.urlencode(parameters)
+        query = urllib.parse.urlencode(parameters)
 
         base_url = "https://github.com/login/oauth/authorize"
-        return f"{base_url}?{parameters}"
+        return f"{base_url}?{query}"
 
     def get_access_token(self, code: str, state: str | None = None) -> AccessToken:
         """
