@@ -180,17 +180,11 @@ class Issue(CompletableGithubObject):
 
     @property
     def labels_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._labels_url)
         return self._labels_url.value
 
     @property
     def milestone(self) -> Milestone:
-        """
-        :type: :class:`github.Milestone.Milestone`
-        """
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -201,17 +195,11 @@ class Issue(CompletableGithubObject):
 
     @property
     def pull_request(self) -> IssuePullRequest:
-        """
-        :type: :class:`github.IssuePullRequest.IssuePullRequest`
-        """
         self._completeIfNotSet(self._pull_request)
         return self._pull_request.value
 
     @property
     def repository(self) -> Repository:
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         self._completeIfNotSet(self._repository)
         if isinstance(self._repository, _NotSetType):
             # The repository was not set automatically, so it must be looked up by url.
@@ -269,7 +257,6 @@ class Issue(CompletableGithubObject):
     def as_pull_request(self) -> PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
-        :rtype: :class:`github.PullRequest.PullRequest`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET", "/pulls/".join(self.url.rsplit("/issues/", 1))
@@ -562,7 +549,6 @@ class Issue(CompletableGithubObject):
     def get_timeline(self) -> PaginatedList[TimelineEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/timeline <https://docs.github.com/en/rest/reference/issues#list-timeline-events-for-an-issue>`_
-        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent.TimelineEvent`
         """
         return github.PaginatedList.PaginatedList(
             github.TimelineEvent.TimelineEvent,
