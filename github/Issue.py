@@ -379,7 +379,7 @@ class Issue(CompletableGithubObject):
         )
 
         if not isinstance(milestone, _NotSetType):
-            post_parameters["milestone"] = (milestone._identity if milestone else "",)
+            post_parameters["milestone"] = milestone._identity if milestone else ""
 
         if not isinstance(assignee, _NotSetType):
             if isinstance(assignee, str):
