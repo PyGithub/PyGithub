@@ -39,9 +39,8 @@ import github.Commit
 import github.GithubObject
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+from github import Consts
 from github.GithubObject import NotSet, Opt, _NotSetType
-
-from . import Consts
 
 if TYPE_CHECKING:
     from github.BranchProtection import BranchProtection
