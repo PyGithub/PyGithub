@@ -30,14 +30,27 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 import github.BranchProtection
 import github.Commit
 import github.GithubObject
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+from github.GithubObject import NotSet, Opt, _NotSetType
 
 from . import Consts
+
+if TYPE_CHECKING:
+    from github.BranchProtection import BranchProtection
+    from github.Commit import Commit
+    from github.NamedUser import NamedUser
+    from github.PaginatedList import PaginatedList
+    from github.RequiredPullRequestReviews import RequiredPullRequestReviews
+    from github.RequiredStatusChecks import RequiredStatusChecks
+    from github.Team import Team
 
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
@@ -49,31 +62,19 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def commit(self):
-        """
-        :type: :class:`github.Commit.Commit`
-        """
+    def commit(self) -> Commit:
         return self._commit.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def protected(self):
-        """
-        :type: bool
-        """
+    def protected(self) -> bool:
         return self._protected.value
 
     @property
-    def protection_url(self):
-        """
-        :type: string
-        """
+    def protection_url(self) -> str:
         return self._protection_url.value
 
     def _initAttributes(self):
@@ -96,7 +97,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         if "protected" in attributes:  # pragma no branch
             self._protected = self._makeBoolAttribute(attributes["protected"])
 
-    def get_protection(self):
+    def get_protection(self) -> BranchProtection:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -161,74 +162,61 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         be submitted. Take care to pass both as arguments even if only one is
         changing. Use edit_required_status_checks() to avoid this.
         """
-        assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(
+        assert isinstance(strict, _NotSetType) or isinstance(strict, bool), strict
+        assert isinstance(contexts, _NotSetType) or all(
             isinstance(element, str) for element in contexts
         ), contexts
-        assert enforce_admins is github.GithubObject.NotSet or isinstance(
+        assert isinstance(enforce_admins, _NotSetType) or isinstance(
             enforce_admins, bool
         ), enforce_admins
-        assert dismissal_users is github.GithubObject.NotSet or all(
+        assert isinstance(dismissal_users, _NotSetType) or all(
             isinstance(element, str) for element in dismissal_users
         ), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(
+        assert isinstance(dismissal_teams, _NotSetType) or all(
             isinstance(element, str) for element in dismissal_teams
         ), dismissal_teams
-        assert dismissal_apps is github.GithubObject.NotSet or all(
+        assert isinstance(dismissal_apps, _NotSetType) or all(
             isinstance(element, str) for element in dismissal_apps
         ), dismissal_apps
-        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
+        assert isinstance(dismiss_stale_reviews, _NotSetType) or isinstance(
             dismiss_stale_reviews, bool
         ), dismiss_stale_reviews
-        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(
+        assert isinstance(require_code_owner_reviews, _NotSetType) or isinstance(
             require_code_owner_reviews, bool
         ), require_code_owner_reviews
-        assert (
-            required_approving_review_count is github.GithubObject.NotSet
-            or isinstance(required_approving_review_count, int)
-        ), (required_approving_review_count)
-        assert required_linear_history is github.GithubObject.NotSet or isinstance(
+        assert isinstance(required_approving_review_count, _NotSetType) or isinstance(
+            required_approving_review_count, int
+        ), required_approving_review_count
+        assert isinstance(required_linear_history, _NotSetType) or isinstance(
             required_linear_history, bool
         ), required_linear_history
-        assert allow_force_pushes is github.GithubObject.NotSet or isinstance(
+        assert isinstance(allow_force_pushes, _NotSetType) or isinstance(
             allow_force_pushes, bool
         ), allow_force_pushes
-        assert (
-            required_conversation_resolution is github.GithubObject.NotSet
-            or isinstance(required_linear_history, bool)
+        assert isinstance(required_conversation_resolution, _NotSetType) or isinstance(
+            required_linear_history, bool
         ), required_conversation_resolution
-        assert lock_branch is github.GithubObject.NotSet or isinstance(
+        assert isinstance(lock_branch, _NotSetType) or isinstance(
             lock_branch, bool
         ), lock_branch
-        assert allow_fork_syncing is github.GithubObject.NotSet or isinstance(
+        assert isinstance(allow_fork_syncing, _NotSetType) or isinstance(
             allow_fork_syncing, bool
         ), allow_fork_syncing
-        assert (
-            users_bypass_pull_request_allowances is github.GithubObject.NotSet
-            or all(
-                isinstance(element, str)
-                for element in users_bypass_pull_request_allowances
-            )
-        ), (users_bypass_pull_request_allowances)
-        assert (
-            teams_bypass_pull_request_allowances is github.GithubObject.NotSet
-            or all(
-                isinstance(element, str)
-                for element in teams_bypass_pull_request_allowances
-            )
-        ), (teams_bypass_pull_request_allowances)
-        assert apps_bypass_pull_request_allowances is github.GithubObject.NotSet or all(
+        assert isinstance(users_bypass_pull_request_allowances, _NotSetType) or all(
+            isinstance(element, str) for element in users_bypass_pull_request_allowances
+        ), users_bypass_pull_request_allowances
+        assert isinstance(teams_bypass_pull_request_allowances, _NotSetType) or all(
+            isinstance(element, str) for element in teams_bypass_pull_request_allowances
+        ), teams_bypass_pull_request_allowances
+        assert isinstance(apps_bypass_pull_request_allowances, _NotSetType) or all(
             isinstance(element, str) for element in apps_bypass_pull_request_allowances
         ), apps_bypass_pull_request_allowances
 
         post_parameters = {}
-        if (
-            strict is not github.GithubObject.NotSet
-            or contexts is not github.GithubObject.NotSet
-        ):
-            if strict is github.GithubObject.NotSet:
+        if not isinstance(strict, _NotSetType) or not isinstance(contexts, _NotSetType):
+            if isinstance(strict, _NotSetType):
                 strict = False
-            if contexts is github.GithubObject.NotSet:
+            if isinstance(contexts, _NotSetType):
                 contexts = []
             post_parameters["required_status_checks"] = {
                 "strict": strict,
@@ -237,72 +225,72 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         else:
             post_parameters["required_status_checks"] = None
 
-        if enforce_admins is not github.GithubObject.NotSet:
+        if not isinstance(enforce_admins, _NotSetType):
             post_parameters["enforce_admins"] = enforce_admins
         else:
             post_parameters["enforce_admins"] = None
 
         if (
-            dismissal_users is not github.GithubObject.NotSet
-            or dismissal_teams is not github.GithubObject.NotSet
-            or dismissal_apps is not github.GithubObject.NotSet
-            or dismiss_stale_reviews is not github.GithubObject.NotSet
-            or require_code_owner_reviews is not github.GithubObject.NotSet
-            or required_approving_review_count is not github.GithubObject.NotSet
-            or users_bypass_pull_request_allowances is not github.GithubObject.NotSet
-            or teams_bypass_pull_request_allowances is not github.GithubObject.NotSet
-            or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
+            not isinstance(dismissal_users, _NotSetType)
+            or not isinstance(dismissal_teams, _NotSetType)
+            or not isinstance(dismissal_apps, _NotSetType)
+            or not isinstance(dismiss_stale_reviews, _NotSetType)
+            or not isinstance(require_code_owner_reviews, _NotSetType)
+            or not isinstance(required_approving_review_count, _NotSetType)
+            or not isinstance(users_bypass_pull_request_allowances, _NotSetType)
+            or not isinstance(teams_bypass_pull_request_allowances, _NotSetType)
+            or not isinstance(apps_bypass_pull_request_allowances, _NotSetType)
         ):
             post_parameters["required_pull_request_reviews"] = {}
-            if dismiss_stale_reviews is not github.GithubObject.NotSet:
+            if not isinstance(dismiss_stale_reviews, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "dismiss_stale_reviews"
                 ] = dismiss_stale_reviews
-            if require_code_owner_reviews is not github.GithubObject.NotSet:
+            if not isinstance(require_code_owner_reviews, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "require_code_owner_reviews"
                 ] = require_code_owner_reviews
-            if required_approving_review_count is not github.GithubObject.NotSet:
+            if not isinstance(required_approving_review_count, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "required_approving_review_count"
                 ] = required_approving_review_count
 
             if (
-                dismissal_users is not github.GithubObject.NotSet
-                or dismissal_teams is not github.GithubObject.NotSet
-                or dismissal_apps is not github.GithubObject.NotSet
+                not isinstance(dismissal_users, _NotSetType)
+                or not isinstance(dismissal_teams, _NotSetType)
+                or not isinstance(dismissal_apps, _NotSetType)
             ):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ] = {}
 
-            if dismissal_users is not github.GithubObject.NotSet:
+            if not isinstance(dismissal_users, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["users"] = dismissal_users
-            if dismissal_teams is not github.GithubObject.NotSet:
+            if not isinstance(dismissal_teams, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["teams"] = dismissal_teams
-            if dismissal_apps is not github.GithubObject.NotSet:
+            if not isinstance(dismissal_apps, _NotSetType):
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
                 ]["apps"] = dismissal_apps
 
             if (
-                users_bypass_pull_request_allowances is not github.GithubObject.NotSet
+                not isinstance(users_bypass_pull_request_allowances, _NotSetType)
                 or teams_bypass_pull_request_allowances
                 is not github.GithubObject.NotSet
-                or apps_bypass_pull_request_allowances is not github.GithubObject.NotSet
+                or not isinstance(apps_bypass_pull_request_allowances, _NotSetType)
             ):
                 post_parameters["required_pull_request_reviews"][
                     "bypass_pull_request_allowances"
                 ] = {}
-                if users_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                if isinstance(users_bypass_pull_request_allowances, _NotSetType):
                     users_bypass_pull_request_allowances = []
-                if teams_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                if isinstance(teams_bypass_pull_request_allowances, _NotSetType):
                     teams_bypass_pull_request_allowances = []
-                if apps_bypass_pull_request_allowances is github.GithubObject.NotSet:
+                if isinstance(apps_bypass_pull_request_allowances, _NotSetType):
                     apps_bypass_pull_request_allowances = []
                 post_parameters["required_pull_request_reviews"][
                     "bypass_pull_request_allowances"
@@ -318,15 +306,15 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
-            user_push_restrictions is not github.GithubObject.NotSet
-            or team_push_restrictions is not github.GithubObject.NotSet
-            or app_push_restrictions is not github.GithubObject.NotSet
+            not isinstance(user_push_restrictions, _NotSetType)
+            or not isinstance(team_push_restrictions, _NotSetType)
+            or not isinstance(app_push_restrictions, _NotSetType)
         ):
-            if user_push_restrictions is github.GithubObject.NotSet:
+            if isinstance(user_push_restrictions, _NotSetType):
                 user_push_restrictions = []
-            if team_push_restrictions is github.GithubObject.NotSet:
+            if isinstance(team_push_restrictions, _NotSetType):
                 team_push_restrictions = []
-            if app_push_restrictions is github.GithubObject.NotSet:
+            if isinstance(app_push_restrictions, _NotSetType):
                 app_push_restrictions = []
             post_parameters["restrictions"] = {
                 "users": user_push_restrictions,
@@ -335,29 +323,29 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             }
         else:
             post_parameters["restrictions"] = None
-        if required_linear_history is not github.GithubObject.NotSet:
+        if not isinstance(required_linear_history, _NotSetType):
             post_parameters["required_linear_history"] = required_linear_history
         else:
             post_parameters["required_linear_history"] = None
-        if allow_force_pushes is not github.GithubObject.NotSet:
+        if not isinstance(allow_force_pushes, _NotSetType):
             post_parameters["allow_force_pushes"] = allow_force_pushes
         else:
             post_parameters["allow_force_pushes"] = None
-        if required_conversation_resolution is not github.GithubObject.NotSet:
+        if not isinstance(required_conversation_resolution, _NotSetType):
             post_parameters[
                 "required_conversation_resolution"
             ] = required_conversation_resolution
         else:
             post_parameters["required_conversation_resolution"] = None
-        if lock_branch is not github.GithubObject.NotSet:
+        if not isinstance(lock_branch, _NotSetType):
             post_parameters["lock_branch"] = lock_branch
         else:
             post_parameters["lock_branch"] = None
-        if allow_fork_syncing is not github.GithubObject.NotSet:
+        if not isinstance(allow_fork_syncing, _NotSetType):
             post_parameters["allow_fork_syncing"] = allow_fork_syncing
         else:
             post_parameters["allow_fork_syncing"] = None
-        if block_creations is not github.GithubObject.NotSet:
+        if not isinstance(block_creations, _NotSetType):
             post_parameters["block_creations"] = block_creations
         else:
             post_parameters["block_creations"] = None
@@ -369,7 +357,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def remove_protection(self):
+    def remove_protection(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -378,7 +366,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             self.protection_url,
         )
 
-    def get_required_status_checks(self):
+    def get_required_status_checks(self) -> RequiredStatusChecks:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
@@ -391,22 +379,24 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         )
 
     def edit_required_status_checks(
-        self, strict=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet
+        self,
+        strict: Opt[bool] = NotSet,
+        contexts: Opt[list[str]] = NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         :strict: bool
         :contexts: list of strings
         """
-        assert strict is github.GithubObject.NotSet or isinstance(strict, bool), strict
-        assert contexts is github.GithubObject.NotSet or all(
+        assert isinstance(strict, _NotSetType) or isinstance(strict, bool), strict
+        assert isinstance(contexts, _NotSetType) or all(
             isinstance(element, str) for element in contexts
         ), contexts
 
-        post_parameters = {}
-        if strict is not github.GithubObject.NotSet:
+        post_parameters: dict[str, Any] = {}
+        if not isinstance(strict, _NotSetType):
             post_parameters["strict"] = strict
-        if contexts is not github.GithubObject.NotSet:
+        if not isinstance(contexts, _NotSetType):
             post_parameters["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -423,7 +413,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             f"{self.protection_url}/required_status_checks",
         )
 
-    def get_required_pull_request_reviews(self):
+    def get_required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
@@ -439,12 +429,12 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def edit_required_pull_request_reviews(
         self,
-        dismissal_users=github.GithubObject.NotSet,
-        dismissal_teams=github.GithubObject.NotSet,
-        dismissal_apps=github.GithubObject.NotSet,
-        dismiss_stale_reviews=github.GithubObject.NotSet,
-        require_code_owner_reviews=github.GithubObject.NotSet,
-        required_approving_review_count=github.GithubObject.NotSet,
+        dismissal_users: Opt[list[str]] = NotSet,
+        dismissal_teams: Opt[list[str]] = NotSet,
+        dismissal_apps: Opt[list[str]] = NotSet,
+        dismiss_stale_reviews: Opt[bool] = NotSet,
+        require_code_owner_reviews: Opt[bool] = NotSet,
+        required_approving_review_count: Opt[int] = NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
@@ -455,43 +445,42 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
-        assert dismissal_users is github.GithubObject.NotSet or all(
+        assert isinstance(dismissal_users, _NotSetType) or all(
             isinstance(element, str) for element in dismissal_users
         ), dismissal_users
-        assert dismissal_teams is github.GithubObject.NotSet or all(
+        assert isinstance(dismissal_teams, _NotSetType) or all(
             isinstance(element, str) for element in dismissal_teams
         ), dismissal_teams
-        assert dismiss_stale_reviews is github.GithubObject.NotSet or isinstance(
+        assert isinstance(dismiss_stale_reviews, _NotSetType) or isinstance(
             dismiss_stale_reviews, bool
         ), dismiss_stale_reviews
-        assert require_code_owner_reviews is github.GithubObject.NotSet or isinstance(
+        assert isinstance(require_code_owner_reviews, _NotSetType) or isinstance(
             require_code_owner_reviews, bool
         ), require_code_owner_reviews
-        assert (
-            required_approving_review_count is github.GithubObject.NotSet
-            or isinstance(required_approving_review_count, int)
-        ), (required_approving_review_count)
+        assert isinstance(required_approving_review_count, _NotSetType) or isinstance(
+            required_approving_review_count, int
+        ), required_approving_review_count
 
-        post_parameters = {}
+        post_parameters: dict[str, Any] = {}
         if (
-            dismissal_users is not github.GithubObject.NotSet
-            or dismissal_teams is not github.GithubObject.NotSet
-            or dismissal_apps is not github.GithubObject.NotSet
+            not isinstance(dismissal_users, _NotSetType)
+            or not isinstance(dismissal_teams, _NotSetType)
+            or not isinstance(dismissal_apps, _NotSetType)
         ):
             post_parameters["dismissal_restrictions"] = {}
 
-        if dismissal_users is not github.GithubObject.NotSet:
+        if not isinstance(dismissal_users, _NotSetType):
             post_parameters["dismissal_restrictions"]["users"] = dismissal_users
-        if dismissal_teams is not github.GithubObject.NotSet:
+        if not isinstance(dismissal_teams, _NotSetType):
             post_parameters["dismissal_restrictions"]["teams"] = dismissal_teams
-        if dismissal_apps is not github.GithubObject.NotSet:
+        if not isinstance(dismissal_apps, _NotSetType):
             post_parameters["dismissal_restrictions"]["apps"] = dismissal_apps
 
-        if dismiss_stale_reviews is not github.GithubObject.NotSet:
+        if not isinstance(dismiss_stale_reviews, _NotSetType):
             post_parameters["dismiss_stale_reviews"] = dismiss_stale_reviews
-        if require_code_owner_reviews is not github.GithubObject.NotSet:
+        if not isinstance(require_code_owner_reviews, _NotSetType):
             post_parameters["require_code_owner_reviews"] = require_code_owner_reviews
-        if required_approving_review_count is not github.GithubObject.NotSet:
+        if not isinstance(required_approving_review_count, _NotSetType):
             post_parameters[
                 "required_approving_review_count"
             ] = required_approving_review_count
@@ -521,7 +510,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         )
         return data["enabled"]
 
-    def set_admin_enforcement(self):
+    def set_admin_enforcement(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -529,7 +518,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "POST", f"{self.protection_url}/enforce_admins"
         )
 
-    def remove_admin_enforcement(self):
+    def remove_admin_enforcement(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -537,10 +526,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE", f"{self.protection_url}/enforce_admins"
         )
 
-    def get_user_push_restrictions(self):
+    def get_user_push_restrictions(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
@@ -549,10 +537,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
-    def get_team_push_restrictions(self):
+    def get_team_push_restrictions(self) -> PaginatedList[Team]:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
             github.Team.Team,
@@ -561,7 +548,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
-    def add_user_push_restrictions(self, *users):
+    def add_user_push_restrictions(self, *users: str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
@@ -572,7 +559,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "POST", f"{self.protection_url}/restrictions/users", input=users
         )
 
-    def replace_user_push_restrictions(self, *users):
+    def replace_user_push_restrictions(self, *users: str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
@@ -583,7 +570,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "PUT", f"{self.protection_url}/restrictions/users", input=users
         )
 
-    def remove_user_push_restrictions(self, *users):
+    def remove_user_push_restrictions(self, *users: str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         :users: list of strings (user names)
@@ -594,7 +581,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE", f"{self.protection_url}/restrictions/users", input=users
         )
 
-    def add_team_push_restrictions(self, *teams):
+    def add_team_push_restrictions(self, *teams: str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
@@ -605,7 +592,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "POST", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
-    def replace_team_push_restrictions(self, *teams):
+    def replace_team_push_restrictions(self, *teams: str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
@@ -616,7 +603,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "PUT", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
-    def remove_team_push_restrictions(self, *teams):
+    def remove_team_push_restrictions(self, *teams: str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         :teams: list of strings (team slugs)
@@ -627,7 +614,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE", f"{self.protection_url}/restrictions/teams", input=teams
         )
 
-    def remove_push_restrictions(self):
+    def remove_push_restrictions(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -635,7 +622,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             "DELETE", f"{self.protection_url}/restrictions"
         )
 
-    def get_required_signatures(self):
+    def get_required_signatures(self) -> bool:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -646,7 +633,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         )
         return data["enabled"]
 
-    def add_required_signatures(self):
+    def add_required_signatures(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -656,7 +643,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
 
-    def remove_required_signatures(self):
+    def remove_required_signatures(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
