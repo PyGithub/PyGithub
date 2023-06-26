@@ -330,13 +330,15 @@ class Issue(CompletableGithubObject):
         body: Opt[str] = NotSet,
         assignee: Opt[str | NamedUser | None] = NotSet,
         state: Opt[str] = NotSet,
-        milestone: Opt[Milestone] = NotSet,
+        milestone: Opt[Milestone | None] = NotSet,
         labels: Opt[list[str]] = NotSet,
         assignees: Opt[list[str]] = NotSet,
         state_reason: Opt[str] = NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
+        :param assignee: deprecated, use `assignees` instead. `assignee=None` means to remove current assignee.
+        :param milestone: `milestone=None` means to remove current milestone.
         """
         assert isinstance(title, (str, _NotSetType)), title
         assert isinstance(body, (str, _NotSetType)), body
