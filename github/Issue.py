@@ -340,17 +340,13 @@ class Issue(CompletableGithubObject):
         """
         assert isinstance(title, (str, _NotSetType)), title
         assert isinstance(body, (str, _NotSetType)), body
-        assert assignee is None or isinstance(
-            assignee, (github.NamedUser.NamedUser, str, _NotSetType)
-        ), assignee
+        assert isinstance(assignee, (github.NamedUser.NamedUser, str, _NotSetType)), assignee
         assert isinstance(assignees, _NotSetType) or all(
             isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees
         assert isinstance(state, (_NotSetType, str)), state
-        assert milestone is None or isinstance(
-            milestone, (_NotSetType, github.Milestone.Milestone)
-        ), milestone
+        assert isinstance(milestone, (github.Milestone.Milestone, _NotSetType)), milestone
         assert isinstance(labels, _NotSetType) or all(
             isinstance(element, str) for element in labels
         ), labels
