@@ -36,16 +36,24 @@ import github.GitAuthor
 import github.GithubObject
 import github.GitObject
 import github.GitTreeElement
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.GitAuthor import GitAuthor
     from github.GitObject import GitObject
 
 
-class GitTag(github.GithubObject.CompletableGithubObject):
+class GitTag(CompletableGithubObject):
     """
     This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags
     """
+
+    _message: Attribute[str]
+    _object: Attribute[GitObject]
+    _sha: Attribute[str]
+    _tag: Attribute[str]
+    _tagger: Attribute[GitAuthor]
+    _url: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
@@ -81,12 +89,12 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     def _initAttributes(self):
-        self._message = github.GithubObject.NotSet
-        self._object = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._tag = github.GithubObject.NotSet
-        self._tagger = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._message = NotSet
+        self._object = NotSet
+        self._sha = NotSet
+        self._tag = NotSet
+        self._tagger = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "message" in attributes:  # pragma no branch
