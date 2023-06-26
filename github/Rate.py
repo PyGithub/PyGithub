@@ -26,13 +26,17 @@
 ################################################################################
 from datetime import datetime
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Rate(github.GithubObject.NonCompletableGithubObject):
+class Rate(NonCompletableGithubObject):
     """
     This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
+
+    _limit: Attribute[int]
+    _remaining: Attribute[int]
+    _reset: Attribute[datetime]
 
     def __repr__(self):
         return self.get__repr__(
@@ -56,9 +60,9 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         return self._reset.value
 
     def _initAttributes(self):
-        self._limit = github.GithubObject.NotSet
-        self._remaining = github.GithubObject.NotSet
-        self._reset = github.GithubObject.NotSet
+        self._limit = NotSet
+        self._remaining = NotSet
+        self._reset = NotSet
 
     def _useAttributes(self, attributes):
         if "limit" in attributes:  # pragma no branch
