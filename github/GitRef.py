@@ -34,16 +34,26 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.GitObject
-from github.GithubObject import Opt, _NotSetType
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+)
 
 if TYPE_CHECKING:
     from github.GitObject import GitObject
 
 
-class GitRef(github.GithubObject.CompletableGithubObject):
+class GitRef(CompletableGithubObject):
     """
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
+
+    _object: Attribute[GitObject]
+    _ref: Attribute[str]
+    _url: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"ref": self._ref.value})
@@ -66,16 +76,12 @@ class GitRef(github.GithubObject.CompletableGithubObject):
     def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha: str, force: Opt[bool] = github.GithubObject.NotSet) -> None:
+    def edit(self, sha: str, force: Opt[bool] = NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :param sha: string
-        :param force: bool
-        :rtype: None
         """
         assert isinstance(sha, str), sha
         assert isinstance(force, (_NotSetType, bool)), force
@@ -86,9 +92,9 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     def _initAttributes(self):
-        self._object = github.GithubObject.NotSet
-        self._ref = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._object = NotSet
+        self._ref = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
