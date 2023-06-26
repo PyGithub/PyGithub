@@ -28,12 +28,17 @@
 ################################################################################
 
 import github.GithubObject
+from github.GithubObject import Attribute
 
 
 class CommitStats(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents CommitStatses.
+    This class represents CommitStats.
     """
+
+    _total: Attribute[int]
+    _deletions: Attribute[int]
+    _additions: Attribute[int]
 
     @property
     def additions(self) -> int:
