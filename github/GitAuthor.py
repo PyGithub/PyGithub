@@ -30,12 +30,17 @@
 from datetime import datetime
 
 import github.GithubObject
+from github.GithubObject import Attribute
 
 
 class GitAuthor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitAuthors
     """
+
+    _name: Attribute[str]
+    _email: Attribute[str]
+    _date: Attribute[datetime]
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
