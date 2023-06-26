@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.Rate
+from github.GithubObject import Attribute
 
 if TYPE_CHECKING:
     from github.Rate import Rate
@@ -40,6 +41,10 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents RateLimits. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
+
+    _core: Attribute[Rate]
+    _search: Attribute[Rate]
+    _graphql: Attribute[Rate]
 
     def __repr__(self):
         return self.get__repr__({"core": self._core.value})
