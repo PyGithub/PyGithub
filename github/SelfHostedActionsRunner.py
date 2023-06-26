@@ -20,8 +20,6 @@
 #                                                                              #
 ################################################################################
 
-from __future__ import annotations
-
 import github.GithubObject
 
 
@@ -35,26 +33,44 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def id(self) -> int:
+    def id(self):
+        """
+        :type: int
+        """
         return self._id.value
 
     @property
-    def name(self) -> str:
+    def name(self):
+        """
+        :type: string
+        """
         return self._name.value
 
     @property
-    def os(self) -> str:
+    def os(self):
+        """
+        :type: string
+        """
         return self._os.value
 
     @property
-    def status(self) -> str:
+    def status(self):
+        """
+        :type: str
+        """
         return self._status.value
 
     @property
-    def busy(self) -> bool:
+    def busy(self):
+        """
+        :type: bool
+        """
         return self._busy.value
 
-    def labels(self) -> list[dict[str, int | str]]:
+    def labels(self):
+        """
+        :type: list of dicts
+        """
         return self._labels.value
 
     def _initAttributes(self):
