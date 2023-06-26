@@ -365,11 +365,6 @@ class Issue(CompletableGithubObject):
         if not isinstance(milestone, _NotSetType):
             post_parameters["milestone"] = milestone._identity if milestone else ""
 
-        if not isinstance(assignee, _NotSetType):
-            if isinstance(assignee, str):
-                post_parameters["assignee"] = assignee
-            else:
-                post_parameters["assignee"] = assignee._identity if assignee else ""
         if not isinstance(assignees, _NotSetType):
             post_parameters["assignees"] = [
                 element._identity
