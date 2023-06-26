@@ -54,8 +54,8 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
 
-    _key_id: Attribute[str]
-    _key: Attribute[str | int]
+    _key_id: Attribute[str | int]
+    _key: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
