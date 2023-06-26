@@ -36,6 +36,7 @@ from base64 import b64encode
 from nacl import encoding, public
 
 import github.GithubObject
+from github.GithubObject import Attribute
 
 
 def encrypt(public_key: str, secret_value: str) -> str:
@@ -52,6 +53,9 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
+
+    _key_id: Attribute[str]
+    _key: Attribute[str | int]
 
     def __repr__(self):
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
