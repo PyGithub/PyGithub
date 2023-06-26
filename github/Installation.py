@@ -65,18 +65,30 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         return self._id.value
 
     @property
     def app_id(self):
+        """
+        :type: integer
+        """
         return self._app_id.value
 
     @property
     def target_id(self):
+        """
+        :type: integer
+        """
         return self._target_id.value
 
     @property
     def target_type(self):
+        """
+        :type: string
+        """
         return self._target_type.value
 
     def get_repos(self):

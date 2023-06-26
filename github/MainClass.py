@@ -177,6 +177,9 @@ class Github:
 
     @property
     def FIX_REPO_GET_GIT_REF(self):
+        """
+        :type: bool
+        """
         return self.__requester.FIX_REPO_GET_GIT_REF
 
     @FIX_REPO_GET_GIT_REF.setter
@@ -186,6 +189,9 @@ class Github:
     # v2: Remove this property? Why should it be necessary to read/modify it after construction
     @property
     def per_page(self):
+        """
+        :type: int
+        """
         return self.__requester.per_page
 
     @per_page.setter
@@ -230,6 +236,9 @@ class Github:
 
     @property
     def oauth_scopes(self):
+        """
+        :type: list of string
+        """
         return self.__requester.oauth_scopes
 
     def get_license(self, key=github.GithubObject.NotSet):
