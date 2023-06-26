@@ -35,31 +35,49 @@ class WorkflowStep(github.GithubObject.CompletableGithubObject):
 
     @property
     def completed_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
     @property
     def conclusion(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def number(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._number)
         return self._number.value
 
     @property
     def started_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 
     @property
     def status(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._status)
         return self._status.value
 
