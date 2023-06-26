@@ -44,17 +44,11 @@ class AuthorizationApplication(CompletableGithubObject):
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
