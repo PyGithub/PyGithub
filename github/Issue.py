@@ -358,6 +358,7 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
+                "assignee": assignee._identity if isinstance(assignee, NamedUser) else assignee
             }
         )
 
