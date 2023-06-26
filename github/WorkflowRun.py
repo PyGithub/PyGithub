@@ -221,9 +221,6 @@ class WorkflowRun(CompletableGithubObject):
 
     @property
     def workflow_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
