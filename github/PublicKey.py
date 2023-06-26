@@ -58,17 +58,11 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
 
     @property
     def key(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._key)
         return self._key.value
 
     @property
     def key_id(self) -> str | int:
-        """
-        :type: string or int
-        """
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 

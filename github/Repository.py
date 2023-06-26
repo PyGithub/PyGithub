@@ -206,577 +206,361 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     @property
     def allow_auto_merge(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_auto_merge)
         return self._allow_auto_merge.value
 
     @property
     def allow_forking(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_forking)
         return self._allow_forking.value
 
     @property
     def allow_merge_commit(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_merge_commit)
         return self._allow_merge_commit.value
 
     @property
     def allow_rebase_merge(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_rebase_merge)
         return self._allow_rebase_merge.value
 
     @property
     def allow_squash_merge(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_squash_merge)
         return self._allow_squash_merge.value
 
     @property
     def allow_update_branch(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._allow_update_branch)
         return self._allow_update_branch.value
 
     @property
     def archived(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._archived)
         return self._archived.value
 
     @property
     def archive_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._archive_url)
         return self._archive_url.value
 
     @property
     def assignees_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._assignees_url)
         return self._assignees_url.value
 
     @property
     def blobs_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._blobs_url)
         return self._blobs_url.value
 
     @property
     def branches_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._branches_url)
         return self._branches_url.value
 
     @property
     def clone_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._clone_url)
         return self._clone_url.value
 
     @property
     def collaborators_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._collaborators_url)
         return self._collaborators_url.value
 
     @property
     def comments_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
     def commits_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._commits_url)
         return self._commits_url.value
 
     @property
     def compare_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._compare_url)
         return self._compare_url.value
 
     @property
     def contents_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._contents_url)
         return self._contents_url.value
 
     @property
     def contributors_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._contributors_url)
         return self._contributors_url.value
 
     @property
     def created_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def default_branch(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._default_branch)
         return self._default_branch.value
 
     @property
     def delete_branch_on_merge(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._delete_branch_on_merge)
         return self._delete_branch_on_merge.value
 
     @property
     def deployments_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._deployments_url)
         return self._deployments_url.value
 
     @property
     def description(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
     def downloads_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._downloads_url)
         return self._downloads_url.value
 
     @property
     def events_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._events_url)
         return self._events_url.value
 
     @property
     def fork(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._fork)
         return self._fork.value
 
     @property
     def forks(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._forks)
         return self._forks.value
 
     @property
     def forks_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._forks_count)
         return self._forks_count.value
 
     @property
     def forks_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._forks_url)
         return self._forks_url.value
 
     @property
     def full_name(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._full_name)
         return self._full_name.value
 
     @property
     def git_commits_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._git_commits_url)
         return self._git_commits_url.value
 
     @property
     def git_refs_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._git_refs_url)
         return self._git_refs_url.value
 
     @property
     def git_tags_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._git_tags_url)
         return self._git_tags_url.value
 
     @property
     def git_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._git_url)
         return self._git_url.value
 
     @property
     def has_downloads(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_downloads)
         return self._has_downloads.value
 
     @property
     def has_issues(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_issues)
         return self._has_issues.value
 
     @property
     def has_pages(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_pages)
         return self._has_pages.value
 
     @property
     def has_projects(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_projects)
         return self._has_projects.value
 
     @property
     def has_wiki(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_wiki)
         return self._has_wiki.value
 
     @property
     def homepage(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._homepage)
         return self._homepage.value
 
     @property
     def hooks_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._hooks_url)
         return self._hooks_url.value
 
     @property
     def html_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def id(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def is_template(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._is_template)
         return self._is_template.value
 
     @property
     def issue_comment_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._issue_comment_url)
         return self._issue_comment_url.value
 
     @property
     def issue_events_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._issue_events_url)
         return self._issue_events_url.value
 
     @property
     def issues_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._issues_url)
         return self._issues_url.value
 
     @property
     def keys_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._keys_url)
         return self._keys_url.value
 
     @property
     def labels_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._labels_url)
         return self._labels_url.value
 
     @property
     def language(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._language)
         return self._language.value
 
     @property
     def languages_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._languages_url)
         return self._languages_url.value
 
     @property
     def master_branch(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._master_branch)
         return self._master_branch.value
 
     @property
     def merges_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._merges_url)
         return self._merges_url.value
 
     @property
     def milestones_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._milestones_url)
         return self._milestones_url.value
 
     @property
     def mirror_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._mirror_url)
         return self._mirror_url.value
 
     @property
     def name(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def network_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._network_count)
         return self._network_count.value
 
     @property
     def notifications_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._notifications_url)
         return self._notifications_url.value
 
     @property
     def open_issues(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._open_issues)
         return self._open_issues.value
 
     @property
     def open_issues_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._open_issues_count)
         return self._open_issues_count.value
 
     @property
     def organization(self):
-        """
-        :type: :class:`github.Organization.Organization`
-        """
         self._completeIfNotSet(self._organization)
         return self._organization.value
 
     @property
     def owner(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
     @property
     def parent(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         self._completeIfNotSet(self._parent)
         return self._parent.value
 
     @property
     def permissions(self):
-        """
-        :type: :class:`github.Permissions.Permissions`
-        """
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
     @property
     def private(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._private)
         return self._private.value
 
     @property
     def pulls_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._pulls_url)
         return self._pulls_url.value
 
     @property
     def pushed_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._pushed_at)
         return self._pushed_at.value
 
     @property
     def releases_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._releases_url)
         return self._releases_url.value
 
     @property
     def size(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._size)
         return self._size.value
 
     @property
     def source(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         self._completeIfNotSet(self._source)
         return self._source.value
 
     @property
     def ssh_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._ssh_url)
         return self._ssh_url.value
 
     @property
     def stargazers_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(
             self._stargazers_count
         )  # pragma no cover (Should be covered)
@@ -784,121 +568,76 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     @property
     def stargazers_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._stargazers_url)
         return self._stargazers_url.value
 
     @property
     def statuses_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._statuses_url)
         return self._statuses_url.value
 
     @property
     def subscribers_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
 
     @property
     def subscribers_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._subscribers_count)
         return self._subscribers_count.value
 
     @property
     def subscription_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._subscription_url)
         return self._subscription_url.value
 
     @property
     def svn_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._svn_url)
         return self._svn_url.value
 
     @property
     def tags_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._tags_url)
         return self._tags_url.value
 
     @property
     def teams_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._teams_url)
         return self._teams_url.value
 
     @property
     def topics(self):
-        """
-        :type: list of strings
-        """
         self._completeIfNotSet(self._topics)
         return self._topics.value
 
     @property
     def trees_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._trees_url)
         return self._trees_url.value
 
     @property
     def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
     def url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def visibility(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._visibility)
         return self._visibility.value
 
     @property
     def watchers(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._watchers)
         return self._watchers.value
 
     @property
     def watchers_count(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
 

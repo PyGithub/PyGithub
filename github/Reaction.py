@@ -45,33 +45,21 @@ class Reaction(github.GithubObject.CompletableGithubObject):
 
     @property
     def content(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def user(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._user)
         return self._user.value
 

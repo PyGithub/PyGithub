@@ -50,37 +50,22 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def label(self) -> str:
-        """
-        :type: string
-        """
         return self._label.value
 
     @property
     def ref(self) -> str:
-        """
-        :type: string
-        """
         return self._ref.value
 
     @property
     def repo(self) -> Repository:
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         return self._repo.value
 
     @property
     def sha(self) -> str:
-        """
-        :type: string
-        """
         return self._sha.value
 
     @property
     def user(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         return self._user.value
 
     def _initAttributes(self):

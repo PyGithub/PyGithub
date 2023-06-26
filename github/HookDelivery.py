@@ -44,86 +44,50 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def id(self) -> Optional[int]:
-        """
-        :type: integer
-        """
         return self._id.value
 
     @property
     def guid(self) -> Optional[str]:
-        """
-        :type: string
-        """
         return self._guid.value
 
     @property
     def delivered_at(self) -> Optional[datetime]:
-        """
-        :type: datetime
-        """
         return self._delivered_at.value
 
     @property
     def redelivery(self) -> Optional[bool]:
-        """
-        :type: boolean
-        """
         return self._redelivery.value
 
     @property
     def duration(self) -> Optional[float]:
-        """
-        :type: float
-        """
         return self._duration.value
 
     @property
     def status(self) -> Optional[str]:
-        """
-        :type: string
-        """
         return self._status.value
 
     @property
     def status_code(self) -> Optional[int]:
-        """
-        :type: integer
-        """
         return self._status_code.value
 
     @property
     def event(self) -> Optional[str]:
-        """
-        :type: string
-        """
         return self._event.value
 
     @property
     def action(self) -> Optional[str]:
-        """
-        :type: string
-        """
         return self._action.value
 
     @property
     def installation_id(self) -> Optional[int]:
-        """
-        :type: integer
-        """
         return self._installation_id.value
 
     @property
     def repository_id(self) -> Optional[int]:
-        """
-        :type: integer
-        """
         return self._repository_id.value
 
     @property
     def url(self) -> Optional[str]:
-        """
-        :type: string
-        """
         return self._url.value
 
     def _initAttributes(self) -> None:
@@ -179,16 +143,10 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def headers(self) -> Optional[dict]:
-        """
-        :type: dict
-        """
         return self._request_headers.value
 
     @property
     def payload(self) -> Optional[dict]:
-        """
-        :type: dict
-        """
         return self._payload.value
 
     def _initAttributes(self) -> None:
@@ -212,16 +170,10 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def headers(self) -> Optional[dict]:
-        """
-        :type: dict
-        """
         return self._response_headers.value
 
     @property
     def payload(self) -> Optional[str]:
-        """
-        :type: str
-        """
         return self._payload.value
 
     def _initAttributes(self) -> None:
@@ -245,16 +197,10 @@ class HookDelivery(HookDeliverySummary):
 
     @property
     def request(self) -> Optional[HookDeliveryRequest]:
-        """
-        :type: :class:`HookDeliveryRequest`
-        """
         return self._request.value
 
     @property
     def response(self) -> Optional[HookDeliveryResponse]:
-        """
-        :type: :class:`HookDeliveryResponse`
-        """
         return self._response.value
 
     def _initAttributes(self) -> None:

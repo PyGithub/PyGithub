@@ -47,57 +47,36 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def key(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._key)
         return self._key.value
 
     @property
     def title(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def verified(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
     @property
     def read_only(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._read_only)
         return self._read_only.value
 

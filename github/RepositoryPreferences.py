@@ -39,16 +39,10 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
-        """
-        :type: dict
-        """
         return self._preferences.value
 
     @property
     def repository(self) -> Repository:
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         return self._repository.value
 
     def _initAttributes(self):

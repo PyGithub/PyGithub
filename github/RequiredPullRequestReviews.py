@@ -49,49 +49,31 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
 
     @property
     def dismiss_stale_reviews(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._dismiss_stale_reviews)
         return self._dismiss_stale_reviews.value
 
     @property
     def require_code_owner_reviews(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._require_code_owner_reviews)
         return self._require_code_owner_reviews.value
 
     @property
     def required_approving_review_count(self) -> int:
-        """
-        :type: int
-        """
         self._completeIfNotSet(self._required_approving_review_count)
         return self._required_approving_review_count.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def dismissal_users(self) -> NamedUser:
-        """
-        :type: list of :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._users)
         return self._users.value
 
     @property
     def dismissal_teams(self) -> Team:
-        """
-        :type: list of :class:`github.Team.Team`
-        """
         self._completeIfNotSet(self._teams)
         return self._teams.value
 

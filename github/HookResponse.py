@@ -41,23 +41,14 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def code(self) -> int:
-        """
-        :type: integer
-        """
         return self._code.value
 
     @property
     def message(self) -> str:
-        """
-        :type: string
-        """
         return self._message.value
 
     @property
     def status(self) -> str:
-        """
-        :type: string
-        """
         return self._status.value
 
     def _initAttributes(self):

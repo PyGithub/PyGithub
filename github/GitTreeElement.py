@@ -41,44 +41,26 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def mode(self) -> str:
-        """
-        :type: string
-        """
         return self._mode.value
 
     @property
     def path(self) -> str:
-        """
-        :type: string
-        """
         return self._path.value
 
     @property
     def sha(self) -> str:
-        """
-        :type: string
-        """
         return self._sha.value
 
     @property
     def size(self) -> int:
-        """
-        :type: integer
-        """
         return self._size.value
 
     @property
     def type(self) -> str:
-        """
-        :type: string
-        """
         return self._type.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         return self._url.value
 
     def _initAttributes(self):

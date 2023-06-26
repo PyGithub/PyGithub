@@ -36,43 +36,25 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def id(self) -> int:
-        """
-        :type: int
-        """
         return self._id.value
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         return self._name.value
 
     @property
     def os(self) -> str:
-        """
-        :type: string
-        """
         return self._os.value
 
     @property
     def status(self) -> str:
-        """
-        :type: str
-        """
         return self._status.value
 
     @property
     def busy(self) -> bool:
-        """
-        :type: bool
-        """
         return self._busy.value
 
     def labels(self) -> list[dict[str, int | str]]:
-        """
-        :type: list of dicts
-        """
         return self._labels.value
 
     def _initAttributes(self):

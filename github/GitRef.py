@@ -50,25 +50,16 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     @property
     def object(self) -> GitObject:
-        """
-        :type: :class:`github.GitObject.GitObject`
-        """
         self._completeIfNotSet(self._object)
         return self._object.value
 
     @property
     def ref(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._ref)
         return self._ref.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 

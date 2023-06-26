@@ -52,41 +52,26 @@ class GitTag(github.GithubObject.CompletableGithubObject):
 
     @property
     def message(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._message)
         return self._message.value
 
     @property
     def object(self) -> GitObject:
-        """
-        :type: :class:`github.GitObject.GitObject`
-        """
         self._completeIfNotSet(self._object)
         return self._object.value
 
     @property
     def sha(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
     def tag(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._tag)
         return self._tag.value
 
     @property
     def tagger(self) -> GitAuthor:
-        """
-        :type: :class:`github.GitAuthor.GitAuthor`
-        """
         self._completeIfNotSet(self._tagger)
         return self._tagger.value
 

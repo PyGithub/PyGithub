@@ -35,16 +35,10 @@ class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def all(self) -> List[int]:
-        """
-        :type: list of int
-        """
         return self._all.value
 
     @property
     def owner(self) -> List[int]:
-        """
-        :type: list of int
-        """
         return self._owner.value
 
     def _initAttributes(self):

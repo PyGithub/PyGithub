@@ -39,177 +39,111 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     @property
     def id(self):
-        """
-        :type: int
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def name(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def head_branch(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
 
     @property
     def head_sha(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
 
     @property
     def display_title(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._display_title)
         return self._display_title.value
 
     @property
     def path(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
     def run_attempt(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._run_attempt)
         return self._run_attempt.value
 
     @property
     def run_number(self):
-        """
-        :type: int
-        """
         self._completeIfNotSet(self._run_number)
         return self._run_number.value
 
     @property
     def event(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._event)
         return self._event.value
 
     @property
     def run_started_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._run_started_at)
         return self._run_started_at.value
 
     @property
     def status(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._status)
         return self._status.value
 
     @property
     def conclusion(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
     @property
     def workflow_id(self):
-        """
-        :type: int
-        """
         self._completeIfNotSet(self._workflow_id)
         return self._workflow_id.value
 
     @property
     def url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def html_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def pull_requests(self):
-        """
-        :type: list of :class:`github.PullRequest.PullRequest`
-        """
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
     @property
     def created_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
     def jobs_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._jobs_url)
         return self._jobs_url.value
 
     @property
     def logs_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._logs_url)
         return self._logs_url.value
 
     @property
     def check_suite_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._check_suite_url)
         return self._check_suite_url.value
 
     @property
     def artifacts_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
@@ -224,49 +158,31 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
 
     @property
     def cancel_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._cancel_url)
         return self._cancel_url.value
 
     @property
     def rerun_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._rerun_url)
         return self._rerun_url.value
 
     @property
     def workflow_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
     @property
     def head_commit(self):
-        """
-        :type: :class:`github.GitCommit.GitCommit`
-        """
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
     @property
     def repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
     def head_repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
         self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 

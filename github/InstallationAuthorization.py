@@ -45,37 +45,22 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def token(self) -> str:
-        """
-        :type: string
-        """
         return self._token.value
 
     @property
     def expires_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._expires_at.value
 
     @property
     def on_behalf_of(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         return self._on_behalf_of.value
 
     @property
     def permissions(self) -> dict:
-        """
-        :type: dict
-        """
         return self._permissions.value
 
     @property
     def repository_selection(self) -> str:
-        """
-        :type: string
-        """
         return self._repository_selection.value
 
     def _initAttributes(self):

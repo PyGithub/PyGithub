@@ -42,30 +42,18 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def events(self) -> str:
-        """
-        :type: list of string
-        """
         return self._events.value
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         return self._name.value
 
     @property
     def schema(self) -> List[List[str]]:
-        """
-        :type: list of list of string
-        """
         return self._schema.value
 
     @property
     def supported_events(self) -> List[str]:
-        """
-        :type: list of string
-        """
         return self._supported_events.value
 
     def _initAttributes(self):

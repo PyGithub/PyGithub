@@ -43,9 +43,6 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def actor(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         return self._actor.value
 
     @property
@@ -62,30 +59,18 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         return self._id.value
 
     @property
     def node_id(self) -> str:
-        """
-        :type: string
-        """
         return self._node_id.value
 
     @property
     def commit_url(self) -> str:
-        """
-        :type: string
-        """
         return self._commit_url.value
 
     @property
     def source(self) -> TimelineEventSource | None:
-        """
-        :type: :class:`github.TimelineEventSource.TimelineEventSource`
-        """
         # only available on `cross-referenced` events.
         if (
             self.event == "cross-referenced"

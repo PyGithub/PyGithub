@@ -63,297 +63,186 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     @property
     def avatar_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._avatar_url)
         return self._avatar_url.value
 
     @property
     def billing_email(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._billing_email)
         return self._billing_email.value
 
     @property
     def blog(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._blog)
         return self._blog.value
 
     @property
     def collaborators(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._collaborators)
         return self._collaborators.value
 
     @property
     def company(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._company)
         return self._company.value
 
     @property
     def created_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def default_repository_permission(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._default_repository_permission)
         return self._default_repository_permission.value
 
     @property
     def description(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
     def disk_usage(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._disk_usage)
         return self._disk_usage.value
 
     @property
     def email(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._email)
         return self._email.value
 
     @property
     def events_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._events_url)
         return self._events_url.value
 
     @property
     def followers(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._followers)
         return self._followers.value
 
     @property
     def following(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._following)
         return self._following.value
 
     @property
     def gravatar_id(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._gravatar_id)
         return self._gravatar_id.value
 
     @property
     def has_organization_projects(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_organization_projects)
         return self._has_organization_projects.value
 
     @property
     def has_repository_projects(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_repository_projects)
         return self._has_repository_projects.value
 
     @property
     def hooks_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._hooks_url)
         return self._hooks_url.value
 
     @property
     def html_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def id(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def issues_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._issues_url)
         return self._issues_url.value
 
     @property
     def location(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._location)
         return self._location.value
 
     @property
     def login(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._login)
         return self._login.value
 
     @property
     def members_can_create_repositories(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._members_can_create_repositories)
         return self._members_can_create_repositories.value
 
     @property
     def members_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._members_url)
         return self._members_url.value
 
     @property
     def name(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def owned_private_repos(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
 
     @property
     def plan(self):
-        """
-        :type: :class:`github.Plan.Plan`
-        """
         self._completeIfNotSet(self._plan)
         return self._plan.value
 
     @property
     def private_gists(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._private_gists)
         return self._private_gists.value
 
     @property
     def public_gists(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._public_gists)
         return self._public_gists.value
 
     @property
     def public_members_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._public_members_url)
         return self._public_members_url.value
 
     @property
     def public_repos(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._public_repos)
         return self._public_repos.value
 
     @property
     def repos_url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._repos_url)
         return self._repos_url.value
 
     @property
     def total_private_repos(self):
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
 
     @property
     def two_factor_requirement_enabled(self):
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._two_factor_requirement_enabled)
         return self._two_factor_requirement_enabled.value
 
     @property
     def type(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._type)
         return self._type.value
 
     @property
     def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
     def url(self):
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
