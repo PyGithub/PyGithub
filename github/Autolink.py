@@ -33,23 +33,14 @@ class Autolink(NonCompletableGithubObject):
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         return self._id.value
 
     @property
     def key_prefix(self) -> str:
-        """
-        :type: string
-        """
         return self._key_prefix.value
 
     @property
     def url_template(self) -> str:
-        """
-        :type: string
-        """
         return self._url_template.value
 
     def _initAttributes(self):
