@@ -328,7 +328,7 @@ class Issue(CompletableGithubObject):
         self,
         title: Opt[str] = NotSet,
         body: Opt[str] = NotSet,
-        assignee: Opt[str | NamedUser] = NotSet,
+        assignee: Opt[str | NamedUser | None] = NotSet,
         state: Opt[str] = NotSet,
         milestone: Opt[Milestone] = NotSet,
         labels: Opt[list[str]] = NotSet,
@@ -340,13 +340,17 @@ class Issue(CompletableGithubObject):
         """
         assert isinstance(title, (str, _NotSetType)), title
         assert isinstance(body, (str, _NotSetType)), body
-        assert isinstance(assignee, (github.NamedUser.NamedUser, str, _NotSetType)), assignee
+        assert assignee is None or isinstance(
+            assignee, (github.NamedUser.NamedUser, str, _NotSetType)
+        ), assignee
         assert isinstance(assignees, _NotSetType) or all(
             isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees
         assert isinstance(state, (_NotSetType, str)), state
-        assert isinstance(milestone, (github.Milestone.Milestone, _NotSetType)), milestone
+        assert milestone is None or isinstance(
+            milestone, (github.Milestone.Milestone, _NotSetType)
+        ), milestone
         assert isinstance(labels, _NotSetType) or all(
             isinstance(element, str) for element in labels
         ), labels
@@ -358,12 +362,14 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
-                "assignee": assignee._identity if isinstance(assignee, NamedUser) else assignee
+                "assignee": assignee._identity
+                if isinstance(assignee, github.NamedUser.NamedUser)
+                else (assignee or ""),
+                "milestone": milestone._identity
+                if isinstance(milestone, github.Milestone.Milestone)
+                else (milestone or ""),
             }
         )
-
-        if not isinstance(milestone, _NotSetType):
-            post_parameters["milestone"] = milestone._identity if milestone else ""
 
         if not isinstance(assignees, _NotSetType):
             post_parameters["assignees"] = [
