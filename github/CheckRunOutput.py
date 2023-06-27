@@ -20,58 +20,43 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
+class CheckRunOutput(NonCompletableGithubObject):
     """This class represents the output of check run."""
 
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotations_count(self):
-        """
-        :type: integer
-        """
+    def annotations_count(self) -> int:
         return self._annotations_count.value
 
     @property
-    def annotations_url(self):
-        """
-        :type: string
-        """
+    def annotations_url(self) -> str:
         return self._annotations_url.value
 
     @property
-    def summary(self):
-        """
-        :type: string
-        """
+    def summary(self) -> str:
         return self._summary.value
 
     @property
-    def text(self):
-        """
-        :type: string
-        """
+    def text(self) -> str:
         return self._text.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
-    def _initAttributes(self):
-        self._annotations_count = github.GithubObject.NotSet
-        self._annotations_url = github.GithubObject.NotSet
-        self._summary = github.GithubObject.NotSet
-        self._text = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._annotations_count: Attribute[int] = NotSet
+        self._annotations_url: Attribute[str] = NotSet
+        self._summary: Attribute[str] = NotSet
+        self._text: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(
                 attributes["annotations_count"]
