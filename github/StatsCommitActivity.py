@@ -26,6 +26,7 @@
 from datetime import datetime
 
 import github.GithubObject
+from github.GithubObject import Attribute
 
 
 class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
@@ -46,9 +47,9 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
         return self._days.value
 
     def _initAttributes(self) -> None:
-        self._week = github.GithubObject.NotSet
-        self._total = github.GithubObject.NotSet
-        self._days = github.GithubObject.NotSet
+        self._week: Attribute[datetime] = github.GithubObject.NotSet
+        self._total: Attribute[int] = github.GithubObject.NotSet
+        self._days: Attribute[int] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "week" in attributes:  # pragma no branch

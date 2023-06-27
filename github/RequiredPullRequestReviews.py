@@ -27,6 +27,7 @@ from typing import TYPE_CHECKING
 import github.GithubObject
 import github.NamedUser
 import github.Team
+from github.GithubObject import Attribute, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
@@ -78,11 +79,11 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         return self._teams.value
 
     def _initAttributes(self) -> None:
-        self._dismiss_stale_reviews = github.GithubObject.NotSet
-        self._require_code_owner_reviews = github.GithubObject.NotSet
-        self._required_approving_review_count = github.GithubObject.NotSet
-        self._users = github.GithubObject.NotSet
-        self._teams = github.GithubObject.NotSet
+        self._dismiss_stale_reviews: Attribute[bool] = NotSet
+        self._require_code_owner_reviews: Attribute[bool] = NotSet
+        self._required_approving_review_count: Attribute[int] = NotSet
+        self._users: Attribute[NamedUser] = NotSet
+        self._teams: Attribute[Team] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "dismissal_restrictions" in attributes:  # pragma no branch

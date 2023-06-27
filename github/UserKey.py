@@ -30,6 +30,7 @@
 ################################################################################
 
 import github.GithubObject
+from github.GithubObject import Attribute
 
 
 class UserKey(github.GithubObject.CompletableGithubObject):
@@ -73,11 +74,11 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._key = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._verified = github.GithubObject.NotSet
+        self._id: Attribute[int] = github.GithubObject.NotSet
+        self._key: Attribute[str] = github.GithubObject.NotSet
+        self._title: Attribute[str] = github.GithubObject.NotSet
+        self._url: Attribute[str] = github.GithubObject.NotSet
+        self._verified: Attribute[bool] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch

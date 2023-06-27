@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute
 
 from . import Consts
 
@@ -75,10 +76,10 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self) -> None:
-        self._content = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
+        self._content: Attribute[str] = github.GithubObject.NotSet
+        self._created_at: Attribute[datetime] = github.GithubObject.NotSet
+        self._id: Attribute[int] = github.GithubObject.NotSet
+        self._user: Attribute[NamedUser] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "content" in attributes:  # pragma no branch

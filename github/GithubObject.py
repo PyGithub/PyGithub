@@ -223,7 +223,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attribute[int]:
+    def _makeTimestampAttribute(value: int) -> Attribute[datetime.datetime]:
         return GithubObject.__makeTransformedAttribute(
             value, int, datetime.datetime.utcfromtimestamp
         )

@@ -29,7 +29,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import github
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
@@ -52,9 +52,9 @@ class Stargazer(NonCompletableGithubObject):
         return self._user.value
 
     def _initAttributes(self) -> None:
-        self._starred_at = NotSet
-        self._user = NotSet
-        self._url = NotSet
+        self._starred_at: Attribute[datetime] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "starred_at" in attributes:
