@@ -91,6 +91,8 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     This class represents StatsContributors. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
     """
 
+    Week: type[Week] = Week
+
     @property
     def author(self) -> NamedUser:
         return self._author.value
