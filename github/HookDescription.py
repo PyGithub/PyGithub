@@ -27,12 +27,12 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import List
+from __future__ import annotations
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookDescription(github.GithubObject.NonCompletableGithubObject):
+class HookDescription(NonCompletableGithubObject):
     """
     This class represents HookDescriptions
     """
@@ -41,7 +41,7 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def events(self) -> str:
+    def events(self) -> list[str]:
         return self._events.value
 
     @property
@@ -49,18 +49,18 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         return self._name.value
 
     @property
-    def schema(self) -> List[List[str]]:
+    def schema(self) -> list[list[str]]:
         return self._schema.value
 
     @property
-    def supported_events(self) -> List[str]:
+    def supported_events(self) -> list[str]:
         return self._supported_events.value
 
     def _initAttributes(self):
-        self._events = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._schema = github.GithubObject.NotSet
-        self._supported_events = github.GithubObject.NotSet
+        self._events: Attribute[list[str]] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._schema: Attribute[list[list[str]]] = NotSet
+        self._supported_events: Attribute[list[str]] = NotSet
 
     def _useAttributes(self, attributes):
         if "events" in attributes:  # pragma no branch
