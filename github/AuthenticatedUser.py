@@ -59,6 +59,7 @@ import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
+from github import Consts
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -67,17 +68,15 @@ from github.GithubObject import (
     _NotSetType,
 )
 
-from . import Consts
-from .InputFileContent import InputFileContent
-from .Label import Label
-
 if TYPE_CHECKING:
     from github.Authorization import Authorization
     from github.Event import Event
     from github.Gist import Gist
+    from github.InputFileContent import InputFileContent
     from github.Installation import Installation
     from github.Invitation import Invitation
     from github.Issue import Issue
+    from github.Label import Label
     from github.Membership import Membership
     from github.Migration import Migration
     from github.NamedUser import NamedUser
