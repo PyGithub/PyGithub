@@ -28,10 +28,10 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookResponse(github.GithubObject.NonCompletableGithubObject):
+class HookResponse(NonCompletableGithubObject):
     """
     This class represents HookResponses
     """
@@ -40,32 +40,23 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"status": self._status.value})
 
     @property
-    def code(self):
-        """
-        :type: integer
-        """
+    def code(self) -> int:
         return self._code.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         return self._status.value
 
-    def _initAttributes(self):
-        self._code = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._code: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "code" in attributes:  # pragma no branch
             self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch

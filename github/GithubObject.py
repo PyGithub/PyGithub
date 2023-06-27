@@ -223,7 +223,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attribute[int]:
+    def _makeTimestampAttribute(value: int) -> Attribute[datetime.datetime]:
         return GithubObject.__makeTransformedAttribute(
             value, int, datetime.datetime.utcfromtimestamp
         )
@@ -346,10 +346,10 @@ class GithubObject:
             params=", ".join(list(format_params(params))),
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
     def _completeIfNeeded(self):

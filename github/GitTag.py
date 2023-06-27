@@ -28,76 +28,75 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitObject
+import github.GitTreeElement
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.GitAuthor import GitAuthor
+    from github.GitObject import GitObject
 
 
-class GitTag(github.GithubObject.CompletableGithubObject):
+class GitTag(CompletableGithubObject):
     """
     This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags
     """
+
+    _message: Attribute[str]
+    _object: Attribute[GitObject]
+    _sha: Attribute[str]
+    _tag: Attribute[str]
+    _tagger: Attribute[GitAuthor]
+    _url: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         self._completeIfNotSet(self._message)
         return self._message.value
 
     @property
-    def object(self):
-        """
-        :type: :class:`github.GitObject.GitObject`
-        """
+    def object(self) -> GitObject:
         self._completeIfNotSet(self._object)
         return self._object.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def tag(self):
-        """
-        :type: string
-        """
+    def tag(self) -> str:
         self._completeIfNotSet(self._tag)
         return self._tag.value
 
     @property
-    def tagger(self):
-        """
-        :type: :class:`github.GitAuthor.GitAuthor`
-        """
+    def tagger(self) -> GitAuthor:
         self._completeIfNotSet(self._tagger)
         return self._tagger.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
-        self._message = github.GithubObject.NotSet
-        self._object = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._tag = github.GithubObject.NotSet
-        self._tagger = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._message = NotSet
+        self._object = NotSet
+        self._sha = NotSet
+        self._tag = NotSet
+        self._tagger = NotSet
+        self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch

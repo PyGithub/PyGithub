@@ -28,74 +28,75 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.GithubObject
 import github.GitObject
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+)
+
+if TYPE_CHECKING:
+    from github.GitObject import GitObject
 
 
-class GitRef(github.GithubObject.CompletableGithubObject):
+class GitRef(CompletableGithubObject):
     """
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
+
+    _object: Attribute[GitObject]
+    _ref: Attribute[str]
+    _url: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"ref": self._ref.value})
 
     @property
-    def object(self):
-        """
-        :type: :class:`github.GitObject.GitObject`
-        """
+    def object(self) -> GitObject:
         self._completeIfNotSet(self._object)
         return self._object.value
 
     @property
-    def ref(self):
-        """
-        :type: string
-        """
+    def ref(self) -> str:
         self._completeIfNotSet(self._ref)
         return self._ref.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha, force=github.GithubObject.NotSet):
+    def edit(self, sha: str, force: Opt[bool] = NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :param sha: string
-        :param force: bool
-        :rtype: None
         """
         assert isinstance(sha, str), sha
-        assert force is github.GithubObject.NotSet or isinstance(force, bool), force
-        post_parameters = {
-            "sha": sha,
-        }
-        if force is not github.GithubObject.NotSet:
-            post_parameters["force"] = force
+        assert isinstance(force, (_NotSetType, bool)), force
+        post_parameters = _NotSetType.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
-        self._object = github.GithubObject.NotSet
-        self._ref = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._object = NotSet
+        self._ref = NotSet
+        self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(
                 github.GitObject.GitObject, attributes["object"]

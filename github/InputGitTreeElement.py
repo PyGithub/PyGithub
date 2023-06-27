@@ -25,8 +25,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import github.GithubObject
+from typing import Any
+
+from github.GithubObject import NotSet, Opt, _NotSetType
 
 
 class InputGitTreeElement:
@@ -36,11 +39,11 @@ class InputGitTreeElement:
 
     def __init__(
         self,
-        path,
-        mode,
-        type,
-        content=github.GithubObject.NotSet,
-        sha=github.GithubObject.NotSet,
+        path: str,
+        mode: str,
+        type: str,
+        content: Opt[str] = NotSet,
+        sha: Opt[str] = NotSet,
     ):
         """
         :param path: string
@@ -53,27 +56,23 @@ class InputGitTreeElement:
         assert isinstance(path, str), path
         assert isinstance(mode, str), mode
         assert isinstance(type, str), type
-        assert content is github.GithubObject.NotSet or isinstance(
-            content, str
-        ), content
-        assert (
-            sha is github.GithubObject.NotSet or sha is None or isinstance(sha, str)
-        ), sha
+        assert isinstance(content, (_NotSetType, str)), content
+        assert sha is None or isinstance(sha, (_NotSetType, str)), sha
         self.__path = path
         self.__mode = mode
         self.__type = type
         self.__content = content
-        self.__sha = sha
+        self.__sha: Opt[str] | None = sha
 
     @property
-    def _identity(self):
-        identity = {
+    def _identity(self) -> dict[str, Any]:
+        identity: dict[str, Any] = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,
         }
-        if self.__sha is not github.GithubObject.NotSet:
+        if not isinstance(self.__sha, _NotSetType):
             identity["sha"] = self.__sha
-        if self.__content is not github.GithubObject.NotSet:
+        if not isinstance(self.__content, _NotSetType):
             identity["content"] = self.__content
         return identity

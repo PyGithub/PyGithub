@@ -20,11 +20,23 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import github.GithubObject
 import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
+from github.GithubObject import Attribute, _NotSetType
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.RequiredPullRequestReviews import RequiredPullRequestReviews
+    from github.RequiredStatusChecks import RequiredStatusChecks
+    from github.Team import Team
 
 
 class BranchProtection(github.GithubObject.CompletableGithubObject):
@@ -35,62 +47,54 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"url": self._url.value})
 
+    _url: Attribute[str]
+    _required_status_checks: Attribute[RequiredStatusChecks]
+    _enforce_admins: Attribute[bool]
+    _required_pull_request_reviews: Attribute[RequiredPullRequestReviews]
+    _user_push_restrictions: str | _NotSetType
+    _team_push_restrictions: str | _NotSetType
+
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def required_status_checks(self):
-        """
-        :type: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
-        """
+    def required_status_checks(self) -> RequiredStatusChecks:
         self._completeIfNotSet(self._required_status_checks)
         return self._required_status_checks.value
 
     @property
-    def enforce_admins(self):
-        """
-        :type: bool
-        """
+    def enforce_admins(self) -> bool:
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
 
     @property
-    def required_pull_request_reviews(self):
-        """
-        :type: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
-        """
+    def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
-    def get_user_push_restrictions(self):
-        """
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
-        """
-        if self._user_push_restrictions is github.GithubObject.NotSet:
+    def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
+        if isinstance(self._user_push_restrictions, _NotSetType):
             return None
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self._user_push_restrictions,
             None,
         )
 
-    def get_team_push_restrictions(self):
+    def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
-        if self._team_push_restrictions is github.GithubObject.NotSet:
+        if isinstance(self._team_push_restrictions, _NotSetType):
             return None
         return github.PaginatedList.PaginatedList(
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
@@ -98,7 +102,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch
