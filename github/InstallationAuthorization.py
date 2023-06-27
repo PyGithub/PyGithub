@@ -27,15 +27,15 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
 
 
-class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
+class InstallationAuthorization(NonCompletableGithubObject):
     """
     This class represents InstallationAuthorizations
     """
@@ -63,12 +63,12 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
     def repository_selection(self) -> str:
         return self._repository_selection.value
 
-    def _initAttributes(self):
-        self._token = github.GithubObject.NotSet
-        self._expires_at = github.GithubObject.NotSet
-        self._on_behalf_of = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._repository_selection = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._token: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
+        self._on_behalf_of: Attribute[NamedUser] = NotSet
+        self._permissions: Attribute[dict] = NotSet
+        self._repository_selection: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes):
         if "token" in attributes:  # pragma no branch
