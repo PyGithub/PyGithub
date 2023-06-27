@@ -107,7 +107,7 @@ class Artifact(NonCompletableGithubObject):
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
         return status == 204
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._archive_download_url = NotSet
         self._created_at = NotSet
         self._expired = NotSet
@@ -121,7 +121,7 @@ class Artifact(NonCompletableGithubObject):
         self._url = NotSet
         self._workflow_run = NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "archive_download_url" in attributes:  # pragma no branch
             self._archive_download_url = self._makeStringAttribute(
                 attributes["archive_download_url"]
