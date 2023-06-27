@@ -27,13 +27,16 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
+class GitignoreTemplate(NonCompletableGithubObject):
     """
     This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore
     """
+
+    _name: Attribute[str]
+    _source: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
@@ -47,8 +50,8 @@ class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
         return self._name.value
 
     def _initAttributes(self):
-        self._source = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
+        self._source = NotSet
+        self._name = NotSet
 
     def _useAttributes(self, attributes):
         if "source" in attributes:  # pragma no branch
