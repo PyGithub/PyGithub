@@ -790,17 +790,14 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_key(self, id: int) -> UserKey:
         """
         :calls: `GET /user/keys/{id} <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
-        :param id: integer
-        :rtype: :class:`github.UserKey.UserKey`
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/keys/{id}")
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
-    def get_keys(self):
+    def get_keys(self) -> PaginatedList[UserKey]:
         """
         :calls: `GET /user/keys <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.UserKey.UserKey`
         """
         return github.PaginatedList.PaginatedList(
             github.UserKey.UserKey, self._requester, "/user/keys", None
