@@ -32,17 +32,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import github.GithubObject
 import github.GitTreeElement
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.GitTreeElement import GitTreeElement
 
 
-class GitTree(github.GithubObject.CompletableGithubObject):
+class GitTree(CompletableGithubObject):
     """
     This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
     """
+
+    _sha: Attribute[str]
+    _tree: Attribute[list[GitTreeElement]]
+    _url: Attribute[str]
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value})
@@ -67,9 +71,9 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         return self.sha
 
     def _initAttributes(self):
-        self._sha = github.GithubObject.NotSet
-        self._tree = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._sha = NotSet
+        self._tree = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch
