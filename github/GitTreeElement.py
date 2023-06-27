@@ -28,16 +28,23 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
+class GitTreeElement(NonCompletableGithubObject):
     """
     This class represents GitTreeElements
     """
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
+
+    _mode: Attribute[str]
+    _path: Attribute[str]
+    _sha: Attribute[str]
+    _size: Attribute[int]
+    _type: Attribute[str]
+    _url: Attribute[str]
 
     @property
     def mode(self) -> str:
@@ -64,12 +71,12 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
         return self._url.value
 
     def _initAttributes(self):
-        self._mode = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._mode = NotSet
+        self._path = NotSet
+        self._sha = NotSet
+        self._size = NotSet
+        self._type = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "mode" in attributes:  # pragma no branch
