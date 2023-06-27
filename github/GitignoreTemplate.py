@@ -49,11 +49,11 @@ class GitignoreTemplate(NonCompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._source = NotSet
         self._name = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "source" in attributes:  # pragma no branch
             self._source = self._makeStringAttribute(attributes["source"])
         if "name" in attributes:  # pragma no branch

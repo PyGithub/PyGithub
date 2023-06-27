@@ -64,15 +64,15 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     def labels(self) -> list[dict[str, int | str]]:
         return self._labels.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = NotSet
         self._name = NotSet
         self._os = NotSet
         self._status = NotSet
         self._busy = NotSet
-        self._labels = []
+        self._labels = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

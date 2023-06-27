@@ -60,12 +60,12 @@ class View(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._timestamp = NotSet
         self._count = NotSet
         self._uniques = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "timestamp" in attributes:  # pragma no branch
             self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "count" in attributes:  # pragma no branch

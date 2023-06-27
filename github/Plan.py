@@ -63,7 +63,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
     def seats(self) -> int:
         return self._seats.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._collaborators = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._private_repos = github.GithubObject.NotSet
@@ -71,7 +71,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         self._filled_seats = github.GithubObject.NotSet
         self._seats = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch

@@ -56,13 +56,13 @@ class HookDescription(NonCompletableGithubObject):
     def supported_events(self) -> list[str]:
         return self._supported_events.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._events: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
         self._schema: Attribute[list[list[str]]] = NotSet
         self._supported_events: Attribute[list[str]] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch

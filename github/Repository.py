@@ -4235,7 +4235,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "DELETE", f"{self.url}/environments/{environment_name}"
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._allow_auto_merge = github.GithubObject.NotSet
         self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
@@ -4324,7 +4324,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
             self._allow_auto_merge = self._makeBoolAttribute(
                 attributes["allow_auto_merge"]

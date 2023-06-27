@@ -45,12 +45,12 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     def days(self) -> int:
         return self._days.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._week = github.GithubObject.NotSet
         self._total = github.GithubObject.NotSet
         self._days = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "week" in attributes:  # pragma no branch
             self._week = self._makeTimestampAttribute(attributes["week"])
         if "total" in attributes:  # pragma no branch

@@ -52,12 +52,12 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
     def sha(self) -> str:
         return self._sha.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._merged = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "merged" in attributes:  # pragma no branch
             self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch

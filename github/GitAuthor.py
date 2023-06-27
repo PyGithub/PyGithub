@@ -57,12 +57,12 @@ class GitAuthor(github.GithubObject.NonCompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._date = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "date" in attributes:  # pragma no branch
             self._date = self._makeDatetimeAttribute(attributes["date"])
         if "email" in attributes:  # pragma no branch

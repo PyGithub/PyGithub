@@ -56,7 +56,7 @@ class HookResponse(NonCompletableGithubObject):
         self._message: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "code" in attributes:  # pragma no branch
             self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch

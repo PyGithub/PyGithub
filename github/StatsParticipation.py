@@ -44,11 +44,11 @@ class StatsParticipation(NonCompletableGithubObject):
     def owner(self) -> list[int]:
         return self._owner.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._all = NotSet
         self._owner = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "all" in attributes:  # pragma no branch
             self._all = self._makeListOfIntsAttribute(attributes["all"])
         if "owner" in attributes:  # pragma no branch

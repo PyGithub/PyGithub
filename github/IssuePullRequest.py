@@ -48,12 +48,12 @@ class IssuePullRequest(NonCompletableGithubObject):
     def patch_url(self) -> str:
         return self._patch_url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._diff_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._patch_url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch

@@ -77,14 +77,14 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._teams)
         return self._teams.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._dismiss_stale_reviews = github.GithubObject.NotSet
         self._require_code_owner_reviews = github.GithubObject.NotSet
         self._required_approving_review_count = github.GithubObject.NotSet
         self._users = github.GithubObject.NotSet
         self._teams = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "dismissal_restrictions" in attributes:  # pragma no branch
             if "users" in attributes["dismissal_restrictions"]:
                 self._users = self._makeListOfClassesAttribute(

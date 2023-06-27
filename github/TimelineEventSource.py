@@ -50,11 +50,11 @@ class TimelineEventSource(NonCompletableGithubObject):
     def issue(self) -> Issue:
         return self._issue.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._type = NotSet
         self._issue = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch

@@ -51,12 +51,12 @@ class Stargazer(NonCompletableGithubObject):
     def user(self) -> NamedUser:
         return self._user.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._starred_at = NotSet
         self._user = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "starred_at" in attributes:
             self._starred_at = self._makeDatetimeAttribute(attributes["starred_at"])
         if "user" in attributes:

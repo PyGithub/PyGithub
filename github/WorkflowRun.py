@@ -241,7 +241,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             list_item="jobs",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
@@ -271,7 +271,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         self._repository = github.GithubObject.NotSet
         self._head_repository = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

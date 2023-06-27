@@ -43,12 +43,12 @@ class Autolink(NonCompletableGithubObject):
     def url_template(self) -> str:
         return self._url_template.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = NotSet
         self._key_prefix = NotSet
         self._url_template = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key_prefix" in attributes:  # pragma no branch

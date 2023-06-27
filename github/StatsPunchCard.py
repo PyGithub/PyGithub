@@ -40,9 +40,9 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
         """Get a specific element"""
         return self._dict[(day, hour)]
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._dict = {}
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         for day, hour, commits in attributes:
             self._dict[(day, hour)] = commits

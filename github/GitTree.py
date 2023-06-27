@@ -70,12 +70,12 @@ class GitTree(CompletableGithubObject):
     def _identity(self) -> str:
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._sha = NotSet
         self._tree = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch

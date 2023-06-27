@@ -45,12 +45,12 @@ class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
     def deletions(self) -> int:
         return self._deletions.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._week = github.GithubObject.NotSet
         self._additions = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         self._week = self._makeTimestampAttribute(attributes[0])
         self._additions = self._makeIntAttribute(attributes[1])
         self._deletions = self._makeIntAttribute(attributes[2])

@@ -81,7 +81,7 @@ class WorkflowStep(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._status)
         return self._status.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._completed_at = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -89,7 +89,7 @@ class WorkflowStep(github.GithubObject.CompletableGithubObject):
         self._started_at = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch

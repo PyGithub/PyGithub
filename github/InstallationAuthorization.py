@@ -70,7 +70,7 @@ class InstallationAuthorization(NonCompletableGithubObject):
         self._permissions: Attribute[dict] = NotSet
         self._repository_selection: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch

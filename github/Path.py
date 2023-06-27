@@ -59,13 +59,13 @@ class Path(github.GithubObject.NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._path = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._count = github.GithubObject.NotSet
         self._uniques = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch

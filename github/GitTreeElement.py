@@ -70,7 +70,7 @@ class GitTreeElement(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._mode = NotSet
         self._path = NotSet
         self._sha = NotSet
@@ -78,7 +78,7 @@ class GitTreeElement(NonCompletableGithubObject):
         self._type = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

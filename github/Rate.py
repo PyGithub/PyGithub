@@ -59,12 +59,12 @@ class Rate(NonCompletableGithubObject):
     def reset(self) -> datetime:
         return self._reset.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._limit = NotSet
         self._remaining = NotSet
         self._reset = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "limit" in attributes:  # pragma no branch
             self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch

@@ -87,7 +87,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._key = github.GithubObject.NotSet
@@ -96,7 +96,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._verified = github.GithubObject.NotSet
         self._read_only = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch

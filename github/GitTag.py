@@ -88,7 +88,7 @@ class GitTag(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._message = NotSet
         self._object = NotSet
         self._sha = NotSet
@@ -96,7 +96,7 @@ class GitTag(CompletableGithubObject):
         self._tagger = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch

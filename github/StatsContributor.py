@@ -73,13 +73,13 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
             """
             return self._c.value
 
-        def _initAttributes(self):
+        def _initAttributes(self) -> None:
             self._w = github.GithubObject.NotSet
             self._a = github.GithubObject.NotSet
             self._d = github.GithubObject.NotSet
             self._c = github.GithubObject.NotSet
 
-        def _useAttributes(self, attributes):
+        def _useAttributes(self, attributes) -> None:
             if "w" in attributes:  # pragma no branch
                 self._w = self._makeTimestampAttribute(attributes["w"])
             if "a" in attributes:  # pragma no branch
@@ -101,12 +101,12 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     def weeks(self) -> list[Week]:
         return self._weeks.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._total = github.GithubObject.NotSet
         self._weeks = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]

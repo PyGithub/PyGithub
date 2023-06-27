@@ -98,7 +98,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -111,7 +111,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         self._author_association = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["actor"]

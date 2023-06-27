@@ -48,11 +48,11 @@ class RepositoryPreferences(NonCompletableGithubObject):
     def repository(self) -> Repository:
         return self._repository.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._preferences = NotSet
         self._repository = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "preferences" in attributes:  # pragma no branch
             self._preferences = self._makeDictAttribute(attributes["preferences"])
         if "repository" in attributes:  # pragma no branch

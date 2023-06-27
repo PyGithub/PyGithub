@@ -67,14 +67,14 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
     def triage(self) -> bool:
         return self._triage.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._admin = github.GithubObject.NotSet
         self._maintain = github.GithubObject.NotSet
         self._pull = github.GithubObject.NotSet
         self._push = github.GithubObject.NotSet
         self._triage = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
         if "maintain" in attributes:  # pragma no branch

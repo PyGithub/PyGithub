@@ -94,7 +94,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
