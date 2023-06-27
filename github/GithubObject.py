@@ -60,6 +60,7 @@ if TYPE_CHECKING:
     from .Requester import Requester
 
 T = typing.TypeVar("T")
+K = typing.TypeVar("K")
 
 
 class Attribute(Generic[T]):
@@ -190,8 +191,8 @@ class GithubObject:
 
     @staticmethod
     def __makeTransformedAttribute(
-        value: T, type: Type[T], transform: Callable[[T], Any]
-    ) -> Attribute[T]:
+        value: T, type: Type[T], transform: Callable[[T], K]
+    ) -> Attribute[K]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
