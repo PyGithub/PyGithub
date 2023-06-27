@@ -22,10 +22,10 @@
 
 from __future__ import annotations
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
+class SelfHostedActionsRunner(NonCompletableGithubObject):
     """
     This class represents Self-hosted GitHub Actions Runners. The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
@@ -33,6 +33,13 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
+
+    _id: Attribute[int]
+    _name: Attribute[str]
+    _os: Attribute[str]
+    _status: Attribute[str]
+    _busy: Attribute[bool]
+    _labels: Attribute[list[dict[str, int | str]]]
 
     @property
     def id(self) -> int:
@@ -58,11 +65,11 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
         return self._labels.value
 
     def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._os = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._busy = github.GithubObject.NotSet
+        self._id = NotSet
+        self._name = NotSet
+        self._os = NotSet
+        self._status = NotSet
+        self._busy = NotSet
         self._labels = []
 
     def _useAttributes(self, attributes):
