@@ -30,64 +30,66 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
+
+
+class Week(github.GithubObject.NonCompletableGithubObject):
+    """
+    This class represents weekly statistics of a contributor.
+    """
+
+    @property
+    def w(self) -> datetime:
+        """
+        :type: datetime.datetime
+        """
+        return self._w.value
+
+    @property
+    def a(self) -> int:
+        """
+        :type: int
+        """
+        return self._a.value
+
+    @property
+    def d(self) -> int:
+        """
+        :type: int
+        """
+        return self._d.value
+
+    @property
+    def c(self) -> int:
+        """
+        :type: int
+        """
+        return self._c.value
+
+    def _initAttributes(self) -> None:
+        self._w: Attribute[datetime] = github.GithubObject.NotSet
+        self._a: Attribute[int] = github.GithubObject.NotSet
+        self._d: Attribute[int] = github.GithubObject.NotSet
+        self._c: Attribute[int] = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes) -> None:
+        if "w" in attributes:  # pragma no branch
+            self._w = self._makeTimestampAttribute(attributes["w"])
+        if "a" in attributes:  # pragma no branch
+            self._a = self._makeIntAttribute(attributes["a"])
+        if "d" in attributes:  # pragma no branch
+            self._d = self._makeIntAttribute(attributes["d"])
+        if "c" in attributes:  # pragma no branch
+            self._c = self._makeIntAttribute(attributes["c"])
 
 
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsContributors. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
     """
-
-    class Week(github.GithubObject.NonCompletableGithubObject):
-        """
-        This class represents weekly statistics of a contributor.
-        """
-
-        @property
-        def w(self) -> datetime:
-            """
-            :type: datetime.datetime
-            """
-            return self._w.value
-
-        @property
-        def a(self) -> int:
-            """
-            :type: int
-            """
-            return self._a.value
-
-        @property
-        def d(self) -> int:
-            """
-            :type: int
-            """
-            return self._d.value
-
-        @property
-        def c(self) -> int:
-            """
-            :type: int
-            """
-            return self._c.value
-
-        def _initAttributes(self) -> None:
-            self._w = github.GithubObject.NotSet
-            self._a = github.GithubObject.NotSet
-            self._d = github.GithubObject.NotSet
-            self._c = github.GithubObject.NotSet
-
-        def _useAttributes(self, attributes) -> None:
-            if "w" in attributes:  # pragma no branch
-                self._w = self._makeTimestampAttribute(attributes["w"])
-            if "a" in attributes:  # pragma no branch
-                self._a = self._makeIntAttribute(attributes["a"])
-            if "d" in attributes:  # pragma no branch
-                self._d = self._makeIntAttribute(attributes["d"])
-            if "c" in attributes:  # pragma no branch
-                self._c = self._makeIntAttribute(attributes["c"])
 
     @property
     def author(self) -> NamedUser:
@@ -102,9 +104,9 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
         return self._weeks.value
 
     def _initAttributes(self) -> None:
-        self._author = github.GithubObject.NotSet
-        self._total = github.GithubObject.NotSet
-        self._weeks = github.GithubObject.NotSet
+        self._author: Attribute[NamedUser] = github.GithubObject.NotSet
+        self._total: Attribute[int] = github.GithubObject.NotSet
+        self._weeks: Attribute[list[Week]] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "author" in attributes:  # pragma no branch
