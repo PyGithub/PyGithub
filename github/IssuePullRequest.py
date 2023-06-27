@@ -27,10 +27,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
+class IssuePullRequest(NonCompletableGithubObject):
     """
     This class represents IssuePullRequests
     """
@@ -48,9 +49,9 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         return self._patch_url.value
 
     def _initAttributes(self):
-        self._diff_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._patch_url = github.GithubObject.NotSet
+        self._diff_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._patch_url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes):
         if "diff_url" in attributes:  # pragma no branch
