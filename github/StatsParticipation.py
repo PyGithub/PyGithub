@@ -23,27 +23,30 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import List
+from __future__ import annotations
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
+class StatsParticipation(NonCompletableGithubObject):
     """
     This class represents StatsParticipations. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
     """
 
+    _all: Attribute[list[int]]
+    _owner: Attribute[list[int]]
+
     @property
-    def all(self) -> List[int]:
+    def all(self) -> list[int]:
         return self._all.value
 
     @property
-    def owner(self) -> List[int]:
+    def owner(self) -> list[int]:
         return self._owner.value
 
     def _initAttributes(self):
-        self._all = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
+        self._all = NotSet
+        self._owner = NotSet
 
     def _useAttributes(self, attributes):
         if "all" in attributes:  # pragma no branch
