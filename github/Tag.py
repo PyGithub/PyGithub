@@ -33,13 +33,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import github.Commit
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.Commit import Commit
 
 
-class Tag(github.GithubObject.NonCompletableGithubObject):
+class Tag(NonCompletableGithubObject):
     """
     This class represents Tags. The reference can be found here https://docs.github.com/en/rest/reference/repos#list-repository-tags
     """
@@ -48,6 +48,11 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__(
             {"name": self._name.value, "commit": self._commit.value}
         )
+
+    _commit: Attribute[Commit]
+    _name: Attribute[str]
+    _tarball_url: Attribute[str]
+    _zipball_url: Attribute[str]
 
     @property
     def commit(self) -> Commit:
@@ -66,10 +71,10 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
         return self._zipball_url.value
 
     def _initAttributes(self):
-        self._commit = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._tarball_url = github.GithubObject.NotSet
-        self._zipball_url = github.GithubObject.NotSet
+        self._commit = NotSet
+        self._name = NotSet
+        self._tarball_url = NotSet
+        self._zipball_url = NotSet
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
