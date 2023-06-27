@@ -154,11 +154,17 @@ class GithubObject:
 
     @property
     def raw_data(self) -> Dict[str, Any]:
+        """
+        :type: dict
+        """
         self._completeIfNeeded()
         return self._rawData
 
     @property
     def raw_headers(self) -> Dict[str, Union[str, int]]:
+        """
+        :type: dict
+        """
         self._completeIfNeeded()
         return self._headers
 
@@ -309,10 +315,16 @@ class GithubObject:
 
     @property
     def etag(self) -> Optional[str]:
+        """
+        :type: str
+        """
         return self._headers.get(Consts.RES_ETAG)  # type: ignore
 
     @property
     def last_modified(self) -> Optional[str]:
+        """
+        :type: str
+        """
         return self._headers.get(Consts.RES_LAST_MODIFIED)  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
