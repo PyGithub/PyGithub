@@ -26,16 +26,20 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.Repository import Repository
 
 
-class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
+class RepositoryPreferences(NonCompletableGithubObject):
     """
     This class represents repository preferences.
     The reference can be found here https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
     """
+
+    _preferences: Attribute[dict[str, list[dict[str, bool | int]]]]
+    _repository: Attribute[Repository]
 
     @property
     def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
@@ -46,8 +50,8 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
         return self._repository.value
 
     def _initAttributes(self):
-        self._preferences = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
+        self._preferences = NotSet
+        self._repository = NotSet
 
     def _useAttributes(self, attributes):
         if "preferences" in attributes:  # pragma no branch
