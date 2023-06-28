@@ -749,7 +749,7 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[Any],
     ) -> Tuple[int, Dict[str, Any], str]:
-        self.__defer_request(verb)
+        self.__deferRequest(verb)
 
         try:
             original_cnx = cnx
@@ -812,9 +812,9 @@ class Requester:
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start
-            self.__record_request_time(verb)
+            self.__recordRequestTime(verb)
 
-    def __defer_request(self, verb: str) -> None:
+    def __deferRequest(self, verb: str) -> None:
         # Ensures at least self.__seconds_between_requests seconds have passed since any last request
         # and self.__seconds_between_writes seconds have passed since last write request (if verb refers to a write).
         # Uses self.__last_requests.
@@ -843,7 +843,7 @@ class Requester:
             self.__logger.debug(f"sleeping {defer}s before next GitHub request")
             time.sleep(defer)
 
-    def __record_request_time(self, verb: str) -> None:
+    def __recordRequestTime(self, verb: str) -> None:
         # Updates self.__last_requests with current timestamp for given verb
         self.__last_requests[verb] = datetime.datetime.utcnow().timestamp()
 
