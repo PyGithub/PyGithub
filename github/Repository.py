@@ -104,6 +104,7 @@
 # Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1713,6 +1714,42 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
         return status == 201
+    
+    def create_variable(self, variable_name, value):
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
+        :param variable_name: string
+        :param value: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        post_parameters = {
+            "name": variable_name,
+            "value": value,
+        }
+        status, headers, data = self._requester.requestJson(
+            "POST", f"{self.url}/actions/variables", input=post_parameters
+        )
+        return status == 201
+    
+    def update_variable(self, variable_name, value):
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        :param variable_name: string
+        :param value: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        patch_parameters = {
+            "name": variable_name,
+            "value": value,
+        }
+        status, headers, data = self._requester.requestJson(
+            "PATCH", f"{self.url}/actions/variables/{variable_name}", input=patch_parameters
+        )
+        return status == 204
 
     def delete_secret(self, secret_name):
         """
@@ -1723,6 +1760,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(secret_name, str), secret_name
         status, headers, data = self._requester.requestJson(
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
+        )
+        return status == 204
+    
+    def delete_variable(self, variable_name):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
+        :param variable_name: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/variables/{variable_name}"
         )
         return status == 204
 
