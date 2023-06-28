@@ -37,6 +37,8 @@ class GithubIntegration:
         verify=True,
         retry=None,
         pool_size=None,
+        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm=Consts.DEFAULT_JWT_ALGORITHM,
@@ -52,6 +54,8 @@ class GithubIntegration:
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         :param pool_size: int
+        :param seconds_between_requests: float
+        :param seconds_between_writes: float
         :param jwt_expiry: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_algorithm: string deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -74,6 +78,8 @@ class GithubIntegration:
             or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert seconds_between_requests is None or seconds_between_requests >= 0
+        assert seconds_between_writes is None or seconds_between_writes >= 0
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
@@ -115,6 +121,8 @@ class GithubIntegration:
             verify=verify,
             retry=retry,
             pool_size=pool_size,
+            seconds_between_requests=seconds_between_requests,
+            seconds_between_writes=seconds_between_writes,
         )
 
     def get_github_for_installation(self, installation_id):

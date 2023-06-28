@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import github
@@ -84,9 +84,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testGetAccessTokenWithExpiry(self):
         with mock.patch("github.AccessToken.datetime") as dt:
             dt.now = mock.Mock(
-                return_value=datetime.datetime(
-                    2023, 6, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc
-                )
+                return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc)
             )
             access_token = self.app.get_access_token(
                 "oauth_code_removed", state="state_removed"
@@ -103,13 +101,13 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertEqual(access_token.expires_in, 28800)
         self.assertEqual(
             access_token.expires_at,
-            datetime.datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc),
+            datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=timezone.utc),
         )
         self.assertEqual(access_token.refresh_token, "refresh_token_removed")
         self.assertEqual(access_token.refresh_expires_in, 15811200)
         self.assertEqual(
             access_token.refresh_expires_at,
-            datetime.datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc),
+            datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=timezone.utc),
         )
 
     def testRefreshAccessToken(self):
@@ -119,9 +117,7 @@ class ApplicationOAuth(Framework.TestCase):
 
         with mock.patch("github.AccessToken.datetime") as dt:
             dt.now = mock.Mock(
-                return_value=datetime.datetime(
-                    2023, 6, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc
-                )
+                return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc)
             )
             refreshed = self.app.refresh_access_token(access_token.refresh_token)
 
@@ -139,18 +135,18 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertEqual(refreshed.scope, "")
         self.assertEqual(
             refreshed.created,
-            datetime.datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc),
+            datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc),
         )
         self.assertEqual(refreshed.expires_in, 28800)
         self.assertEqual(
             refreshed.expires_at,
-            datetime.datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc),
+            datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=timezone.utc),
         )
         self.assertEqual(refreshed.refresh_token, "another_refresh_token_removed")
         self.assertEqual(refreshed.refresh_expires_in, 15811200)
         self.assertEqual(
             refreshed.refresh_expires_at,
-            datetime.datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc),
+            datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=timezone.utc),
         )
 
     def testGetAccessTokenBadCode(self):

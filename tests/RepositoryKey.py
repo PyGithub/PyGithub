@@ -29,7 +29,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -51,7 +51,10 @@ class RepositoryKey(Framework.TestCase):
         self.assertEqual(
             self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881"
         )
-        self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
+        self.assertEqual(
+            self.key.created_at,
+            datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc),
+        )
         self.assertTrue(self.key.verified)
         self.assertTrue(self.key.read_only)
         self.assertEqual(

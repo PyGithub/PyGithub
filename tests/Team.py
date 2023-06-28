@@ -34,7 +34,7 @@
 
 
 import warnings
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -75,7 +75,9 @@ class Team(Framework.TestCase):
         self.assertEqual(
             d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments"
         )
-        self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(
+            d.created_at, datetime(2019, 10, 8, 21, 3, 36, tzinfo=timezone.utc)
+        )
         self.assertEqual(
             d.html_url,
             "https://github.com/orgs/BeaverSoftware/teams/Team/discussions/1",
@@ -87,7 +89,9 @@ class Team(Framework.TestCase):
         self.assertEqual(d.private, False)
         self.assertEqual(d.team_url, "https://api.github.com/teams/189850")
         self.assertEqual(d.title, "TITLE")
-        self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36))
+        self.assertEqual(
+            d.updated_at, datetime(2019, 10, 8, 21, 3, 36, tzinfo=timezone.utc)
+        )
         self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
         self.assertEqual(repr(d), 'TeamDiscussion(title="TITLE", number=1)')
 

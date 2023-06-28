@@ -47,6 +47,8 @@ class Github:
         verify: Union[bool, str] = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
+        seconds_between_requests: Optional[float] = ...,
+        seconds_between_writes: Optional[float] = ...,
         auth: Optional[Auth] = ...,
     ) -> None: ...
     @property

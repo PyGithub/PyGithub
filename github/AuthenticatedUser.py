@@ -39,8 +39,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 from collections import namedtuple
+from datetime import datetime, timezone
 
 import github.Authorization
 import github.Event
@@ -114,7 +114,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -354,7 +354,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -855,12 +855,10 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists <http://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -885,7 +883,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label`
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
@@ -897,9 +895,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
@@ -934,7 +930,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label`
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
@@ -946,9 +942,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
@@ -1010,8 +1004,8 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /notifications <http://docs.github.com/en/rest/reference/activity#notifications>`_
         :param all: bool
         :param participating: bool
-        :param since: datetime.datetime
-        :param before: datetime.datetime
+        :param since: datetime
+        :param before: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
@@ -1019,11 +1013,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert participating is github.GithubObject.NotSet or isinstance(
             participating, bool
         ), participating
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         assert before is github.GithubObject.NotSet or isinstance(
-            before, datetime.datetime
+            before, datetime
         ), before
 
         params = dict()
@@ -1229,14 +1221,12 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return status == 200
 
-    def mark_notifications_as_read(
-        self, last_read_at=datetime.datetime.now(datetime.timezone.utc)
-    ):
+    def mark_notifications_as_read(self, last_read_at=datetime.now(timezone.utc)):
         """
         :calls: `PUT /notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         :param last_read_at: datetime
         """
-        assert isinstance(last_read_at, datetime.datetime)
+        assert isinstance(last_read_at, datetime)
         put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
         headers, data = self._requester.requestJsonAndCheck(
