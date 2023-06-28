@@ -124,10 +124,10 @@
 ################################################################################
 
 import collections
-import datetime
 import typing
 import urllib.parse
 from base64 import b64encode
+from datetime import date, datetime, timezone
 
 from deprecated import deprecated
 
@@ -351,7 +351,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -735,7 +735,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def pushed_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._pushed_at)
         return self._pushed_at.value
@@ -865,7 +865,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -1412,7 +1412,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             description, str
         ), description
         assert due_on is github.GithubObject.NotSet or isinstance(
-            due_on, (datetime.datetime, datetime.date)
+            due_on, (datetime, date)
         ), due_on
         post_parameters = {
             "title": title,
@@ -1422,7 +1422,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
-            if isinstance(due_on, datetime.date):
+            if isinstance(due_on, date):
                 post_parameters["due_on"] = due_on.strftime("%Y-%m-%dT%H:%M:%SZ")
             else:
                 post_parameters["due_on"] = due_on.isoformat()
@@ -2044,19 +2044,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/commits <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
         :param path: string
-        :param since: datetime.datetime
-        :param until: datetime.datetime
+        :param since: datetime
+        :param until: datetime
         :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, str), sha
         assert path is github.GithubObject.NotSet or isinstance(path, str), path
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
-        assert until is github.GithubObject.NotSet or isinstance(
-            until, datetime.datetime
-        ), until
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
+        assert until is github.GithubObject.NotSet or isinstance(until, datetime), until
         assert author is github.GithubObject.NotSet or isinstance(
             author,
             (
@@ -2868,7 +2864,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param labels: list of string or :class:`github.Label.Label`
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
@@ -2895,9 +2891,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         assert (
             creator is github.GithubObject.NotSet
             or isinstance(creator, github.NamedUser.NamedUser)
@@ -2950,16 +2944,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/issues/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
@@ -3209,7 +3201,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`_
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_pulls_review_comments(sort, direction, since)
@@ -3224,16 +3216,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created', 'updated', 'created_at'
         :param direction: string 'asc' or 'desc'
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
@@ -3705,8 +3695,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         :param all: bool
         :param participating: bool
-        :param since: datetime.datetime
-        :param before: datetime.datetime
+        :param since: datetime
+        :param before: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
@@ -3714,11 +3704,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert participating is github.GithubObject.NotSet or isinstance(
             participating, bool
         ), participating
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         assert before is github.GithubObject.NotSet or isinstance(
-            before, datetime.datetime
+            before, datetime
         ), before
 
         params = dict()
@@ -3738,14 +3726,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             params,
         )
 
-    def mark_notifications_as_read(
-        self, last_read_at=datetime.datetime.now(datetime.timezone.utc)
-    ):
+    def mark_notifications_as_read(self, last_read_at=datetime.now(timezone.utc)):
         """
         :calls: `PUT /repos/{owner}/{repo}/notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         :param last_read_at: datetime
         """
-        assert isinstance(last_read_at, datetime.datetime)
+        assert isinstance(last_read_at, datetime)
         put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -4026,9 +4012,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param details_url: string
         :param external_id: string
         :param status: string
-        :param started_at: datetime.datetime
+        :param started_at: datetime
         :param conclusion: string
-        :param completed_at: datetime.datetime
+        :param completed_at: datetime
         :param output: dict
         :param actions: list of dict
         :rtype: :class:`github.CheckRun.CheckRun`
@@ -4043,13 +4029,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         ), external_id
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
         assert started_at is github.GithubObject.NotSet or isinstance(
-            started_at, datetime.datetime
+            started_at, datetime
         ), started_at
         assert conclusion is github.GithubObject.NotSet or isinstance(
             conclusion, str
         ), conclusion
         assert completed_at is github.GithubObject.NotSet or isinstance(
-            completed_at, datetime.datetime
+            completed_at, datetime
         ), completed_at
         assert output is github.GithubObject.NotSet or isinstance(output, dict), output
         assert actions is github.GithubObject.NotSet or all(
