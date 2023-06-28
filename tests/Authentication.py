@@ -25,7 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-import warnings
+import datetime
 from unittest import mock
 
 import jwt
@@ -40,16 +40,6 @@ class Authentication(Framework.BasicTestCase):
     def testNoAuthentication(self):
         g = github.Github()
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
-
-    def assertWarning(self, warning, expected):
-        self.assertWarnings(warning, expected)
-
-    def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
-        for message, expected in zip(warning.warnings, expecteds):
-            self.assertIsInstance(message, warnings.WarningMessage)
-            self.assertIsInstance(message.message, DeprecationWarning)
-            self.assertEqual(message.message.args, (expected,))
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
@@ -90,7 +80,7 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
         self.assertWarnings(
             warning,
-            "Call to deprecated class AppAuthentication. (Use app.Auth.AppInstallationAuth instead)",
+            "Call to deprecated class AppAuthentication. (Use github.Auth.AppInstallationAuth instead)",
             "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
         )
 
@@ -113,7 +103,104 @@ class Authentication(Framework.BasicTestCase):
         # test data copied from testAppAuthentication to test parity
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
+
+        # test token expiry
+        # token expires 2024-11-25 01:00:02
+        token = installation_auth.token
+        self.assertFalse(installation_auth._is_expired)
+        self.assertEqual(
+            installation_auth._AppInstallationAuth__installation_authorization.expires_at,
+            datetime.datetime(2024, 11, 25, 1, 0, 2),
+        )
+
+        # forward the clock so token expires
+        with mock.patch("github.Auth.datetime") as dt:
+            # just before expiry
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2024, 11, 25, 0, 59, 3, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertFalse(installation_auth._is_expired)
+
+            # just after expiry
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2024, 11, 25, 1, 0, 3, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertTrue(installation_auth._is_expired)
+
+            # expect refreshing the token
+            refreshed_token = installation_auth.token
+            self.assertNotEqual(refreshed_token, token)
+            self.assertFalse(installation_auth._is_expired)
+            self.assertEqual(
+                installation_auth._AppInstallationAuth__installation_authorization.expires_at,
+                datetime.datetime(2025, 11, 25, 1, 0, 2),
+            )
+
+        # use the token
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+
+    def testAppUserAuthentication(self):
+        client_id = "removed client id"
+        client_secret = "removed client secret"
+        refresh_token = "removed refresh token"
+
+        g = github.Github()
+        app = g.get_oauth_application(client_id, client_secret)
+        with mock.patch("github.AccessToken.datetime") as dt:
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc
+                )
+            )
+            token = app.refresh_access_token(refresh_token)
+        self.assertEqual(token.token, "fresh access token")
+        self.assertEqual(token.type, "bearer")
+        self.assertEqual(token.scope, "")
+        self.assertEqual(token.expires_in, 28800)
+        self.assertEqual(
+            token.expires_at,
+            datetime.datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc),
+        )
+        self.assertEqual(token.refresh_token, "fresh refresh token")
+        self.assertEqual(token.refresh_expires_in, 15811200)
+        self.assertEqual(
+            token.refresh_expires_at,
+            datetime.datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc),
+        )
+
+        auth = app.get_app_user_auth(token)
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertEqual(auth._is_expired, False)
+            self.assertEqual(auth.token, "fresh access token")
+        self.assertEqual(auth.token_type, "bearer")
+        self.assertEqual(auth.refresh_token, "fresh refresh token")
+
+        # expire auth token
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 20, 0, 1, 123, tzinfo=datetime.timezone.utc
+                )
+            )
+            self.assertEqual(auth._is_expired, True)
+            self.assertEqual(auth.token, "another access token")
+            self.assertEqual(auth._is_expired, False)
+        self.assertEqual(auth.token_type, "bearer")
+        self.assertEqual(auth.refresh_token, "another refresh token")
+
+        g = github.Github(auth=auth)
+        user = g.get_user()
+        self.assertEqual(user.login, "EnricoMi")
 
     def testCreateJWT(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)

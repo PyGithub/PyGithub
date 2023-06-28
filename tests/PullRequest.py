@@ -152,6 +152,67 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(comment.id, 886298)
 
+    def testCreateReviewCommentInReplyTo(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            in_reply_to=42,
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateReviewCommentSubjectType(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            subject_type="FILE",
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateMultilineReviewComment(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateMultilineReviewCommentAsSuggestion(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            as_suggestion=True,
+        )
+        self.assertEqual(comment.id, 886298)
+        self.assertEqual(
+            comment.body, "```suggestion\nComment created by PyGithub\n```"
+        )
+
+    def testCreateMultilineReviewCommentChoosingSide(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            side="RIGHT",
+            start_side="RIGHT",
+        )
+        self.assertEqual(comment.id, 886298)
+
     def testGetComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_comments(sort="updated", direction="desc", since=epoch)

@@ -22,9 +22,8 @@
 
 import abc
 import base64
-import datetime
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional, Union
 
 import jwt
@@ -261,16 +260,10 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         self._token_permissions = token_permissions
 
         if requester is not None:
-            assert isinstance(requester, Requester), requester
-            self._setRequester(requester)
+            self.withRequester(requester)
 
     def withRequester(self, requester: Requester) -> "AppInstallationAuth":
-        assert isinstance(requester, Requester), requester
-        self._setRequester(requester.withAuth(self._app_auth))
-        return self
-
-    def _setRequester(self, requester: Requester):
-        super().withRequester(requester)
+        super().withRequester(requester.withAuth(self._app_auth))
 
         from github.GithubIntegration import GithubIntegration
 
@@ -278,6 +271,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             auth=self._app_auth,
             base_url=requester.base_url,
         )
+
+        return self
 
     @property
     def app_id(self) -> Union[int, str]:
@@ -312,7 +307,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             self.__installation_authorization.expires_at
             - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
         )
-        return token_expires_at < datetime.datetime.utcnow()
+        # to be fixed by https://github.com/PyGithub/PyGithub/pull/1831
+        return token_expires_at < datetime.now(timezone.utc).replace(tzinfo=None)
 
     def _get_installation_authorization(self) -> InstallationAuthorization:
         assert (
@@ -324,19 +320,136 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         )
 
 
-class AppUserAuth(Auth):
+class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     """
-    This class is used to authenticate Requester as a GitHub App Installation on behalf of a user.
+    This class is used to authenticate Requester as a GitHub App on behalf of a user.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
     """
 
-    def __init__(self):
-        raise NotImplementedError
+    _client_id: str
+    _client_secret: str
+    _token: str
+    _type: str
+    _scope: Optional[str]
+    _expires_at: Optional[datetime]
+    _refresh_token: Optional[str]
+    _refresh_expires_at: Optional[datetime]
+
+    # imported here to avoid circular import
+    from github.ApplicationOAuth import ApplicationOAuth
+
+    __app: ApplicationOAuth
+
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        token: str,
+        token_type: Optional[str] = None,
+        expires_at: Optional[datetime] = None,
+        refresh_token=None,
+        refresh_expires_at=None,
+        requester: Optional[Requester] = None,
+    ):
+        assert isinstance(client_id, str)
+        assert len(client_id) > 0
+        assert isinstance(client_secret, str)
+        assert len(client_secret) > 0
+        assert isinstance(token, str)
+        assert len(token) > 0
+        if token_type is not None:
+            assert isinstance(token_type, str)
+            assert len(token_type) > 0
+        assert isinstance(token, str)
+        if token_type is not None:
+            assert isinstance(token_type, str)
+            assert len(token_type) > 0
+        if expires_at is not None:
+            assert isinstance(expires_at, datetime)
+        if refresh_token is not None:
+            assert isinstance(refresh_token, str)
+            assert len(refresh_token) > 0
+        if refresh_expires_at is not None:
+            assert isinstance(refresh_expires_at, datetime)
+
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._token = token
+        self._type = token_type or "bearer"
+        self._expires_at = expires_at
+        self._refresh_token = refresh_token
+        self._refresh_expires_at = refresh_expires_at
+
+        if requester is not None:
+            self.withRequester(requester)
 
     @property
     def token_type(self) -> str:
-        raise NotImplementedError
+        return self._type
 
     @property
     def token(self) -> str:
-        raise NotImplementedError
+        if self._is_expired:
+            self._refresh()
+        return self._token
+
+    def withRequester(self, requester: Requester) -> "AppUserAuth":
+        super().withRequester(requester.withAuth(None))
+
+        # imported here to avoid circular import
+        from github.ApplicationOAuth import ApplicationOAuth
+
+        self.__app = ApplicationOAuth(
+            # take requester given to super().withRequester, not given to this method
+            super().requester,
+            headers={},
+            attributes={
+                "client_id": self._client_id,
+                "client_secret": self._client_secret,
+            },
+            completed=False,
+        )
+
+        return self
+
+    @property
+    def _is_expired(self) -> bool:
+        return self._expires_at is not None and self._expires_at < datetime.now(
+            timezone.utc
+        )
+
+    def _refresh(self):
+        if self._refresh_token is None:
+            raise RuntimeError(
+                "Cannot refresh expired token because no refresh token has been provided"
+            )
+        if (
+            self._refresh_expires_at is not None
+            and self._refresh_expires_at < datetime.now(timezone.utc)
+        ):
+            raise RuntimeError(
+                "Cannot refresh expired token because refresh token also expired"
+            )
+
+        # refresh token
+        token = self.__app.refresh_access_token(self._refresh_token)
+
+        # update this auth
+        self._token = token.token
+        self._type = token.type
+        self._scope = token.scope
+        self._expires_at = token.expires_at
+        self._refresh_token = token.refresh_token
+        self._refresh_expires_at = token.refresh_expires_at
+
+    @property
+    def expires_at(self) -> Optional[datetime]:
+        return self._expires_at
+
+    @property
+    def refresh_token(self) -> Optional[str]:
+        return self._refresh_token
+
+    @property
+    def refresh_expires_at(self) -> Optional[datetime]:
+        return self._refresh_expires_at

@@ -42,6 +42,90 @@ class Requester(Framework.TestCase):
         github.Requester.Requester.resetLogger()
         super().tearDown()
 
+    def testRecreation(self):
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        # create a Requester with non-default arguments
+        auth = TestAuth(123, "key")
+        requester = github.Requester.Requester(
+            auth=auth,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+        )
+        kwargs = requester.kwargs
+
+        # assert kwargs consists of ALL constructor arguments
+        self.assertEqual(
+            kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys()
+        )
+        self.assertEqual(
+            kwargs,
+            dict(
+                auth=auth,
+                base_url="https://base.url",
+                timeout=1,
+                user_agent="user agent",
+                per_page=123,
+                verify=False,
+                retry=3,
+                pool_size=5,
+            ),
+        )
+
+        # create a copy Requester, assert identity via kwargs
+        copy = github.Requester.Requester(**kwargs)
+        self.assertEqual(copy.kwargs, kwargs)
+
+        # create Github instance, assert identity requester
+        gh = github.Github(**kwargs)
+        self.assertEqual(gh._Github__requester.kwargs, kwargs)
+
+        # create GithubIntegration instance, assert identity requester
+        gi = github.GithubIntegration(**kwargs)
+        self.assertEqual(gi._GithubIntegration__requester.kwargs, kwargs)
+
+    def testWithAuth(self):
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        # create a Requester with non-default arguments
+        auth = TestAuth(123, "key")
+        requester = github.Requester.Requester(
+            auth=auth,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+        )
+
+        # create a copy with different auth
+        auth2 = TestAuth(456, "key2")
+        copy = requester.withAuth(auth2)
+
+        # assert kwargs of copy
+        self.assertEqual(
+            copy.kwargs,
+            dict(
+                auth=auth2,
+                base_url="https://base.url",
+                timeout=1,
+                user_agent="user agent",
+                per_page=123,
+                verify=False,
+                retry=3,
+                pool_size=5,
+            ),
+        )
+
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
         self.logger.info.assert_called_once_with(
@@ -95,6 +179,48 @@ class Requester(Framework.TestCase):
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
         )
 
+    PrimaryRateLimitErrors = [
+        "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+    ]
+    SecondaryRateLimitErrors = [
+        "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+        "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later."
+        "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.",
+        "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
+        "Something else here. Please wait a few minutes before you try again.",
+    ]
+    OtherErrors = ["User does not exist or is not a member of the organization"]
+
+    def testIsRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
+        for message in self.OtherErrors:
+            self.assertFalse(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
+
+    def testIsPrimaryRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
+        for message in self.OtherErrors + self.SecondaryRateLimitErrors:
+            self.assertFalse(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
+
+    def testIsSecondaryRateLimitError(self):
+        for message in self.SecondaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
+        for message in self.OtherErrors + self.PrimaryRateLimitErrors:
+            self.assertFalse(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
+
     def assertException(self, exception, exception_type, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
         self.assertEqual(exception.status, status)
@@ -106,7 +232,7 @@ class Requester(Framework.TestCase):
         self.assertEqual(str(exception), string)
 
     def testShouldCreateBadCredentialsException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401, {"header": "value"}, {"message": "Bad credentials"}
         )
         self.assertException(
@@ -119,7 +245,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateTwoFactorException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401,
             {"x-github-otp": "required; app"},
             {
@@ -140,7 +266,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateBadUserAgentException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             403,
             {"header": "value"},
             {"message": "Missing or invalid User Agent string"},
@@ -155,13 +281,9 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateRateLimitExceededException(self):
-        for message in [
-            "API Rate Limit Exceeded for 92.104.200.119",
-            "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
-            "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
-        ]:
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
             with self.subTest(message=message):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     403, {"header": "value"}, {"message": message}
                 )
                 self.assertException(
@@ -174,7 +296,7 @@ class Requester(Framework.TestCase):
                 )
 
     def testShouldCreateUnknownObjectException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             404, {"header": "value"}, {"message": "Not Found"}
         )
         self.assertException(
@@ -189,7 +311,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateGithubException(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     status, {"header": "value"}, {"message": "Something unknown"}
                 )
                 self.assertException(
@@ -204,7 +326,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, {})
+                exc = self.g._Github__requester.createException(status, {}, {})
                 self.assertException(
                     exc, github.GithubException, status, {}, {}, f"{status} {{}}"
                 )
@@ -212,7 +334,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, None)
+                exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(
                     exc, github.GithubException, status, None, {}, f"{status} null"
                 )

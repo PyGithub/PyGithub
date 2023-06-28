@@ -398,36 +398,86 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_comment(self, body, commit_id, path, position):
+    def create_comment(self, body, commit, path, position):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
-        :param commit_id: :class:`github.Commit.Commit`
+        :param commit: :class:`github.Commit.Commit`
         :param path: string
         :param position: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
-        return self.create_review_comment(body, commit_id, path, position)
+        return self.create_review_comment(body, commit, path, position)
 
-    def create_review_comment(self, body, commit_id, path, position):
+    def create_review_comment(
+        self,
+        body,
+        commit,
+        path,
+        # line replaces deprecated position argument, so we put it between path and side
+        line=github.GithubObject.NotSet,
+        side=github.GithubObject.NotSet,
+        start_line=github.GithubObject.NotSet,
+        start_side=github.GithubObject.NotSet,
+        in_reply_to=github.GithubObject.NotSet,
+        subject_type=github.GithubObject.NotSet,
+        as_suggestion=False,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
-        :param commit_id: :class:`github.Commit.Commit`
+        :param commit: :class:`github.Commit.Commit`
         :param path: string
-        :param position: integer
+        :param line: integer
+        :param side: string
+        :param start_line: integer
+        :param start_side: string
+        :param in_reply_to: integer
+        :param subject_type: string
+        :param as_suggestion: bool interprets the body as suggested code and modifies it accordingly
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(body, str), body
-        assert isinstance(commit_id, github.Commit.Commit), commit_id
+        assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
-        assert isinstance(position, int), position
+        assert line is github.GithubObject.NotSet or isinstance(line, int), line
+        assert side is github.GithubObject.NotSet or side in ["LEFT", "RIGHT"], side
+        assert start_line is github.GithubObject.NotSet or isinstance(
+            start_line, int
+        ), start_line
+        assert start_side is github.GithubObject.NotSet or start_side in [
+            "LEFT",
+            "RIGHT",
+        ], start_side
+        assert in_reply_to is github.GithubObject.NotSet or isinstance(
+            in_reply_to, int
+        ), in_reply_to
+        assert subject_type is github.GithubObject.NotSet or subject_type in [
+            "LINE",
+            "FILE",
+            "side",
+        ], subject_type
+        assert isinstance(as_suggestion, bool), as_suggestion
+
+        if as_suggestion:
+            body = f"```suggestion\n{body}\n```"
         post_parameters = {
             "body": body,
-            "commit_id": commit_id._identity,
+            "commit_id": commit._identity,
             "path": path,
-            "position": position,
         }
+        if line is not github.GithubObject.NotSet:
+            post_parameters["line"] = line
+        if side is not github.GithubObject.NotSet:
+            post_parameters["side"] = side
+        if start_line is not github.GithubObject.NotSet:
+            post_parameters["start_line"] = start_line
+        if start_side is not github.GithubObject.NotSet:
+            post_parameters["start_side"] = start_side
+        if in_reply_to is not github.GithubObject.NotSet:
+            post_parameters["in_reply_to"] = in_reply_to
+        if subject_type is not github.GithubObject.NotSet:
+            post_parameters["subject_type"] = subject_type
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/comments", input=post_parameters
         )

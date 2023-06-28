@@ -134,6 +134,7 @@ repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
+DEFAULT_USER_AGENT = "PyGithub/Python"
 # As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
 # Thus, the timeout should be slightly > 10s to account for network/front-end
 # latency.

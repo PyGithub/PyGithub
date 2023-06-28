@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overl
 
 from github.Auth import Auth
 from github.AppAuthentication import AppAuthentication
+from github.ApplicationOAuth import ApplicationOAuth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -18,6 +19,7 @@ from github.NamedUser import NamedUser
 from github.Organization import Organization
 from github.PaginatedList import PaginatedList
 from github.Project import Project
+from github.ProjectColumn import ProjectColumn
 from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
@@ -25,6 +27,11 @@ from github.Topic import Topic
 from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
+
+DEFAULT_BASE_URL: str
+DEFAULT_STATUS_URL: str
+DEFAULT_TIMEOUT: int
+DEFAULT_PER_PAGE: int
 
 class Github:
     def __init__(
@@ -37,7 +44,7 @@ class Github:
         timeout: int = ...,
         user_agent: str = ...,
         per_page: int = ...,
-        verify: bool = ...,
+        verify: Union[bool, str] = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
         seconds_between_requests: Optional[float] = ...,
@@ -76,6 +83,7 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[Organization]: ...
     def get_project(self, id: int) -> Project: ...
+    def get_project_column(self, id: int) -> ProjectColumn: ...
     def get_rate_limit(self) -> RateLimit: ...
     def get_repo(
         self, full_name_or_id: Union[int, str], lazy: bool = ...
@@ -96,6 +104,11 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
+    # argument slug is deprecated, not included here
+    def get_app(self): ...
+    def get_oauth_application(
+        self, client_id: str, client_secret: str
+    ) -> ApplicationOAuth: ...
     @property
     def oauth_scopes(self) -> Optional[List[str]]: ...
     @property
