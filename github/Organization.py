@@ -734,11 +734,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_variable(
         self,
-        variable_name,
-        value,
-        visibility="all",
-        selected_repositories=github.GithubObject.NotSet,
-    ):
+        variable_name: str,
+        value: str,
+        visibility:str = "all",
+        selected_repositories: list = github.GithubObject.NotSet,
+    ) -> bool:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
         :param variable_name: string
@@ -795,7 +795,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
     
-    def delete_variable(self, variable_name):
+    def delete_variable(self, variable_name: str) -> bool:
         """
         :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#delete-an-organization-variable>`_
         :param variable_name: string
@@ -903,11 +903,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def update_variable(
         self,
-        variable_name,
-        value,
-        visibility="all",
-        selected_repositories=github.GithubObject.NotSet,
-    ):
+        variable_name: str,
+        value: str,
+        visibility: str = "all",
+        selected_repositories: list = github.GithubObject.NotSet,
+    ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string

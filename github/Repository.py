@@ -1715,7 +1715,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
     
-    def create_variable(self, variable_name, value):
+    def create_variable(self, variable_name: str, value: str) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
         :param variable_name: string
@@ -1733,7 +1733,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
     
-    def update_variable(self, variable_name, value):
+    def update_variable(self, variable_name: str, value: str) -> bool:
         """
         :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
         :param variable_name: string
@@ -1763,7 +1763,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
     
-    def delete_variable(self, variable_name):
+    def delete_variable(self, variable_name: str) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
         :param variable_name: string
