@@ -4145,6 +4145,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             f"{self.url}/code-scanning/alerts",
             None,
         )
+    def get_dependabot_alerts(self):
+        """
+        :calls: `GET https://api.github.com/repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts?apiVersion=2022-11-28#list-dependabot-alerts-for-a-repository>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.CodeScanAlert.CodeScanAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            None,
+        )
 
     def get_environments(self):
         """
