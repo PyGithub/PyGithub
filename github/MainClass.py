@@ -68,6 +68,7 @@ from . import (
     AuthenticatedUser,
     Consts,
     GithubApp,
+    GithubRetry,
     GitignoreTemplate,
     HookDelivery,
     HookDescription,
@@ -82,6 +83,8 @@ class Github:
     """
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
+
+    default_retry = GithubRetry.GithubRetry()
 
     # keep non-deprecated arguments in-sync with Requester
     # v2: remove login_or_token, password, jwt and app_auth
@@ -99,7 +102,7 @@ class Github:
         user_agent=Consts.DEFAULT_USER_AGENT,
         per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
-        retry=None,
+        retry=default_retry,
         pool_size=None,
         auth=None,
     ):
@@ -113,7 +116,9 @@ class Github:
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
-        :param retry: int or urllib3.util.retry.Retry object
+        :param retry: int or urllib3.util.retry.Retry object,
+                      defaults to github.Github.default_retry,
+                      set to None to disable retries
         :param pool_size: int
         :param auth: authentication method
         """
