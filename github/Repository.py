@@ -1714,7 +1714,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
         return status == 201
-    
+
     def create_variable(self, variable_name: str, value: str) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
@@ -1732,7 +1732,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST", f"{self.url}/actions/variables", input=post_parameters
         )
         return status == 201
-    
+
     def update_variable(self, variable_name: str, value: str) -> bool:
         """
         :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
@@ -1747,7 +1747,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "value": value,
         }
         status, headers, data = self._requester.requestJson(
-            "PATCH", f"{self.url}/actions/variables/{variable_name}", input=patch_parameters
+            "PATCH",
+            f"{self.url}/actions/variables/{variable_name}",
+            input=patch_parameters,
         )
         return status == 204
 
@@ -1762,7 +1764,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
         )
         return status == 204
-    
+
     def delete_variable(self, variable_name: str) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
