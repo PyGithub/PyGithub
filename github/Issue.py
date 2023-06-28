@@ -42,8 +42,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import urllib.parse
+from datetime import datetime
 
 import github.GithubObject
 import github.IssueComment
@@ -97,7 +97,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def closed_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
@@ -129,7 +129,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -241,7 +241,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -472,12 +472,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def get_comments(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")

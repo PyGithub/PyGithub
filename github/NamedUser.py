@@ -35,7 +35,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime
 
 import github.Event
 import github.Gist
@@ -135,7 +135,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -383,7 +383,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     @property
     def suspended_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._suspended_at)
         return self._suspended_at.value
@@ -415,7 +415,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -458,12 +458,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /users/{user}/gists <https://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")

@@ -19,12 +19,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
+import contextlib
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
 
 from . import Framework
+
+REPO_NAME = "PyGithub/PyGithub"
 
 
 class Requester(Framework.TestCase):
@@ -54,6 +57,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
         kwargs = requester.kwargs
 
@@ -72,6 +77,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -102,6 +109,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
 
         # create a copy with different auth
@@ -120,6 +129,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -176,6 +187,48 @@ class Requester(Framework.TestCase):
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
         )
 
+    PrimaryRateLimitErrors = [
+        "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+    ]
+    SecondaryRateLimitErrors = [
+        "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+        "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later."
+        "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.",
+        "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
+        "Something else here. Please wait a few minutes before you try again.",
+    ]
+    OtherErrors = ["User does not exist or is not a member of the organization"]
+
+    def testIsRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
+        for message in self.OtherErrors:
+            self.assertFalse(
+                github.Requester.Requester.isRateLimitError(message), message
+            )
+
+    def testIsPrimaryRateLimitError(self):
+        for message in self.PrimaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
+        for message in self.OtherErrors + self.SecondaryRateLimitErrors:
+            self.assertFalse(
+                github.Requester.Requester.isPrimaryRateLimitError(message), message
+            )
+
+    def testIsSecondaryRateLimitError(self):
+        for message in self.SecondaryRateLimitErrors:
+            self.assertTrue(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
+        for message in self.OtherErrors + self.PrimaryRateLimitErrors:
+            self.assertFalse(
+                github.Requester.Requester.isSecondaryRateLimitError(message), message
+            )
+
     def assertException(self, exception, exception_type, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
         self.assertEqual(exception.status, status)
@@ -187,7 +240,7 @@ class Requester(Framework.TestCase):
         self.assertEqual(str(exception), string)
 
     def testShouldCreateBadCredentialsException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401, {"header": "value"}, {"message": "Bad credentials"}
         )
         self.assertException(
@@ -200,7 +253,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateTwoFactorException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             401,
             {"x-github-otp": "required; app"},
             {
@@ -221,7 +274,7 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateBadUserAgentException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             403,
             {"header": "value"},
             {"message": "Missing or invalid User Agent string"},
@@ -236,13 +289,9 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateRateLimitExceededException(self):
-        for message in [
-            "API Rate Limit Exceeded for 92.104.200.119",
-            "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
-            "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
-        ]:
+        for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
             with self.subTest(message=message):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     403, {"header": "value"}, {"message": message}
                 )
                 self.assertException(
@@ -255,7 +304,7 @@ class Requester(Framework.TestCase):
                 )
 
     def testShouldCreateUnknownObjectException(self):
-        exc = self.g._Github__requester.__createException(
+        exc = self.g._Github__requester.createException(
             404, {"header": "value"}, {"message": "Not Found"}
         )
         self.assertException(
@@ -270,7 +319,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateGithubException(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(
+                exc = self.g._Github__requester.createException(
                     status, {"header": "value"}, {"message": "Something unknown"}
                 )
                 self.assertException(
@@ -285,7 +334,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, {})
+                exc = self.g._Github__requester.createException(status, {}, {})
                 self.assertException(
                     exc, github.GithubException, status, {}, {}, f"{status} {{}}"
                 )
@@ -293,7 +342,98 @@ class Requester(Framework.TestCase):
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
-                exc = self.g._Github__requester.__createException(status, {}, None)
+                exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(
                     exc, github.GithubException, status, None, {}, f"{status} null"
                 )
+
+
+class RequesterThrottleTestCase(Framework.TestCase):
+    per_page = 10
+
+    mock_time = [datetime.now(timezone.utc)]
+
+    def sleep(self, seconds):
+        self.mock_time[0] = self.mock_time[0] + timedelta(seconds=seconds)
+
+    def now(self, tz=None):
+        return self.mock_time[0]
+
+    @contextlib.contextmanager
+    def mock_sleep(self):
+        with mock.patch(
+            "github.Requester.time.sleep", side_effect=self.sleep
+        ) as sleep_mock, mock.patch("github.Requester.datetime") as datetime_mock:
+            datetime_mock.now = self.now
+            yield sleep_mock
+
+
+class RequesterUnThrottled(RequesterThrottleTestCase):
+    def testShouldNotDeferRequests(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in RequesterThrottled.testShouldDeferRequests
+            repository = self.g.get_repo(REPO_NAME)
+            releases = list(repository.get_releases())
+            self.assertEqual(len(releases), 30)
+
+        sleep_mock.assert_not_called()
+
+
+class RequesterThrottled(RequesterThrottleTestCase):
+    seconds_between_requests = 1.0
+    seconds_between_writes = 3.0
+
+    def testShouldDeferRequests(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
+            repository = self.g.get_repo(REPO_NAME)
+            releases = [release for release in repository.get_releases()]
+            self.assertEqual(len(releases), 30)
+
+        self.assertEqual(
+            sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)]
+        )
+
+    def testShouldDeferWrites(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in AuthenticatedUser.testEmail
+            user = self.g.get_user()
+            emails = user.get_emails()
+            self.assertEqual(
+                [item.email for item in emails],
+                ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
+            )
+            self.assertTrue(emails[0].primary)
+            self.assertTrue(emails[0].verified)
+            self.assertEqual(emails[0].visibility, "private")
+            user.add_to_emails("1@foobar.com", "2@foobar.com")
+            self.assertEqual(
+                [item.email for item in user.get_emails()],
+                [
+                    "vincent@vincent-jacques.net",
+                    "1@foobar.com",
+                    "2@foobar.com",
+                    "github.com@vincent-jacques.net",
+                ],
+            )
+            user.remove_from_emails("1@foobar.com", "2@foobar.com")
+            self.assertEqual(
+                [item.email for item in user.get_emails()],
+                ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
+            )
+
+        self.assertEqual(
+            sleep_mock.call_args_list,
+            [
+                # g.get_user() does not call into GitHub API
+                # user.get_emails() is the first request so no waiting needed
+                # user.add_to_emails is a write request, this is the first write request
+                mock.call(1),
+                # user.get_emails() is a read request
+                mock.call(1),
+                # user.remove_from_emails is a write request, it has to be 3 seconds after the last write
+                mock.call(2),
+                # user.get_emails() is a read request
+                mock.call(1),
+            ],
+        )
