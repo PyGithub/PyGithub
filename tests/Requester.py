@@ -57,6 +57,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
         kwargs = requester.kwargs
 
@@ -75,6 +77,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -105,6 +109,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
 
         # create a copy with different auth
@@ -123,6 +129,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -367,7 +375,7 @@ class RequesterUnThrottled(RequesterThrottleTestCase):
         with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterThrottled.testShouldDeferRequests
             repository = self.g.get_repo(REPO_NAME)
-            releases = [release for release in repository.get_releases()]
+            releases = list(repository.get_releases())
             self.assertEqual(len(releases), 30)
 
         sleep_mock.assert_not_called()

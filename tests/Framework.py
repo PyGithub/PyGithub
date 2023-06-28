@@ -418,6 +418,7 @@ class TestCase(BasicTestCase):
         if self.tokenAuthMode:
             return github.Github(
                 auth=self.oauth_token,
+                per_page=self.per_page,
                 retry=retry,
                 pool_size=pool_size,
                 seconds_between_requests=self.seconds_between_requests,
@@ -426,6 +427,7 @@ class TestCase(BasicTestCase):
         elif self.jwtAuthMode:
             return github.Github(
                 auth=self.jwt,
+                per_page=self.per_page,
                 retry=retry,
                 pool_size=pool_size,
                 seconds_between_requests=self.seconds_between_requests,
@@ -434,6 +436,7 @@ class TestCase(BasicTestCase):
         else:
             return github.Github(
                 auth=self.login,
+                per_page=self.per_page,
                 retry=retry,
                 pool_size=pool_size,
                 seconds_between_requests=self.seconds_between_requests,
