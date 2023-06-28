@@ -28,6 +28,11 @@ from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
+DEFAULT_BASE_URL: str
+DEFAULT_STATUS_URL: str
+DEFAULT_TIMEOUT: int
+DEFAULT_PER_PAGE: int
+
 class Github:
     def __init__(
         self,
