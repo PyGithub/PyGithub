@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 import contextlib
-import datetime
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
@@ -351,22 +351,20 @@ class Requester(Framework.TestCase):
 class RequesterThrottleTestCase(Framework.TestCase):
     per_page = 10
 
-    now = [datetime.datetime.utcnow()]
+    mock_time = [datetime.now(timezone.utc)]
 
     def sleep(self, seconds):
-        self.now[0] = self.now[0] + datetime.timedelta(seconds=seconds)
+        self.mock_time[0] = self.mock_time[0] + timedelta(seconds=seconds)
 
-    def utcnow(self):
-        return self.now[0]
+    def now(self, tz=None):
+        return self.mock_time[0]
 
     @contextlib.contextmanager
     def mock_sleep(self):
         with mock.patch(
             "github.Requester.time.sleep", side_effect=self.sleep
-        ) as sleep_mock, mock.patch(
-            "github.Requester.datetime.datetime"
-        ) as datetime_mock:
-            datetime_mock.utcnow = self.utcnow
+        ) as sleep_mock, mock.patch("github.Requester.datetime") as datetime_mock:
+            datetime_mock.now = self.now
             yield sleep_mock
 
 

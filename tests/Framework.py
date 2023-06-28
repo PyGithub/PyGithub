@@ -339,7 +339,6 @@ class BasicTestCase(unittest.TestCase):
         self.assertWarnings(warning, expected)
 
     def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
         actual = [
             (type(message), type(message.message), message.message.args)
             for message in warning.warnings

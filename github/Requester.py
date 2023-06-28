@@ -51,7 +51,6 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import io
 import json
 import logging
@@ -62,6 +61,7 @@ import time
 import urllib
 import urllib.parse
 from collections import defaultdict
+from datetime import datetime, timezone
 from io import IOBase
 from typing import (
     TYPE_CHECKING,
@@ -836,7 +836,7 @@ class Requester:
         )
 
         next = next_request if verb == "GET" else max(next_request, next_write)
-        defer = max(next - datetime.datetime.utcnow().timestamp(), 0)
+        defer = max(next - datetime.now(timezone.utc).timestamp(), 0)
         if defer > 0:
             if self.__logger is None:
                 self.__logger = logging.getLogger(__name__)
@@ -845,7 +845,7 @@ class Requester:
 
     def __recordRequestTime(self, verb: str) -> None:
         # Updates self.__last_requests with current timestamp for given verb
-        self.__last_requests[verb] = datetime.datetime.utcnow().timestamp()
+        self.__last_requests[verb] = datetime.now(timezone.utc).timestamp()
 
     def __makeAbsoluteUrl(self, url: str) -> str:
         # URLs generated locally will be relative to __base_url
