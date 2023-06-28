@@ -24,6 +24,8 @@ from . import Framework
 
 
 class Issue2469(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issues/2469
+    tokenAuthMode = True
+    
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user()
