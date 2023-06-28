@@ -647,7 +647,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         secret_name,
         unencrypted_value,
         visibility="all",
-        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
@@ -738,7 +740,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
@@ -795,7 +799,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
         )
         return status == 204
-    
+
     def delete_variable(self, variable_name: str) -> bool:
         """
         :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#delete-an-organization-variable>`_
@@ -901,13 +905,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
-
     def update_variable(
         self,
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
@@ -939,7 +944,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
             ]
 
         status, headers, data = self._requester.requestJson(
-            "PATCH", f"{self.url}/actions/variables/{variable_name}", input=patch_parameters
+            "PATCH",
+            f"{self.url}/actions/variables/{variable_name}",
+            input=patch_parameters,
         )
         return status == 204
 
