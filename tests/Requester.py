@@ -19,12 +19,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
+import contextlib
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
 
 from . import Framework
+
+REPO_NAME = "PyGithub/PyGithub"
 
 
 class Requester(Framework.TestCase):
@@ -54,6 +57,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
         kwargs = requester.kwargs
 
@@ -72,6 +77,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -102,6 +109,8 @@ class Requester(Framework.TestCase):
             verify=False,
             retry=3,
             pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
         )
 
         # create a copy with different auth
@@ -120,6 +129,8 @@ class Requester(Framework.TestCase):
                 verify=False,
                 retry=3,
                 pool_size=5,
+                seconds_between_requests=1.2,
+                seconds_between_writes=3.4,
             ),
         )
 
@@ -335,3 +346,94 @@ class Requester(Framework.TestCase):
                 self.assertException(
                     exc, github.GithubException, status, None, {}, f"{status} null"
                 )
+
+
+class RequesterThrottleTestCase(Framework.TestCase):
+    per_page = 10
+
+    mock_time = [datetime.now(timezone.utc)]
+
+    def sleep(self, seconds):
+        self.mock_time[0] = self.mock_time[0] + timedelta(seconds=seconds)
+
+    def now(self, tz=None):
+        return self.mock_time[0]
+
+    @contextlib.contextmanager
+    def mock_sleep(self):
+        with mock.patch(
+            "github.Requester.time.sleep", side_effect=self.sleep
+        ) as sleep_mock, mock.patch("github.Requester.datetime") as datetime_mock:
+            datetime_mock.now = self.now
+            yield sleep_mock
+
+
+class RequesterUnThrottled(RequesterThrottleTestCase):
+    def testShouldNotDeferRequests(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in RequesterThrottled.testShouldDeferRequests
+            repository = self.g.get_repo(REPO_NAME)
+            releases = list(repository.get_releases())
+            self.assertEqual(len(releases), 30)
+
+        sleep_mock.assert_not_called()
+
+
+class RequesterThrottled(RequesterThrottleTestCase):
+    seconds_between_requests = 1.0
+    seconds_between_writes = 3.0
+
+    def testShouldDeferRequests(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
+            repository = self.g.get_repo(REPO_NAME)
+            releases = [release for release in repository.get_releases()]
+            self.assertEqual(len(releases), 30)
+
+        self.assertEqual(
+            sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)]
+        )
+
+    def testShouldDeferWrites(self):
+        with self.mock_sleep() as sleep_mock:
+            # same test setup as in AuthenticatedUser.testEmail
+            user = self.g.get_user()
+            emails = user.get_emails()
+            self.assertEqual(
+                [item.email for item in emails],
+                ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
+            )
+            self.assertTrue(emails[0].primary)
+            self.assertTrue(emails[0].verified)
+            self.assertEqual(emails[0].visibility, "private")
+            user.add_to_emails("1@foobar.com", "2@foobar.com")
+            self.assertEqual(
+                [item.email for item in user.get_emails()],
+                [
+                    "vincent@vincent-jacques.net",
+                    "1@foobar.com",
+                    "2@foobar.com",
+                    "github.com@vincent-jacques.net",
+                ],
+            )
+            user.remove_from_emails("1@foobar.com", "2@foobar.com")
+            self.assertEqual(
+                [item.email for item in user.get_emails()],
+                ["vincent@vincent-jacques.net", "github.com@vincent-jacques.net"],
+            )
+
+        self.assertEqual(
+            sleep_mock.call_args_list,
+            [
+                # g.get_user() does not call into GitHub API
+                # user.get_emails() is the first request so no waiting needed
+                # user.add_to_emails is a write request, this is the first write request
+                mock.call(1),
+                # user.get_emails() is a read request
+                mock.call(1),
+                # user.remove_from_emails is a write request, it has to be 3 seconds after the last write
+                mock.call(2),
+                # user.get_emails() is a read request
+                mock.call(1),
+            ],
+        )

@@ -152,3 +152,7 @@ DEFAULT_JWT_ISSUED_AT = -60
 # https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
 # "Your JWT must be signed using the RS256 algorithm"
 DEFAULT_JWT_ALGORITHM = "RS256"
+
+# https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
+DEFAULT_SECONDS_BETWEEN_WRITES = 1.0
