@@ -37,7 +37,7 @@ from . import Framework
 class PullRequest(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
 
         marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
@@ -84,17 +84,15 @@ class PullRequest(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
-        self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
-        )
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(
-            self.pull.base.label, "jacquev6:topic/RewriteWithGeneratedCode"
+            self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode"
         )
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
-        self.assertEqual(self.pull.base.user.login, "jacquev6")
+        self.assertEqual(self.pull.base.user.login, "PyGithub")
         self.assertEqual(self.pull.base.ref, "topic/RewriteWithGeneratedCode")
-        self.assertEqual(self.pull.base.repo.full_name, "jacquev6/PyGithub")
-        self.assertEqual(self.pull.body, "Body edited by PyGithub")
+        self.assertEqual(self.pull.base.repo.full_name, "PyGithub/PyGithub")
+        self.assertEqual(self.pull.body, "Body edited by PyGithub\n")
         self.assertEqual(self.pull.changed_files, 45)
         self.assertEqual(self.pull.closed_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
         self.assertEqual(self.pull.comments, 1)
@@ -104,18 +102,18 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(
-            self.pull.diff_url, "https://github.com/jacquev6/PyGithub/pull/31.diff"
+            self.pull.diff_url, "https://github.com/PyGithub/PyGithub/pull/31.diff"
         )
-        self.assertEqual(self.pull.head.label, "BeaverSoftware:master")
+        self.assertEqual(self.pull.head.ref, "master")
         self.assertEqual(
-            self.pull.html_url, "https://github.com/jacquev6/PyGithub/pull/31"
+            self.pull.html_url, "https://github.com/PyGithub/PyGithub/pull/31"
         )
         self.assertEqual(self.pull.id, 1436215)
         self.assertEqual(
             self.pull.issue_url,
-            "https://api.github.com/repos/jacquev6/PyGithub/issues/31",
+            "https://api.github.com/repos/PyGithub/PyGithub/issues/31",
         )
-        self.assertListKeyEqual(self.pull.labels, lambda a: a.name, ["refactoring"])
+        self.assertListKeyEqual(self.pull.labels, lambda a: a.name, [])
         self.assertFalse(self.pull.mergeable)
         self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
@@ -123,20 +121,20 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
         self.assertEqual(
-            self.pull.patch_url, "https://github.com/jacquev6/PyGithub/pull/31.patch"
+            self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch"
         )
-        self.assertEqual(self.pull.review_comments, 1)
+        self.assertEqual(self.pull.review_comments, 2)
         self.assertEqual(self.pull.state, "closed")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
-            self.pull.updated_at, datetime.datetime(2012, 11, 3, 8, 19, 40)
+            self.pull.updated_at, datetime.datetime(2018, 6, 25, 12, 54, 43)
         )
         self.assertEqual(
-            self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31"
+            self.pull.url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"
         )
         self.assertEqual(self.pull.user.login, "jacquev6")
-        self.assertEqual(self.pull.draft, None)
-        self.assertEqual(self.pull.maintainer_can_modify, None)
+        self.assertEqual(self.pull.draft, False)
+        self.assertEqual(self.pull.maintainer_can_modify, False)
         self.assertEqual(
             repr(self.pull),
             'PullRequest(title="Title edited by PyGithub", number=31)',
@@ -154,8 +152,71 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(comment.id, 886298)
 
+    def testCreateReviewCommentInReplyTo(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            in_reply_to=42,
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateReviewCommentSubjectType(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            5,
+            subject_type="FILE",
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateMultilineReviewComment(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+        )
+        self.assertEqual(comment.id, 886298)
+
+    def testCreateMultilineReviewCommentAsSuggestion(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            as_suggestion=True,
+        )
+        self.assertEqual(comment.id, 886298)
+        self.assertEqual(
+            comment.body, "```suggestion\nComment created by PyGithub\n```"
+        )
+
+    def testCreateMultilineReviewCommentChoosingSide(self):
+        commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
+        comment = self.pull.create_review_comment(
+            "Comment created by PyGithub",
+            commit,
+            "src/github/Issue.py",
+            10,
+            start_line=5,
+            side="RIGHT",
+            start_side="RIGHT",
+        )
+        self.assertEqual(comment.id, 886298)
+
     def testGetComments(self):
-        self.assertListKeyEqual(self.pull.get_comments(), lambda c: c.id, [886298])
+        epoch = datetime.datetime(1970, 1, 1, 0, 0)
+        comments = self.pull.get_comments(sort="updated", direction="desc", since=epoch)
+        self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testCreateIssueComment(self):
         comment = self.pull.create_issue_comment("Issue comment created by PyGithub")
@@ -179,8 +240,10 @@ class PullRequest(Framework.TestCase):
 
     def testGetReviewComments(self):
         epoch = datetime.datetime(1970, 1, 1, 0, 0)
-        comments = self.pull.get_review_comments(since=epoch)
-        self.assertListKeyEqual(comments, lambda c: c.id, [238127783])
+        comments = self.pull.get_review_comments(
+            sort="updated", direction="desc", since=epoch
+        )
+        self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testReviewRequests(self):
         self.pull.create_review_request(
@@ -373,16 +436,12 @@ class PullRequest(Framework.TestCase):
         )
 
     def testMergeWithCommitMessage(self):
-        self.g.get_user().get_repo("PyGithub").get_pull(39).merge(
-            "Custom commit message created by PyGithub"
-        )
+        self.repo.get_pull(39).merge("Custom commit message created by PyGithub")
 
     def testAddAndRemoveAssignees(self):
         user1 = "jayfk"
         user2 = self.g.get_user("jzelinskie")
-        self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"]
-        )
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
         url = self.pull.url
         self.pull.add_to_assignees(user1, user2)
         self.assertListKeyEqual(

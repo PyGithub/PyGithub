@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Union, overload
+from typing import Any, Dict, List, Optional, Union, overload, Iterable
 
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
@@ -14,6 +14,11 @@ from github.Comparison import Comparison
 from github.ContentFile import ContentFile
 from github.Deployment import Deployment
 from github.Download import Download
+from github.Environment import Environment
+from github.EnvironmentDeploymentBranchPolicy import (
+    EnvironmentDeploymentBranchPolicyParams,
+)
+from github.EnvironmentProtectionRuleReviewer import ReviewerParams
 from github.Event import Event
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
@@ -43,6 +48,12 @@ from github.PublicKey import PublicKey
 from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
+from github.RepositoryAdvisory import RepositoryAdvisory
+from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
+from github.RepositoryAdvisoryVulnerability import (
+    RepositoryAdvisoryVulnerability,
+    AdvisoryVulnerability,
+)
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
@@ -134,6 +145,17 @@ class Repository(CompletableGithubObject):
         transient_environment: Union[bool, _NotSetType] = ...,
         production_environment: Union[bool, _NotSetType] = ...,
     ) -> Deployment: ...
+    def get_repository_advisories(self) -> PaginatedList[RepositoryAdvisory]: ...
+    def get_repository_advisory(self, ghsa: str) -> RepositoryAdvisory: ...
+    def create_environment(
+        self,
+        environment_name: str,
+        wait_timer: int = ...,
+        reviewers: List[ReviewerParams] = ...,
+        deployment_branch_policy: Optional[
+            EnvironmentDeploymentBranchPolicyParams
+        ] = ...,
+    ) -> Environment: ...
     def create_file(
         self,
         path: str,
@@ -160,6 +182,7 @@ class Repository(CompletableGithubObject):
         message: str,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
         target_commitish: Union[str, _NotSetType] = ...,
     ) -> GitRelease: ...
     def create_git_tag(
@@ -181,6 +204,7 @@ class Repository(CompletableGithubObject):
         tagger: Union[InputGitAuthor, _NotSetType] = ...,
         draft: bool = ...,
         prerelease: bool = ...,
+        generate_release_notes: bool = ...,
     ) -> GitRelease: ...
     def create_git_tree(
         self,
@@ -240,6 +264,26 @@ class Repository(CompletableGithubObject):
         maintainer_can_modify: _NotSetType,
         issue: Issue,
     ) -> PullRequest: ...
+    def create_repository_advisory(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: Optional[str] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        cwe_ids: Optional[Iterable[str]] = ...,
+        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+    ) -> RepositoryAdvisory: ...
+    def report_security_vulnerability(
+        self,
+        summary: str,
+        description: str,
+        severity_or_cvss_vector_string: str,
+        cve_id: Optional[str] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        cwe_ids: Optional[Iterable[str]] = ...,
+        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+    ) -> RepositoryAdvisory: ...
     def create_repository_dispatch(
         self, event_type: str, client_payload: Union[Dict[str, Any], _NotSetType] = ...
     ) -> bool: ...
@@ -257,6 +301,7 @@ class Repository(CompletableGithubObject):
     @property
     def default_branch(self) -> str: ...
     def delete(self) -> None: ...
+    def delete_environment(self, environment_name: str) -> None: ...
     def delete_file(
         self,
         path: str,
@@ -287,10 +332,12 @@ class Repository(CompletableGithubObject):
         has_wiki: Union[bool, _NotSetType] = ...,
         has_downloads: Union[bool, _NotSetType] = ...,
         default_branch: Union[str, _NotSetType] = ...,
+        allow_forking: Union[bool, _NotSetType] = ...,
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
         delete_branch_on_merge: Union[bool, _NotSetType] = ...,
+        allow_update_branch: Union[bool, _NotSetType] = ...,
         archived: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
@@ -310,8 +357,10 @@ class Repository(CompletableGithubObject):
     def get_archive_link(
         self, archive_format: str, ref: Union[str, _NotSetType] = ...
     ) -> str: ...
-    def get_artifact(self) -> Artifact: ...
-    def get_artifacts(self) -> PaginatedList[Artifact]: ...
+    def get_artifact(self, artifact_id: int) -> Artifact: ...
+    def get_artifacts(
+        self, name: Union[str, _NotSetType] = ...
+    ) -> PaginatedList[Artifact]: ...
     def get_assignees(self) -> PaginatedList[NamedUser]: ...
     def get_autolinks(self) -> PaginatedList[Autolink]: ...
     def get_branch(self, branch: str) -> Branch: ...
@@ -358,10 +407,15 @@ class Repository(CompletableGithubObject):
     ) -> List[ContentFile]: ...
     def get_download(self, id: int) -> Download: ...
     def get_downloads(self) -> PaginatedList[Download]: ...
+    def get_environments(self) -> PaginatedList[Environment]: ...
+    def get_environment(self, environment_name: str) -> Environment: ...
     def get_events(self) -> PaginatedList[Event]: ...
     def get_forks(self) -> PaginatedList[Repository]: ...
     def create_fork(
-        self, organization: Union[Organization, str, _NotSetType] = ...
+        self,
+        organization: Union[Organization, str, _NotSetType] = ...,
+        name: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[str, _NotSetType] = ...,
     ) -> Repository: ...
     def get_git_blob(self, sha: str) -> GitBlob: ...
     def get_git_commit(self, sha: str) -> GitCommit: ...
@@ -477,6 +531,8 @@ class Repository(CompletableGithubObject):
         branch: Union[Branch, _NotSetType] = ...,
         event: Union[str, _NotSetType] = ...,
         status: Union[str, _NotSetType] = ...,
+        exclude_pull_requests: Union[bool, _NotSetType] = ...,
+        head_sha: Union[str, _NotSetType] = ...,
     ) -> PaginatedList[WorkflowRun]: ...
     def update_check_suites_preferences(
         self, auto_trigger_checks: List[Dict[str, Union[bool, int]]]
@@ -605,6 +661,15 @@ class Repository(CompletableGithubObject):
     @property
     def trees_url(self) -> str: ...
     def unsubscribe_from_hub(self, event: str, callback: str) -> None: ...
+    def update_environment(
+        self,
+        environment_name: str,
+        wait_timer: int = ...,
+        reviewers: List[ReviewerParams] = ...,
+        deployment_branch_policy: Optional[
+            EnvironmentDeploymentBranchPolicyParams
+        ] = ...,
+    ) -> Environment: ...
     def update_file(
         self,
         path: str,

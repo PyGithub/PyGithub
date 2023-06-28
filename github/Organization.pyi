@@ -4,10 +4,10 @@ from typing import Any, Dict, List, Optional, Union
 from github.Event import Event
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Hook import Hook
+from github.Installation import Installation
 from github.Issue import Issue
 from github.Label import Label
 from github.Migration import Migration
-from github.Installation import Installation
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Plan import Plan
@@ -35,7 +35,12 @@ class Organization(CompletableGithubObject):
     @property
     def company(self) -> Optional[str]: ...
     def convert_to_outside_collaborator(self, member: NamedUser) -> None: ...
-    def create_fork(self, repo: Repository) -> Repository: ...
+    def create_fork(
+        self,
+        repo: Repository,
+        name: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[str, _NotSetType] = ...,
+    ) -> Repository: ...
     def create_hook(
         self,
         name: str,

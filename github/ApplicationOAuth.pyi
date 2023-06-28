@@ -1,7 +1,8 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from github.AccessToken import AccessToken
 from github.GithubObject import NonCompletableGithubObject
+from github.Auth import AppUserAuth
 
 class ApplicationOAuth(NonCompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -12,6 +13,17 @@ class ApplicationOAuth(NonCompletableGithubObject):
     @property
     def client_secret(self) -> str: ...
     def get_login_url(
-        self, redirect_uri: Optional[str], state: Optional[str], login: Optional[str]
+        self,
+        redirect_uri: Optional[str] = ...,
+        state: Optional[str] = ...,
+        login: Optional[str] = ...,
     ) -> str: ...
-    def get_access_token(self, code: str, state: Optional[str]) -> AccessToken: ...
+    def get_access_token(
+        self, code: str, state: Optional[str] = ...
+    ) -> AccessToken: ...
+    def get_app_user_auth(self, token: AccessToken) -> AppUserAuth: ...
+    def refresh_access_token(self, refresh_token: str) -> AccessToken: ...
+    @staticmethod
+    def _checkError(
+        header: Dict[str, Any], data: Optional[Dict[str, Any]]
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]: ...

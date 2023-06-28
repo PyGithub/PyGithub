@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: master
+    branches: main
   pull_request:
 jobs:
   test:
@@ -9,6 +9,7 @@ jobs:
     name: test (Python ${{ matrix.python-version }})
     strategy:
       matrix:
+        # keep it sync with tox.ini [gh-actions] section
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12-dev"]
     steps:
       - uses: actions/checkout@v3
@@ -23,5 +24,12 @@ jobs:
       - name: Run tests
         run: tox
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2.1.0
-
+        uses: codecov/codecov-action@v3
+  draft:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

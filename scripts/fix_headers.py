@@ -6,6 +6,10 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -60,9 +64,11 @@ def generateLicenseSection(filename):
 
 def listContributors(filename):
     contributors = set()
-    for line in subprocess.check_output(
-        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]
-    ).split("\n"):
+    result = subprocess.check_output(
+        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
+        text=True,
+    )
+    for line in result.split("\n"):
         year = line[0:4]
         name = line[11:]
         contributors.add((year, name))
@@ -126,7 +132,7 @@ class StandardHeader:
 
         bodyLines = extractBodyLines(lines)
 
-        if len(bodyLines) and bodyLines[0] != "" > 0:
+        if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
         newLines += bodyLines
 
@@ -141,10 +147,18 @@ def findHeadersAndFiles():
             dirs.remove("developer.github.com")
         if "build" in dirs:
             dirs.remove("build")
+        if ".tox" in dirs:
+            dirs.remove(".tox")
+        if ".venv" in dirs:
+            dirs.remove(".venv")
+        if "PyGithub.egg-info" in dirs:
+            dirs.remove("PyGithub.egg-info")
 
         for filename in files:
             fullname = os.path.join(root, filename)
-            if filename.endswith(".py"):
+            if filename == "GithubCredentials.py":
+                pass
+            elif filename.endswith(".py"):
                 yield (PythonHeader(), fullname)
             elif filename in ["COPYING", "COPYING.LESSER"]:
                 pass

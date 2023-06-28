@@ -26,6 +26,7 @@ from collections import namedtuple
 import github.Artifact
 import github.GithubObject
 import github.PullRequest
+import github.WorkflowJob
 
 
 class WorkflowRun(github.GithubObject.CompletableGithubObject):
@@ -45,6 +46,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def name(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
     def head_branch(self):
         """
         :type: string
@@ -59,6 +68,22 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
+
+    @property
+    def display_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._display_title)
+        return self._display_title.value
+
+    @property
+    def path(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._path)
+        return self._path.value
 
     @property
     def run_attempt(self):
@@ -278,10 +303,35 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
 
+    def jobs(self, _filter=github.GithubObject.NotSet):
+        """
+        :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
+        :param _filter: string `latest`, or `all`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowJob.WorkflowJob`
+        """
+        assert _filter is github.GithubObject.NotSet or isinstance(
+            _filter, str
+        ), _filter
+
+        url_parameters = dict()
+        if _filter is not github.GithubObject.NotSet:
+            url_parameters["filter"] = _filter
+
+        return github.PaginatedList.PaginatedList(
+            github.WorkflowJob.WorkflowJob,
+            self._requester,
+            self.jobs_url,
+            url_parameters,
+            list_item="jobs",
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
         self._head_sha = github.GithubObject.NotSet
+        self._display_title = github.GithubObject.NotSet
+        self._path = github.GithubObject.NotSet
         self._run_attempt = github.GithubObject.NotSet
         self._run_number = github.GithubObject.NotSet
         self._event = github.GithubObject.NotSet
@@ -308,10 +358,16 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
         if "head_branch" in attributes:  # pragma no branch
             self._head_branch = self._makeStringAttribute(attributes["head_branch"])
         if "head_sha" in attributes:  # pragma no branch
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
+        if "display_title" in attributes:  # pragma no branch
+            self._display_title = self._makeStringAttribute(attributes["display_title"])
+        if "path" in attributes:  # pragma no branch
+            self._path = self._makeStringAttribute(attributes["path"])
         if "run_attempt" in attributes:  # pragma no branch
             self._run_attempt = self._makeIntAttribute(attributes["run_attempt"])
         if "run_number" in attributes:  # pragma no branch
