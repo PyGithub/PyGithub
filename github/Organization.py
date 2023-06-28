@@ -646,14 +646,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         secret_name,
         unencrypted_value,
         visibility="all",
-        selected_repositories=github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
         :param visibility: string
-        :param selected_repositories: list of :class:`github.Repository.Repository`
+        :param selected_repositories: Optional value with :class:`github.GithubObject.Opt` list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
@@ -736,8 +736,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self,
         variable_name: str,
         value: str,
-        visibility:str = "all",
-        selected_repositories: list = github.GithubObject.NotSet,
+        visibility: str = "all",
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
@@ -906,14 +906,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: list = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
-        :param selected_repositories: list of :class:`github.Repository.Repository`
+        :param selected_repositories: Optional value with :class:`github.GithubObject.Opt` list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
