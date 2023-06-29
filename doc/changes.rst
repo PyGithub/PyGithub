@@ -26,11 +26,10 @@ Set these parameters to ``None`` to disable throttling and restore earlier behav
 
 **Request retry**
 
-This release introduces a default retry mechanism to retry retry-able 403 responses (primary and secondary rate limit errors).
-Further, any 5xx response is retried.
+This release introduces a default retry mechanism to retry retry-able 403 responses (primary and secondary rate limit errors only) and any 5xx response.
 
 Class ``github.GithubRetry`` implements this behavior, and can be configured via the ``retry`` argument of ``github.Github`` and ``github.GithubIntegration``.
-Retry behavior is configured similar ``urllib3.Retry``: https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html
+Retry behavior is configured similar to ``urllib3.Retry``: https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html
 
 .. code-block::
 
