@@ -267,27 +267,18 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
                     "required_approving_review_count"
                 ] = required_approving_review_count
 
-            if (
-                dismissal_users is not github.GithubObject.NotSet
-                or dismissal_teams is not github.GithubObject.NotSet
-                or dismissal_apps is not github.GithubObject.NotSet
-            ):
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ] = {}
-
+            dismissal_restrictions = {}
             if dismissal_users is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ]["users"] = dismissal_users
+                dismissal_restrictions["users"] = dismissal_users
             if dismissal_teams is not github.GithubObject.NotSet:
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ]["teams"] = dismissal_teams
+                dismissal_restrictions["teams"] = dismissal_teams
             if dismissal_apps is not github.GithubObject.NotSet:
+                dismissal_restrictions["apps"] = dismissal_apps
+
+            if dismissal_restrictions:
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
-                ]["apps"] = dismissal_apps
+                ] = dismissal_restrictions
 
             bypass_pull_request_allowances = {}
             if users_bypass_pull_request_allowances is not github.GithubObject.NotSet:
