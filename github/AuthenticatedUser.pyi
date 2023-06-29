@@ -66,7 +66,7 @@ class AuthenticatedUser(CompletableGithubObject):
         name: str,
         repo: Repository,
         description: Union[str, _NotSetType] = ...,
-        private: Union[bool, _NotSetType]= ...,
+        private: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
     def create_gist(
         self,
