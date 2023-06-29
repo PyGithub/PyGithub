@@ -51,12 +51,16 @@ Add a timezone information to your ``datetime`` instances before comparison:
     if g.get_repo("PyGithub/PyGithub").created_at < datetime(2012, 2, 26, tzinfo=timezone.utc):
         ...
 
+New features
+^^^^^^^^^^^^
+
+* Throttle requests to mitigate RateLimitExceededExceptions (#2145) (99155806)
+* Retry retryable 403 (rate limit) (#2387) (0bb72ca0)
+
 Improvements
 ^^^^^^^^^^^^
 
 * Make datetime objects timezone-aware (#2565) (0177f7c5)
-* Throttle requests to mitigate RateLimitExceededExceptions (#2145) (99155806)
-* Retry retryable 403 (rate limit) (#2387) (0bb72ca0)
 
 Maintenance
 ^^^^^^^^^^^
@@ -68,7 +72,8 @@ Maintenance
 Version 1.59.0 (June 22, 2023)
 -----------------------------------
 
-**Important**
+Important
+^^^^^^^^^
 
 This release introduces new way of authentication. All authentication-related arguments ``github.Github(login_or_token=…, password=…, jwt=…, app_auth=…)``
 and ``github.GithubIntegration(integration_id=…, private_key=…, jwt_expiry=…, jwt_issued_at=…, jwt_algorithm=…)`` are replaced by a single ``auth=…`` argument.
@@ -78,7 +83,8 @@ Old arguments are deprecated but continue to work. They are scheduled for remova
 This project has decided to move all typing information from ``.pyi`` files into the respective ``.py`` source files.
 This will happen gradually over time.
 
-**Breaking Changes**
+Breaking Changes
+^^^^^^^^^^^^^^^^
 
 * The ``position`` argument in ``github.PullRequest.create_review_comment(position=…)`` has been renamed to ``line``.
   This breaks user code that calls ``create_review_comment`` with keyword argument ``position``. Call with ``line=…`` instead.
@@ -90,7 +96,8 @@ This will happen gradually over time.
   User code calling ``github.PullRequest.get_review_comments(…)`` with this argument as positional argument breaks.
   Please use keyword argument: ``github.PullRequest.get_review_comments(since=…)``.
 
-**Deprecations**
+Deprecation
+^^^^^^^^^^^
 
 * The use of ``github.Github(login_or_token=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` or ``github.Github(auth=github.Auth.Token(…))`` instead.
 * The use of ``github.Github(password=…)`` is deprecated, use ``github.Github(auth=github.Auth.Login(…))`` instead.
@@ -101,7 +108,8 @@ This will happen gradually over time.
 * The use of ``AppAuthentication`` is deprecated, use ``github.Auth.AppInstallationAuth`` instead.
 * The use of ``github.Github.get_app()`` without providing argument ``slug`` is deprecated, use ``github.GithubIntegration(auth=github.Auth.AppAuth(…)).get_app()``.
 
-**Bug Fixes**
+Bug Fixes
+^^^^^^^^^
 
 * Test and fix UTC issue with AppInstallationAuth (#2561) (ff3b80f8)
 * Make Requester.__createException robust against missing message and body (#2159) (7be3f763)
@@ -115,7 +123,8 @@ This will happen gradually over time.
 * Move CI to Python 3.11 release and 3.12 dev (#2434) (e414c322)
 * Pass Requester base URL to integration (#2420) (bdceae2f)
 
-**Improvements**
+Improvements
+^^^^^^^^^^^^
 
 * Add Webhook Deliveries (#2508) (517ad336)
 * Add support for workflow jobs and steps (#1951) (804c3107)
@@ -141,7 +150,8 @@ This will happen gradually over time.
 * Add support for Issue.state_reason #2370 (#2392) (5aa544a1)
 * Add parameters to Repository.get_workflow_runs (#2408) (4198dbfb)
 
-**Maintenance**
+Maintenance
+^^^^^^^^^^^
 
 * Add type stub for MainClass.get_project_column (#2502) (d514222c)
 * Sync GithubIntegration __init__ arguments with github.Github (#2556) (ea45237d)
@@ -163,14 +173,16 @@ This will happen gradually over time.
 Version 1.58.2 (May 09, 2023)
 -----------------------------------
 
-**Bug Fixes**
+Bug Fixes
+^^^^^^^^^
 
 * Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
 
 Version 1.58.1 (March 18, 2023)
 -----------------------------------
 
-**Bug Fixes**
+Bug Fixes
+^^^^^^^^^
 
 * Add expiration argument back to GithubIntegration.create_jwt (#2439) (822fc05c)
 * Add crypto extras to pyjwt, which pulls in cryptogaphy package (#2443) (554b2b28)
@@ -184,7 +196,8 @@ Version 1.58.1 (March 18, 2023)
 Version 1.58.0 (February 19, 2023)
 -----------------------------------
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Add unarchiving support @Tsuesun (#2391)
 * Support full GitHub app authentication @dblanchette (#1986)
@@ -195,11 +208,13 @@ Version 1.58.0 (February 19, 2023)
 Version 1.57 (November 05, 2022)
 -----------------------------------
 
-**Breaking Changes**
+Breaking Changes
+^^^^^^^^^^^^^^^^
 
 * Add support for Python 3.11, drop support for Python 3.6 (#2332) (1e2f10dc)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Speed up get requested reviewers and teams for pr (#2349) (6725eceb)
 * [WorkflowRun] - Add missing attributes (`run_started_at` & `run_attempt`), remove deprecated `unicode` type (#2273) (3a6235b5)
@@ -211,11 +226,13 @@ Version 1.57 (November 05, 2022)
 Version 1.56 (October 13, 2022)
 -----------------------------------
 
-**Important**
+Important
+^^^^^^^^^
 
 This is the last release that will support Python 3.6.
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Create repo from template (#2090) (b50283a7)
 * Improve signature of Repository.create_repo (#2118) (001970d4)
@@ -241,7 +258,9 @@ This is the last release that will support Python 3.6.
 
 Version 1.55 (April 26, 2021)
 -----------------------------------
-**Breaking Changes**
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
 
 * Remove client_id/client_secret authentication (#1888) (901af8c8)
 * Adjust to Github API changes regarding emails (#1890) (2c77cfad)
@@ -249,7 +268,8 @@ Version 1.55 (April 26, 2021)
 * PublicKey.key_id could be int on Github Enterprise (#1894) (ad124ef4)
 * Export headers in GithubException (#1887) (ddd437a7)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Do not import from unpackaged paths in typing (#1926) (27ba7838)
 * Implement hash for CompletableGithubObject (#1922) (4faff23c)
@@ -289,16 +309,20 @@ Version 1.54.1 (December 24, 2020)
 
 Version 1.54 (November 30, 2020)
 -----------------------------------
-**Important**
+
+Important
+^^^^^^^^^
 
 This is the last release that will support Python 3.5.
 
-**Breaking Changes**
+Breaking Changes
+^^^^^^^^^^^^^^^^
 
 The Github.get_installation(integer) method has been removed.
 Repository.create_deployment()'s payload parameter is now a dictionary.
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Add support for Check Suites (#1764) (6d501b28)
 * Add missing preview features of Deployment and Deployment Statuses API (#1674) (197e0653)
@@ -331,7 +355,7 @@ Version 1.53 (August 18, 2020)
 * Fix Repository.create_repository_dispatch type signature (#1643) (f891bd61)
 * PaginatedList's totalCount is 0 if no last page (#1641) (69b37b4a)
 * Add initial support for Github Apps. (#1631) (260558c1)
-* Correct **kwargs typing for search_* (#1636) (165d995d)
+* Correct ``**kwargs`` typing for ``search_*`` (#1636) (165d995d)
 * Add delete_branch_on_merge arg to Repository.edit type stub (#1639) (15b5ae0c)
 * Fix type stub for MainClass.get_user (#1637) (8912be64)
 * Add type stub for Repository.create_fork (#1638) (de386dfb)
@@ -399,7 +423,9 @@ Version 1.51 (May 03, 2020)
 
 Version 1.50 (April 26, 2020)
 -----------------------------------
-**New features**
+
+New features
+^^^^^^^^^^^^
 
 * PyGithub now supports type checking thanks to (#1231) (91433fe9)
 * Slack is now the main channel of communication rather than Gitter (6a6e7c26)
@@ -410,7 +436,8 @@ Version 1.50 (April 26, 2020)
 * Add some Organization and Repository attributes. (#1468) (3ab97d61)
 * Add create project method (801ea385)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Drop use of shadow-cat for draft PRs (#1469) (84bb69ab)
 * AuthenticatedUser.get_organization_membership() should be str (#1473) (38b34db5)
@@ -424,7 +451,9 @@ Version 1.50 (April 26, 2020)
 
 Version 1.47 (March 15, 2020)
 -----------------------------------
-**Bug Fixes & Improvements**
+
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Add support to edit and delete a project (#1434) (f11f7395)
 * Add method for fetching pull requests associated with a commit (#1433) (0c55381b)
@@ -453,11 +482,13 @@ Version 1.47 (March 15, 2020)
 
 Version 1.46 (February 11, 2020)
 -----------------------------------
-**Important**
+Important
+^^^^^^^^^
 
 Python 2 support has been removed. If you still require Python 2, use 1.45.
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Add repo edit support for delete_branch_on_merge (#1381) (9564cd4d)
 * Fix mistake in Repository.create_fork() (#1383) (ad040baf)
@@ -475,11 +506,13 @@ Python 2 support has been removed. If you still require Python 2, use 1.45.
 
 Version 1.45 (December 29, 2019)
 -----------------------------------
-**Important**
+Important
+^^^^^^^^^
 
 * This is the last release of PyGithub that will support Python 2.
 
-**Breaking Changes**
+Breaking Changes
+^^^^^^^^^^^^^^^^
 
 * Branch.edit_{user,team}_push_restrictions() have been removed
 * The new API is:
@@ -488,7 +521,8 @@ Version 1.45 (December 29, 2019)
   - Branch.remove_{user,team}_push_restrictions() to remove members
 * The api_preview parameter to Github() has been removed.
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Allow sha=None for InputGitTreeElement (#1327) (60464f65)
 * Support github timeline events. (#1302) (732fd26a)
@@ -526,12 +560,15 @@ Version 1.44.1 (November 07, 2019)
 
 Version 1.44 (October 19, 2019)
 -----------------------------------
-**New features**
+
+New features
+^^^^^^^^^^^^
 
 * This version supports running under Python 3 directly, and the test suite
   passes under both 2.7 and recent 3.x's.
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Stop ignoring unused imports and remove them (#1250) (a0765083)
 * Bump httpretty to be a greater or equal to (#1262) (27092fb0)
@@ -563,7 +600,9 @@ Version 1.44 (October 19, 2019)
 
 Version 1.43.8 (July 20, 2019)
 -----------------------------------
-**New features**
+
+New features
+^^^^^^^^^^^^
 
 * Add two factor attributes on organizations (#1132) (a0731685)
 * Add Repository methods for pending invitations (#1159) (57af1e05)
@@ -578,13 +617,16 @@ Version 1.43.8 (July 20, 2019)
 * Handle a path of / in Repository.get_contents() (#1070) (102c8208)
 * Add issue lock/unlock (#1107) (ec7bbcf5)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix bug in recursive repository contents example (#1166) (8b6b4505)
 * Allow name to be specified for upload_asset (#1151) (8d2a6b53)
 * Fixes #1106 for GitHub Enterprise API (#1110) (54065792)
 
-**Deprecation**
+Deprecation
+^^^^^^^^^^^
+
 * Repository.get_file_contents() no longer works use Repository.get_contents() instead 
 
 Version 1.43.7 (April 16, 2019)
@@ -595,7 +637,9 @@ Version 1.43.7 (April 16, 2019)
 
 Version 1.43.6 (April 05, 2019)
 -----------------------------------
-**New features**
+
+New features
+^^^^^^^^^^^^
 
 * Add support for Python 3.7 (#1028) (6faa00ac)
 * Adding HTTP retry functionality via urllib3 (#1002) (5ae7af55)
@@ -604,13 +648,15 @@ Version 1.43.6 (April 05, 2019)
 * Add url parameter to include anonymous contributors in `get_contributors` (#1075) (293846be)
 * Provide option to extend expiration of jwt token (#1068) (86a9d8e9)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix the default parameter for `PullRequest.create_review` (#1058) (118def30)
 * Fix `get_access_token` (#1042) (6a89eb64)
 * Fix `Organization.add_to_members` role passing (#1039) (480f91cf)
 
-**Deprecation**
+Deprecation
+^^^^^^^^^^^
 
 * Remove Status API (6efd6318)
 
@@ -624,13 +670,15 @@ Version 1.43.5 (January 29, 2019)
 Version 1.43.4 (December 21, 2018)
 -----------------------------------
 
-**New features**
+New features
+^^^^^^^^^^^^
 
 * Add Migration API (#899) (b4d895ed)
 * Add Traffic API (#977) (a433a2fe)
 * New in Project API: create repository project, create project column (#995) (1c0fd97d)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Change type of GitRelease.author to NamedUser (#969) (aca50a75)
 * Use total_count from data in PaginatedList (#963) (ec177610)
@@ -638,7 +686,8 @@ Version 1.43.4 (December 21, 2018)
 Version 1.43.3 (October 31, 2018)
 -----------------------------------
 
-**New features**
+New features
+^^^^^^^^^^^^
 
 * Add support for JWT authentication (#948) (8ccf9a94)
 * Added support for required signatures on protected branches (#939) (8ee75a28)
@@ -648,7 +697,8 @@ Version 1.43.3 (October 31, 2018)
 * Adding ``suspended_at`` property to NamedUSer (#922) (c13b43ea)
 * Add since parameter for Gists (#914) (e18b1078)
 
-**Bug Fixes & Improvements**
+Bug Fixes & Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix missing parameters when reversing ``PaginatedList`` (#946) (60a684c5)
 * Fix unable to trigger ``RateLimitExceededException``. (#943) (972446d5)
@@ -676,13 +726,15 @@ Version 1.43 (September 08, 2018)
 -----------------------------------
 
 
-**BUGFIX**
+Bug Fixes
+^^^^^^^^^
 
 * ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
 * Fixed ``Gistfile.content`` (#486) (e1df09f7)
 * Restored NamedUser.contributions attribute (#865) (b91dee8d)
 
-**New features**
+New features
+^^^^^^^^^^^^
 
 * Add support for repository topics (#832) (c6802b51)
 * Add support for required approving review count (#888) (ef16702)
@@ -700,7 +752,8 @@ Version 1.43 (September 08, 2018)
   + Add `RequiredStatusChecks <https://pygithub.readthedocs.io/en/latest/github_objects/RequiredStatusChecks.html>`__
   + Add ``Branch.get_protection``, ``Branch.get_required_pull_request_reviews``, ``Branch.get_required_status_checks``, etc
 
-**Improvements**
+Improvements
+^^^^^^^^^^^^
 
 * Add missing arguments to ``Repository.edit`` (#844) (29d23151)
 * Add missing attributes to Repository (#842) (2b352fb3)
@@ -711,7 +764,8 @@ Version 1.43 (September 08, 2018)
 * Add missing attributes for IssueEvent (#857) (7ac2a2a)
 * Change ``MainClass.get_repo`` default laziness (#882) (6732517)
 
-**Deprecation**
+Deprecation
+^^^^^^^^^^^
 
 * Removed Repository.get_protected_branch (#871) (49db6f8)
 
@@ -721,7 +775,8 @@ Version 1.42 (August 19, 2018)
 
 * Fix travis upload issue
 
-**BUGFIX**
+Bug Fixes
+^^^^^^^^^
 
 * ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
 * Fixed ``Gistfile.content`` (#486) (e1df09f7)
@@ -750,7 +805,8 @@ Improvements
 Version 1.41 (August 19, 2018)
 -----------------------------------
 
-**BUGFIX**
+Bug Fixes
+^^^^^^^^^
 
 * ``Repository.get_archive_link`` will now NOT follow HTTP redirect and return the url instead (#858) (43d325a5)
 * Fixed ``Gistfile.content`` (#486) (e1df09f7)
