@@ -61,6 +61,13 @@ class AuthenticatedUser(CompletableGithubObject):
         name: Union[str, _NotSetType] = ...,
         default_branch_only: Union[str, _NotSetType] = ...,
     ) -> Repository: ...
+    def create_repo_from_template(
+        self,
+        name: str,
+        repo: Repository,
+        description: Union[str, _NotSetType] = ...,
+        private: Union[bool, _NotSetType]= ...,
+    ) -> Repository: ...
     def create_gist(
         self,
         public: bool,
