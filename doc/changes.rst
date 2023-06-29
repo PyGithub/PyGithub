@@ -4,6 +4,67 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.60.0 (June 29, 2023)
+-----------------------------------
+
+Important
+^^^^^^^^^
+
+**Request throttling**
+
+This release introduces a default throttling mechanism to mitigate secondary rate limit errors and comply with Github's best practices:
+https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+
+The default throttling of 1 second between writes and 0.25 second between any requests can be configured
+for ``github.Github`` and ``github.GithubIntegration``:
+
+.. code-block::
+
+    g = github.Github(seconds_between_requests=0.25, seconds_between_writes=1)
+
+Set these parameters to ``None`` to disable throttling and restore earlier behavior.
+
+**Request retry**
+
+This release introduces a default retry mechanism to retry retry-able 403 responses (primary and secondary rate limit errors).
+Further, any 5xx response is retried.
+
+Class ``github.GithubRetry`` implements this behavior, and can be configured via the ``retry`` argument of ``github.Github`` and ``github.GithubIntegration``.
+Retry behavior is configured similar ``urllib3.Retry``: https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html
+
+.. code-block::
+
+    g = github.Github(retry=github.GithubRetry())
+
+Set this parameter to ``None`` to disable retry mechanism and restore earlier behaviour.
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+Any timestamps returned by this library are ``datetime`` with timezone information, usually UTC.
+Before this release, timestamps used to be naive ``datetime`` instances without timezone.
+Comparing (other than ``==``) these timestamps with naive ``datetime`` instances used to work but will now break.
+Add a timezone information to your ``datetime`` instances before comparison:
+
+.. code-block::
+
+    if g.get_repo("PyGithub/PyGithub").created_at < datetime(2012, 2, 26, tzinfo=timezone.utc):
+        ...
+
+Improvements
+^^^^^^^^^^^^
+
+* Make datetime objects timezone-aware (#2565) (0177f7c5)
+* Throttle requests to mitigate RateLimitExceededExceptions (#2145) (99155806)
+* Retry retryable 403 (rate limit) (#2387) (0bb72ca0)
+
+Maintenance
+^^^^^^^^^^^
+
+* Move to main default branch (#2566) (e66c163a)
+* Force Unix EOL (#2573) (094538e1)
+* Merge `Artifact` type stub back to source (#2553)
+
 Version 1.59.0 (June 22, 2023)
 -----------------------------------
 
