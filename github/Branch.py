@@ -202,13 +202,13 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         assert isinstance(allow_fork_syncing, _NotSetType) or isinstance(
             allow_fork_syncing, bool
         ), allow_fork_syncing
-        assert isinstance(users_bypass_pull_request_allowances, _NotSetType) or all(
+        assert isinstance(users_bypass_pull_request_allowances, _NotSetType) or isinstance(users_bypass_pull_request_allowances, list) and all(
             isinstance(element, str) for element in users_bypass_pull_request_allowances
         ), users_bypass_pull_request_allowances
-        assert isinstance(teams_bypass_pull_request_allowances, _NotSetType) or all(
+        assert isinstance(teams_bypass_pull_request_allowances, _NotSetType) or  isinstance(teams_bypass_pull_request_allowances, list) and all(
             isinstance(element, str) for element in teams_bypass_pull_request_allowances
         ), teams_bypass_pull_request_allowances
-        assert isinstance(apps_bypass_pull_request_allowances, _NotSetType) or all(
+        assert isinstance(apps_bypass_pull_request_allowances, _NotSetType) or  isinstance(apps_bypass_pull_request_allowances, list) and all(
             isinstance(element, str) for element in apps_bypass_pull_request_allowances
         ), apps_bypass_pull_request_allowances
 
