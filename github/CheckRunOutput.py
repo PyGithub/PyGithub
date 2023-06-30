@@ -30,33 +30,48 @@ class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotations_count(self) -> int:
+    def annotations_count(self):
+        """
+        :type: integer
+        """
         return self._annotations_count.value
 
     @property
-    def annotations_url(self) -> str:
+    def annotations_url(self):
+        """
+        :type: string
+        """
         return self._annotations_url.value
 
     @property
-    def summary(self) -> str:
+    def summary(self):
+        """
+        :type: string
+        """
         return self._summary.value
 
     @property
-    def text(self) -> str:
+    def text(self):
+        """
+        :type: string
+        """
         return self._text.value
 
     @property
-    def title(self) -> str:
+    def title(self):
+        """
+        :type: string
+        """
         return self._title.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._annotations_count = github.GithubObject.NotSet
         self._annotations_url = github.GithubObject.NotSet
         self._summary = github.GithubObject.NotSet
         self._text = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(
                 attributes["annotations_count"]
