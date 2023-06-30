@@ -20,8 +20,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import typing
+from datetime import datetime
 
 import github.GithubObject
 import github.NamedUser
@@ -54,16 +54,16 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self._author.value
 
     @property
-    def closed_at(self) -> datetime.datetime:
+    def closed_at(self) -> datetime:
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         return self._closed_at.value
 
     @property
-    def created_at(self) -> datetime.datetime:
+    def created_at(self) -> datetime:
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         return self._created_at.value
 
@@ -128,9 +128,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self._html_url.value
 
     @property
-    def published_at(self) -> datetime.datetime:
+    def published_at(self) -> datetime:
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         return self._published_at.value
 
@@ -156,9 +156,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self._summary.value
 
     @property
-    def updated_at(self) -> datetime.datetime:
+    def updated_at(self) -> datetime:
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         return self._updated_at.value
 
@@ -179,9 +179,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self._vulnerabilities.value
 
     @property
-    def withdrawn_at(self) -> datetime.datetime:
+    def withdrawn_at(self) -> datetime:
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         return self._withdrawn_at.value
 
