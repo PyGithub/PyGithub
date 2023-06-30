@@ -61,6 +61,11 @@ Improvements
 
 * Make datetime objects timezone-aware (#2565) (0177f7c5)
 
+Bug Fixes
+^^^^^^^^^
+
+* Fix `Branch.bypass_pull_request_allowances` failing with "nil is not an object" (#2535) (c5542a6a)
+
 Maintenance
 ^^^^^^^^^^^
 
