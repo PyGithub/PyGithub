@@ -35,9 +35,21 @@ jobs:
         run: tox
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
+
+  test_success:
+    # this aggregates success state of all jobs listed in `needs`
+    # this is the only required check to pass CI
+    name: "Test success"
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: "Noop"
+        run: true
+        shell: bash
+
   draft:
     runs-on: ubuntu-latest
-    needs: test
+    needs: test_success
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: release-drafter/release-drafter@v5
