@@ -360,29 +360,21 @@ class Branch(NonCompletableGithubObject):
             required_approving_review_count, int
         ), required_approving_review_count
 
-        post_parameters: dict[str, Any] = {}
-        if (
-            is_defined(dismissal_users)
-            or is_defined(dismissal_teams)
-            or is_defined(dismissal_apps)
-        ):
-            post_parameters["dismissal_restrictions"] = {}
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "dismiss_stale_reviews": dismiss_stale_reviews,
+                "require_code_owner_reviews": require_code_owner_reviews,
+                "required_approving_review_count": required_approving_review_count,
+            }
+        )
 
-        if is_defined(dismissal_users):
-            post_parameters["dismissal_restrictions"]["users"] = dismissal_users
-        if is_defined(dismissal_teams):
-            post_parameters["dismissal_restrictions"]["teams"] = dismissal_teams
-        if is_defined(dismissal_apps):
-            post_parameters["dismissal_restrictions"]["apps"] = dismissal_apps
+        dismissal_restrictions: dict[str, Any] = NotSet.remove_unset_items(
+            {"users": dismissal_users, "teams": dismissal_teams, "apps": dismissal_apps}
+        )
 
-        if is_defined(dismiss_stale_reviews):
-            post_parameters["dismiss_stale_reviews"] = dismiss_stale_reviews
-        if is_defined(require_code_owner_reviews):
-            post_parameters["require_code_owner_reviews"] = require_code_owner_reviews
-        if is_defined(required_approving_review_count):
-            post_parameters[
-                "required_approving_review_count"
-            ] = required_approving_review_count
+        if dismissal_restrictions:
+            post_parameters["dismissal_restrictions"] = dismissal_restrictions
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.protection_url}/required_pull_request_reviews",
