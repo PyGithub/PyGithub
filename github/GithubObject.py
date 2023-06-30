@@ -96,7 +96,7 @@ def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: Type[T]) -> TypeGuard[List[T]]:
+def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
