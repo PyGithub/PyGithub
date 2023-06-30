@@ -254,17 +254,19 @@ class Branch(NonCompletableGithubObject):
             or is_defined(team_push_restrictions)
             or is_defined(app_push_restrictions)
         ):
-            if is_undefined(user_push_restrictions):
-                user_push_restrictions = []
-            if is_undefined(team_push_restrictions):
-                team_push_restrictions = []
-            if is_undefined(app_push_restrictions):
-                app_push_restrictions = []
-            post_parameters["restrictions"] = {
-                "users": user_push_restrictions,
-                "teams": team_push_restrictions,
-                "apps": app_push_restrictions,
+            restrictions = {
+                "users": [],
+                "teams": [],
+                "apps": [],
+                **NotSet.remove_unset_items(
+                    {
+                        "users": user_push_restrictions,
+                        "teams": team_push_restrictions,
+                        "apps": app_push_restrictions,
+                    }
+                ),
             }
+            post_parameters["restrictions"] = restrictions
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
