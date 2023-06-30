@@ -88,6 +88,11 @@ class _NotSetType(Attribute):
         }
 
 
+NotSet = _NotSetType()
+
+Opt = Union[T, _NotSetType]
+
+
 def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
     return not isinstance(v, _NotSetType)
 
@@ -106,11 +111,6 @@ def is_optional_list_of_type(v, type: Type[T]) -> TypeGuard[List[T]]:
         or isinstance(v, list)
         and all(isinstance(element, type) for element in v)
     )
-
-
-NotSet = _NotSetType()
-
-Opt = Union[T, _NotSetType]
 
 
 class _ValuedAttribute(Attribute, Generic[T]):

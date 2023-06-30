@@ -121,7 +121,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        enforce_admins: Opt[bool] = NotSet,
+        enforce_admins: bool | None = None,
         dismissal_users: Opt[list[str]] = NotSet,
         dismissal_teams: Opt[list[str]] = NotSet,
         dismissal_apps: Opt[list[str]] = NotSet,
@@ -131,15 +131,15 @@ class Branch(NonCompletableGithubObject):
         user_push_restrictions: Opt[list[str]] = NotSet,
         team_push_restrictions: Opt[list[str]] = NotSet,
         app_push_restrictions: Opt[list[str]] = NotSet,
-        required_linear_history: Opt[bool] = NotSet,
-        allow_force_pushes: Opt[bool] = NotSet,
-        required_conversation_resolution: Opt[bool] = NotSet,
-        lock_branch: Opt[bool] = NotSet,
-        allow_fork_syncing: Opt[bool] = NotSet,
+        required_linear_history: bool | None = None,
+        allow_force_pushes: bool | None = None,
+        required_conversation_resolution: bool | None = None,
+        lock_branch: bool | None = None,
+        allow_fork_syncing: bool | None = None,
         users_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
-        block_creations: Opt[bool] = NotSet,
+        block_creations: bool | None = None,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -197,7 +197,15 @@ class Branch(NonCompletableGithubObject):
             apps_bypass_pull_request_allowances, str
         ), apps_bypass_pull_request_allowances
 
-        post_parameters: dict[str, Any] = {}
+        post_parameters: dict[str, Any] = {
+            "allow_force_pushes": allow_force_pushes,
+            "allow_fork_syncing": allow_fork_syncing,
+            "block_creations": block_creations,
+            "enforce_admins": enforce_admins,
+            "lock_branch": lock_branch,
+            "required_conversation_resolution": required_conversation_resolution,
+            "required_linear_history": required_linear_history,
+        }
 
         required_status_checks = {}
         if is_defined(strict) or is_defined(contexts):
@@ -209,106 +217,49 @@ class Branch(NonCompletableGithubObject):
                 "strict": strict,
                 "contexts": contexts,
             }
-
         post_parameters["required_status_checks"] = required_status_checks or None
 
-        if is_defined(enforce_admins):
-            post_parameters["enforce_admins"] = enforce_admins
-        else:
-            post_parameters["enforce_admins"] = None
+        required_pr_reviews: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "dismiss_stale_reviews": dismiss_stale_reviews,
+                "require_code_owner_reviews": require_code_owner_reviews,
+                "required_approving_review_count": required_approving_review_count,
+            }
+        )
 
-        required_pr_reviews: dict[str, Any] = {}
-        if is_defined(dismiss_stale_reviews):
-            required_pr_reviews["dismiss_stale_reviews"] = dismiss_stale_reviews
-        if is_defined(require_code_owner_reviews):
-            required_pr_reviews[
-                "require_code_owner_reviews"
-            ] = require_code_owner_reviews
-        if is_defined(required_approving_review_count):
-            required_pr_reviews[
-                "required_approving_review_count"
-            ] = required_approving_review_count
-
-        dismissal_restrictions = {}
-        if is_defined(dismissal_users):
-            dismissal_restrictions["users"] = dismissal_users
-        if is_defined(dismissal_teams):
-            dismissal_restrictions["teams"] = dismissal_teams
-        if is_defined(dismissal_apps):
-            dismissal_restrictions["apps"] = dismissal_apps
-
+        dismissal_restrictions = NotSet.remove_unset_items(
+            {"users": dismissal_users, "teams": dismissal_teams, "apps": dismissal_apps}
+        )
         if dismissal_restrictions:
             required_pr_reviews["dismissal_restrictions"] = dismissal_restrictions
 
-        bypass_pull_request_allowances = {}
-        if is_defined(users_bypass_pull_request_allowances):
-            bypass_pull_request_allowances[
-                "users"
-            ] = users_bypass_pull_request_allowances
-        if is_defined(teams_bypass_pull_request_allowances):
-            bypass_pull_request_allowances[
-                "teams"
-            ] = teams_bypass_pull_request_allowances
-        if is_defined(apps_bypass_pull_request_allowances):
-            bypass_pull_request_allowances["apps"] = apps_bypass_pull_request_allowances
-
+        bypass_pull_request_allowances = NotSet.remove_unset_items(
+            {
+                "users": users_bypass_pull_request_allowances,
+                "teams": teams_bypass_pull_request_allowances,
+                "apps": apps_bypass_pull_request_allowances,
+            }
+        )
         if bypass_pull_request_allowances:
             required_pr_reviews[
                 "bypass_pull_request_allowances"
             ] = bypass_pull_request_allowances
-
         post_parameters["required_pull_request_reviews"] = required_pr_reviews or None
 
-        if (
-            is_defined(user_push_restrictions)
-            or is_defined(team_push_restrictions)
-            or is_defined(app_push_restrictions)
-        ):
-            if is_undefined(user_push_restrictions):
-                user_push_restrictions = []
-            if is_undefined(team_push_restrictions):
-                team_push_restrictions = []
-            if is_undefined(app_push_restrictions):
-                app_push_restrictions = []
-            post_parameters["restrictions"] = {
-                "users": user_push_restrictions,
-                "teams": team_push_restrictions,
-                "apps": app_push_restrictions,
-            }
-        else:
-            post_parameters["restrictions"] = None
+        restrictions: dict[str, Any] = {
+            "users": [],
+            "teams": [],
+            "apps": [],
+            **NotSet.remove_unset_items(
+                {
+                    "users": user_push_restrictions,
+                    "teams": team_push_restrictions,
+                    "apps": app_push_restrictions,
+                }
+            ),
+        }
 
-        if is_defined(required_linear_history):
-            post_parameters["required_linear_history"] = required_linear_history
-        else:
-            post_parameters["required_linear_history"] = None
-
-        if is_defined(allow_force_pushes):
-            post_parameters["allow_force_pushes"] = allow_force_pushes
-        else:
-            post_parameters["allow_force_pushes"] = None
-
-        if is_defined(required_conversation_resolution):
-            post_parameters[
-                "required_conversation_resolution"
-            ] = required_conversation_resolution
-        else:
-            post_parameters["required_conversation_resolution"] = None
-
-        if is_defined(lock_branch):
-            post_parameters["lock_branch"] = lock_branch
-        else:
-            post_parameters["lock_branch"] = None
-
-        if is_defined(allow_fork_syncing):
-            post_parameters["allow_fork_syncing"] = allow_fork_syncing
-        else:
-            post_parameters["allow_fork_syncing"] = None
-
-        if is_defined(block_creations):
-            post_parameters["block_creations"] = block_creations
-        else:
-            post_parameters["block_creations"] = None
+        post_parameters["restrictions"] = restrictions or None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -351,11 +302,9 @@ class Branch(NonCompletableGithubObject):
         assert is_optional(strict, bool), strict
         assert is_optional_list_of_type(contexts, str), contexts
 
-        post_parameters: dict[str, Any] = {}
-        if is_defined(strict):
-            post_parameters["strict"] = strict
-        if is_defined(contexts):
-            post_parameters["contexts"] = contexts
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"strict": strict, "contexts": contexts}
+        )
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.protection_url}/required_status_checks",
