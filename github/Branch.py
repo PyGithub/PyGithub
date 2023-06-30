@@ -44,8 +44,10 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    is_defined,
     is_optional,
     is_optional_list_of_type,
+    is_undefined,
 )
 
 if TYPE_CHECKING:
@@ -278,15 +280,15 @@ class Branch(NonCompletableGithubObject):
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
-            not isinstance(user_push_restrictions, _NotSetType)
-            or not isinstance(team_push_restrictions, _NotSetType)
-            or not isinstance(app_push_restrictions, _NotSetType)
+            is_defined(user_push_restrictions)
+            or is_defined(team_push_restrictions)
+            or is_defined(app_push_restrictions)
         ):
-            if isinstance(user_push_restrictions, _NotSetType):
+            if is_undefined(user_push_restrictions):
                 user_push_restrictions = []
-            if isinstance(team_push_restrictions, _NotSetType):
+            if is_undefined(team_push_restrictions):
                 team_push_restrictions = []
-            if isinstance(app_push_restrictions, _NotSetType):
+            if is_undefined(app_push_restrictions):
                 app_push_restrictions = []
             post_parameters["restrictions"] = {
                 "users": user_push_restrictions,

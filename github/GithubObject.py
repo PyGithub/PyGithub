@@ -50,11 +50,11 @@ from typing import (
     List,
     Optional,
     Type,
-    TypeGuard,
     Union,
 )
 
 from dateutil import parser
+from typing_extensions import TypeGuard
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -86,6 +86,14 @@ class _NotSetType(Attribute):
             for key, value in data.items()
             if not isinstance(value, _NotSetType)
         }
+
+
+def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
+    return not isinstance(v, _NotSetType)
+
+
+def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
+    return isinstance(v, _NotSetType)
 
 
 def is_optional(v, type: Type[T]) -> TypeGuard[List[T]]:
