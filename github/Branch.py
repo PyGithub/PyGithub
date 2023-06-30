@@ -249,20 +249,22 @@ class Branch(NonCompletableGithubObject):
             ] = bypass_pull_request_allowances
         post_parameters["required_pull_request_reviews"] = required_pr_reviews or None
 
-        restrictions: dict[str, Any] = {
-            "users": [],
-            "teams": [],
-            "apps": [],
-            **NotSet.remove_unset_items(
-                {
-                    "users": user_push_restrictions,
-                    "teams": team_push_restrictions,
-                    "apps": app_push_restrictions,
-                }
-            ),
-        }
-
-        post_parameters["restrictions"] = restrictions or None
+        if (
+            is_defined(user_push_restrictions)
+            or is_defined(team_push_restrictions)
+            or is_defined(app_push_restrictions)
+        ):
+            if is_undefined(user_push_restrictions):
+                user_push_restrictions = []
+            if is_undefined(team_push_restrictions):
+                team_push_restrictions = []
+            if is_undefined(app_push_restrictions):
+                app_push_restrictions = []
+            post_parameters["restrictions"] = {
+                "users": user_push_restrictions,
+                "teams": team_push_restrictions,
+                "apps": app_push_restrictions,
+            }
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
