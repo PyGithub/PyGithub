@@ -121,7 +121,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        enforce_admins: bool | None = None,
+        enforce_admins: Opt[bool] = NotSet,
         dismissal_users: Opt[list[str]] = NotSet,
         dismissal_teams: Opt[list[str]] = NotSet,
         dismissal_apps: Opt[list[str]] = NotSet,
@@ -131,15 +131,15 @@ class Branch(NonCompletableGithubObject):
         user_push_restrictions: Opt[list[str]] = NotSet,
         team_push_restrictions: Opt[list[str]] = NotSet,
         app_push_restrictions: Opt[list[str]] = NotSet,
-        required_linear_history: bool | None = None,
-        allow_force_pushes: bool | None = None,
-        required_conversation_resolution: bool | None = None,
-        lock_branch: bool | None = None,
-        allow_fork_syncing: bool | None = None,
+        required_linear_history: Opt[bool] = NotSet,
+        allow_force_pushes: Opt[bool] = NotSet,
+        required_conversation_resolution: Opt[bool] = NotSet,
+        lock_branch: Opt[bool] = NotSet,
+        allow_fork_syncing: Opt[bool] = NotSet,
         users_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
-        block_creations: bool | None = None,
+        block_creations: Opt[bool] = NotSet,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -198,13 +198,16 @@ class Branch(NonCompletableGithubObject):
         ), apps_bypass_pull_request_allowances
 
         post_parameters: dict[str, Any] = {
-            "allow_force_pushes": allow_force_pushes,
-            "allow_fork_syncing": allow_fork_syncing,
-            "block_creations": block_creations,
-            "enforce_admins": enforce_admins,
-            "lock_branch": lock_branch,
-            "required_conversation_resolution": required_conversation_resolution,
-            "required_linear_history": required_linear_history,
+            key: value if is_defined(value) else None
+            for key, value in {
+                "allow_force_pushes": allow_force_pushes,
+                "allow_fork_syncing": allow_fork_syncing,
+                "block_creations": block_creations,
+                "enforce_admins": enforce_admins,
+                "lock_branch": lock_branch,
+                "required_conversation_resolution": required_conversation_resolution,
+                "required_linear_history": required_linear_history,
+            }.items()
         }
 
         required_status_checks = {}
