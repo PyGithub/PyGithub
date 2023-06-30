@@ -249,6 +249,7 @@ class Branch(NonCompletableGithubObject):
             ] = bypass_pull_request_allowances
         post_parameters["required_pull_request_reviews"] = required_pr_reviews or None
 
+        post_parameters["restrictions"] = None
         if (
             is_defined(user_push_restrictions)
             or is_defined(team_push_restrictions)
