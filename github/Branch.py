@@ -44,7 +44,6 @@ from github.GithubObject import (
     NonCompletableGithubObject,
     NotSet,
     Opt,
-    _NotSetType,
     is_defined,
     is_optional,
     is_optional_list_of_type,
@@ -176,24 +175,18 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list_of_type(dismissal_users, str), dismissal_users
         assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
         assert is_optional_list_of_type(dismissal_apps, str), dismissal_apps
-        assert isinstance(
-            dismiss_stale_reviews, (bool, _NotSetType)
-        ), dismiss_stale_reviews
-        assert isinstance(
-            require_code_owner_reviews, (bool, _NotSetType)
-        ), require_code_owner_reviews
-        assert isinstance(
-            required_approving_review_count, (int, _NotSetType)
+        assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
+        assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
+        assert is_optional(
+            required_approving_review_count, int
         ), required_approving_review_count
-        assert isinstance(
-            required_linear_history, (bool, _NotSetType)
-        ), required_linear_history
-        assert isinstance(allow_force_pushes, (bool, _NotSetType)), allow_force_pushes
-        assert isinstance(
-            required_linear_history, (bool, _NotSetType)
+        assert is_optional(required_linear_history, bool), required_linear_history
+        assert is_optional(allow_force_pushes, bool), allow_force_pushes
+        assert is_optional(
+            required_linear_history, bool
         ), required_conversation_resolution
-        assert isinstance(lock_branch, (bool, _NotSetType)), lock_branch
-        assert isinstance(allow_fork_syncing, (bool, _NotSetType)), allow_fork_syncing
+        assert is_optional(lock_branch, bool), lock_branch
+        assert is_optional(allow_fork_syncing, bool), allow_fork_syncing
         assert is_optional_list_of_type(
             users_bypass_pull_request_allowances, str
         ), users_bypass_pull_request_allowances
@@ -205,81 +198,67 @@ class Branch(NonCompletableGithubObject):
         ), apps_bypass_pull_request_allowances
 
         post_parameters: dict[str, Any] = {}
-        if not isinstance(strict, _NotSetType) or not isinstance(contexts, _NotSetType):
-            if isinstance(strict, _NotSetType):
+
+        required_status_checks = {}
+        if is_defined(strict) or is_defined(contexts):
+            if is_undefined(strict):
                 strict = False
-            if isinstance(contexts, _NotSetType):
+            if is_undefined(contexts):
                 contexts = []
-            post_parameters["required_status_checks"] = {
+            required_status_checks = {
                 "strict": strict,
                 "contexts": contexts,
             }
-        else:
-            post_parameters["required_status_checks"] = None
 
-        if not isinstance(enforce_admins, _NotSetType):
+        post_parameters["required_status_checks"] = required_status_checks or None
+
+        if is_defined(enforce_admins):
             post_parameters["enforce_admins"] = enforce_admins
         else:
             post_parameters["enforce_admins"] = None
 
-        if (
-            not isinstance(dismissal_users, _NotSetType)
-            or not isinstance(dismissal_teams, _NotSetType)
-            or not isinstance(dismissal_apps, _NotSetType)
-            or not isinstance(dismiss_stale_reviews, _NotSetType)
-            or not isinstance(require_code_owner_reviews, _NotSetType)
-            or not isinstance(required_approving_review_count, _NotSetType)
-            or not isinstance(users_bypass_pull_request_allowances, _NotSetType)
-            or not isinstance(teams_bypass_pull_request_allowances, _NotSetType)
-            or not isinstance(apps_bypass_pull_request_allowances, _NotSetType)
-        ):
-            post_parameters["required_pull_request_reviews"] = {}
-            if not isinstance(dismiss_stale_reviews, _NotSetType):
-                post_parameters["required_pull_request_reviews"][
-                    "dismiss_stale_reviews"
-                ] = dismiss_stale_reviews
-            if not isinstance(require_code_owner_reviews, _NotSetType):
-                post_parameters["required_pull_request_reviews"][
-                    "require_code_owner_reviews"
-                ] = require_code_owner_reviews
-            if not isinstance(required_approving_review_count, _NotSetType):
-                post_parameters["required_pull_request_reviews"][
-                    "required_approving_review_count"
-                ] = required_approving_review_count
+        required_pr_reviews: dict[str, Any] = {}
+        if is_defined(dismiss_stale_reviews):
+            required_pr_reviews["dismiss_stale_reviews"] = dismiss_stale_reviews
+        if is_defined(require_code_owner_reviews):
+            required_pr_reviews[
+                "require_code_owner_reviews"
+            ] = require_code_owner_reviews
+        if is_defined(required_approving_review_count):
+            required_pr_reviews[
+                "required_approving_review_count"
+            ] = required_approving_review_count
 
-            dismissal_restrictions = {}
-            if not isinstance(dismissal_users, _NotSetType):
-                dismissal_restrictions["users"] = dismissal_users
-            if not isinstance(dismissal_teams, _NotSetType):
-                dismissal_restrictions["teams"] = dismissal_teams
-            if not isinstance(dismissal_apps, _NotSetType):
-                dismissal_restrictions["apps"] = dismissal_apps
+        dismissal_restrictions = {}
+        if is_defined(dismissal_users):
+            dismissal_restrictions["users"] = dismissal_users
+        if is_defined(dismissal_teams):
+            dismissal_restrictions["teams"] = dismissal_teams
+        if is_defined(dismissal_apps):
+            dismissal_restrictions["apps"] = dismissal_apps
 
-            if dismissal_restrictions:
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ] = dismissal_restrictions
+        if dismissal_restrictions:
+            required_pr_reviews["dismissal_restrictions"] = dismissal_restrictions
 
-            bypass_pull_request_allowances = {}
-            if not isinstance(users_bypass_pull_request_allowances, _NotSetType):
-                bypass_pull_request_allowances[
-                    "users"
-                ] = users_bypass_pull_request_allowances
-            if not isinstance(teams_bypass_pull_request_allowances, _NotSetType):
-                bypass_pull_request_allowances[
-                    "teams"
-                ] = teams_bypass_pull_request_allowances
-            if not isinstance(apps_bypass_pull_request_allowances, _NotSetType):
-                bypass_pull_request_allowances[
-                    "apps"
-                ] = apps_bypass_pull_request_allowances
+        bypass_pull_request_allowances = {}
+        if is_defined(users_bypass_pull_request_allowances):
+            bypass_pull_request_allowances[
+                "users"
+            ] = users_bypass_pull_request_allowances
+        if is_defined(teams_bypass_pull_request_allowances):
+            bypass_pull_request_allowances[
+                "teams"
+            ] = teams_bypass_pull_request_allowances
+        if is_defined(apps_bypass_pull_request_allowances):
+            bypass_pull_request_allowances["apps"] = apps_bypass_pull_request_allowances
 
-            if bypass_pull_request_allowances:
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = bypass_pull_request_allowances
-        else:
-            post_parameters["required_pull_request_reviews"] = None
+        if bypass_pull_request_allowances:
+            required_pr_reviews[
+                "bypass_pull_request_allowances"
+            ] = bypass_pull_request_allowances
+
+        post_parameters["required_pull_request_reviews"] = required_pr_reviews or None
+
         if (
             is_defined(user_push_restrictions)
             or is_defined(team_push_restrictions)
@@ -298,29 +277,35 @@ class Branch(NonCompletableGithubObject):
             }
         else:
             post_parameters["restrictions"] = None
-        if not isinstance(required_linear_history, _NotSetType):
+
+        if is_defined(required_linear_history):
             post_parameters["required_linear_history"] = required_linear_history
         else:
             post_parameters["required_linear_history"] = None
-        if not isinstance(allow_force_pushes, _NotSetType):
+
+        if is_defined(allow_force_pushes):
             post_parameters["allow_force_pushes"] = allow_force_pushes
         else:
             post_parameters["allow_force_pushes"] = None
-        if not isinstance(required_conversation_resolution, _NotSetType):
+
+        if is_defined(required_conversation_resolution):
             post_parameters[
                 "required_conversation_resolution"
             ] = required_conversation_resolution
         else:
             post_parameters["required_conversation_resolution"] = None
-        if not isinstance(lock_branch, _NotSetType):
+
+        if is_defined(lock_branch):
             post_parameters["lock_branch"] = lock_branch
         else:
             post_parameters["lock_branch"] = None
-        if not isinstance(allow_fork_syncing, _NotSetType):
+
+        if is_defined(allow_fork_syncing):
             post_parameters["allow_fork_syncing"] = allow_fork_syncing
         else:
             post_parameters["allow_fork_syncing"] = None
-        if not isinstance(block_creations, _NotSetType):
+
+        if is_defined(block_creations):
             post_parameters["block_creations"] = block_creations
         else:
             post_parameters["block_creations"] = None
@@ -363,15 +348,13 @@ class Branch(NonCompletableGithubObject):
         :strict: bool
         :contexts: list of strings
         """
-        assert isinstance(strict, _NotSetType) or isinstance(strict, bool), strict
-        assert isinstance(contexts, _NotSetType) or all(
-            isinstance(element, str) for element in contexts
-        ), contexts
+        assert is_optional(strict, bool), strict
+        assert is_optional_list_of_type(contexts, str), contexts
 
         post_parameters: dict[str, Any] = {}
-        if not isinstance(strict, _NotSetType):
+        if is_defined(strict):
             post_parameters["strict"] = strict
-        if not isinstance(contexts, _NotSetType):
+        if is_defined(contexts):
             post_parameters["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -420,42 +403,34 @@ class Branch(NonCompletableGithubObject):
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
-        assert isinstance(dismissal_users, _NotSetType) or all(
-            isinstance(element, str) for element in dismissal_users
-        ), dismissal_users
-        assert isinstance(dismissal_teams, _NotSetType) or all(
-            isinstance(element, str) for element in dismissal_teams
-        ), dismissal_teams
-        assert isinstance(dismiss_stale_reviews, _NotSetType) or isinstance(
-            dismiss_stale_reviews, bool
-        ), dismiss_stale_reviews
-        assert isinstance(require_code_owner_reviews, _NotSetType) or isinstance(
-            require_code_owner_reviews, bool
-        ), require_code_owner_reviews
-        assert isinstance(required_approving_review_count, _NotSetType) or isinstance(
+        assert is_optional_list_of_type(dismissal_users, str), dismissal_users
+        assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
+        assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
+        assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
+        assert is_optional(
             required_approving_review_count, int
         ), required_approving_review_count
 
         post_parameters: dict[str, Any] = {}
         if (
-            not isinstance(dismissal_users, _NotSetType)
-            or not isinstance(dismissal_teams, _NotSetType)
-            or not isinstance(dismissal_apps, _NotSetType)
+            is_defined(dismissal_users)
+            or is_defined(dismissal_teams)
+            or is_defined(dismissal_apps)
         ):
             post_parameters["dismissal_restrictions"] = {}
 
-        if not isinstance(dismissal_users, _NotSetType):
+        if is_defined(dismissal_users):
             post_parameters["dismissal_restrictions"]["users"] = dismissal_users
-        if not isinstance(dismissal_teams, _NotSetType):
+        if is_defined(dismissal_teams):
             post_parameters["dismissal_restrictions"]["teams"] = dismissal_teams
-        if not isinstance(dismissal_apps, _NotSetType):
+        if is_defined(dismissal_apps):
             post_parameters["dismissal_restrictions"]["apps"] = dismissal_apps
 
-        if not isinstance(dismiss_stale_reviews, _NotSetType):
+        if is_defined(dismiss_stale_reviews):
             post_parameters["dismiss_stale_reviews"] = dismiss_stale_reviews
-        if not isinstance(require_code_owner_reviews, _NotSetType):
+        if is_defined(require_code_owner_reviews):
             post_parameters["require_code_owner_reviews"] = require_code_owner_reviews
-        if not isinstance(required_approving_review_count, _NotSetType):
+        if is_defined(required_approving_review_count):
             post_parameters[
                 "required_approving_review_count"
             ] = required_approving_review_count
