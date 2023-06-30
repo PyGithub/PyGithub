@@ -40,6 +40,7 @@ import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 from github import Consts
 from github.GithubObject import (
+    Attribute,
     NonCompletableGithubObject,
     NotSet,
     Opt,
@@ -85,10 +86,10 @@ class Branch(NonCompletableGithubObject):
         return self._protection_url.value
 
     def _initAttributes(self) -> None:
-        self._commit = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._protection_url = github.GithubObject.NotSet
-        self._protected = github.GithubObject.NotSet
+        self._commit: Attribute[Commit] = github.GithubObject.NotSet
+        self._name: Attribute[str] = github.GithubObject.NotSet
+        self._protection_url: Attribute[str] = github.GithubObject.NotSet
+        self._protected: Attribute[bool] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "commit" in attributes:  # pragma no branch
