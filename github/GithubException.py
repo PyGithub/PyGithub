@@ -27,9 +27,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any
 
 
 class GithubException(Exception):
@@ -42,8 +43,8 @@ class GithubException(Exception):
     def __init__(
         self,
         status: int,
-        data: Dict[str, Any],
-        headers: Optional[Dict[str, str]],
+        data: Any,
+        headers: dict[str, str] | None,
     ):
         super().__init__()
         self.__status = status
@@ -59,16 +60,14 @@ class GithubException(Exception):
         return self.__status
 
     @property
-    def data(
-        self,
-    ) -> Dict[str, Any]:
+    def data(self) -> Any:
         """
         The (decoded) data returned by the Github API
         """
         return self.__data
 
     @property
-    def headers(self) -> Optional[Dict[str, str]]:
+    def headers(self) -> dict[str, str] | None:
         """
         The headers returned by the Github API
         """
@@ -83,11 +82,33 @@ class BadCredentialsException(GithubException):
     Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
     """
 
+    if TYPE_CHECKING:
+
+        def __init__(
+            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+        ):
+            ...
+
+        @property
+        def data(self) -> dict[str, Any]:
+            ...
+
 
 class UnknownObjectException(GithubException):
     """
     Exception raised when a non-existing object is requested (when Github API replies with a 404 HTML status)
     """
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+        ):
+            ...
+
+        @property
+        def data(self) -> dict[str, Any]:
+            ...
 
 
 class BadUserAgentException(GithubException):
@@ -95,11 +116,33 @@ class BadUserAgentException(GithubException):
     Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user agent HTML status)
     """
 
+    if TYPE_CHECKING:
+
+        def __init__(
+            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+        ):
+            ...
+
+        @property
+        def data(self) -> dict[str, Any]:
+            ...
+
 
 class RateLimitExceededException(GithubException):
     """
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+        ):
+            ...
+
+        @property
+        def data(self) -> dict[str, Any]:
+            ...
 
 
 class BadAttributeException(Exception):
@@ -110,13 +153,13 @@ class BadAttributeException(Exception):
     def __init__(
         self,
         actualValue: Any,
-        expectedType: Union[
-            Dict[Tuple[Type[str], Type[str]], Type[dict]],
-            Tuple[Type[str], Type[str]],
-            List[Type[dict]],
-            List[Tuple[Type[str], Type[str]]],
-        ],
-        transformationException: Optional[Exception],
+        expectedType: (
+            dict[tuple[type[str], type[str]], type[dict]]
+            | tuple[type[str], type[str]]
+            | list[type[dict]]
+            | list[tuple[type[str], type[str]]]
+        ),
+        transformationException: Exception | None,
     ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
@@ -132,19 +175,19 @@ class BadAttributeException(Exception):
     @property
     def expected_type(
         self,
-    ) -> Union[
-        List[Type[dict]],
-        Tuple[Type[str], Type[str]],
-        Dict[Tuple[Type[str], Type[str]], Type[dict]],
-        List[Tuple[Type[str], Type[str]]],
-    ]:
+    ) -> (
+        list[type[dict]]
+        | tuple[type[str], type[str]]
+        | dict[tuple[type[str], type[str]], type[dict]]
+        | list[tuple[type[str], type[str]]]
+    ):
         """
         The type PyGithub expected
         """
         return self.__expectedType
 
     @property
-    def transformation_exception(self) -> Optional[Exception]:
+    def transformation_exception(self) -> Exception | None:
         """
         The exception raised when PyGithub tried to parse the value
         """
@@ -156,8 +199,37 @@ class TwoFactorException(GithubException):
     Exception raised when Github requires a onetime password for two-factor authentication
     """
 
+    if TYPE_CHECKING:
+
+        def __init__(
+            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+        ):
+            ...
+
+        @property
+        def data(self) -> dict[str, Any]:
+            ...
+
 
 class IncompletableObject(GithubException):
     """
     Exception raised when we can not request an object from Github because the data returned did not include a URL
     """
+
+    if TYPE_CHECKING:
+        __data: str
+
+        def __init__(
+            self,
+            status: int,
+            data: str,
+            headers: dict[str, str] | None,
+        ):
+            super().__init__(status=status, data=data, headers=headers)
+
+        @property
+        def data(self) -> str:
+            """
+            The (decoded) data returned by the Github API
+            """
+            return self.__data
