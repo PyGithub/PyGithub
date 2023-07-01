@@ -143,27 +143,6 @@ class Branch(NonCompletableGithubObject):
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
-        :strict: bool
-        :contexts: list of strings
-        :enforce_admins: bool
-        :dismissal_users: list of strings
-        :dismissal_teams: list of strings
-        :dismissal_apps: list of strings
-        :dismiss_stale_reviews: bool
-        :require_code_owner_reviews: bool
-        :required_approving_review_count: int
-        :user_push_restrictions: list of strings
-        :team_push_restrictions: list of strings
-        :app_push_restrictions: list of strings
-        :required_linear_history: bool
-        :allow_force_pushes: bool
-        :required_conversation_resolution: bool
-        :lock_branch: bool
-        :allow_fork_syncing: bool
-        :users_bypass_pull_request_allowances: list of strings
-        :teams_bypass_pull_request_allowances: list of strings
-        :apps_bypass_pull_request_allowances: list of strings
-        :block_creations: bool
 
         NOTE: The GitHub API groups strict and contexts together, both must
         be submitted. Take care to pass both as arguments even if only one is
@@ -353,8 +332,6 @@ class Branch(NonCompletableGithubObject):
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :strict: bool
-        :contexts: list of strings
         """
         assert is_optional(strict, bool), strict
         assert is_optional_list(contexts, str), contexts
@@ -380,7 +357,6 @@ class Branch(NonCompletableGithubObject):
     def get_required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :rtype: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -402,12 +378,6 @@ class Branch(NonCompletableGithubObject):
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :dismissal_users: list of strings
-        :dismissal_teams: list of strings
-        :dismissal_apps: list of strings
-        :dismiss_stale_reviews: bool
-        :require_code_owner_reviews: bool
-        :required_approving_review_count: int
         """
         assert is_optional_list(dismissal_users, str), dismissal_users
         assert is_optional_list(dismissal_teams, str), dismissal_teams
@@ -448,10 +418,9 @@ class Branch(NonCompletableGithubObject):
             f"{self.protection_url}/required_pull_request_reviews",
         )
 
-    def get_admin_enforcement(self):
+    def get_admin_enforcement(self) -> bool:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins <https://docs.github.com/en/rest/reference/repos#branches>`_
-        :rtype: bool
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.protection_url}/enforce_admins"
