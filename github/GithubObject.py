@@ -105,7 +105,7 @@ def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list_of_type(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
     return (
         isinstance(v, _NotSetType)
         or isinstance(v, list)

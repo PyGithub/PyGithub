@@ -46,7 +46,7 @@ from github.GithubObject import (
     Opt,
     is_defined,
     is_optional,
-    is_optional_list_of_type,
+    is_optional_list,
     is_undefined,
 )
 
@@ -170,11 +170,11 @@ class Branch(NonCompletableGithubObject):
         changing. Use edit_required_status_checks() to avoid this.
         """
         assert is_optional(strict, bool), strict
-        assert is_optional_list_of_type(contexts, str), contexts
+        assert is_optional_list(contexts, str), contexts
         assert is_optional(enforce_admins, bool), enforce_admins
-        assert is_optional_list_of_type(dismissal_users, str), dismissal_users
-        assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
-        assert is_optional_list_of_type(dismissal_apps, str), dismissal_apps
+        assert is_optional_list(dismissal_users, str), dismissal_users
+        assert is_optional_list(dismissal_teams, str), dismissal_teams
+        assert is_optional_list(dismissal_apps, str), dismissal_apps
         assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
         assert is_optional(
@@ -187,13 +187,13 @@ class Branch(NonCompletableGithubObject):
         ), required_conversation_resolution
         assert is_optional(lock_branch, bool), lock_branch
         assert is_optional(allow_fork_syncing, bool), allow_fork_syncing
-        assert is_optional_list_of_type(
+        assert is_optional_list(
             users_bypass_pull_request_allowances, str
         ), users_bypass_pull_request_allowances
-        assert is_optional_list_of_type(
+        assert is_optional_list(
             teams_bypass_pull_request_allowances, str
         ), teams_bypass_pull_request_allowances
-        assert is_optional_list_of_type(
+        assert is_optional_list(
             apps_bypass_pull_request_allowances, str
         ), apps_bypass_pull_request_allowances
 
@@ -357,7 +357,7 @@ class Branch(NonCompletableGithubObject):
         :contexts: list of strings
         """
         assert is_optional(strict, bool), strict
-        assert is_optional_list_of_type(contexts, str), contexts
+        assert is_optional_list(contexts, str), contexts
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {"strict": strict, "contexts": contexts}
@@ -409,8 +409,8 @@ class Branch(NonCompletableGithubObject):
         :require_code_owner_reviews: bool
         :required_approving_review_count: int
         """
-        assert is_optional_list_of_type(dismissal_users, str), dismissal_users
-        assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
+        assert is_optional_list(dismissal_users, str), dismissal_users
+        assert is_optional_list(dismissal_teams, str), dismissal_teams
         assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
         assert is_optional(
