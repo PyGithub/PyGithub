@@ -169,52 +169,32 @@ class Branch(NonCompletableGithubObject):
         be submitted. Take care to pass both as arguments even if only one is
         changing. Use edit_required_status_checks() to avoid this.
         """
-        assert is_undefined(strict) or isinstance(strict, bool), strict
-        assert is_undefined(contexts) or all(
-            isinstance(element, str) for element in contexts
-        ), contexts
-        assert is_undefined(enforce_admins) or isinstance(
-            enforce_admins, bool
-        ), enforce_admins
-        assert is_undefined(dismissal_users) or all(
-            isinstance(element, str) for element in dismissal_users
-        ), dismissal_users
-        assert is_undefined(dismissal_teams) or all(
-            isinstance(element, str) for element in dismissal_teams
-        ), dismissal_teams
-        assert is_undefined(dismissal_apps) or all(
-            isinstance(element, str) for element in dismissal_apps
-        ), dismissal_apps
-        assert is_undefined(dismiss_stale_reviews) or isinstance(
-            dismiss_stale_reviews, bool
-        ), dismiss_stale_reviews
-        assert is_undefined(require_code_owner_reviews) or isinstance(
-            require_code_owner_reviews, bool
-        ), require_code_owner_reviews
-        assert is_undefined(required_approving_review_count) or isinstance(
+        assert is_optional(strict, bool), strict
+        assert is_optional_list_of_type(contexts, str), contexts
+        assert is_optional(enforce_admins, bool), enforce_admins
+        assert is_optional_list_of_type(dismissal_users, str), dismissal_users
+        assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
+        assert is_optional_list_of_type(dismissal_apps, str), dismissal_apps
+        assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
+        assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
+        assert is_optional(
             required_approving_review_count, int
         ), required_approving_review_count
-        assert is_undefined(required_linear_history) or isinstance(
-            required_linear_history, bool
-        ), required_linear_history
-        assert is_undefined(allow_force_pushes) or isinstance(
-            allow_force_pushes, bool
-        ), allow_force_pushes
-        assert is_undefined(required_conversation_resolution) or isinstance(
+        assert is_optional(required_linear_history, bool), required_linear_history
+        assert is_optional(allow_force_pushes, bool), allow_force_pushes
+        assert is_optional(
             required_linear_history, bool
         ), required_conversation_resolution
-        assert is_undefined(lock_branch) or isinstance(lock_branch, bool), lock_branch
-        assert is_undefined(allow_fork_syncing) or isinstance(
-            allow_fork_syncing, bool
-        ), allow_fork_syncing
-        assert is_undefined(users_bypass_pull_request_allowances) or all(
-            isinstance(element, str) for element in users_bypass_pull_request_allowances
+        assert is_optional(lock_branch, bool), lock_branch
+        assert is_optional(allow_fork_syncing, bool), allow_fork_syncing
+        assert is_optional_list_of_type(
+            users_bypass_pull_request_allowances, str
         ), users_bypass_pull_request_allowances
-        assert is_undefined(teams_bypass_pull_request_allowances) or all(
-            isinstance(element, str) for element in teams_bypass_pull_request_allowances
+        assert is_optional_list_of_type(
+            teams_bypass_pull_request_allowances, str
         ), teams_bypass_pull_request_allowances
-        assert is_undefined(apps_bypass_pull_request_allowances) or all(
-            isinstance(element, str) for element in apps_bypass_pull_request_allowances
+        assert is_optional_list_of_type(
+            apps_bypass_pull_request_allowances, str
         ), apps_bypass_pull_request_allowances
 
         post_parameters: dict[str, Any] = {}
