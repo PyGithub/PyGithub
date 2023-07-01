@@ -169,105 +169,191 @@ class Branch(NonCompletableGithubObject):
         be submitted. Take care to pass both as arguments even if only one is
         changing. Use edit_required_status_checks() to avoid this.
         """
-        assert is_optional(strict, bool), strict
-        assert is_optional_list_of_type(contexts, str), contexts
-        assert is_optional(enforce_admins, bool), enforce_admins
-        assert is_optional_list_of_type(dismissal_users, str), dismissal_users
-        assert is_optional_list_of_type(dismissal_teams, str), dismissal_teams
-        assert is_optional_list_of_type(dismissal_apps, str), dismissal_apps
-        assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
-        assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
-        assert is_optional(
+        assert is_undefined(strict) or isinstance(strict, bool), strict
+        assert is_undefined(contexts) or all(
+            isinstance(element, str) for element in contexts
+        ), contexts
+        assert is_undefined(enforce_admins) or isinstance(
+            enforce_admins, bool
+        ), enforce_admins
+        assert is_undefined(dismissal_users) or all(
+            isinstance(element, str) for element in dismissal_users
+        ), dismissal_users
+        assert is_undefined(dismissal_teams) or all(
+            isinstance(element, str) for element in dismissal_teams
+        ), dismissal_teams
+        assert is_undefined(dismissal_apps) or all(
+            isinstance(element, str) for element in dismissal_apps
+        ), dismissal_apps
+        assert is_undefined(dismiss_stale_reviews) or isinstance(
+            dismiss_stale_reviews, bool
+        ), dismiss_stale_reviews
+        assert is_undefined(require_code_owner_reviews) or isinstance(
+            require_code_owner_reviews, bool
+        ), require_code_owner_reviews
+        assert is_undefined(required_approving_review_count) or isinstance(
             required_approving_review_count, int
         ), required_approving_review_count
-        assert is_optional(required_linear_history, bool), required_linear_history
-        assert is_optional(allow_force_pushes, bool), allow_force_pushes
-        assert is_optional(
+        assert is_undefined(required_linear_history) or isinstance(
+            required_linear_history, bool
+        ), required_linear_history
+        assert is_undefined(allow_force_pushes) or isinstance(
+            allow_force_pushes, bool
+        ), allow_force_pushes
+        assert is_undefined(required_conversation_resolution) or isinstance(
             required_linear_history, bool
         ), required_conversation_resolution
-        assert is_optional(lock_branch, bool), lock_branch
-        assert is_optional(allow_fork_syncing, bool), allow_fork_syncing
-        assert is_optional_list_of_type(
-            users_bypass_pull_request_allowances, str
+        assert is_undefined(lock_branch) or isinstance(lock_branch, bool), lock_branch
+        assert is_undefined(allow_fork_syncing) or isinstance(
+            allow_fork_syncing, bool
+        ), allow_fork_syncing
+        assert is_undefined(users_bypass_pull_request_allowances) or all(
+            isinstance(element, str) for element in users_bypass_pull_request_allowances
         ), users_bypass_pull_request_allowances
-        assert is_optional_list_of_type(
-            teams_bypass_pull_request_allowances, str
+        assert is_undefined(teams_bypass_pull_request_allowances) or all(
+            isinstance(element, str) for element in teams_bypass_pull_request_allowances
         ), teams_bypass_pull_request_allowances
-        assert is_optional_list_of_type(
-            apps_bypass_pull_request_allowances, str
+        assert is_undefined(apps_bypass_pull_request_allowances) or all(
+            isinstance(element, str) for element in apps_bypass_pull_request_allowances
         ), apps_bypass_pull_request_allowances
 
-        post_parameters: dict[str, Any] = {
-            key: value if is_defined(value) else None
-            for key, value in {
-                "allow_force_pushes": allow_force_pushes,
-                "allow_fork_syncing": allow_fork_syncing,
-                "block_creations": block_creations,
-                "enforce_admins": enforce_admins,
-                "lock_branch": lock_branch,
-                "required_conversation_resolution": required_conversation_resolution,
-                "required_linear_history": required_linear_history,
-            }.items()
-        }
-
-        required_status_checks = {}
-        if is_defined(strict) or is_defined(contexts):
+        post_parameters: dict[str, Any] = {}
+        if not is_defined(strict) or not is_defined(contexts):
             if is_undefined(strict):
                 strict = False
             if is_undefined(contexts):
                 contexts = []
-            required_status_checks = {
+            post_parameters["required_status_checks"] = {
                 "strict": strict,
                 "contexts": contexts,
             }
-        post_parameters["required_status_checks"] = required_status_checks or None
+        else:
+            post_parameters["required_status_checks"] = None
 
-        required_pr_reviews: dict[str, Any] = NotSet.remove_unset_items(
-            {
-                "dismiss_stale_reviews": dismiss_stale_reviews,
-                "require_code_owner_reviews": require_code_owner_reviews,
-                "required_approving_review_count": required_approving_review_count,
-            }
-        )
+        if not is_defined(enforce_admins):
+            post_parameters["enforce_admins"] = enforce_admins
+        else:
+            post_parameters["enforce_admins"] = None
 
-        dismissal_restrictions = NotSet.remove_unset_items(
-            {"users": dismissal_users, "teams": dismissal_teams, "apps": dismissal_apps}
-        )
-        if dismissal_restrictions:
-            required_pr_reviews["dismissal_restrictions"] = dismissal_restrictions
-
-        bypass_pull_request_allowances = NotSet.remove_unset_items(
-            {
-                "users": users_bypass_pull_request_allowances,
-                "teams": teams_bypass_pull_request_allowances,
-                "apps": apps_bypass_pull_request_allowances,
-            }
-        )
-        if bypass_pull_request_allowances:
-            required_pr_reviews[
-                "bypass_pull_request_allowances"
-            ] = bypass_pull_request_allowances
-        post_parameters["required_pull_request_reviews"] = required_pr_reviews or None
-
-        post_parameters["restrictions"] = None
         if (
-            is_defined(user_push_restrictions)
-            or is_defined(team_push_restrictions)
-            or is_defined(app_push_restrictions)
+            not is_defined(dismissal_users)
+            or not is_defined(dismissal_teams)
+            or not is_defined(dismissal_apps)
+            or not is_defined(dismiss_stale_reviews)
+            or not is_defined(require_code_owner_reviews)
+            or not is_defined(required_approving_review_count)
+            or not is_defined(users_bypass_pull_request_allowances)
+            or not is_defined(teams_bypass_pull_request_allowances)
+            or not is_defined(apps_bypass_pull_request_allowances)
         ):
-            restrictions = {
-                "users": [],
-                "teams": [],
-                "apps": [],
-                **NotSet.remove_unset_items(
-                    {
-                        "users": user_push_restrictions,
-                        "teams": team_push_restrictions,
-                        "apps": app_push_restrictions,
-                    }
-                ),
+            post_parameters["required_pull_request_reviews"] = {}
+            if not is_defined(dismiss_stale_reviews):
+                post_parameters["required_pull_request_reviews"][
+                    "dismiss_stale_reviews"
+                ] = dismiss_stale_reviews
+            if not is_defined(require_code_owner_reviews):
+                post_parameters["required_pull_request_reviews"][
+                    "require_code_owner_reviews"
+                ] = require_code_owner_reviews
+            if not is_defined(required_approving_review_count):
+                post_parameters["required_pull_request_reviews"][
+                    "required_approving_review_count"
+                ] = required_approving_review_count
+
+            if (
+                not is_defined(dismissal_users)
+                or not is_defined(dismissal_teams)
+                or not is_defined(dismissal_apps)
+            ):
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ] = {}
+
+            if not is_defined(dismissal_users):
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ]["users"] = dismissal_users
+            if not is_defined(dismissal_teams):
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ]["teams"] = dismissal_teams
+            if not is_defined(dismissal_apps):
+                post_parameters["required_pull_request_reviews"][
+                    "dismissal_restrictions"
+                ]["apps"] = dismissal_apps
+
+            if (
+                not is_defined(users_bypass_pull_request_allowances)
+                or teams_bypass_pull_request_allowances
+                is not github.GithubObject.NotSet
+                or not is_defined(apps_bypass_pull_request_allowances)
+            ):
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = {}
+                if is_undefined(users_bypass_pull_request_allowances):
+                    users_bypass_pull_request_allowances = []
+                if is_undefined(teams_bypass_pull_request_allowances):
+                    teams_bypass_pull_request_allowances = []
+                if is_undefined(apps_bypass_pull_request_allowances):
+                    apps_bypass_pull_request_allowances = []
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = {
+                    "users": users_bypass_pull_request_allowances,
+                    "teams": teams_bypass_pull_request_allowances,
+                    "apps": apps_bypass_pull_request_allowances,
+                }
+            else:
+                post_parameters["required_pull_request_reviews"][
+                    "bypass_pull_request_allowances"
+                ] = None
+        else:
+            post_parameters["required_pull_request_reviews"] = None
+        if (
+            not is_defined(user_push_restrictions)
+            or not is_defined(team_push_restrictions)
+            or not is_defined(app_push_restrictions)
+        ):
+            if is_undefined(user_push_restrictions):
+                user_push_restrictions = []
+            if is_undefined(team_push_restrictions):
+                team_push_restrictions = []
+            if is_undefined(app_push_restrictions):
+                app_push_restrictions = []
+            post_parameters["restrictions"] = {
+                "users": user_push_restrictions,
+                "teams": team_push_restrictions,
+                "apps": app_push_restrictions,
             }
-            post_parameters["restrictions"] = restrictions
+        else:
+            post_parameters["restrictions"] = None
+        if not is_defined(required_linear_history):
+            post_parameters["required_linear_history"] = required_linear_history
+        else:
+            post_parameters["required_linear_history"] = None
+        if not is_defined(allow_force_pushes):
+            post_parameters["allow_force_pushes"] = allow_force_pushes
+        else:
+            post_parameters["allow_force_pushes"] = None
+        if not is_defined(required_conversation_resolution):
+            post_parameters[
+                "required_conversation_resolution"
+            ] = required_conversation_resolution
+        else:
+            post_parameters["required_conversation_resolution"] = None
+        if not is_defined(lock_branch):
+            post_parameters["lock_branch"] = lock_branch
+        else:
+            post_parameters["lock_branch"] = None
+        if not is_defined(allow_fork_syncing):
+            post_parameters["allow_fork_syncing"] = allow_fork_syncing
+        else:
+            post_parameters["allow_fork_syncing"] = None
+        if not is_defined(block_creations):
+            post_parameters["block_creations"] = block_creations
+        else:
+            post_parameters["block_creations"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
