@@ -198,7 +198,7 @@ class Branch(NonCompletableGithubObject):
         ), apps_bypass_pull_request_allowances
 
         post_parameters: dict[str, Any] = {}
-        if not is_defined(strict) or not is_defined(contexts):
+        if is_defined(strict) or is_defined(contexts):
             if is_undefined(strict):
                 strict = False
             if is_undefined(contexts):
@@ -210,90 +210,73 @@ class Branch(NonCompletableGithubObject):
         else:
             post_parameters["required_status_checks"] = None
 
-        if not is_defined(enforce_admins):
+        if is_defined(enforce_admins):
             post_parameters["enforce_admins"] = enforce_admins
         else:
             post_parameters["enforce_admins"] = None
 
         if (
-            not is_defined(dismissal_users)
-            or not is_defined(dismissal_teams)
-            or not is_defined(dismissal_apps)
-            or not is_defined(dismiss_stale_reviews)
-            or not is_defined(require_code_owner_reviews)
-            or not is_defined(required_approving_review_count)
-            or not is_defined(users_bypass_pull_request_allowances)
-            or not is_defined(teams_bypass_pull_request_allowances)
-            or not is_defined(apps_bypass_pull_request_allowances)
+            is_defined(dismissal_users)
+            or is_defined(dismissal_teams)
+            or is_defined(dismissal_apps)
+            or is_defined(dismiss_stale_reviews)
+            or is_defined(require_code_owner_reviews)
+            or is_defined(required_approving_review_count)
+            or is_defined(users_bypass_pull_request_allowances)
+            or is_defined(teams_bypass_pull_request_allowances)
+            or is_defined(apps_bypass_pull_request_allowances)
         ):
             post_parameters["required_pull_request_reviews"] = {}
-            if not is_defined(dismiss_stale_reviews):
+            if is_defined(dismiss_stale_reviews):
                 post_parameters["required_pull_request_reviews"][
                     "dismiss_stale_reviews"
                 ] = dismiss_stale_reviews
-            if not is_defined(require_code_owner_reviews):
+            if is_defined(require_code_owner_reviews):
                 post_parameters["required_pull_request_reviews"][
                     "require_code_owner_reviews"
                 ] = require_code_owner_reviews
-            if not is_defined(required_approving_review_count):
+            if is_defined(required_approving_review_count):
                 post_parameters["required_pull_request_reviews"][
                     "required_approving_review_count"
                 ] = required_approving_review_count
 
-            if (
-                not is_defined(dismissal_users)
-                or not is_defined(dismissal_teams)
-                or not is_defined(dismissal_apps)
-            ):
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ] = {}
+            dismissal_restrictions = {}
+            if is_defined(dismissal_users):
+                dismissal_restrictions["users"] = dismissal_users
+            if is_defined(dismissal_teams):
+                dismissal_restrictions["teams"] = dismissal_teams
+            if is_defined(dismissal_apps):
+                dismissal_restrictions["apps"] = dismissal_apps
 
-            if not is_defined(dismissal_users):
+            if dismissal_restrictions:
                 post_parameters["required_pull_request_reviews"][
                     "dismissal_restrictions"
-                ]["users"] = dismissal_users
-            if not is_defined(dismissal_teams):
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ]["teams"] = dismissal_teams
-            if not is_defined(dismissal_apps):
-                post_parameters["required_pull_request_reviews"][
-                    "dismissal_restrictions"
-                ]["apps"] = dismissal_apps
+                ] = dismissal_restrictions
 
-            if (
-                not is_defined(users_bypass_pull_request_allowances)
-                or teams_bypass_pull_request_allowances
-                is not github.GithubObject.NotSet
-                or not is_defined(apps_bypass_pull_request_allowances)
-            ):
+            bypass_pull_request_allowances = {}
+            if is_defined(users_bypass_pull_request_allowances):
+                bypass_pull_request_allowances[
+                    "users"
+                ] = users_bypass_pull_request_allowances
+            if is_defined(teams_bypass_pull_request_allowances):
+                bypass_pull_request_allowances[
+                    "teams"
+                ] = teams_bypass_pull_request_allowances
+            if is_defined(apps_bypass_pull_request_allowances):
+                bypass_pull_request_allowances[
+                    "apps"
+                ] = apps_bypass_pull_request_allowances
+
+            if bypass_pull_request_allowances:
                 post_parameters["required_pull_request_reviews"][
                     "bypass_pull_request_allowances"
-                ] = {}
-                if is_undefined(users_bypass_pull_request_allowances):
-                    users_bypass_pull_request_allowances = []
-                if is_undefined(teams_bypass_pull_request_allowances):
-                    teams_bypass_pull_request_allowances = []
-                if is_undefined(apps_bypass_pull_request_allowances):
-                    apps_bypass_pull_request_allowances = []
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = {
-                    "users": users_bypass_pull_request_allowances,
-                    "teams": teams_bypass_pull_request_allowances,
-                    "apps": apps_bypass_pull_request_allowances,
-                }
-            else:
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = None
+                ] = bypass_pull_request_allowances
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (
-            not is_defined(user_push_restrictions)
-            or not is_defined(team_push_restrictions)
-            or not is_defined(app_push_restrictions)
+            is_defined(user_push_restrictions)
+            or is_defined(team_push_restrictions)
+            or is_defined(app_push_restrictions)
         ):
             if is_undefined(user_push_restrictions):
                 user_push_restrictions = []
@@ -308,29 +291,29 @@ class Branch(NonCompletableGithubObject):
             }
         else:
             post_parameters["restrictions"] = None
-        if not is_defined(required_linear_history):
+        if is_defined(required_linear_history):
             post_parameters["required_linear_history"] = required_linear_history
         else:
             post_parameters["required_linear_history"] = None
-        if not is_defined(allow_force_pushes):
+        if is_defined(allow_force_pushes):
             post_parameters["allow_force_pushes"] = allow_force_pushes
         else:
             post_parameters["allow_force_pushes"] = None
-        if not is_defined(required_conversation_resolution):
+        if is_defined(required_conversation_resolution):
             post_parameters[
                 "required_conversation_resolution"
             ] = required_conversation_resolution
         else:
             post_parameters["required_conversation_resolution"] = None
-        if not is_defined(lock_branch):
+        if is_defined(lock_branch):
             post_parameters["lock_branch"] = lock_branch
         else:
             post_parameters["lock_branch"] = None
-        if not is_defined(allow_fork_syncing):
+        if is_defined(allow_fork_syncing):
             post_parameters["allow_fork_syncing"] = allow_fork_syncing
         else:
             post_parameters["allow_fork_syncing"] = None
-        if not is_defined(block_creations):
+        if is_defined(block_creations):
             post_parameters["block_creations"] = block_creations
         else:
             post_parameters["block_creations"] = None
