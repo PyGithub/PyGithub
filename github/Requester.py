@@ -538,10 +538,12 @@ class Requester:
         status: int,
         headers: Dict[str, Any],
         output: Dict[str, Any],
-    ) -> Any:
+    ) -> GithubException.GithubException[Dict[str, Any]]:
         message = output.get("message", "").lower() if output is not None else ""
 
-        exc = GithubException.GithubException
+        exc: Type[
+            GithubException.GithubException[Dict[str, Any]]
+        ] = GithubException.GithubException
         if status == 401 and message == "bad credentials":
             exc = GithubException.BadCredentialsException
         elif (
