@@ -27,10 +27,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from __future__ import annotations
-
 import json
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 
 class GithubException(Exception):
@@ -44,7 +42,7 @@ class GithubException(Exception):
         self,
         status: int,
         data: Any,
-        headers: dict[str, str] | None,
+        headers: Optional[dict[str, str]],
     ):
         super().__init__()
         self.__status = status
@@ -67,7 +65,7 @@ class GithubException(Exception):
         return self.__data
 
     @property
-    def headers(self) -> dict[str, str] | None:
+    def headers(self) -> Optional[dict[str, str]]:
         """
         The headers returned by the Github API
         """
@@ -85,7 +83,7 @@ class BadCredentialsException(GithubException):
     if TYPE_CHECKING:
 
         def __init__(
-            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
         ):
             ...
 
@@ -102,7 +100,7 @@ class UnknownObjectException(GithubException):
     if TYPE_CHECKING:
 
         def __init__(
-            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
         ):
             ...
 
@@ -119,7 +117,7 @@ class BadUserAgentException(GithubException):
     if TYPE_CHECKING:
 
         def __init__(
-            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
         ):
             ...
 
@@ -136,7 +134,7 @@ class RateLimitExceededException(GithubException):
     if TYPE_CHECKING:
 
         def __init__(
-            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
         ):
             ...
 
@@ -154,12 +152,14 @@ class BadAttributeException(Exception):
         self,
         actualValue: Any,
         expectedType: (
-            dict[tuple[type[str], type[str]], type[dict]]
-            | tuple[type[str], type[str]]
-            | list[type[dict]]
-            | list[tuple[type[str], type[str]]]
+            Union[
+                dict[tuple[type[str], type[str]], type[dict]],
+                tuple[type[str], type[str]],
+                list[type[dict]],
+                list[tuple[type[str], type[str]]],
+            ]
         ),
-        transformationException: Exception | None,
+        transformationException: Optional[Exception],
     ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
@@ -176,10 +176,12 @@ class BadAttributeException(Exception):
     def expected_type(
         self,
     ) -> (
-        list[type[dict]]
-        | tuple[type[str], type[str]]
-        | dict[tuple[type[str], type[str]], type[dict]]
-        | list[tuple[type[str], type[str]]]
+        Union[
+            list[type[dict]],
+            tuple[type[str], type[str]],
+            dict[tuple[type[str], type[str]], type[dict]],
+            list[tuple[type[str], type[str]]],
+        ]
     ):
         """
         The type PyGithub expected
@@ -187,7 +189,7 @@ class BadAttributeException(Exception):
         return self.__expectedType
 
     @property
-    def transformation_exception(self) -> Exception | None:
+    def transformation_exception(self) -> Optional[Exception]:
         """
         The exception raised when PyGithub tried to parse the value
         """
@@ -202,7 +204,7 @@ class TwoFactorException(GithubException):
     if TYPE_CHECKING:
 
         def __init__(
-            self, status: int, data: dict[str, Any], headers: dict[str, str] | None
+            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
         ):
             ...
 
@@ -223,7 +225,7 @@ class IncompletableObject(GithubException):
             self,
             status: int,
             data: str,
-            headers: dict[str, str] | None,
+            headers: Optional[dict[str, str]],
         ):
             super().__init__(status=status, data=data, headers=headers)
 
