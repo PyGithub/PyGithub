@@ -61,7 +61,7 @@ class GithubException(Exception):
     @property
     def data(
         self,
-    ) -> Union[str, Dict[str, Union[str, List[str], List[Dict[str, str]]]]]:
+    ) -> Dict[str, Any]:
         """
         The (decoded) data returned by the Github API
         """
