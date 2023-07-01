@@ -28,18 +28,7 @@
 #                                                                              #
 ################################################################################
 import json
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
 
 T = TypeVar("T", bound=Any)
 
@@ -165,17 +154,6 @@ class TwoFactorException(GithubException[Dict[str, Any]]):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
     """
-
-    if TYPE_CHECKING:
-
-        def __init__(
-            self, status: int, data: dict[str, Any], headers: Optional[dict[str, str]]
-        ):
-            ...
-
-        @property
-        def data(self) -> dict[str, Any]:
-            ...
 
 
 class IncompletableObject(GithubException[str]):
