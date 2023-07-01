@@ -55,7 +55,7 @@ class GithubException(Exception, Generic[T]):
         self,
         status: int,
         data: T,
-        headers: Optional[dict[str, str]],
+        headers: Optional[Dict[str, str]],
     ):
         super().__init__()
         self.__status = status
@@ -78,7 +78,7 @@ class GithubException(Exception, Generic[T]):
         return self.__data
 
     @property
-    def headers(self) -> Optional[dict[str, str]]:
+    def headers(self) -> Optional[Dict[str, str]]:
         """
         The headers returned by the Github API
         """
