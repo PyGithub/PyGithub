@@ -28,6 +28,11 @@ from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
+DEFAULT_BASE_URL: str
+DEFAULT_STATUS_URL: str
+DEFAULT_TIMEOUT: int
+DEFAULT_PER_PAGE: int
+
 class Github:
     def __init__(
         self,
@@ -42,6 +47,8 @@ class Github:
         verify: Union[bool, str] = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
+        seconds_between_requests: Optional[float] = ...,
+        seconds_between_writes: Optional[float] = ...,
         auth: Optional[Auth] = ...,
     ) -> None: ...
     @property

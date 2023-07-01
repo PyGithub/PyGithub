@@ -38,8 +38,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import typing
+from datetime import datetime, timezone
 from operator import itemgetter
 from typing import (
     TYPE_CHECKING,
@@ -52,6 +52,8 @@ from typing import (
     Type,
     Union,
 )
+
+from dateutil import parser
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -226,28 +228,14 @@ class GithubObject:
     @staticmethod
     def _makeTimestampAttribute(value: int) -> Attribute[datetime.datetime]:
         return GithubObject.__makeTransformedAttribute(
-            value, int, datetime.datetime.utcfromtimestamp
+            value,
+            int,
+            lambda t: datetime.fromtimestamp(t, tz=timezone.utc),
         )
 
     @staticmethod
     def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attribute:
-        def parseDatetime(s):
-            if (
-                len(s) == 24
-            ):  # pragma no branch (This branch was used only when creating a download)
-                # The Downloads API has been removed. I'm keeping this branch because I have no mean
-                # to check if it's really useless now.
-                return datetime.datetime.strptime(
-                    s, "%Y-%m-%dT%H:%M:%S.000Z"
-                )  # pragma no cover (This branch was used only when creating a download)
-            elif len(s) >= 25:
-                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (
-                    1 if s[19] == "-" else -1
-                ) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
-            else:
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
-
-        return GithubObject.__makeTransformedAttribute(value, str, parseDatetime)
+        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)
 
     def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
         return GithubObject.__makeTransformedAttribute(
