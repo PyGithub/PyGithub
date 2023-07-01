@@ -28,7 +28,18 @@
 #                                                                              #
 ################################################################################
 import json
-from typing import TYPE_CHECKING, Any, Dict, Generic, Optional, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Generic,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 T = TypeVar("T", bound=Any)
 
@@ -109,14 +120,12 @@ class BadAttributeException(Exception):
     def __init__(
         self,
         actualValue: Any,
-        expectedType: (
-            Union[
-                dict[tuple[type[str], type[str]], type[dict]],
-                tuple[type[str], type[str]],
-                list[type[dict]],
-                list[tuple[type[str], type[str]]],
-            ]
-        ),
+        expectedType: Union[
+            Dict[Tuple[Type[str], Type[str]], Type[dict]],
+            Tuple[Type[str], Type[str]],
+            List[Type[dict]],
+            List[Tuple[Type[str], Type[str]]],
+        ],
         transformationException: Optional[Exception],
     ):
         self.__actualValue = actualValue
@@ -133,14 +142,12 @@ class BadAttributeException(Exception):
     @property
     def expected_type(
         self,
-    ) -> (
-        Union[
-            list[type[dict]],
-            tuple[type[str], type[str]],
-            dict[tuple[type[str], type[str]], type[dict]],
-            list[tuple[type[str], type[str]]],
-        ]
-    ):
+    ) -> Union[
+        List[Type[dict]],
+        Tuple[Type[str], Type[str]],
+        Dict[Tuple[Type[str], Type[str]], Type[dict]],
+        List[Tuple[Type[str], Type[str]]],
+    ]:
         """
         The type PyGithub expected
         """
