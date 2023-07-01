@@ -31,6 +31,7 @@
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,6 +60,8 @@ import re
 import time
 import urllib
 import urllib.parse
+from collections import defaultdict
+from datetime import datetime, timezone
 from io import IOBase
 from typing import (
     TYPE_CHECKING,
@@ -343,6 +346,9 @@ class Requester:
     ]
     __hostname: str
     __authorizationHeader: Optional[str]
+    __last_requests: Dict[str, float]
+    __seconds_between_requests: Optional[float]
+    __seconds_between_writes: Optional[float]
 
     # keep arguments in-sync with github.MainClass and GithubIntegration
     def __init__(
@@ -355,6 +361,8 @@ class Requester:
         verify: Union[bool, str],
         retry: Optional[Union[int, Retry]],
         pool_size: Optional[int],
+        seconds_between_requests: Optional[float] = None,
+        seconds_between_writes: Optional[float] = None,
     ):
         self._initializeDebugFeature()
 
@@ -368,6 +376,9 @@ class Requester:
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
+        self.__seconds_between_requests = seconds_between_requests
+        self.__seconds_between_writes = seconds_between_writes
+        self.__last_requests = defaultdict(lambda: 0.0)
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -411,6 +422,8 @@ class Requester:
             verify=self.__verify,
             retry=self.__retry,
             pool_size=self.__pool_size,
+            seconds_between_requests=self.__seconds_between_requests,
+            seconds_between_writes=self.__seconds_between_writes,
         )
 
     @property
@@ -484,7 +497,7 @@ class Requester:
     ) -> Tuple[Dict[str, Any], Any]:
         data = self.__structuredFromJson(output)
         if status >= 400:
-            raise self.__createException(status, responseHeaders, data)
+            raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
     def __customConnection(
@@ -519,36 +532,60 @@ class Requester:
                     )
         return cnx
 
-    def __createException(
-        self,
+    @classmethod
+    def createException(
+        cls,
         status: int,
         headers: Dict[str, Any],
         output: Dict[str, Any],
     ) -> Any:
         message = output.get("message", "").lower() if output is not None else ""
 
-        cls = GithubException.GithubException
+        exc = GithubException.GithubException
         if status == 401 and message == "bad credentials":
-            cls = GithubException.BadCredentialsException
+            exc = GithubException.BadCredentialsException
         elif (
             status == 401
             and Consts.headerOTP in headers
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
-            cls = GithubException.TwoFactorException
+            exc = GithubException.TwoFactorException
         elif status == 403 and message.startswith(
             "missing or invalid user agent string"
         ):
-            cls = GithubException.BadUserAgentException
-        elif status == 403 and (
-            message.startswith("api rate limit exceeded")
-            or message.endswith("please wait a few minutes before you try again.")
-        ):
-            cls = GithubException.RateLimitExceededException
+            exc = GithubException.BadUserAgentException
+        elif status == 403 and cls.isRateLimitError(message):
+            exc = GithubException.RateLimitExceededException
         elif status == 404 and message == "not found":
-            cls = GithubException.UnknownObjectException
+            exc = GithubException.UnknownObjectException
 
-        return cls(status, output, headers)
+        return exc(status, output, headers)
+
+    @classmethod
+    def isRateLimitError(cls, message: str) -> bool:
+        return cls.isPrimaryRateLimitError(message) or cls.isSecondaryRateLimitError(
+            message
+        )
+
+    @classmethod
+    def isPrimaryRateLimitError(cls, message: str) -> bool:
+        if not message:
+            return False
+
+        message = message.lower()
+        return message.startswith("api rate limit exceeded")
+
+    @classmethod
+    def isSecondaryRateLimitError(cls, message: str) -> bool:
+        if not message:
+            return False
+
+        message = message.lower()
+        return (
+            message.startswith("you have exceeded a secondary rate limit")
+            or message.endswith("please retry your request again later.")
+            or message.endswith("please wait a few minutes before you try again.")
+        )
 
     def __structuredFromJson(self, data: str) -> Any:
         if len(data) == 0:
@@ -712,57 +749,103 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[Any],
     ) -> Tuple[int, Dict[str, Any], str]:
-        original_cnx = cnx
-        if cnx is None:
-            cnx = self.__createConnection()
-        cnx.request(verb, url, input, requestHeaders)
-        response = cnx.getresponse()
+        self.__deferRequest(verb)
 
-        status = response.status
-        responseHeaders = {k.lower(): v for k, v in response.getheaders()}
-        output = response.read()
+        try:
+            original_cnx = cnx
+            if cnx is None:
+                cnx = self.__createConnection()
+            cnx.request(verb, url, input, requestHeaders)
+            response = cnx.getresponse()
 
-        cnx.close()
-        if input:
-            if isinstance(input, IOBase):
-                input.close()
+            status = response.status
+            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
+            output = response.read()
 
-        self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+            cnx.close()
+            if input:
+                if isinstance(input, IOBase):
+                    input.close()
 
-        if status == 202 and (
-            verb == "GET" or verb == "HEAD"
-        ):  # only for requests that are considered 'safe' in RFC 2616
-            time.sleep(Consts.PROCESSING_202_WAIT_TIME)
-            return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+            self.__log(
+                verb, url, requestHeaders, input, status, responseHeaders, output
+            )
 
-        if status == 301 and "location" in responseHeaders:
-            location = responseHeaders["location"]
-            o = urllib.parse.urlparse(location)
-            if o.scheme != self.__scheme:
-                raise RuntimeError(
-                    f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
-                    f"please correct your Github server URL via base_url: Github(base_url=...)"
+            if status == 202 and (
+                verb == "GET" or verb == "HEAD"
+            ):  # only for requests that are considered 'safe' in RFC 2616
+                time.sleep(Consts.PROCESSING_202_WAIT_TIME)
+                return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+
+            if status == 301 and "location" in responseHeaders:
+                location = responseHeaders["location"]
+                o = urllib.parse.urlparse(location)
+                if o.scheme != self.__scheme:
+                    raise RuntimeError(
+                        f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
+                        f"please correct your Github server URL via base_url: Github(base_url=...)"
+                    )
+                if o.hostname != self.__hostname:
+                    raise RuntimeError(
+                        f"Github server redirected from host {self.__hostname} to {o.hostname}, "
+                        f"please correct your Github server URL via base_url: Github(base_url=...)"
+                    )
+                if o.path == url:
+                    port = ":" + str(self.__port) if self.__port is not None else ""
+                    requested_location = (
+                        f"{self.__scheme}://{self.__hostname}{port}{url}"
+                    )
+                    raise RuntimeError(
+                        f"Requested {requested_location} but server redirected to {location}, "
+                        f"you may need to correct your Github server URL "
+                        f"via base_url: Github(base_url=...)"
+                    )
+                if self._logger.isEnabledFor(logging.INFO):
+                    self._logger.info(
+                        f"Following Github server redirection from {url} to {o.path}"
+                    )
+                return self.__requestRaw(
+                    original_cnx, verb, o.path, requestHeaders, input
                 )
-            if o.hostname != self.__hostname:
-                raise RuntimeError(
-                    f"Github server redirected from host {self.__hostname} to {o.hostname}, "
-                    f"please correct your Github server URL via base_url: Github(base_url=...)"
-                )
-            if o.path == url:
-                port = ":" + str(self.__port) if self.__port is not None else ""
-                requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
-                raise RuntimeError(
-                    f"Requested {requested_location} but server redirected to {location}, "
-                    f"you may need to correct your Github server URL "
-                    f"via base_url: Github(base_url=...)"
-                )
-            if self._logger.isEnabledFor(logging.INFO):
-                self._logger.info(
-                    f"Following Github server redirection from {url} to {o.path}"
-                )
-            return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
-        return status, responseHeaders, output
+            return status, responseHeaders, output
+        finally:
+            # we record the time of this request after it finished
+            # to defer next request starting from this request's end, not start
+            self.__recordRequestTime(verb)
+
+    def __deferRequest(self, verb: str) -> None:
+        # Ensures at least self.__seconds_between_requests seconds have passed since any last request
+        # and self.__seconds_between_writes seconds have passed since last write request (if verb refers to a write).
+        # Uses self.__last_requests.
+        requests = self.__last_requests.values()
+        writes = [l for v, l in self.__last_requests.items() if v != "GET"]
+
+        last_request = max(requests) if requests else 0
+        last_write = max(writes) if writes else 0
+
+        next_request = (
+            (last_request + self.__seconds_between_requests)
+            if self.__seconds_between_requests
+            else 0
+        )
+        next_write = (
+            (last_write + self.__seconds_between_writes)
+            if self.__seconds_between_writes
+            else 0
+        )
+
+        next = next_request if verb == "GET" else max(next_request, next_write)
+        defer = max(next - datetime.now(timezone.utc).timestamp(), 0)
+        if defer > 0:
+            if self.__logger is None:
+                self.__logger = logging.getLogger(__name__)
+            self.__logger.debug(f"sleeping {defer}s before next GitHub request")
+            time.sleep(defer)
+
+    def __recordRequestTime(self, verb: str) -> None:
+        # Updates self.__last_requests with current timestamp for given verb
+        self.__last_requests[verb] = datetime.now(timezone.utc).timestamp()
 
     def __makeAbsoluteUrl(self, url: str) -> str:
         # URLs generated locally will be relative to __base_url

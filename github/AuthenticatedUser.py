@@ -698,7 +698,7 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
         :calls: `GET /gists <http://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
         assert isinstance(since, _NotSetType) or isinstance(since, datetime), since
@@ -827,8 +827,8 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /notifications <http://docs.github.com/en/rest/reference/activity#notifications>`_
         :param all: bool
         :param participating: bool
-        :param since: datetime.datetime
-        :param before: datetime.datetime
+        :param since: datetime
+        :param before: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 

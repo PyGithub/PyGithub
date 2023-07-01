@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -73,7 +73,8 @@ class PullRequestReview(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/pulls/538",
         )
         self.assertEqual(
-            self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59)
+            self.pullreview.submitted_at,
+            datetime(2017, 3, 22, 19, 6, 59, tzinfo=timezone.utc),
         )
         self.assertIn(self.created_pullreview.id, [r.id for r in self.pullreviews])
         self.assertEqual(
