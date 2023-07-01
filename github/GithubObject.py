@@ -54,7 +54,12 @@ from typing import (
 )
 
 from dateutil import parser
-from typing_extensions import TypeGuard
+
+try:
+    from typing import TypeGuard
+except ImportError:
+    # TODO: remove this after we drop python3.9
+    from typing_extensions import TypeGuard
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
