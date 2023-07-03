@@ -1,7 +1,8 @@
 name: Publish to PyPI
 on:
   push:
-    tags: ["*"]
+    branches: [main]  # this will just build and check package
+    tags: ["*"]  # this will run full workflow including publish to PyPI
 
 jobs:
   publish:
@@ -21,6 +22,7 @@ jobs:
         run: twine check dist/*
 
       - name: Publish distribution 📦 to PyPI
+        if: startsWith(github.event.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@v1.8.6
         with:
           user: __token__
