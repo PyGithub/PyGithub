@@ -226,7 +226,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attribute[datetime.datetime]:
+    def _makeTimestampAttribute(value: int) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(
             value,
             int,
@@ -234,8 +234,8 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attribute:
-        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)
+    def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
     def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
         return GithubObject.__makeTransformedAttribute(
