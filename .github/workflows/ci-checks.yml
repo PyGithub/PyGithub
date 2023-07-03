@@ -25,6 +25,19 @@ jobs:
         run: tox
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      - run: pip install -r requirements.txt
+      - run: pip install -e .
+      - run: sphinx-build doc build
+
   draft:
     runs-on: ubuntu-latest
     needs: test
