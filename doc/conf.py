@@ -306,7 +306,7 @@ for githubClass in githubClasses:
 
 methods = dict()
 for githubClass in githubClasses + ["MainClass"]:
-    with open("../github/" + githubClass + ".py") as f:
+    with open("../src/github/" + githubClass + ".py") as f:
         if githubClass == "MainClass":
             githubClass = "github.MainClass.Github"
         else:
