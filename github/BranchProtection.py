@@ -75,21 +75,21 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
-        if is_defined(self._user_push_restrictions):
-            return PaginatedList(
-                github.NamedUser.NamedUser,
-                self._requester,
-                self._user_push_restrictions,
-                None,
-            )
-        return None
+        if not is_defined(self._user_push_restrictions):
+            return None
+        return PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self._user_push_restrictions,
+            None,
+        )
 
     def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
-        if is_defined(self._team_push_restrictions):
-            return github.PaginatedList.PaginatedList(
-                github.Team.Team, self._requester, self._team_push_restrictions, None
-            )
-        return None
+        if not is_defined(self._team_push_restrictions):
+            return None
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team, self._requester, self._team_push_restrictions, None
+        )
 
     def _initAttributes(self) -> None:
         self._url = NotSet
