@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.HookResponse import HookResponse
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
 
 class Hook(CompletableGithubObject):
     def __repr__(self) -> str: ...

@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class Permissions(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Permissions

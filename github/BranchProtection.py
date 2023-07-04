@@ -20,20 +20,20 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
-
-
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
 from github.RequiredStatusChecks import RequiredStatusChecks
 from github.Team import Team
+
+
 class BranchProtection(github.GithubObject.CompletableGithubObject):
     """
     This class represents Branch Protection. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-branch-protection

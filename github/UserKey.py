@@ -29,11 +29,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
 class UserKey(github.GithubObject.CompletableGithubObject):
     """
     This class represents UserKeys. The reference can be found here https://docs.github.com/en/rest/reference/users#keys

@@ -20,15 +20,12 @@
 #                                                                              #
 ################################################################################
 
-import github.CodeScanAlertInstanceLocation
-import github.GithubObject
-
-
 from typing import Any, Dict
-import github.GithubObject
+
 import github.CodeScanAlertInstanceLocation
 import github.GithubObject
-import github.CodeScanAlertInstanceLocation
+
+
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents code scanning alert instances.
@@ -81,7 +78,9 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
         return self._message.value
 
     @property
-    def location(self) -> github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation:
+    def location(
+        self,
+    ) -> github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation:
         """
         :type: :class: `github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation`
         """

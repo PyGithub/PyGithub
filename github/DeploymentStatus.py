@@ -21,13 +21,13 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from datetime import datetime
 from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
+
+import github.GithubObject
 from github.NamedUser import NamedUser
+
+
 class DeploymentStatus(github.GithubObject.CompletableGithubObject):
     """
     This class represents Deployment Statuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments

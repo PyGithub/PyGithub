@@ -20,14 +20,14 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.WorkflowStep
-
-
 from datetime import datetime
 from typing import Any, Dict, List
-from github.GithubObject import CompletableGithubObject
+
+import github.GithubObject
+import github.WorkflowStep
 from github.WorkflowStep import WorkflowStep
+
+
 class WorkflowJob(github.GithubObject.CompletableGithubObject):
     """
     This class represents Workflow Jobs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-jobs

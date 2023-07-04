@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 
 from github.Commit import Commit
 from github.File import File
+
 from github.GithubObject import CompletableGithubObject
 
 class Comparison(CompletableGithubObject):

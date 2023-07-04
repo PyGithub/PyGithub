@@ -20,11 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.GithubObject
 
 
-from typing import Any, Dict, List
-from github.GithubObject import CompletableGithubObject
 class License(github.GithubObject.CompletableGithubObject):
     """
     This class represents Licenses. The reference can be found here https://docs.github.com/en/rest/reference/licenses

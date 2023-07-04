@@ -28,13 +28,14 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, Union
+
 import github.GithubObject
 import github.GitObject
-
-
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.GitObject import GitObject
+
+
 class GitRef(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
@@ -74,7 +75,9 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha: str, force: Union[bool, _NotSetType] = github.GithubObject.NotSet) -> None:
+    def edit(
+        self, sha: str, force: Union[bool, _NotSetType] = github.GithubObject.NotSet
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :param sha: string

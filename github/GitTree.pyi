@@ -1,7 +1,8 @@
 from typing import Any, Dict, List
 
-from github.GithubObject import CompletableGithubObject
 from github.GitTreeElement import GitTreeElement
+
+from github.GithubObject import CompletableGithubObject
 
 class GitTree(CompletableGithubObject):
     def __repr__(self) -> str: ...

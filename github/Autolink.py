@@ -20,11 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict, List
-from github.GithubObject import NonCompletableGithubObject
 class Autolink(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})

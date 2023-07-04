@@ -23,15 +23,15 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
-
-
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
+
+
 class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents InstallationAuthorizations

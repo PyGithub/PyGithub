@@ -28,14 +28,14 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.NamedUser
-
-
 from datetime import datetime
 from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
+
+import github.GithubObject
+import github.NamedUser
 from github.NamedUser import NamedUser
+
+
 class GistComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistComments. The reference can be found here https://docs.github.com/en/rest/reference/gists#comments

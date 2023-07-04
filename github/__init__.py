@@ -35,6 +35,7 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
 from github.GithubRetry import GithubRetry as GithubRetry
+
 from .GithubException import BadAttributeException as BadAttributeException
 from .GithubException import BadCredentialsException as BadCredentialsException
 from .GithubException import BadUserAgentException as BadUserAgentException
@@ -46,17 +47,7 @@ from .GithubException import UnknownObjectException as UnknownObjectException
 from .InputFileContent import InputFileContent as InputFileContent
 from .InputGitAuthor import InputGitAuthor as InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement as InputGitTreeElement
-from .GithubException import BadAttributeException as BadAttributeException
-from .GithubException import BadCredentialsException as BadCredentialsException
-from .GithubException import BadUserAgentException as BadUserAgentException
-from .GithubException import GithubException as GithubException
-from .GithubException import IncompletableObject as IncompletableObject
-from .GithubException import RateLimitExceededException as RateLimitExceededException
-from .GithubException import TwoFactorException as TwoFactorException
-from .GithubException import UnknownObjectException as UnknownObjectException
-from .InputFileContent import InputFileContent as InputFileContent
-from .InputGitAuthor import InputGitAuthor as InputGitAuthor
-from .InputGitTreeElement import InputGitTreeElement as InputGitTreeElement
+
 __all__ = [
     "Auth",
     "AppAuthentication",
@@ -83,21 +74,6 @@ from github import Auth
 from github.AppAuthentication import AppAuthentication
 from github.GithubIntegration import GithubIntegration
 from github.MainClass import Github
-
-from .GithubException import (
-    BadAttributeException,
-    BadCredentialsException,
-    BadUserAgentException,
-    GithubException,
-    IncompletableObject,
-    RateLimitExceededException,
-    TwoFactorException,
-    UnknownObjectException,
-)
-from .GithubRetry import GithubRetry
-from .InputFileContent import InputFileContent
-from .InputGitAuthor import InputGitAuthor
-from .InputGitTreeElement import InputGitTreeElement
 
 # set log level to INFO for github
 logger = logging.getLogger("github")

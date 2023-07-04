@@ -29,13 +29,13 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.Commit
 import github.GithubObject
-
-
-from typing import Any, Dict
 from github.Commit import Commit
-from github.GithubObject import NonCompletableGithubObject
+
+
 class Tag(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Tags. The reference can be found here https://docs.github.com/en/rest/reference/repos#list-repository-tags

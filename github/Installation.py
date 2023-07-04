@@ -24,6 +24,9 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
+import github
 import github.Authorization
 import github.Event
 import github.Gist
@@ -36,14 +39,11 @@ import github.Plan
 import github.Repository
 import github.UserKey
 from github.Auth import AppAuth
+from github.PaginatedList import PaginatedList
+from github.Repository import Repository
 
 from . import Consts
 
-from typing import Any, Dict
-import github
-from github.GithubObject import NonCompletableGithubObject
-from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 

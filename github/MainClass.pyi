@@ -2,29 +2,29 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
-from github.Auth import Auth
-from github.AppAuthentication import AppAuthentication
-from github.ApplicationOAuth import ApplicationOAuth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import GithubObject, _NotSetType
 from github.GitignoreTemplate import GitignoreTemplate
 from github.HookDescription import HookDescription
 from github.Issue import Issue
 from github.License import License
 from github.NamedUser import NamedUser
 from github.Organization import Organization
-from github.PaginatedList import PaginatedList
 from github.Project import Project
 from github.ProjectColumn import ProjectColumn
 from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
-
 from urllib3.util import Retry
+
+from github.AppAuthentication import AppAuthentication
+from github.ApplicationOAuth import ApplicationOAuth
+from github.Auth import Auth
+from github.GithubObject import GithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 

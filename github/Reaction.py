@@ -22,16 +22,16 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
+from github.NamedUser import NamedUser
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
-from github.NamedUser import NamedUser
 class Reaction(github.GithubObject.CompletableGithubObject):
     """
     This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions

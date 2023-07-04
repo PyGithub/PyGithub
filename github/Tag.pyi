@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from github.Commit import Commit
+
 from github.GithubObject import NonCompletableGithubObject
 
 class Tag(NonCompletableGithubObject):

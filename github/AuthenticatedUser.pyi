@@ -1,10 +1,8 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union, NamedTuple
+from typing import Any, Dict, List, Union, NamedTuple
 
-from github.Authorization import Authorization
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.InputFileContent import InputFileContent
 from github.Invitation import Invitation
 from github.Issue import Issue
@@ -14,11 +12,14 @@ from github.Migration import Migration
 from github.NamedUser import NamedUser
 from github.Notification import Notification
 from github.Organization import Organization
-from github.PaginatedList import PaginatedList
 from github.Plan import Plan
 from github.Repository import Repository
 from github.Team import Team
 from github.UserKey import UserKey
+
+from github.Authorization import Authorization
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 class EmailData(NamedTuple):
     email: str

@@ -20,12 +20,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Any, Dict
+
 import github.GithubObject
-import github.GithubObject
+
+
 class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents code scanning alert instance locations.

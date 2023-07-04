@@ -20,19 +20,20 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.WorkflowRun
-
-
 from datetime import datetime
 from typing import Any, Dict, Union
+
+import github.GithubObject
+import github.WorkflowRun
 from github.Branch import Branch
 from github.Commit import Commit
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 from github.Tag import Tag
 from github.WorkflowRun import WorkflowRun
+
+
 class Workflow(github.GithubObject.CompletableGithubObject):
     """
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
@@ -113,7 +114,13 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
 
-    def create_dispatch(self, ref: Union[str, Branch, Commit, Tag], inputs: Union[Dict[str, Union[str, int, float]], _NotSetType] = github.GithubObject.NotSet) -> bool:
+    def create_dispatch(
+        self,
+        ref: Union[str, Branch, Commit, Tag],
+        inputs: Union[
+            Dict[str, Union[str, int, float]], _NotSetType
+        ] = github.GithubObject.NotSet,
+    ) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or :class:`github.Commit.Commit` or string
@@ -146,7 +153,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         branch: Union[str, Branch, _NotSetType] = github.GithubObject.NotSet,
         event: Union[str, _NotSetType] = github.GithubObject.NotSet,
         status: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        check_suite_id: Union[int, _NotSetType] = github.GithubObject.NotSet
+        check_suite_id: Union[int, _NotSetType] = github.GithubObject.NotSet,
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_

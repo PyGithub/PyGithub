@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Dict
+
 import github.GithubObject
 
 
-from typing import Dict
-from github.GithubObject import CompletableGithubObject
 class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
     """
     This class represents AuthorizationApplications

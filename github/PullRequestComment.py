@@ -33,18 +33,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.Reaction import Reaction
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
-from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
-from github.Reaction import Reaction
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments

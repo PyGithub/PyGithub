@@ -27,11 +27,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore

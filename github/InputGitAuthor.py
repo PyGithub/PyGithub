@@ -28,17 +28,23 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Dict, Union
+
+import github.GithubObject
 from github.GithubObject import _NotSetType
+
+
 class InputGitAuthor:
     """
     This class represents InputGitAuthors
     """
 
-    def __init__(self, name: str, email: str, date: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
+    def __init__(
+        self,
+        name: str,
+        email: str,
+        date: Union[str, _NotSetType] = github.GithubObject.NotSet,
+    ) -> None:
         """
         :param name: string
         :param email: string

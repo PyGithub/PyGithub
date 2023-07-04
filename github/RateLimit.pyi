@@ -1,7 +1,8 @@
 from typing import Any, Dict
 
-from github.GithubObject import NonCompletableGithubObject
 from github.Rate import Rate
+
+from github.GithubObject import NonCompletableGithubObject
 
 class RateLimit(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

@@ -20,12 +20,12 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 from github import Consts
 
 
-from typing import Any, Dict, Optional
-from github.GithubObject import CompletableGithubObject
 class SourceImport(github.GithubObject.CompletableGithubObject):
     """
     This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports

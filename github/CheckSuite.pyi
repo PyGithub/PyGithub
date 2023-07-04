@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import Any, Dict, List
 
-from github.CheckRun import CheckRun
 from github.GitCommit import GitCommit
+from github.PullRequest import PullRequest
+from github.Repository import Repository
+
+from github.CheckRun import CheckRun
 from github.GithubApp import GithubApp
 from github.GithubObject import CompletableGithubObject
 from github.PaginatedList import PaginatedList
-from github.PullRequest import PullRequest
-from github.Repository import Repository
 
 class CheckSuite(CompletableGithubObject):
     def __repr__(self) -> str: ...

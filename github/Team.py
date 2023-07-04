@@ -39,6 +39,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, Union
+
 from deprecated import deprecated
 
 import github.GithubObject
@@ -48,19 +50,18 @@ import github.PaginatedList
 import github.Repository
 import github.TeamDiscussion
 from github.GithubException import UnknownObjectException
-
-from . import Consts
-
-
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
+from github.Membership import Membership
 from github.NamedUser import NamedUser
 from github.Organization import Organization
-from github.Membership import Membership
 from github.PaginatedList import PaginatedList
 from github.Permissions import Permissions
 from github.Repository import Repository
 from github.TeamDiscussion import TeamDiscussion
+
+from . import Consts
+
+
 class Team(github.GithubObject.CompletableGithubObject):
     """
     This class represents Teams. The reference can be found here https://docs.github.com/en/rest/reference/teams
@@ -166,7 +167,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self._privacy.value
 
     @property
-    def parent(self) -> Union[Team, _NotSetType]:
+    def parent(self) -> Union["Team", _NotSetType]:
         """
         :type: string
         """
@@ -195,7 +196,11 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/members/{member._identity}"
         )
 
-    def add_membership(self, member: NamedUser, role: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
+    def add_membership(
+        self,
+        member: NamedUser,
+        role: Union[str, _NotSetType] = github.GithubObject.NotSet,
+    ) -> None:
         """
         :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
         :param member: :class:`github.Nameduser.NamedUser`
@@ -326,7 +331,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         name: str,
         description: Union[str, _NotSetType] = github.GithubObject.NotSet,
         permission: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        privacy: Union[str, _NotSetType] = github.GithubObject.NotSet
+        privacy: Union[str, _NotSetType] = github.GithubObject.NotSet,
     ) -> None:
         """
         :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
@@ -360,7 +365,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_teams(self) -> PaginatedList[Team]:
+    def get_teams(self) -> PaginatedList["Team"]:
         """
         :calls: `GET /teams/{id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
@@ -385,7 +390,9 @@ class Team(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeTeamDiscussionsPreview},
         )
 
-    def get_members(self, role: Union[str, _NotSetType] = github.GithubObject.NotSet) -> PaginatedList[NamedUser]:
+    def get_members(
+        self, role: Union[str, _NotSetType] = github.GithubObject.NotSet
+    ) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /teams/{id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
         :param role: string

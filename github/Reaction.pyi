@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
+
+from github.GithubObject import CompletableGithubObject
 
 class Reaction(CompletableGithubObject):
     def __repr__(self) -> str: ...

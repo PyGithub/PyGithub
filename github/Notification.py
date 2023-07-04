@@ -27,18 +27,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 import github.NotificationSubject
 import github.Repository
-
-
-from datetime import datetime
-from typing import Any, Dict, Optional
-from github.GithubObject import CompletableGithubObject
 from github.Issue import Issue
 from github.NotificationSubject import NotificationSubject
 from github.PullRequest import PullRequest
 from github.Repository import Repository
+
+
 class Notification(github.GithubObject.CompletableGithubObject):
     """
     This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications

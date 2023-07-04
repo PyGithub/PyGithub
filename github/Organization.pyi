@@ -2,19 +2,20 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from github.Event import Event
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Hook import Hook
 from github.Installation import Installation
 from github.Issue import Issue
 from github.Label import Label
 from github.Migration import Migration
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.Plan import Plan
 from github.Project import Project
-from github.PublicKey import PublicKey
 from github.Repository import Repository
 from github.Team import Team
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
+from github.PublicKey import PublicKey
 
 class Organization(CompletableGithubObject):
     def __repr__(self) -> str: ...

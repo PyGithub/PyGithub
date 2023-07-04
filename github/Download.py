@@ -28,12 +28,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import Any, Dict, Optional
-from github.GithubObject import CompletableGithubObject
 class Download(github.GithubObject.CompletableGithubObject):
     """
     This class represents Downloads. The reference can be found here https://docs.github.com/en/rest/reference/repos

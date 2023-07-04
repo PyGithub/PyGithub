@@ -30,14 +30,13 @@
 
 # https://docs.github.com/en/rest/reference/actions#example-encrypting-a-secret-using-python
 from base64 import b64encode
+from typing import Any, Dict, Union
 
 from nacl import encoding, public
 
 import github.GithubObject
 
 
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject
 def encrypt(public_key: str, secret_value: str) -> str:
     """Encrypt a Unicode string using the public key."""
     public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())

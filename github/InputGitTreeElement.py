@@ -26,11 +26,12 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Dict, Union
+
+import github.GithubObject
 from github.GithubObject import _NotSetType
+
+
 class InputGitTreeElement:
     """
     This class represents InputGitTreeElements
@@ -42,7 +43,7 @@ class InputGitTreeElement:
         mode: str,
         type: str,
         content: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        sha: Union[str, _NotSetType, None] = github.GithubObject.NotSet
+        sha: Union[str, _NotSetType, None] = github.GithubObject.NotSet,
     ) -> None:
         """
         :param path: string

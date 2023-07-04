@@ -1,9 +1,10 @@
 from datetime import date, datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Label import Label
 from github.NamedUser import NamedUser
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 
 class Milestone(CompletableGithubObject):

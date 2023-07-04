@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitReleaseAsset import GitReleaseAsset
 from github.NamedUser import NamedUser
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 
 class GitRelease(CompletableGithubObject):

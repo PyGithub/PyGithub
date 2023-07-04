@@ -27,11 +27,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Dict
+
 import github.GithubObject
 
 
-from typing import Dict
-from github.GithubObject import NonCompletableGithubObject
 class CommitStats(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitStatses.

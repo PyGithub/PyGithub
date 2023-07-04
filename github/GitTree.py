@@ -28,13 +28,13 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.GithubObject
 import github.GitTreeElement
-
-
-from typing import Any, Dict, List
-from github.GithubObject import CompletableGithubObject
 from github.GitTreeElement import GitTreeElement
+
+
 class GitTree(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees

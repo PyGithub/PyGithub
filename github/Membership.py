@@ -38,13 +38,13 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
+
+import github.GithubObject
 from github.NamedUser import NamedUser
 from github.Organization import Organization
+
+
 class Membership(github.GithubObject.CompletableGithubObject):
     """
     This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs

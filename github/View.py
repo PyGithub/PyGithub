@@ -24,12 +24,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class View(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.

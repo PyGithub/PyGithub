@@ -1,36 +1,22 @@
 from datetime import date, datetime
 from typing import Any, Dict, Iterable, List, Optional, Union, overload
 
-from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
-from github.Autolink import Autolink
-from github.Branch import Branch
-from github.CheckRun import CheckRun
-from github.CheckSuite import CheckSuite
 from github.Clones import Clones
-from github.CodeScanAlert import CodeScanAlert
 from github.Commit import Commit
 from github.CommitComment import CommitComment
 from github.Comparison import Comparison
 from github.ContentFile import ContentFile
-from github.Deployment import Deployment
 from github.Download import Download
-from github.Environment import Environment
-from github.EnvironmentDeploymentBranchPolicy import (
-    EnvironmentDeploymentBranchPolicyParams,
-)
-from github.EnvironmentProtectionRuleReviewer import ReviewerParams
 from github.Event import Event
 from github.GitBlob import GitBlob
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.GitRef import GitRef
 from github.GitRelease import GitRelease
 from github.GitReleaseAsset import GitReleaseAsset
 from github.GitTag import GitTag
 from github.GitTree import GitTree
 from github.Hook import Hook
-from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.InputGitAuthor import InputGitAuthor
 from github.InputGitTreeElement import InputGitTreeElement
 from github.Invitation import Invitation
@@ -42,23 +28,13 @@ from github.Milestone import Milestone
 from github.NamedUser import NamedUser
 from github.Notification import Notification
 from github.Organization import Organization
-from github.PaginatedList import PaginatedList
 from github.Path import Path
 from github.Permissions import Permissions
 from github.Project import Project
-from github.PublicKey import PublicKey
 from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
-from github.RepositoryAdvisory import RepositoryAdvisory
-from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
-from github.RepositoryAdvisoryVulnerability import (
-    AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
-)
 from github.RepositoryKey import RepositoryKey
-from github.RepositoryPreferences import RepositoryPreferences
-from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.SourceImport import SourceImport
 from github.Stargazer import Stargazer
 from github.StatsCodeFrequency import StatsCodeFrequency
@@ -69,6 +45,30 @@ from github.StatsPunchCard import StatsPunchCard
 from github.Tag import Tag
 from github.Team import Team
 from github.View import View
+
+from github.Artifact import Artifact
+from github.Autolink import Autolink
+from github.Branch import Branch
+from github.CheckRun import CheckRun
+from github.CheckSuite import CheckSuite
+from github.CodeScanAlert import CodeScanAlert
+from github.Deployment import Deployment
+from github.Environment import Environment
+from github.EnvironmentDeploymentBranchPolicy import (
+    EnvironmentDeploymentBranchPolicyParams,
+)
+from github.EnvironmentProtectionRuleReviewer import ReviewerParams
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.HookDelivery import HookDelivery, HookDeliverySummary
+from github.PaginatedList import PaginatedList
+from github.PublicKey import PublicKey
+from github.RepositoryAdvisory import RepositoryAdvisory
+from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
+from github.RepositoryAdvisoryVulnerability import (
+    AdvisoryVulnerability,
+)
+from github.RepositoryPreferences import RepositoryPreferences
+from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
 

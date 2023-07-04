@@ -20,13 +20,13 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List, Union
+
 import github.GithubObject
 import github.Repository
-
-
-from typing import Any, Dict, List, Union
-from github.GithubObject import NonCompletableGithubObject
 from github.Repository import Repository
+
+
 class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents repository preferences.

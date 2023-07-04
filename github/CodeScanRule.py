@@ -20,12 +20,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Any, Dict
+
 import github.GithubObject
-import github.GithubObject
+
+
 class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Alerts from code scanning.

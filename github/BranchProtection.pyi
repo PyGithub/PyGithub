@@ -1,11 +1,12 @@
 from typing import Any, Dict
 
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.RequiredPullRequestReviews import RequiredPullRequestReviews
 from github.RequiredStatusChecks import RequiredStatusChecks
 from github.Team import Team
+
+from github.GithubObject import CompletableGithubObject
+from github.PaginatedList import PaginatedList
 
 class BranchProtection(CompletableGithubObject):
     def __repr__(self) -> str: ...

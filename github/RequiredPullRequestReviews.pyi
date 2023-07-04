@@ -1,8 +1,9 @@
 from typing import Any, Dict, List, Optional
 
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Team import Team
+
+from github.GithubObject import CompletableGithubObject
 
 class RequiredPullRequestReviews(CompletableGithubObject):
     def __repr__(self) -> str: ...

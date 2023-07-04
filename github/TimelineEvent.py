@@ -20,16 +20,16 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
-
-
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 from github.TimelineEventSource import TimelineEventSource
+
+
 class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline

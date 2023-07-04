@@ -28,15 +28,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitObject
-
-
-from typing import Any, Dict, Union
 from github.GitAuthor import GitAuthor
-from github.GithubObject import CompletableGithubObject
 from github.GitObject import GitObject
+
+
 class GitTag(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags

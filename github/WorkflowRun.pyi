@@ -2,10 +2,11 @@ from datetime import datetime
 from typing import Any, Dict, NamedTuple, List, Union
 
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
-from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 from github.WorkflowJob import WorkflowJob
 
 class TimingData(NamedTuple):

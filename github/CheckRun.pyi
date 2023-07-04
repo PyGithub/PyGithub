@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
+from github.PullRequest import PullRequest
+
 from github.CheckRunAnnotation import CheckRunAnnotation
 from github.CheckRunOutput import CheckRunOutput
 from github.GithubApp import GithubApp
 from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
-from github.PullRequest import PullRequest
 
 class CheckRun(CompletableGithubObject):
     def __repr__(self) -> str: ...

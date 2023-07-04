@@ -20,14 +20,14 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, List
+
 import github.GithubObject
 import github.NamedUser
-
-
-from typing import Any, Dict, List
-from datetime import datetime
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
+
+
 class GithubApp(github.GithubObject.CompletableGithubObject):
     """
     This class represents github apps. The reference can be found here https://docs.github.com/en/rest/reference/apps

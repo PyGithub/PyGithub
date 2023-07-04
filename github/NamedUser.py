@@ -36,6 +36,7 @@
 ################################################################################
 
 from datetime import datetime
+from typing import Any, Dict, Optional, Union
 
 import github.Event
 import github.Gist
@@ -46,14 +47,9 @@ import github.PaginatedList
 import github.Permissions
 import github.Plan
 import github.Repository
-
-from . import Consts
-
-
-from typing import Any, Dict, Optional, Union
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.Membership import Membership
 from github.Organization import Organization
 from github.PaginatedList import PaginatedList
@@ -62,6 +58,10 @@ from github.Plan import Plan
 from github.Project import Project
 from github.Repository import Repository
 from github.UserKey import UserKey
+
+from . import Consts
+
+
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
@@ -257,7 +257,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._invitation_teams_url.value
 
     @property
-    def inviter(self) -> NamedUser:
+    def inviter(self) -> "NamedUser":
         """
         :type: github.NamedUser.NamedUser
         """
@@ -449,7 +449,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Event.Event, self._requester, f"{self.url}/events", None
         )
 
-    def get_followers(self) -> PaginatedList[NamedUser]:
+    def get_followers(self) -> PaginatedList["NamedUser"]:
         """
         :calls: `GET /users/{user}/followers <https://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -458,7 +458,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             NamedUser, self._requester, f"{self.url}/followers", None
         )
 
-    def get_following(self) -> PaginatedList[NamedUser]:
+    def get_following(self) -> PaginatedList["NamedUser"]:
         """
         :calls: `GET /users/{user}/following <https://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
@@ -467,7 +467,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             NamedUser, self._requester, f"{self.url}/following", None
         )
 
-    def get_gists(self, since: Union[_NotSetType, datetime] = github.GithubObject.NotSet) -> PaginatedList[Gist]:
+    def get_gists(
+        self, since: Union[_NotSetType, datetime] = github.GithubObject.NotSet
+    ) -> PaginatedList[Gist]:
         """
         :calls: `GET /users/{user}/gists <https://docs.github.com/en/rest/reference/gists>`_
         :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
@@ -563,7 +565,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self,
         type: Union[str, _NotSetType] = github.GithubObject.NotSet,
         sort: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        direction: Union[str, _NotSetType] = github.GithubObject.NotSet
+        direction: Union[str, _NotSetType] = github.GithubObject.NotSet,
     ) -> PaginatedList[Repository]:
         """
         :calls: `GET /users/{user}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -621,7 +623,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository, self._requester, f"{self.url}/watched", None
         )
 
-    def has_in_following(self, following: NamedUser) -> bool:
+    def has_in_following(self, following: "NamedUser") -> bool:
         """
         :calls: `GET /users/{user}/following/{target_user} <https://docs.github.com/en/rest/reference/users#check-if-a-user-follows-another-user>`_
         :param following: :class:`github.NamedUser.NamedUser`

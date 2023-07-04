@@ -20,15 +20,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List, Optional
+
 import github.GithubObject
 import github.NamedUser
 import github.Team
-
-
-from typing import Any, Dict, List, Optional
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Team import Team
+
+
 class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     """
     This class represents Required Pull Request Reviews. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection

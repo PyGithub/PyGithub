@@ -21,6 +21,7 @@
 ################################################################################
 
 from datetime import datetime
+from typing import Any, Dict, List, Union
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -28,15 +29,14 @@ import github.GithubApp
 import github.GithubObject
 import github.PaginatedList
 import github.PullRequest
-
-
-from typing import Any, Dict, List, Union
 from github.CheckRunAnnotation import CheckRunAnnotation
 from github.CheckRunOutput import CheckRunOutput
 from github.GithubApp import GithubApp
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
+
+
 class CheckRun(github.GithubObject.CompletableGithubObject):
     """
     This class represents check runs.
@@ -199,8 +199,10 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         started_at: Union[_NotSetType, datetime] = github.GithubObject.NotSet,
         conclusion: Union[_NotSetType, str] = github.GithubObject.NotSet,
         completed_at: Union[_NotSetType, datetime] = github.GithubObject.NotSet,
-        output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = github.GithubObject.NotSet,
-        actions: Union[_NotSetType, List[Dict[str, str]]] = github.GithubObject.NotSet
+        output: Union[
+            _NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
+        ] = github.GithubObject.NotSet,
+        actions: Union[_NotSetType, List[Dict[str, str]]] = github.GithubObject.NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/check-runs/{check_run_id} <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`_

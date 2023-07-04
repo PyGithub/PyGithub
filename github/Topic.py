@@ -20,12 +20,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class Topic(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents topics as used by https://github.com/topics. The object reference can be found here https://docs.github.com/en/rest/reference/search#search-topics

@@ -28,12 +28,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Dict
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import Dict
-from github.GithubObject import NonCompletableGithubObject
 class GitAuthor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitAuthors

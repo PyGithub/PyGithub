@@ -24,14 +24,14 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, List
+
 import github.GithubObject
 import github.NamedUser
-
-
-from datetime import datetime
-from typing import Any, Dict, List, Optional
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
+
+
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsContributors. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity

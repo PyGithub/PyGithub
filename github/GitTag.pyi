@@ -1,8 +1,9 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from github.GitAuthor import GitAuthor
-from github.GithubObject import CompletableGithubObject
 from github.GitObject import GitObject
+
+from github.GithubObject import CompletableGithubObject
 
 class GitTag(CompletableGithubObject):
     def __repr__(self) -> str: ...

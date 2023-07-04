@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.Reaction import Reaction
+
+from github.GithubObject import CompletableGithubObject
+from github.PaginatedList import PaginatedList
 
 class IssueComment(CompletableGithubObject):
     def __repr__(self) -> str: ...

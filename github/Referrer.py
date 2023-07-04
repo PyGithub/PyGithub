@@ -24,11 +24,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class Referrer(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a popylar Referrer for a GitHub repository.

@@ -1,8 +1,9 @@
 from typing import Any, Dict, Optional
 
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Repository import Repository
+
+from github.GithubObject import NonCompletableGithubObject
 
 class PullRequestPart(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

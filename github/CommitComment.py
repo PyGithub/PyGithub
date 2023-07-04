@@ -31,18 +31,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 import github.NamedUser
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.Reaction import Reaction
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict, Optional
-from github.GithubObject import CompletableGithubObject
-from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
-from github.Reaction import Reaction
 class CommitComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents CommitComments. The reference can be found here https://docs.github.com/en/rest/reference/repos#comments

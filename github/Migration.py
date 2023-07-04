@@ -30,18 +30,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, List
+
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+from github.NamedUser import NamedUser
+from github.Repository import Repository
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
-from github.GithubObject import CompletableGithubObject
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 class Migration(github.GithubObject.CompletableGithubObject):
     """
     This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations

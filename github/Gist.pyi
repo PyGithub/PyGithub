@@ -4,9 +4,10 @@ from typing import Any, Dict, List, Optional, Union
 from github.GistComment import GistComment
 from github.GistFile import GistFile
 from github.GistHistoryState import GistHistoryState
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.InputFileContent import InputFileContent
 from github.NamedUser import NamedUser
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.PaginatedList import PaginatedList
 
 class Gist(CompletableGithubObject):

@@ -1,11 +1,11 @@
 from typing import Union, Optional, Dict
 
-from urllib3 import Retry
-
 import github
-from github.Auth import AppAuth
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
+from urllib3 import Retry
+
+from github.Auth import AppAuth
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 

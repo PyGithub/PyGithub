@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 from github.TimelineEventSource import TimelineEventSource
+
+from github.GithubObject import NonCompletableGithubObject
 
 class TimelineEvent(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

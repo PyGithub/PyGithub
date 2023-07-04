@@ -1,9 +1,9 @@
+from github.MainClass import Github as Github
+
 from github import Auth as Auth
 from github.AppAuthentication import AppAuthentication as AppAuthentication
 from github.GithubIntegration import GithubIntegration as GithubIntegration
 from github.GithubRetry import GithubRetry as GithubRetry
-from github.MainClass import Github as Github
-
 from .GithubException import BadAttributeException as BadAttributeException
 from .GithubException import BadCredentialsException as BadCredentialsException
 from .GithubException import BadUserAgentException as BadUserAgentException

@@ -26,12 +26,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class Rate(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit

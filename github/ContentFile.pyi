@@ -1,8 +1,9 @@
 from typing import Any, Dict, List, Optional
 
-from github.GithubObject import CompletableGithubObject
 from github.License import License
 from github.Repository import Repository
+
+from github.GithubObject import CompletableGithubObject
 
 class ContentFile(CompletableGithubObject):
     def __repr__(self) -> str: ...

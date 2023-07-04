@@ -20,18 +20,19 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Union
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
+from github.GithubObject import _NotSetType
+from github.PaginatedList import PaginatedList
+from github.ProjectCard import ProjectCard
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
-from github.PaginatedList import PaginatedList
-from github.ProjectCard import ProjectCard
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
@@ -96,7 +97,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         """
         return self._url.value
 
-    def get_cards(self, archived_state: Union[_NotSetType, str] = github.GithubObject.NotSet) -> PaginatedList[ProjectCard]:
+    def get_cards(
+        self, archived_state: Union[_NotSetType, str] = github.GithubObject.NotSet
+    ) -> PaginatedList[ProjectCard]:
         """
         :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#list-project-cards>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
@@ -122,7 +125,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         self,
         note: Union[_NotSetType, str] = github.GithubObject.NotSet,
         content_id: Union[int, _NotSetType] = github.GithubObject.NotSet,
-        content_type: Union[_NotSetType, str] = github.GithubObject.NotSet
+        content_type: Union[_NotSetType, str] = github.GithubObject.NotSet,
     ) -> ProjectCard:
         """
         :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#create-a-project-card>`_

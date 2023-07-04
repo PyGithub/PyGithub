@@ -29,18 +29,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Optional, Union
+
 import github.GithubObject
 import github.Issue
 import github.NamedUser
-
-
-from datetime import datetime
-from typing import Any, Dict, Optional, Union
-from github.GithubObject import CompletableGithubObject
 from github.Issue import Issue
 from github.Label import Label
 from github.Milestone import Milestone
 from github.NamedUser import NamedUser
+
+
 class IssueEvent(github.GithubObject.CompletableGithubObject):
     """
     This class represents IssueEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#events

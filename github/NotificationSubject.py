@@ -26,11 +26,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 
 
-from typing import Any, Dict, Optional
-from github.GithubObject import NonCompletableGithubObject
 class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user

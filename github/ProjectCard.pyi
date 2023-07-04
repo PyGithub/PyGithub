@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Issue import Issue
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
 
 class ProjectCard(CompletableGithubObject):
     def _repr__(self) -> str: ...

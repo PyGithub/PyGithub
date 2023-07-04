@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
+from github.NamedUser import NamedUser
+
 from github.DeploymentStatus import DeploymentStatus
 from github.GithubObject import CompletableGithubObject, _NotSetType
-from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
 class Deployment(CompletableGithubObject):

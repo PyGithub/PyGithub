@@ -1,7 +1,8 @@
 from typing import Any, Dict
 
-from github.GithubObject import NonCompletableGithubObject
 from github.Issue import Issue
+
+from github.GithubObject import NonCompletableGithubObject
 
 class TimelineEventSource(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

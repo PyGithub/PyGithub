@@ -29,14 +29,15 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-import github.HookResponse
-
-
 from datetime import datetime
 from typing import Any, Dict, List, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
+
+import github.GithubObject
+import github.HookResponse
+from github.GithubObject import _NotSetType
 from github.HookResponse import HookResponse
+
+
 class Hook(github.GithubObject.CompletableGithubObject):
     """
     This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
@@ -147,7 +148,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
         add_events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
         remove_events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
-        active: Union[bool, _NotSetType] = github.GithubObject.NotSet
+        active: Union[bool, _NotSetType] = github.GithubObject.NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_

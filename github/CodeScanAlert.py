@@ -20,6 +20,9 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.CodeScanAlertInstance
 import github.CodeScanRule
 import github.CodeScanTool
@@ -28,18 +31,6 @@ import github.NamedUser
 import github.PaginatedList
 
 
-from typing import Any, Dict
-from datetime import datetime
-import github.GithubObject
-import github.PaginatedList
-import github.CodeScanRule
-import github.CodeScanTool
-import github.CodeScanAlertInstance
-import github.GithubObject
-import github.PaginatedList
-import github.CodeScanRule
-import github.CodeScanTool
-import github.CodeScanAlertInstance
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents alerts from code scanning.
@@ -120,7 +111,9 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         return self._instances_url.value
 
     @property
-    def most_recent_instance(self) -> github.CodeScanAlertInstance.CodeScanAlertInstance:
+    def most_recent_instance(
+        self,
+    ) -> github.CodeScanAlertInstance.CodeScanAlertInstance:
         """
         :type: :class: github.CodeScanAlertInstance.CodeScanAlertInstance
         """

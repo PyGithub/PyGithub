@@ -24,11 +24,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Dict, List
+
 import github.GithubObject
 
 
-from typing import Dict, List
-from github.GithubObject import NonCompletableGithubObject
 class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsParticipations. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count

@@ -1,8 +1,9 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
+from github.NamedUser import NamedUser
 
 from github.GithubObject import NonCompletableGithubObject
-from github.NamedUser import NamedUser
 
 class StatsContributor(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...

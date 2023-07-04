@@ -33,21 +33,22 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
 from os.path import basename
+from typing import Any, Dict, Union
 
 import github.GithubObject
 import github.GitReleaseAsset
 import github.NamedUser
+from github.GithubObject import _NotSetType
+from github.GitRelease import GitRelease
+from github.GitReleaseAsset import GitReleaseAsset
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
-from github.GitReleaseAsset import GitReleaseAsset
-from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 class GitRelease(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
@@ -198,7 +199,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         draft: bool = False,
         prerelease: bool = False,
         tag_name: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        target_commitish: Union[str, _NotSetType] = github.GithubObject.NotSet
+        target_commitish: Union[str, _NotSetType] = github.GithubObject.NotSet,
     ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
@@ -245,7 +246,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         path: str,
         label: str = "",
         content_type: Union[_NotSetType, str] = github.GithubObject.NotSet,
-        name: Union[_NotSetType, str] = github.GithubObject.NotSet
+        name: Union[_NotSetType, str] = github.GithubObject.NotSet,
     ) -> GitReleaseAsset:
         """
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_

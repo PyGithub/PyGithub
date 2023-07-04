@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
+
+from github.GithubObject import NonCompletableGithubObject
 
 class CommitStatus(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

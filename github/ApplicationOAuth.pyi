@@ -1,8 +1,8 @@
 from typing import Any, Dict, Optional, Tuple
 
 from github.AccessToken import AccessToken
-from github.GithubObject import NonCompletableGithubObject
 from github.Auth import AppUserAuth
+from github.GithubObject import NonCompletableGithubObject
 
 class ApplicationOAuth(NonCompletableGithubObject):
     def __repr__(self) -> str: ...

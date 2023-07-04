@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict, Union
-from github.GithubObject import NonCompletableGithubObject
 class Plan(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Plans

@@ -27,15 +27,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.Commit
 import github.File
 import github.GithubObject
-
-
-from typing import Any, Dict, List
 from github.Commit import Commit
 from github.File import File
-from github.GithubObject import CompletableGithubObject
+
+
 class Comparison(github.GithubObject.CompletableGithubObject):
     """
     This class represents Comparisons

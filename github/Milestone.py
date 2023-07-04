@@ -28,20 +28,19 @@
 #                                                                              #
 ################################################################################
 
-from datetime import date
+from datetime import date, datetime
+from typing import Any, Dict, Optional, Union
 
 import github.GithubObject
 import github.Label
 import github.NamedUser
 import github.PaginatedList
-
-
-from datetime import date, datetime
-from typing import Any, Dict, Optional, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.Label import Label
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
+
+
 class Milestone(github.GithubObject.CompletableGithubObject):
     """
     This class represents Milestones. The reference can be found here https://docs.github.com/en/rest/reference/issues#milestones
@@ -168,7 +167,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         title: str,
         state: Union[_NotSetType, str] = github.GithubObject.NotSet,
         description: Union[_NotSetType, str] = github.GithubObject.NotSet,
-        due_on: Union[date, _NotSetType] = github.GithubObject.NotSet
+        due_on: Union[date, _NotSetType] = github.GithubObject.NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_

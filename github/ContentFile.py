@@ -30,15 +30,14 @@
 ################################################################################
 
 import base64
+from typing import Any, Dict, List, Optional
 
 import github.GithubObject
 import github.Repository
-
-
-from typing import Any, Dict, List, Optional
-from github.GithubObject import CompletableGithubObject
 from github.License import License
 from github.Repository import Repository
+
+
 class ContentFile(github.GithubObject.CompletableGithubObject):
     """
     This class represents ContentFiles. The reference can be found here https://docs.github.com/en/rest/reference/repos#contents

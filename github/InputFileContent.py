@@ -26,17 +26,22 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Dict, Union
+
+import github.GithubObject
 from github.GithubObject import _NotSetType
+
+
 class InputFileContent:
     """
     This class represents InputFileContents
     """
 
-    def __init__(self, content: str, new_name: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
+    def __init__(
+        self,
+        content: str,
+        new_name: Union[str, _NotSetType] = github.GithubObject.NotSet,
+    ) -> None:
         """
         :param content: string
         :param new_name: string

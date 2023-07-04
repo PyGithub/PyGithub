@@ -22,13 +22,13 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
+
+import github.GithubObject
 from github.NamedUser import NamedUser
 from github.Repository import Repository
+
+
 class Invitation(github.GithubObject.CompletableGithubObject):
     """
     This class represents repository invitations. The reference can be found here https://docs.github.com/en/rest/reference/repos#invitations

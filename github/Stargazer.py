@@ -24,14 +24,15 @@
 #                                                                              #
 ################################################################################
 
-import github
-
-
 from datetime import datetime
 from typing import Any, Dict
+
+import github
 from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
-class Stargazer(github.GithubObject.NonCompletableGithubObject):
+
+
+class Stargazer(NonCompletableGithubObject):
     """
     This class represents Stargazers. The reference can be found here https://docs.github.com/en/rest/reference/activity#starring
     """

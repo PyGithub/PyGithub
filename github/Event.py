@@ -28,18 +28,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 import github.Repository
-
-
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Organization import Organization
 from github.Repository import Repository
+
+
 class Event(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events

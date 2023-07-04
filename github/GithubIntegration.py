@@ -1,7 +1,9 @@
 import warnings
+from typing import Dict, Optional, Union
 
 import deprecated
 import urllib3
+from urllib3 import Retry
 
 import github
 from github import Consts
@@ -14,12 +16,11 @@ from github.PaginatedList import PaginatedList
 from github.Requester import Requester
 
 
-from typing import Union, Optional, Dict
-from urllib3 import Retry
 class GithubIntegration:
     """
     Main class to obtain tokens for a GitHub integration.
     """
+
     # keep non-deprecated arguments in-sync with Requester
     # v3: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
     # v3: move auth to the front of arguments
@@ -30,6 +31,7 @@ class GithubIntegration:
     base_url: str
     __requester: Requester
     auth: AppAuth
+
     def __init__(
         self,
         integration_id: Optional[Union[int, str]] = None,
@@ -42,12 +44,14 @@ class GithubIntegration:
         verify: Union[bool, str] = True,
         retry: Optional[Union[int, Retry]] = None,
         pool_size: Optional[int] = None,
-        seconds_between_requests: Optional[float] = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_requests: Optional[
+            float
+        ] = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: Optional[float] = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
-        auth: Optional[AppAuth] = None
+        auth: Optional[AppAuth] = None,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -177,7 +181,9 @@ class GithubIntegration:
         """
         return self.auth.create_jwt(expiration)
 
-    def get_access_token(self, installation_id: int, permissions: Optional[Dict[str, str]] = None) -> InstallationAuthorization:
+    def get_access_token(
+        self, installation_id: int, permissions: Optional[Dict[str, str]] = None
+    ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
         :param installation_id: int

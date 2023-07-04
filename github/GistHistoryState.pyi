@@ -4,8 +4,9 @@ from typing import Any, Dict, List, Optional
 from github.CommitStats import CommitStats
 from github.Gist import Gist
 from github.GistFile import GistFile
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
+
+from github.GithubObject import CompletableGithubObject
 
 class GistHistoryState(CompletableGithubObject):
     def _initAttributes(self) -> None: ...

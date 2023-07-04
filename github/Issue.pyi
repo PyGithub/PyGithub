@@ -1,18 +1,19 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.IssueComment import IssueComment
 from github.IssueEvent import IssueEvent
 from github.IssuePullRequest import IssuePullRequest
 from github.Label import Label
 from github.Milestone import Milestone
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Reaction import Reaction
 from github.Repository import Repository
 from github.TimelineEvent import TimelineEvent
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 class Issue(CompletableGithubObject):
     def __repr__(self) -> str: ...

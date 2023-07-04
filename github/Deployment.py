@@ -22,17 +22,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, Union
+
 import github.Consts
 import github.DeploymentStatus
 import github.GithubObject
-
-
-from datetime import datetime
-from typing import Any, Dict, Union
 from github.DeploymentStatus import DeploymentStatus
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
+
+
 class Deployment(github.GithubObject.CompletableGithubObject):
     """
     This class represents Deployments. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
@@ -205,7 +206,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         description: Union[str, _NotSetType] = github.GithubObject.NotSet,
         environment: Union[str, _NotSetType] = github.GithubObject.NotSet,
         environment_url: Union[str, _NotSetType] = github.GithubObject.NotSet,
-        auto_inactive: Union[bool, _NotSetType] = github.GithubObject.NotSet
+        auto_inactive: Union[bool, _NotSetType] = github.GithubObject.NotSet,
     ) -> DeploymentStatus:
         """
         :calls: `POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses <https://docs.github.com/en/rest/reference/repos#create-a-deployment-status>`_

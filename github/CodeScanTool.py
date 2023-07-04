@@ -20,12 +20,11 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from typing import Any, Dict
+
 import github.GithubObject
-import github.GithubObject
+
+
 class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents code scanning tools.

@@ -31,23 +31,25 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
-
-
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from github.Gist import Gist
 from github.GistComment import GistComment
 from github.GistFile import GistFile
 from github.GistHistoryState import GistHistoryState
-from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GithubObject import _NotSetType
 from github.InputFileContent import InputFileContent
 from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
+
+
 class Gist(github.GithubObject.CompletableGithubObject):
     """
     This class represents Gists. The reference can be found here https://docs.github.com/en/rest/reference/gists
@@ -241,7 +243,11 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
-        self, description: Union[_NotSetType, str] = github.GithubObject.NotSet, files: Union[_NotSetType, Dict[str, Optional[InputFileContent]]] = github.GithubObject.NotSet
+        self,
+        description: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        files: Union[
+            _NotSetType, Dict[str, Optional[InputFileContent]]
+        ] = github.GithubObject.NotSet,
     ) -> None:
         """
         :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_

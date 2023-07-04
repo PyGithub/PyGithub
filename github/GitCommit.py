@@ -28,15 +28,16 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitTree
-
-
-from typing import Any, Dict, List
 from github.GitAuthor import GitAuthor
-from github.GithubObject import CompletableGithubObject
+from github.GitCommit import GitCommit
 from github.GitTree import GitTree
+
+
 class GitCommit(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitCommits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits

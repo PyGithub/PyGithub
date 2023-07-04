@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Any, Dict, Union
 
-from github.Branch import Branch
 from github.Commit import Commit
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.Tag import Tag
+
+from github.Branch import Branch
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 from github.WorkflowRun import WorkflowRun
 
 class Workflow(CompletableGithubObject):

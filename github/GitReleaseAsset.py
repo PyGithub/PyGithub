@@ -23,13 +23,14 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-
-
 from datetime import datetime
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject
+from typing import Any, Dict
+
+import github.GithubObject
+from github.GitReleaseAsset import GitReleaseAsset
 from github.NamedUser import NamedUser
+
+
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitReleaseAssets. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases

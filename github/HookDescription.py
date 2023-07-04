@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.GithubObject
 
 
-from typing import Any, Dict, List
-from github.GithubObject import NonCompletableGithubObject
 class HookDescription(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents HookDescriptions

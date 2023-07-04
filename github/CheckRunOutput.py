@@ -20,11 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
     """This class represents the output of check run."""
 

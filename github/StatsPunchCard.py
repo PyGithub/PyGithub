@@ -24,12 +24,12 @@
 #                                                                              #
 ################################################################################
 
+from typing import List
+
 import github.GithubObject
 import github.NamedUser  # TODO remove unused
 
 
-from typing import List
-from github.GithubObject import NonCompletableGithubObject
 class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsPunchCards. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day

@@ -27,19 +27,20 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 import github.CommitStats
 import github.Gist
 import github.GithubObject
 import github.NamedUser
-
-
-from datetime import datetime
-from typing import Any, Dict, List, Optional
 from github.CommitStats import CommitStats
 from github.Gist import Gist
 from github.GistFile import GistFile
-from github.GithubObject import CompletableGithubObject
+from github.GistHistoryState import GistHistoryState
 from github.NamedUser import NamedUser
+
+
 class GistHistoryState(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistHistoryStates

@@ -1,8 +1,9 @@
 from typing import Any, Dict
 
-from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Repository import Repository
+
+from github.GithubObject import CompletableGithubObject
 
 class Invitation(CompletableGithubObject):
     def __repr__(self) -> str: ...

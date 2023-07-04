@@ -1,9 +1,10 @@
 from typing import Any, Dict
 
 import github
+from github.Repository import Repository
+
 from github.GithubObject import NonCompletableGithubObject
 from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 
 class Installation(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...

@@ -1,7 +1,8 @@
 from typing import Any, Dict, List, Union
 
-from github.GithubObject import NonCompletableGithubObject
 from github.Repository import Repository
+
+from github.GithubObject import NonCompletableGithubObject
 
 class RepositoryPreferences(NonCompletableGithubObject):
     def _initAttributes(self) -> None: ...

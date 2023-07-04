@@ -20,11 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents check run annotations.

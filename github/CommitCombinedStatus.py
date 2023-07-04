@@ -24,15 +24,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List
+
 import github.CommitStatus
 import github.GithubObject
 import github.Repository
-
-
-from typing import Any, Dict, List
 from github.CommitStatus import CommitStatus
-from github.GithubObject import NonCompletableGithubObject
 from github.Repository import Repository
+
+
 class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitCombinedStatuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses

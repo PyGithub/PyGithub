@@ -3,19 +3,20 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from github.Commit import Commit
 from github.File import File
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.IssueEvent import IssueEvent
 from github.Label import Label
 from github.Milestone import Milestone
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.PullRequestComment import PullRequestComment
 from github.PullRequestMergeStatus import PullRequestMergeStatus
 from github.PullRequestPart import PullRequestPart
 from github.PullRequestReview import PullRequestReview
 from github.Team import Team
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 class PullRequest(CompletableGithubObject):
     def _initAttributes(self) -> None: ...

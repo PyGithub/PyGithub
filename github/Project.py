@@ -20,18 +20,18 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any, Dict
+
 import github.GithubObject
 import github.ProjectColumn
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.ProjectColumn import ProjectColumn
 
 from . import Consts
 
 
-from datetime import datetime
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
-from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
-from github.ProjectColumn import ProjectColumn
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here https://docs.github.com/en/rest/reference/projects

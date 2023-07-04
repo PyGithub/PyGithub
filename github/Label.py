@@ -30,14 +30,14 @@
 ################################################################################
 
 import urllib.parse
+from typing import Any, Dict, Optional, Union
 
 import github.GithubObject
+from github.GithubObject import _NotSetType
 
 from . import Consts
 
 
-from typing import Any, Dict, Optional, Union
-from github.GithubObject import CompletableGithubObject, _NotSetType
 class Label(github.GithubObject.CompletableGithubObject):
     """
     This class represents Labels. The reference can be found here https://docs.github.com/en/rest/reference/issues#labels
@@ -85,7 +85,12 @@ class Label(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, name: str, color: str, description: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
+    def edit(
+        self,
+        name: str,
+        color: str,
+        description: Union[str, _NotSetType] = github.GithubObject.NotSet,
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string

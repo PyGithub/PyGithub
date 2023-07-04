@@ -24,12 +24,12 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import List
+
 import github.GithubObject
 
 
-from datetime import datetime
-from typing import List
-from github.GithubObject import NonCompletableGithubObject
 class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents statistics of StatsCodeFrequencies. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity

@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 
 
-from typing import Any, Dict, Optional
-from github.GithubObject import NonCompletableGithubObject
 class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitTreeElements

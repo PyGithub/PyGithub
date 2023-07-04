@@ -30,11 +30,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import NonCompletableGithubObject
 class File(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Files

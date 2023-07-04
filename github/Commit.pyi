@@ -1,17 +1,18 @@
 from typing import Any, Dict, List, Union
 
-from github.CheckRun import CheckRun
-from github.CheckSuite import CheckSuite
 from github.CommitCombinedStatus import CommitCombinedStatus
 from github.CommitComment import CommitComment
 from github.CommitStats import CommitStats
 from github.CommitStatus import CommitStatus
 from github.File import File
 from github.GitCommit import GitCommit
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.NamedUser import NamedUser
-from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
+
+from github.CheckRun import CheckRun
+from github.CheckSuite import CheckSuite
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 class Commit(CompletableGithubObject):
     def __repr__(self) -> str: ...

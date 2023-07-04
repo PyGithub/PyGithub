@@ -20,11 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, List, Union
+
 import github.GithubObject
 
 
-from typing import Any, Dict, List, Union
-from github.GithubObject import NonCompletableGithubObject
 class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Self-hosted GitHub Actions Runners. The reference can be found at

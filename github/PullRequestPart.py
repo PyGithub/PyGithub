@@ -28,15 +28,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict, Optional
+
 import github.GithubObject
 import github.NamedUser
 import github.Repository
-
-
-from typing import Any, Dict, Optional
-from github.GithubObject import NonCompletableGithubObject
 from github.NamedUser import NamedUser
 from github.Repository import Repository
+
+
 class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents PullRequestParts

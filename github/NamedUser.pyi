@@ -3,15 +3,16 @@ from typing import Any, Dict, Optional, Union
 
 from github.Event import Event
 from github.Gist import Gist
-from github.GithubObject import CompletableGithubObject, _NotSetType
 from github.Membership import Membership
 from github.Organization import Organization
-from github.PaginatedList import PaginatedList
 from github.Permissions import Permissions
 from github.Plan import Plan
 from github.Project import Project
 from github.Repository import Repository
 from github.UserKey import UserKey
+
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
 
 class NamedUser(CompletableGithubObject):
     def __eq__(self, other: Any) -> bool: ...

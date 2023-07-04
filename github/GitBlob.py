@@ -28,11 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
-from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject
 class GitBlob(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitBlobs. The reference can be found here https://docs.github.com/en/rest/reference/git#blobs
