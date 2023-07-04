@@ -29,7 +29,7 @@ import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
-from github.GithubObject import Attribute, _NotSetType
+from github.GithubObject import Attribute, Opt, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -75,7 +75,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
-        if isinstance(self._user_push_restrictions, _NotSetType):
+        if is_undefined(self._user_push_restrictions):
             return None
         return PaginatedList(
             github.NamedUser.NamedUser,
