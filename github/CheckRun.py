@@ -20,17 +20,33 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
 import github.GithubApp
 import github.GithubObject
-import github.PaginatedList
 import github.PullRequest
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    is_defined,
+    is_undefined,
+)
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.CheckRunAnnotation import CheckRunAnnotation
+    from github.CheckRunOutput import CheckRunOutput
+    from github.GithubApp import GithubApp
+    from github.PullRequest import PullRequest
 
 
-class CheckRun(github.GithubObject.CompletableGithubObject):
+class CheckRun(CompletableGithubObject):
     """
     This class represents check runs.
     The reference can be found here https://docs.github.com/en/rest/reference/checks#check-runs
@@ -42,139 +58,90 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def app(self):
-        """
-        :type: :class:`github.GithubApp.GithubApp`
-        """
+    def app(self) -> GithubApp:
         self._completeIfNotSet(self._app)
         return self._app.value
 
     @property
-    def check_suite_id(self):
-        """
-        :type: integer
-        """
+    def check_suite_id(self) -> int:
         self._completeIfNotSet(self._check_suite_id)
         return self._check_suite_id.value
 
     @property
-    def completed_at(self):
-        """
-        :type: datetime
-        """
+    def completed_at(self) -> datetime | None:
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
     @property
-    def conclusion(self):
-        """
-        :type: string
-        """
+    def conclusion(self) -> str:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
     @property
-    def details_url(self):
-        """
-        :type: string
-        """
+    def details_url(self) -> str:
         self._completeIfNotSet(self._details_url)
         return self._details_url.value
 
     @property
-    def external_id(self):
-        """
-        :type: string
-        """
+    def external_id(self) -> str:
         self._completeIfNotSet(self._external_id)
         return self._external_id.value
 
     @property
-    def head_sha(self):
-        """
-        :type: string
-        """
+    def head_sha(self) -> str:
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def node_id(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
     @property
-    def output(self):
-        """
-        :type: :class:`github.CheckRunOutput.CheckRunOutput`
-        """
+    def output(self) -> CheckRunOutput:
         self._completeIfNotSet(self._output)
         return self._output.value
 
     @property
-    def pull_requests(self):
-        """
-        :type: list of :class:`github.PullRequest.PullRequest`
-        """
+    def pull_requests(self) -> list[PullRequest]:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
     @property
-    def started_at(self):
-        """
-        :type: datetime
-        """
+    def started_at(self) -> datetime:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_annotations(self):
+    def get_annotations(self) -> PaginatedList[CheckRunAnnotation]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRunAnnotation.CheckRunAnnotation`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.CheckRunAnnotation.CheckRunAnnotation,
             self._requester,
             f"{self.url}/annotations",
@@ -209,53 +176,43 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         :param actions: list of dict
         :rtype: None
         """
-        assert name is github.GithubObject.NotSet or isinstance(name, str), name
-        assert head_sha is github.GithubObject.NotSet or isinstance(
-            head_sha, str
-        ), head_sha
-        assert details_url is github.GithubObject.NotSet or isinstance(
-            details_url, str
-        ), details_url
-        assert external_id is github.GithubObject.NotSet or isinstance(
-            external_id, str
-        ), external_id
-        assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert started_at is github.GithubObject.NotSet or isinstance(
-            started_at, datetime
-        ), started_at
-        assert conclusion is github.GithubObject.NotSet or isinstance(
-            conclusion, str
-        ), conclusion
-        assert completed_at is github.GithubObject.NotSet or isinstance(
+        assert is_undefined(name) or isinstance(name, str), name
+        assert is_undefined(head_sha) or isinstance(head_sha, str), head_sha
+        assert is_undefined(details_url) or isinstance(details_url, str), details_url
+        assert is_undefined(external_id) or isinstance(external_id, str), external_id
+        assert is_undefined(status) or isinstance(status, str), status
+        assert is_undefined(started_at) or isinstance(started_at, datetime), started_at
+        assert is_undefined(conclusion) or isinstance(conclusion, str), conclusion
+        assert is_undefined(completed_at) or isinstance(
             completed_at, datetime
         ), completed_at
-        assert output is github.GithubObject.NotSet or isinstance(output, dict), output
-        assert actions is github.GithubObject.NotSet or all(
+        assert is_undefined(output) or isinstance(output, dict), output
+        assert is_undefined(actions) or all(
             isinstance(element, dict) for element in actions
         ), actions
 
         post_parameters = dict()
-        if name is not github.GithubObject.NotSet:
+        if is_defined(name):
             post_parameters["name"] = name
-        if head_sha is not github.GithubObject.NotSet:
+        if is_defined(head_sha):
             post_parameters["head_sha"] = head_sha
-        if details_url is not github.GithubObject.NotSet:
+        if is_defined(details_url):
             post_parameters["details_url"] = details_url
-        if external_id is not github.GithubObject.NotSet:
+        if is_defined(external_id):
             post_parameters["external_id"] = external_id
-        if status is not github.GithubObject.NotSet:
+        if is_defined(status):
             post_parameters["status"] = status
-        if started_at is not github.GithubObject.NotSet:
+        if is_defined(started_at):
             post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
-        if completed_at is not github.GithubObject.NotSet:
+        if is_defined(completed_at):
             post_parameters["completed_at"] = completed_at.strftime(
                 "%Y-%m-%dT%H:%M:%SZ"
             )
-        if conclusion is not github.GithubObject.NotSet:
+        if is_defined(conclusion):
             post_parameters["conclusion"] = conclusion
-        if output is not github.GithubObject.NotSet:
+        if is_defined(output):
             post_parameters["output"] = output
-        if actions is not github.GithubObject.NotSet:
+        if is_defined(actions):
             post_parameters["actions"] = actions
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -263,25 +220,25 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
-        self._app = github.GithubObject.NotSet
-        self._check_suite_id = github.GithubObject.NotSet
-        self._completed_at = github.GithubObject.NotSet
-        self._conclusion = github.GithubObject.NotSet
-        self._details_url = github.GithubObject.NotSet
-        self._external_id = github.GithubObject.NotSet
-        self._head_sha = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._output = github.GithubObject.NotSet
-        self._pull_requests = github.GithubObject.NotSet
-        self._started_at = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._app: Attribute[GithubApp] = NotSet
+        self._check_suite_id: Attribute[int] = NotSet
+        self._completed_at: Attribute[datetime | None] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._details_url: Attribute[str] = NotSet
+        self._external_id: Attribute[str] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._output: Attribute[github.CheckRunOutput.CheckRunOutput] = NotSet
+        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._started_at: Attribute[datetime] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.GithubApp.GithubApp, attributes["app"]
