@@ -20,11 +20,10 @@
 #                                                                              #
 ################################################################################
 
-import github.EnvironmentProtectionRuleReviewer
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithubObject):
+class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     """
     This class represents a deployment branch policy for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
@@ -41,8 +40,8 @@ class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithub
         return self._custom_branch_policies.value
 
     def _initAttributes(self):
-        self._protected_branches = github.GithubObject.NotSet
-        self._custom_branch_policies = github.GithubObject.NotSet
+        self._protected_branches: Attribute[bool] = NotSet
+        self._custom_branch_policies: Attribute[bool] = NotSet
 
     def _useAttributes(self, attributes):
         if "protected_branches" in attributes:  # pragma no branch

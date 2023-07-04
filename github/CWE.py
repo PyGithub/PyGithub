@@ -20,10 +20,10 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class CWE(github.GithubObject.CompletableGithubObject):
+class CWE(CompletableGithubObject):
     """
     This class represents a CWE.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -45,8 +45,8 @@ class CWE(github.GithubObject.CompletableGithubObject):
 
     # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._cwe_id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
+        self._cwe_id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     # noinspection PyPep8Naming
     def _useAttributes(self, attributes):

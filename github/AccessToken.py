@@ -23,12 +23,10 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-import github.GithubObject
-
-from .GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class AccessToken(github.GithubObject.NonCompletableGithubObject):
+class AccessToken(NonCompletableGithubObject):
     """
     This class represents access tokens.
     """
@@ -125,12 +123,12 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         return None
 
     def _initAttributes(self):
-        self._token = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._scope = github.GithubObject.NotSet
-        self._expires_in = github.GithubObject.NotSet
-        self._refresh_token = github.GithubObject.NotSet
-        self._refresh_expires_in = github.GithubObject.NotSet
+        self._token = NotSet
+        self._type = NotSet
+        self._scope = NotSet
+        self._expires_in = NotSet
+        self._refresh_token = NotSet
+        self._refresh_expires_in = NotSet
 
     def _useAttributes(self, attributes):
         self._created = datetime.now(timezone.utc)
