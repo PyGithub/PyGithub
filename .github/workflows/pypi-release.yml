@@ -38,15 +38,8 @@ jobs:
         with:
           name: package
           path: dist
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: pip install -U twine
       - name: Publish 📦 to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: twine upload dist/*
+        uses: pypa/gh-action-pypi-publish@v1.8.7
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
