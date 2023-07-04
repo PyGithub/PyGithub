@@ -51,8 +51,8 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     _required_status_checks: Attribute[RequiredStatusChecks]
     _enforce_admins: Attribute[bool]
     _required_pull_request_reviews: Attribute[RequiredPullRequestReviews]
-    _user_push_restrictions: str | _NotSetType
-    _team_push_restrictions: str | _NotSetType
+    _user_push_restrictions: Opt[str]
+    _team_push_restrictions: Opt[str]
 
     @property
     def url(self) -> str:
