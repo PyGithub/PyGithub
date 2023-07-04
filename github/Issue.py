@@ -54,7 +54,7 @@ import github.IssuePullRequest
 import github.Label
 import github.Milestone
 import github.NamedUser
-import github.PaginatedList
+from github.PaginatedList import PaginatedList
 import github.PullRequest
 import github.Reaction
 import github.Repository
@@ -75,7 +75,6 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
-    from github.PaginatedList import PaginatedList
     from github.PullRequest import PullRequest
     from github.Reaction import Reaction
     from github.Repository import Repository
@@ -201,7 +200,7 @@ class Issue(CompletableGithubObject):
     @property
     def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
-        if isinstance(self._repository, _NotSetType):
+        if is_undefined(self._repository):
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:-2])
             self._repository = github.GithubObject._ValuedAttribute(
@@ -345,7 +344,7 @@ class Issue(CompletableGithubObject):
         assert assignee is None or isinstance(
             assignee, (github.NamedUser.NamedUser, str, _NotSetType)
         ), assignee
-        assert isinstance(assignees, _NotSetType) or all(
+        assert is_undefined(assignees) or all(
             isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees
@@ -353,7 +352,7 @@ class Issue(CompletableGithubObject):
         assert milestone is None or isinstance(
             milestone, (github.Milestone.Milestone, _NotSetType)
         ), milestone
-        assert isinstance(labels, _NotSetType) or all(
+        assert is_undefined(labels) or all(
             isinstance(element, str) for element in labels
         ), labels
 
@@ -373,7 +372,7 @@ class Issue(CompletableGithubObject):
             }
         )
 
-        if not isinstance(assignees, _NotSetType):
+        if is_defined(assignees):
             post_parameters["assignees"] = [
                 element._identity
                 if isinstance(element, github.NamedUser.NamedUser)
@@ -426,11 +425,11 @@ class Issue(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         url_parameters = {}
-        if not isinstance(since, _NotSetType):
+        if is_defined(since):
             assert isinstance(since, datetime), since
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
             f"{self.url}/comments",
@@ -441,7 +440,7 @@ class Issue(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.IssueEvent.IssueEvent,
             self._requester,
             f"{self.url}/events",
@@ -453,7 +452,7 @@ class Issue(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Label.Label, self._requester, f"{self.url}/labels", None
         )
 
@@ -510,7 +509,7 @@ class Issue(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Reaction.Reaction,
             self._requester,
             f"{self.url}/reactions",
@@ -550,7 +549,7 @@ class Issue(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/timeline <https://docs.github.com/en/rest/reference/issues#list-timeline-events-for-an-issue>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.TimelineEvent.TimelineEvent,
             self._requester,
             f"{self.url}/timeline",
@@ -562,7 +561,7 @@ class Issue(CompletableGithubObject):
     def _identity(self) -> int:
         return self.number
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._active_lock_reason = NotSet
         self._assignee = NotSet
         self._assignees = NotSet
@@ -589,7 +588,7 @@ class Issue(CompletableGithubObject):
         self._url = NotSet
         self._user = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(
                 attributes["active_lock_reason"]
