@@ -29,7 +29,7 @@ import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
-from github.GithubObject import Attribute, Opt, is_undefined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -75,32 +75,29 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
-        if is_undefined(self._user_push_restrictions):
-            return None
-        return PaginatedList(
-            github.NamedUser.NamedUser,
-            self._requester,
-            self._user_push_restrictions,
-            None,
-        )
+        if is_defined(self._user_push_restrictions):
+            return PaginatedList(
+                github.NamedUser.NamedUser,
+                self._requester,
+                self._user_push_restrictions,
+                None,
+            )
+        return None
 
     def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
-        """
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
-        """
-        if is_undefined(self._team_push_restrictions):
-            return None
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self._team_push_restrictions, None
-        )
+        if is_defined(self._team_push_restrictions):
+            return github.PaginatedList.PaginatedList(
+                github.Team.Team, self._requester, self._team_push_restrictions, None
+            )
+        return None
 
     def _initAttributes(self) -> None:
-        self._url = github.GithubObject.NotSet
-        self._required_status_checks = github.GithubObject.NotSet
-        self._enforce_admins = github.GithubObject.NotSet
-        self._required_pull_request_reviews = github.GithubObject.NotSet
-        self._user_push_restrictions = github.GithubObject.NotSet
-        self._team_push_restrictions = github.GithubObject.NotSet
+        self._url = NotSet
+        self._required_status_checks = NotSet
+        self._enforce_admins = NotSet
+        self._required_pull_request_reviews = NotSet
+        self._user_push_restrictions = NotSet
+        self._team_push_restrictions = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
