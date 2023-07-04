@@ -25,7 +25,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github
+import github.CheckRun
+import github.GitCommit
+import github.GithubApp
+import github.PullRequest
+import github.Repository
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -193,9 +197,9 @@ class CheckSuite(CompletableGithubObject):
 
     def get_check_runs(
         self,
-        check_name: Opt[str] = github.GithubObject.NotSet,
-        status: Opt[str] = github.GithubObject.NotSet,
-        filter: Opt[str] = github.GithubObject.NotSet,
+        check_name: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
+        filter: Opt[str] = NotSet,
     ) -> PaginatedList[CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-in-a-check-suite>`_
