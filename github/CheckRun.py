@@ -34,8 +34,10 @@ from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
     NotSet,
+    Opt,
     is_defined,
-    is_undefined,
+    is_optional,
+    is_optional_list,
 )
 from github.PaginatedList import PaginatedList
 
@@ -151,45 +153,30 @@ class CheckRun(CompletableGithubObject):
 
     def edit(
         self,
-        name=github.GithubObject.NotSet,
-        head_sha=github.GithubObject.NotSet,
-        details_url=github.GithubObject.NotSet,
-        external_id=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        started_at=github.GithubObject.NotSet,
-        conclusion=github.GithubObject.NotSet,
-        completed_at=github.GithubObject.NotSet,
-        output=github.GithubObject.NotSet,
-        actions=github.GithubObject.NotSet,
-    ):
+        name: Opt[str] = NotSet,
+        head_sha: Opt[str] = NotSet,
+        details_url: Opt[str] = NotSet,
+        external_id: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
+        started_at: Opt[datetime] = NotSet,
+        conclusion: Opt[str] = NotSet,
+        completed_at: Opt[datetime] = NotSet,
+        output: Opt[dict] = NotSet,
+        actions: Opt[list[dict]] = NotSet,
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/check-runs/{check_run_id} <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`_
-        :param name: string
-        :param head_sha: string
-        :param details_url: string
-        :param external_id: string
-        :param status: string
-        :param started_at: datetime
-        :param conclusion: string
-        :param completed_at: datetime
-        :param output: dict
-        :param actions: list of dict
-        :rtype: None
         """
-        assert is_undefined(name) or isinstance(name, str), name
-        assert is_undefined(head_sha) or isinstance(head_sha, str), head_sha
-        assert is_undefined(details_url) or isinstance(details_url, str), details_url
-        assert is_undefined(external_id) or isinstance(external_id, str), external_id
-        assert is_undefined(status) or isinstance(status, str), status
-        assert is_undefined(started_at) or isinstance(started_at, datetime), started_at
-        assert is_undefined(conclusion) or isinstance(conclusion, str), conclusion
-        assert is_undefined(completed_at) or isinstance(
-            completed_at, datetime
-        ), completed_at
-        assert is_undefined(output) or isinstance(output, dict), output
-        assert is_undefined(actions) or all(
-            isinstance(element, dict) for element in actions
-        ), actions
+        assert is_optional(name, str), name
+        assert is_optional(head_sha, str), head_sha
+        assert is_optional(details_url, str), details_url
+        assert is_optional(external_id, str), external_id
+        assert is_optional(status, str), status
+        assert is_optional(started_at, datetime), started_at
+        assert is_optional(conclusion, str), conclusion
+        assert is_optional(completed_at, datetime), completed_at
+        assert is_optional(output, dict), output
+        assert is_optional_list(actions, dict), actions
 
         post_parameters = dict()
         if is_defined(name):
