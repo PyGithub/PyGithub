@@ -19,12 +19,13 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import sys
 import typing
 
-import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if sys.version_info >= (3, 8):
     # TypedDict is only available in Python 3.8 and later
@@ -33,7 +34,7 @@ if sys.version_info >= (3, 8):
         A simple credit for a security advisory.
         """
 
-        login: typing.Union[str, "github.NamedUser.NamedUser"]
+        login: str | github.NamedUser.NamedUser
         type: str
 
 else:
@@ -42,7 +43,7 @@ else:
 Credit = typing.Union[SimpleCredit, "RepositoryAdvisoryCredit"]
 
 
-class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
+class RepositoryAdvisoryCredit(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -64,8 +65,8 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
 
     # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._login = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
+        self._login: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
 
     # noinspection PyPep8Naming
     def _useAttributes(self, attributes):

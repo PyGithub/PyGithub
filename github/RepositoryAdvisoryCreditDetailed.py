@@ -19,12 +19,13 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class RepositoryAdvisoryCreditDetailed(github.GithubObject.NonCompletableGithubObject):
+class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -46,7 +47,7 @@ class RepositoryAdvisoryCreditDetailed(github.GithubObject.NonCompletableGithubO
 
     # noinspection PyPep8Naming
     @property
-    def user(self) -> "github.NamedUser.NamedUser":
+    def user(self) -> github.NamedUser.NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -54,9 +55,9 @@ class RepositoryAdvisoryCreditDetailed(github.GithubObject.NonCompletableGithubO
 
     # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._state = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
+        self._state: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     # noinspection PyPep8Naming
     def _useAttributes(self, attributes):

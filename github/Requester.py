@@ -947,7 +947,7 @@ class WithRequester(Generic[T]):
     __requester: Requester
 
     def __init__(self):
-        self.__requester: Optional[Requester] = None
+        self.__requester: Optional[Requester] = None  # type: ignore
 
     @property
     def requester(self) -> Requester:

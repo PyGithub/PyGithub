@@ -27,8 +27,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
 from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 import github.AuthorizationApplication
 import github.GithubObject
@@ -43,11 +45,11 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    _app: Attribute["AuthorizationApplication"]
+    _app: Attribute[AuthorizationApplication]
     _created_at: Attribute[datetime]
     _id: Attribute[int]
-    _note: Attribute[Optional[str]]
-    _note_url: Attribute[Optional[str]]
+    _note: Attribute[str] | Attribute[None]
+    _note_url: Attribute[str] | Attribute[None]
     _scopes: Attribute[str]
     _token: Attribute[str]
     _updated_at: Attribute[datetime]
@@ -57,7 +59,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"scopes": self._scopes.value})
 
     @property
-    def app(self) -> "AuthorizationApplication":
+    def app(self) -> AuthorizationApplication:
         self._completeIfNotSet(self._app)
         return self._app.value
 
@@ -75,12 +77,12 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def note(self) -> Optional[str]:
+    def note(self) -> str | None:
         self._completeIfNotSet(self._note)
         return self._note.value
 
     @property
-    def note_url(self) -> Optional[str]:
+    def note_url(self) -> str | None:
         self._completeIfNotSet(self._note_url)
         return self._note_url.value
 
@@ -112,9 +114,9 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        scopes: Opt[List[str]] = NotSet,
-        add_scopes: Opt[List[str]] = NotSet,
-        remove_scopes: Opt[List[str]] = NotSet,
+        scopes: Opt[list[str]] = NotSet,
+        add_scopes: Opt[list[str]] = NotSet,
+        remove_scopes: Opt[list[str]] = NotSet,
         note: Opt[str] = NotSet,
         note_url: Opt[str] = NotSet,
     ) -> None:
