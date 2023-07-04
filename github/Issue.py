@@ -91,8 +91,8 @@ class Issue(CompletableGithubObject):
     """
 
     _id: Attribute[int]
-    _active_lock_reason: Attribute[str | None]
-    _assignee: Attribute[NamedUser | None]
+    _active_lock_reason: Attribute[str] | Attribute[None]
+    _assignee: Attribute[NamedUser] | Attribute[None]
     _assignees: Attribute[list[NamedUser]]
     _body: Attribute[str]
     _closed_at: Attribute[datetime]
@@ -110,7 +110,7 @@ class Issue(CompletableGithubObject):
     _pull_request: Attribute[IssuePullRequest]
     _repository: Attribute[Repository]
     _state: Attribute[str]
-    _state_reason: Attribute[str | None]
+    _state_reason: Attribute[str] | Attribute[None]
     _title: Attribute[str]
     _updated_at: Attribute[datetime]
     _url: Attribute[str]
@@ -345,7 +345,7 @@ class Issue(CompletableGithubObject):
         assert assignee is None or isinstance(
             assignee, (github.NamedUser.NamedUser, str, _NotSetType)
         ), assignee
-        assert is_undefined(assignees) or all(
+        assert isinstance(assignees, _NotSetType) or all(
             isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees

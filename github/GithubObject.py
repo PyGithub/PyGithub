@@ -97,7 +97,7 @@ def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
     return not isinstance(v, _NotSetType)
 
 
-def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
+def is_undefined(v: Union[T, _NotSetType]) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
