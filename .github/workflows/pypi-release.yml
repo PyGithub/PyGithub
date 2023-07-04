@@ -24,4 +24,7 @@ jobs:
         run: twine check dist/*
       - name: Publish 📦 to PyPI
         if: startsWith(github.event.ref, 'refs/tags/')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: twine upload dist/*
