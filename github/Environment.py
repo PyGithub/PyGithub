@@ -25,10 +25,10 @@ from typing import List
 
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class Environment(github.GithubObject.CompletableGithubObject):
+class Environment(CompletableGithubObject):
     """
     This class represents Environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
@@ -86,15 +86,19 @@ class Environment(github.GithubObject.CompletableGithubObject):
         return self._deployment_branch_policy.value
 
     def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._protection_rules = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._deployment_branch_policy = github.GithubObject.NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._protection_rules: Attribute[
+            List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]
+        ] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._deployment_branch_policy: Attribute[
+            github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy
+        ] = NotSet
 
     def _useAttributes(self, attributes):
         if "created_at" in attributes:  # pragma no branch

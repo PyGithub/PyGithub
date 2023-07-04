@@ -316,7 +316,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
-        patch_parameters = {"credits": []}
+        patch_parameters: dict[str, Any] = {"credits": []}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -455,24 +455,26 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     # noinspection DuplicatedCode
     # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._author: Attribute[str] = NotSet
-        self._closed_at: Attribute[str] = NotSet
-        self._created_at: Attribute[str] = NotSet
-        self._credits: Attribute[str] = NotSet
-        self._credits_detailed: Attribute[str] = NotSet
+        self._author: Attribute[NamedUser] = NotSet
+        self._closed_at: Attribute[datetime] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._credits: Attribute[list[RepositoryAdvisoryCredit]] = NotSet
+        self._credits_detailed: Attribute[
+            list[RepositoryAdvisoryCreditDetailed]
+        ] = NotSet
         self._cve_id: Attribute[str] = NotSet
-        self._cwe_ids: Attribute[str] = NotSet
-        self._cwes: Attribute[str] = NotSet
+        self._cwe_ids: Attribute[list[str]] = NotSet
+        self._cwes: Attribute[list[CWE]] = NotSet
         self._description: Attribute[str] = NotSet
         self._ghsa_id: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._published_at: Attribute[str] = NotSet
+        self._published_at: Attribute[datetime] = NotSet
         self._severity: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._summary: Attribute[str] = NotSet
-        self._updated_at: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._vulnerabilities: Attribute[str] = NotSet
+        self._vulnerabilities: Attribute[list[RepositoryAdvisoryVulnerability]] = NotSet
         self._withdrawn_at: Attribute[datetime] = NotSet
 
     # noinspection PyPep8Naming
