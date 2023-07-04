@@ -288,9 +288,7 @@ class GithubObject:
     ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
-    def _makeListOfClassesAttribute(
-        self, klass: Any, value: Any
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeListOfClassesAttribute(self, klass: Any, value: Any) -> Attribute:
         if isinstance(value, list) and all(
             isinstance(element, dict) for element in value
         ):

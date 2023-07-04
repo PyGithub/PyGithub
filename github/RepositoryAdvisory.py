@@ -19,13 +19,14 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import typing
 from datetime import datetime
+from typing import TYPE_CHECKING, Any, Iterable
 
-import github.GithubObject
 import github.NamedUser
 from github.CWE import CWE
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 from github.RepositoryAdvisoryCredit import Credit, RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryCreditDetailed import RepositoryAdvisoryCreditDetailed
 from github.RepositoryAdvisoryVulnerability import (
@@ -34,8 +35,11 @@ from github.RepositoryAdvisoryVulnerability import (
 )
 from github.Requester import Requester
 
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
-class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
+
+class RepositoryAdvisory(NonCompletableGithubObject):
     """
     This class represents a RepositoryAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -47,7 +51,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
 
     @property
-    def author(self) -> "github.NamedUser.NamedUser":
+    def author(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -70,7 +74,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     @property
     def credits(
         self,
-    ) -> typing.List[RepositoryAdvisoryCredit]:
+    ) -> list[RepositoryAdvisoryCredit]:
         """
         :type: list of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
         """
@@ -79,7 +83,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     @property
     def credits_detailed(
         self,
-    ) -> typing.List[RepositoryAdvisoryCreditDetailed]:
+    ) -> list[RepositoryAdvisoryCreditDetailed]:
         """
         :type: list of :class:`github.RepositoryAdvisoryCreditDetailed.RepositoryAdvisoryCreditDetailed`
         """
@@ -93,14 +97,14 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         return self._cve_id.value
 
     @property
-    def cwe_ids(self) -> typing.List[str]:
+    def cwe_ids(self) -> list[str]:
         """
         :type: list of string
         """
         return self._cwe_ids.value
 
     @property
-    def cwes(self) -> typing.List[CWE]:
+    def cwes(self) -> list[CWE]:
         """
         :type: list of :class:`github.CWE.CWE`
         """
@@ -172,7 +176,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     @property
     def vulnerabilities(
         self,
-    ) -> typing.List[RepositoryAdvisoryVulnerability]:
+    ) -> list[RepositoryAdvisoryVulnerability]:
         """
         :type: list of :class:`github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability`
         """
@@ -188,10 +192,10 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     def add_vulnerability(
         self,
         ecosystem: str,
-        package_name: typing.Optional[str] = None,
-        vulnerable_version_range: typing.Optional[str] = None,
-        patched_versions: typing.Optional[str] = None,
-        vulnerable_functions: typing.Optional[typing.List[str]] = None,
+        package_name: str | None = None,
+        vulnerable_version_range: str | None = None,
+        patched_versions: str | None = None,
+        vulnerable_functions: list[str] | None = None,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
@@ -215,14 +219,12 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
             ]
         )
 
-    def add_vulnerabilities(
-        self, vulnerabilities: typing.Iterable[AdvisoryVulnerability]
-    ):
+    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
         """
-        assert isinstance(vulnerabilities, typing.Iterable), vulnerabilities
+        assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
             # noinspection PyProtectedMember
             github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
@@ -246,7 +248,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
 
     def offer_credit(
         self,
-        login_or_user: typing.Union[str, "github.NamedUser.NamedUser"],
+        login_or_user: str | github.NamedUser.NamedUser,
         credit_type: str,
     ):
         """
@@ -260,7 +262,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
 
     def offer_credits(
         self,
-        credited: typing.Iterable["Credit"],
+        credited: Iterable[Credit],
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
@@ -268,7 +270,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
         :param credited: iterable of dict with keys "login" and "type"
         """
-        assert isinstance(credited, typing.Iterable), credited
+        assert isinstance(credited, Iterable), credited
         for credit in credited:
             # noinspection PyProtectedMember
             RepositoryAdvisoryCredit._validate_credit(credit)
@@ -286,9 +288,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def revoke_credit(
-        self, login_or_user: typing.Union[str, "github.NamedUser.NamedUser"]
-    ):
+    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param login_or_user: string username or :class:`github.NamedUser.NamedUser`
@@ -326,23 +326,15 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
 
     def edit(
         self,
-        summary: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-        description: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-        severity_or_cvss_vector_string: github.GithubObject.Opt[
-            str
-        ] = github.GithubObject.NotSet,
-        cve_id: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-        vulnerabilities: github.GithubObject.Opt[
-            typing.Iterable[AdvisoryVulnerability]
-        ] = github.GithubObject.NotSet,
-        cwe_ids: github.GithubObject.Opt[
-            typing.Iterable[str]
-        ] = github.GithubObject.NotSet,
-        credits: github.GithubObject.Opt[
-            typing.Iterable[Credit]
-        ] = github.GithubObject.NotSet,
-        state: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-    ) -> "RepositoryAdvisory":
+        summary: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        severity_or_cvss_vector_string: Opt[str] = NotSet,
+        cve_id: Opt[str] = NotSet,
+        vulnerabilities: Opt[Iterable[AdvisoryVulnerability]] = NotSet,
+        cwe_ids: Opt[Iterable[str]] = NotSet,
+        credits: Opt[Iterable[Credit]] = NotSet,
+        state: Opt[str] = NotSet,
+    ) -> RepositoryAdvisory:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param summary: string
@@ -355,50 +347,45 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         :param state: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
-        assert summary is github.GithubObject.NotSet or isinstance(
-            summary, str
-        ), summary
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert (
-            severity_or_cvss_vector_string is github.GithubObject.NotSet
-            or isinstance(severity_or_cvss_vector_string, str)
-        ), (severity_or_cvss_vector_string)
-        assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str), cve_id
-        assert vulnerabilities is github.GithubObject.NotSet or isinstance(
-            vulnerabilities, typing.Iterable
+        assert summary is NotSet or isinstance(summary, str), summary
+        assert description is NotSet or isinstance(description, str), description
+        assert severity_or_cvss_vector_string is NotSet or isinstance(
+            severity_or_cvss_vector_string, str
+        ), severity_or_cvss_vector_string
+        assert cve_id is NotSet or isinstance(cve_id, str), cve_id
+        assert vulnerabilities is NotSet or isinstance(
+            vulnerabilities, Iterable
         ), vulnerabilities
-        if isinstance(vulnerabilities, typing.Iterable):
+        if isinstance(vulnerabilities, Iterable):
             for vulnerability in vulnerabilities:
                 # noinspection PyProtectedMember
                 github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
                     vulnerability
                 )
-        assert cwe_ids is github.GithubObject.NotSet or (
-            isinstance(cwe_ids, typing.Iterable)
+        assert cwe_ids is NotSet or (
+            isinstance(cwe_ids, Iterable)
             and all(isinstance(element, str) for element in cwe_ids)
         ), cwe_ids
-        if isinstance(credits, typing.Iterable):
+        if isinstance(credits, Iterable):
             for credit in credits:
                 # noinspection PyProtectedMember
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(
                     credit
                 )
-        assert state is github.GithubObject.NotSet or isinstance(state, str), state
-        patch_parameters: typing.Dict[str, typing.Any] = dict()
-        if summary is not github.GithubObject.NotSet:
+        assert state is NotSet or isinstance(state, str), state
+        patch_parameters: dict[str, Any] = {}
+        if summary is not NotSet:
             patch_parameters["summary"] = summary
-        if description is not github.GithubObject.NotSet:
+        if description is not NotSet:
             patch_parameters["description"] = description
         if isinstance(severity_or_cvss_vector_string, str):
             if severity_or_cvss_vector_string.startswith("CVSS:"):
                 patch_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
             else:
                 patch_parameters["severity"] = severity_or_cvss_vector_string
-        if cve_id is not github.GithubObject.NotSet:
+        if cve_id is not NotSet:
             patch_parameters["cve_id"] = cve_id
-        if isinstance(vulnerabilities, typing.Iterable):
+        if isinstance(vulnerabilities, Iterable):
             # noinspection PyProtectedMember
             patch_parameters["vulnerabilities"] = [
                 github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
@@ -406,9 +393,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
                 )
                 for vulnerability in vulnerabilities
             ]
-        if isinstance(cwe_ids, typing.Iterable):
+        if isinstance(cwe_ids, Iterable):
             patch_parameters["cwe_ids"] = list(cwe_ids)
-        if isinstance(credits, typing.Iterable):
+        if isinstance(credits, Iterable):
             # noinspection PyProtectedMember
             patch_parameters["credits"] = [
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(
@@ -416,7 +403,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
                 )
                 for credit in credits
             ]
-        if state is not github.GithubObject.NotSet:
+        if state is not NotSet:
             patch_parameters["state"] = state
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -468,25 +455,25 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     # noinspection DuplicatedCode
     # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._author = github.GithubObject.NotSet
-        self._closed_at = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._credits = github.GithubObject.NotSet
-        self._credits_detailed = github.GithubObject.NotSet
-        self._cve_id = github.GithubObject.NotSet
-        self._cwe_ids = github.GithubObject.NotSet
-        self._cwes = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._ghsa_id = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._published_at = github.GithubObject.NotSet
-        self._severity = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._summary = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._vulnerabilities = github.GithubObject.NotSet
-        self._withdrawn_at = github.GithubObject.NotSet
+        self._author: Attribute[str] = NotSet
+        self._closed_at: Attribute[str] = NotSet
+        self._created_at: Attribute[str] = NotSet
+        self._credits: Attribute[str] = NotSet
+        self._credits_detailed: Attribute[str] = NotSet
+        self._cve_id: Attribute[str] = NotSet
+        self._cwe_ids: Attribute[str] = NotSet
+        self._cwes: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._ghsa_id: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._published_at: Attribute[str] = NotSet
+        self._severity: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._summary: Attribute[str] = NotSet
+        self._updated_at: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._vulnerabilities: Attribute[str] = NotSet
+        self._withdrawn_at: Attribute[datetime] = NotSet
 
     # noinspection PyPep8Naming
     def _useAttributes(self, attributes):
