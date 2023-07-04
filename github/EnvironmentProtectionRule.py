@@ -19,14 +19,20 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import List
+from typing import TYPE_CHECKING
 
 import github.EnvironmentProtectionRuleReviewer
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.EnvironmentProtectionRuleReviewer import (
+        EnvironmentProtectionRuleReviewer,
+    )
 
 
-class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
+class EnvironmentProtectionRule(NonCompletableGithubObject):
     """
     This class represents a protection rule for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
@@ -49,9 +55,7 @@ class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
     @property
     def reviewers(
         self,
-    ) -> List[
-        github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer
-    ]:
+    ) -> list[EnvironmentProtectionRuleReviewer]:
         return self._reviewers.value
 
     @property
@@ -59,11 +63,11 @@ class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
         return self._wait_timer.value
 
     def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._reviewers = github.GithubObject.NotSet
-        self._wait_timer = github.GithubObject.NotSet
+        self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
+        self._wait_timer: Attribute[int] = NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
