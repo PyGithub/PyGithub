@@ -87,9 +87,9 @@ class Github:
     default_retry = GithubRetry.GithubRetry()
 
     # keep non-deprecated arguments in-sync with Requester
-    # v2: remove login_or_token, password, jwt and app_auth
-    # v2: move auth to the front of arguments
-    # v2: add * before first argument so all arguments must be named,
+    # v3: remove login_or_token, password, jwt and app_auth
+    # v3: move auth to the front of arguments
+    # v3: add * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
@@ -199,7 +199,7 @@ class Github:
     def FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    # v3: Remove this property? Why should it be necessary to read/modify it after construction
     @property
     def per_page(self):
         """
@@ -211,9 +211,9 @@ class Github:
     def per_page(self, value):
         self.__requester.per_page = value
 
-    # v2: Provide a unified way to access values of headers of last response
-    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
-    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
+    # v3: Provide a unified way to access values of headers of last response
+    # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
