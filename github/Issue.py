@@ -65,6 +65,8 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    is_defined,
+    is_undefined,
 )
 from github.PaginatedList import PaginatedList
 

@@ -40,8 +40,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import urllib.parse
+from datetime import datetime
 
 import github.Commit
 import github.File
@@ -119,7 +119,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     @property
     def closed_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
@@ -159,7 +159,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -263,7 +263,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     @property
     def merged_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._merged_at)
         return self._merged_at.value
@@ -351,7 +351,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -685,12 +685,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comments(sort=sort, direction=direction, since=since)
 
-    # v2: remove *, added here to force named parameters because order has changed
+    # v3: remove *, added here to force named parameters because order has changed
     def get_review_comments(
         self,
         *,
@@ -702,16 +702,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort

@@ -32,7 +32,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import github
@@ -53,7 +53,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.blog, "http://www.example.com")
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(
+            self.org.created_at,
+            datetime(2014, 1, 9, 16, 56, 17, tzinfo=timezone.utc),
+        )
         self.assertEqual(self.org.default_repository_permission, "none")
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertEqual(self.org.disk_usage, 2)
@@ -190,7 +193,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(delivery.id, 12345)
         self.assertEqual(delivery.guid, "abcde-12345")
         self.assertEqual(
-            delivery.delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(delivery.redelivery, False)
         self.assertEqual(delivery.duration, 0.27)
@@ -218,7 +222,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(deliveries[0].id, 12345)
         self.assertEqual(deliveries[0].guid, "abcde-12345")
         self.assertEqual(
-            deliveries[0].delivered_at, datetime.datetime(2012, 5, 27, 6, 0, 32)
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(deliveries[0].redelivery, False)
         self.assertEqual(deliveries[0].duration, 0.27)
@@ -243,7 +248,7 @@ class Organization(Framework.TestCase):
             [requestedByUser],
             "comments",
             "asc",
-            datetime.datetime(2012, 5, 28, 23, 0, 0),
+            datetime(2012, 5, 28, 23, 0, 0, tzinfo=timezone.utc),
         )
         self.assertListKeyEqual(issues, lambda i: i.id, [])
 

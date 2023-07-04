@@ -59,7 +59,8 @@ class Exceptions(Framework.TestCase):
     def testNonJsonDataReturnedByGithub(self):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
         with self.assertRaises(github.GithubException) as raisedexp:
-            self.g.get_user("jacquev6")
+            # 503 would be retried, disable retries
+            self.get_github(retry=None, pool_size=self.pool_size).get_user("jacquev6")
         self.assertEqual(raisedexp.exception.status, 503)
         self.assertEqual(
             raisedexp.exception.data,
@@ -129,7 +130,8 @@ class SpecificExceptions(Framework.TestCase):
         )
 
     def testRateLimitExceeded(self):
-        g = github.Github()
+        # rate limit errors would be retried if retry is not set None
+        g = github.Github(retry=None)
 
         def exceed():
             for i in range(100):

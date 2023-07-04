@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -60,7 +60,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def completed_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
@@ -148,7 +148,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     @property
     def started_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
@@ -202,9 +202,9 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         :param details_url: string
         :param external_id: string
         :param status: string
-        :param started_at: datetime.datetime
+        :param started_at: datetime
         :param conclusion: string
-        :param completed_at: datetime.datetime
+        :param completed_at: datetime
         :param output: dict
         :param actions: list of dict
         :rtype: None
@@ -221,13 +221,13 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         ), external_id
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
         assert started_at is github.GithubObject.NotSet or isinstance(
-            started_at, datetime.datetime
+            started_at, datetime
         ), started_at
         assert conclusion is github.GithubObject.NotSet or isinstance(
             conclusion, str
         ), conclusion
         assert completed_at is github.GithubObject.NotSet or isinstance(
-            completed_at, datetime.datetime
+            completed_at, datetime
         ), completed_at
         assert output is github.GithubObject.NotSet or isinstance(output, dict), output
         assert actions is github.GithubObject.NotSet or all(

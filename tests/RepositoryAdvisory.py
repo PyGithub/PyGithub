@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github.RepositoryAdvisory
 
@@ -41,7 +41,8 @@ class RepositoryAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.author.login, "JLLeitschuh")
         self.assertEqual(self.advisory.closed_at, None)
         self.assertEqual(
-            self.advisory.created_at, datetime.datetime(2023, 3, 28, 21, 41, 40)
+            self.advisory.created_at,
+            datetime(2023, 3, 28, 21, 41, 40, tzinfo=timezone.utc),
         )
         self.assertListKeyEqual(
             self.advisory.credits, lambda e: (e.login, e.type), [("octocat", "analyst")]
@@ -75,7 +76,8 @@ class RepositoryAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.state, "draft")
         self.assertEqual(self.advisory.summary, "A test creating a GHSA via the API")
         self.assertEqual(
-            self.advisory.updated_at, datetime.datetime(2023, 3, 30, 19, 31, 33)
+            self.advisory.updated_at,
+            datetime(2023, 3, 30, 19, 31, 33, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.advisory.url,
