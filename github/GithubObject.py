@@ -114,6 +114,8 @@ class _BadAttribute(Attribute):
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
+# v3: add * to edit function of all GithubObject implementations,
+#     this allows to rename attributes and maintain the order of attributes
 class GithubObject:
     """
     Base class for all classes representing objects returned by the API.
