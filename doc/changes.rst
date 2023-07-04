@@ -4,7 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.60.0 (June 29, 2023)
+Version 2.0.0 (July 04, 2023)
 -----------------------------------
 
 Important
