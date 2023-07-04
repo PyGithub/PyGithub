@@ -31,6 +31,8 @@
 import github.GithubObject
 
 
+from typing import Dict
+from github.GithubObject import NonCompletableGithubObject
 class GitObject(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitObjects
@@ -40,32 +42,32 @@ class GitObject(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._sha = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, str]) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "type" in attributes:  # pragma no branch

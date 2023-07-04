@@ -31,12 +31,14 @@
 import github.GithubObject
 
 
+from typing import Dict, Union
+from github.GithubObject import _NotSetType
 class InputGitAuthor:
     """
     This class represents InputGitAuthors
     """
 
-    def __init__(self, name, email, date=github.GithubObject.NotSet):
+    def __init__(self, name: str, email: str, date: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
         """
         :param name: string
         :param email: string
@@ -57,7 +59,7 @@ class InputGitAuthor:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property
-    def _identity(self):
+    def _identity(self) -> Dict[str, str]:
         identity = {
             "name": self.__name,
             "email": self.__email,

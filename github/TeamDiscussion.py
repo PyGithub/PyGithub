@@ -25,18 +25,22 @@ import github.GithubObject
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     """
     This class represents TeamDiscussions. The reference can be found here https://docs.github.com/en/rest/reference/teams#discussions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"number": self._number.value, "title": self._title.value}
         )
 
     @property
-    def author(self):
+    def author(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -44,7 +48,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._author.value
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -52,7 +56,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def body_html(self):
+    def body_html(self) -> str:
         """
         :type: string
         """
@@ -60,7 +64,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._body_html.value
 
     @property
-    def body_version(self):
+    def body_version(self) -> str:
         """
         :type: string
         """
@@ -68,7 +72,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._body_version.value
 
     @property
-    def comments_count(self):
+    def comments_count(self) -> int:
         """
         :type: integer
         """
@@ -76,7 +80,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._comments_count.value
 
     @property
-    def comments_url(self):
+    def comments_url(self) -> str:
         """
         :type: string
         """
@@ -84,7 +88,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._comments_url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -92,7 +96,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -100,7 +104,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def last_edited_at(self):
+    def last_edited_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -108,7 +112,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._last_edited_at.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -116,7 +120,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def number(self):
+    def number(self) -> int:
         """
         :type: integer
         """
@@ -124,7 +128,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._number.value
 
     @property
-    def pinned(self):
+    def pinned(self) -> bool:
         """
         :type: bool
         """
@@ -132,7 +136,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._pinned.value
 
     @property
-    def private(self):
+    def private(self) -> bool:
         """
         :type: bool
         """
@@ -140,7 +144,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._private.value
 
     @property
-    def team_url(self):
+    def team_url(self) -> str:
         """
         :type: string
         """
@@ -148,7 +152,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._team_url.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -156,7 +160,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -164,14 +168,14 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._body_html = github.GithubObject.NotSet
@@ -190,7 +194,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]

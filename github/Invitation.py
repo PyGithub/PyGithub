@@ -25,16 +25,20 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.Repository import Repository
 class Invitation(github.GithubObject.CompletableGithubObject):
     """
     This class represents repository invitations. The reference can be found here https://docs.github.com/en/rest/reference/repos#invitations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -42,7 +46,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def permissions(self):
+    def permissions(self) -> str:
         """
         :type: string
         """
@@ -50,7 +54,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._permissions.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> str:
         """
         :type: string
         """
@@ -58,7 +62,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def invitee(self):
+    def invitee(self) -> NamedUser:
         """
         :type: NamedUser
         """
@@ -66,7 +70,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._invitee.value
 
     @property
-    def inviter(self):
+    def inviter(self) -> NamedUser:
         """
         :type: NamedUser
         """
@@ -74,7 +78,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._inviter.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -82,7 +86,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -90,14 +94,14 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: Repository
         """
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._permissions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -107,7 +111,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
                 github.Repository.Repository, attributes["repository"]

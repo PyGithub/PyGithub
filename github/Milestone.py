@@ -36,18 +36,24 @@ import github.NamedUser
 import github.PaginatedList
 
 
+from datetime import date, datetime
+from typing import Any, Dict, Optional, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.Label import Label
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
 class Milestone(github.GithubObject.CompletableGithubObject):
     """
     This class represents Milestones. The reference can be found here https://docs.github.com/en/rest/reference/issues#milestones
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"number": self._number.value, "title": self._title.value}
         )
 
     @property
-    def closed_issues(self):
+    def closed_issues(self) -> int:
         """
         :type: integer
         """
@@ -55,7 +61,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._closed_issues.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -63,7 +69,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self):
+    def creator(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -71,7 +77,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._creator.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
@@ -79,7 +85,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def due_on(self):
+    def due_on(self) -> Optional[datetime]:
         """
         :type: datetime
         """
@@ -87,7 +93,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._due_on.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -95,7 +101,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def labels_url(self):
+    def labels_url(self) -> str:
         """
         :type: string
         """
@@ -103,7 +109,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._labels_url.value
 
     @property
-    def number(self):
+    def number(self) -> int:
         """
         :type: integer
         """
@@ -111,7 +117,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._number.value
 
     @property
-    def open_issues(self):
+    def open_issues(self) -> int:
         """
         :type: integer
         """
@@ -119,7 +125,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._open_issues.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
@@ -127,7 +133,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -135,7 +141,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -143,14 +149,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :rtype: None
@@ -159,11 +165,11 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        title,
-        state=github.GithubObject.NotSet,
-        description=github.GithubObject.NotSet,
-        due_on=github.GithubObject.NotSet,
-    ):
+        title: str,
+        state: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        description: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        due_on: Union[date, _NotSetType] = github.GithubObject.NotSet
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param title: string
@@ -192,7 +198,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_labels(self):
+    def get_labels(self) -> PaginatedList[Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
@@ -202,10 +208,10 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def _identity(self):
+    def _identity(self) -> int:
         return self.number
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._closed_issues = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
@@ -220,7 +226,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "closed_issues" in attributes:  # pragma no branch
             self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch

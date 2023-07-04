@@ -41,16 +41,20 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.Organization import Organization
 class Membership(github.GithubObject.CompletableGithubObject):
     """
     This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -66,7 +70,7 @@ class Membership(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def role(self):
+    def role(self) -> str:
         """
         :type: string
         """
@@ -74,7 +78,7 @@ class Membership(github.GithubObject.CompletableGithubObject):
         return self._role.value
 
     @property
-    def organization_url(self):
+    def organization_url(self) -> str:
         """
         :type: string
         """
@@ -82,7 +86,7 @@ class Membership(github.GithubObject.CompletableGithubObject):
         return self._organization_url.value
 
     @property
-    def organization(self):
+    def organization(self) -> Organization:
         """
         :type: :class:`github.Organization.Organization`
         """
@@ -90,14 +94,14 @@ class Membership(github.GithubObject.CompletableGithubObject):
         return self._organization.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
         self._role = github.GithubObject.NotSet
@@ -105,7 +109,7 @@ class Membership(github.GithubObject.CompletableGithubObject):
         self._organization = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "state" in attributes:  # pragma no branch

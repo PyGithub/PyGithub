@@ -26,16 +26,22 @@ import github.ProjectColumn
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.ProjectColumn import ProjectColumn
 class Project(github.GithubObject.CompletableGithubObject):
     """
     This class represents Projects. The reference can be found here https://docs.github.com/en/rest/reference/projects
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -43,7 +49,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def columns_url(self):
+    def columns_url(self) -> str:
         """
         :type: string
         """
@@ -51,7 +57,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._columns_url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -59,7 +65,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self):
+    def creator(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -67,7 +73,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._creator.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -75,7 +81,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -83,7 +89,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -91,7 +97,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -99,7 +105,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def number(self):
+    def number(self) -> int:
         """
         :type: integer
         """
@@ -107,7 +113,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._number.value
 
     @property
-    def owner_url(self):
+    def owner_url(self) -> str:
         """
         :type: string
         """
@@ -115,7 +121,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._owner_url.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
@@ -123,7 +129,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -131,7 +137,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -192,7 +198,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_columns(self):
+    def get_columns(self) -> PaginatedList[ProjectColumn]:
         """
         :calls: `GET /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#list-project-columns>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectColumn.ProjectColumn`
@@ -206,7 +212,7 @@ class Project(github.GithubObject.CompletableGithubObject):
             {"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    def create_column(self, name):
+    def create_column(self, name: str) -> ProjectColumn:
         """
         calls: `POST /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#create-a-project-column>`_
         :param name: string
@@ -221,7 +227,7 @@ class Project(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._body = github.GithubObject.NotSet
         self._columns_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -236,7 +242,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "columns_url" in attributes:  # pragma no branch

@@ -23,79 +23,81 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents check run annotations.
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotation_level(self):
+    def annotation_level(self) -> str:
         """
         :type: string
         """
         return self._annotation_level.value
 
     @property
-    def end_column(self):
+    def end_column(self) -> int:
         """
         :type: integer
         """
         return self._end_column.value
 
     @property
-    def end_line(self):
+    def end_line(self) -> int:
         """
         :type: integer
         """
         return self._end_line.value
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: string
         """
         return self._message.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
         return self._path.value
 
     @property
-    def raw_details(self):
+    def raw_details(self) -> str:
         """
         :type: string
         """
         return self._raw_details.value
 
     @property
-    def start_column(self):
+    def start_column(self) -> int:
         """
         :type: integer
         """
         return self._start_column.value
 
     @property
-    def start_line(self):
+    def start_line(self) -> int:
         """
         :type: integer
         """
         return self._start_line.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
         return self._title.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._annotation_level = github.GithubObject.NotSet
         self._end_column = github.GithubObject.NotSet
         self._end_line = github.GithubObject.NotSet
@@ -106,7 +108,7 @@ class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
         self._start_line = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
             self._annotation_level = self._makeStringAttribute(
                 attributes["annotation_level"]

@@ -24,33 +24,36 @@ import github.GithubObject
 import github.Issue
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
+from github.Issue import Issue
 class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def issue(self):
+    def issue(self) -> Issue:
         """
         :type: :class:`github.Issue.Issue`
         """
         return self._issue.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._type = github.GithubObject.NotSet
         self._issue = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch

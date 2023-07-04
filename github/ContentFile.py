@@ -35,16 +35,20 @@ import github.GithubObject
 import github.Repository
 
 
+from typing import Any, Dict, List, Optional
+from github.GithubObject import CompletableGithubObject
+from github.License import License
+from github.Repository import Repository
 class ContentFile(github.GithubObject.CompletableGithubObject):
     """
     This class represents ContentFiles. The reference can be found here https://docs.github.com/en/rest/reference/repos#contents
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
 
     @property
-    def content(self):
+    def content(self) -> Optional[str]:
         """
         :type: string
         """
@@ -52,7 +56,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._content.value
 
     @property
-    def decoded_content(self):
+    def decoded_content(self) -> bytes:
         """
         :type: bytes
         """
@@ -60,7 +64,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return base64.b64decode(bytearray(self.content, "utf-8"))
 
     @property
-    def download_url(self):
+    def download_url(self) -> str:
         """
         :type: string
         """
@@ -68,7 +72,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._download_url.value
 
     @property
-    def encoding(self):
+    def encoding(self) -> str:
         """
         :type: string
         """
@@ -76,7 +80,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._encoding.value
 
     @property
-    def git_url(self):
+    def git_url(self) -> str:
         """
         :type: string
         """
@@ -84,7 +88,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._git_url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -92,7 +96,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def license(self):
+    def license(self) -> License:
         """
         :type: :class:`github.License.License`
         """
@@ -100,7 +104,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._license.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -108,7 +112,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
@@ -116,7 +120,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._path.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
@@ -133,7 +137,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._repository.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -141,7 +145,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :type: integer
         """
@@ -149,7 +153,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._size.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
@@ -157,7 +161,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._type.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -165,14 +169,14 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def text_matches(self):
+    def text_matches(self) -> List[Dict[str, Any]]:
         """
         :type: string
         """
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._text_matches = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
@@ -187,7 +191,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "download_url" in attributes:  # pragma no branch

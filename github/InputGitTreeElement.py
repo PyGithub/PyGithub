@@ -29,6 +29,8 @@
 import github.GithubObject
 
 
+from typing import Dict, Union
+from github.GithubObject import _NotSetType
 class InputGitTreeElement:
     """
     This class represents InputGitTreeElements
@@ -36,12 +38,12 @@ class InputGitTreeElement:
 
     def __init__(
         self,
-        path,
-        mode,
-        type,
-        content=github.GithubObject.NotSet,
-        sha=github.GithubObject.NotSet,
-    ):
+        path: str,
+        mode: str,
+        type: str,
+        content: Union[str, _NotSetType] = github.GithubObject.NotSet,
+        sha: Union[str, _NotSetType, None] = github.GithubObject.NotSet
+    ) -> None:
         """
         :param path: string
         :param mode: string
@@ -66,7 +68,7 @@ class InputGitTreeElement:
         self.__sha = sha
 
     @property
-    def _identity(self):
+    def _identity(self) -> Dict[str, str]:
         identity = {
             "path": self.__path,
             "mode": self.__mode,

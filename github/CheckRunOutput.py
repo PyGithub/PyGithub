@@ -23,55 +23,57 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
     """This class represents the output of check run."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotations_count(self):
+    def annotations_count(self) -> int:
         """
         :type: integer
         """
         return self._annotations_count.value
 
     @property
-    def annotations_url(self):
+    def annotations_url(self) -> str:
         """
         :type: string
         """
         return self._annotations_url.value
 
     @property
-    def summary(self):
+    def summary(self) -> str:
         """
         :type: string
         """
         return self._summary.value
 
     @property
-    def text(self):
+    def text(self) -> str:
         """
         :type: string
         """
         return self._text.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
         return self._title.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._annotations_count = github.GithubObject.NotSet
         self._annotations_url = github.GithubObject.NotSet
         self._summary = github.GithubObject.NotSet
         self._text = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(
                 attributes["annotations_count"]

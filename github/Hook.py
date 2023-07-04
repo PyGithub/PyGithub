@@ -33,16 +33,20 @@ import github.GithubObject
 import github.HookResponse
 
 
+from datetime import datetime
+from typing import Any, Dict, List, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.HookResponse import HookResponse
 class Hook(github.GithubObject.CompletableGithubObject):
     """
     This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def active(self):
+    def active(self) -> bool:
         """
         :type: bool
         """
@@ -50,7 +54,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._active.value
 
     @property
-    def config(self):
+    def config(self) -> Dict[str, str]:
         """
         :type: dict
         """
@@ -58,7 +62,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._config.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -66,7 +70,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def events(self):
+    def events(self) -> List[str]:
         """
         :type: list of string
         """
@@ -74,7 +78,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._events.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -82,7 +86,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def last_response(self):
+    def last_response(self) -> HookResponse:
         """
         :type: :class:`github.HookResponse.HookResponse`
         """
@@ -90,7 +94,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._last_response.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -98,7 +102,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def test_url(self):
+    def test_url(self) -> str:
         """
         :type: string
         """
@@ -106,7 +110,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._test_url.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -114,7 +118,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -122,14 +126,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def ping_url(self):
+    def ping_url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._ping_url)
         return self._ping_url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
@@ -138,13 +142,13 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        name,
-        config,
-        events=github.GithubObject.NotSet,
-        add_events=github.GithubObject.NotSet,
-        remove_events=github.GithubObject.NotSet,
-        active=github.GithubObject.NotSet,
-    ):
+        name: str,
+        config: Dict[str, str],
+        events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
+        add_events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
+        remove_events: Union[_NotSetType, List[str]] = github.GithubObject.NotSet,
+        active: Union[bool, _NotSetType] = github.GithubObject.NotSet
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param name: string
@@ -184,21 +188,21 @@ class Hook(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def test(self):
+    def test(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
-    def ping(self):
+    def ping(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._active = github.GithubObject.NotSet
         self._config = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -211,7 +215,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._ping_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "active" in attributes:  # pragma no branch
             self._active = self._makeBoolAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch

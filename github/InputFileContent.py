@@ -29,12 +29,14 @@
 import github.GithubObject
 
 
+from typing import Dict, Union
+from github.GithubObject import _NotSetType
 class InputFileContent:
     """
     This class represents InputFileContents
     """
 
-    def __init__(self, content, new_name=github.GithubObject.NotSet):
+    def __init__(self, content: str, new_name: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
         """
         :param content: string
         :param new_name: string
@@ -48,7 +50,7 @@ class InputFileContent:
         self.__content = content
 
     @property
-    def _identity(self):
+    def _identity(self) -> Dict[str, str]:
         identity = {
             "content": self.__content,
         }

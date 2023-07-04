@@ -39,6 +39,11 @@ from github.Auth import AppAuth
 
 from . import Consts
 
+from typing import Any, Dict
+import github
+from github.GithubObject import NonCompletableGithubObject
+from github.PaginatedList import PaginatedList
+from github.Repository import Repository
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 
@@ -60,11 +65,11 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
-    def get_github_for_installation(self):
+    def get_github_for_installation(self) -> github.Github:
         return github.Github(**self._requester.kwargs)
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -91,7 +96,7 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
         """
         return self._target_type.value
 
-    def get_repos(self):
+    def get_repos(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /installation/repositories <https://docs.github.com/en/rest/reference/integrations/installations#list-repositories>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -107,13 +112,13 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
             list_item="repositories",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._app_id = github.GithubObject.NotSet
         self._target_id = github.GithubObject.NotSet
         self._target_type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "app_id" in attributes:  # pragma no branch

@@ -33,94 +33,96 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class File(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Files
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"sha": self._sha.value, "filename": self._filename.value}
         )
 
     @property
-    def additions(self):
+    def additions(self) -> int:
         """
         :type: integer
         """
         return self._additions.value
 
     @property
-    def blob_url(self):
+    def blob_url(self) -> str:
         """
         :type: string
         """
         return self._blob_url.value
 
     @property
-    def changes(self):
+    def changes(self) -> int:
         """
         :type: integer
         """
         return self._changes.value
 
     @property
-    def contents_url(self):
+    def contents_url(self) -> str:
         """
         :type: string
         """
         return self._contents_url.value
 
     @property
-    def deletions(self):
+    def deletions(self) -> int:
         """
         :type: integer
         """
         return self._deletions.value
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         """
         :type: string
         """
         return self._filename.value
 
     @property
-    def patch(self):
+    def patch(self) -> str:
         """
         :type: string
         """
         return self._patch.value
 
     @property
-    def previous_filename(self):
+    def previous_filename(self) -> str:
         """
         :type: string
         """
         return self._previous_filename.value
 
     @property
-    def raw_url(self):
+    def raw_url(self) -> str:
         """
         :type: string
         """
         return self._raw_url.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
         return self._status.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._additions = github.GithubObject.NotSet
         self._blob_url = github.GithubObject.NotSet
         self._changes = github.GithubObject.NotSet
@@ -133,7 +135,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         self._sha = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "blob_url" in attributes:  # pragma no branch

@@ -31,57 +31,59 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, Optional
+from github.GithubObject import NonCompletableGithubObject
 class GistFile(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GistFiles
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"filename": self._filename.value})
 
     @property
-    def content(self):
+    def content(self) -> str:
         """
         :type: string
         """
         return self._content.value
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         """
         :type: string
         """
         return self._filename.value
 
     @property
-    def language(self):
+    def language(self) -> Optional[str]:
         """
         :type: string
         """
         return self._language.value
 
     @property
-    def raw_url(self):
+    def raw_url(self) -> str:
         """
         :type: string
         """
         return self._raw_url.value
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :type: integer
         """
         return self._size.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
@@ -89,7 +91,7 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "filename" in attributes:  # pragma no branch

@@ -23,37 +23,39 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, List
+from github.GithubObject import NonCompletableGithubObject
 class Autolink(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def key_prefix(self):
+    def key_prefix(self) -> str:
         """
         :type: string
         """
         return self._key_prefix.value
 
     @property
-    def url_template(self):
+    def url_template(self) -> str:
         """
         :type: string
         """
         return self._url_template.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._key_prefix = github.GithubObject.NotSet
         self._url_template = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key_prefix" in attributes:  # pragma no branch

@@ -27,71 +27,76 @@ import github.ProjectCard
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
+from github.ProjectCard import ProjectCard
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def cards_url(self):
+    def cards_url(self) -> str:
         """
         :type: string
         """
         return self._cards_url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
         return self._node_id.value
 
     @property
-    def project_url(self):
+    def project_url(self) -> str:
         """
         :type: string
         """
         return self._project_url.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def get_cards(self, archived_state=github.GithubObject.NotSet):
+    def get_cards(self, archived_state: Union[_NotSetType, str] = github.GithubObject.NotSet) -> PaginatedList[ProjectCard]:
         """
         :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#list-project-cards>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
@@ -115,10 +120,10 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def create_card(
         self,
-        note=github.GithubObject.NotSet,
-        content_id=github.GithubObject.NotSet,
-        content_type=github.GithubObject.NotSet,
-    ):
+        note: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        content_id: Union[int, _NotSetType] = github.GithubObject.NotSet,
+        content_type: Union[_NotSetType, str] = github.GithubObject.NotSet
+    ) -> ProjectCard:
         """
         :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#create-a-project-card>`_
         :param note: string
@@ -145,7 +150,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def move(self, position):
+    def move(self, position: str) -> bool:
         """
         :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
         :param position: string
@@ -162,7 +167,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
-    def delete(self):
+    def delete(self) -> bool:
         """
         :calls: `DELETE /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#delete-a-project-column>`_
         :rtype: bool
@@ -174,7 +179,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def edit(self, name):
+    def edit(self, name: str) -> None:
         """
         :calls: `PATCH /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#update-an-existing-project-column>`_
         :param name: string
@@ -192,7 +197,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._cards_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -202,7 +207,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "cards_url" in attributes:  # pragma no branch
             self._cards_url = self._makeStringAttribute(attributes["cards_url"])
         if "created_at" in attributes:  # pragma no branch

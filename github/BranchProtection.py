@@ -27,16 +27,23 @@ import github.RequiredStatusChecks
 import github.Team
 
 
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.RequiredPullRequestReviews import RequiredPullRequestReviews
+from github.RequiredStatusChecks import RequiredStatusChecks
+from github.Team import Team
 class BranchProtection(github.GithubObject.CompletableGithubObject):
     """
     This class represents Branch Protection. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-branch-protection
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -44,7 +51,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def required_status_checks(self):
+    def required_status_checks(self) -> RequiredStatusChecks:
         """
         :type: :class:`github.RequiredStatusChecks.RequiredStatusChecks`
         """
@@ -52,7 +59,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_status_checks.value
 
     @property
-    def enforce_admins(self):
+    def enforce_admins(self) -> bool:
         """
         :type: bool
         """
@@ -60,14 +67,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._enforce_admins.value
 
     @property
-    def required_pull_request_reviews(self):
+    def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         """
         :type: :class:`github.RequiredPullRequestReviews.RequiredPullRequestReviews`
         """
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
-    def get_user_push_restrictions(self):
+    def get_user_push_restrictions(self) -> PaginatedList[Team]:
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -80,7 +87,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_team_push_restrictions(self):
+    def get_team_push_restrictions(self) -> PaginatedList[NamedUser]:
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
@@ -90,7 +97,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
@@ -98,7 +105,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch

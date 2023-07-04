@@ -24,72 +24,77 @@ import github.CodeScanAlertInstanceLocation
 import github.GithubObject
 
 
+from typing import Any, Dict
+import github.GithubObject
+import github.CodeScanAlertInstanceLocation
+import github.GithubObject
+import github.CodeScanAlertInstanceLocation
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents code scanning alert instances.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
 
     @property
-    def ref(self):
+    def ref(self) -> str:
         """
         :type: str
         """
         return self._ref.value
 
     @property
-    def analysis_key(self):
+    def analysis_key(self) -> str:
         """
         :type: str
         """
         return self._analysis_key.value
 
     @property
-    def environment(self):
+    def environment(self) -> str:
         """
         :type: str
         """
         return self._environment.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: str
         """
         return self._state.value
 
     @property
-    def commit_sha(self):
+    def commit_sha(self) -> str:
         """
         :type: str
         """
         return self._commit_sha.value
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: str
         """
         return self._message.value
 
     @property
-    def location(self):
+    def location(self) -> github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation:
         """
         :type: :class: `github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation`
         """
         return self._location.value
 
     @property
-    def classifications(self):
+    def classifications(self) -> list[str]:
         """
         :type: list of str
         """
         return self._classifications.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._ref = github.GithubObject.NotSet
         self._analysis_key = github.GithubObject.NotSet
         self._environment = github.GithubObject.NotSet
@@ -99,7 +104,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._classifications = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "analysis_key" in attributes:  # pragma no branch

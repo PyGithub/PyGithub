@@ -24,16 +24,20 @@ import github.GithubObject
 import github.WorkflowStep
 
 
+from datetime import datetime
+from typing import Any, Dict, List
+from github.GithubObject import CompletableGithubObject
+from github.WorkflowStep import WorkflowStep
 class WorkflowJob(github.GithubObject.CompletableGithubObject):
     """
     This class represents Workflow Jobs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-jobs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def check_run_url(self):
+    def check_run_url(self) -> str:
         """
         :type: string
         """
@@ -41,7 +45,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._check_run_url.value
 
     @property
-    def completed_at(self):
+    def completed_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -49,7 +53,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._completed_at.value
 
     @property
-    def conclusion(self):
+    def conclusion(self) -> str:
         """
         :type: string
         """
@@ -57,7 +61,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def head_sha(self):
+    def head_sha(self) -> str:
         """
         :type: string
         """
@@ -65,7 +69,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._head_sha.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -73,7 +77,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: int
         """
@@ -81,7 +85,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -89,7 +93,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -97,7 +101,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def run_id(self):
+    def run_id(self) -> int:
         """
         :type: integer
         """
@@ -105,7 +109,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._run_id.value
 
     @property
-    def run_url(self):
+    def run_url(self) -> str:
         """
         :type: string
         """
@@ -113,7 +117,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._run_url.value
 
     @property
-    def started_at(self):
+    def started_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -121,7 +125,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._started_at.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
@@ -129,7 +133,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._status.value
 
     @property
-    def steps(self):
+    def steps(self) -> List[WorkflowStep]:
         """
         :type: list of github.WorkflowStep.WorkflowStep
         """
@@ -137,14 +141,14 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         return self._steps.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def logs_url(self):
+    def logs_url(self) -> str:
         """
         :type: string
         """
@@ -152,7 +156,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         headers, _ = self._requester.requestBlobAndCheck("GET", f"{self.url}/logs")
         return headers["location"]
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._check_run_url = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
@@ -168,7 +172,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         self._steps = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "check_run_url" in attributes:  # pragma no branch
             self._check_run_url = self._makeStringAttribute(attributes["check_run_url"])
         if "completed_at" in attributes:  # pragma no branch

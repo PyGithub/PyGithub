@@ -31,12 +31,14 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class Permissions(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Permissions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "admin": self._admin.value,
@@ -48,48 +50,48 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def admin(self):
+    def admin(self) -> bool:
         """
         :type: bool
         """
         return self._admin.value
 
     @property
-    def maintain(self):
+    def maintain(self) -> bool:
         """
         :type: bool
         """
         return self._maintain.value
 
     @property
-    def pull(self):
+    def pull(self) -> bool:
         """
         :type: bool
         """
         return self._pull.value
 
     @property
-    def push(self):
+    def push(self) -> bool:
         """
         :type: bool
         """
         return self._push.value
 
     @property
-    def triage(self):
+    def triage(self) -> bool:
         """
         :type: bool
         """
         return self._triage.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._admin = github.GithubObject.NotSet
         self._maintain = github.GithubObject.NotSet
         self._pull = github.GithubObject.NotSet
         self._push = github.GithubObject.NotSet
         self._triage = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
         if "maintain" in attributes:  # pragma no branch

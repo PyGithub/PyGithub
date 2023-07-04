@@ -32,6 +32,13 @@ import github.NotificationSubject
 import github.Repository
 
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+from github.GithubObject import CompletableGithubObject
+from github.Issue import Issue
+from github.NotificationSubject import NotificationSubject
+from github.PullRequest import PullRequest
+from github.Repository import Repository
 class Notification(github.GithubObject.CompletableGithubObject):
     """
     This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
@@ -41,7 +48,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "subject": self._subject.value})
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: string
         """
@@ -49,7 +56,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def last_read_at(self):
+    def last_read_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -57,7 +64,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._last_read_at.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
@@ -65,7 +72,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._repository.value
 
     @property
-    def subject(self):
+    def subject(self) -> NotificationSubject:
         """
         :type: :class:`github.NotificationSubject.NotificationSubject`
         """
@@ -73,7 +80,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._subject.value
 
     @property
-    def reason(self):
+    def reason(self) -> str:
         """
         :type: string
         """
@@ -81,7 +88,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._reason.value
 
     @property
-    def subscription_url(self):
+    def subscription_url(self) -> str:
         """
         :type: string
         """
@@ -89,7 +96,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._subscription_url.value
 
     @property
-    def unread(self):
+    def unread(self) -> Optional[bool]:
         """
         :type: bool
         """
@@ -97,7 +104,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._unread.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> Optional[datetime]:
         """
         :type: datetime.datetime
         """
@@ -105,14 +112,14 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def mark_as_read(self):
+    def mark_as_read(self) -> None:
         """
         :calls: `PATCH /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
@@ -121,7 +128,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self.url,
         )
 
-    def get_pull_request(self):
+    def get_pull_request(self) -> PullRequest:
         """
         :type: :class:github.PullRequest.PullRequest
         """
@@ -130,14 +137,14 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def get_issue(self):
+    def get_issue(self) -> Issue:
         """
         :type: :class:github.Issue.Issue
         """
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._last_read_at = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
@@ -147,7 +154,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch

@@ -39,16 +39,22 @@ import github.NamedUser
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.Reaction import Reaction
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -56,7 +62,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def commit_id(self):
+    def commit_id(self) -> str:
         """
         :type: string
         """
@@ -64,7 +70,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._commit_id.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -72,7 +78,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def diff_hunk(self):
+    def diff_hunk(self) -> str:
         """
         :type: string
         """
@@ -80,7 +86,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._diff_hunk.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -88,7 +94,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def in_reply_to_id(self):
+    def in_reply_to_id(self) -> int:
         """
         :type: integer
         """
@@ -96,7 +102,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._in_reply_to_id.value
 
     @property
-    def original_commit_id(self):
+    def original_commit_id(self) -> str:
         """
         :type: string
         """
@@ -104,7 +110,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._original_commit_id.value
 
     @property
-    def original_position(self):
+    def original_position(self) -> int:
         """
         :type: integer
         """
@@ -112,7 +118,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._original_position.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
@@ -120,7 +126,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._path.value
 
     @property
-    def position(self):
+    def position(self) -> int:
         """
         :type: integer
         """
@@ -128,7 +134,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._position.value
 
     @property
-    def pull_request_url(self):
+    def pull_request_url(self) -> str:
         """
         :type: string
         """
@@ -136,7 +142,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._pull_request_url.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -144,7 +150,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -152,7 +158,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -160,21 +166,21 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, body):
+    def edit(self, body: str) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
@@ -189,7 +195,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_reactions(self):
+    def get_reactions(self) -> PaginatedList[Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-pull-request-review-comment>`_
@@ -203,7 +209,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def create_reaction(self, reaction_type):
+    def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/comments/{number}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-pull-request-review-comment>`_
@@ -222,7 +228,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
-    def delete_reaction(self, reaction_id):
+    def delete_reaction(self, reaction_id: int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}
                 <https://docs.github.com/en/rest/reference/reactions#delete-a-pull-request-comment-reaction>`_
@@ -237,7 +243,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -254,7 +260,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch

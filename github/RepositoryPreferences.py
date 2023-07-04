@@ -24,6 +24,9 @@ import github.GithubObject
 import github.Repository
 
 
+from typing import Any, Dict, List, Union
+from github.GithubObject import NonCompletableGithubObject
+from github.Repository import Repository
 class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents repository preferences.
@@ -31,24 +34,24 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def preferences(self):
+    def preferences(self) -> Dict[str, List[Dict[str, Union[bool, int]]]]:
         """
         :type: dict
         """
         return self._preferences.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
         return self._repository.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._preferences = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "preferences" in attributes:  # pragma no branch
             self._preferences = self._makeDictAttribute(attributes["preferences"])
         if "repository" in attributes:  # pragma no branch

@@ -28,16 +28,20 @@ import github.NamedUser
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class Reaction(github.GithubObject.CompletableGithubObject):
     """
     This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def content(self):
+    def content(self) -> str:
         """
         :type: string
         """
@@ -45,7 +49,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._content.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -53,7 +57,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -61,14 +65,14 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_
         :rtype: None
@@ -79,13 +83,13 @@ class Reaction(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "created_at" in attributes:  # pragma no branch

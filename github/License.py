@@ -23,16 +23,18 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, List
+from github.GithubObject import CompletableGithubObject
 class License(github.GithubObject.CompletableGithubObject):
     """
     This class represents Licenses. The reference can be found here https://docs.github.com/en/rest/reference/licenses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -40,7 +42,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -48,7 +50,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def spdx_id(self):
+    def spdx_id(self) -> str:
         """
         :type: string
         """
@@ -56,7 +58,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._spdx_id.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -64,7 +66,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -72,7 +74,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
@@ -80,7 +82,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def implementation(self):
+    def implementation(self) -> str:
         """
         :type: string
         """
@@ -88,7 +90,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._implementation.value
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -96,7 +98,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def permissions(self):
+    def permissions(self) -> List[str]:
         """
         :type: list of string
         """
@@ -104,7 +106,7 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._permissions.value
 
     @property
-    def conditions(self):
+    def conditions(self) -> List[str]:
         """
         :type: list of string
         """
@@ -112,14 +114,14 @@ class License(github.GithubObject.CompletableGithubObject):
         return self._conditions.value
 
     @property
-    def limitations(self):
+    def limitations(self) -> List[str]:
         """
         :type: list of string
         """
         self._completeIfNotSet(self._limitations)
         return self._limitations.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._key = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._spdx_id = github.GithubObject.NotSet
@@ -132,7 +134,7 @@ class License(github.GithubObject.CompletableGithubObject):
         self._conditions = github.GithubObject.NotSet
         self._limitations = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "name" in attributes:  # pragma no branch

@@ -32,13 +32,17 @@ import github.File
 import github.GithubObject
 
 
+from typing import Any, Dict, List
+from github.Commit import Commit
+from github.File import File
+from github.GithubObject import CompletableGithubObject
 class Comparison(github.GithubObject.CompletableGithubObject):
     """
     This class represents Comparisons
     """
 
     @property
-    def ahead_by(self):
+    def ahead_by(self) -> int:
         """
         :type: integer
         """
@@ -46,7 +50,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._ahead_by.value
 
     @property
-    def base_commit(self):
+    def base_commit(self) -> Commit:
         """
         :type: :class:`github.Commit.Commit`
         """
@@ -54,7 +58,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._base_commit.value
 
     @property
-    def behind_by(self):
+    def behind_by(self) -> int:
         """
         :type: integer
         """
@@ -62,7 +66,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._behind_by.value
 
     @property
-    def commits(self):
+    def commits(self) -> List[Commit]:
         """
         :type: list of :class:`github.Commit.Commit`
         """
@@ -70,7 +74,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._commits.value
 
     @property
-    def diff_url(self):
+    def diff_url(self) -> str:
         """
         :type: string
         """
@@ -78,7 +82,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._diff_url.value
 
     @property
-    def files(self):
+    def files(self) -> List[File]:
         """
         :type: list of :class:`github.File.File`
         """
@@ -86,7 +90,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._files.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -94,7 +98,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def merge_base_commit(self):
+    def merge_base_commit(self) -> Commit:
         """
         :type: :class:`github.Commit.Commit`
         """
@@ -102,7 +106,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._merge_base_commit.value
 
     @property
-    def patch_url(self):
+    def patch_url(self) -> str:
         """
         :type: string
         """
@@ -110,7 +114,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._patch_url.value
 
     @property
-    def permalink_url(self):
+    def permalink_url(self) -> str:
         """
         :type: string
         """
@@ -118,7 +122,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._permalink_url.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
@@ -126,7 +130,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._status.value
 
     @property
-    def total_commits(self):
+    def total_commits(self) -> int:
         """
         :type: integer
         """
@@ -134,14 +138,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._total_commits.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._ahead_by = github.GithubObject.NotSet
         self._base_commit = github.GithubObject.NotSet
         self._behind_by = github.GithubObject.NotSet
@@ -156,7 +160,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         self._total_commits = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch

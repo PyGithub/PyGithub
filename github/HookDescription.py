@@ -31,49 +31,51 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, List
+from github.GithubObject import NonCompletableGithubObject
 class HookDescription(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents HookDescriptions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def events(self):
+    def events(self) -> List[str]:
         """
         :type: list of string
         """
         return self._events.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def schema(self):
+    def schema(self) -> List[List[str]]:
         """
         :type: list of list of string
         """
         return self._schema.value
 
     @property
-    def supported_events(self):
+    def supported_events(self) -> List[str]:
         """
         :type: list of string
         """
         return self._supported_events.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._events = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._schema = github.GithubObject.NotSet
         self._supported_events = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch

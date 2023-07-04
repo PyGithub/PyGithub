@@ -32,16 +32,18 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
 class UserKey(github.GithubObject.CompletableGithubObject):
     """
     This class represents UserKeys. The reference can be found here https://docs.github.com/en/rest/reference/users#keys
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -49,7 +51,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -57,7 +59,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -65,7 +67,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -73,28 +75,28 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def verified(self):
+    def verified(self) -> bool:
         """
         :type: bool
         """
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /user/keys/{id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._key = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._verified = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch

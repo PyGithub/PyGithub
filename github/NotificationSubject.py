@@ -29,49 +29,51 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, Optional
+from github.GithubObject import NonCompletableGithubObject
 class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
         return self._title.value
 
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         """
         :type: string
         """
         return self._url.value
 
     @property
-    def latest_comment_url(self):
+    def latest_comment_url(self) -> Optional[str]:
         """
         :type: string
         """
         return self._latest_comment_url.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._title = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._latest_comment_url = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch

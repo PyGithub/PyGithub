@@ -31,16 +31,19 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+from github.GithubObject import CompletableGithubObject
 class Download(github.GithubObject.CompletableGithubObject):
     """
     This class represents Downloads. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def accesskeyid(self):
+    def accesskeyid(self) -> Optional[str]:
         """
         :type: string
         """
@@ -48,7 +51,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._accesskeyid.value
 
     @property
-    def acl(self):
+    def acl(self) -> Optional[str]:
         """
         :type: string
         """
@@ -56,7 +59,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._acl.value
 
     @property
-    def bucket(self):
+    def bucket(self) -> Optional[str]:
         """
         :type: string
         """
@@ -64,7 +67,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._bucket.value
 
     @property
-    def content_type(self):
+    def content_type(self) -> Optional[str]:
         """
         :type: string
         """
@@ -72,7 +75,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._content_type.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> Optional[datetime]:
         """
         :type: datetime.datetime
         """
@@ -80,7 +83,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self):
+    def description(self) -> Optional[str]:
         """
         :type: string
         """
@@ -88,7 +91,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def download_count(self):
+    def download_count(self) -> Optional[int]:
         """
         :type: integer
         """
@@ -96,7 +99,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._download_count.value
 
     @property
-    def expirationdate(self):
+    def expirationdate(self) -> Optional[datetime]:
         """
         :type: datetime.datetime
         """
@@ -104,7 +107,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._expirationdate.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> Optional[str]:
         """
         :type: string
         """
@@ -112,7 +115,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -120,7 +123,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def mime_type(self):
+    def mime_type(self) -> Optional[str]:
         """
         :type: string
         """
@@ -128,7 +131,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._mime_type.value
 
     @property
-    def name(self):
+    def name(self) -> Optional[str]:
         """
         :type: string
         """
@@ -136,7 +139,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def path(self):
+    def path(self) -> Optional[str]:
         """
         :type: string
         """
@@ -144,7 +147,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._path.value
 
     @property
-    def policy(self):
+    def policy(self) -> Optional[str]:
         """
         :type: string
         """
@@ -152,7 +155,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._policy.value
 
     @property
-    def prefix(self):
+    def prefix(self) -> Optional[str]:
         """
         :type: string
         """
@@ -160,7 +163,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._prefix.value
 
     @property
-    def redirect(self):
+    def redirect(self) -> Optional[bool]:
         """
         :type: bool
         """
@@ -168,7 +171,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._redirect.value
 
     @property
-    def s3_url(self):
+    def s3_url(self) -> Optional[str]:
         """
         :type: string
         """
@@ -176,7 +179,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._s3_url.value
 
     @property
-    def signature(self):
+    def signature(self) -> Optional[str]:
         """
         :type: string
         """
@@ -184,7 +187,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._signature.value
 
     @property
-    def size(self):
+    def size(self) -> Optional[int]:
         """
         :type: integer
         """
@@ -192,21 +195,21 @@ class Download(github.GithubObject.CompletableGithubObject):
         return self._size.value
 
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/downloads/{id} <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._accesskeyid = github.GithubObject.NotSet
         self._acl = github.GithubObject.NotSet
         self._bucket = github.GithubObject.NotSet
@@ -228,7 +231,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "accesskeyid" in attributes:  # pragma no branch
             self._accesskeyid = self._makeStringAttribute(
                 attributes["accesskeyid"]

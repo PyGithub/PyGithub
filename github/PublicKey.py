@@ -36,6 +36,8 @@ from nacl import encoding, public
 import github.GithubObject
 
 
+from typing import Any, Dict, Union
+from github.GithubObject import CompletableGithubObject
 def encrypt(public_key: str, secret_value: str) -> str:
     """Encrypt a Unicode string using the public key."""
     public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
@@ -51,11 +53,11 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -63,18 +65,18 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def key_id(self):
+    def key_id(self) -> Union[str, int]:
         """
         :type: string or int
         """
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._key = github.GithubObject.NotSet
         self._key_id = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch
@@ -83,5 +85,5 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])
 
-    def encrypt(self, unencrypted_value):
+    def encrypt(self, unencrypted_value: str) -> str:
         return encrypt(self._key.value, unencrypted_value)

@@ -24,16 +24,20 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class DeploymentStatus(github.GithubObject.CompletableGithubObject):
     """
     This class represents Deployment Statuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -41,7 +45,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self):
+    def creator(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -49,7 +53,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._creator.value
 
     @property
-    def deployment_url(self):
+    def deployment_url(self) -> str:
         """
         :type: string
         """
@@ -57,7 +61,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._deployment_url.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
@@ -65,7 +69,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def environment(self):
+    def environment(self) -> str:
         """
         :type: string
         """
@@ -73,7 +77,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._environment.value
 
     @property
-    def environment_url(self):
+    def environment_url(self) -> str:
         """
         :type: string
         """
@@ -81,7 +85,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._environment_url.value
 
     @property
-    def repository_url(self):
+    def repository_url(self) -> str:
         """
         :type: string
         """
@@ -89,7 +93,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._repository_url.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
@@ -97,7 +101,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def target_url(self):
+    def target_url(self) -> str:
         """
         :type: string
         """
@@ -105,7 +109,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._target_url.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -113,7 +117,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -121,7 +125,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: int
         """
@@ -129,14 +133,14 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
         self._deployment_url = github.GithubObject.NotSet
@@ -151,7 +155,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._node_id = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "environment_url" in attributes:  # pragma no branch
             self._environment_url = self._makeStringAttribute(
                 attributes["environment_url"]

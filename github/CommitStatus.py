@@ -34,12 +34,16 @@ import github.GithubObject
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict, Optional
+from github.GithubObject import NonCompletableGithubObject
+from github.NamedUser import NamedUser
 class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitStatuses.The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "id": self._id.value,
@@ -49,69 +53,69 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def creator(self):
+    def creator(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._creator.value
 
     @property
-    def description(self):
+    def description(self) -> Optional[str]:
         """
         :type: string
         """
         return self._description.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
         return self._state.value
 
     @property
-    def context(self):
+    def context(self) -> str:
         """
         :type: string
         """
         return self._context.value
 
     @property
-    def target_url(self):
+    def target_url(self) -> Optional[str]:
         """
         :type: string
         """
         return self._target_url.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
@@ -122,7 +126,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch

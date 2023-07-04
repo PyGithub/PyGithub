@@ -27,38 +27,41 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import List
+from github.GithubObject import NonCompletableGithubObject
 class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents statistics of StatsCodeFrequencies. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity
     """
 
     @property
-    def week(self):
+    def week(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._week.value
 
     @property
-    def additions(self):
+    def additions(self) -> int:
         """
         :type: int
         """
         return self._additions.value
 
     @property
-    def deletions(self):
+    def deletions(self) -> int:
         """
         :type: int
         """
         return self._deletions.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._week = github.GithubObject.NotSet
         self._additions = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: List[int]) -> None:
         self._week = self._makeTimestampAttribute(attributes[0])
         self._additions = self._makeIntAttribute(attributes[1])
         self._deletions = self._makeIntAttribute(attributes[2])

@@ -31,37 +31,39 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, Union
+from github.GithubObject import NonCompletableGithubObject
 class Plan(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Plans
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def collaborators(self):
+    def collaborators(self) -> int:
         """
         :type: integer
         """
         return self._collaborators.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def private_repos(self):
+    def private_repos(self) -> int:
         """
         :type: integer
         """
         return self._private_repos.value
 
     @property
-    def space(self):
+    def space(self) -> int:
         """
         :type: integer
         """
@@ -81,7 +83,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         """
         return self._seats.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._collaborators = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._private_repos = github.GithubObject.NotSet
@@ -89,7 +91,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         self._filled_seats = github.GithubObject.NotSet
         self._seats = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch

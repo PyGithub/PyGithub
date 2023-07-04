@@ -28,6 +28,10 @@ import github.GithubObject
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+from github.GithubObject import NonCompletableGithubObject
+from github.NamedUser import NamedUser
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsContributors. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
@@ -39,40 +43,40 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
         """
 
         @property
-        def w(self):
+        def w(self) -> datetime:
             """
             :type: datetime.datetime
             """
             return self._w.value
 
         @property
-        def a(self):
+        def a(self) -> int:
             """
             :type: int
             """
             return self._a.value
 
         @property
-        def d(self):
+        def d(self) -> int:
             """
             :type: int
             """
             return self._d.value
 
         @property
-        def c(self):
+        def c(self) -> int:
             """
             :type: int
             """
             return self._c.value
 
-        def _initAttributes(self):
+        def _initAttributes(self) -> None:
             self._w = github.GithubObject.NotSet
             self._a = github.GithubObject.NotSet
             self._d = github.GithubObject.NotSet
             self._c = github.GithubObject.NotSet
 
-        def _useAttributes(self, attributes):
+        def _useAttributes(self, attributes: Dict[str, int]) -> None:
             if "w" in attributes:  # pragma no branch
                 self._w = self._makeTimestampAttribute(attributes["w"])
             if "a" in attributes:  # pragma no branch
@@ -83,32 +87,32 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
                 self._c = self._makeIntAttribute(attributes["c"])
 
     @property
-    def author(self):
+    def author(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._author.value
 
     @property
-    def total(self):
+    def total(self) -> int:
         """
         :type: int
         """
         return self._total.value
 
     @property
-    def weeks(self):
+    def weeks(self) -> List[Week]:
         """
         :type: list of :class:`.Week`
         """
         return self._weeks.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._total = github.GithubObject.NotSet
         self._weeks = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]

@@ -27,13 +27,15 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class Path(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "path": self._path.value,
@@ -44,40 +46,40 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
         return self._path.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
         return self._title.value
 
     @property
-    def count(self):
+    def count(self) -> int:
         """
         :type: integer
         """
         return self._count.value
 
     @property
-    def uniques(self):
+    def uniques(self) -> int:
         """
         :type: integer
         """
         return self._uniques.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._path = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._count = github.GithubObject.NotSet
         self._uniques = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch

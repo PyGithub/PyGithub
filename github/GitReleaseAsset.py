@@ -26,16 +26,20 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict, Union
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitReleaseAssets. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self.url})
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -43,7 +47,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -51,7 +55,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -59,7 +63,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def label(self):
+    def label(self) -> str:
         """
         :type: string
         """
@@ -67,7 +71,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._label.value
 
     @property
-    def content_type(self):
+    def content_type(self) -> str:
         """
         :type: string
         """
@@ -75,7 +79,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._content_type.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
@@ -83,7 +87,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :type: integer
         """
@@ -91,7 +95,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._size.value
 
     @property
-    def download_count(self):
+    def download_count(self) -> int:
         """
         :type: integer
         """
@@ -99,7 +103,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._download_count.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -107,7 +111,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -115,7 +119,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def browser_download_url(self):
+    def browser_download_url(self) -> str:
         """
         :type: string
         """
@@ -123,14 +127,14 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         return self._browser_download_url.value
 
     @property
-    def uploader(self):
+    def uploader(self) -> NamedUser:
         """
         :type: github.NamedUser.NamedUser
         """
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 
-    def delete_asset(self):
+    def delete_asset(self) -> bool:
         """
         Delete asset from the release.
         :rtype: bool
@@ -138,7 +142,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
-    def update_asset(self, name, label=""):
+    def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
         Update asset metadata.
         :rtype: github.GitReleaseAsset.GitReleaseAsset
@@ -151,7 +155,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         )
         return GitReleaseAsset(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -165,7 +169,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._browser_download_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "id" in attributes:  # pragma no branch

@@ -32,16 +32,19 @@ import github.GithubObject
 import github.GitTreeElement
 
 
+from typing import Any, Dict, List
+from github.GithubObject import CompletableGithubObject
+from github.GitTreeElement import GitTreeElement
 class GitTree(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -49,7 +52,7 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def tree(self):
+    def tree(self) -> List[GitTreeElement]:
         """
         :type: list of :class:`github.GitTreeElement.GitTreeElement`
         """
@@ -57,7 +60,7 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         return self._tree.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -65,15 +68,15 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._sha = github.GithubObject.NotSet
         self._tree = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch

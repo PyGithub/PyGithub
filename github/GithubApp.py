@@ -24,16 +24,20 @@ import github.GithubObject
 import github.NamedUser
 
 
+from typing import Any, Dict, List
+from datetime import datetime
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class GithubApp(github.GithubObject.CompletableGithubObject):
     """
     This class represents github apps. The reference can be found here https://docs.github.com/en/rest/reference/apps
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -41,7 +45,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
@@ -49,7 +53,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def events(self):
+    def events(self) -> List[str]:
         """
         :type: list of string
         """
@@ -57,7 +61,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._events.value
 
     @property
-    def external_url(self):
+    def external_url(self) -> str:
         """
         :type: string
         """
@@ -65,7 +69,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._external_url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -73,7 +77,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: int
         """
@@ -81,7 +85,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -89,7 +93,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def owner(self):
+    def owner(self) -> NamedUser:
         """
         :type: :class:`Github.NamedUser.NamedUser`
         """
@@ -97,7 +101,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._owner.value
 
     @property
-    def permissions(self):
+    def permissions(self) -> Dict[str, str]:
         """
         :type: dict
         """
@@ -105,7 +109,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._permissions.value
 
     @property
-    def slug(self):
+    def slug(self) -> str:
         """
         :type: string
         """
@@ -113,7 +117,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._slug.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -121,13 +125,13 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._events = github.GithubObject.NotSet
@@ -141,7 +145,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch

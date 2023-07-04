@@ -31,57 +31,59 @@
 import github.GithubObject
 
 
+from typing import Any, Dict, Optional
+from github.GithubObject import NonCompletableGithubObject
 class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitTreeElements
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
 
     @property
-    def mode(self):
+    def mode(self) -> str:
         """
         :type: string
         """
         return self._mode.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
         return self._path.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def size(self):
+    def size(self) -> Optional[int]:
         """
         :type: integer
         """
         return self._size.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._mode = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -89,7 +91,7 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
         self._type = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

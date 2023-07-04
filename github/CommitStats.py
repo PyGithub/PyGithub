@@ -30,38 +30,40 @@
 import github.GithubObject
 
 
+from typing import Dict
+from github.GithubObject import NonCompletableGithubObject
 class CommitStats(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitStatses.
     """
 
     @property
-    def additions(self):
+    def additions(self) -> int:
         """
         :type: integer
         """
         return self._additions.value
 
     @property
-    def deletions(self):
+    def deletions(self) -> int:
         """
         :type: integer
         """
         return self._deletions.value
 
     @property
-    def total(self):
+    def total(self) -> int:
         """
         :type: integer
         """
         return self._total.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._additions = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._total = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, int]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "deletions" in attributes:  # pragma no branch

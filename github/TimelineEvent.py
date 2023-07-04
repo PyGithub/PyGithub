@@ -25,65 +25,70 @@ import github.NamedUser
 import github.TimelineEventSource
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
+from github.NamedUser import NamedUser
+from github.TimelineEventSource import TimelineEventSource
 class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self):
+    def actor(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._actor.value
 
     @property
-    def commit_id(self):
+    def commit_id(self) -> str:
         """
         :type: string
         """
         return self._commit_id.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def event(self):
+    def event(self) -> str:
         """
         :type: string
         """
         return self._event.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
         return self._id.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
         return self._node_id.value
 
     @property
-    def commit_url(self):
+    def commit_url(self) -> str:
         """
         :type: string
         """
         return self._commit_url.value
 
     @property
-    def source(self):
+    def source(self) -> Any[TimelineEventSource, None]:
         """
         :type: :class:`github.TimelineEventSource.TimelineEventSource`
         """
@@ -96,7 +101,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def body(self):
+    def body(self) -> Any[str, None]:
         """
         :type string
         """
@@ -105,7 +110,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def author_association(self):
+    def author_association(self) -> Any[str, None]:
         """
         :type string
         """
@@ -117,13 +122,13 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         return None
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -136,7 +141,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         self._author_association = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["actor"]

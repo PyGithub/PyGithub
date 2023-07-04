@@ -24,16 +24,25 @@ import github.GithubObject
 import github.WorkflowRun
 
 
+from datetime import datetime
+from typing import Any, Dict, Union
+from github.Branch import Branch
+from github.Commit import Commit
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
+from github.Tag import Tag
+from github.WorkflowRun import WorkflowRun
 class Workflow(github.GithubObject.CompletableGithubObject):
     """
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: int
         """
@@ -41,7 +50,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -49,7 +58,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: string
         """
@@ -57,7 +66,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._path.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
@@ -65,7 +74,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -73,7 +82,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -81,7 +90,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -89,7 +98,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -97,14 +106,14 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def badge_url(self):
+    def badge_url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
 
-    def create_dispatch(self, ref, inputs=github.GithubObject.NotSet):
+    def create_dispatch(self, ref: Union[str, Branch, Commit, Tag], inputs: Union[Dict[str, Union[str, int, float]], _NotSetType] = github.GithubObject.NotSet) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or :class:`github.Commit.Commit` or string
@@ -133,12 +142,12 @@ class Workflow(github.GithubObject.CompletableGithubObject):
 
     def get_runs(
         self,
-        actor=github.GithubObject.NotSet,
-        branch=github.GithubObject.NotSet,
-        event=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        check_suite_id=github.GithubObject.NotSet,
-    ):
+        actor: Union[str, NamedUser, _NotSetType] = github.GithubObject.NotSet,
+        branch: Union[str, Branch, _NotSetType] = github.GithubObject.NotSet,
+        event: Union[str, _NotSetType] = github.GithubObject.NotSet,
+        status: Union[str, _NotSetType] = github.GithubObject.NotSet,
+        check_suite_id: Union[int, _NotSetType] = github.GithubObject.NotSet
+    ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :param actor: :class:`github.NamedUser.NamedUser` or string
@@ -189,7 +198,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             list_item="workflow_runs",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
@@ -200,7 +209,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._badge_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

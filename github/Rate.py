@@ -29,12 +29,15 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class Rate(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "limit": self._limit.value,
@@ -44,40 +47,40 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def limit(self):
+    def limit(self) -> int:
         """
         :type: integer
         """
         return self._limit.value
 
     @property
-    def remaining(self):
+    def remaining(self) -> int:
         """
         :type: integer
         """
         return self._remaining.value
 
     @property
-    def reset(self):
+    def reset(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._reset.value
 
     @property
-    def used(self):
+    def used(self) -> int:
         """
         :type: integer
         """
         return self._used.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._limit = github.GithubObject.NotSet
         self._remaining = github.GithubObject.NotSet
         self._reset = github.GithubObject.NotSet
         self._used = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "limit" in attributes:  # pragma no branch
             self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch

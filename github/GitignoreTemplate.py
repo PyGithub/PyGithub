@@ -30,33 +30,35 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def source(self):
+    def source(self) -> str:
         """
         :type: string
         """
         return self._source.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._source = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "source" in attributes:  # pragma no branch
             self._source = self._makeStringAttribute(attributes["source"])
         if "name" in attributes:  # pragma no branch

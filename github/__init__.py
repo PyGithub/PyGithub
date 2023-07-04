@@ -34,6 +34,29 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
+from github.GithubRetry import GithubRetry as GithubRetry
+from .GithubException import BadAttributeException as BadAttributeException
+from .GithubException import BadCredentialsException as BadCredentialsException
+from .GithubException import BadUserAgentException as BadUserAgentException
+from .GithubException import GithubException as GithubException
+from .GithubException import IncompletableObject as IncompletableObject
+from .GithubException import RateLimitExceededException as RateLimitExceededException
+from .GithubException import TwoFactorException as TwoFactorException
+from .GithubException import UnknownObjectException as UnknownObjectException
+from .InputFileContent import InputFileContent as InputFileContent
+from .InputGitAuthor import InputGitAuthor as InputGitAuthor
+from .InputGitTreeElement import InputGitTreeElement as InputGitTreeElement
+from .GithubException import BadAttributeException as BadAttributeException
+from .GithubException import BadCredentialsException as BadCredentialsException
+from .GithubException import BadUserAgentException as BadUserAgentException
+from .GithubException import GithubException as GithubException
+from .GithubException import IncompletableObject as IncompletableObject
+from .GithubException import RateLimitExceededException as RateLimitExceededException
+from .GithubException import TwoFactorException as TwoFactorException
+from .GithubException import UnknownObjectException as UnknownObjectException
+from .InputFileContent import InputFileContent as InputFileContent
+from .InputGitAuthor import InputGitAuthor as InputGitAuthor
+from .InputGitTreeElement import InputGitTreeElement as InputGitTreeElement
 __all__ = [
     "Auth",
     "AppAuthentication",
@@ -90,7 +113,7 @@ def set_log_level(level: int):
     logger.setLevel(level)
 
 
-def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)
+def enable_console_debug_logging() -> None:  # pragma no cover (Function useful only outside test environment)
     """
     This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
     """

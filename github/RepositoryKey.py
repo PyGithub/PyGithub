@@ -36,16 +36,19 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
 class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
     This class represents RepositoryKeys. The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -53,7 +56,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -61,7 +64,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def key(self):
+    def key(self) -> str:
         """
         :type: string
         """
@@ -69,7 +72,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._key.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -77,7 +80,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -85,7 +88,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def verified(self):
+    def verified(self) -> bool:
         """
         :type: bool
         """
@@ -93,21 +96,21 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         return self._verified.value
 
     @property
-    def read_only(self):
+    def read_only(self) -> bool:
         """
         :type: bool
         """
         self._completeIfNotSet(self._read_only)
         return self._read_only.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._key = github.GithubObject.NotSet
@@ -116,7 +119,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._verified = github.GithubObject.NotSet
         self._read_only = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch

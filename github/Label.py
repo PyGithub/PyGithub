@@ -36,16 +36,18 @@ import github.GithubObject
 from . import Consts
 
 
+from typing import Any, Dict, Optional, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
 class Label(github.GithubObject.CompletableGithubObject):
     """
     This class represents Labels. The reference can be found here https://docs.github.com/en/rest/reference/issues#labels
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def color(self):
+    def color(self) -> str:
         """
         :type: string
         """
@@ -53,7 +55,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         return self._color.value
 
     @property
-    def description(self):
+    def description(self) -> Optional[str]:
         """
         :type: string
         """
@@ -61,7 +63,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -69,21 +71,21 @@ class Label(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, name, color, description=github.GithubObject.NotSet):
+    def edit(self, name: str, color: str, description: Union[str, _NotSetType] = github.GithubObject.NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string
@@ -111,16 +113,16 @@ class Label(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return urllib.parse.quote(self.name)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._color = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
         if "description" in attributes:  # pragma no branch

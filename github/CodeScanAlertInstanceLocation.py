@@ -23,16 +23,19 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+import github.GithubObject
+import github.GithubObject
 class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents code scanning alert instance locations.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.path} @ l{self.start_line}:c{self.start_column}-l{self.end_line}:c{self.end_column}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "path": self.path,
@@ -44,48 +47,48 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
         )
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         :type: str
         """
         return self._path.value
 
     @property
-    def start_line(self):
+    def start_line(self) -> int:
         """
         :type: int
         """
         return self._start_line.value
 
     @property
-    def start_column(self):
+    def start_column(self) -> int:
         """
         :type: int
         """
         return self._start_column.value
 
     @property
-    def end_line(self):
+    def end_line(self) -> int:
         """
         :type: int
         """
         return self._end_line.value
 
     @property
-    def end_column(self):
+    def end_column(self) -> int:
         """
         :type: int
         """
         return self._end_column.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._path = github.GithubObject.NotSet
         self._start_line = github.GithubObject.NotSet
         self._start_column = github.GithubObject.NotSet
         self._end_line = github.GithubObject.NotSet
         self._end_column = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "start_line" in attributes:  # pragma no branch

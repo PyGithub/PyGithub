@@ -23,58 +23,61 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+import github.GithubObject
+import github.GithubObject
 class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Alerts from code scanning.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: str
         """
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: str
         """
         return self._name.value
 
     @property
-    def severity(self):
+    def severity(self) -> str:
         """
         :type: str
         """
         return self._severity.value
 
     @property
-    def security_severity_level(self):
+    def security_severity_level(self) -> str:
         """
         :type: str
         """
         return self._security_severity_level.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: str
         """
         return self._description.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._severity = github.GithubObject.NotSet
         self._security_severity_level = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

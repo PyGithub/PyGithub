@@ -23,92 +23,95 @@
 import github.GithubObject
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
 class Topic(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents topics as used by https://github.com/topics. The object reference can be found here https://docs.github.com/en/rest/reference/search#search-topics
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
         return self._name.value
 
     @property
-    def display_name(self):
+    def display_name(self) -> str:
         """
         :type: string
         """
         return self._display_name.value
 
     @property
-    def short_description(self):
+    def short_description(self) -> str:
         """
         :type: string
         """
         return self._short_description.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
         return self._description.value
 
     @property
-    def created_by(self):
+    def created_by(self) -> str:
         """
         :type: string
         """
         return self._created_by.value
 
     @property
-    def released(self):
+    def released(self) -> str:
         """
         :type: string
         """
         return self._released.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._updated_at.value
 
     @property
-    def featured(self):
+    def featured(self) -> bool:
         """
         :type: bool
         """
         return self._featured.value
 
     @property
-    def curated(self):
+    def curated(self) -> bool:
         """
         :type: bool
         """
         return self._curated.value
 
     @property
-    def score(self):
+    def score(self) -> float:
         """
         :type: float
         """
         return self._score.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._display_name = github.GithubObject.NotSet
         self._short_description = github.GithubObject.NotSet
@@ -121,7 +124,7 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
         self._curated = github.GithubObject.NotSet
         self._score = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "display_name" in attributes:  # pragma no branch

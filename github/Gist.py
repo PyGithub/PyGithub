@@ -39,16 +39,25 @@ import github.NamedUser
 import github.PaginatedList
 
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+from github.GistComment import GistComment
+from github.GistFile import GistFile
+from github.GistHistoryState import GistHistoryState
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.InputFileContent import InputFileContent
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
 class Gist(github.GithubObject.CompletableGithubObject):
     """
     This class represents Gists. The reference can be found here https://docs.github.com/en/rest/reference/gists
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def comments(self):
+    def comments(self) -> int:
         """
         :type: integer
         """
@@ -56,7 +65,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._comments.value
 
     @property
-    def comments_url(self):
+    def comments_url(self) -> str:
         """
         :type: string
         """
@@ -64,7 +73,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._comments_url.value
 
     @property
-    def commits_url(self):
+    def commits_url(self) -> str:
         """
         :type: string
         """
@@ -72,7 +81,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._commits_url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -80,7 +89,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self):
+    def description(self) -> Optional[str]:
         """
         :type: string
         """
@@ -88,7 +97,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def files(self):
+    def files(self) -> Dict[str, GistFile]:
         """
         :type: dict of string to :class:`github.GistFile.GistFile`
         """
@@ -96,7 +105,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._files.value
 
     @property
-    def fork_of(self):
+    def fork_of(self) -> Optional[Gist]:
         """
         :type: :class:`github.Gist.Gist`
         """
@@ -104,7 +113,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._fork_of.value
 
     @property
-    def forks(self):
+    def forks(self) -> List[Gist]:
         """
         :type: list of :class:`github.Gist.Gist`
         """
@@ -112,7 +121,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._forks.value
 
     @property
-    def forks_url(self):
+    def forks_url(self) -> str:
         """
         :type: string
         """
@@ -120,7 +129,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._forks_url.value
 
     @property
-    def git_pull_url(self):
+    def git_pull_url(self) -> str:
         """
         :type: string
         """
@@ -128,7 +137,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._git_pull_url.value
 
     @property
-    def git_push_url(self):
+    def git_push_url(self) -> str:
         """
         :type: string
         """
@@ -136,7 +145,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._git_push_url.value
 
     @property
-    def history(self):
+    def history(self) -> List[GistHistoryState]:
         """
         :type: list of :class:`github.GistHistoryState.GistHistoryState`
         """
@@ -144,7 +153,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._history.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -152,7 +161,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: string
         """
@@ -160,7 +169,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def owner(self):
+    def owner(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -168,7 +177,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._owner.value
 
     @property
-    def public(self):
+    def public(self) -> bool:
         """
         :type: bool
         """
@@ -176,7 +185,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._public.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -184,7 +193,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -192,14 +201,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self):
+    def user(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def create_comment(self, body):
+    def create_comment(self, body: str) -> GistComment:
         """
         :calls: `POST /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         :param body: string
@@ -216,7 +225,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def create_fork(self):
+    def create_fork(self) -> Gist:
         """
         :calls: `POST /gists/{id}/forks <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: :class:`github.Gist.Gist`
@@ -224,7 +233,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/forks")
         return Gist(self._requester, headers, data, completed=True)
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
@@ -232,8 +241,8 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
-        self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet
-    ):
+        self, description: Union[_NotSetType, str] = github.GithubObject.NotSet, files: Union[_NotSetType, Dict[str, Optional[InputFileContent]]] = github.GithubObject.NotSet
+    ) -> None:
         """
         :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         :param description: string
@@ -260,7 +269,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def get_comment(self, id):
+    def get_comment(self, id: int) -> GistComment:
         """
         :calls: `GET /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         :param id: integer
@@ -274,7 +283,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def get_comments(self):
+    def get_comments(self) -> PaginatedList[GistComment]:
         """
         :calls: `GET /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
@@ -286,7 +295,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def is_starred(self):
+    def is_starred(self) -> bool:
         """
         :calls: `GET /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: bool
@@ -294,7 +303,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
         return status == 204
 
-    def reset_starred(self):
+    def reset_starred(self) -> None:
         """
         :calls: `DELETE /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
@@ -303,14 +312,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "DELETE", f"{self.url}/star"
         )
 
-    def set_starred(self):
+    def set_starred(self) -> None:
         """
         :calls: `PUT /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._comments = github.GithubObject.NotSet
         self._comments_url = github.GithubObject.NotSet
         self._commits_url = github.GithubObject.NotSet
@@ -331,7 +340,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch

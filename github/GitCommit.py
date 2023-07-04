@@ -33,16 +33,20 @@ import github.GithubObject
 import github.GitTree
 
 
+from typing import Any, Dict, List
+from github.GitAuthor import GitAuthor
+from github.GithubObject import CompletableGithubObject
+from github.GitTree import GitTree
 class GitCommit(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitCommits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def author(self):
+    def author(self) -> GitAuthor:
         """
         :type: :class:`github.GitAuthor.GitAuthor`
         """
@@ -50,7 +54,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._author.value
 
     @property
-    def committer(self):
+    def committer(self) -> GitAuthor:
         """
         :type: :class:`github.GitAuthor.GitAuthor`
         """
@@ -58,7 +62,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._committer.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -66,7 +70,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: string
         """
@@ -74,7 +78,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._message.value
 
     @property
-    def parents(self):
+    def parents(self) -> List[GitCommit]:
         """
         :type: list of :class:`github.GitCommit.GitCommit`
         """
@@ -82,7 +86,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._parents.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -90,7 +94,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def tree(self):
+    def tree(self) -> GitTree:
         """
         :type: :class:`github.GitTree.GitTree`
         """
@@ -98,7 +102,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._tree.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -106,10 +110,10 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._committer = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -119,7 +123,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         self._tree = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.GitAuthor.GitAuthor, attributes["author"]

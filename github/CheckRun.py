@@ -30,19 +30,26 @@ import github.PaginatedList
 import github.PullRequest
 
 
+from typing import Any, Dict, List, Union
+from github.CheckRunAnnotation import CheckRunAnnotation
+from github.CheckRunOutput import CheckRunOutput
+from github.GithubApp import GithubApp
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.PaginatedList import PaginatedList
+from github.PullRequest import PullRequest
 class CheckRun(github.GithubObject.CompletableGithubObject):
     """
     This class represents check runs.
     The reference can be found here https://docs.github.com/en/rest/reference/checks#check-runs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"id": self._id.value, "conclusion": self._conclusion.value}
         )
 
     @property
-    def app(self):
+    def app(self) -> GithubApp:
         """
         :type: :class:`github.GithubApp.GithubApp`
         """
@@ -50,7 +57,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._app.value
 
     @property
-    def check_suite_id(self):
+    def check_suite_id(self) -> int:
         """
         :type: integer
         """
@@ -58,7 +65,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._check_suite_id.value
 
     @property
-    def completed_at(self):
+    def completed_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -66,7 +73,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._completed_at.value
 
     @property
-    def conclusion(self):
+    def conclusion(self) -> str:
         """
         :type: string
         """
@@ -74,7 +81,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def details_url(self):
+    def details_url(self) -> str:
         """
         :type: string
         """
@@ -82,7 +89,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._details_url.value
 
     @property
-    def external_id(self):
+    def external_id(self) -> str:
         """
         :type: string
         """
@@ -90,7 +97,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._external_id.value
 
     @property
-    def head_sha(self):
+    def head_sha(self) -> str:
         """
         :type: string
         """
@@ -98,7 +105,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._head_sha.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -106,7 +113,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -114,7 +121,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -122,7 +129,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -130,7 +137,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def output(self):
+    def output(self) -> CheckRunOutput:
         """
         :type: :class:`github.CheckRunOutput.CheckRunOutput`
         """
@@ -138,7 +145,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._output.value
 
     @property
-    def pull_requests(self):
+    def pull_requests(self) -> List[PullRequest]:
         """
         :type: list of :class:`github.PullRequest.PullRequest`
         """
@@ -146,7 +153,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._pull_requests.value
 
     @property
-    def started_at(self):
+    def started_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -154,7 +161,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._started_at.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
@@ -162,14 +169,14 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         return self._status.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_annotations(self):
+    def get_annotations(self) -> PaginatedList[CheckRunAnnotation]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRunAnnotation.CheckRunAnnotation`
@@ -184,17 +191,17 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        name=github.GithubObject.NotSet,
-        head_sha=github.GithubObject.NotSet,
-        details_url=github.GithubObject.NotSet,
-        external_id=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        started_at=github.GithubObject.NotSet,
-        conclusion=github.GithubObject.NotSet,
-        completed_at=github.GithubObject.NotSet,
-        output=github.GithubObject.NotSet,
-        actions=github.GithubObject.NotSet,
-    ):
+        name: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        head_sha: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        details_url: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        external_id: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        status: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        started_at: Union[_NotSetType, datetime] = github.GithubObject.NotSet,
+        conclusion: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        completed_at: Union[_NotSetType, datetime] = github.GithubObject.NotSet,
+        output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = github.GithubObject.NotSet,
+        actions: Union[_NotSetType, List[Dict[str, str]]] = github.GithubObject.NotSet
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/check-runs/{check_run_id} <https://docs.github.com/en/rest/reference/checks#update-a-check-run>`_
         :param name: string
@@ -263,7 +270,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._app = github.GithubObject.NotSet
         self._check_suite_id = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
@@ -281,7 +288,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         self._status = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.GithubApp.GithubApp, attributes["app"]

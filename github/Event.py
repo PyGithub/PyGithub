@@ -34,71 +34,77 @@ import github.Organization
 import github.Repository
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import NonCompletableGithubObject
+from github.NamedUser import NamedUser
+from github.Organization import Organization
+from github.Repository import Repository
 class Event(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
 
     @property
-    def actor(self):
+    def actor(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._actor.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: string
         """
         return self._id.value
 
     @property
-    def org(self):
+    def org(self) -> Organization:
         """
         :type: :class:`github.Organization.Organization`
         """
         return self._org.value
 
     @property
-    def payload(self):
+    def payload(self) -> Dict[str, Any]:
         """
         :type: dict
         """
         return self._payload.value
 
     @property
-    def public(self):
+    def public(self) -> bool:
         """
         :type: bool
         """
         return self._public.value
 
     @property
-    def repo(self):
+    def repo(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
         return self._repo.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -108,7 +114,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         self._repo = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["actor"]

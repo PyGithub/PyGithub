@@ -32,16 +32,19 @@ import github.GithubObject
 import github.GitObject
 
 
+from typing import Any, Dict, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GitObject import GitObject
 class GitRef(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self._ref.value})
 
     @property
-    def object(self):
+    def object(self) -> GitObject:
         """
         :type: :class:`github.GitObject.GitObject`
         """
@@ -49,7 +52,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         return self._object.value
 
     @property
-    def ref(self):
+    def ref(self) -> str:
         """
         :type: string
         """
@@ -57,21 +60,21 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         return self._ref.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha, force=github.GithubObject.NotSet):
+    def edit(self, sha: str, force: Union[bool, _NotSetType] = github.GithubObject.NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         :param sha: string
@@ -90,12 +93,12 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._object = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(
                 github.GitObject.GitObject, attributes["object"]

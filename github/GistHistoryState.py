@@ -33,13 +33,20 @@ import github.GithubObject
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+from github.CommitStats import CommitStats
+from github.Gist import Gist
+from github.GistFile import GistFile
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class GistHistoryState(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistHistoryStates
     """
 
     @property
-    def change_status(self):
+    def change_status(self) -> CommitStats:
         """
         :type: :class:`github.CommitStats.CommitStats`
         """
@@ -47,7 +54,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._change_status.value
 
     @property
-    def comments(self):
+    def comments(self) -> int:
         """
         :type: integer
         """
@@ -55,7 +62,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._comments.value
 
     @property
-    def comments_url(self):
+    def comments_url(self) -> str:
         """
         :type: string
         """
@@ -63,7 +70,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._comments_url.value
 
     @property
-    def commits_url(self):
+    def commits_url(self) -> str:
         """
         :type: string
         """
@@ -71,7 +78,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._commits_url.value
 
     @property
-    def committed_at(self):
+    def committed_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -79,7 +86,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._committed_at.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -87,7 +94,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """
         :type: string
         """
@@ -95,7 +102,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._description.value
 
     @property
-    def files(self):
+    def files(self) -> Dict[str, GistFile]:
         """
         :type: dict of string to :class:`github.GistFile.GistFile`
         """
@@ -103,7 +110,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._files.value
 
     @property
-    def forks(self):
+    def forks(self) -> List[Gist]:
         """
         :type: list of :class:`github.Gist.Gist`
         """
@@ -111,7 +118,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._forks.value
 
     @property
-    def forks_url(self):
+    def forks_url(self) -> str:
         """
         :type: string
         """
@@ -119,7 +126,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._forks_url.value
 
     @property
-    def git_pull_url(self):
+    def git_pull_url(self) -> str:
         """
         :type: string
         """
@@ -127,7 +134,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._git_pull_url.value
 
     @property
-    def git_push_url(self):
+    def git_push_url(self) -> str:
         """
         :type: string
         """
@@ -135,7 +142,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._git_push_url.value
 
     @property
-    def history(self):
+    def history(self) -> List[GistHistoryState]:
         """
         :type: list of :class:`GistHistoryState`
         """
@@ -143,7 +150,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._history.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -151,7 +158,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> str:
         """
         :type: string
         """
@@ -159,7 +166,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def owner(self):
+    def owner(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -167,7 +174,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._owner.value
 
     @property
-    def public(self):
+    def public(self) -> bool:
         """
         :type: bool
         """
@@ -175,7 +182,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._public.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -183,7 +190,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -191,7 +198,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self):
+    def user(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -199,14 +206,14 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._user.value
 
     @property
-    def version(self):
+    def version(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._version)
         return self._version.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._change_status = github.GithubObject.NotSet
         self._comments = github.GithubObject.NotSet
         self._comments_url = github.GithubObject.NotSet
@@ -229,7 +236,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         self._user = github.GithubObject.NotSet
         self._version = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "change_status" in attributes:  # pragma no branch
             self._change_status = self._makeClassAttribute(
                 github.CommitStats.CommitStats, attributes["change_status"]

@@ -34,16 +34,23 @@ import github.Issue
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict, Optional, Union
+from github.GithubObject import CompletableGithubObject
+from github.Issue import Issue
+from github.Label import Label
+from github.Milestone import Milestone
+from github.NamedUser import NamedUser
 class IssueEvent(github.GithubObject.CompletableGithubObject):
     """
     This class represents IssueEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#events
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self):
+    def actor(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -51,7 +58,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._actor.value
 
     @property
-    def commit_id(self):
+    def commit_id(self) -> Optional[str]:
         """
         :type: string
         """
@@ -59,7 +66,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._commit_id.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -67,7 +74,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def event(self):
+    def event(self) -> str:
         """
         :type: string
         """
@@ -75,7 +82,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._event.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -83,7 +90,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def issue(self):
+    def issue(self) -> Issue:
         """
         :type: :class:`github.Issue.Issue`
         """
@@ -91,7 +98,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._issue.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -99,7 +106,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -107,7 +114,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def commit_url(self):
+    def commit_url(self) -> Optional[str]:
         """
         :type: string
         """
@@ -115,7 +122,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._commit_url.value
 
     @property
-    def label(self):
+    def label(self) -> Optional[Label]:
         """
         :type: :class:`github.Label.Label`
         """
@@ -123,7 +130,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._label.value
 
     @property
-    def assignee(self):
+    def assignee(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -131,7 +138,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._assignee.value
 
     @property
-    def assigner(self):
+    def assigner(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -139,7 +146,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._assigner.value
 
     @property
-    def review_requester(self):
+    def review_requester(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -147,7 +154,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._review_requester.value
 
     @property
-    def requested_reviewer(self):
+    def requested_reviewer(self) -> Optional[NamedUser]:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -155,7 +162,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._requested_reviewer.value
 
     @property
-    def milestone(self):
+    def milestone(self) -> Optional[Milestone]:
         """
         :type: :class:`github.Milestone.Milestone`
         """
@@ -163,7 +170,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._milestone.value
 
     @property
-    def rename(self):
+    def rename(self) -> Optional[Dict[str, str]]:
         """
         :type: dict
         """
@@ -171,7 +178,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._rename.value
 
     @property
-    def dismissed_review(self):
+    def dismissed_review(self) -> Optional[Dict[str, Union[str, int]]]:
         """
         :type: dict
         """
@@ -179,14 +186,14 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         return self._dismissed_review.value
 
     @property
-    def lock_reason(self):
+    def lock_reason(self) -> Optional[str]:
         """
         :type: string
         """
         self._completeIfNotSet(self._lock_reason)
         return self._lock_reason.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -206,7 +213,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._dismissed_review = github.GithubObject.NotSet
         self._lock_reason = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["actor"]

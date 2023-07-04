@@ -37,23 +37,28 @@ import github.PaginatedList
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
+from github.Repository import Repository
 class Migration(github.GithubObject.CompletableGithubObject):
     """
     This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: int
         """
         return self._id.value
 
     @property
-    def owner(self):
+    def owner(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -61,7 +66,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._owner.value
 
     @property
-    def guid(self):
+    def guid(self) -> str:
         """
         :type: str
         """
@@ -69,7 +74,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._guid.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: str
         """
@@ -77,7 +82,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
-    def lock_repositories(self):
+    def lock_repositories(self) -> bool:
         """
         :type: bool
         """
@@ -85,7 +90,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._lock_repositories.value
 
     @property
-    def exclude_attachments(self):
+    def exclude_attachments(self) -> bool:
         """
         :type: bool
         """
@@ -93,7 +98,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._exclude_attachments.value
 
     @property
-    def repositories(self):
+    def repositories(self) -> List[Repository]:
         """
         :type: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
@@ -101,7 +106,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._repositories.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: str
         """
@@ -109,7 +114,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         :rtype: None
@@ -118,7 +123,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         :rtype: None
@@ -126,7 +131,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
-    def get_status(self):
+    def get_status(self) -> str:
         """
         :calls: `GET /user/migrations/{migration_id} <https://docs.github.com/en/rest/reference/migrations>`_
         :rtype: str
@@ -137,7 +142,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
         return self.state
 
-    def get_archive_url(self):
+    def get_archive_url(self) -> str:
         """
         :calls: `GET /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
         :rtype: str
@@ -149,7 +154,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         )
         return data["data"]
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
         """
@@ -159,7 +164,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def unlock_repo(self, repo_name):
+    def unlock_repo(self, repo_name: str) -> None:
         """
         :calls: `DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock <https://docs.github.com/en/rest/reference/migrations>`_
         :param repo_name: str
@@ -172,7 +177,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
         self._guid = github.GithubObject.NotSet
@@ -184,7 +189,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:

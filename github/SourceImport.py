@@ -24,12 +24,14 @@ import github.GithubObject
 from github import Consts
 
 
+from typing import Any, Dict, Optional
+from github.GithubObject import CompletableGithubObject
 class SourceImport(github.GithubObject.CompletableGithubObject):
     """
     This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "vcs_url": self._vcs_url.value,
@@ -40,7 +42,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def authors_count(self):
+    def authors_count(self) -> int:
         """
         :type: integer
         """
@@ -48,7 +50,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._authors_count.value
 
     @property
-    def authors_url(self):
+    def authors_url(self) -> str:
         """
         :type: string
         """
@@ -56,7 +58,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._authors_url.value
 
     @property
-    def has_large_files(self):
+    def has_large_files(self) -> bool:
         """
         :type: bool
         """
@@ -64,7 +66,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._has_large_files.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -72,7 +74,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def large_files_count(self):
+    def large_files_count(self) -> int:
         """
         :type: integer
         """
@@ -80,7 +82,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._large_files_count.value
 
     @property
-    def large_files_size(self):
+    def large_files_size(self) -> int:
         """
         :type: integer
         """
@@ -88,7 +90,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._large_files_size.value
 
     @property
-    def repository_url(self):
+    def repository_url(self) -> str:
         """
         :type: string
         """
@@ -96,7 +98,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._repository_url.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
@@ -104,7 +106,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._status.value
 
     @property
-    def status_text(self):
+    def status_text(self) -> str:
         """
         :type: string
         """
@@ -112,7 +114,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._status_text.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -120,7 +122,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def use_lfs(self):
+    def use_lfs(self) -> str:
         """
         :type: string
         """
@@ -128,7 +130,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._use_lfs.value
 
     @property
-    def vcs(self):
+    def vcs(self) -> str:
         """
         :type: string
         """
@@ -136,7 +138,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._vcs.value
 
     @property
-    def vcs_url(self):
+    def vcs_url(self) -> str:
         """
         :type: string
         """
@@ -147,7 +149,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         return super().update(additional_headers=import_header)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._authors_count = github.GithubObject.NotSet
         self._authors_url = github.GithubObject.NotSet
         self._has_large_files = github.GithubObject.NotSet
@@ -162,7 +164,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         self._vcs = github.GithubObject.NotSet
         self._vcs_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch
             self._authors_count = self._makeIntAttribute(attributes["authors_count"])
         if "authors_url" in attributes:  # pragma no branch

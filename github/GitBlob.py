@@ -31,16 +31,18 @@
 import github.GithubObject
 
 
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
 class GitBlob(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitBlobs. The reference can be found here https://docs.github.com/en/rest/reference/git#blobs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def content(self):
+    def content(self) -> str:
         """
         :type: string
         """
@@ -48,7 +50,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         return self._content.value
 
     @property
-    def encoding(self):
+    def encoding(self) -> str:
         """
         :type: string
         """
@@ -56,7 +58,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         return self._encoding.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -64,7 +66,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :type: integer
         """
@@ -72,21 +74,21 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         return self._size.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch

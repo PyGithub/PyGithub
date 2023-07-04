@@ -42,16 +42,22 @@ import github.NamedUser
 from . import Consts
 
 
+from datetime import datetime
+from typing import Any, Dict, Union
+from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.GitReleaseAsset import GitReleaseAsset
+from github.NamedUser import NamedUser
+from github.PaginatedList import PaginatedList
 class GitRelease(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -59,7 +65,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -67,7 +73,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def title(self):
+    def title(self) -> str:
         """
         :type: string
         """
@@ -75,7 +81,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._title.value
 
     @property
-    def tag_name(self):
+    def tag_name(self) -> str:
         """
         :type: string
         """
@@ -83,7 +89,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._tag_name.value
 
     @property
-    def target_commitish(self):
+    def target_commitish(self) -> str:
         """
         :type: string
         """
@@ -91,7 +97,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._target_commitish.value
 
     @property
-    def draft(self):
+    def draft(self) -> bool:
         """
         :type: bool
         """
@@ -99,7 +105,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._draft.value
 
     @property
-    def prerelease(self):
+    def prerelease(self) -> bool:
         """
         :type: bool
         """
@@ -107,7 +113,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._prerelease.value
 
     @property
-    def author(self):
+    def author(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -115,7 +121,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._author.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -123,7 +129,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def published_at(self):
+    def published_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -131,7 +137,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._published_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -139,7 +145,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def upload_url(self):
+    def upload_url(self) -> str:
         """
         :type: string
         """
@@ -147,7 +153,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._upload_url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -155,7 +161,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def tarball_url(self):
+    def tarball_url(self) -> str:
         """
         :type: string
         """
@@ -163,7 +169,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._tarball_url.value
 
     @property
-    def zipball_url(self):
+    def zipball_url(self) -> str:
         """
         :type: string
         """
@@ -171,14 +177,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._zipball_url.value
 
     @property
-    def assets(self):
+    def assets(self) -> list[GitReleaseAsset]:
         """
         :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         self._completeIfNotSet(self._assets)
         return self._assets.value
 
-    def delete_release(self):
+    def delete_release(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#delete-a-release>`_
         :rtype: None
@@ -187,13 +193,13 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
 
     def update_release(
         self,
-        name,
-        message,
-        draft=False,
-        prerelease=False,
-        tag_name=github.GithubObject.NotSet,
-        target_commitish=github.GithubObject.NotSet,
-    ):
+        name: str,
+        message: str,
+        draft: bool = False,
+        prerelease: bool = False,
+        tag_name: Union[str, _NotSetType] = github.GithubObject.NotSet,
+        target_commitish: Union[str, _NotSetType] = github.GithubObject.NotSet
+    ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
         :param name: string
@@ -236,11 +242,11 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
 
     def upload_asset(
         self,
-        path,
-        label="",
-        content_type=github.GithubObject.NotSet,
-        name=github.GithubObject.NotSet,
-    ):
+        path: str,
+        label: str = "",
+        content_type: Union[_NotSetType, str] = github.GithubObject.NotSet,
+        name: Union[_NotSetType, str] = github.GithubObject.NotSet
+    ) -> GitReleaseAsset:
         """
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param path: string
@@ -313,7 +319,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._requester, resp_headers, data, completed=True
         )
 
-    def get_assets(self):
+    def get_assets(self) -> PaginatedList[GitReleaseAsset]:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#list-release-assets>`_
         :rtype: :class:`github.PaginatedList.PaginatedList`
@@ -325,7 +331,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
@@ -344,7 +350,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._zipball_url = github.GithubObject.NotSet
         self._assets = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "body" in attributes:

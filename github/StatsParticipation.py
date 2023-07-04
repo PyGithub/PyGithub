@@ -27,30 +27,32 @@
 import github.GithubObject
 
 
+from typing import Dict, List
+from github.GithubObject import NonCompletableGithubObject
 class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents StatsParticipations. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
     """
 
     @property
-    def all(self):
+    def all(self) -> List[int]:
         """
         :type: list of int
         """
         return self._all.value
 
     @property
-    def owner(self):
+    def owner(self) -> List[int]:
         """
         :type: list of int
         """
         return self._owner.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._all = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, List[int]]) -> None:
         if "all" in attributes:  # pragma no branch
             self._all = self._makeListOfIntsAttribute(attributes["all"])
         if "owner" in attributes:  # pragma no branch

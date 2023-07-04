@@ -32,16 +32,20 @@ import github.GithubObject
 import github.NamedUser
 
 
+from datetime import datetime
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject
+from github.NamedUser import NamedUser
 class GistComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistComments. The reference can be found here https://docs.github.com/en/rest/reference/gists#comments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def body(self):
+    def body(self) -> str:
         """
         :type: string
         """
@@ -49,7 +53,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         return self._body.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -57,7 +61,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -65,7 +69,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -73,7 +77,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
@@ -81,21 +85,21 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self):
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, body):
+    def edit(self, body: str) -> None:
         """
         :calls: `PATCH /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         :param body: string
@@ -110,7 +114,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._body = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -118,7 +122,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch

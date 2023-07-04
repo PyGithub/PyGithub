@@ -33,16 +33,20 @@ import github.GithubObject
 import github.GitObject
 
 
+from typing import Any, Dict, Union
+from github.GitAuthor import GitAuthor
+from github.GithubObject import CompletableGithubObject
+from github.GitObject import GitObject
 class GitTag(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
         :type: string
         """
@@ -50,7 +54,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._message.value
 
     @property
-    def object(self):
+    def object(self) -> GitObject:
         """
         :type: :class:`github.GitObject.GitObject`
         """
@@ -58,7 +62,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._object.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
@@ -66,7 +70,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._sha.value
 
     @property
-    def tag(self):
+    def tag(self) -> str:
         """
         :type: string
         """
@@ -74,7 +78,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._tag.value
 
     @property
-    def tagger(self):
+    def tagger(self) -> GitAuthor:
         """
         :type: :class:`github.GitAuthor.GitAuthor`
         """
@@ -82,14 +86,14 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         return self._tagger.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._message = github.GithubObject.NotSet
         self._object = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -97,7 +101,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
         self._tagger = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch

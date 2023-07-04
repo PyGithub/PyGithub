@@ -29,64 +29,68 @@ import github.GithubObject
 import github.Repository
 
 
+from typing import Any, Dict, List
+from github.CommitStatus import CommitStatus
+from github.GithubObject import NonCompletableGithubObject
+from github.Repository import Repository
 class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitCombinedStatuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: string
         """
         return self._state.value
 
     @property
-    def sha(self):
+    def sha(self) -> str:
         """
         :type: string
         """
         return self._sha.value
 
     @property
-    def total_count(self):
+    def total_count(self) -> int:
         """
         :type: integer
         """
         return self._total_count.value
 
     @property
-    def commit_url(self):
+    def commit_url(self) -> str:
         """
         :type: string
         """
         return self._commit_url.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
         return self._repository.value
 
     @property
-    def statuses(self):
+    def statuses(self) -> List[CommitStatus]:
         """
         :type: list of :class:`CommitStatus`
         """
         return self._statuses.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._state = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._total_count = github.GithubObject.NotSet
@@ -95,7 +99,7 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
         self._repository = github.GithubObject.NotSet
         self._statuses = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "sha" in attributes:  # pragma no branch

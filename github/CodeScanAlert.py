@@ -28,100 +28,112 @@ import github.NamedUser
 import github.PaginatedList
 
 
+from typing import Any, Dict
+from datetime import datetime
+import github.GithubObject
+import github.PaginatedList
+import github.CodeScanRule
+import github.CodeScanTool
+import github.CodeScanAlertInstance
+import github.GithubObject
+import github.PaginatedList
+import github.CodeScanRule
+import github.CodeScanTool
+import github.CodeScanAlertInstance
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents alerts from code scanning.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
 
     @property
-    def number(self):
+    def number(self) -> int:
         """
         :type: int
         """
         return self._number.value
 
     @property
-    def rule(self):
+    def rule(self) -> github.CodeScanRule.CodeScanRule:
         """
         :type: :class: `github.CodeScanRule.CodeScanRule`
         """
         return self._rule.value
 
     @property
-    def tool(self):
+    def tool(self) -> github.CodeScanTool.CodeScanTool:
         """
         :type:  :class: `github.CodeScanTool.CodeScanTool`
         """
         return self._tool.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime
         """
         return self._created_at.value
 
     @property
-    def dismissed_at(self):
+    def dismissed_at(self) -> datetime:
         """
         :type: datetime
         """
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self):
+    def dismissed_by(self) -> dict:
         """
         :type: :class: `github.NamedUser.NamedUser`
         """
         return self._dismissed_by.value
 
     @property
-    def dismissed_reason(self):
+    def dismissed_reason(self) -> str:
         """
         :type: str
         """
         return self._dismissed_reason.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
         return self._html_url.value
 
     @property
-    def instances_url(self):
+    def instances_url(self) -> str:
         """
         :type: string
         """
         return self._instances_url.value
 
     @property
-    def most_recent_instance(self):
+    def most_recent_instance(self) -> github.CodeScanAlertInstance.CodeScanAlertInstance:
         """
         :type: :class: github.CodeScanAlertInstance.CodeScanAlertInstance
         """
         return self._most_recent_instance.value
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         :type: str
         """
         return self._state.value
 
-    def get_instances(self):
+    def get_instances(self) -> github.PaginatedList.PaginatedList:
         """
         :calls: `GET` on the URL for instances as provided by Github
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlertInstance.CodeScanAlertInstance`
@@ -133,7 +145,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._number = github.GithubObject.NotSet
         self._rule = github.GithubObject.NotSet
         self._tool = github.GithubObject.NotSet
@@ -150,7 +162,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         self._most_recent_instance = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "rule" in attributes:  # pragma no branch
