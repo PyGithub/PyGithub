@@ -20,19 +20,39 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
 import github
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    is_optional,
+)
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.CheckRun import CheckRun
+    from github.GitCommit import GitCommit
+    from github.GithubApp import GithubApp
+    from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
-class CheckSuite(github.GithubObject.CompletableGithubObject):
+class CheckSuite(CompletableGithubObject):
     """
     This class represents check suites. The reference can be found here https://docs.github.com/en/rest/reference/checks#check-suites
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def after(self):
+    def after(self) -> str:
         """
         :type: string
         """
@@ -40,7 +60,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._after.value
 
     @property
-    def app(self):
+    def app(self) -> GithubApp:
         """
         :type: :class:`github.GithubApp.GithubApp`
         """
@@ -48,7 +68,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._app.value
 
     @property
-    def before(self):
+    def before(self) -> str:
         """
         :type: string
         """
@@ -56,7 +76,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._before.value
 
     @property
-    def check_runs_url(self):
+    def check_runs_url(self) -> str:
         """
         :type: string
         """
@@ -64,7 +84,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._check_runs_url.value
 
     @property
-    def conclusion(self):
+    def conclusion(self) -> str:
         """
         :type: string
         """
@@ -72,7 +92,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -80,7 +100,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def head_branch(self):
+    def head_branch(self) -> str:
         """
         :type: string
         """
@@ -88,7 +108,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._head_branch.value
 
     @property
-    def head_commit(self):
+    def head_commit(self) -> GitCommit:
         """
         :type: :class:`github.GitCommit.GitCommit`
         """
@@ -96,7 +116,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._head_commit.value
 
     @property
-    def head_sha(self):
+    def head_sha(self) -> str:
         """
         :type: string
         """
@@ -104,7 +124,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._head_sha.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: int
         """
@@ -112,7 +132,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def latest_check_runs_count(self):
+    def latest_check_runs_count(self) -> int:
         """
         :type: int
         """
@@ -120,7 +140,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._latest_check_runs_count.value
 
     @property
-    def pull_requests(self):
+    def pull_requests(self) -> list[PullRequest]:
         """
         :type: list of :class:`github.PullRequest.PullRequest`
         """
@@ -128,7 +148,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._pull_requests.value
 
     @property
-    def repository(self):
+    def repository(self) -> Repository:
         """
         :type: :class:`github.Repository.Repository`
         """
@@ -136,7 +156,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._repository.value
 
     @property
-    def status(self):
+    def status(self) -> str:
         """
         :type: string
         """
@@ -144,7 +164,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._status.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -152,14 +172,14 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def rerequest(self):
+    def rerequest(self) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest <https://docs.github.com/en/rest/reference/checks#rerequest-a-check-suite>`_
         :rtype: bool
@@ -172,30 +192,24 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
 
     def get_check_runs(
         self,
-        check_name=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        filter=github.GithubObject.NotSet,
-    ):
+        check_name: Opt[str] = github.GithubObject.NotSet,
+        status: Opt[str] = github.GithubObject.NotSet,
+        filter: Opt[str] = github.GithubObject.NotSet,
+    ) -> PaginatedList[CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-in-a-check-suite>`_
-        :param check_name: string
-        :param status: string
-        :param filter: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRun.CheckRun`
         """
-        assert check_name is github.GithubObject.NotSet or isinstance(
-            check_name, str
-        ), check_name
-        assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
-        url_parameters = dict()
+        assert is_optional(check_name, str), check_name
+        assert is_optional(status, str), status
+        assert is_optional(isinstance(filter, str), filter)
+        url_parameters: dict[str, Any] = {}
         if check_name is not github.GithubObject.NotSet:
             url_parameters["check_name"] = check_name
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
         if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.CheckRun.CheckRun,
             self._requester,
             f"{self.url}/check-runs",
@@ -204,25 +218,25 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
             list_item="check_runs",
         )
 
-    def _initAttributes(self):
-        self._after = github.GithubObject.NotSet
-        self._app = github.GithubObject.NotSet
-        self._before = github.GithubObject.NotSet
-        self._check_runs_url = github.GithubObject.NotSet
-        self._conclusion = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._head_branch = github.GithubObject.NotSet
-        self._head_commit = github.GithubObject.NotSet
-        self._head_sha = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._latest_check_runs_count = github.GithubObject.NotSet
-        self._pull_requests = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._after: Attribute[str] = NotSet
+        self._app: Attribute[GithubApp] = NotSet
+        self._before: Attribute[str] = NotSet
+        self._check_runs_url: Attribute[str] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._head_branch: Attribute[str] = NotSet
+        self._head_commit: Attribute[GitCommit] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._latest_check_runs_count: Attribute[int] = NotSet
+        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "after" in attributes:  # pragma no branch
             self._after = self._makeStringAttribute(attributes["after"])
         if "app" in attributes:  # pragma no branch
