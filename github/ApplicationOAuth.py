@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING
 import github.AccessToken
 import github.Auth
 from github.GithubException import BadCredentialsException, GithubException
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.AccessToken import AccessToken
@@ -40,6 +40,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
     This class is used for identifying and authorizing users for Github Apps.
     The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
     """
+
+    _client_id: Attribute[str]
+    _client_secret: Attribute[str]
 
     def __init__(self, requester, headers, attributes, completed):
         # this object requires a request without authentication
@@ -57,7 +60,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
     def client_secret(self) -> str:
         return self._client_secret.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._client_id = NotSet
         self._client_secret = NotSet
 
