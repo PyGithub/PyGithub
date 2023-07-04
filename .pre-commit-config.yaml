@@ -28,10 +28,6 @@ repos:
     rev: v5.10.1
     hooks:
       - id: isort
-  - repo: https://github.com/pycqa/flake8
-    rev: 3.9.2
-    hooks:
-      - id: flake8
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.1
     hooks:
@@ -46,3 +42,7 @@ repos:
       - id: pyupgrade
         args:
           - --py37-plus
+  - repo: https://github.com/pycqa/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
