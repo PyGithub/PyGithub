@@ -197,7 +197,7 @@ class Issue(CompletableGithubObject):
         return self._number.value
 
     @property
-    def pull_request(self) -> IssuePullRequest:
+    def pull_request(self) -> IssuePullRequest | None:
         self._completeIfNotSet(self._pull_request)
         return self._pull_request.value
 
