@@ -54,7 +54,6 @@ import github.IssuePullRequest
 import github.Label
 import github.Milestone
 import github.NamedUser
-from github.PaginatedList import PaginatedList
 import github.PullRequest
 import github.Reaction
 import github.Repository
@@ -67,6 +66,7 @@ from github.GithubObject import (
     Opt,
     _NotSetType,
 )
+from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.IssueComment import IssueComment
