@@ -65,7 +65,10 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
-    _NotSetType,
+    is_defined,
+    is_optional,
+    is_optional_list,
+    is_undefined,
 )
 
 if TYPE_CHECKING:
@@ -350,28 +353,24 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `POST /authorizations <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         """
-        assert isinstance(scopes, _NotSetType) or all(
-            isinstance(element, str) for element in scopes
-        ), scopes
-        assert isinstance(note, _NotSetType) or isinstance(note, str), note
-        assert isinstance(note_url, _NotSetType) or isinstance(note_url, str), note_url
-        assert isinstance(client_id, _NotSetType) or isinstance(
-            client_id, str
-        ), client_id
-        assert client_secret is NotSet or isinstance(client_secret, str), client_secret
-        assert onetime_password is None or isinstance(
+        assert is_optional_list(scopes, str), scopes
+        assert is_optional(note, str), note
+        assert is_optional(note_url, str), note_url
+        assert is_optional(client_id, str), client_id
+        assert is_optional(client_secret, str), client_secret
+        assert onetime_password is None or is_optional(
             onetime_password, str
         ), onetime_password
         post_parameters: dict[str, Any] = {}
-        if not isinstance(scopes, _NotSetType):
+        if is_defined(scopes):
             post_parameters["scopes"] = scopes
-        if not isinstance(note, _NotSetType):
+        if is_defined(note):
             post_parameters["note"] = note
-        if not isinstance(note_url, _NotSetType):
+        if is_defined(note_url):
             post_parameters["note_url"] = note_url
-        if not isinstance(client_id, _NotSetType):
+        if is_defined(client_id):
             post_parameters["client_id"] = client_id
-        if not isinstance(client_secret, _NotSetType):
+        if is_defined(client_secret):
             post_parameters["client_secret"] = client_secret
         if onetime_password is not None:
             request_header = {
@@ -417,17 +416,15 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
-        assert isinstance(description, _NotSetType) or isinstance(
-            description, str
-        ), description
-        assert isinstance(private, _NotSetType) or isinstance(private, bool), private
+        assert is_undefined(description) or isinstance(description, str), description
+        assert is_undefined(private) or isinstance(private, bool), private
         post_parameters: dict[str, Any] = {
             "name": name,
             "owner": self.login,
         }
-        if not isinstance(description, _NotSetType):
+        if is_defined(description):
             post_parameters["description"] = description
-        if not isinstance(private, _NotSetType):
+        if is_defined(private):
             post_parameters["private"] = private
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -452,14 +449,12 @@ class AuthenticatedUser(CompletableGithubObject):
         assert all(
             isinstance(element, github.InputFileContent) for element in files.values()
         ), files
-        assert isinstance(description, _NotSetType) or isinstance(
-            description, str
-        ), description
+        assert is_undefined(description) or isinstance(description, str), description
         post_parameters = {
             "public": public,
             "files": {key: value._identity for key, value in files.items()},
         }
-        if not isinstance(description, _NotSetType):
+        if is_defined(description):
             post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "POST", "/gists", input=post_parameters
@@ -492,7 +487,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :rtype: :class:`github.Project.Project`
         """
         assert isinstance(name, str), name
-        assert isinstance(body, _NotSetType) or isinstance(body, str), body
+        assert is_undefined(body) or isinstance(body, str), body
         post_parameters = {
             "name": name,
             "body": body,
@@ -527,72 +522,66 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `POST /user/repos <http://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        assert isinstance(description, _NotSetType) or isinstance(
-            description, str
-        ), description
-        assert isinstance(homepage, _NotSetType) or isinstance(homepage, str), homepage
-        assert isinstance(private, _NotSetType) or isinstance(private, bool), private
-        assert isinstance(has_issues, _NotSetType) or isinstance(
-            has_issues, bool
-        ), has_issues
-        assert isinstance(has_wiki, _NotSetType) or isinstance(has_wiki, bool), has_wiki
-        assert isinstance(has_downloads, _NotSetType) or isinstance(
+        assert is_undefined(description) or isinstance(description, str), description
+        assert is_undefined(homepage) or isinstance(homepage, str), homepage
+        assert is_undefined(private) or isinstance(private, bool), private
+        assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
+        assert is_undefined(has_wiki) or isinstance(has_wiki, bool), has_wiki
+        assert is_undefined(has_downloads) or isinstance(
             has_downloads, bool
         ), has_downloads
-        assert isinstance(has_projects, _NotSetType) or isinstance(
+        assert is_undefined(has_projects) or isinstance(
             has_projects, bool
         ), has_projects
-        assert isinstance(auto_init, _NotSetType) or isinstance(
-            auto_init, bool
-        ), auto_init
-        assert isinstance(license_template, _NotSetType) or isinstance(
+        assert is_undefined(auto_init) or isinstance(auto_init, bool), auto_init
+        assert is_undefined(license_template) or isinstance(
             license_template, str
         ), license_template
-        assert isinstance(gitignore_template, _NotSetType) or isinstance(
+        assert is_undefined(gitignore_template) or isinstance(
             gitignore_template, str
         ), gitignore_template
-        assert isinstance(allow_squash_merge, _NotSetType) or isinstance(
+        assert is_undefined(allow_squash_merge) or isinstance(
             allow_squash_merge, bool
         ), allow_squash_merge
-        assert isinstance(allow_merge_commit, _NotSetType) or isinstance(
+        assert is_undefined(allow_merge_commit) or isinstance(
             allow_merge_commit, bool
         ), allow_merge_commit
-        assert isinstance(allow_rebase_merge, _NotSetType) or isinstance(
+        assert is_undefined(allow_rebase_merge) or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
-        assert isinstance(delete_branch_on_merge, _NotSetType) or isinstance(
+        assert is_undefined(delete_branch_on_merge) or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
         post_parameters: dict[str, Any] = {
             "name": name,
         }
-        if not isinstance(description, _NotSetType):
+        if is_defined(description):
             post_parameters["description"] = description
-        if not isinstance(homepage, _NotSetType):
+        if is_defined(homepage):
             post_parameters["homepage"] = homepage
-        if not isinstance(private, _NotSetType):
+        if is_defined(private):
             post_parameters["private"] = private
-        if not isinstance(has_issues, _NotSetType):
+        if is_defined(has_issues):
             post_parameters["has_issues"] = has_issues
-        if not isinstance(has_wiki, _NotSetType):
+        if is_defined(has_wiki):
             post_parameters["has_wiki"] = has_wiki
-        if not isinstance(has_downloads, _NotSetType):
+        if is_defined(has_downloads):
             post_parameters["has_downloads"] = has_downloads
-        if not isinstance(has_projects, _NotSetType):
+        if is_defined(has_projects):
             post_parameters["has_projects"] = has_projects
-        if not isinstance(auto_init, _NotSetType):
+        if is_defined(auto_init):
             post_parameters["auto_init"] = auto_init
-        if not isinstance(license_template, _NotSetType):
+        if is_defined(license_template):
             post_parameters["license_template"] = license_template
-        if not isinstance(gitignore_template, _NotSetType):
+        if is_defined(gitignore_template):
             post_parameters["gitignore_template"] = gitignore_template
-        if not isinstance(allow_squash_merge, _NotSetType):
+        if is_defined(allow_squash_merge):
             post_parameters["allow_squash_merge"] = allow_squash_merge
-        if not isinstance(allow_merge_commit, _NotSetType):
+        if is_defined(allow_merge_commit):
             post_parameters["allow_merge_commit"] = allow_merge_commit
-        if not isinstance(allow_rebase_merge, _NotSetType):
+        if is_defined(allow_rebase_merge):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if not isinstance(delete_branch_on_merge, _NotSetType):
+        if is_defined(delete_branch_on_merge):
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         headers, data = self._requester.requestJsonAndCheck(
             "POST", "/user/repos", input=post_parameters
@@ -614,27 +603,27 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `PATCH /user <http://docs.github.com/en/rest/reference/users>`_
         """
-        assert isinstance(name, _NotSetType) or isinstance(name, str), name
-        assert isinstance(email, _NotSetType) or isinstance(email, str), email
-        assert isinstance(blog, _NotSetType) or isinstance(blog, str), blog
-        assert isinstance(company, _NotSetType) or isinstance(company, str), company
-        assert isinstance(location, _NotSetType) or isinstance(location, str), location
-        assert isinstance(hireable, _NotSetType) or isinstance(hireable, bool), hireable
-        assert isinstance(bio, _NotSetType) or isinstance(bio, str), bio
+        assert is_undefined(name) or isinstance(name, str), name
+        assert is_undefined(email) or isinstance(email, str), email
+        assert is_undefined(blog) or isinstance(blog, str), blog
+        assert is_undefined(company) or isinstance(company, str), company
+        assert is_undefined(location) or isinstance(location, str), location
+        assert is_undefined(hireable) or isinstance(hireable, bool), hireable
+        assert is_undefined(bio) or isinstance(bio, str), bio
         post_parameters: dict[str, Any] = {}
-        if not isinstance(name, _NotSetType):
+        if is_defined(name):
             post_parameters["name"] = name
-        if not isinstance(email, _NotSetType):
+        if is_defined(email):
             post_parameters["email"] = email
-        if not isinstance(blog, _NotSetType):
+        if is_defined(blog):
             post_parameters["blog"] = blog
-        if not isinstance(company, _NotSetType):
+        if is_defined(company):
             post_parameters["company"] = company
-        if not isinstance(location, _NotSetType):
+        if is_defined(location):
             post_parameters["location"] = location
-        if not isinstance(hireable, _NotSetType):
+        if is_defined(hireable):
             post_parameters["hireable"] = hireable
-        if not isinstance(bio, _NotSetType):
+        if is_defined(bio):
             post_parameters["bio"] = bio
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", "/user", input=post_parameters
@@ -701,9 +690,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert isinstance(since, _NotSetType) or isinstance(since, datetime), since
+        assert is_undefined(since) or isinstance(since, datetime), since
         url_parameters = dict()
-        if not isinstance(since, _NotSetType):
+        if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist, self._requester, "/gists", url_parameters
@@ -721,28 +710,24 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /issues <http://docs.github.com/en/rest/reference/issues>`_
         """
-        assert isinstance(filter, _NotSetType) or isinstance(filter, str), filter
-        assert isinstance(state, _NotSetType) or isinstance(state, str), state
-        assert isinstance(labels, _NotSetType) or all(
-            isinstance(element, github.Label.Label) for element in labels
-        ), labels
-        assert isinstance(sort, _NotSetType) or isinstance(sort, str), sort
-        assert isinstance(direction, _NotSetType) or isinstance(
-            direction, str
-        ), direction
-        assert isinstance(since, _NotSetType) or isinstance(since, datetime), since
-        url_parameters = dict()
-        if not isinstance(filter, _NotSetType):
+        assert is_optional(filter, str), filter
+        assert is_optional(state, str), state
+        assert is_optional_list(labels, github.Label.Label), labels
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
+        url_parameters: dict[str, Any] = {}
+        if is_defined(filter):
             url_parameters["filter"] = filter
-        if not isinstance(state, _NotSetType):
+        if is_defined(state):
             url_parameters["state"] = state
-        if not isinstance(labels, _NotSetType):
+        if is_defined(labels):
             url_parameters["labels"] = ",".join(label.name for label in labels)
-        if not isinstance(sort, _NotSetType):
+        if is_defined(sort):
             url_parameters["sort"] = sort
-        if not isinstance(direction, _NotSetType):
+        if is_defined(direction):
             url_parameters["direction"] = direction
-        if not isinstance(since, _NotSetType):
+        if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Issue.Issue, self._requester, "/issues", url_parameters
@@ -760,28 +745,24 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/issues <http://docs.github.com/en/rest/reference/issues>`_
         """
-        assert isinstance(filter, _NotSetType) or isinstance(filter, str), filter
-        assert isinstance(state, _NotSetType) or isinstance(state, str), state
-        assert isinstance(labels, _NotSetType) or all(
-            isinstance(element, github.Label.Label) for element in labels
-        ), labels
-        assert isinstance(sort, _NotSetType) or isinstance(sort, str), sort
-        assert isinstance(direction, _NotSetType) or isinstance(
-            direction, str
-        ), direction
-        assert isinstance(since, _NotSetType) or isinstance(since, datetime), since
-        url_parameters = dict()
-        if not isinstance(filter, _NotSetType):
+        assert is_optional(filter, str), filter
+        assert is_optional(state, str), state
+        assert is_optional_list(labels, github.Label.Label), labels
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
+        url_parameters: dict[str, Any] = {}
+        if is_defined(filter):
             url_parameters["filter"] = filter
-        if not isinstance(state, _NotSetType):
+        if is_defined(state):
             url_parameters["state"] = state
-        if not isinstance(labels, _NotSetType):
+        if is_defined(labels):
             url_parameters["labels"] = ",".join(label.name for label in labels)
-        if not isinstance(sort, _NotSetType):
+        if is_defined(sort):
             url_parameters["sort"] = sort
-        if not isinstance(direction, _NotSetType):
+        if is_defined(direction):
             url_parameters["direction"] = direction
-        if not isinstance(since, _NotSetType):
+        if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Issue.Issue, self._requester, "/user/issues", url_parameters
@@ -822,33 +803,26 @@ class AuthenticatedUser(CompletableGithubObject):
         participating: Opt[bool] = NotSet,
         since: Opt[datetime] = NotSet,
         before: Opt[datetime] = NotSet,
-    ):
+    ) -> PaginatedList[Notification]:
         """
         :calls: `GET /notifications <http://docs.github.com/en/rest/reference/activity#notifications>`_
-        :param all: bool
-        :param participating: bool
-        :param since: datetime
-        :param before: datetime
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
-        assert isinstance(all, _NotSetType) or isinstance(all, bool), all
-        assert isinstance(participating, _NotSetType) or isinstance(
-            participating, bool
-        ), participating
-        assert isinstance(since, _NotSetType) or isinstance(since, datetime), since
-        assert isinstance(before, _NotSetType) or isinstance(before, datetime), before
+        assert is_optional(all, bool), all
+        assert is_optional(participating, bool), participating
+        assert is_optional(since, datetime), since
+        assert is_optional(before, datetime), before
 
-        params = dict()
-        if not isinstance(all, _NotSetType):
+        params: dict[str, Any] = {}
+        if is_defined(all):
             # convert True, False to true, false for api parameters
             params["all"] = "true" if all else "false"
-        if not isinstance(participating, _NotSetType):
+        if is_defined(participating):
             # convert True, False to true, false for api parameters
             params["participating"] = "true" if participating else "false"
-        if not isinstance(since, _NotSetType):
+        if is_defined(since):
             params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        if not isinstance(before, _NotSetType):
+        if is_defined(before):
             params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         return github.PaginatedList.PaginatedList(
@@ -898,27 +872,21 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/repos <http://docs.github.com/en/rest/reference/repos>`_
         """
-        assert isinstance(visibility, _NotSetType) or isinstance(
-            visibility, str
-        ), visibility
-        assert isinstance(affiliation, _NotSetType) or isinstance(
-            affiliation, str
-        ), affiliation
-        assert isinstance(type, _NotSetType) or isinstance(type, str), type
-        assert isinstance(sort, _NotSetType) or isinstance(sort, str), sort
-        assert isinstance(direction, _NotSetType) or isinstance(
-            direction, str
-        ), direction
+        assert is_optional(visibility, str), visibility
+        assert is_optional(affiliation, str), affiliation
+        assert is_optional(type, str), type
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
         url_parameters = dict()
-        if not isinstance(visibility, _NotSetType):
+        if is_defined(visibility):
             url_parameters["visibility"] = visibility
-        if not isinstance(affiliation, _NotSetType):
+        if is_defined(affiliation):
             url_parameters["affiliation"] = affiliation
-        if not isinstance(type, _NotSetType):
+        if is_defined(type):
             url_parameters["type"] = type
-        if not isinstance(sort, _NotSetType):
+        if is_defined(sort):
             url_parameters["sort"] = sort
-        if not isinstance(direction, _NotSetType):
+        if is_defined(direction):
             url_parameters["direction"] = direction
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, "/user/repos", url_parameters
@@ -1113,16 +1081,12 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(repos, (list, tuple)), repos
         assert all(isinstance(repo, str) for repo in repos), repos
-        assert isinstance(lock_repositories, _NotSetType) or isinstance(
-            lock_repositories, bool
-        ), lock_repositories
-        assert isinstance(exclude_attachments, _NotSetType) or isinstance(
-            exclude_attachments, bool
-        ), exclude_attachments
+        assert is_optional(lock_repositories, bool), lock_repositories
+        assert is_optional(exclude_attachments, bool), exclude_attachments
         post_parameters: dict[str, Any] = {"repositories": repos}
-        if not isinstance(lock_repositories, _NotSetType):
+        if is_defined(lock_repositories):
             post_parameters["lock_repositories"] = lock_repositories
-        if not isinstance(exclude_attachments, _NotSetType):
+        if is_defined(exclude_attachments):
             post_parameters["exclude_attachments"] = exclude_attachments
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -1137,7 +1101,6 @@ class AuthenticatedUser(CompletableGithubObject):
     def get_migrations(self) -> PaginatedList[Migration]:
         """
         :calls: `GET /user/migrations <https://docs.github.com/en/rest/reference/migrations>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
         """
         return github.PaginatedList.PaginatedList(
             github.Migration.Migration,
