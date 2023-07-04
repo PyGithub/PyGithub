@@ -18,14 +18,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install -U build twine
-      - name: Build package
+      - name: Build 📦 package
         run: python -m build
-      - name: Check package
+      - name: Check 📦 package
         run: twine check dist/*
-
-      - name: Publish distribution 📦 to PyPI
+      - name: Publish 📦 to PyPI
         if: startsWith(github.event.ref, 'refs/tags/')
-        uses: pypa/gh-action-pypi-publish@v1.8.6
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
+        run: twine upload dist/*
