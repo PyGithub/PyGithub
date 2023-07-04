@@ -416,8 +416,8 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(private) or isinstance(private, bool), private
+        assert is_optional(description, str), description
+        assert is_optional(private, bool), private
         post_parameters: dict[str, Any] = {
             "name": name,
             "owner": self.login,
