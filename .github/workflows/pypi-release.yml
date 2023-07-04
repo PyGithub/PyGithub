@@ -7,7 +7,7 @@ on:
     branches: [main]  # this will just build and check package
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +22,31 @@ jobs:
         run: python -m build
       - name: Check 📦 package
         run: twine check dist/*
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: dist
+
+  publish:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: .
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -U twine
+      - name: Check 📦 package
+        run: twine check dist/*
       - name: Publish 📦 to PyPI
+        # only run this for tags
         if: startsWith(github.event.ref, 'refs/tags/')
         env:
           TWINE_USERNAME: __token__
