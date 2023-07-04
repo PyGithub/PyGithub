@@ -15,12 +15,8 @@ jobs:
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
-          - python-version: "3.8"
-            os: "windows-latest"
-            os-label: "Windows"
-          - python-version: "3.8"
-            os: "macos-latest"
-            os-label: "macOS"
+          - {python-version: "3.8", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.8", os: "macos-latest", os-label: "macOS"}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
