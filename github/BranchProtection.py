@@ -88,7 +88,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         """
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
-        if isinstance(self._team_push_restrictions, _NotSetType):
+        if is_undefined(self._team_push_restrictions):
             return None
         return github.PaginatedList.PaginatedList(
             github.Team.Team, self._requester, self._team_push_restrictions, None
