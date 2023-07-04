@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]  # this will just build and check package
     tags: ["*"]  # this will run full workflow including publish to PyPI
+  pull_request:
+    branches: [main]  # this will just build and check package
 
 jobs:
   publish:
