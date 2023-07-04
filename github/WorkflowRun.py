@@ -274,7 +274,7 @@ class WorkflowRun(CompletableGithubObject):
         :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
         :param _filter: string `latest`, or `all`
         """
-        assert is_optional(_filter, (str)), _filter
+        assert is_optional(_filter, str), _filter
 
         url_parameters = NotSet.remove_unset_items({"filter": _filter})
 
