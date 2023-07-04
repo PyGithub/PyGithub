@@ -66,6 +66,8 @@ from github.GithubObject import (
     Opt,
     _NotSetType,
     is_defined,
+    is_optional,
+    is_optional_list,
     is_undefined,
 )
 from github.PaginatedList import PaginatedList
@@ -249,9 +251,6 @@ class Issue(CompletableGithubObject):
 
     @property
     def active_lock_reason(self) -> str | None:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._active_lock_reason)
         return self._active_lock_reason.value
 
@@ -341,8 +340,8 @@ class Issue(CompletableGithubObject):
         :param assignee: deprecated, use `assignees` instead. `assignee=None` means to remove current assignee.
         :param milestone: `milestone=None` means to remove current milestone.
         """
-        assert isinstance(title, (str, _NotSetType)), title
-        assert isinstance(body, (str, _NotSetType)), body
+        assert is_optional(title, str), title
+        assert is_optional(body, str), body
         assert assignee is None or isinstance(
             assignee, (github.NamedUser.NamedUser, str, _NotSetType)
         ), assignee
@@ -350,13 +349,11 @@ class Issue(CompletableGithubObject):
             isinstance(element, (github.NamedUser.NamedUser, str))
             for element in assignees
         ), assignees
-        assert isinstance(state, (_NotSetType, str)), state
+        assert is_optional(state, str), state
         assert milestone is None or isinstance(
             milestone, (github.Milestone.Milestone, _NotSetType)
         ), milestone
-        assert is_undefined(labels) or all(
-            isinstance(element, str) for element in labels
-        ), labels
+        assert is_optional_list(labels, str), labels
 
         post_parameters = NotSet.remove_unset_items(
             {
