@@ -33,6 +33,16 @@ repos:
       - id: pyupgrade
         args:
           - --py37-plus
+
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.0
+    hooks:
+      - id: autoflake
+        args:
+          - --in-place
+          - --expand-star-imports
+          - --remove-all-unused-imports
+
   - repo: https://github.com/pycqa/flake8
     rev: 3.9.2
     hooks:
