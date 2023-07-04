@@ -51,7 +51,6 @@ class Auth(abc.ABC):
         The type of the auth token as used in the HTTP Authorization header, e.g. Bearer or Basic.
         :return: token type
         """
-        pass
 
     @property
     @abc.abstractmethod
@@ -60,7 +59,6 @@ class Auth(abc.ABC):
         The auth token as used in the HTTP Authorization header.
         :return: token
         """
-        pass
 
 
 class Login(Auth):
