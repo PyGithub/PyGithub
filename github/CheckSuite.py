@@ -31,6 +31,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    is_defined,
     is_optional,
 )
 from github.PaginatedList import PaginatedList
@@ -203,11 +204,11 @@ class CheckSuite(CompletableGithubObject):
         assert is_optional(status, str), status
         assert is_optional(isinstance(filter, str), filter)
         url_parameters: dict[str, Any] = {}
-        if check_name is not github.GithubObject.NotSet:
+        if is_defined(check_name):
             url_parameters["check_name"] = check_name
-        if status is not github.GithubObject.NotSet:
+        if is_defined(status):
             url_parameters["status"] = status
-        if filter is not github.GithubObject.NotSet:
+        if is_defined(filter):
             url_parameters["filter"] = filter
         return PaginatedList(
             github.CheckRun.CheckRun,
