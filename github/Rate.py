@@ -6,6 +6,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Nikolay Yurin <yurinnick@meta.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,6 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from datetime import datetime
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -33,10 +35,6 @@ class Rate(NonCompletableGithubObject):
     """
     This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
-
-    _limit: Attribute[int]
-    _remaining: Attribute[int]
-    _reset: Attribute[datetime]
 
     def __repr__(self):
         return self.get__repr__(
@@ -59,15 +57,22 @@ class Rate(NonCompletableGithubObject):
     def reset(self) -> datetime:
         return self._reset.value
 
-    def _initAttributes(self) -> None:
-        self._limit = NotSet
-        self._remaining = NotSet
-        self._reset = NotSet
+    @property
+    def used(self) -> int:
+        return self._used.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _initAttributes(self):
+        self._limit: Attribute[int] = NotSet
+        self._remaining: Attribute[int] = NotSet
+        self._reset: Attribute[datetime] = NotSet
+        self._used: Attribute[int] = NotSet
+
+    def _useAttributes(self, attributes):
         if "limit" in attributes:  # pragma no branch
             self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch
             self._remaining = self._makeIntAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
             self._reset = self._makeTimestampAttribute(attributes["reset"])
+        if "used" in attributes:  # pragma no branch
+            self._used = self._makeIntAttribute(attributes["used"])
