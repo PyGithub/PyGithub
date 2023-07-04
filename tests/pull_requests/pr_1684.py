@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
 class PullRequest1684(Framework.TestCase):

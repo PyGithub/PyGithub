@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,19 +20,27 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class PullRequest2408(Framework.TestCase):
+class PullRequest1375(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
+        self.pr = self.g.get_repo("rsn491/PyGithub").get_pulls()[0]
 
-    def test_get_workflow_runs(self):
-        runs = self.repo.get_workflow_runs(
-            head_sha="7aab33f4294ba5141f17bed0aeb1a929f7afc155"
+    def testCreateReviewCommentReply(self):
+        comment_id = 373866377  # id of pull request comment without replies
+        first_reply_body = "Comment reply created by PyGithub"
+        second_reply_body = "Second comment reply created by PyGithub"
+
+        first_reply = self.pr.create_review_comment_reply(comment_id, first_reply_body)
+        second_reply = self.pr.create_review_comment_reply(
+            first_reply.id, second_reply_body
         )
-        self.assertEqual(720994709, runs[0].id)
 
-        runs = self.repo.get_workflow_runs(exclude_pull_requests=True)
-        self.assertEqual(3519037359, runs[0].id)
+        # ensure both first and second reply have `in_reply_to_id` attr set to top comment
+        self.assertEqual(first_reply.in_reply_to_id, comment_id)
+        self.assertEqual(second_reply.in_reply_to_id, comment_id)
+
+        self.assertEqual(first_reply.body, first_reply_body)
+        self.assertEqual(second_reply.body, second_reply_body)

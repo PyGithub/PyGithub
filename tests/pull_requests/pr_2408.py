@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,16 +20,19 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class PullRequest1169(Framework.TestCase):
+class PullRequest2408(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        ferada_repo = self.g.get_repo("coleslaw-org/coleslaw", lazy=True)
-        self.pull = ferada_repo.get_pull(173)
+        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
 
-    def testReviewApproveWithoutBody(self):
-        r = self.pull.create_review(event="APPROVE")
-        self.assertEqual(r.id, 261942907)
-        self.assertEqual(r.user.login, "Ferada")
+    def test_get_workflow_runs(self):
+        runs = self.repo.get_workflow_runs(
+            head_sha="7aab33f4294ba5141f17bed0aeb1a929f7afc155"
+        )
+        self.assertEqual(720994709, runs[0].id)
+
+        runs = self.repo.get_workflow_runs(exclude_pull_requests=True)
+        self.assertEqual(3519037359, runs[0].id)

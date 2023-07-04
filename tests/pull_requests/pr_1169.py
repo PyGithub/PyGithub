@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2020 Victor Zeng <zacker150@hotmail.com>                           #
+# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,37 +20,16 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class PullRequest1682(Framework.TestCase):
+class PullRequest1169(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
+        ferada_repo = self.g.get_repo("coleslaw-org/coleslaw", lazy=True)
+        self.pull = ferada_repo.get_pull(173)
 
-    def test_no_parameters(self):
-        runs = self.repo.get_workflow_runs()
-        self.assertEqual(313400760, runs[0].id)
-
-    def test_object_parameters(self):
-        branch = self.repo.get_branch("adversary")
-        runs = self.repo.get_workflow_runs(branch=branch)
-        self.assertEqual(204764033, runs[0].id)
-        self.assertEqual(1, runs.totalCount)
-
-        user = self.g.get_user("shahryarabaki")
-        runs = self.repo.get_workflow_runs(actor=user)
-        self.assertEqual(28372848, runs[0].id)
-
-    def test_string_parameters(self):
-        runs = self.repo.get_workflow_runs(actor="xzhou29")
-        self.assertEqual(226142695, runs[0].id)
-
-        runs = self.repo.get_workflow_runs(branch="API_Flatten")
-        self.assertEqual(287515889, runs[0].id)
-
-        runs = self.repo.get_workflow_runs(event="pull_request")
-        self.assertEqual(298867254, runs[0].id)
-
-        runs = self.repo.get_workflow_runs(status="failure")
-        self.assertEqual(292080359, runs[0].id)
+    def testReviewApproveWithoutBody(self):
+        r = self.pull.create_review(event="APPROVE")
+        self.assertEqual(r.id, 261942907)
+        self.assertEqual(r.user.login, "Ferada")

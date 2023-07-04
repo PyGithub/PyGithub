@@ -20,27 +20,24 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class PullRequest1375(Framework.TestCase):
+class PullRequest1168(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.pr = self.g.get_repo("rsn491/PyGithub").get_pulls()[0]
-
-    def testCreateReviewCommentReply(self):
-        comment_id = 373866377  # id of pull request comment without replies
-        first_reply_body = "Comment reply created by PyGithub"
-        second_reply_body = "Second comment reply created by PyGithub"
-
-        first_reply = self.pr.create_review_comment_reply(comment_id, first_reply_body)
-        second_reply = self.pr.create_review_comment_reply(
-            first_reply.id, second_reply_body
+        self.notifications = self.g.get_repo("PyGithub/PyGithub").get_notifications(
+            all=True
         )
 
-        # ensure both first and second reply have `in_reply_to_id` attr set to top comment
-        self.assertEqual(first_reply.in_reply_to_id, comment_id)
-        self.assertEqual(second_reply.in_reply_to_id, comment_id)
+    def testGetPullRequest(self):
+        p = self.notifications[0].get_pull_request()
+        self.assertEqual(p.id, 297582636)
+        self.assertEqual(p.number, 1171)
+        self.assertEqual(p.title, "Fix small issues for Python 3 compatibility.")
 
-        self.assertEqual(first_reply.body, first_reply_body)
-        self.assertEqual(second_reply.body, second_reply_body)
+    def testGetIssue(self):
+        i = self.notifications[0].get_issue()
+        self.assertEqual(i.id, 297582636)
+        self.assertEqual(i.number, 1171)
+        self.assertEqual(i.title, "Fix small issues for Python 3 compatibility.")
