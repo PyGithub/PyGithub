@@ -81,11 +81,7 @@ class _NotSetType(Attribute):
 
     @staticmethod
     def remove_unset_items(data: Dict[str, Any]) -> Dict[str, Any]:
-        return {
-            key: value
-            for key, value in data.items()
-            if not isinstance(value, _NotSetType)
-        }
+        return {key: value for key, value in data.items() if not isinstance(value, _NotSetType)}
 
 
 NotSet = _NotSetType()
@@ -106,11 +102,7 @@ def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
 
 
 def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
-    return (
-        isinstance(v, _NotSetType)
-        or isinstance(v, list)
-        and all(isinstance(element, type) for element in v)
-    )
+    return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
 
 
 class _ValuedAttribute(Attribute, Generic[T]):
@@ -123,9 +115,7 @@ class _ValuedAttribute(Attribute, Generic[T]):
 
 
 class _BadAttribute(Attribute):
-    def __init__(
-        self, value: Any, expectedType: Any, exception: Optional[Exception] = None
-    ):
+    def __init__(self, value: Any, expectedType: Any, exception: Optional[Exception] = None):
         self.__value = value
         self.__expectedType = expectedType
         self.__exception = exception
@@ -168,9 +158,7 @@ class GithubObject:
         if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
             requester.check_me(self)
 
-    def _storeAndUseAttributes(
-        self, headers: Dict[str, Union[str, int]], attributes: Any
-    ) -> None:
+    def _storeAndUseAttributes(self, headers: Dict[str, Union[str, int]], attributes: Any) -> None:
         # Make sure headers are assigned before calling _useAttributes
         # (Some derived classes will use headers in _useAttributes)
         self._headers = headers
@@ -206,17 +194,13 @@ class GithubObject:
 
     @staticmethod
     def __makeSimpleListAttribute(value: list, type: Type[T]) -> Attribute[T]:
-        if isinstance(value, list) and all(
-            isinstance(element, type) for element in value
-        ):
+        if isinstance(value, list) and all(isinstance(element, type) for element in value):
             return _ValuedAttribute(value)  # type: ignore
         else:
             return _BadAttribute(value, [type])  # type: ignore
 
     @staticmethod
-    def __makeTransformedAttribute(
-        value: T, type: Type[T], transform: Callable[[T], Any]
-    ) -> Attribute[T]:
+    def __makeTransformedAttribute(value: T, type: Type[T], transform: Callable[[T], Any]) -> Attribute[T]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -267,9 +251,7 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeListOfStringsAttribute(
-        value: Union[List[List[str]], List[str], List[Union[str, int]]]
-    ) -> Attribute:
+    def _makeListOfStringsAttribute(value: Union[List[List[str]], List[str], List[Union[str, int]]]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, str)
 
     @staticmethod
@@ -288,17 +270,10 @@ class GithubObject:
     ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
-    def _makeListOfClassesAttribute(
-        self, klass: Any, value: Any
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
-        if isinstance(value, list) and all(
-            isinstance(element, dict) for element in value
-        ):
+    def _makeListOfClassesAttribute(self, klass: Any, value: Any) -> Union[_ValuedAttribute, _BadAttribute]:
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute(
-                [
-                    klass(self._requester, self._headers, element, completed=False)
-                    for element in value
-                ]
+                [klass(self._requester, self._headers, element, completed=False) for element in value]
             )
         else:
             return _BadAttribute(value, [dict])
@@ -312,14 +287,10 @@ class GithubObject:
         ],
     ) -> Union[_ValuedAttribute, _BadAttribute]:
         if isinstance(value, dict) and all(
-            isinstance(key, str) and isinstance(element, dict)
-            for key, element in value.items()
+            isinstance(key, str) and isinstance(element, dict) for key, element in value.items()
         ):
             return _ValuedAttribute(
-                {
-                    key: klass(self._requester, self._headers, element, completed=False)
-                    for key, element in value.items()
-                }
+                {key: klass(self._requester, self._headers, element, completed=False) for key, element in value.items()}
             )
         else:
             return _BadAttribute(value, {str: dict})
@@ -426,9 +397,7 @@ class CompletableGithubObject(GithubObject):
         if status == 304:
             return False
         else:
-            headers, data = self._requester._Requester__check(  # type: ignore
-                status, responseHeaders, output
-            )
+            headers, data = self._requester._Requester__check(status, responseHeaders, output)  # type: ignore
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True

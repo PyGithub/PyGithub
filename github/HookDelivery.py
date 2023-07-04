@@ -160,9 +160,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         if "action" in attributes:  # pragma no branch
             self._action = self._makeStringAttribute(attributes["action"])
         if "installation_id" in attributes:  # pragma no branch
-            self._installation_id = self._makeIntAttribute(
-                attributes["installation_id"]
-            )
+            self._installation_id = self._makeIntAttribute(attributes["installation_id"])
         if "repository_id" in attributes:  # pragma no branch
             self._repository_id = self._makeIntAttribute(attributes["repository_id"])
         if "url" in attributes:  # pragma no branch
@@ -265,11 +263,7 @@ class HookDelivery(HookDeliverySummary):
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "request" in attributes:  # pragma no branch
-            self._request = self._makeClassAttribute(
-                HookDeliveryRequest, attributes["request"]
-            )
+            self._request = self._makeClassAttribute(HookDeliveryRequest, attributes["request"])
         if "response" in attributes:  # pragma no branch
-            self._response = self._makeClassAttribute(
-                HookDeliveryResponse, attributes["response"]
-            )
+            self._response = self._makeClassAttribute(HookDeliveryResponse, attributes["response"])
             # self._response = self._makeDictAttribute(attributes["response"])

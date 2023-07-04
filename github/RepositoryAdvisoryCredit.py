@@ -80,9 +80,7 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
-            assert isinstance(
-                credit["login"], (str, github.NamedUser.NamedUser)
-            ), credit["login"]
+            assert isinstance(credit["login"], (str, github.NamedUser.NamedUser)), credit["login"]
             assert isinstance(credit["type"], str), credit["type"]
         else:
             assert isinstance(credit.login, str), credit.login
@@ -94,9 +92,7 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
-            assert isinstance(
-                credit["login"], (str, github.NamedUser.NamedUser)
-            ), credit["login"]
+            assert isinstance(credit["login"], (str, github.NamedUser.NamedUser)), credit["login"]
             login = credit["login"]
             if isinstance(login, github.NamedUser.NamedUser):
                 login = login.login

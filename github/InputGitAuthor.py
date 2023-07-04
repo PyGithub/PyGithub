@@ -45,9 +45,7 @@ class InputGitAuthor:
 
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert date is github.GithubObject.NotSet or isinstance(
-            date, str
-        ), date  # @todo Datetime?
+        assert date is github.GithubObject.NotSet or isinstance(date, str), date  # @todo Datetime?
 
         self.__name = name
         self.__email = email

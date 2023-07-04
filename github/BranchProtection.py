@@ -86,9 +86,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         """
         if self._team_push_restrictions is github.GithubObject.NotSet:
             return None
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self._team_push_restrictions, None
-        )
+        return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
@@ -107,9 +105,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 attributes["required_status_checks"],
             )
         if "enforce_admins" in attributes:  # pragma no branch
-            self._enforce_admins = self._makeBoolAttribute(
-                attributes["enforce_admins"]["enabled"]
-            )
+            self._enforce_admins = self._makeBoolAttribute(attributes["enforce_admins"]["enabled"])
         if "required_pull_request_reviews" in attributes:  # pragma no branch
             self._required_pull_request_reviews = self._makeClassAttribute(
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,

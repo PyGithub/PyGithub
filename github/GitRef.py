@@ -85,9 +85,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         }
         if force is not github.GithubObject.NotSet:
             post_parameters["force"] = force
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _initAttributes(self):
@@ -97,9 +95,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(
-                github.GitObject.GitObject, attributes["object"]
-            )
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch

@@ -309,9 +309,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         :param _filter: string `latest`, or `all`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowJob.WorkflowJob`
         """
-        assert _filter is github.GithubObject.NotSet or isinstance(
-            _filter, str
-        ), _filter
+        assert _filter is github.GithubObject.NotSet or isinstance(_filter, str), _filter
 
         url_parameters = dict()
         if _filter is not github.GithubObject.NotSet:
@@ -375,12 +373,10 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         if "event" in attributes:  # pragma no branch
             self._event = self._makeStringAttribute(attributes["event"])
         if "run_started_at" in attributes:  # pragma no branch
-            assert attributes["run_started_at"] is None or isinstance(
-                attributes["run_started_at"], str
-            ), attributes["run_started_at"]
-            self._run_started_at = self._makeDatetimeAttribute(
-                attributes["run_started_at"]
-            )
+            assert attributes["run_started_at"] is None or isinstance(attributes["run_started_at"], str), attributes[
+                "run_started_at"
+            ]
+            self._run_started_at = self._makeDatetimeAttribute(attributes["run_started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "conclusion" in attributes:  # pragma no branch
@@ -404,9 +400,7 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         if "logs_url" in attributes:  # pragma no branch
             self._logs_url = self._makeStringAttribute(attributes["logs_url"])
         if "check_suite_url" in attributes:  # pragma no branch
-            self._check_suite_url = self._makeStringAttribute(
-                attributes["check_suite_url"]
-            )
+            self._check_suite_url = self._makeStringAttribute(attributes["check_suite_url"])
         if "artifacts_url" in attributes:  # pragma no branch
             self._artifacts_url = self._makeStringAttribute(attributes["artifacts_url"])
         if "cancel_url" in attributes:  # pragma no branch
@@ -416,13 +410,9 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         if "workflow_url" in attributes:  # pragma no branch
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
-            self._head_commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["head_commit"]
-            )
+            self._head_commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["head_commit"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
-            )
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "head_repository" in attributes:  # pragma no branch
             self._head_repository = self._makeClassAttribute(
                 github.Repository.Repository, attributes["head_repository"]

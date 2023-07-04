@@ -52,6 +52,4 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
         if "preferences" in attributes:  # pragma no branch
             self._preferences = self._makeDictAttribute(attributes["preferences"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
-            )
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

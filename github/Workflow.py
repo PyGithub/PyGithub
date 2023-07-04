@@ -153,26 +153,16 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(actor, str)
         ), actor
         assert (
-            branch is github.GithubObject.NotSet
-            or isinstance(branch, github.Branch.Branch)
-            or isinstance(branch, str)
+            branch is github.GithubObject.NotSet or isinstance(branch, github.Branch.Branch) or isinstance(branch, str)
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert check_suite_id is github.GithubObject.NotSet or isinstance(
-            check_suite_id, int
-        ), check_suite_id
+        assert check_suite_id is github.GithubObject.NotSet or isinstance(check_suite_id, int), check_suite_id
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
-            url_parameters["actor"] = (
-                actor._identity
-                if isinstance(actor, github.NamedUser.NamedUser)
-                else actor
-            )
+            url_parameters["actor"] = actor._identity if isinstance(actor, github.NamedUser.NamedUser) else actor
         if branch is not github.GithubObject.NotSet:
-            url_parameters["branch"] = (
-                branch.name if isinstance(branch, github.Branch.Branch) else branch
-            )
+            url_parameters["branch"] = branch.name if isinstance(branch, github.Branch.Branch) else branch
         if event is not github.GithubObject.NotSet:
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:

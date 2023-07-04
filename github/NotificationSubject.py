@@ -77,8 +77,6 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "latest_comment_url" in attributes:  # pragma no branch
-            self._latest_comment_url = self._makeStringAttribute(
-                attributes["latest_comment_url"]
-            )
+            self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
