@@ -24,7 +24,7 @@ jobs:
         run: twine check dist/*
 
       - name: Publish distribution 📦 to PyPI
-        if: startsWith(github.event.ref, 'refs/tags')
+        if: startsWith(github.event.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@v1.8.6
         with:
           user: __token__
