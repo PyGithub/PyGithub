@@ -20,9 +20,9 @@ class GithubIntegration:
     """
 
     # keep non-deprecated arguments in-sync with Requester
-    # v2: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
-    # v2: move auth to the front of arguments
-    # v2: move * before first argument so all arguments must be named,
+    # v3: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
+    # v3: move auth to the front of arguments
+    # v3: move * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     #     added here to force named parameters because new parameters have been added
     def __init__(
