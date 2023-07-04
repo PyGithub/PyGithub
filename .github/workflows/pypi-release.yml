@@ -29,6 +29,8 @@ jobs:
           path: dist
 
   publish:
+    # only run this for tags
+    if: startsWith(github.event.ref, 'refs/tags/')
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -43,11 +45,7 @@ jobs:
 
       - name: Install dependencies
         run: pip install -U twine
-      - name: Check 📦 package
-        run: twine check dist/*
       - name: Publish 📦 to PyPI
-        # only run this for tags
-        if: startsWith(github.event.ref, 'refs/tags/')
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
