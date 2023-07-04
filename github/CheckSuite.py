@@ -206,7 +206,7 @@ class CheckSuite(CompletableGithubObject):
         """
         assert is_optional(check_name, str), check_name
         assert is_optional(status, str), status
-        assert is_optional(isinstance(filter, str), filter)
+        assert is_optional(filter, str), filter
         url_parameters: dict[str, Any] = {}
         if is_defined(check_name):
             url_parameters["check_name"] = check_name
