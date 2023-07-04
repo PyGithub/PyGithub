@@ -93,7 +93,7 @@ if __name__ == "__main__":
             See http://pygithub.readthedocs.io/en/stable/"""
         ),
         packages=["github"],
-        package_data={"github": ["py.typed", "*.pyi"]},
+        package_data={"github": ["py.typed"]},
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
