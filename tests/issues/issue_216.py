@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,24 +23,15 @@
 #                                                                              #
 ################################################################################
 
-import github
-
-from . import Framework
+from tests import Framework
 
 
-class Issue572(Framework.TestCase):
+# Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt
+class Issue216(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
+        self.list = self.repo.get_issues()
 
-    def testIssueAsPullRequest(self):
-        issue = self.repo.get_issue(2)
-        pull = issue.as_pull_request()
-        self.assertEqual(issue.html_url, pull.html_url)
-        self.assertTrue(isinstance(pull, github.PullRequest.PullRequest))
-
-    def testPullReqeustAsIssue(self):
-        pull = self.repo.get_pull(2)
-        issue = pull.as_issue()
-        self.assertEqual(pull.html_url, issue.html_url)
-        self.assertTrue(isinstance(issue, github.Issue.Issue))
+    def testIteration(self):
+        self.assertEqual(len(list(self.list)), 333)

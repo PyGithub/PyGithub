@@ -25,35 +25,23 @@
 #                                                                              #
 ################################################################################
 
-import github
+from datetime import datetime, timezone
 
-from . import Framework
+from tests import Framework
 
 
-class Issue80(
-    Framework.BasicTestCase
-):  # https://github.com/jacquev6/PyGithub/issues/80
-    def testIgnoreHttpsFromGithubEnterprise(self):
-        g = github.Github(
-            auth=self.login, base_url="http://my.enterprise.com/some/prefix"
-        )  # http here
-        org = g.get_organization("BeaverSoftware")
+class Issue54(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_user().get_repo("TestRepo")
+
+    def testConversion(self):
+        commit = self.repo.get_git_commit("73f320ae06cd565cf38faca34b6a482addfc721b")
         self.assertEqual(
-            org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware"
-        )  # https returned
-        self.assertListKeyEqual(
-            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
-        )  # But still http in second request based on org.url
-
-    def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
-        g = github.Github(
-            auth=self.login,
-            base_url="http://my.enterprise.com:1234/some/prefix",
-        )  # http here
-        org = g.get_organization("BeaverSoftware")
+            commit.message,
+            "Test commit created around Fri, 13 Jul 2012 18:43:21 GMT, that is vendredi 13 juillet 2012 20:43:21 GMT+2\n",
+        )
         self.assertEqual(
-            org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware"
-        )  # https returned
-        self.assertListKeyEqual(
-            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
-        )  # But still http in second request based on org.url
+            commit.author.date,
+            datetime(2012, 7, 13, 18, 47, 10, tzinfo=timezone.utc),
+        )

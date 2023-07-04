@@ -1,8 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 David Farr <david.farr@sap.com>                               #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -23,45 +24,30 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+import github
+
+from tests import Framework
 
 
-class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/214
-    def setUp(self):
-        super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
-        self.issue = self.repo.get_issue(1)
+class Issue134(
+    Framework.BasicTestCase
+):  # https://github.com/jacquev6/PyGithub/pull/134
+    def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
+        g = github.Github(auth=self.oauth_token)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            list(g.get_user().get_authorizations())
+        self.assertEqual(raisedexp.exception.status, 404)
 
-    def testAssignees(self):
-        self.assertTrue(self.repo.has_in_assignees("farrd"))
-        self.assertFalse(self.repo.has_in_assignees("fake"))
+    def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
+        g = github.Github(auth=self.login)
+        self.assertListKeyEqual(
+            g.get_user().get_authorizations(),
+            lambda a: a.note,
+            [None, None, "cligh", None, None, "GitHub Android App"],
+        )
 
-    def testCollaborators(self):
-        self.assertTrue(self.repo.has_in_collaborators("farrd"))
-        self.assertFalse(self.repo.has_in_collaborators("fake"))
-
-        self.assertFalse(self.repo.has_in_collaborators("marcmenges"))
-        self.repo.add_to_collaborators("marcmenges")
-        self.assertTrue(self.repo.has_in_collaborators("marcmenges"))
-
-        self.repo.remove_from_collaborators("marcmenges")
-        self.assertFalse(self.repo.has_in_collaborators("marcmenges"))
-
-    def testEditIssue(self):
-        self.assertEqual(self.issue.assignee, None)
-
-        self.issue.edit(assignee="farrd")
-        self.assertEqual(self.issue.assignee.login, "farrd")
-
-        self.issue.edit(assignee=None)
-        self.assertEqual(self.issue.assignee, None)
-
-    def testCreateIssue(self):
-        issue = self.repo.create_issue("Issue created by PyGithub", assignee="farrd")
-        self.assertEqual(issue.assignee.login, "farrd")
-
-    def testGetIssues(self):
-        issues = self.repo.get_issues(assignee="farrd")
-
-        for issue in issues:
-            self.assertEqual(issue.assignee.login, "farrd")
+    def testGetOAuthScopesFromHeader(self):
+        g = github.Github(auth=self.oauth_token)
+        self.assertEqual(g.oauth_scopes, None)
+        g.get_user().name
+        self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])

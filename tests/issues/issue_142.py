@@ -23,15 +23,12 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+
+import github
+
+from tests import Framework
 
 
-# Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt
-class Issue216(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
-        self.list = self.repo.get_issues()
-
-    def testIteration(self):
-        self.assertEqual(len(list(self.list)), 333)
+class Issue142(Framework.TestCase):
+    def testDecodeJson(self):
+        self.assertEqual(github.Github().get_rate_limit().core.limit, 60)

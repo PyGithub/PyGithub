@@ -1,5 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
@@ -22,15 +23,13 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-# Replay data forged by adding nulls to PaginatedList.setUp.txt and PaginatedList.testIteration.txt
-class Issue278(Framework.TestCase):
+class Issue133(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
-        self.list = self.repo.get_issues()
+        self.user = self.g.get_user()
 
-    def testIteration(self):
-        self.assertEqual(len(list(self.list)), 333)
+    def testGetPageWithoutInitialArguments(self):
+        self.assertEqual(len(self.user.get_followers().get_page(0)), 22)

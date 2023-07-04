@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -21,18 +23,25 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue494(Framework.TestCase):
+class Issue823(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("apache/brooklyn-server", lazy=True)
-        self.pull = self.repo.get_pull(465)
+        self.org = self.g.get_organization("p-society")
+        self.team = self.org.get_team(2745783)
+        self.pending_invitations = self.team.invitations()
 
-    def testRepr(self):
-        expected = (
-            'PullRequest(title="Change SetHostnameCustomizer to check if '
-            '/etc/sysconfig/network exist…", number=465)'
+    def testGetPendingInvitationAttributes(self):
+        team_url = self.pending_invitations[0].invitation_teams_url
+        self.assertEqual(
+            team_url,
+            "https://api.github.com/organizations/29895434/invitations/6080804/teams",
         )
-        self.assertEqual(self.pull.__repr__(), expected)
+        inviter = self.pending_invitations[0].inviter.login
+        self.assertEqual(inviter, "palash25")
+        role = self.pending_invitations[0].role
+        self.assertEqual(role, "direct_member")
+        team_count = self.pending_invitations[0].team_count
+        self.assertEqual(team_count, 1)

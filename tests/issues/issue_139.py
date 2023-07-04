@@ -23,13 +23,16 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue133(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
+class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/139
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user()
+        self.user = self.g.get_user().get_repo("PyGithub").get_issue(139).user
 
-    def testGetPageWithoutInitialArguments(self):
-        self.assertEqual(len(self.user.get_followers().get_page(0)), 22)
+    def testCompletion(self):
+        self.assertFalse(self.user._CompletableGithubObject__completed)
+        self.assertEqual(self.user.name, "Ian Ozsvald")
+        self.assertTrue(self.user._CompletableGithubObject__completed)
+        self.assertEqual(self.user.plan, None)

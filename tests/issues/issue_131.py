@@ -23,25 +23,30 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue823(Framework.TestCase):
+class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
     def setUp(self):
         super().setUp()
-        self.org = self.g.get_organization("p-society")
-        self.team = self.org.get_team(2745783)
-        self.pending_invitations = self.team.invitations()
+        self.user = self.g.get_user()
+        self.repo = self.g.get_user("openmicroscopy").get_repo("ome-documentation")
 
-    def testGetPendingInvitationAttributes(self):
-        team_url = self.pending_invitations[0].invitation_teams_url
-        self.assertEqual(
-            team_url,
-            "https://api.github.com/organizations/29895434/invitations/6080804/teams",
-        )
-        inviter = self.pending_invitations[0].inviter.login
-        self.assertEqual(inviter, "palash25")
-        role = self.pending_invitations[0].role
-        self.assertEqual(role, "direct_member")
-        team_count = self.pending_invitations[0].team_count
-        self.assertEqual(team_count, 1)
+    def testGetPullWithOrgHeadUser(self):
+        user = self.repo.get_pull(204).head.user
+        self.assertEqual(user.login, "imcf")
+        self.assertEqual(user.type, "Organization")
+        self.assertEqual(user.__class__.__name__, "NamedUser")  # Should be Organization
+
+    def testGetPullsWithOrgHeadUser(self):
+        for pull in self.repo.get_pulls("closed"):
+            if pull.number == 204:
+                user = pull.head.user
+                self.assertEqual(user, None)
+                # Should be:
+                # self.assertEqual(user.login, 'imcf')
+                # self.assertEqual(user.type, 'Organization')
+                # self.assertEqual(user.__class__.__name__, 'NamedUser')  # Should be Organization
+                break
+        else:
+            self.assertTrue(False)

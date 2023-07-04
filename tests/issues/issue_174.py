@@ -23,12 +23,14 @@
 #                                                                              #
 ################################################################################
 
-
-import github
-
-from . import Framework
+from tests import Framework
 
 
-class Issue142(Framework.TestCase):
-    def testDecodeJson(self):
-        self.assertEqual(github.Github().get_rate_limit().core.limit, 60)
+class Issue174(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_repo("twitter/bootstrap")
+
+    def testGetDirContentsWhithHttpRedirect(self):
+        contents = self.repo.get_contents("js/")
+        self.assertEqual(len(contents), 15)

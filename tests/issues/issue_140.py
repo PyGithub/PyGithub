@@ -1,7 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
@@ -25,23 +23,40 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timezone
-
-from . import Framework
+from tests import Framework
 
 
-class Issue54(Framework.TestCase):
+class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/140
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("TestRepo")
+        self.repo = self.g.get_repo("twitter/bootstrap")
 
-    def testConversion(self):
-        commit = self.repo.get_git_commit("73f320ae06cd565cf38faca34b6a482addfc721b")
+    def testGetDirContentsThenLazyCompletionOfFile(self):
+        contents = self.repo.get_contents("js")
+        self.assertEqual(len(contents), 15)
+        n = 0
+        for content in contents:
+            if content.path == "js/bootstrap-affix.js":
+                self.assertEqual(len(content.content), 4722)  # Lazy completion
+                n += 1
+            elif content.path == "js/tests":
+                self.assertEqual(content.content, None)  # No completion at all
+                n += 1
+        self.assertEqual(n, 2)
+
+    def testGetFileContents(self):
+        contents = self.repo.get_contents("js/bootstrap-affix.js")
+        self.assertEqual(contents.encoding, "base64")
         self.assertEqual(
-            commit.message,
-            "Test commit created around Fri, 13 Jul 2012 18:43:21 GMT, that is vendredi 13 juillet 2012 20:43:21 GMT+2\n",
+            contents.url,
+            "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js",
         )
+        self.assertEqual(len(contents.content), 4722)
+
+    def testGetDirContentsWithRef(self):
         self.assertEqual(
-            commit.author.date,
-            datetime(2012, 7, 13, 18, 47, 10, tzinfo=timezone.utc),
+            len(
+                self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")
+            ),
+            15,
         )

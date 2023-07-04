@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 David Farr <david.farr@sap.com>                               #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
@@ -23,40 +23,45 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/140
+class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/214
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("twitter/bootstrap")
+        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.issue = self.repo.get_issue(1)
 
-    def testGetDirContentsThenLazyCompletionOfFile(self):
-        contents = self.repo.get_contents("js")
-        self.assertEqual(len(contents), 15)
-        n = 0
-        for content in contents:
-            if content.path == "js/bootstrap-affix.js":
-                self.assertEqual(len(content.content), 4722)  # Lazy completion
-                n += 1
-            elif content.path == "js/tests":
-                self.assertEqual(content.content, None)  # No completion at all
-                n += 1
-        self.assertEqual(n, 2)
+    def testAssignees(self):
+        self.assertTrue(self.repo.has_in_assignees("farrd"))
+        self.assertFalse(self.repo.has_in_assignees("fake"))
 
-    def testGetFileContents(self):
-        contents = self.repo.get_contents("js/bootstrap-affix.js")
-        self.assertEqual(contents.encoding, "base64")
-        self.assertEqual(
-            contents.url,
-            "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js",
-        )
-        self.assertEqual(len(contents.content), 4722)
+    def testCollaborators(self):
+        self.assertTrue(self.repo.has_in_collaborators("farrd"))
+        self.assertFalse(self.repo.has_in_collaborators("fake"))
 
-    def testGetDirContentsWithRef(self):
-        self.assertEqual(
-            len(
-                self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")
-            ),
-            15,
-        )
+        self.assertFalse(self.repo.has_in_collaborators("marcmenges"))
+        self.repo.add_to_collaborators("marcmenges")
+        self.assertTrue(self.repo.has_in_collaborators("marcmenges"))
+
+        self.repo.remove_from_collaborators("marcmenges")
+        self.assertFalse(self.repo.has_in_collaborators("marcmenges"))
+
+    def testEditIssue(self):
+        self.assertEqual(self.issue.assignee, None)
+
+        self.issue.edit(assignee="farrd")
+        self.assertEqual(self.issue.assignee.login, "farrd")
+
+        self.issue.edit(assignee=None)
+        self.assertEqual(self.issue.assignee, None)
+
+    def testCreateIssue(self):
+        issue = self.repo.create_issue("Issue created by PyGithub", assignee="farrd")
+        self.assertEqual(issue.assignee.login, "farrd")
+
+    def testGetIssues(self):
+        issues = self.repo.get_issues(assignee="farrd")
+
+        for issue in issues:
+            self.assertEqual(issue.assignee.login, "farrd")

@@ -1,4 +1,4 @@
-from . import Framework
+from tests import Framework
 
 
 class Organization(Framework.TestCase):

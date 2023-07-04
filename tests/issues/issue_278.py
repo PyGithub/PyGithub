@@ -1,6 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
@@ -23,30 +22,15 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
+# Replay data forged by adding nulls to PaginatedList.setUp.txt and PaginatedList.testIteration.txt
+class Issue278(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user()
-        self.repo = self.g.get_user("openmicroscopy").get_repo("ome-documentation")
+        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
+        self.list = self.repo.get_issues()
 
-    def testGetPullWithOrgHeadUser(self):
-        user = self.repo.get_pull(204).head.user
-        self.assertEqual(user.login, "imcf")
-        self.assertEqual(user.type, "Organization")
-        self.assertEqual(user.__class__.__name__, "NamedUser")  # Should be Organization
-
-    def testGetPullsWithOrgHeadUser(self):
-        for pull in self.repo.get_pulls("closed"):
-            if pull.number == 204:
-                user = pull.head.user
-                self.assertEqual(user, None)
-                # Should be:
-                # self.assertEqual(user.login, 'imcf')
-                # self.assertEqual(user.type, 'Organization')
-                # self.assertEqual(user.__class__.__name__, 'NamedUser')  # Should be Organization
-                break
-        else:
-            self.assertTrue(False)
+    def testIteration(self):
+        self.assertEqual(len(list(self.list)), 333)

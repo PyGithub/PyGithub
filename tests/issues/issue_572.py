@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2018 Vinay Hegde <vinayhegde2010@gmail.com>                        #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,17 +19,25 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from . import Framework
+
+import github
+
+from tests import Framework
 
 
-class Issue937(Framework.TestCase):
+class Issue572(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user()
-        self.repo = self.user.get_repo("PyGithub")
+        self.repo = self.g.get_user().get_repo("PyGithub")
 
-    def testCollaboratorsAffiliation(self):
-        collaborators = self.repo.get_collaborators(affiliation="direct")
-        self.assertListKeyEqual(collaborators, lambda u: u.login, ["hegde5"])
-        with self.assertRaises(AssertionError):
-            self.repo.get_collaborators(affiliation="invalid_option")
+    def testIssueAsPullRequest(self):
+        issue = self.repo.get_issue(2)
+        pull = issue.as_pull_request()
+        self.assertEqual(issue.html_url, pull.html_url)
+        self.assertTrue(isinstance(pull, github.PullRequest.PullRequest))
+
+    def testPullReqeustAsIssue(self):
+        pull = self.repo.get_pull(2)
+        issue = pull.as_issue()
+        self.assertEqual(pull.html_url, issue.html_url)
+        self.assertTrue(isinstance(issue, github.Issue.Issue))

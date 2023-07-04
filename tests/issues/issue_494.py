@@ -1,8 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -23,16 +21,18 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
-class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/139
+class Issue494(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user().get_repo("PyGithub").get_issue(139).user
+        self.repo = self.g.get_repo("apache/brooklyn-server", lazy=True)
+        self.pull = self.repo.get_pull(465)
 
-    def testCompletion(self):
-        self.assertFalse(self.user._CompletableGithubObject__completed)
-        self.assertEqual(self.user.name, "Ian Ozsvald")
-        self.assertTrue(self.user._CompletableGithubObject__completed)
-        self.assertEqual(self.user.plan, None)
+    def testRepr(self):
+        expected = (
+            'PullRequest(title="Change SetHostnameCustomizer to check if '
+            '/etc/sysconfig/network exist…", number=465)'
+        )
+        self.assertEqual(self.pull.__repr__(), expected)

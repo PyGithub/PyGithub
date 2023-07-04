@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from tests import Framework
 
 
 class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issues/945

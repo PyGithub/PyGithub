@@ -1,5 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
@@ -23,14 +25,35 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+import github
+
+from tests import Framework
 
 
-class Issue174(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-        self.repo = self.g.get_repo("twitter/bootstrap")
+class Issue80(
+    Framework.BasicTestCase
+):  # https://github.com/jacquev6/PyGithub/issues/80
+    def testIgnoreHttpsFromGithubEnterprise(self):
+        g = github.Github(
+            auth=self.login, base_url="http://my.enterprise.com/some/prefix"
+        )  # http here
+        org = g.get_organization("BeaverSoftware")
+        self.assertEqual(
+            org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware"
+        )  # https returned
+        self.assertListKeyEqual(
+            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+        )  # But still http in second request based on org.url
 
-    def testGetDirContentsWhithHttpRedirect(self):
-        contents = self.repo.get_contents("js/")
-        self.assertEqual(len(contents), 15)
+    def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
+        g = github.Github(
+            auth=self.login,
+            base_url="http://my.enterprise.com:1234/some/prefix",
+        )  # http here
+        org = g.get_organization("BeaverSoftware")
+        self.assertEqual(
+            org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware"
+        )  # https returned
+        self.assertListKeyEqual(
+            org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
+        )  # But still http in second request based on org.url
