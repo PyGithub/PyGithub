@@ -631,7 +631,7 @@ Bug Fixes & Improvements
 Deprecation
 ^^^^^^^^^^^
 
-* Repository.get_file_contents() no longer works use Repository.get_contents() instead 
+* Repository.get_file_contents() no longer works use Repository.get_contents() instead
 
 Version 1.43.7 (April 16, 2019)
 -----------------------------------

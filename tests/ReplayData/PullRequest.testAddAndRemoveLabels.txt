@@ -96,4 +96,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4984'), ('content-length', '328'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"c9f9beccb03030beaf7b80927da6fef6"'), ('date', 'Sun, 27 May 2012 09:04:06 GMT'), ('content-type', 'application/json; charset=utf-8')]
 [{"url":"https://api.github.com/repos/PyGithub/PyGithub/labels/wip","name":"wip","color":"eb6420"},{"url":"https://api.github.com/repos/PyGithub/PyGithub/labels/refactoring","name":"refactoring","color":"fbca04"},{"url":"https://api.github.com/repos/PyGithub/PyGithub/labels/improvement","name":"improvement","color":"ffffff"}]
-

@@ -8,4 +8,3 @@ None
 422
 [('status', '422 Unprocessable Entity'), ('content-length', '51'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-remaining', '4994'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Tue, 05 Feb 2013 18:58:01 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"message":"Invalid event: \"non-existing-event\""}
-
