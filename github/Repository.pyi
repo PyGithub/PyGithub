@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Union, overload, Iterable
+from typing import Any, Dict, Iterable, List, Optional, Union, overload
 
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
@@ -29,6 +29,7 @@ from github.GitReleaseAsset import GitReleaseAsset
 from github.GitTag import GitTag
 from github.GitTree import GitTree
 from github.Hook import Hook
+from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.InputGitAuthor import InputGitAuthor
 from github.InputGitTreeElement import InputGitTreeElement
 from github.Invitation import Invitation
@@ -51,8 +52,8 @@ from github.Referrer import Referrer
 from github.RepositoryAdvisory import RepositoryAdvisory
 from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryVulnerability import (
-    RepositoryAdvisoryVulnerability,
     AdvisoryVulnerability,
+    RepositoryAdvisoryVulnerability,
 )
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
@@ -80,6 +81,10 @@ class Repository(CompletableGithubObject):
     def _initAttributes(self) -> None: ...
     def _legacy_convert_issue(self, attributes: Dict[str, Any]) -> Dict[str, Any]: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
+    @property
+    def allow_auto_merge(self) -> bool: ...
+    @property
+    def allow_forking(self) -> bool: ...
     @property
     def allow_merge_commit(self) -> bool: ...
     @property
@@ -430,6 +435,10 @@ class Repository(CompletableGithubObject):
     ) -> GitTree: ...
     def get_hook(self, id: int) -> Hook: ...
     def get_hooks(self) -> PaginatedList[Hook]: ...
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery: ...
+    def get_hook_deliveries(
+        self, hook_id: int
+    ) -> PaginatedList[HookDeliverySummary]: ...
     def get_issue(self, number: int) -> Issue: ...
     def get_issues(
         self,
