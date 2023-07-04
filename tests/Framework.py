@@ -41,12 +41,14 @@ import os
 import traceback
 import unittest
 import warnings
+from typing import Optional
 
 import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
 import github
+from github import Consts
 
 APP_PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
@@ -264,8 +266,11 @@ class BasicTestCase(unittest.TestCase):
     recordMode = False
     tokenAuthMode = False
     jwtAuthMode = False
+    per_page = Consts.DEFAULT_PER_PAGE
     retry = None
     pool_size = None
+    seconds_between_requests: Optional[float] = None
+    seconds_between_writes: Optional[float] = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -334,7 +339,6 @@ class BasicTestCase(unittest.TestCase):
         self.assertWarnings(warning, expected)
 
     def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
         actual = [
             (type(message), type(message.message), message.message.args)
             for message in warning.warnings
@@ -407,17 +411,35 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
+        self.g = self.get_github(self.retry, self.pool_size)
+
+    def get_github(self, retry, pool_size):
         if self.tokenAuthMode:
-            self.g = github.Github(
-                auth=self.oauth_token, retry=self.retry, pool_size=self.pool_size
+            return github.Github(
+                auth=self.oauth_token,
+                per_page=self.per_page,
+                retry=retry,
+                pool_size=pool_size,
+                seconds_between_requests=self.seconds_between_requests,
+                seconds_between_writes=self.seconds_between_writes,
             )
         elif self.jwtAuthMode:
-            self.g = github.Github(
-                auth=self.jwt, retry=self.retry, pool_size=self.pool_size
+            return github.Github(
+                auth=self.jwt,
+                per_page=self.per_page,
+                retry=retry,
+                pool_size=pool_size,
+                seconds_between_requests=self.seconds_between_requests,
+                seconds_between_writes=self.seconds_between_writes,
             )
         else:
-            self.g = github.Github(
-                auth=self.login, retry=self.retry, pool_size=self.pool_size
+            return github.Github(
+                auth=self.login,
+                per_page=self.per_page,
+                retry=retry,
+                pool_size=pool_size,
+                seconds_between_requests=self.seconds_between_requests,
+                seconds_between_writes=self.seconds_between_writes,
             )
 
 

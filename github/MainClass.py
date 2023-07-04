@@ -47,9 +47,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import pickle
 import warnings
+from datetime import datetime
 from typing import List
 
 import urllib3
@@ -68,6 +68,7 @@ from . import (
     AuthenticatedUser,
     Consts,
     GithubApp,
+    GithubRetry,
     GitignoreTemplate,
     HookDelivery,
     HookDescription,
@@ -83,10 +84,12 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
+    default_retry = GithubRetry.GithubRetry()
+
     # keep non-deprecated arguments in-sync with Requester
-    # v2: remove login_or_token, password, jwt and app_auth
-    # v2: move auth to the front of arguments
-    # v2: add * before first argument so all arguments must be named,
+    # v3: remove login_or_token, password, jwt and app_auth
+    # v3: move auth to the front of arguments
+    # v3: add * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
@@ -99,8 +102,10 @@ class Github:
         user_agent=Consts.DEFAULT_USER_AGENT,
         per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
-        retry=None,
+        retry=default_retry,
         pool_size=None,
+        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         auth=None,
     ):
         """
@@ -113,8 +118,12 @@ class Github:
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
-        :param retry: int or urllib3.util.retry.Retry object
+        :param retry: int or urllib3.util.retry.Retry object,
+                      defaults to github.Github.default_retry,
+                      set to None to disable retries
         :param pool_size: int
+        :param seconds_between_requests: float
+        :param seconds_between_writes: float
         :param auth: authentication method
         """
 
@@ -132,6 +141,8 @@ class Github:
             or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert seconds_between_requests is None or seconds_between_requests >= 0
+        assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, Auth.Auth), auth
 
         if password is not None:
@@ -173,6 +184,8 @@ class Github:
             verify,
             retry,
             pool_size,
+            seconds_between_requests,
+            seconds_between_writes,
         )
 
     @property
@@ -186,7 +199,7 @@ class Github:
     def FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    # v3: Remove this property? Why should it be necessary to read/modify it after construction
     @property
     def per_page(self):
         """
@@ -198,9 +211,9 @@ class Github:
     def per_page(self, value):
         self.__requester.per_page = value
 
-    # v2: Provide a unified way to access values of headers of last response
-    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
-    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
+    # v3: Provide a unified way to access values of headers of last response
+    # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -427,12 +440,10 @@ class Github:
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
