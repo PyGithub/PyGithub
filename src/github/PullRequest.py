@@ -690,7 +690,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         return self.get_review_comments(sort=sort, direction=direction, since=since)
 
-    # v2: remove *, added here to force named parameters because order has changed
+    # v3: remove *, added here to force named parameters because order has changed
     def get_review_comments(
         self,
         *,

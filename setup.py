@@ -117,6 +117,7 @@ if __name__ == "__main__":
             "pynacl>=1.4.0",
             "requests>=2.14.0",
             "python-dateutil",
+            "typing-extensions>=4.0.0",
         ],
         # can be removed, still here to avoid breaking user code
         extras_require={"integrations": []},
