@@ -23,7 +23,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -178,7 +178,7 @@ class CheckRun(CompletableGithubObject):
         assert is_optional(output, dict), output
         assert is_optional_list(actions, dict), actions
 
-        post_parameters = dict()
+        post_parameters: dict[str, Any] = {}
         if is_defined(name):
             post_parameters["name"] = name
         if is_defined(head_sha):
