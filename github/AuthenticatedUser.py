@@ -358,7 +358,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(note_url, str), note_url
         assert is_optional(client_id, str), client_id
         assert is_optional(client_secret, str), client_secret
-        assert onetime_password is None or is_optional(
+        assert onetime_password is None or isinstance(
             onetime_password, str
         ), onetime_password
         post_parameters: dict[str, Any] = {}
