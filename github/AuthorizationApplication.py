@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Dict
+
 import github.GithubObject
 
 
@@ -40,7 +42,7 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -48,18 +50,18 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, str]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
