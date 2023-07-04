@@ -1,0 +1,4 @@
+sphinx <3
+Jinja2 <3.1
+pyjwt[crypto] >=2.4.0
+sphinx-rtd-theme <1.1

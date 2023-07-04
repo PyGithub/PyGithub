@@ -1,9 +1,5 @@
-pynacl>=1.4.0
+pynacl >=1.4.0
 python-dateutil
-requests>=2.14.0
-pyjwt[crypto]>=2.4.0
+requests >=2.14.0
 urllib3
-sphinx<3
-Jinja2<3.1
-sphinx-rtd-theme<1.1
 Deprecated
