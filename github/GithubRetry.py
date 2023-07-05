@@ -24,12 +24,14 @@ import json
 import logging
 from datetime import datetime, timezone
 from logging import Logger
+from types import TracebackType
 from typing import Any, Optional
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
-from urllib3 import HTTPResponse, Retry
+from urllib3 import BaseHTTPResponse, Retry
+from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
 
 from github.GithubException import GithubException
@@ -83,12 +85,12 @@ class GithubRetry(Retry):
 
     def increment(
         self,
-        method=None,
-        url=None,
-        response=None,
-        error=None,
-        _pool=None,
-        _stacktrace=None,
+        method: Optional[str] = None,
+        url: Optional[str] = None,
+        response: Optional[BaseHTTPResponse] = None,
+        error: Optional[Exception] = None,
+        _pool: Optional[ConnectionPool] = None,
+        _stacktrace: Optional[TracebackType] = None,
     ) -> Retry:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
@@ -203,7 +205,7 @@ class GithubRetry(Retry):
         return super().increment(method, url, response, error, _pool, _stacktrace)
 
     @staticmethod
-    def get_content(resp: HTTPResponse, url: str) -> bytes:
+    def get_content(resp: BaseHTTPResponse, url: str) -> bytes:
         # logic taken from HTTPAdapter.build_response (requests.adapters)
         response = Response()
 

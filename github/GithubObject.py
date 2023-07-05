@@ -101,11 +101,11 @@ def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
+def is_optional(v: Any, type: Type[T]) -> TypeGuard[Opt[T]]:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+def is_optional_list(v: Any, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
     return (
         isinstance(v, _NotSetType)
         or isinstance(v, list)
@@ -113,7 +113,7 @@ def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
     )
 
 
-class _ValuedAttribute(Attribute, Generic[T]):
+class _ValuedAttribute(Attribute[T]):
     def __init__(self, value: T):
         self._value = value
 
@@ -341,7 +341,7 @@ class GithubObject:
         Converts the object to a nicely printable string.
         """
 
-        def format_params(params):
+        def format_params(params: Dict[str, Any]) -> typing.Generator[str, None, None]:
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):

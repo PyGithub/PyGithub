@@ -155,7 +155,7 @@ class HTTPSRequestsConnectionClass:
         url: str,
         input: Optional[Union[str, io.BufferedReader]],
         headers: Dict[str, str],
-    ):
+    ) -> None:
         self.verb = verb
         self.url = url
         self.input = input
@@ -247,7 +247,7 @@ class Requester:
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
     __persist = True
-    __logger = None
+    __logger: Optional[logging.Logger] = None
 
     _frameBuffer: List[Any]
 
@@ -256,7 +256,7 @@ class Requester:
         cls,
         httpConnectionClass: Type[HTTPRequestsConnectionClass],
         httpsConnectionClass: Type[HTTPSRequestsConnectionClass],
-    ):
+    ) -> None:
         cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
@@ -268,7 +268,7 @@ class Requester:
         cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
     @classmethod
-    def injectLogger(cls, logger):
+    def injectLogger(cls, logger: logging.Logger) -> None:
         cls.__logger = logger
 
     @classmethod
@@ -613,7 +613,7 @@ class Requester:
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
-        def encode(input):
+        def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
@@ -629,7 +629,7 @@ class Requester:
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
-        def encode(input):
+        def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
 
@@ -658,7 +658,7 @@ class Requester:
         if headers is None:
             headers = {}
 
-        def encode(local_path: str):
+        def encode(local_path: str) -> Tuple[str, Any]:
             if "Content-Type" in headers:  # type: ignore
                 mime_type = headers["Content-Type"]  # type: ignore
             else:
@@ -873,7 +873,7 @@ class Requester:
         self,
         url: str,
         parameters: Dict[str, Any],
-    ):
+    ) -> str:
         if len(parameters) == 0:
             return url
         else:

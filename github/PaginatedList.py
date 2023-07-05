@@ -72,7 +72,7 @@ class PaginatedListBase(Generic[T]):
     def _isBiggerThan(self, index: int) -> bool:
         return len(self.__elements) > index or self._couldGrow()
 
-    def __fetchToIndex(self, index):
+    def __fetchToIndex(self, index: int) -> None:
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
