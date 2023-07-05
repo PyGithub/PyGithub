@@ -107,7 +107,7 @@ class Artifact(NonCompletableGithubObject):
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
         return status == 204
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._archive_download_url = NotSet
         self._created_at = NotSet
         self._expired = NotSet

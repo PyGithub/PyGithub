@@ -409,7 +409,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def remove_required_pull_request_reviews(self):
+    def remove_required_pull_request_reviews(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
