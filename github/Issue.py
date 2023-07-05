@@ -333,7 +333,7 @@ class Issue(CompletableGithubObject):
         labels: Opt[list[str]] = NotSet,
         assignees: Opt[list[str]] = NotSet,
         state_reason: Opt[str] = NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
         :param assignee: deprecated, use `assignees` instead. `assignee=None` means to remove current assignee.
