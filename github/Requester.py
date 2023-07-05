@@ -527,7 +527,7 @@ class Requester:
                     )
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
-                        o.hostname,
+                        o.hostname,  # type: ignore
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
@@ -685,7 +685,7 @@ class Requester:
         cnx: Optional[
             Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
         ] = None,
-    ):
+    ) -> Tuple[Dict[str, Any], Any]:
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like

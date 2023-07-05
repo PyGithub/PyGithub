@@ -30,9 +30,10 @@ from typing import Any, Optional
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
-from urllib3 import BaseHTTPResponse, Retry
+from urllib3 import Retry
 from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
+from urllib3.response import BaseHTTPResponse
 
 from github.GithubException import GithubException
 from github.Requester import Requester

@@ -206,7 +206,7 @@ class PaginatedList(PaginatedListBase[T]):
         if lastUrl:
             self.__nextUrl = lastUrl
 
-    def _couldGrow(self):
+    def _couldGrow(self) -> bool:
         return self.__nextUrl is not None
 
     def _fetchNextPage(self) -> List[T]:
