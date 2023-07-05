@@ -89,31 +89,32 @@ class Issue(CompletableGithubObject):
     This class represents Issues. The reference can be found here https://docs.github.com/en/rest/reference/issues
     """
 
-    _id: Attribute[int]
-    _active_lock_reason: Attribute[str] | Attribute[None]
-    _assignee: Attribute[NamedUser] | Attribute[None]
-    _assignees: Attribute[list[NamedUser]]
-    _body: Attribute[str]
-    _closed_at: Attribute[datetime]
-    _closed_by: Attribute[NamedUser]
-    _comments: Attribute[int]
-    _comments_url: Attribute[str]
-    _created_at: Attribute[datetime]
-    _events_url: Attribute[str]
-    _html_url: Attribute[str]
-    _labels: Attribute[list[Label]]
-    _labels_url: Attribute[str]
-    _locked: Attribute[bool]
-    _milestone: Attribute[Milestone]
-    _number: Attribute[int]
-    _pull_request: Attribute[IssuePullRequest]
-    _repository: Attribute[Repository]
-    _state: Attribute[str]
-    _state_reason: Attribute[str] | Attribute[None]
-    _title: Attribute[str]
-    _updated_at: Attribute[datetime]
-    _url: Attribute[str]
-    _user: Attribute[NamedUser]
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._active_lock_reason: Attribute[str] | Attribute[None] = NotSet
+        self._assignee: Attribute[NamedUser] | Attribute[None] = NotSet
+        self._assignees: Attribute[list[NamedUser]] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._closed_at: Attribute[datetime] = NotSet
+        self._closed_by: Attribute[NamedUser] = NotSet
+        self._comments: Attribute[int] = NotSet
+        self._comments_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._events_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._labels: Attribute[list[Label]] = NotSet
+        self._labels_url: Attribute[str] = NotSet
+        self._locked: Attribute[bool] = NotSet
+        self._milestone: Attribute[Milestone] = NotSet
+        self._number: Attribute[int] = NotSet
+        self._pull_request: Attribute[IssuePullRequest] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._state_reason: Attribute[str] | Attribute[None] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self):
         return self.get__repr__(
@@ -555,33 +556,6 @@ class Issue(CompletableGithubObject):
     @property
     def _identity(self) -> int:
         return self.number
-
-    def _initAttributes(self) -> None:
-        self._active_lock_reason = NotSet
-        self._assignee = NotSet
-        self._assignees = NotSet
-        self._body = NotSet
-        self._closed_at = NotSet
-        self._closed_by = NotSet
-        self._comments = NotSet
-        self._comments_url = NotSet
-        self._created_at = NotSet
-        self._events_url = NotSet
-        self._html_url = NotSet
-        self._id = NotSet
-        self._labels = NotSet
-        self._labels_url = NotSet
-        self._locked = NotSet
-        self._milestone = NotSet
-        self._number = NotSet
-        self._pull_request = NotSet
-        self._repository = NotSet
-        self._state = NotSet
-        self._state_reason = NotSet
-        self._title = NotSet
-        self._updated_at = NotSet
-        self._url = NotSet
-        self._user = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
