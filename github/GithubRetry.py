@@ -171,7 +171,7 @@ class GithubRetry(Retry):
                                     )
                                 backoff = retry_backoff
 
-                            def get_backoff_time():
+                            def get_backoff_time() -> float:
                                 return backoff
 
                             self.__log(

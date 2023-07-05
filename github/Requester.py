@@ -676,7 +676,15 @@ class Requester:
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMemoryBlobAndCheck(
-        self, verb, url, parameters, headers, file_like, cnx=None
+        self,
+        verb: str,
+        url: str,
+        parameters: Any,
+        headers: Dict[str, Any],
+        file_like: io.TextIOBase,
+        cnx: Optional[
+            Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]
+        ] = None,
     ):
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
