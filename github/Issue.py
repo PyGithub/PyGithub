@@ -332,7 +332,7 @@ class Issue(CompletableGithubObject):
         state: Opt[str] = NotSet,
         milestone: Opt[Milestone | None] = NotSet,
         labels: Opt[list[str]] = NotSet,
-        assignees: Opt[list[str]] = NotSet,
+        assignees: Opt[list[NamedUser | str]] = NotSet,
         state_reason: Opt[str] = NotSet,
     ) -> None:
         """
