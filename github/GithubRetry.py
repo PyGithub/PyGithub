@@ -33,7 +33,7 @@ from typing_extensions import Self
 from urllib3 import Retry
 from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
-from urllib3.response import BaseHTTPResponse
+from urllib3.response import HTTPResponse
 
 from github.GithubException import GithubException
 from github.Requester import Requester
@@ -88,7 +88,7 @@ class GithubRetry(Retry):
         self,
         method: Optional[str] = None,
         url: Optional[str] = None,
-        response: Optional[BaseHTTPResponse] = None,
+        response: Optional[HTTPResponse] = None,
         error: Optional[Exception] = None,
         _pool: Optional[ConnectionPool] = None,
         _stacktrace: Optional[TracebackType] = None,
@@ -113,8 +113,8 @@ class GithubRetry(Retry):
                     # to identify retry-able methods, we inspect the response body
                     try:
                         content = self.get_content(response, url)  # type: ignore
-                        content = json.loads(content)
-                        message = content.get("message")
+                        content = json.loads(content)  # type: ignore
+                        message = content.get("message")  # type: ignore
 
                         if Requester.isRateLimitError(message):
                             rate_type = (
@@ -189,7 +189,7 @@ class GithubRetry(Retry):
                             "Response message does not indicate retry-able error",
                         )
                         raise Requester.createException(
-                            response.status, response.headers, content
+                            response.status, response.headers, content  # type: ignore
                         )
                     except (MaxRetryError, GithubException):
                         raise
@@ -200,13 +200,17 @@ class GithubRetry(Retry):
                             exc_info=e,
                         )
 
-                    raise GithubException(response.status, content, response.headers)
+                    raise GithubException(
+                        response.status,
+                        content,  # type: ignore
+                        response.headers,  # type: ignore
+                    )
 
         # retry the request as usual
         return super().increment(method, url, response, error, _pool, _stacktrace)
 
     @staticmethod
-    def get_content(resp: BaseHTTPResponse, url: str) -> bytes:
+    def get_content(resp: HTTPResponse, url: str) -> bytes:
         # logic taken from HTTPAdapter.build_response (requests.adapters)
         response = Response()
 
