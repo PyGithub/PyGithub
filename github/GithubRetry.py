@@ -24,7 +24,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from logging import Logger
-from typing import Optional
+from typing import Any, Optional
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
@@ -59,8 +59,8 @@ class GithubRetry(Retry):
     __datetime = datetime
 
     def __init__(
-        self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs
-    ):
+        self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs: Any
+    ) -> None:
         """
         :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
         :param kwargs: see urllib3.Retry for more arguments
@@ -77,7 +77,7 @@ class GithubRetry(Retry):
         )
         super().__init__(**kwargs)
 
-    def new(self, **kw):
+    def new(self, **kw: Any) -> Retry:
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)
 
@@ -222,7 +222,7 @@ class GithubRetry(Retry):
 
         return response.content
 
-    def __log(self, level: int, message: str, **kwargs) -> None:
+    def __log(self, level: int, message: str, **kwargs: Any) -> None:
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(level):

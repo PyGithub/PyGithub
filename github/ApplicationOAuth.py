@@ -44,7 +44,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
     _client_id: Attribute[str]
     _client_secret: Attribute[str]
 
-    def __init__(self, requester, headers, attributes, completed):
+    def __init__(self, requester, headers, attributes, completed) -> None:
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
         super().__init__(requester, headers, attributes, completed)
