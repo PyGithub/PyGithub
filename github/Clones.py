@@ -34,6 +34,11 @@ class Clones(NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/repos#get-repository-clones
     """
 
+    def _initAttributes(self) -> None:
+        self._timestamp: Attribute[datetime] = NotSet
+        self._count: Attribute[int] = NotSet
+        self._uniques: Attribute[int] = NotSet
+
     def __repr__(self):
         return self.get__repr__(
             {
@@ -42,10 +47,6 @@ class Clones(NonCompletableGithubObject):
                 "uniques": self._uniques.value,
             }
         )
-
-    _timestamp: Attribute[datetime]
-    _count: Attribute[int]
-    _uniques: Attribute[int]
 
     @property
     def timestamp(self) -> datetime:
@@ -58,11 +59,6 @@ class Clones(NonCompletableGithubObject):
     @property
     def uniques(self) -> int:
         return self._uniques.value
-
-    def _initAttributes(self) -> None:
-        self._timestamp = NotSet
-        self._count = NotSet
-        self._uniques = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "timestamp" in attributes:  # pragma no branch
