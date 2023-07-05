@@ -10,6 +10,7 @@ from github.Commit import Commit
 from github.ContentFile import ContentFile
 from github.Event import Event
 from github.Gist import Gist
+from github.GithubApp import GithubApp
 from github.GithubObject import GithubObject, _NotSetType
 from github.GitignoreTemplate import GitignoreTemplate
 from github.HookDescription import HookDescription
@@ -105,7 +106,7 @@ class Github:
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
     # argument slug is deprecated, not included here
-    def get_app(self): ...
+    def get_app(self) -> GithubApp: ...
     def get_oauth_application(
         self, client_id: str, client_secret: str
     ) -> ApplicationOAuth: ...
