@@ -19,7 +19,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 import json
 import logging
 from datetime import datetime, timezone
