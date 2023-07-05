@@ -140,7 +140,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         self._repository_id: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "guid" in attributes:  # pragma no branch

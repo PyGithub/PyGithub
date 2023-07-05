@@ -409,7 +409,7 @@ class Requester:
             self.__auth.withRequester(self)
 
     @property
-    def kwargs(self):
+    def kwargs(self) -> Dict[str, Any]:
         """
         Returns arguments required to recreate this Requester with Requester.__init__, as well as
         with MainClass.__init__ and GithubIntegration.__init__.
@@ -679,7 +679,7 @@ class Requester:
         self, verb, url, parameters, headers, file_like, cnx=None
     ):
         # The expected signature of encode means that the argument is ignored.
-        def encode(_: Any):
+        def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like
 
         if not cnx:
