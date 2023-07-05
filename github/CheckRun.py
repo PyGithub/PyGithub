@@ -54,6 +54,24 @@ class CheckRun(CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/checks#check-runs
     """
 
+    def _initAttributes(self) -> None:
+        self._app: Attribute[GithubApp] = NotSet
+        self._check_suite_id: Attribute[int] = NotSet
+        self._completed_at: Attribute[datetime | None] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._details_url: Attribute[str] = NotSet
+        self._external_id: Attribute[str] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._output: Attribute[github.CheckRunOutput.CheckRunOutput] = NotSet
+        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._started_at: Attribute[datetime] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__(
             {"id": self._id.value, "conclusion": self._conclusion.value}
@@ -206,24 +224,6 @@ class CheckRun(CompletableGithubObject):
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
-
-    def _initAttributes(self) -> None:
-        self._app: Attribute[GithubApp] = NotSet
-        self._check_suite_id: Attribute[int] = NotSet
-        self._completed_at: Attribute[datetime | None] = NotSet
-        self._conclusion: Attribute[str] = NotSet
-        self._details_url: Attribute[str] = NotSet
-        self._external_id: Attribute[str] = NotSet
-        self._head_sha: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._output: Attribute[github.CheckRunOutput.CheckRunOutput] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
-        self._started_at: Attribute[datetime] = NotSet
-        self._status: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "app" in attributes:  # pragma no branch
