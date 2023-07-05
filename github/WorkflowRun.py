@@ -56,9 +56,6 @@ class WorkflowRun(CompletableGithubObject):
     This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
     """
 
-    def __repr__(self):
-        return self.get__repr__({"id": self._id.value, "url": self._url.value})
-
     def _initAttributes(self):
         self._id: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
@@ -87,6 +84,9 @@ class WorkflowRun(CompletableGithubObject):
         self._head_commit: Attribute[GitCommit] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._head_repository: Attribute[Repository] = NotSet
+
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
     def id(self) -> int:
