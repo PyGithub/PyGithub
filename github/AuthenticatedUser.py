@@ -100,6 +100,46 @@ class AuthenticatedUser(CompletableGithubObject):
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
+    def _initAttributes(self) -> None:
+        self._avatar_url: Attribute[str] = NotSet
+        self._bio: Attribute[str] = NotSet
+        self._blog: Attribute[str] = NotSet
+        self._collaborators: Attribute[int] = NotSet
+        self._company: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._disk_usage: Attribute[int] = NotSet
+        self._email: Attribute[str] = NotSet
+        self._events_url: Attribute[str] = NotSet
+        self._followers: Attribute[int] = NotSet
+        self._followers_url: Attribute[str] = NotSet
+        self._following: Attribute[int] = NotSet
+        self._following_url: Attribute[str] = NotSet
+        self._gists_url: Attribute[str] = NotSet
+        self._gravatar_id: Attribute[str] = NotSet
+        self._hireable: Attribute[bool] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._location: Attribute[str] = NotSet
+        self._login: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._organizations_url: Attribute[str] = NotSet
+        self._owned_private_repos: Attribute[int] = NotSet
+        self._plan: Attribute[github.Plan.Plan] = NotSet
+        self._private_gists: Attribute[int] = NotSet
+        self._public_gists: Attribute[int] = NotSet
+        self._public_repos: Attribute[int] = NotSet
+        self._received_events_url: Attribute[str] = NotSet
+        self._repos_url: Attribute[str] = NotSet
+        self._site_admin: Attribute[bool] = NotSet
+        self._starred_url: Attribute[str] = NotSet
+        self._subscriptions_url: Attribute[str] = NotSet
+        self._total_private_repos: Attribute[int] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._two_factor_authentication: Attribute[bool] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"login": self._login.value})
 
@@ -1121,46 +1161,6 @@ class AuthenticatedUser(CompletableGithubObject):
         return github.Membership.Membership(
             self._requester, headers, data, completed=True
         )
-
-    def _initAttributes(self) -> None:
-        self._avatar_url: Attribute[str] = NotSet
-        self._bio: Attribute[str] = NotSet
-        self._blog: Attribute[str] = NotSet
-        self._collaborators: Attribute[int] = NotSet
-        self._company: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._disk_usage: Attribute[int] = NotSet
-        self._email: Attribute[str] = NotSet
-        self._events_url: Attribute[str] = NotSet
-        self._followers: Attribute[int] = NotSet
-        self._followers_url: Attribute[str] = NotSet
-        self._following: Attribute[int] = NotSet
-        self._following_url: Attribute[str] = NotSet
-        self._gists_url: Attribute[str] = NotSet
-        self._gravatar_id: Attribute[str] = NotSet
-        self._hireable: Attribute[bool] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._location: Attribute[str] = NotSet
-        self._login: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._organizations_url: Attribute[str] = NotSet
-        self._owned_private_repos: Attribute[int] = NotSet
-        self._plan: Attribute[github.Plan.Plan] = NotSet
-        self._private_gists: Attribute[int] = NotSet
-        self._public_gists: Attribute[int] = NotSet
-        self._public_repos: Attribute[int] = NotSet
-        self._received_events_url: Attribute[str] = NotSet
-        self._repos_url: Attribute[str] = NotSet
-        self._site_admin: Attribute[bool] = NotSet
-        self._starred_url: Attribute[str] = NotSet
-        self._subscriptions_url: Attribute[str] = NotSet
-        self._total_private_repos: Attribute[int] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._two_factor_authentication: Attribute[bool] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "avatar_url" in attributes:  # pragma no branch
