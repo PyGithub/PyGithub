@@ -39,7 +39,9 @@ jobs:
           name: package
           path: dist
       - name: Publish 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.8.7
+        run: |
+          pip install -q twine
+          twine upload dist/*
         with:
           user: __token__
           password: ${{ secrets.pypi_password }}
