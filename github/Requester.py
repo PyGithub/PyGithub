@@ -117,7 +117,7 @@ class HTTPSRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
         self,
-        host,
+        host: str,
         port: Optional[int] = None,
         strict: bool = False,
         timeout: Optional[int] = None,
@@ -174,7 +174,7 @@ class HTTPSRequestsConnectionClass:
         )
         return RequestsResponse(r)
 
-    def close(self):
+    def close(self) -> None:
         return
 
 
@@ -214,7 +214,9 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]):
+    def request(
+        self, verb: str, url: str, input: None, headers: Dict[str, str]
+    ) -> None:
         self.verb = verb
         self.url = url
         self.input = input
@@ -311,7 +313,7 @@ class Requester:
 
     def DEBUG_ON_RESPONSE(
         self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str
-    ):
+    ) -> None:
         """
         Update current frame with response
         Current frame index will be attached to responseHeader
@@ -324,7 +326,7 @@ class Requester:
             ]
             responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
-    def check_me(self, obj: "GithubObject"):
+    def check_me(self, obj: "GithubObject") -> None:
         if (
             self.DEBUG_FLAG and self.ON_CHECK_ME is not None
         ):  # pragma no branch (Flag always set in tests)
@@ -677,7 +679,7 @@ class Requester:
         self, verb, url, parameters, headers, file_like, cnx=None
     ):
         # The expected signature of encode means that the argument is ignored.
-        def encode(_):
+        def encode(_: Any):
             return headers["Content-Type"], file_like
 
         if not cnx:
