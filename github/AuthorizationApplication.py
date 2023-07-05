@@ -36,11 +36,12 @@ class AuthorizationApplication(CompletableGithubObject):
     This class represents AuthorizationApplications
     """
 
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
-
-    _name: Attribute[str]
-    _url: Attribute[str]
 
     @property
     def name(self) -> str:
@@ -51,10 +52,6 @@ class AuthorizationApplication(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._name = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "name" in attributes:  # pragma no branch
