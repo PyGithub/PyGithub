@@ -30,6 +30,7 @@ from typing import Any, Optional
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
+from typing_extensions import Self
 from urllib3 import Retry
 from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
@@ -80,7 +81,7 @@ class GithubRetry(Retry):
         )
         super().__init__(**kwargs)
 
-    def new(self, **kw: Any) -> Retry:
+    def new(self, **kw: Any) -> Self:
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)
 
