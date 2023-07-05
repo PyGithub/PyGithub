@@ -91,8 +91,8 @@ class Issue(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
-        self._active_lock_reason: Attribute[str] | Attribute[None] = NotSet
-        self._assignee: Attribute[NamedUser] | Attribute[None] = NotSet
+        self._active_lock_reason: Attribute[str | None] = NotSet
+        self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._body: Attribute[str] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
@@ -110,7 +110,7 @@ class Issue(CompletableGithubObject):
         self._pull_request: Attribute[IssuePullRequest] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._state: Attribute[str] = NotSet
-        self._state_reason: Attribute[str] | Attribute[None] = NotSet
+        self._state_reason: Attribute[str | None] = NotSet
         self._title: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet

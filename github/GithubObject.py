@@ -46,7 +46,6 @@ from typing import (
     Any,
     Callable,
     Dict,
-    Generic,
     List,
     Optional,
     Tuple,
@@ -55,7 +54,7 @@ from typing import (
 )
 
 from dateutil import parser
-from typing_extensions import TypeGuard
+from typing_extensions import Protocol, TypeGuard
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -64,15 +63,16 @@ if TYPE_CHECKING:
     from .Requester import Requester
 
 T = typing.TypeVar("T")
+T_co = typing.TypeVar("T_co", covariant=True)
 
 
-class Attribute(Generic[T]):
+class Attribute(Protocol[T_co]):
     @property
-    def value(self) -> T:
+    def value(self) -> T_co:
         raise NotImplementedError
 
 
-class _NotSetType(Attribute):
+class _NotSetType:
     def __repr__(self):
         return "NotSet"
 
@@ -114,7 +114,7 @@ def is_optional_list(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
     )
 
 
-class _ValuedAttribute(Attribute, Generic[T]):
+class _ValuedAttribute(Attribute[T]):
     def __init__(self, value: T):
         self._value = value
 
