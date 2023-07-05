@@ -64,7 +64,6 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
-    _NotSetType,
     is_defined,
     is_optional,
     is_optional_list,
@@ -342,16 +341,13 @@ class Issue(CompletableGithubObject):
         """
         assert is_optional(title, str), title
         assert is_optional(body, str), body
-        assert assignee is None or isinstance(
-            assignee, (github.NamedUser.NamedUser, str, _NotSetType)
+        assert assignee is None or is_optional(
+            assignee, (github.NamedUser.NamedUser, str)
         ), assignee
-        assert isinstance(assignees, _NotSetType) or all(
-            isinstance(element, (github.NamedUser.NamedUser, str))
-            for element in assignees
-        ), assignees
+        assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(state, str), state
-        assert milestone is None or isinstance(
-            milestone, (github.Milestone.Milestone, _NotSetType)
+        assert milestone is None or is_optional(
+            milestone, github.Milestone.Milestone
         ), milestone
         assert is_optional_list(labels, str), labels
 

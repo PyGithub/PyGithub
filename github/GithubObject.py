@@ -49,6 +49,7 @@ from typing import (
     Generic,
     List,
     Optional,
+    Tuple,
     Type,
     Union,
 )
@@ -101,11 +102,11 @@ def is_undefined(v: Union[T, _NotSetType]) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
+def is_optional(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+def is_optional_list(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return (
         isinstance(v, _NotSetType)
         or isinstance(v, list)
