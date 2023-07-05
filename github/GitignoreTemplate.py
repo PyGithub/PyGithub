@@ -35,8 +35,9 @@ class GitignoreTemplate(NonCompletableGithubObject):
     This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore
     """
 
-    _name: Attribute[str]
-    _source: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._source: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
@@ -48,10 +49,6 @@ class GitignoreTemplate(NonCompletableGithubObject):
     @property
     def name(self) -> str:
         return self._name.value
-
-    def _initAttributes(self) -> None:
-        self._source = NotSet
-        self._name = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "source" in attributes:  # pragma no branch
