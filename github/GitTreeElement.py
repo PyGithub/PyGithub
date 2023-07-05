@@ -40,7 +40,7 @@ class GitTreeElement(NonCompletableGithubObject):
         self._mode: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._sha: Attribute[str] = NotSet
-        self._size: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
         self._type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
