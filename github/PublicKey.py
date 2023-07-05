@@ -30,6 +30,7 @@
 
 # https://docs.github.com/en/rest/reference/actions#example-encrypting-a-secret-using-python
 from base64 import b64encode
+from typing import Any, Dict
 
 from nacl import encoding, public
 
@@ -51,7 +52,7 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
 
     @property
@@ -70,11 +71,11 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._key = github.GithubObject.NotSet
         self._key_id = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch

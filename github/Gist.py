@@ -31,6 +31,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
@@ -44,7 +46,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
     This class represents Gists. The reference can be found here https://docs.github.com/en/rest/reference/gists
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -310,7 +312,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._comments = github.GithubObject.NotSet
         self._comments_url = github.GithubObject.NotSet
         self._commits_url = github.GithubObject.NotSet
@@ -331,7 +333,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch

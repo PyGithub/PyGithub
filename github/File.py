@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -38,7 +40,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
     This class represents Files
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"sha": self._sha.value, "filename": self._filename.value}
         )
@@ -120,7 +122,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         """
         return self._status.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._additions = github.GithubObject.NotSet
         self._blob_url = github.GithubObject.NotSet
         self._changes = github.GithubObject.NotSet
@@ -133,7 +135,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         self._sha = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "blob_url" in attributes:  # pragma no branch

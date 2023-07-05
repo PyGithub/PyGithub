@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.RequiredPullRequestReviews
@@ -32,7 +34,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     This class represents Branch Protection. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-branch-protection
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
@@ -90,7 +92,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._required_status_checks = github.GithubObject.NotSet
         self._enforce_admins = github.GithubObject.NotSet
@@ -98,7 +100,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._user_push_restrictions = github.GithubObject.NotSet
         self._team_push_restrictions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch

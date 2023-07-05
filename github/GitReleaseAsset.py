@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -31,7 +33,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
     This class represents GitReleaseAssets. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self.url})
 
     @property
@@ -151,7 +153,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         )
         return GitReleaseAsset(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -165,7 +167,7 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._browser_download_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "id" in attributes:  # pragma no branch

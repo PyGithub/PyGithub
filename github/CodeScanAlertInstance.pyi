@@ -22,8 +22,8 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
 import github.CodeScanAlertInstanceLocation
+import github.GithubObject
 
 class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self) -> str: ...

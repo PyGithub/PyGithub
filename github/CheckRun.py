@@ -21,6 +21,7 @@
 ################################################################################
 
 from datetime import datetime
+from typing import Any, Dict
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -36,7 +37,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/checks#check-runs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"id": self._id.value, "conclusion": self._conclusion.value}
         )
@@ -263,7 +264,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._app = github.GithubObject.NotSet
         self._check_suite_id = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
@@ -281,7 +282,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         self._status = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.GithubApp.GithubApp, attributes["app"]

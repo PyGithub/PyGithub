@@ -40,6 +40,7 @@
 ################################################################################
 
 from datetime import datetime
+from typing import Any, Dict
 
 import github.Event
 import github.GithubObject
@@ -58,7 +59,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     This class represents Organizations. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
     @property
@@ -1341,7 +1342,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             list_item="installations",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._default_repository_permission = github.GithubObject.NotSet
         self._has_organization_projects = github.GithubObject.NotSet
         self._has_repository_projects = github.GithubObject.NotSet
@@ -1380,7 +1381,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "billing_email" in attributes:  # pragma no branch

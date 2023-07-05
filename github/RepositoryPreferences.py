@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.Repository
 
@@ -44,11 +46,11 @@ class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
         """
         return self._repository.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._preferences = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "preferences" in attributes:  # pragma no branch
             self._preferences = self._makeDictAttribute(attributes["preferences"])
         if "repository" in attributes:  # pragma no branch

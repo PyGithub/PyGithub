@@ -22,6 +22,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.Consts
 import github.DeploymentStatus
 import github.GithubObject
@@ -32,7 +34,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
     This class represents Deployments. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -259,7 +261,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             ]
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._production_environment = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet
@@ -277,7 +279,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         self._statuses_url = github.GithubObject.NotSet
         self._repository_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "production_environment" in attributes:  # pragma no branch

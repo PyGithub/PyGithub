@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -29,7 +31,7 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -73,7 +75,7 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
         """
         return self._labels.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._os = github.GithubObject.NotSet
@@ -81,7 +83,7 @@ class SelfHostedActionsRunner(github.GithubObject.NonCompletableGithubObject):
         self._busy = github.GithubObject.NotSet
         self._labels = []
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

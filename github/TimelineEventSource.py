@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.Issue
 
@@ -29,7 +31,7 @@ class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
     This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
@@ -46,11 +48,11 @@ class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
         """
         return self._issue.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._type = github.GithubObject.NotSet
         self._issue = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch

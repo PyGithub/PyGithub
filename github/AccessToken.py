@@ -22,6 +22,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -122,7 +123,7 @@ class AccessToken(NonCompletableGithubObject):
             return self._created + timedelta(seconds=seconds)
         return None
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._token = NotSet
         self._type = NotSet
         self._scope = NotSet
@@ -130,7 +131,7 @@ class AccessToken(NonCompletableGithubObject):
         self._refresh_token = NotSet
         self._refresh_expires_in = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._created = datetime.now(timezone.utc)
         if "access_token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["access_token"])

@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -36,7 +38,7 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
     This class represents GitTreeElements
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
 
     @property
@@ -81,7 +83,7 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._mode = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -89,7 +91,7 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
         self._type = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

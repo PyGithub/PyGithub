@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -29,7 +31,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
     This class represents github apps. The reference can be found here https://docs.github.com/en/rest/reference/apps
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -127,7 +129,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._events = github.GithubObject.NotSet
@@ -141,7 +143,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch

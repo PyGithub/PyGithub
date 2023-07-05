@@ -20,13 +20,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
 class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
     """This class represents the output of check run."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -64,14 +66,14 @@ class CheckRunOutput(github.GithubObject.NonCompletableGithubObject):
         """
         return self._title.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._annotations_count = github.GithubObject.NotSet
         self._annotations_url = github.GithubObject.NotSet
         self._summary = github.GithubObject.NotSet
         self._text = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(
                 attributes["annotations_count"]

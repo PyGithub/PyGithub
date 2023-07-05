@@ -29,6 +29,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.Commit
 import github.GithubObject
 
@@ -38,7 +40,7 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     This class represents Tags. The reference can be found here https://docs.github.com/en/rest/reference/repos#list-repository-tags
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"name": self._name.value, "commit": self._commit.value}
         )
@@ -71,13 +73,13 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
         """
         return self._zipball_url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._commit = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._tarball_url = github.GithubObject.NotSet
         self._zipball_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(
                 github.Commit.Commit, attributes["commit"]

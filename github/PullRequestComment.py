@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -44,7 +46,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
     This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
@@ -237,7 +239,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -254,7 +256,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch

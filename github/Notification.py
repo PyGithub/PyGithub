@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NotificationSubject
 import github.Repository
@@ -37,7 +39,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
     This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "subject": self._subject.value})
 
     @property
@@ -137,7 +139,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._last_read_at = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
@@ -147,7 +149,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch

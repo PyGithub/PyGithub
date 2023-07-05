@@ -25,6 +25,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.Rate
 
@@ -34,7 +36,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
     This class represents RateLimits. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
 
     @property
@@ -64,12 +66,12 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         """
         return self._graphql.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._core = github.GithubObject.NotSet
         self._search = github.GithubObject.NotSet
         self._graphql = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
         if "search" in attributes:  # pragma no branch

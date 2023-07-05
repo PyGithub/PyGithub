@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -29,7 +31,7 @@ class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -95,7 +97,7 @@ class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
         """
         return self._title.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._annotation_level = github.GithubObject.NotSet
         self._end_column = github.GithubObject.NotSet
         self._end_line = github.GithubObject.NotSet
@@ -106,7 +108,7 @@ class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
         self._start_line = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
             self._annotation_level = self._makeStringAttribute(
                 attributes["annotation_level"]

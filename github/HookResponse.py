@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -36,7 +38,7 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
     This class represents HookResponses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"status": self._status.value})
 
     @property
@@ -60,12 +62,12 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
         """
         return self._status.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._code = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "code" in attributes:  # pragma no branch
             self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch

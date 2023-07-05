@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.GitTreeElement
 
@@ -37,7 +39,7 @@ class GitTree(github.GithubObject.CompletableGithubObject):
     This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -68,12 +70,12 @@ class GitTree(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._sha = github.GithubObject.NotSet
         self._tree = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch

@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
@@ -33,7 +35,7 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
     This class represents InstallationAuthorizations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"expires_at": self._expires_at.value})
 
     @property
@@ -71,14 +73,14 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
         """
         return self._repository_selection.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._token = github.GithubObject.NotSet
         self._expires_at = github.GithubObject.NotSet
         self._on_behalf_of = github.GithubObject.NotSet
         self._permissions = github.GithubObject.NotSet
         self._repository_selection = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch

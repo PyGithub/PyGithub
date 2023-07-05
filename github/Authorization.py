@@ -30,7 +30,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.AuthorizationApplication
 import github.GithubObject
@@ -156,7 +156,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._app = NotSet
         self._created_at = NotSet
         self._id = NotSet
@@ -167,7 +167,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         self._updated_at = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.AuthorizationApplication.AuthorizationApplication,

@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -53,12 +55,12 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
         """
         return self._days.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._week = github.GithubObject.NotSet
         self._total = github.GithubObject.NotSet
         self._days = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "week" in attributes:  # pragma no branch
             self._week = self._makeTimestampAttribute(attributes["week"])
         if "total" in attributes:  # pragma no branch

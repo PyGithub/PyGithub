@@ -26,6 +26,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -34,7 +36,7 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
     This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -65,13 +67,13 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._title = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._latest_comment_url = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch

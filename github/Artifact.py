@@ -22,7 +22,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.WorkflowRun
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -49,7 +49,7 @@ class Artifact(NonCompletableGithubObject):
     _url: Attribute[str]
     _workflow_run: Attribute[WorkflowRun]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
 
     @property
@@ -121,7 +121,7 @@ class Artifact(NonCompletableGithubObject):
         self._url = NotSet
         self._workflow_run = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archive_download_url" in attributes:  # pragma no branch
             self._archive_download_url = self._makeStringAttribute(
                 attributes["archive_download_url"]

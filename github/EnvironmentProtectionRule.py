@@ -21,7 +21,7 @@
 ################################################################################
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.EnvironmentProtectionRuleReviewer
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -37,7 +37,7 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     This class represents a protection rule for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -62,14 +62,14 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     def wait_timer(self) -> int:
         return self._wait_timer.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
         self._wait_timer: Attribute[int] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch

@@ -72,7 +72,7 @@ class Attribute(Generic[T]):
 
 
 class _NotSetType(Attribute):
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "NotSet"
 
     @property
@@ -355,10 +355,10 @@ class GithubObject:
             params=", ".join(list(format_params(params))),
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
     def _completeIfNeeded(self):

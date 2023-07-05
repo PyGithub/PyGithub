@@ -22,6 +22,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -30,7 +32,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
     This class represents repository invitations. The reference can be found here https://docs.github.com/en/rest/reference/repos#invitations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -97,7 +99,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._permissions = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -107,7 +109,7 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(
                 github.Repository.Repository, attributes["repository"]

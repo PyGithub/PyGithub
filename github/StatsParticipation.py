@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -46,11 +48,11 @@ class StatsParticipation(github.GithubObject.NonCompletableGithubObject):
         """
         return self._owner.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._all = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "all" in attributes:  # pragma no branch
             self._all = self._makeListOfIntsAttribute(attributes["all"])
         if "owner" in attributes:  # pragma no branch

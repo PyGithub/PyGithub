@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -36,7 +38,7 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
     This class represents HookDescriptions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -67,13 +69,13 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         """
         return self._supported_events.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._events = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._schema = github.GithubObject.NotSet
         self._supported_events = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch

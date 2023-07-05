@@ -47,7 +47,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
 
     _requester: Requester
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
 
     @property
@@ -196,7 +196,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         vulnerable_version_range: str | None = None,
         patched_versions: str | None = None,
         vulnerable_functions: list[str] | None = None,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
         :param ecosystem: string
@@ -219,7 +219,9 @@ class RepositoryAdvisory(NonCompletableGithubObject):
             ]
         )
 
-    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]):
+    def add_vulnerabilities(
+        self, vulnerabilities: Iterable[AdvisoryVulnerability]
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
@@ -250,7 +252,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self,
         login_or_user: str | github.NamedUser.NamedUser,
         credit_type: str,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a user for a vulnerability in a repository.
@@ -263,7 +265,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     def offer_credits(
         self,
         credited: Iterable[Credit],
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a list of users for a vulnerability in a repository.

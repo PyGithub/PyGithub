@@ -21,6 +21,8 @@
 ################################################################################
 from __future__ import annotations
 
+from typing import Any
+
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -54,13 +56,13 @@ class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
         return self._user.value
 
     # noinspection PyPep8Naming
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._state: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     # noinspection PyPep8Naming
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "type" in attributes:  # pragma no branch

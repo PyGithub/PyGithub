@@ -90,7 +90,7 @@ class Branch(NonCompletableGithubObject):
         self._protection_url: Attribute[str] = github.GithubObject.NotSet
         self._protected: Attribute[bool] = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(
                 github.Commit.Commit, attributes["commit"]

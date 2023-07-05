@@ -21,7 +21,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import List
+from typing import Any, Dict, List
 
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
@@ -33,7 +33,7 @@ class Environment(CompletableGithubObject):
     This class represents Environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -85,7 +85,7 @@ class Environment(CompletableGithubObject):
         self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
@@ -100,7 +100,7 @@ class Environment(CompletableGithubObject):
             github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy
         ] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "html_url" in attributes:  # pragma no branch

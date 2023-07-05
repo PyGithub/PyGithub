@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import sys
 import typing
+from typing import Any
 
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -64,12 +65,12 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
         return self._type.value
 
     # noinspection PyPep8Naming
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._login: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
 
     # noinspection PyPep8Naming
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         if "type" in attributes:  # pragma no branch

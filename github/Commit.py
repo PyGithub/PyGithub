@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.CheckRun
 import github.CheckSuite
 import github.CommitCombinedStatus
@@ -48,7 +50,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
     This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -324,7 +326,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._comments_url = github.GithubObject.NotSet
         self._commit = github.GithubObject.NotSet
@@ -336,7 +338,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         self._stats = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]

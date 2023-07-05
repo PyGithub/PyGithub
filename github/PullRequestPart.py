@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.Repository
@@ -38,7 +40,7 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
     This class represents PullRequestParts
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -76,14 +78,14 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
         """
         return self._user.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._label = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet
         self._repo = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "ref" in attributes:  # pragma no branch

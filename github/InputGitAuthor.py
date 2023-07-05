@@ -28,6 +28,7 @@
 #                                                                              #
 ################################################################################
 
+
 import github.GithubObject
 
 
@@ -53,7 +54,7 @@ class InputGitAuthor:
         self.__email = email
         self.__date = date
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property

@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.GitObject
 
@@ -37,7 +39,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self._ref.value})
 
     @property
@@ -90,12 +92,12 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._object = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(
                 github.GitObject.GitObject, attributes["object"]

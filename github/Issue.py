@@ -44,6 +44,7 @@
 
 import urllib.parse
 from datetime import datetime
+from typing import Any, Dict
 
 import github.GithubObject
 import github.IssueComment
@@ -65,7 +66,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     This class represents Issues. The reference can be found here https://docs.github.com/en/rest/reference/issues
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {"number": self._number.value, "title": self._title.value}
         )
@@ -625,7 +626,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.number
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._active_lock_reason = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
@@ -652,7 +653,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(
                 attributes["active_lock_reason"]
