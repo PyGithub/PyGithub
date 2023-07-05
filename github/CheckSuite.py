@@ -53,6 +53,24 @@ class CheckSuite(CompletableGithubObject):
     This class represents check suites. The reference can be found here https://docs.github.com/en/rest/reference/checks#check-suites
     """
 
+    def _initAttributes(self) -> None:
+        self._after: Attribute[str] = NotSet
+        self._app: Attribute[GithubApp] = NotSet
+        self._before: Attribute[str] = NotSet
+        self._check_runs_url: Attribute[str] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._head_branch: Attribute[str] = NotSet
+        self._head_commit: Attribute[GitCommit] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._latest_check_runs_count: Attribute[int] = NotSet
+        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
@@ -222,24 +240,6 @@ class CheckSuite(CompletableGithubObject):
             headers={"Accept": "application/vnd.github.v3+json"},
             list_item="check_runs",
         )
-
-    def _initAttributes(self) -> None:
-        self._after: Attribute[str] = NotSet
-        self._app: Attribute[GithubApp] = NotSet
-        self._before: Attribute[str] = NotSet
-        self._check_runs_url: Attribute[str] = NotSet
-        self._conclusion: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._head_branch: Attribute[str] = NotSet
-        self._head_commit: Attribute[GitCommit] = NotSet
-        self._head_sha: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._latest_check_runs_count: Attribute[int] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
-        self._repository: Attribute[Repository] = NotSet
-        self._status: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "after" in attributes:  # pragma no branch
