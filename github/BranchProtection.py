@@ -47,12 +47,15 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"url": self._url.value})
 
-    _url: Attribute[str]
-    _required_status_checks: Attribute[RequiredStatusChecks]
-    _enforce_admins: Attribute[bool]
-    _required_pull_request_reviews: Attribute[RequiredPullRequestReviews]
-    _user_push_restrictions: Opt[str]
-    _team_push_restrictions: Opt[str]
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+        self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
+        self._enforce_admins: Attribute[bool] = NotSet
+        self._required_pull_request_reviews: Attribute[
+            RequiredPullRequestReviews
+        ] = NotSet
+        self._user_push_restrictions: Opt[str] = NotSet
+        self._team_push_restrictions: Opt[str] = NotSet
 
     @property
     def url(self) -> str:
@@ -90,14 +93,6 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
-
-    def _initAttributes(self) -> None:
-        self._url = NotSet
-        self._required_status_checks = NotSet
-        self._enforce_admins = NotSet
-        self._required_pull_request_reviews = NotSet
-        self._user_push_restrictions = NotSet
-        self._team_push_restrictions = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
