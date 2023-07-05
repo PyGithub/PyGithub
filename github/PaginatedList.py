@@ -52,7 +52,7 @@ class PaginatedListBase(Generic[T]):
     def _fetchNextPage(self) -> List[T]:
         raise NotImplementedError
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__elements = []
 
     def __getitem__(self, index: Union[int, slice]) -> Any:
@@ -200,7 +200,7 @@ class PaginatedList(PaginatedListBase[T]):
         r.__reverse()
         return r
 
-    def __reverse(self):
+    def __reverse(self) -> None:
         self._reversed = True
         lastUrl = self._getLastPageUrl()
         if lastUrl:

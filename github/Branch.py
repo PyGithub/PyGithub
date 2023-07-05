@@ -345,7 +345,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def remove_required_status_checks(self):
+    def remove_required_status_checks(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """

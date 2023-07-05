@@ -361,7 +361,7 @@ class GithubObject:
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
-    def _completeIfNeeded(self):
+    def _completeIfNeeded(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
 
 
@@ -398,7 +398,7 @@ class CompletableGithubObject(GithubObject):
         if not self.__completed:
             self.__complete()
 
-    def __complete(self):
+    def __complete(self) -> None:
         if self._url.value is None:
             raise IncompletableObject(400, "Returned object contains no URL", None)
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
