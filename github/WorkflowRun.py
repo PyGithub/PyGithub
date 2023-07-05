@@ -59,33 +59,34 @@ class WorkflowRun(CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
-    _id: Attribute[int]
-    _url: Attribute[str]
-    _name: Attribute[str]
-    _path: Attribute[str]
-    _head_branch: Attribute[str]
-    _head_sha: Attribute[str]
-    _run_attempt: Attribute[int]
-    _run_number: Attribute[int]
-    _created_at: Attribute[datetime]
-    _updated_at: Attribute[datetime]
-    _pull_requests: Attribute[list[PullRequest]]
-    _status: Attribute[str]
-    _conclusion: Attribute[str]
-    _html_url: Attribute[str]
-    _jobs_url: Attribute[str]
-    _logs_url: Attribute[str]
-    _display_title: Attribute[str]
-    _event: Attribute[str]
-    _run_started_at: Attribute[datetime]
-    _check_suite_url: Attribute[str]
-    _cancel_url: Attribute[str]
-    _rerun_url: Attribute[str]
-    _artifacts_url: Attribute[str]
-    _workflow_url: Attribute[str]
-    _head_commit: Attribute[GitCommit]
-    _repository: Attribute[Repository]
-    _head_repository: Attribute[Repository]
+    def _initAttributes(self):
+        self._id: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._head_branch: Attribute[str] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._run_attempt: Attribute[int] = NotSet
+        self._run_number: Attribute[int] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._jobs_url: Attribute[str] = NotSet
+        self._logs_url: Attribute[str] = NotSet
+        self._display_title: Attribute[str] = NotSet
+        self._event: Attribute[str] = NotSet
+        self._run_started_at: Attribute[datetime] = NotSet
+        self._check_suite_url: Attribute[str] = NotSet
+        self._cancel_url: Attribute[str] = NotSet
+        self._rerun_url: Attribute[str] = NotSet
+        self._artifacts_url: Attribute[str] = NotSet
+        self._workflow_url: Attribute[str] = NotSet
+        self._head_commit: Attribute[GitCommit] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._head_repository: Attribute[Repository] = NotSet
 
     @property
     def id(self) -> int:
@@ -168,12 +169,12 @@ class WorkflowRun(CompletableGithubObject):
         return self._pull_requests.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
@@ -282,36 +283,6 @@ class WorkflowRun(CompletableGithubObject):
             url_parameters,
             list_item="jobs",
         )
-
-    def _initAttributes(self):
-        self._id = NotSet
-        self._name = NotSet
-        self._head_branch = NotSet
-        self._head_sha = NotSet
-        self._display_title = NotSet
-        self._path = NotSet
-        self._run_attempt = NotSet
-        self._run_number = NotSet
-        self._event = NotSet
-        self._run_started_at = NotSet
-        self._status = NotSet
-        self._conclusion = NotSet
-        self._workflow_id = NotSet
-        self._url = NotSet
-        self._html_url = NotSet
-        self._pull_requests = NotSet
-        self._created_at = NotSet
-        self._updated_at = NotSet
-        self._jobs_url = NotSet
-        self._logs_url = NotSet
-        self._check_suite_url = NotSet
-        self._artifacts_url = NotSet
-        self._cancel_url = NotSet
-        self._rerun_url = NotSet
-        self._workflow_url = NotSet
-        self._head_commit = NotSet
-        self._repository = NotSet
-        self._head_repository = NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
