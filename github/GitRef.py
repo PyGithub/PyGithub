@@ -51,9 +51,10 @@ class GitRef(CompletableGithubObject):
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
-    _object: Attribute[GitObject]
-    _ref: Attribute[str]
-    _url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._object: Attribute[GitObject] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"ref": self._ref.value})
@@ -90,11 +91,6 @@ class GitRef(CompletableGithubObject):
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
-
-    def _initAttributes(self) -> None:
-        self._object = NotSet
-        self._ref = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "object" in attributes:  # pragma no branch
