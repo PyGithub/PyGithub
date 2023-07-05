@@ -288,7 +288,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser):
+    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param login_or_user: string username or :class:`github.NamedUser.NamedUser`
@@ -312,7 +312,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def clear_credits(self):
+    def clear_credits(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
@@ -413,7 +413,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._useAttributes(data)
         return self
 
-    def accept_report(self):
+    def accept_report(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Accepts the advisory reported from an external reporter via private vulnerability reporting.
@@ -426,7 +426,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def publish(self):
+    def publish(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Publishes the advisory.
@@ -439,7 +439,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def close(self):
+    def close(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Closes the advisory.
@@ -452,9 +452,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    # noinspection DuplicatedCode
-    # noinspection PyPep8Naming
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author: Attribute[NamedUser] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -478,7 +476,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._withdrawn_at: Attribute[datetime] = NotSet
 
     # noinspection PyPep8Naming
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["author"]
