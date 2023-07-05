@@ -36,6 +36,11 @@ class HookResponse(NonCompletableGithubObject):
     This class represents HookResponses
     """
 
+    def _initAttributes(self) -> None:
+        self._code: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"status": self._status.value})
 
@@ -50,11 +55,6 @@ class HookResponse(NonCompletableGithubObject):
     @property
     def status(self) -> str:
         return self._status.value
-
-    def _initAttributes(self) -> None:
-        self._code: Attribute[int] = NotSet
-        self._message: Attribute[str] = NotSet
-        self._status: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "code" in attributes:  # pragma no branch
