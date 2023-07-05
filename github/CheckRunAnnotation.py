@@ -29,6 +29,17 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
     """
 
+    def _initAttributes(self) -> None:
+        self._annotation_level: Attribute[str] = NotSet
+        self._end_column: Attribute[int] = NotSet
+        self._end_line: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._raw_details: Attribute[str] = NotSet
+        self._start_column: Attribute[int] = NotSet
+        self._start_line: Attribute[int] = NotSet
+        self._title: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
 
@@ -67,17 +78,6 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     @property
     def title(self) -> str:
         return self._title.value
-
-    def _initAttributes(self) -> None:
-        self._annotation_level: Attribute[str] = NotSet
-        self._end_column: Attribute[int] = NotSet
-        self._end_line: Attribute[int] = NotSet
-        self._message: Attribute[str] = NotSet
-        self._path: Attribute[str] = NotSet
-        self._raw_details: Attribute[str] = NotSet
-        self._start_column: Attribute[int] = NotSet
-        self._start_line: Attribute[int] = NotSet
-        self._title: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "annotation_level" in attributes:  # pragma no branch
