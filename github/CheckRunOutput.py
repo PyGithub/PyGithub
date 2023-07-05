@@ -26,6 +26,13 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CheckRunOutput(NonCompletableGithubObject):
     """This class represents the output of check run."""
 
+    def _initAttributes(self) -> None:
+        self._annotations_count: Attribute[int] = NotSet
+        self._annotations_url: Attribute[str] = NotSet
+        self._summary: Attribute[str] = NotSet
+        self._text: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
 
@@ -48,13 +55,6 @@ class CheckRunOutput(NonCompletableGithubObject):
     @property
     def title(self) -> str:
         return self._title.value
-
-    def _initAttributes(self) -> None:
-        self._annotations_count: Attribute[int] = NotSet
-        self._annotations_url: Attribute[str] = NotSet
-        self._summary: Attribute[str] = NotSet
-        self._text: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "annotations_count" in attributes:  # pragma no branch
