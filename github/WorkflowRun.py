@@ -148,10 +148,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def workflow_id(self):
-        """
-        :type: int
-        """
+    def workflow_id(self) -> int:
         self._completeIfNotSet(self._workflow_id)
         return self._workflow_id.value
 
