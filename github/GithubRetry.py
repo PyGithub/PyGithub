@@ -112,7 +112,7 @@ class GithubRetry(Retry):
 
                     # to identify retry-able methods, we inspect the response body
                     try:
-                        content = self.get_content(response, url)
+                        content = self.get_content(response, url)  # type: ignore
                         content = json.loads(content)
                         message = content.get("message")
 

@@ -29,6 +29,7 @@ import github.AccessToken
 import github.Auth
 from github.GithubException import BadCredentialsException, GithubException
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AccessToken import AccessToken
@@ -44,7 +45,13 @@ class ApplicationOAuth(NonCompletableGithubObject):
     _client_id: Attribute[str]
     _client_secret: Attribute[str]
 
-    def __init__(self, requester, headers, attributes, completed) -> None:
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, Any],
+        attributes: Any,
+        completed: bool,
+    ) -> None:
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
         super().__init__(requester, headers, attributes, completed)
