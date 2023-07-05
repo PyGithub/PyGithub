@@ -1,6 +1,6 @@
-from datetime import datetime
 from typing import Any, Dict, List
 
+from datetime import datetime
 from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
 

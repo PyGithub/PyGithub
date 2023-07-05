@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Union, Optional, Dict
 
 from urllib3 import Retry
 

@@ -20,14 +20,14 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
 from typing import Any, Dict
+from datetime import datetime
 
-import github.CodeScanAlertInstance
-import github.CodeScanRule
-import github.CodeScanTool
 import github.GithubObject
 import github.PaginatedList
+import github.CodeScanRule
+import github.CodeScanTool
+import github.CodeScanAlertInstance
 
 class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self) -> str: ...
