@@ -76,7 +76,7 @@ class _NotSetType(Attribute):
         return "NotSet"
 
     @property
-    def value(self):
+    def value(self) -> Any:
         return None
 
     @staticmethod
@@ -131,7 +131,7 @@ class _BadAttribute(Attribute):
         self.__exception = exception
 
     @property
-    def value(self):
+    def value(self) -> Any:
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 

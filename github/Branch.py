@@ -375,7 +375,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """

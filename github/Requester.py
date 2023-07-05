@@ -124,7 +124,7 @@ class HTTPSRequestsConnectionClass:
         retry: Optional[Union[int, Retry]] = None,
         pool_size: Optional[int] = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         self.port = port if port else 443
         self.host = host
         self.protocol = "https"
@@ -270,7 +270,7 @@ class Requester:
         cls.__logger = logger
 
     @classmethod
-    def resetLogger(cls):
+    def resetLogger(cls) -> None:
         cls.__logger = None
 
     #############################################################
@@ -334,7 +334,7 @@ class Requester:
                 frame = self._frameBuffer[frame_index]  # type: ignore
             self.ON_CHECK_ME(obj, frame)
 
-    def _initializeDebugFeature(self):
+    def _initializeDebugFeature(self) -> None:
         self._frameCount = 0
         self._frameBuffer = []
 
@@ -946,7 +946,7 @@ class WithRequester(Generic[T]):
 
     __requester: Requester
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__requester: Optional[Requester] = None  # type: ignore
 
     @property
