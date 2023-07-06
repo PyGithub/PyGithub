@@ -87,6 +87,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._assignees.value
 
     @property
+    def author_association(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
     def body(self):
         """
         :type: string
@@ -629,6 +637,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._active_lock_reason = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
+        self._author_association = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._closed_at = github.GithubObject.NotSet
         self._closed_by = github.GithubObject.NotSet
@@ -674,6 +683,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
                 self._assignees = self._makeListOfClassesAttribute(
                     github.NamedUser.NamedUser, []
                 )
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(
+                attributes["author_association"]
+            )
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
