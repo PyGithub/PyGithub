@@ -22,7 +22,7 @@
 import contextlib
 import sys
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime
 from io import BytesIO
 from unittest import mock
 
