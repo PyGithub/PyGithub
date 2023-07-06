@@ -29,7 +29,7 @@
 
 from __future__ import annotations
 
-from github.GithubObject import NotSet, Opt, _NotSetType, is_optional
+from github.GithubObject import NotSet, Opt, is_optional, is_undefined
 
 
 class InputFileContent:
@@ -48,6 +48,6 @@ class InputFileContent:
         identity: dict[str, str] = {
             "content": self.__content,
         }
-        if not isinstance(self.__newName, _NotSetType):
+        if not is_undefined(self.__newName):
             identity["filename"] = self.__newName
         return identity
