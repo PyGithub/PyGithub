@@ -1931,6 +1931,11 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.5", refs[4].ref)
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
 
+    def testRepoVariable(self):
+        self.assertTrue(self.repo.create_variable("variable_name", "variable-value"))
+        self.assertTrue(self.repo.update_variable("variable_name", "variable-value123"))
+        self.assertTrue(self.repo.delete_variable("variable_name"))
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
