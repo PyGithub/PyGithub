@@ -132,7 +132,7 @@ class GithubRetry(unittest.TestCase):
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"
         with mock.patch(attr) as dt:
-            dt.now = mock.Mock(return_value=datetime.fromtimestamp(now, timezone.utc))
+            dt.now = lambda tz=None: datetime.fromtimestamp(now, tz=tz)
             dt.fromtimestamp = datetime.fromtimestamp
             yield
 
