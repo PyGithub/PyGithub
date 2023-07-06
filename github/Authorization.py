@@ -49,7 +49,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     _created_at: Attribute[datetime]
     _id: Attribute[int]
     _note: Attribute[str] | Attribute[None]
-    _note_url: Attribute[str] | Attribute[None]
+    _note_url: Attribute[str | None]
     _scopes: Attribute[str]
     _token: Attribute[str]
     _updated_at: Attribute[datetime]

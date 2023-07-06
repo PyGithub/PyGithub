@@ -35,9 +35,9 @@ class AccessToken(NonCompletableGithubObject):
     _token: Attribute[str]
     _type: Attribute[str]
     _scope: Attribute[str]
-    _expires_in: Attribute[int] | Attribute[None]
+    _expires_in: Attribute[int | None]
     _refresh_token: Attribute[str]
-    _refresh_expires_in: Attribute[int] | Attribute[None]
+    _refresh_expires_in: Attribute[int | None]
 
     def __repr__(self) -> str:
         return self.get__repr__(
