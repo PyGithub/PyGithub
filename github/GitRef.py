@@ -39,7 +39,6 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
-    _NotSetType,
     is_optional,
 )
 
@@ -87,7 +86,7 @@ class GitRef(CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         assert is_optional(force, bool), force
-        post_parameters = _NotSetType.remove_unset_items({"sha": sha, "force": force})
+        post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
