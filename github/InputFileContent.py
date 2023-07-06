@@ -29,7 +29,7 @@
 
 from __future__ import annotations
 
-from github.GithubObject import NotSet, Opt, _NotSetType
+from github.GithubObject import NotSet, Opt, _NotSetType, is_optional
 
 
 class InputFileContent:
@@ -38,13 +38,8 @@ class InputFileContent:
     """
 
     def __init__(self, content: str, new_name: Opt[str] = NotSet):
-        """
-        :param content: string
-        :param new_name: string
-        """
-
         assert isinstance(content, str), content
-        assert isinstance(new_name, (_NotSetType, str)), new_name
+        assert is_optional(new_name, str), new_name
         self.__newName = new_name
         self.__content = content
 
