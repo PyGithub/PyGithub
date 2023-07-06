@@ -657,7 +657,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param secret_name: string
         :param unencrypted_value: string
         :param visibility: string
-        :param selected_repositories: Optional value with :class:`github.GithubObject.Opt` list of :class:`github.Repository.Repository`
+        :param selected_repositories: Optional list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
