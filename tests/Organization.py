@@ -13,7 +13,7 @@
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>                 
+# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
