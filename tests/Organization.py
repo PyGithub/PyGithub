@@ -510,7 +510,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
-    
+
     def testOrgVariable(self):
         self.org = self.g.get_organization("tecnoly")
         self.assertTrue(self.org.create_variable("variable_name", "variable-value"))
