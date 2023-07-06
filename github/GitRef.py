@@ -40,6 +40,7 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    is_optional,
 )
 
 if TYPE_CHECKING:
@@ -85,7 +86,7 @@ class GitRef(CompletableGithubObject):
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         """
         assert isinstance(sha, str), sha
-        assert isinstance(force, (_NotSetType, bool)), force
+        assert is_optional(force, bool), force
         post_parameters = _NotSetType.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
