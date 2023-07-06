@@ -408,9 +408,16 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual({}, exp.exception.headers)
 
             self.assertIsInstance(exp.exception.__cause__, RuntimeError)
-            self.assertEqual(("Failed to inspect response message", ), exp.exception.__cause__.args)
+            self.assertEqual(
+                ("Failed to inspect response message",), exp.exception.__cause__.args
+            )
 
             self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
-            self.assertEqual(("Unable to determine whether fp is closed.", ), exp.exception.__cause__.__cause__.args)
+            self.assertEqual(
+                ("Unable to determine whether fp is closed.",),
+                exp.exception.__cause__.__cause__.args,
+            )
 
-        log.assert_called_once_with(logging.INFO, "Request TEST URL failed with 403: NOT GOOD")
+        log.assert_called_once_with(
+            logging.INFO, "Request TEST URL failed with 403: NOT GOOD"
+        )
