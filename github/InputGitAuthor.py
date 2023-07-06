@@ -31,7 +31,7 @@
 from __future__ import annotations
 
 import github.GithubObject
-from github.GithubObject import Opt, _NotSetType
+from github.GithubObject import Opt, _NotSetType, is_optional
 
 
 class InputGitAuthor:
@@ -42,15 +42,9 @@ class InputGitAuthor:
     def __init__(
         self, name: str, email: str, date: Opt[str] = github.GithubObject.NotSet
     ):
-        """
-        :param name: string
-        :param email: string
-        :param date: string
-        """
-
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert isinstance(date, (_NotSetType, str)), date  # @todo Datetime?
+        assert is_optional(date, str), date  # @todo Datetime?
 
         self.__name: str = name
         self.__email: str = email
