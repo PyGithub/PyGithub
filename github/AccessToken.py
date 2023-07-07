@@ -23,23 +23,22 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-import github.GithubObject
-
-from .GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class AccessToken(github.GithubObject.NonCompletableGithubObject):
+class AccessToken(NonCompletableGithubObject):
     """
     This class represents access tokens.
     """
 
-    _created: datetime
-    _token: Attribute[str]
-    _type: Attribute[str]
-    _scope: Attribute[str]
-    _expires_in: Attribute[Optional[int]]
-    _refresh_token: Attribute[str]
-    _refresh_expires_in: Attribute[Optional[int]]
+    def _initAttributes(self):
+        self._created: datetime = NotSet
+        self._token: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._scope: Attribute[str] = NotSet
+        self._expires_in: Attribute[Optional[int]] = NotSet
+        self._refresh_token: Attribute[str] = NotSet
+        self._refresh_expires_in: Attribute[Optional[int]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -123,14 +122,6 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         if seconds is not None:
             return self._created + timedelta(seconds=seconds)
         return None
-
-    def _initAttributes(self):
-        self._token = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._scope = github.GithubObject.NotSet
-        self._expires_in = github.GithubObject.NotSet
-        self._refresh_token = github.GithubObject.NotSet
-        self._refresh_expires_in = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         self._created = datetime.now(timezone.utc)
