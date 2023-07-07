@@ -56,7 +56,6 @@ import json
 import logging
 import mimetypes
 import os
-import re
 import time
 import urllib
 import urllib.parse
@@ -547,7 +546,9 @@ class Requester:
                 exc = GithubException.BadCredentialsException
             if "SAML enforcement" in message:
                 exc = GithubException.SAMLException
-            elif Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]:
+            elif (
+                Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]
+            ):
                 exc = GithubException.TwoFactorException
         elif status == 403:
             if message.startswith("missing or invalid user agent string"):
