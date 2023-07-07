@@ -54,7 +54,7 @@ class GithubException(Exception):
 
     @property
     def message(self) -> Optional[str]:
-        return self.message
+        return self.__message
 
     @property
     def status(self) -> int:
