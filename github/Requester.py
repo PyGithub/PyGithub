@@ -542,20 +542,18 @@ class Requester:
         message = output.get("message", "").lower() if output is not None else ""
 
         exc = GithubException.GithubException
-        if status == 401 and message == "bad credentials":
-            exc = GithubException.BadCredentialsException
-        elif (
-            status == 401
-            and Consts.headerOTP in headers
-            and re.match(r".*required.*", headers[Consts.headerOTP])
-        ):
-            exc = GithubException.TwoFactorException
-        elif status == 403 and message.startswith(
-            "missing or invalid user agent string"
-        ):
-            exc = GithubException.BadUserAgentException
-        elif status == 403 and cls.isRateLimitError(message):
-            exc = GithubException.RateLimitExceededException
+        if status == 401:
+            if message == "bad credentials":
+                exc = GithubException.BadCredentialsException
+            if "SAML enforcement" in message:
+                exc = GithubException.SAMLException
+            elif Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]:
+                exc = GithubException.TwoFactorException
+        elif status == 403:
+            if message.startswith("missing or invalid user agent string"):
+                exc = GithubException.BadUserAgentException
+            elif cls.isRateLimitError(message):
+                exc = GithubException.RateLimitExceededException
         elif status == 404 and message == "not found":
             exc = GithubException.UnknownObjectException
 
