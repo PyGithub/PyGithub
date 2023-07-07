@@ -37,6 +37,13 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     This class represents a protection rule for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
+    def _initAttributes(self):
+        self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
+        self._wait_timer: Attribute[int] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
@@ -61,13 +68,6 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     @property
     def wait_timer(self) -> int:
         return self._wait_timer.value
-
-    def _initAttributes(self):
-        self._id: Attribute[int] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
-        self._wait_timer: Attribute[int] = NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
