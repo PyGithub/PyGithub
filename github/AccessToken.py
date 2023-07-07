@@ -31,8 +31,9 @@ class AccessToken(NonCompletableGithubObject):
     This class represents access tokens.
     """
 
+    _created: datetime
+
     def _initAttributes(self):
-        self._created: datetime = NotSet
         self._token: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._scope: Attribute[str] = NotSet
