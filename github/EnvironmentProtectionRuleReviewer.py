@@ -32,6 +32,12 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     This class represents a reviewer for an EnvironmentProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
+    def _initAttributes(self):
+        self._type: Attribute[str] = NotSet
+        self._reviewer: Attribute[
+            github.NamedUser.NamedUser | github.Team.Team
+        ] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"type": self._type.value})
 
@@ -42,12 +48,6 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     @property
     def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
         return self._reviewer.value
-
-    def _initAttributes(self):
-        self._type: Attribute[str] = NotSet
-        self._reviewer: Attribute[
-            github.NamedUser.NamedUser | github.Team.Team
-        ] = NotSet
 
     def _useAttributes(self, attributes):
         if "type" in attributes:  # pragma no branch
