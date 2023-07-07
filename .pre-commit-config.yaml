@@ -33,7 +33,9 @@ repos:
       - id: pyupgrade
         args:
           - --py37-plus
-  - repo: https://github.com/pycqa/flake8
-    rev: 3.9.2
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.0.277'
     hooks:
-      - id: flake8
+      - id: ruff
+        args: ["--fix"]
