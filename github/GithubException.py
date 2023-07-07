@@ -28,12 +28,10 @@
 #                                                                              #
 ################################################################################
 import json
-from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
-
-T = TypeVar("T", bound=Any)
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 
-class GithubException(Exception, Generic[T]):
+class GithubException(Exception):
     """
     Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub (but :class:`github.GithubException.BadAttributeException`).
 
@@ -43,14 +41,20 @@ class GithubException(Exception, Generic[T]):
     def __init__(
         self,
         status: int,
-        data: T,
-        headers: Optional[Dict[str, str]],
+        data: Any = None,
+        headers: Optional[Dict[str, str]] = None,
+        message: Optional[str] = None,
     ):
         super().__init__()
         self.__status = status
         self.__data = data
         self.__headers = headers
-        self.args = (status, data, headers)
+        self.__message = message
+        self.args = (status, data, headers, message)
+
+    @property
+    def message(self) -> Optional[str]:
+        return self.message
 
     @property
     def status(self) -> int:
@@ -60,7 +64,7 @@ class GithubException(Exception, Generic[T]):
         return self.__status
 
     @property
-    def data(self) -> T:
+    def data(self) -> Any:
         """
         The (decoded) data returned by the Github API
         """
@@ -74,28 +78,31 @@ class GithubException(Exception, Generic[T]):
         return self.__headers
 
     def __str__(self) -> str:
+        if self.__message:
+            return f"{self.status} {self.__message} {json.dumps(self.data)}"
+
         return f"{self.status} {json.dumps(self.data)}"
 
 
-class BadCredentialsException(GithubException[Dict[str, Any]]):
+class BadCredentialsException(GithubException):
     """
     Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
     """
 
 
-class UnknownObjectException(GithubException[Dict[str, Any]]):
+class UnknownObjectException(GithubException):
     """
     Exception raised when a non-existing object is requested (when Github API replies with a 404 HTML status)
     """
 
 
-class BadUserAgentException(GithubException[Dict[str, Any]]):
+class BadUserAgentException(GithubException):
     """
     Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user agent HTML status)
     """
 
 
-class RateLimitExceededException(GithubException[Dict[str, Any]]):
+class RateLimitExceededException(GithubException):
     """
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
@@ -150,13 +157,13 @@ class BadAttributeException(Exception):
         return self.__transformationException
 
 
-class TwoFactorException(GithubException[Dict[str, Any]]):
+class TwoFactorException(GithubException):
     """
     Exception raised when Github requires a onetime password for two-factor authentication
     """
 
 
-class IncompletableObject(GithubException[str]):
+class IncompletableObject(GithubException):
     """
     Exception raised when we can not request an object from Github because the data returned did not include a URL
     """

@@ -538,12 +538,10 @@ class Requester:
         status: int,
         headers: Dict[str, Any],
         output: Dict[str, Any],
-    ) -> GithubException.GithubException[Dict[str, Any]]:
+    ) -> GithubException.GithubException:
         message = output.get("message", "").lower() if output is not None else ""
 
-        exc: Type[
-            GithubException.GithubException[Dict[str, Any]]
-        ] = GithubException.GithubException
+        exc = GithubException.GithubException
         if status == 401 and message == "bad credentials":
             exc = GithubException.BadCredentialsException
         elif (
@@ -561,7 +559,7 @@ class Requester:
         elif status == 404 and message == "not found":
             exc = GithubException.UnknownObjectException
 
-        return exc(status, output, headers)
+        return exc(status, output, headers, message=message)
 
     @classmethod
     def isRateLimitError(cls, message: str) -> bool:
