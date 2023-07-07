@@ -50,6 +50,7 @@ from github.GithubObject import (
     Opt,
     is_optional,
 )
+from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.CheckRun import CheckRun
@@ -61,7 +62,6 @@ if TYPE_CHECKING:
     from github.File import File
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
-    from github.PaginatedList import PaginatedList
     from github.PullRequest import PullRequest
 
 
