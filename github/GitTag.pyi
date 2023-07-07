@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from github.GitAuthor import GitAuthor
 from github.GithubObject import CompletableGithubObject
