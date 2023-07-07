@@ -20,14 +20,21 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObject):
+class CodeScanAlertInstanceLocation(NonCompletableGithubObject):
     """
     This class represents code scanning alert instance locations.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
+
+    def _initAttributes(self):
+        self._path: Attribute[str] = NotSet
+        self._start_line: Attribute[int] = NotSet
+        self._start_column: Attribute[int] = NotSet
+        self._end_line: Attribute[int] = NotSet
+        self._end_column: Attribute[int] = NotSet
 
     def __str__(self):
         return f"{self.path} @ l{self.start_line}:c{self.start_column}-l{self.end_line}:c{self.end_column}"
@@ -44,46 +51,24 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
         )
 
     @property
-    def path(self):
-        """
-        :type: str
-        """
+    def path(self) -> str:
         return self._path.value
 
     @property
-    def start_line(self):
-        """
-        :type: int
-        """
+    def start_line(self) -> int:
         return self._start_line.value
 
     @property
-    def start_column(self):
-        """
-        :type: int
-        """
+    def start_column(self) -> int:
         return self._start_column.value
 
     @property
-    def end_line(self):
-        """
-        :type: int
-        """
+    def end_line(self) -> int:
         return self._end_line.value
 
     @property
-    def end_column(self):
-        """
-        :type: int
-        """
+    def end_column(self) -> int:
         return self._end_column.value
-
-    def _initAttributes(self):
-        self._path = github.GithubObject.NotSet
-        self._start_line = github.GithubObject.NotSet
-        self._start_column = github.GithubObject.NotSet
-        self._end_line = github.GithubObject.NotSet
-        self._end_column = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "path" in attributes:  # pragma no branch
