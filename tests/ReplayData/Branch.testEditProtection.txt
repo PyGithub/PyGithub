@@ -4,7 +4,7 @@ api.github.com
 None
 /repos/jacquev6/PyGithub/branches/integrations/protection
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
-{"restrictions": null, "required_pull_request_reviews": {"require_code_owner_reviews": true, "required_approving_review_count": 2}, "required_status_checks": {"contexts": [], "strict": true}, "enforce_admins": null}
+{"restrictions": null, "required_pull_request_reviews": {"require_code_owner_reviews": true, "required_approving_review_count": 2}, "required_status_checks": {"contexts": [], "strict": true}, "enforce_admins": null, "allow_force_pushes": null, "allow_fork_syncing": null, "lock_branch": null, "required_conversation_resolution": null, "required_linear_history": null, "block_creations": null }
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e0dc2dfc56971f4a36de1216356ea98b"'), ('date', 'Sat, 05 May 2018 06:05:54 GMT'), ('content-type', 'application/json; charset=utf-8')]
 ''

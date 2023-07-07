@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import date
 
 import github.GithubObject
 import github.Label
@@ -57,7 +57,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -81,7 +81,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def due_on(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._due_on)
         return self._due_on.value
@@ -137,7 +137,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -177,9 +177,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(
             description, str
         ), description
-        assert due_on is github.GithubObject.NotSet or isinstance(
-            due_on, datetime.date
-        ), due_on
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, date), due_on
         post_parameters = {
             "title": title,
         }

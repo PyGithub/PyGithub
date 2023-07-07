@@ -131,3 +131,28 @@ deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json
 
 # https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
 repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
+
+DEFAULT_BASE_URL = "https://api.github.com"
+DEFAULT_STATUS_URL = "https://status.github.com"
+DEFAULT_USER_AGENT = "PyGithub/Python"
+# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
+# Thus, the timeout should be slightly > 10s to account for network/front-end
+# latency.
+DEFAULT_TIMEOUT = 15
+DEFAULT_PER_PAGE = 30
+
+# JWT expiry in seconds. Could be set for max 600 seconds (10 minutes).
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
+DEFAULT_JWT_EXPIRY = 300
+MIN_JWT_EXPIRY = 15
+MAX_JWT_EXPIRY = 600
+# https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
+# "The time the JWT was created. To protect against clock drift, we recommend you set this 60 seconds in the past."
+DEFAULT_JWT_ISSUED_AT = -60
+# https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
+# "Your JWT must be signed using the RS256 algorithm"
+DEFAULT_JWT_ALGORITHM = "RS256"
+
+# https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
+DEFAULT_SECONDS_BETWEEN_WRITES = 1.0

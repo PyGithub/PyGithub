@@ -32,7 +32,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import github
@@ -53,7 +53,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.blog, "http://www.example.com")
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(
+            self.org.created_at,
+            datetime(2014, 1, 9, 16, 56, 17, tzinfo=timezone.utc),
+        )
         self.assertEqual(self.org.default_repository_permission, "none")
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertEqual(self.org.disk_usage, 2)
@@ -186,6 +189,53 @@ class Organization(Framework.TestCase):
     def testGetHooks(self):
         self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
 
+    def testGetHookDelivery(self):
+        delivery = self.org.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(
+            delivery.response, github.HookDelivery.HookDeliveryResponse
+        )
+        self.assertEqual(
+            delivery.response.headers, {"content-type": "text/html;charset=utf-8"}
+        )
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = list(self.org.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
+
     def testGetIssues(self):
         self.assertListKeyEqual(self.org.get_issues(), lambda i: i.id, [])
 
@@ -199,7 +249,7 @@ class Organization(Framework.TestCase):
             [requestedByUser],
             "comments",
             "asc",
-            datetime.datetime(2012, 5, 28, 23, 0, 0),
+            datetime(2012, 5, 28, 23, 0, 0, tzinfo=timezone.utc),
         )
         self.assertListKeyEqual(issues, lambda i: i.id, [])
 
@@ -329,6 +379,7 @@ class Organization(Framework.TestCase):
             has_wiki=False,
             has_downloads=False,
             team_id=team.id,
+            allow_update_branch=True,
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
@@ -337,6 +388,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
         )
+        self.assertTrue(repo.allow_update_branch)
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 

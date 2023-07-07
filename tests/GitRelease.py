@@ -32,9 +32,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import os
 import zipfile
+from datetime import datetime, timezone
 
 from github import GithubException
 
@@ -64,8 +64,8 @@ user = "rickrickston123"
 release_id = 28524234
 author_id = 64711998
 tag = "v1.0"
-create_date = datetime.datetime(2020, 7, 12, 7, 34, 42)
-publish_date = datetime.datetime(2020, 7, 14, 0, 58, 20)
+create_date = datetime(2020, 7, 12, 7, 34, 42, tzinfo=timezone.utc)
+publish_date = datetime(2020, 7, 14, 0, 58, 20, tzinfo=timezone.utc)
 
 
 class GitRelease(Framework.TestCase):
@@ -156,6 +156,12 @@ class GitRelease(Framework.TestCase):
             ),
         )
         self.assertEqual(repr(release), 'GitRelease(title="Test")')
+        self.assertEqual(len(release.assets), 1)
+        self.assertEqual(
+            repr(release.assets[0]),
+            'GitReleaseAsset(url="https://api.github.com/repos/'
+            f'{user}/{repo_name}/releases/assets/{release.raw_data["assets"][0]["id"]}")',
+        )
 
     def testGetRelease(self):
         release_by_id = self.release

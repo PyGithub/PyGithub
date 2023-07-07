@@ -42,8 +42,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import urllib.parse
+from datetime import datetime
 
 import github.GithubObject
 import github.IssueComment
@@ -97,7 +97,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def closed_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
@@ -129,7 +129,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -223,6 +223,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
+    def state_reason(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._state_reason)
+        return self._state_reason.value
+
+    @property
     def title(self):
         """
         :type: string
@@ -233,7 +241,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -357,16 +365,18 @@ class Issue(github.GithubObject.CompletableGithubObject):
         milestone=github.GithubObject.NotSet,
         labels=github.GithubObject.NotSet,
         assignees=github.GithubObject.NotSet,
+        state_reason=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser` or None
-        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string
+        :param assignees: list of string or :class:`github.NamedUser.NamedUser`
+        :param state_reason: string
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, str), title
@@ -409,6 +419,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             ]
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
+        if state_reason is not github.GithubObject.NotSet:
+            post_parameters["state_reason"] = state_reason
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity if milestone else ""
         if labels is not github.GithubObject.NotSet:
@@ -460,12 +472,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def get_comments(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -636,6 +646,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._pull_request = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
+        self._state_reason = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -707,6 +718,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             )
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "state_reason" in attributes:  # pragma no branch
+            self._state_reason = self._makeStringAttribute(attributes["state_reason"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch

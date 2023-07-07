@@ -6,8 +6,16 @@
 # Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2022 Gabriele Oliaro <ict@gabrieleoliaro.it>                       #
+# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,21 +50,25 @@ types = {
         "string",
         None,
         'self._makeStringAttribute(attributes["' + attributeName + '"])',
+        "str",
     ),
     "int": (
         "integer",
         None,
         'self._makeIntAttribute(attributes["' + attributeName + '"])',
+        "int",
     ),
     "bool": (
         "bool",
         None,
         'self._makeBoolAttribute(attributes["' + attributeName + '"])',
+        "bool",
     ),
     "datetime": (
         "datetime.datetime",
-        "(str, unicode)",
+        "str",
         'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
+        "datetime.datetime",
     ),
     "class": (
         ":class:`" + attributeClassType + "`",
@@ -66,10 +78,16 @@ types = {
         + ', attributes["'
         + attributeName
         + '"])',
+        attributeClassType,
     ),
 }
 
-attributeDocType, attributeAssertType, attributeValue = types[attributeType]
+attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[
+    attributeType
+]
+if attributeType == "class":
+    # Wrap in quotes to avoid an explicit import requirement which can cause circular import errors
+    attributeClassType = f"'{attributeClassType}'"
 
 
 fileName = os.path.join("github", className + ".py")
@@ -101,7 +119,9 @@ while not added:
         ):
             if not isProperty:
                 newLines.append("    @property")
-            newLines.append("    def " + attributeName + "(self):")
+            newLines.append(
+                "    def " + attributeName + "(self) -> " + attributeClassType + ":"
+            )
             newLines.append('        """')
             newLines.append("        :type: " + attributeDocType)
             newLines.append('        """')

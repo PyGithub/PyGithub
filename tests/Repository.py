@@ -46,7 +46,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import date, datetime, timezone
 from unittest import mock
 
 import github
@@ -65,7 +65,8 @@ class Repository(Framework.TestCase):
             self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git"
         )
         self.assertEqual(
-            self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47)
+            self.repo.created_at,
+            datetime(2012, 2, 25, 12, 53, 47, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.repo.description, "Python library implementing the full Github API v3"
@@ -101,13 +102,17 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.permissions.pull)
         self.assertTrue(self.repo.permissions.push)
         self.assertFalse(self.repo.private)
-        self.assertEqual(self.repo.pushed_at, datetime.datetime(2012, 5, 27, 6, 0, 28))
+        self.assertEqual(
+            self.repo.pushed_at,
+            datetime(2012, 5, 27, 6, 0, 28, tzinfo=timezone.utc),
+        )
         self.assertEqual(self.repo.size, 308)
         self.assertEqual(self.repo.source, None)
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(
-            self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28)
+            self.repo.updated_at,
+            datetime(2012, 5, 27, 6, 55, 28, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub"
@@ -134,6 +139,9 @@ class Repository(Framework.TestCase):
             has_projects=False,
             has_wiki=False,
             has_downloads=True,
+            allow_auto_merge=True,
+            allow_forking=True,
+            allow_update_branch=True,
             allow_squash_merge=True,
             allow_merge_commit=True,
             allow_rebase_merge=True,
@@ -145,10 +153,13 @@ class Repository(Framework.TestCase):
             self.repo.description, "Python library implementing the full Github API v3"
         )
         self.assertFalse(self.repo.archived)
+        self.assertTrue(self.repo.allow_update_branch)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
         self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.allow_auto_merge)
+        self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
         self.assertTrue(self.repo.allow_merge_commit)
         self.assertTrue(self.repo.allow_rebase_merge)
@@ -175,7 +186,7 @@ class Repository(Framework.TestCase):
             "Milestone created by PyGithub",
             state="open",
             description="Description created by PyGithub",
-            due_on=datetime.date(2012, 6, 15),
+            due_on=date(2012, 6, 15),
         )
         self.assertEqual(milestone.number, 5)
 
@@ -257,6 +268,12 @@ class Repository(Framework.TestCase):
             ref.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
+
+    def testCreateAutolink(self):
+        key = self.repo.create_autolink(
+            "DUMMY-", "https://github.com/PyGithub/PyGithub/issues/<num>"
+        )
+        self.assertEqual(key.id, 209614)
 
     def testCreateGitBlob(self):
         blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
@@ -365,6 +382,7 @@ class Repository(Framework.TestCase):
             "This release is also created by PyGithub",
             False,
             True,
+            False,
             "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
@@ -451,6 +469,123 @@ class Repository(Framework.TestCase):
     def testDeleteSecret(self):
         self.assertTrue(self.repo.delete_secret("secret_name"))
 
+    def testCodeScanAlerts(self):
+        codescan_alerts = self.repo.get_codescan_alerts()
+        self.assertListKeyEqual(
+            codescan_alerts,
+            lambda c: c.number,
+            [
+                6,
+            ],
+        )
+        codescan_alert = codescan_alerts[0]
+        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(codescan_alert.state, "open")
+        self.assertEqual(
+            codescan_alert.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6",
+        )
+        self.assertEqual(
+            codescan_alert.created_at,
+            datetime(2021, 6, 29, 12, 28, 30, tzinfo=timezone.utc),
+        )
+        self.assertEqual(
+            codescan_alert.dismissed_at,
+            datetime(2021, 6, 30, 5, 5, 5, tzinfo=timezone.utc),
+        )
+        self.assertEqual(codescan_alert.dismissed_reason, "Won't tell")
+        dismissed_by = codescan_alert.dismissed_by
+        self.assertEqual(dismissed_by.login, "dismisser.login")
+        instance = codescan_alert.most_recent_instance
+        self.assertEqual(
+            repr(instance),
+            "CodeScanAlertInstance("
+            'ref="refs/heads/master", '
+            'analysis_key=".github/workflows/codeql-analysis.yml:analyze"'
+            ")",
+        )
+        self.assertEqual(instance.ref, "refs/heads/master")
+        self.assertEqual(
+            instance.analysis_key, ".github/workflows/codeql-analysis.yml:analyze"
+        )
+        self.assertEqual(instance.environment, "{language:python}")
+        self.assertEqual(instance.state, "open")
+        self.assertListEqual(instance.classifications, ["stupid typo"])
+        self.assertDictEqual(instance.message, {"text": "Awful stuff might happen."})
+        self.assertEqual(instance.commit_sha, "deadbeef")
+        location = instance.location
+        self.assertEqual(
+            str(location),
+            "tests/ReplayData/Repository.testCodeScanAlerts.txt @ l10:c2-l10:c48",
+        )
+        self.assertEqual(
+            repr(location),
+            "CodeScanAlertInstanceLocation("
+            "start_line=10, start_column=2, "
+            'path="tests/ReplayData/Repository.testCodeScanAlerts.txt", '
+            "end_line=10, end_column=48"
+            ")",
+        )
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 10)
+        self.assertEqual(location.start_column, 2)
+        self.assertEqual(location.end_line, 10)
+        self.assertEqual(location.end_column, 48)
+        rule = codescan_alert.rule
+        self.assertEqual(
+            repr(rule), 'CodeScanRule(name="py/rule-name", id="py/rule-id")'
+        )
+        self.assertEqual(rule.id, "py/rule-id")
+        self.assertEqual(rule.name, "py/rule-name")
+        self.assertEqual(rule.security_severity_level, "high")
+        self.assertEqual(rule.severity, "warning")
+        self.assertEqual(rule.description, "Bad practice")
+        tool = codescan_alert.tool
+        self.assertEqual(
+            repr(tool), 'CodeScanTool(version="2.5.7", name="CodeQL", guid=None)'
+        )
+        self.assertEqual(tool.guid, None)
+        self.assertEqual(tool.name, "CodeQL")
+        self.assertEqual(tool.version, "2.5.7")
+        instances = list(codescan_alert.get_instances())
+        self.assertEqual(len(instances), 2)
+        #
+        instance = instances[0]
+        self.assertEqual(instance.ref, "instances[0].ref")
+        self.assertEqual(instance.analysis_key, "instances[0].analysis_key")
+        self.assertEqual(instance.environment, "instances[0].environment")
+        self.assertEqual(instance.state, "instances[0].state")
+        self.assertListEqual(instance.classifications, ["instances[0].classifications"])
+        self.assertDictEqual(instance.message, {"text": "instances[0].message"})
+        self.assertEqual(instance.commit_sha, "instances[0].commit_sha")
+        location = instance.location
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 10)
+        self.assertEqual(location.start_column, 2)
+        self.assertEqual(location.end_line, 10)
+        self.assertEqual(location.end_column, 48)
+        #
+        instance = instances[1]
+        self.assertEqual(instance.ref, "instances[1].ref")
+        self.assertEqual(instance.analysis_key, "instances[1].analysis_key")
+        self.assertEqual(instance.environment, "instances[1].environment")
+        self.assertEqual(instance.state, "instances[1].state")
+        self.assertListEqual(instance.classifications, ["instances[1].classifications"])
+        self.assertDictEqual(instance.message, {"text": "instances[1].message"})
+        self.assertEqual(instance.commit_sha, "instances[1].commit_sha")
+        location = instance.location
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 20)
+        self.assertEqual(location.start_column, 17)
+        self.assertEqual(location.end_line, 20)
+        self.assertEqual(location.end_column, 42)
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
@@ -477,6 +612,9 @@ class Repository(Framework.TestCase):
 
     def testRemoveInvitation(self):
         self.repo.remove_invitation(17285388)
+
+    def testRemoveAutolink(self):
+        self.repo.remove_autolink(209611)
 
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -653,8 +791,8 @@ class Repository(Framework.TestCase):
     def testGetCommitsWithSinceUntil(self):
         self.assertListKeyEqual(
             self.repo.get_commits(
-                since=datetime.datetime(2013, 3, 1),
-                until=datetime.datetime(2013, 3, 31),
+                since=datetime(2013, 3, 1),
+                until=datetime(2013, 3, 31),
             ),
             lambda c: c.sha,
             [
@@ -802,6 +940,53 @@ class Repository(Framework.TestCase):
     def testGetHooks(self):
         self.assertListKeyEqual(self.repo.get_hooks(), lambda h: h.id, [257993])
 
+    def testGetHookDelivery(self):
+        delivery = self.repo.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(
+            delivery.response, github.HookDelivery.HookDeliveryResponse
+        )
+        self.assertEqual(
+            delivery.response.headers, {"content-type": "text/html;charset=utf-8"}
+        )
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = list(self.repo.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
+
     def testGetIssues(self):
         self.assertListKeyEqual(
             self.repo.get_issues(),
@@ -863,7 +1048,9 @@ class Repository(Framework.TestCase):
             ],
         )
         self.assertListKeyEqual(
-            self.repo.get_issues(since=datetime.datetime(2012, 5, 28, 23, 0, 0)),
+            self.repo.get_issues(
+                since=datetime(2012, 5, 28, 23, 0, 0, tzinfo=timezone.utc)
+            ),
             lambda i: i.id,
             [4793216, 4793162, 4793106, 3624556, 3619973, 3527266],
         )
@@ -1110,12 +1297,30 @@ class Repository(Framework.TestCase):
             stargazers,
             lambda stargazer: (stargazer.starred_at, stargazer.user.login),
             [
-                (datetime.datetime(2014, 8, 13, 19, 22, 5), "sAlexander"),
-                (datetime.datetime(2014, 10, 15, 5, 2, 30), "ThomasG77"),
-                (datetime.datetime(2015, 4, 14, 15, 22, 40), "therusek"),
-                (datetime.datetime(2015, 4, 29, 0, 9, 40), "athomann"),
-                (datetime.datetime(2015, 4, 29, 14, 26, 46), "jcapron"),
-                (datetime.datetime(2015, 5, 9, 19, 14, 45), "JoePython1"),
+                (
+                    datetime(2014, 8, 13, 19, 22, 5, tzinfo=timezone.utc),
+                    "sAlexander",
+                ),
+                (
+                    datetime(2014, 10, 15, 5, 2, 30, tzinfo=timezone.utc),
+                    "ThomasG77",
+                ),
+                (
+                    datetime(2015, 4, 14, 15, 22, 40, tzinfo=timezone.utc),
+                    "therusek",
+                ),
+                (
+                    datetime(2015, 4, 29, 0, 9, 40, tzinfo=timezone.utc),
+                    "athomann",
+                ),
+                (
+                    datetime(2015, 4, 29, 14, 26, 46, tzinfo=timezone.utc),
+                    "jcapron",
+                ),
+                (
+                    datetime(2015, 5, 9, 19, 14, 45, tzinfo=timezone.utc),
+                    "JoePython1",
+                ),
             ],
         )
         self.assertEqual(repr(stargazers[0]), 'Stargazer(user="sAlexander")')
@@ -1170,6 +1375,16 @@ class Repository(Framework.TestCase):
             self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215]
         )
 
+    def testGetAutolinks(self):
+        self.assertListKeyEqual(
+            self.repo.get_autolinks(),
+            lambda i: i.id,
+            [
+                209614,
+                209611,
+            ],
+        )
+
     def testLegacySearchIssues(self):
         issues = self.repo.legacy_search_issues("open", "search")
         self.assertListKeyEqual(issues, lambda i: i.title, ["Support new Search API"])
@@ -1177,13 +1392,15 @@ class Repository(Framework.TestCase):
         # Attributes retrieved from legacy API without lazy completion call
         self.assertEqual(issues[0].number, 49)
         self.assertEqual(
-            issues[0].created_at, datetime.datetime(2012, 6, 21, 12, 27, 38)
+            issues[0].created_at,
+            datetime(2012, 6, 21, 12, 27, 38, tzinfo=timezone.utc),
         )
         self.assertEqual(issues[0].comments, 4)
         self.assertEqual(issues[0].body[:20], "New API ported from ")
         self.assertEqual(issues[0].title, "Support new Search API")
         self.assertEqual(
-            issues[0].updated_at, datetime.datetime(2012, 6, 28, 21, 13, 25)
+            issues[0].updated_at,
+            datetime(2012, 6, 28, 21, 13, 25, tzinfo=timezone.utc),
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
@@ -1194,7 +1411,7 @@ class Repository(Framework.TestCase):
 
     def testMarkNotificationsAsRead(self):
         repo = self.g.get_user().get_repo("PyGithub")
-        repo.mark_notifications_as_read(datetime.datetime(2018, 10, 18, 18, 19, 43, 0))
+        repo.mark_notifications_as_read(datetime(2018, 10, 18, 18, 19, 43, 0))
 
     def testAssignees(self):
         lyloa = self.g.get_user("Lyloa")
@@ -1453,9 +1670,7 @@ class Repository(Framework.TestCase):
             ],
         )
         self.assertListKeyEqual(
-            self.repo.get_issues_comments(
-                since=datetime.datetime(2012, 5, 28, 23, 0, 0)
-            )[:40],
+            self.repo.get_issues_comments(since=datetime(2012, 5, 28, 23, 0, 0))[:40],
             lambda c: c.id,
             [
                 5981084,
@@ -1511,9 +1726,7 @@ class Repository(Framework.TestCase):
             [1580134],
         )
         self.assertListKeyEqual(
-            self.repo.get_pulls_comments(
-                since=datetime.datetime(2012, 5, 28, 23, 0, 0)
-            ),
+            self.repo.get_pulls_comments(since=datetime(2012, 5, 28, 23, 0, 0)),
             lambda c: c.id,
             [1580134],
         )
@@ -1547,18 +1760,27 @@ class Repository(Framework.TestCase):
             if s.author.login == "jacquev6":
                 seenJacquev6 = True
                 self.assertEqual(adTotal, 282147)
-                self.assertEqual(s.weeks[0].w, datetime.datetime(2012, 2, 12))
+                self.assertEqual(
+                    s.weeks[0].w,
+                    datetime(2012, 2, 12, tzinfo=timezone.utc),
+                )
         self.assertTrue(seenJacquev6)
 
     def testStatisticsCommitActivity(self):
         stats = self.repo.get_stats_commit_activity()
-        self.assertEqual(stats[0].week, datetime.datetime(2012, 11, 18, 0, 0))
+        self.assertEqual(
+            stats[0].week,
+            datetime(2012, 11, 18, 0, 0, tzinfo=timezone.utc),
+        )
         self.assertEqual(stats[0].total, 29)
         self.assertEqual(stats[0].days, [0, 7, 3, 9, 7, 3, 0])
 
     def testStatisticsCodeFrequency(self):
         stats = self.repo.get_stats_code_frequency()
-        self.assertEqual(stats[0].week, datetime.datetime(2012, 2, 12, 0, 0))
+        self.assertEqual(
+            stats[0].week,
+            datetime(2012, 2, 12, 0, 0, tzinfo=timezone.utc),
+        )
         self.assertEqual(stats[0].additions, 3853)
         self.assertEqual(stats[0].deletions, -2098)
 

@@ -2,6 +2,9 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
+from github.Auth import Auth
+from github.AppAuthentication import AppAuthentication
+from github.ApplicationOAuth import ApplicationOAuth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -10,21 +13,25 @@ from github.Gist import Gist
 from github.GithubObject import GithubObject, _NotSetType
 from github.GitignoreTemplate import GitignoreTemplate
 from github.HookDescription import HookDescription
-from github.Installation import Installation
-from github.InstallationAuthorization import InstallationAuthorization
 from github.Issue import Issue
 from github.License import License
 from github.NamedUser import NamedUser
 from github.Organization import Organization
 from github.PaginatedList import PaginatedList
 from github.Project import Project
+from github.ProjectColumn import ProjectColumn
 from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
 
-# from urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
+
+DEFAULT_BASE_URL: str
+DEFAULT_STATUS_URL: str
+DEFAULT_TIMEOUT: int
+DEFAULT_PER_PAGE: int
 
 class Github:
     def __init__(
@@ -32,14 +39,17 @@ class Github:
         login_or_token: Optional[str] = ...,
         password: Optional[str] = ...,
         jwt: Optional[str] = ...,
+        app_auth: Optional[AppAuthentication] = ...,
         base_url: str = ...,
         timeout: int = ...,
-        client_id: Optional[str] = ...,
-        client_secret: Optional[str] = ...,
         user_agent: str = ...,
         per_page: int = ...,
-        verify: bool = ...,
-        retry: Any = ...,
+        verify: Union[bool, str] = ...,
+        retry: Optional[Union[int, Retry]] = ...,
+        pool_size: Optional[int] = ...,
+        seconds_between_requests: Optional[float] = ...,
+        seconds_between_writes: Optional[float] = ...,
+        auth: Optional[Auth] = ...,
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...
@@ -66,7 +76,6 @@ class Github:
     def get_gitignore_templates(self) -> List[str]: ...
     def get_hook(self, name: str) -> HookDescription: ...
     def get_hooks(self) -> List[HookDescription]: ...
-    def get_installation(self, id: int) -> Installation: ...
     def get_license(self, key: Union[str, _NotSetType] = ...) -> License: ...
     def get_licenses(self) -> PaginatedList[License]: ...
     def get_organization(self, login: str) -> Organization: ...
@@ -74,6 +83,7 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[Organization]: ...
     def get_project(self, id: int) -> Project: ...
+    def get_project_column(self, id: int) -> ProjectColumn: ...
     def get_rate_limit(self) -> RateLimit: ...
     def get_repo(
         self, full_name_or_id: Union[int, str], lazy: bool = ...
@@ -86,12 +96,19 @@ class Github:
     @overload
     def get_user(self, login: _NotSetType = ...) -> AuthenticatedUser: ...
     @overload
-    def get_user(self, login: str) -> NamedUser: ...
+    def get_user(
+        self, login: Union[str, _NotSetType] = ...
+    ) -> Union[NamedUser, AuthenticatedUser]: ...
     def get_user_by_id(self, user_id: int) -> NamedUser: ...
     def get_users(
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
+    # argument slug is deprecated, not included here
+    def get_app(self): ...
+    def get_oauth_application(
+        self, client_id: str, client_secret: str
+    ) -> ApplicationOAuth: ...
     @property
     def oauth_scopes(self) -> Optional[List[str]]: ...
     @property
@@ -138,13 +155,3 @@ class Github:
         order: Union[str, _NotSetType] = ...,
         **qualifiers: Any
     ) -> PaginatedList[NamedUser]: ...
-
-class GithubIntegration:
-    def __init__(
-        self, integration_id: Union[int, str], private_key: str, base_url: str = ...
-    ) -> None: ...
-    def create_jwt(self, expiration: int = ...) -> str: ...
-    def get_access_token(
-        self, installation_id: int, user_id: Optional[int] = ...
-    ) -> InstallationAuthorization: ...
-    def get_installation(self, owner: str, repo: str) -> Installation: ...

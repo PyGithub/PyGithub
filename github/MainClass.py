@@ -47,12 +47,11 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import pickle
-import time
+import warnings
+from datetime import datetime
+from typing import List
 
-import jwt
-import requests
 import urllib3
 
 import github.ApplicationOAuth
@@ -63,28 +62,21 @@ import github.License
 import github.NamedUser
 import github.PaginatedList
 import github.Topic
+from github import Auth
 
 from . import (
     AuthenticatedUser,
     Consts,
     GithubApp,
-    GithubException,
+    GithubRetry,
     GitignoreTemplate,
+    HookDelivery,
     HookDescription,
-    Installation,
-    InstallationAuthorization,
     RateLimit,
     Repository,
 )
+from .HookDelivery import HookDeliverySummary
 from .Requester import Requester
-
-DEFAULT_BASE_URL = "https://api.github.com"
-DEFAULT_STATUS_URL = "https://status.github.com"
-# As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
-# Thus, the timeout should be slightly > 10s to account for network/front-end
-# latency.
-DEFAULT_TIMEOUT = 15
-DEFAULT_PER_PAGE = 30
 
 
 class Github:
@@ -92,29 +84,47 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
+    default_retry = GithubRetry.GithubRetry()
+
+    # keep non-deprecated arguments in-sync with Requester
+    # v3: remove login_or_token, password, jwt and app_auth
+    # v3: move auth to the front of arguments
+    # v3: add * before first argument so all arguments must be named,
+    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
         login_or_token=None,
         password=None,
         jwt=None,
-        base_url=DEFAULT_BASE_URL,
-        timeout=DEFAULT_TIMEOUT,
-        user_agent="PyGithub/Python",
-        per_page=DEFAULT_PER_PAGE,
+        app_auth=None,
+        base_url=Consts.DEFAULT_BASE_URL,
+        timeout=Consts.DEFAULT_TIMEOUT,
+        user_agent=Consts.DEFAULT_USER_AGENT,
+        per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
-        retry=None,
+        retry=default_retry,
         pool_size=None,
+        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
+        auth=None,
     ):
         """
-        :param login_or_token: string
-        :param password: string
+        :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
+        :param password: string deprecated, use auth=github.Auth.Login(...) instead
+        :param jwt: string deprecated, use auth=github.Auth.AppAuth(...) or auth=github.Auth.AppAuthToken(...) instead
+        :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
-        :param retry: int or urllib3.util.retry.Retry object
+        :param retry: int or urllib3.util.retry.Retry object,
+                      defaults to github.Github.default_retry,
+                      set to None to disable retries
         :param pool_size: int
+        :param seconds_between_requests: float
+        :param seconds_between_writes: float
+        :param auth: authentication method
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -123,16 +133,50 @@ class Github:
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
+        assert isinstance(per_page, int), per_page
+        assert isinstance(verify, (bool, str)), verify
         assert (
             retry is None
-            or isinstance(retry, (int))
-            or isinstance(retry, (urllib3.util.Retry))
-        )
-        assert pool_size is None or isinstance(pool_size, (int)), pool_size
+            or isinstance(retry, int)
+            or isinstance(retry, urllib3.util.Retry)
+        ), retry
+        assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert seconds_between_requests is None or seconds_between_requests >= 0
+        assert seconds_between_writes is None or seconds_between_writes >= 0
+        assert auth is None or isinstance(auth, Auth.Auth), auth
+
+        if password is not None:
+            warnings.warn(
+                "Arguments login_or_token and password are deprecated, please use "
+                "auth=github.Auth.Login(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.Login(login_or_token, password)
+        elif login_or_token is not None:
+            warnings.warn(
+                "Argument login_or_token is deprecated, please use "
+                "auth=github.Auth.Token(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.Token(login_or_token)
+        elif jwt is not None:
+            warnings.warn(
+                "Argument jwt is deprecated, please use "
+                "auth=github.Auth.AppAuth(...) or "
+                "auth=github.Auth.AppAuthToken(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.AppAuthToken(jwt)
+        elif app_auth is not None:
+            warnings.warn(
+                "Argument app_auth is deprecated, please use "
+                "auth=github.Auth.AppInstallationAuth(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = app_auth
+
         self.__requester = Requester(
-            login_or_token,
-            password,
-            jwt,
+            auth,
             base_url,
             timeout,
             user_agent,
@@ -140,6 +184,8 @@ class Github:
             verify,
             retry,
             pool_size,
+            seconds_between_requests,
+            seconds_between_writes,
         )
 
     @property
@@ -153,7 +199,7 @@ class Github:
     def FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    # v3: Remove this property? Why should it be necessary to read/modify it after construction
     @property
     def per_page(self):
         """
@@ -165,9 +211,9 @@ class Github:
     def per_page(self, value):
         self.__requester.per_page = value
 
-    # v2: Provide a unified way to access values of headers of last response
-    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
-    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
+    # v3: Provide a unified way to access values of headers of last response
+    # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -394,12 +440,10 @@ class Github:
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -698,6 +742,39 @@ class Github:
             for attributes in data
         ]
 
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET", f"/hooks/{hook_id}/deliveries/{delivery_id}"
+        )
+        return HookDelivery.HookDelivery(
+            self.__requester, headers, attributes, completed=True
+        )
+
+    def get_hook_deliveries(self, hook_id: int) -> List[HookDeliverySummary]:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :rtype: list of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", f"/hooks/{hook_id}/deliveries"
+        )
+        return [
+            HookDelivery.HookDeliverySummary(
+                self.__requester, headers, attributes, completed=True
+            )
+            for attributes in data
+        ]
+
     def get_gitignore_templates(self):
         """
         :calls: `GET /gitignore/templates <https://docs.github.com/en/rest/reference/gitignore>`_
@@ -777,104 +854,22 @@ class Github:
         :rtype: :class:`github.GithubApp.GithubApp`
         """
         assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
+
         if slug is github.GithubObject.NotSet:
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": "/app"}, completed=False
+            # with no slug given, calling /app returns the authenticated app,
+            # including the actual /apps/{slug}
+            warnings.warn(
+                "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
+                "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
+                category=DeprecationWarning,
             )
+            return GithubIntegration(auth=self.__requester.auth).get_app()
         else:
-            headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
-            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
-
-
-class GithubIntegration:
-    """
-    Main class to obtain tokens for a GitHub integration.
-    """
-
-    def __init__(self, integration_id, private_key, base_url=DEFAULT_BASE_URL):
-        """
-        :param base_url: string
-        :param integration_id: int
-        :param private_key: string
-        """
-        self.base_url = base_url
-        self.integration_id = integration_id
-        self.private_key = private_key
-        assert isinstance(base_url, str), base_url
-
-    def create_jwt(self, expiration=60):
-        """
-        Creates a signed JWT, valid for 60 seconds by default.
-        The expiration can be extended beyond this, to a maximum of 600 seconds.
-
-        :param expiration: int
-        :return string:
-        """
-        now = int(time.time())
-        payload = {"iat": now, "exp": now + expiration, "iss": self.integration_id}
-        encrypted = jwt.encode(payload, key=self.private_key, algorithm="RS256")
-
-        if isinstance(encrypted, bytes):
-            encrypted = encrypted.decode("utf-8")
-
-        return encrypted
-
-    def get_access_token(self, installation_id, user_id=None):
-        """
-        Get an access token for the given installation id.
-        POSTs https://api.github.com/app/installations/<installation_id>/access_tokens
-        :param user_id: int
-        :param installation_id: int
-        :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
-        """
-        body = {}
-        if user_id:
-            body = {"user_id": user_id}
-        response = requests.post(
-            f"{self.base_url}/app/installations/{installation_id}/access_tokens",
-            headers={
-                "Authorization": f"Bearer {self.create_jwt()}",
-                "Accept": Consts.mediaTypeIntegrationPreview,
-                "User-Agent": "PyGithub/Python",
-            },
-            json=body,
-        )
-
-        if response.status_code == 201:
-            return InstallationAuthorization.InstallationAuthorization(
-                requester=None,  # not required, this is a NonCompletableGithubObject
-                headers={},  # not required, this is a NonCompletableGithubObject
-                attributes=response.json(),
-                completed=True,
+            # with a slug given, we can lazily load the GithubApp
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
             )
-        elif response.status_code == 403:
-            raise GithubException.BadCredentialsException(
-                status=response.status_code, data=response.text
-            )
-        elif response.status_code == 404:
-            raise GithubException.UnknownObjectException(
-                status=response.status_code, data=response.text
-            )
-        raise GithubException.GithubException(
-            status=response.status_code, data=response.text
-        )
 
-    def get_installation(self, owner, repo):
-        """
-        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`_
-        :param owner: str
-        :param repo: str
-        :rtype: :class:`github.Installation.Installation`
-        """
-        headers = {
-            "Authorization": f"Bearer {self.create_jwt()}",
-            "Accept": Consts.mediaTypeIntegrationPreview,
-            "User-Agent": "PyGithub/Python",
-        }
 
-        response = requests.get(
-            f"{self.base_url}/repos/{owner}/{repo}/installation",
-            headers=headers,
-        )
-        response_dict = response.json()
-        return Installation.Installation(None, headers, response_dict, True)
+# Retrocompatibility
+GithubIntegration = github.GithubIntegration

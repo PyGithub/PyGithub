@@ -28,7 +28,7 @@ Ideally, changes should be made in logical commits and tests added to improve th
 PyGithub adopts the black coding style and uses isort to sort imports.
 
 To manually format the code:
-```
+```bash
 tox -e lint
 ```
 
@@ -84,11 +84,13 @@ If you add a new test, for example `Issue139.testCompletion`, you have to run `p
 Check them and commit them as well.
 You will need a `GithubCredentials.py` file at the root of the project with the following contents:
 
-```
+```python
 login = "my_login"
-password = "my_password"  # Can be left empty if not used
-oauth_token = "my_token"  # Can be left empty if not used
-jwt = "my_json_web_token"  # Can be left empty if not used
+password = "my_password"                # Can be left empty if not used
+oauth_token = "my_token"                # Can be left empty if not used
+jwt = "my_json_web_token"               # Can be left empty if not used
+app_id = "my_app_id"                    # Can be left empty if not used
+app_private_key = "my_app_private_key"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
@@ -98,26 +100,26 @@ Similarly, you can use `pytest Issue139.testCompletion --record --auth_with_jwt`
 
 To run manual tests with external scripts that use the PyGithub package, you can install your development version with:
 
-```
+```bash
 pip install --editable path/to/project
 ```
 
 You may also want to investigate `tox` to run tests:
 
-```
+```bash
 pip install tox
-tox -epy36
+tox -epy310
 ```
 
 ## Build documentation locally
 
-```
+```bash
 pip install -r requirements.txt
 sphinx-build doc build
 ```
 
 If you use tox:
 
-```
+```bash
 tox -edocs
 ```

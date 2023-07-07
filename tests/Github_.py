@@ -30,11 +30,11 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
-from . import Framework, Time
+from . import Framework
 
 
 class Github(Framework.TestCase):
@@ -148,11 +148,7 @@ class Github(Framework.TestCase):
 
     def testGetGistsWithSince(self):
         self.assertListKeyBegin(
-            self.g.get_gists(
-                since=datetime.datetime(
-                    2018, 10, 2, 10, 38, 30, 00, tzinfo=Time.UTCtzinfo()
-                )
-            ),
+            self.g.get_gists(since=datetime(2018, 10, 2, 10, 38, 30, 00)),
             lambda g: g.id,
             [
                 "69b8a5831b74946db944c5451017fa40",
@@ -203,6 +199,53 @@ class Github(Framework.TestCase):
             ],
         )
         self.assertEqual(repr(hook), 'HookDescription(name="activecollab")')
+
+    def testGetHookDelivery(self):
+        delivery = self.g.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(
+            delivery.response, github.HookDelivery.HookDeliveryResponse
+        )
+        self.assertEqual(
+            delivery.response.headers, {"content-type": "text/html;charset=utf-8"}
+        )
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = list(self.g.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
 
     def testGetRepoFromFullName(self):
         self.assertEqual(
