@@ -87,7 +87,7 @@ class GithubException(Exception):
             msg = f"{self.status}"
 
         if self.data is not None:
-            msg += json.dumps(self.data)
+            msg += " " + json.dumps(self.data)
 
         return msg
 
