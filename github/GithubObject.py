@@ -46,9 +46,9 @@ from typing import (
     Any,
     Callable,
     Dict,
-    Generic,
     List,
     Optional,
+    Tuple,
     Type,
     Union,
 )
@@ -98,15 +98,15 @@ def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
     return not isinstance(v, _NotSetType)
 
 
-def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
+def is_undefined(v: Union[T, _NotSetType]) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
+def is_optional(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+def is_optional_list(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return (
         isinstance(v, _NotSetType)
         or isinstance(v, list)
@@ -114,7 +114,7 @@ def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
     )
 
 
-class _ValuedAttribute(Attribute, Generic[T]):
+class _ValuedAttribute(Attribute[T]):
     def __init__(self, value: T):
         self._value = value
 
