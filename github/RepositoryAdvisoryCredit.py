@@ -20,26 +20,24 @@
 #                                                                              #
 ################################################################################
 
-import sys
-import typing
+from typing import Union
+
+from typing_extensions import TypedDict
 
 import github.GithubObject
 import github.NamedUser
 
-if sys.version_info >= (3, 8):
-    # TypedDict is only available in Python 3.8 and later
-    class SimpleCredit(typing.TypedDict):
-        """
-        A simple credit for a security advisory.
-        """
 
-        login: typing.Union[str, "github.NamedUser.NamedUser"]
-        type: str
+class SimpleCredit(TypedDict):
+    """
+    A simple credit for a security advisory.
+    """
 
-else:
-    SimpleCredit = typing.Dict[str, typing.Any]
+    login: Union[str, "github.NamedUser.NamedUser"]
+    type: str
 
-Credit = typing.Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+
+Credit = Union[SimpleCredit, "RepositoryAdvisoryCredit"]
 
 
 class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
