@@ -45,15 +45,16 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    _app: Attribute[AuthorizationApplication]
-    _created_at: Attribute[datetime]
-    _id: Attribute[int]
-    _note: Attribute[str] | Attribute[None]
-    _note_url: Attribute[str | None]
-    _scopes: Attribute[str]
-    _token: Attribute[str]
-    _updated_at: Attribute[datetime]
-    _url: Attribute[str]
+    def _initAttributes(self):
+        self._app: Attribute[AuthorizationApplication] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._note: Attribute[str | None] = NotSet
+        self._note_url: Attribute[str | None] = NotSet
+        self._scopes: Attribute[str] = NotSet
+        self._token: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"scopes": self._scopes.value})
@@ -155,17 +156,6 @@ class Authorization(github.GithubObject.CompletableGithubObject):
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
-
-    def _initAttributes(self):
-        self._app = NotSet
-        self._created_at = NotSet
-        self._id = NotSet
-        self._note = NotSet
-        self._note_url = NotSet
-        self._scopes = NotSet
-        self._token = NotSet
-        self._updated_at = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
