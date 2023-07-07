@@ -20,14 +20,21 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
+class CodeScanTool(NonCompletableGithubObject):
     """
     This class represents code scanning tools.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
+
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._version: Attribute[str] = NotSet
+        self._guid: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__(
@@ -39,32 +46,18 @@ class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def name(self):
-        """
-        :type: str
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def version(self):
-        """
-        :type: str
-        """
+    def version(self) -> str:
         return self._version.value
 
     @property
-    def guid(self):
-        """
-        :type: str
-        """
+    def guid(self) -> str:
         return self._guid.value
 
-    def _initAttributes(self):
-        self._name = github.GithubObject.NotSet
-        self._version = github.GithubObject.NotSet
-        self._guid = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "version" in attributes:  # pragma no branch
