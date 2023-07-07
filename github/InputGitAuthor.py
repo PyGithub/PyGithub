@@ -30,8 +30,10 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
-from github.GithubObject import Opt, _NotSetType, is_optional
+from github.GithubObject import Opt, is_defined, is_optional
 
 
 class InputGitAuthor:
@@ -55,10 +57,10 @@ class InputGitAuthor:
 
     @property
     def _identity(self) -> dict[str, str]:
-        identity: dict[str, str] = {
+        identity: dict[str, Any] = {
             "name": self.__name,
             "email": self.__email,
         }
-        if not isinstance(self.__date, _NotSetType):
+        if is_defined(self.__date):
             identity["date"] = self.__date
         return identity
