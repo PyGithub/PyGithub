@@ -5,7 +5,7 @@ repos:
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: mixed-line-ending
-        args: [ --fix=lf ]
+        args: ["--fix=lf"]
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.1.0
@@ -33,3 +33,12 @@ repos:
     rev: 23.3.0
     hooks:
       - id: black
+
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.6.3
+    hooks:
+      - id: docformatter
+        args:
+         - "--in-place"
+         - "--wrap-summaries=120"
+         - "--wrap-descriptions=120"
