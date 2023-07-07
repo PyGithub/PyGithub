@@ -544,7 +544,7 @@ class Requester:
         if status == 401:
             if message == "bad credentials":
                 exc = GithubException.BadCredentialsException
-            if "saml enforcement" in message.lower():
+            if "saml enforcement" in message:
                 exc = GithubException.SAMLException
             elif (
                 Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]
