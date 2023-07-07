@@ -137,8 +137,8 @@ class GithubRetry(Retry):
                                 if "X-RateLimit-Reset" in response.headers:
                                     value = response.headers.get("X-RateLimit-Reset")
                                     if value and value.isdigit():
-                                        reset = self.__datetime.utcfromtimestamp(
-                                            int(value)
+                                        reset = self.__datetime.fromtimestamp(
+                                            int(value), timezone.utc
                                         )
                                         delta = reset - self.__datetime.now(
                                             timezone.utc
