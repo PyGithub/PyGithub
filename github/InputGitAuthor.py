@@ -31,7 +31,7 @@
 from __future__ import annotations
 
 import github.GithubObject
-from github.GithubObject import Opt, is_optional, is_undefined
+from github.GithubObject import Opt, _NotSetType, is_optional
 
 
 class InputGitAuthor:
@@ -59,6 +59,6 @@ class InputGitAuthor:
             "name": self.__name,
             "email": self.__email,
         }
-        if not is_undefined(self.__date):
+        if not isinstance(self.__date, _NotSetType):
             identity["date"] = self.__date
         return identity
