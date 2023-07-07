@@ -33,7 +33,6 @@ from github.RepositoryAdvisoryVulnerability import (
     AdvisoryVulnerability,
     RepositoryAdvisoryVulnerability,
 )
-from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
@@ -45,148 +44,111 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
-    _requester: Requester
+    def _initAttributes(self):
+        self._author: Attribute[NamedUser] = NotSet
+        self._closed_at: Attribute[datetime] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._credits: Attribute[list[RepositoryAdvisoryCredit]] = NotSet
+        self._credits_detailed: Attribute[
+            list[RepositoryAdvisoryCreditDetailed]
+        ] = NotSet
+        self._cve_id: Attribute[str] = NotSet
+        self._cwe_ids: Attribute[list[str]] = NotSet
+        self._cwes: Attribute[list[CWE]] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._ghsa_id: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._published_at: Attribute[datetime] = NotSet
+        self._severity: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._summary: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._vulnerabilities: Attribute[list[RepositoryAdvisoryVulnerability]] = NotSet
+        self._withdrawn_at: Attribute[datetime] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
 
     @property
     def author(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         return self._author.value
 
     @property
     def closed_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._closed_at.value
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._created_at.value
 
     @property
     def credits(
         self,
     ) -> list[RepositoryAdvisoryCredit]:
-        """
-        :type: list of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
-        """
         return self._credits.value
 
     @property
     def credits_detailed(
         self,
     ) -> list[RepositoryAdvisoryCreditDetailed]:
-        """
-        :type: list of :class:`github.RepositoryAdvisoryCreditDetailed.RepositoryAdvisoryCreditDetailed`
-        """
         return self._credits_detailed.value
 
     @property
     def cve_id(self) -> str:
-        """
-        :type: string
-        """
         return self._cve_id.value
 
     @property
     def cwe_ids(self) -> list[str]:
-        """
-        :type: list of string
-        """
+
         return self._cwe_ids.value
 
     @property
     def cwes(self) -> list[CWE]:
-        """
-        :type: list of :class:`github.CWE.CWE`
-        """
         return self._cwes.value
 
     @property
     def description(self) -> str:
-        """
-        :type: string
-        """
         return self._description.value
 
     @property
     def ghsa_id(self) -> str:
-        """
-        :type: string
-        """
         return self._ghsa_id.value
 
     @property
     def html_url(self) -> str:
-        """
-        :type: string
-        """
         return self._html_url.value
 
     @property
     def published_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._published_at.value
 
     @property
     def severity(self) -> str:
-        """
-        :type: string
-        """
         return self._severity.value
 
     @property
     def state(self) -> str:
-        """
-        :type: string
-        """
         return self._state.value
 
     @property
     def summary(self) -> str:
-        """
-        :type: string
-        """
         return self._summary.value
 
     @property
     def updated_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._updated_at.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         return self._url.value
 
     @property
-    def vulnerabilities(
-        self,
-    ) -> list[RepositoryAdvisoryVulnerability]:
-        """
-        :type: list of :class:`github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability`
-        """
+    def vulnerabilities(self) -> list[RepositoryAdvisoryVulnerability]:
         return self._vulnerabilities.value
 
     @property
     def withdrawn_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         return self._withdrawn_at.value
 
     def add_vulnerability(
@@ -199,11 +161,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
-        :param ecosystem: string
-        :param package_name: string
-        :param vulnerable_version_range: string
-        :param patched_versions: string
-        :param vulnerable_functions: list of string
         """
         return self.add_vulnerabilities(
             [
@@ -222,7 +179,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
         """
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
@@ -255,8 +211,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a user for a vulnerability in a repository.
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
-        :param login_or_user: string username or :class:`github.NamedUser.NamedUser`
-        :param credit_type: string
         """
         self.offer_credits([{"login": login_or_user, "type": credit_type}])
 
@@ -291,7 +245,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
-        :param login_or_user: string username or :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(
             login_or_user, (str, github.NamedUser.NamedUser)
@@ -337,15 +290,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     ) -> RepositoryAdvisory:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
-        :param summary: string
-        :param description: string
-        :param severity_or_cvss_vector_string: string
-        :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
-        :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.Credit`
-        :param state: string
-        :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         assert summary is NotSet or isinstance(summary, str), summary
         assert description is NotSet or isinstance(description, str), description
@@ -452,32 +396,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    # noinspection DuplicatedCode
-    # noinspection PyPep8Naming
-    def _initAttributes(self):
-        self._author: Attribute[NamedUser] = NotSet
-        self._closed_at: Attribute[datetime] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._credits: Attribute[list[RepositoryAdvisoryCredit]] = NotSet
-        self._credits_detailed: Attribute[
-            list[RepositoryAdvisoryCreditDetailed]
-        ] = NotSet
-        self._cve_id: Attribute[str] = NotSet
-        self._cwe_ids: Attribute[list[str]] = NotSet
-        self._cwes: Attribute[list[CWE]] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._ghsa_id: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._published_at: Attribute[datetime] = NotSet
-        self._severity: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._summary: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._vulnerabilities: Attribute[list[RepositoryAdvisoryVulnerability]] = NotSet
-        self._withdrawn_at: Attribute[datetime] = NotSet
-
-    # noinspection PyPep8Naming
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(
