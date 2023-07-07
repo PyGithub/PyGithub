@@ -559,7 +559,7 @@ class Requester:
         elif status == 404 and message == "not found":
             exc = GithubException.UnknownObjectException
 
-        return exc(status, output, headers, message=message)
+        return exc(status, output, headers)
 
     @classmethod
     def isRateLimitError(cls, message: str) -> bool:

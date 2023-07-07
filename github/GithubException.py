@@ -77,11 +77,19 @@ class GithubException(Exception):
         """
         return self.__headers
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.__str__()})"
+
     def __str__(self) -> str:
         if self.__message:
-            return f"{self.status} {self.__message} {json.dumps(self.data)}"
+            msg = f"{self.__message}: {self.status}"
+        else:
+            msg = f"{self.status}"
 
-        return f"{self.status} {json.dumps(self.data)}"
+        if self.data:
+            msg += {json.dumps(self.data)}
+
+        return msg
 
 
 class BadCredentialsException(GithubException):
