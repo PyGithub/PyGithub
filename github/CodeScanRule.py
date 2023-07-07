@@ -20,59 +20,44 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
+class CodeScanRule(NonCompletableGithubObject):
     """
     This class represents Alerts from code scanning.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
+    def _initAttributes(self):
+        self._id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._severity: Attribute[str] = NotSet
+        self._security_severity_level: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"id": self.id, "name": self.name})
 
     @property
-    def id(self):
-        """
-        :type: str
-        """
+    def id(self) -> str:
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: str
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def severity(self):
-        """
-        :type: str
-        """
+    def severity(self) -> str:
         return self._severity.value
 
     @property
-    def security_severity_level(self):
-        """
-        :type: str
-        """
+    def security_severity_level(self) -> str:
         return self._security_severity_level.value
 
     @property
-    def description(self):
-        """
-        :type: str
-        """
+    def description(self) -> str:
         return self._description.value
-
-    def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._severity = github.GithubObject.NotSet
-        self._security_severity_level = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
