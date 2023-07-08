@@ -71,8 +71,8 @@ class InputGitTreeElement:
             "mode": self.__mode,
             "type": self.__type,
         }
-        if not is_undefined(self.__sha):
+        if is_defined(self.__sha):
             identity["sha"] = self.__sha
-        if not is_undefined(self.__content):
+        if is_defined(self.__content):
             identity["content"] = self.__content
         return identity

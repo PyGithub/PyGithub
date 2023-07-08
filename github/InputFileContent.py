@@ -50,6 +50,6 @@ class InputFileContent:
         identity: dict[str, Any] = {
             "content": self.__content,
         }
-        if not is_undefined(self.__newName):
+        if is_defined(self.__newName):
             identity["filename"] = self.__newName
         return identity
