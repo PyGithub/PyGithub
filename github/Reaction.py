@@ -26,9 +26,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-import github.GithubObject
 import github.NamedUser
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from . import Consts
 
@@ -36,10 +35,16 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
 
 
-class Reaction(github.GithubObject.CompletableGithubObject):
+class Reaction(CompletableGithubObject):
     """
     This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions
     """
+
+    def _initAttributes(self) -> None:
+        self._content: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -74,12 +79,6 @@ class Reaction(github.GithubObject.CompletableGithubObject):
             f"{self._parentUrl('')}/reactions/{self.id}",
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-
-    def _initAttributes(self) -> None:
-        self._content: Attribute[str] = github.GithubObject.NotSet
-        self._created_at: Attribute[datetime] = github.GithubObject.NotSet
-        self._id: Attribute[int] = github.GithubObject.NotSet
-        self._user: Attribute[NamedUser] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "content" in attributes:  # pragma no branch
