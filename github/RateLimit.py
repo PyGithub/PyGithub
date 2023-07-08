@@ -29,22 +29,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import github.GithubObject
 import github.Rate
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.Rate import Rate
 
 
-class RateLimit(github.GithubObject.NonCompletableGithubObject):
+class RateLimit(NonCompletableGithubObject):
     """
     This class represents RateLimits. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
 
-    _core: Attribute[Rate]
-    _search: Attribute[Rate]
-    _graphql: Attribute[Rate]
+    def _initAttributes(self) -> None:
+        self._core: Attribute[Rate] = NotSet
+        self._search: Attribute[Rate] = NotSet
+        self._graphql: Attribute[Rate] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"core": self._core.value})
@@ -75,11 +75,6 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         :type: class:`github.Rate.Rate`
         """
         return self._graphql.value
-
-    def _initAttributes(self) -> None:
-        self._core = github.GithubObject.NotSet
-        self._search = github.GithubObject.NotSet
-        self._graphql = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "core" in attributes:  # pragma no branch
