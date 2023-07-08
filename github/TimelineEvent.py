@@ -38,6 +38,19 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
+    def _initAttributes(self) -> None:
+        self._actor = github.GithubObject.NotSet
+        self._commit_id = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._event = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
+        self._commit_url = github.GithubObject.NotSet
+        self._source = github.GithubObject.NotSet
+        self._body = github.GithubObject.NotSet
+        self._author_association = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
@@ -97,19 +110,6 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     @property
     def url(self) -> str:
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._actor = github.GithubObject.NotSet
-        self._commit_id = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._event = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._commit_url = github.GithubObject.NotSet
-        self._source = github.GithubObject.NotSet
-        self._body = github.GithubObject.NotSet
-        self._author_association = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "actor" in attributes:  # pragma no branch

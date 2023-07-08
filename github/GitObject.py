@@ -44,10 +44,6 @@ class GitObject(NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value})
 
-    _sha: Attribute[str]
-    _type: Attribute[str]
-    _url: Attribute[str]
-
     @property
     def sha(self) -> str:
         return self._sha.value
