@@ -35,6 +35,12 @@ class NotificationSubject(NonCompletableGithubObject):
     This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
     """
 
+    def _initAttributes(self) -> None:
+        self._title: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._latest_comment_url: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
 
@@ -53,12 +59,6 @@ class NotificationSubject(NonCompletableGithubObject):
     @property
     def type(self) -> str:
         return self._type.value
-
-    def _initAttributes(self) -> None:
-        self._title: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._latest_comment_url: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "title" in attributes:  # pragma no branch
