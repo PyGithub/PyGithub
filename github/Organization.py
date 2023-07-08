@@ -1445,7 +1445,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             list_item="installations",
         )
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._default_repository_permission = github.GithubObject.NotSet
         self._has_organization_projects = github.GithubObject.NotSet
         self._has_repository_projects = github.GithubObject.NotSet
@@ -1484,7 +1484,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "billing_email" in attributes:  # pragma no branch
