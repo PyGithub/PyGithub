@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import NotSet, Opt, is_optional, is_undefined
+from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitTreeElement:
@@ -45,14 +45,6 @@ class InputGitTreeElement:
         content: Opt[str] = NotSet,
         sha: Opt[str | None] = NotSet,
     ):
-        """
-        :param path: string
-        :param mode: string
-        :param type: string
-        :param content: string
-        :param sha: string or None
-        """
-
         assert isinstance(path, str), path
         assert isinstance(mode, str), mode
         assert isinstance(type, str), type
