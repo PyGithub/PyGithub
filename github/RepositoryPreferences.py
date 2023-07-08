@@ -37,8 +37,9 @@ class RepositoryPreferences(NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
     """
 
-    _preferences: Attribute[dict[str, list[dict[str, bool | int]]]]
-    _repository: Attribute[Repository]
+    def _initAttributes(self) -> None:
+        self._preferences: Attribute[dict[str, list[dict[str, bool | int]]]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
 
     @property
     def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
@@ -47,10 +48,6 @@ class RepositoryPreferences(NonCompletableGithubObject):
     @property
     def repository(self) -> Repository:
         return self._repository.value
-
-    def _initAttributes(self) -> None:
-        self._preferences = NotSet
-        self._repository = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "preferences" in attributes:  # pragma no branch
