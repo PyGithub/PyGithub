@@ -49,10 +49,11 @@ class Tag(NonCompletableGithubObject):
             {"name": self._name.value, "commit": self._commit.value}
         )
 
-    _commit: Attribute[Commit]
-    _name: Attribute[str]
-    _tarball_url: Attribute[str]
-    _zipball_url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._commit: Attribute[Commit] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._tarball_url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str] = NotSet
 
     @property
     def commit(self) -> Commit:
@@ -69,12 +70,6 @@ class Tag(NonCompletableGithubObject):
     @property
     def zipball_url(self) -> str:
         return self._zipball_url.value
-
-    def _initAttributes(self) -> None:
-        self._commit = NotSet
-        self._name = NotSet
-        self._tarball_url = NotSet
-        self._zipball_url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "commit" in attributes:  # pragma no branch
