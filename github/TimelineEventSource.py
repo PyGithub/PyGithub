@@ -36,11 +36,12 @@ class TimelineEventSource(NonCompletableGithubObject):
     This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
+    def _initAttributes(self) -> None:
+        self._type: Attribute[str] = NotSet
+        self._issue: Attribute[Issue] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"type": self._type.value})
-
-    _type: Attribute[str]
-    _issue: Attribute[Issue]
 
     @property
     def type(self) -> str:
@@ -49,10 +50,6 @@ class TimelineEventSource(NonCompletableGithubObject):
     @property
     def issue(self) -> Issue:
         return self._issue.value
-
-    def _initAttributes(self) -> None:
-        self._type = NotSet
-        self._issue = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "type" in attributes:  # pragma no branch
