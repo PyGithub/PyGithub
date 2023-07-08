@@ -39,6 +39,13 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     This class represents Required Pull Request Reviews. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
     """
 
+    def _initAttributes(self) -> None:
+        self._dismiss_stale_reviews: Attribute[bool] = NotSet
+        self._require_code_owner_reviews: Attribute[bool] = NotSet
+        self._required_approving_review_count: Attribute[int] = NotSet
+        self._users: Attribute[NamedUser] = NotSet
+        self._teams: Attribute[Team] = NotSet
+
     def __repr__(self):
         return self.get__repr__(
             {
@@ -77,13 +84,6 @@ class RequiredPullRequestReviews(github.GithubObject.CompletableGithubObject):
     def dismissal_teams(self) -> Team:
         self._completeIfNotSet(self._teams)
         return self._teams.value
-
-    def _initAttributes(self) -> None:
-        self._dismiss_stale_reviews: Attribute[bool] = NotSet
-        self._require_code_owner_reviews: Attribute[bool] = NotSet
-        self._required_approving_review_count: Attribute[int] = NotSet
-        self._users: Attribute[NamedUser] = NotSet
-        self._teams: Attribute[Team] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "dismissal_restrictions" in attributes:  # pragma no branch
