@@ -19,7 +19,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from __future__ import annotations
 
 import github.GithubObject
 
@@ -33,26 +32,35 @@ class RequiredStatusChecks(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
 
     @property
-    def strict(self) -> bool:
+    def strict(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._strict)
         return self._strict.value
 
     @property
-    def contexts(self) -> list[str]:
+    def contexts(self):
+        """
+        :type: list of string
+        """
         self._completeIfNotSet(self._contexts)
         return self._contexts.value
 
     @property
-    def url(self) -> str:
+    def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._strict = github.GithubObject.NotSet
         self._contexts = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "strict" in attributes:  # pragma no branch
             self._strict = self._makeBoolAttribute(attributes["strict"])
         if "contexts" in attributes:  # pragma no branch

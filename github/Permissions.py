@@ -48,33 +48,48 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def admin(self) -> bool:
+    def admin(self):
+        """
+        :type: bool
+        """
         return self._admin.value
 
     @property
-    def maintain(self) -> bool:
+    def maintain(self):
+        """
+        :type: bool
+        """
         return self._maintain.value
 
     @property
-    def pull(self) -> bool:
+    def pull(self):
+        """
+        :type: bool
+        """
         return self._pull.value
 
     @property
-    def push(self) -> bool:
+    def push(self):
+        """
+        :type: bool
+        """
         return self._push.value
 
     @property
-    def triage(self) -> bool:
+    def triage(self):
+        """
+        :type: bool
+        """
         return self._triage.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._admin = github.GithubObject.NotSet
         self._maintain = github.GithubObject.NotSet
         self._pull = github.GithubObject.NotSet
         self._push = github.GithubObject.NotSet
         self._triage = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
         if "maintain" in attributes:  # pragma no branch

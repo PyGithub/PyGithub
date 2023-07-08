@@ -40,30 +40,48 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def collaborators(self) -> int:
+    def collaborators(self):
+        """
+        :type: integer
+        """
         return self._collaborators.value
 
     @property
-    def name(self) -> str:
+    def name(self):
+        """
+        :type: string
+        """
         return self._name.value
 
     @property
-    def private_repos(self) -> int:
+    def private_repos(self):
+        """
+        :type: integer
+        """
         return self._private_repos.value
 
     @property
-    def space(self) -> int:
+    def space(self):
+        """
+        :type: integer
+        """
         return self._space.value
 
     @property
-    def filled_seats(self) -> int:
+    def filled_seats(self):
+        """
+        :type: integer
+        """
         return self._filled_seats.value
 
     @property
-    def seats(self) -> int:
+    def seats(self):
+        """
+        :type: integer
+        """
         return self._seats.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._collaborators = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._private_repos = github.GithubObject.NotSet
@@ -71,7 +89,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         self._filled_seats = github.GithubObject.NotSet
         self._seats = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch

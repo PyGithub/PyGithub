@@ -41,23 +41,32 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
 
     @property
-    def merged(self) -> bool:
+    def merged(self):
+        """
+        :type: bool
+        """
         return self._merged.value
 
     @property
-    def message(self) -> str:
+    def message(self):
+        """
+        :type: string
+        """
         return self._message.value
 
     @property
-    def sha(self) -> str:
+    def sha(self):
+        """
+        :type: string
+        """
         return self._sha.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._merged = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "merged" in attributes:  # pragma no branch
             self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch

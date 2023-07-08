@@ -44,28 +44,40 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def path(self) -> str:
+    def path(self):
+        """
+        :type: string
+        """
         return self._path.value
 
     @property
-    def title(self) -> str:
+    def title(self):
+        """
+        :type: string
+        """
         return self._title.value
 
     @property
-    def count(self) -> int:
+    def count(self):
+        """
+        :type: integer
+        """
         return self._count.value
 
     @property
-    def uniques(self) -> int:
+    def uniques(self):
+        """
+        :type: integer
+        """
         return self._uniques.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._path = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._count = github.GithubObject.NotSet
         self._uniques = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch

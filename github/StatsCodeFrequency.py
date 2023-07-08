@@ -23,7 +23,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from datetime import datetime
 
 import github.GithubObject
 
@@ -34,23 +33,32 @@ class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
     """
 
     @property
-    def week(self) -> datetime:
+    def week(self):
+        """
+        :type: datetime.datetime
+        """
         return self._week.value
 
     @property
-    def additions(self) -> int:
+    def additions(self):
+        """
+        :type: int
+        """
         return self._additions.value
 
     @property
-    def deletions(self) -> int:
+    def deletions(self):
+        """
+        :type: int
+        """
         return self._deletions.value
 
-    def _initAttributes(self) -> None:
+    def _initAttributes(self):
         self._week = github.GithubObject.NotSet
         self._additions = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         self._week = self._makeTimestampAttribute(attributes[0])
         self._additions = self._makeIntAttribute(attributes[1])
         self._deletions = self._makeIntAttribute(attributes[2])

@@ -19,18 +19,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from __future__ import annotations
-
-from datetime import datetime
-from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
-
-if TYPE_CHECKING:
-    from github.NamedUser import NamedUser
-    from github.TimelineEventSource import TimelineEventSource
 
 
 class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
@@ -38,7 +30,100 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def _initAttributes(self) -> None:
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value})
+
+    @property
+    def actor(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
+        return self._actor.value
+
+    @property
+    def commit_id(self):
+        """
+        :type: string
+        """
+        return self._commit_id.value
+
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._created_at.value
+
+    @property
+    def event(self):
+        """
+        :type: string
+        """
+        return self._event.value
+
+    @property
+    def id(self):
+        """
+        :type: integer
+        """
+        return self._id.value
+
+    @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        return self._node_id.value
+
+    @property
+    def commit_url(self):
+        """
+        :type: string
+        """
+        return self._commit_url.value
+
+    @property
+    def source(self):
+        """
+        :type: :class:`github.TimelineEventSource.TimelineEventSource`
+        """
+        # only available on `cross-referenced` events.
+        if (
+            self.event == "cross-referenced"
+            and self._source is not github.GithubObject.NotSet
+        ):
+            return self._source.value
+        return None
+
+    @property
+    def body(self):
+        """
+        :type string
+        """
+        if self.event == "commented" and self._body is not github.GithubObject.NotSet:
+            return self._body.value
+        return None
+
+    @property
+    def author_association(self):
+        """
+        :type string
+        """
+        if (
+            self.event == "commented"
+            and self._author_association is not github.GithubObject.NotSet
+        ):
+            return self._author_association.value
+        return None
+
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        return self._url.value
+
+    def _initAttributes(self):
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -51,67 +136,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         self._author_association = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def __repr__(self):
-        return self.get__repr__({"id": self._id.value})
-
-    @property
-    def actor(self) -> NamedUser:
-        return self._actor.value
-
-    @property
-    def commit_id(self) -> str:
-        return self._commit_id.value
-
-    @property
-    def created_at(self) -> datetime:
-        return self._created_at.value
-
-    @property
-    def event(self) -> str:
-        return self._event.value
-
-    @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def node_id(self) -> str:
-        return self._node_id.value
-
-    @property
-    def commit_url(self) -> str:
-        return self._commit_url.value
-
-    @property
-    def source(self) -> TimelineEventSource | None:
-        # only available on `cross-referenced` events.
-        if (
-            self.event == "cross-referenced"
-            and self._source is not github.GithubObject.NotSet
-        ):
-            return self._source.value
-        return None
-
-    @property
-    def body(self) -> str | None:
-        if self.event == "commented" and self._body is not github.GithubObject.NotSet:
-            return self._body.value
-        return None
-
-    @property
-    def author_association(self) -> str | None:
-        if (
-            self.event == "commented"
-            and self._author_association is not github.GithubObject.NotSet
-        ):
-            return self._author_association.value
-        return None
-
-    @property
-    def url(self) -> str:
-        return self._url.value
-
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["actor"]
