@@ -33,8 +33,9 @@ class StatsParticipation(NonCompletableGithubObject):
     This class represents StatsParticipations. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
     """
 
-    _all: Attribute[list[int]]
-    _owner: Attribute[list[int]]
+    def _initAttributes(self) -> None:
+        self._all: Attribute[list[int]] = NotSet
+        self._owner: Attribute[list[int]] = NotSet
 
     @property
     def all(self) -> list[int]:
@@ -43,10 +44,6 @@ class StatsParticipation(NonCompletableGithubObject):
     @property
     def owner(self) -> list[int]:
         return self._owner.value
-
-    def _initAttributes(self) -> None:
-        self._all = NotSet
-        self._owner = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "all" in attributes:  # pragma no branch
