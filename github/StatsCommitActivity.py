@@ -34,6 +34,11 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     This class represents StatsCommitActivities. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity
     """
 
+    def _initAttributes(self) -> None:
+        self._week: Attribute[datetime] = github.GithubObject.NotSet
+        self._total: Attribute[int] = github.GithubObject.NotSet
+        self._days: Attribute[int] = github.GithubObject.NotSet
+
     @property
     def week(self) -> datetime:
         return self._week.value
@@ -45,11 +50,6 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     @property
     def days(self) -> int:
         return self._days.value
-
-    def _initAttributes(self) -> None:
-        self._week: Attribute[datetime] = github.GithubObject.NotSet
-        self._total: Attribute[int] = github.GithubObject.NotSet
-        self._days: Attribute[int] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "week" in attributes:  # pragma no branch
