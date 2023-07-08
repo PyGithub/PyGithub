@@ -31,20 +31,26 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import github.GithubObject
 import github.NamedUser
 import github.Repository
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Repository import Repository
 
 
-class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
+class PullRequestPart(NonCompletableGithubObject):
     """
     This class represents PullRequestParts
     """
+
+    def _initAttributes(self) -> None:
+        self._label: Attribute[str] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._repo: Attribute[Repository] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value})
@@ -68,13 +74,6 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
     @property
     def user(self) -> NamedUser:
         return self._user.value
-
-    def _initAttributes(self) -> None:
-        self._label: Attribute[str] = github.GithubObject.NotSet
-        self._ref: Attribute[str] = github.GithubObject.NotSet
-        self._repo: Attribute[Repository] = github.GithubObject.NotSet
-        self._sha: Attribute[str] = github.GithubObject.NotSet
-        self._user: Attribute[NamedUser] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "label" in attributes:  # pragma no branch
