@@ -40,6 +40,11 @@ class Stargazer(NonCompletableGithubObject):
     This class represents Stargazers. The reference can be found here https://docs.github.com/en/rest/reference/activity#starring
     """
 
+    def _initAttributes(self) -> None:
+        self._starred_at: Attribute[datetime] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"user": self._user.value._login.value})
 
@@ -50,11 +55,6 @@ class Stargazer(NonCompletableGithubObject):
     @property
     def user(self) -> NamedUser:
         return self._user.value
-
-    def _initAttributes(self) -> None:
-        self._starred_at: Attribute[datetime] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "starred_at" in attributes:
