@@ -35,8 +35,7 @@ from base64 import b64encode
 
 from nacl import encoding, public
 
-import github.GithubObject
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 def encrypt(public_key: str, secret_value: str) -> str:
@@ -47,15 +46,16 @@ def encrypt(public_key: str, secret_value: str) -> str:
     return b64encode(encrypted).decode("utf-8")
 
 
-class PublicKey(github.GithubObject.CompletableGithubObject):
+class PublicKey(CompletableGithubObject):
     """
     This class represents either an organization public key or a repository public key.
     The reference can be found here https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
 
-    _key_id: Attribute[str | int]
-    _key: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._key_id: Attribute[str | int] = NotSet
+        self._key: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
@@ -69,10 +69,6 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
     def key_id(self) -> str | int:
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
-
-    def _initAttributes(self) -> None:
-        self._key = github.GithubObject.NotSet
-        self._key_id = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "key" in attributes:  # pragma no branch
