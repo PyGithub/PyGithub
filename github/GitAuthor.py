@@ -29,18 +29,18 @@
 ################################################################################
 from datetime import datetime
 
-import github.GithubObject
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitAuthor(github.GithubObject.NonCompletableGithubObject):
+class GitAuthor(NonCompletableGithubObject):
     """
     This class represents GitAuthors
     """
 
-    _name: Attribute[str]
-    _email: Attribute[str]
-    _date: Attribute[datetime]
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._email: Attribute[str] = NotSet
+        self._date: Attribute[datetime] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
@@ -56,11 +56,6 @@ class GitAuthor(github.GithubObject.NonCompletableGithubObject):
     @property
     def name(self) -> str:
         return self._name.value
-
-    def _initAttributes(self) -> None:
-        self._date = github.GithubObject.NotSet
-        self._email = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "date" in attributes:  # pragma no branch

@@ -29,7 +29,9 @@
 
 from __future__ import annotations
 
-from github.GithubObject import NotSet, Opt, _NotSetType
+from typing import Any
+
+from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputFileContent:
@@ -38,21 +40,16 @@ class InputFileContent:
     """
 
     def __init__(self, content: str, new_name: Opt[str] = NotSet):
-        """
-        :param content: string
-        :param new_name: string
-        """
-
         assert isinstance(content, str), content
-        assert isinstance(new_name, (_NotSetType, str)), new_name
-        self.__newName = new_name
-        self.__content = content
+        assert is_optional(new_name, str), new_name
+        self.__newName: Opt[str] = new_name
+        self.__content: str = content
 
     @property
     def _identity(self) -> dict[str, str]:
-        identity: dict[str, str] = {
+        identity: dict[str, Any] = {
             "content": self.__content,
         }
-        if not isinstance(self.__newName, _NotSetType):
+        if is_defined(self.__newName):
             identity["filename"] = self.__newName
         return identity

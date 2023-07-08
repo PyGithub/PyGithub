@@ -36,11 +36,12 @@ class GitBlob(CompletableGithubObject):
     This class represents GitBlobs. The reference can be found here https://docs.github.com/en/rest/reference/git#blobs
     """
 
-    _content: Attribute[str]
-    _encoding: Attribute[str]
-    _sha: Attribute[str]
-    _size: Attribute[int]
-    _url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._content: Attribute[str] = NotSet
+        self._encoding: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value})
@@ -69,13 +70,6 @@ class GitBlob(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._content = NotSet
-        self._encoding = NotSet
-        self._sha = NotSet
-        self._size = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "content" in attributes:  # pragma no branch

@@ -39,6 +39,20 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     This class represents a Summary of HookDeliveries
     """
 
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._guid: Attribute[str] = NotSet
+        self._delivered_at: Attribute[datetime] = NotSet
+        self._redelivery: Attribute[bool] = NotSet
+        self._duration: Attribute[float] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._status_code: Attribute[int] = NotSet
+        self._event: Attribute[str] = NotSet
+        self._action: Attribute[str] = NotSet
+        self._installation_id: Attribute[int] = NotSet
+        self._repository_id: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
@@ -90,20 +104,6 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     def url(self) -> Optional[str]:
         return self._url.value
 
-    def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._guid: Attribute[str] = NotSet
-        self._delivered_at: Attribute[datetime] = NotSet
-        self._redelivery: Attribute[bool] = NotSet
-        self._duration: Attribute[float] = NotSet
-        self._status: Attribute[str] = NotSet
-        self._status_code: Attribute[int] = NotSet
-        self._event: Attribute[str] = NotSet
-        self._action: Attribute[str] = NotSet
-        self._installation_id: Attribute[int] = NotSet
-        self._repository_id: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
-
     def _useAttributes(self, attributes: Dict[str, Any]):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
@@ -138,6 +138,10 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     This class represents a HookDeliveryRequest
     """
 
+    def _initAttributes(self) -> None:
+        self._request_headers: Attribute[Dict] = NotSet
+        self._payload: Attribute[Dict] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
@@ -148,10 +152,6 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     @property
     def payload(self) -> Optional[dict]:
         return self._payload.value
-
-    def _initAttributes(self) -> None:
-        self._request_headers: Attribute[Dict] = NotSet
-        self._payload: Attribute[Dict] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
@@ -192,6 +192,11 @@ class HookDelivery(HookDeliverySummary):
     This class represents a HookDelivery
     """
 
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._request: Attribute[HookDeliveryRequest] = NotSet
+        self._response: Attribute[HookDeliveryResponse] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
@@ -202,11 +207,6 @@ class HookDelivery(HookDeliverySummary):
     @property
     def response(self) -> Optional[HookDeliveryResponse]:
         return self._response.value
-
-    def _initAttributes(self) -> None:
-        super()._initAttributes()
-        self._request: Attribute[HookDeliveryRequest] = NotSet
-        self._response: Attribute[HookDeliveryResponse] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         super()._useAttributes(attributes)

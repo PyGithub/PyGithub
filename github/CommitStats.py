@@ -27,18 +27,18 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitStats(github.GithubObject.NonCompletableGithubObject):
+class CommitStats(NonCompletableGithubObject):
     """
     This class represents CommitStats.
     """
 
-    _total: Attribute[int]
-    _deletions: Attribute[int]
-    _additions: Attribute[int]
+    def _initAttributes(self) -> None:
+        self._total: Attribute[int] = NotSet
+        self._deletions: Attribute[int] = NotSet
+        self._additions: Attribute[int] = NotSet
 
     @property
     def additions(self) -> int:
@@ -51,11 +51,6 @@ class CommitStats(github.GithubObject.NonCompletableGithubObject):
     @property
     def total(self) -> int:
         return self._total.value
-
-    def _initAttributes(self) -> None:
-        self._additions = github.GithubObject.NotSet
-        self._deletions = github.GithubObject.NotSet
-        self._total = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "additions" in attributes:  # pragma no branch

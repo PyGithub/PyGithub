@@ -48,12 +48,13 @@ class GitTag(CompletableGithubObject):
     This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags
     """
 
-    _message: Attribute[str]
-    _object: Attribute[GitObject]
-    _sha: Attribute[str]
-    _tag: Attribute[str]
-    _tagger: Attribute[GitAuthor]
-    _url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._message: Attribute[str] = NotSet
+        self._object: Attribute[GitObject] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._tag: Attribute[str] = NotSet
+        self._tagger: Attribute[GitAuthor] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
@@ -87,14 +88,6 @@ class GitTag(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._message = NotSet
-        self._object = NotSet
-        self._sha = NotSet
-        self._tag = NotSet
-        self._tagger = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "message" in attributes:  # pragma no branch

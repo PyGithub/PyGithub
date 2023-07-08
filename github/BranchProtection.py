@@ -29,7 +29,7 @@ import github.NamedUser
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
 import github.Team
-from github.GithubObject import Attribute, _NotSetType
+from github.GithubObject import Attribute, NotSet, Opt, is_defined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -47,12 +47,15 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"url": self._url.value})
 
-    _url: Attribute[str]
-    _required_status_checks: Attribute[RequiredStatusChecks]
-    _enforce_admins: Attribute[bool]
-    _required_pull_request_reviews: Attribute[RequiredPullRequestReviews]
-    _user_push_restrictions: str | _NotSetType
-    _team_push_restrictions: str | _NotSetType
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+        self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
+        self._enforce_admins: Attribute[bool] = NotSet
+        self._required_pull_request_reviews: Attribute[
+            RequiredPullRequestReviews
+        ] = NotSet
+        self._user_push_restrictions: Opt[str] = NotSet
+        self._team_push_restrictions: Opt[str] = NotSet
 
     @property
     def url(self) -> str:
@@ -75,7 +78,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
-        if isinstance(self._user_push_restrictions, _NotSetType):
+        if not is_defined(self._user_push_restrictions):
             return None
         return PaginatedList(
             github.NamedUser.NamedUser,
@@ -85,22 +88,11 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         )
 
     def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
-        """
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
-        """
-        if isinstance(self._team_push_restrictions, _NotSetType):
+        if not is_defined(self._team_push_restrictions):
             return None
         return github.PaginatedList.PaginatedList(
             github.Team.Team, self._requester, self._team_push_restrictions, None
         )
-
-    def _initAttributes(self) -> None:
-        self._url = github.GithubObject.NotSet
-        self._required_status_checks = github.GithubObject.NotSet
-        self._enforce_admins = github.GithubObject.NotSet
-        self._required_pull_request_reviews = github.GithubObject.NotSet
-        self._user_push_restrictions = github.GithubObject.NotSet
-        self._team_push_restrictions = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch

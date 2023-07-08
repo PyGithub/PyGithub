@@ -44,9 +44,10 @@ class GitTree(CompletableGithubObject):
     This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
     """
 
-    _sha: Attribute[str]
-    _tree: Attribute[list[GitTreeElement]]
-    _url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._sha: Attribute[str] = NotSet
+        self._tree: Attribute[list[GitTreeElement]] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"sha": self._sha.value})
@@ -69,11 +70,6 @@ class GitTree(CompletableGithubObject):
     @property
     def _identity(self) -> str:
         return self.sha
-
-    def _initAttributes(self) -> None:
-        self._sha = NotSet
-        self._tree = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "sha" in attributes:  # pragma no branch

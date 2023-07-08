@@ -24,12 +24,13 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Autolink(NonCompletableGithubObject):
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._key_prefix: Attribute[str] = NotSet
+        self._url_template: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
-
-    _id: Attribute[int]
-    _key_prefix: Attribute[str]
-    _url_template: Attribute[str]
 
     @property
     def id(self) -> int:
@@ -42,11 +43,6 @@ class Autolink(NonCompletableGithubObject):
     @property
     def url_template(self) -> str:
         return self._url_template.value
-
-    def _initAttributes(self) -> None:
-        self._id = NotSet
-        self._key_prefix = NotSet
-        self._url_template = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch

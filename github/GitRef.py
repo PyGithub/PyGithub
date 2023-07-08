@@ -39,7 +39,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
-    _NotSetType,
+    is_optional,
 )
 
 if TYPE_CHECKING:
@@ -51,9 +51,10 @@ class GitRef(CompletableGithubObject):
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
-    _object: Attribute[GitObject]
-    _ref: Attribute[str]
-    _url: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._object: Attribute[GitObject] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"ref": self._ref.value})
@@ -84,17 +85,12 @@ class GitRef(CompletableGithubObject):
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
         """
         assert isinstance(sha, str), sha
-        assert isinstance(force, (_NotSetType, bool)), force
-        post_parameters = _NotSetType.remove_unset_items({"sha": sha, "force": force})
+        assert is_optional(force, bool), force
+        post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", self.url, input=post_parameters
         )
         self._useAttributes(data)
-
-    def _initAttributes(self) -> None:
-        self._object = NotSet
-        self._ref = NotSet
-        self._url = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "object" in attributes:  # pragma no branch
