@@ -40,6 +40,13 @@ class InstallationAuthorization(NonCompletableGithubObject):
     This class represents InstallationAuthorizations
     """
 
+    def _initAttributes(self) -> None:
+        self._token: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
+        self._on_behalf_of: Attribute[NamedUser] = NotSet
+        self._permissions: Attribute[dict] = NotSet
+        self._repository_selection: Attribute[str] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"expires_at": self._expires_at.value})
 
@@ -62,13 +69,6 @@ class InstallationAuthorization(NonCompletableGithubObject):
     @property
     def repository_selection(self) -> str:
         return self._repository_selection.value
-
-    def _initAttributes(self) -> None:
-        self._token: Attribute[str] = NotSet
-        self._expires_at: Attribute[datetime] = NotSet
-        self._on_behalf_of: Attribute[NamedUser] = NotSet
-        self._permissions: Attribute[dict] = NotSet
-        self._repository_selection: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "token" in attributes:  # pragma no branch
