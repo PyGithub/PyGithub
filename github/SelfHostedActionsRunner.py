@@ -31,15 +31,16 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
     """
 
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._os: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._busy: Attribute[bool] = NotSet
+        self._labels: Attribute[list[dict[str, int | str]]] = NotSet
+
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
-
-    _id: Attribute[int]
-    _name: Attribute[str]
-    _os: Attribute[str]
-    _status: Attribute[str]
-    _busy: Attribute[bool]
-    _labels: Attribute[list[dict[str, int | str]]]
 
     @property
     def id(self) -> int:
@@ -63,14 +64,6 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
 
     def labels(self) -> list[dict[str, int | str]]:
         return self._labels.value
-
-    def _initAttributes(self) -> None:
-        self._id = NotSet
-        self._name = NotSet
-        self._os = NotSet
-        self._status = NotSet
-        self._busy = NotSet
-        self._labels = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
