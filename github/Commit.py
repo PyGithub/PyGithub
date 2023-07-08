@@ -86,81 +86,51 @@ class Commit(CompletableGithubObject):
 
     @property
     def author(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._author)
         return self._author.value
 
     @property
     def comments_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
     def commit(self) -> GitCommit:
-        """
-        :type: :class:`github.GitCommit.GitCommit`
-        """
         self._completeIfNotSet(self._commit)
         return self._commit.value
 
     @property
     def committer(self) -> NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
     @property
     def files(self) -> list[File]:
-        """
-        :type: list of :class:`github.File.File`
-        """
         self._completeIfNotSet(self._files)
         return self._files.value
 
     @property
     def html_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def parents(self) -> list[Commit]:
-        """
-        :type: list of :class:`github.Commit.Commit`
-        """
         self._completeIfNotSet(self._parents)
         return self._parents.value
 
     @property
     def sha(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
     def stats(self) -> CommitStats:
-        """
-        :type: :class:`github.CommitStats.CommitStats`
-        """
         self._completeIfNotSet(self._stats)
         return self._stats.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -173,11 +143,6 @@ class Commit(CompletableGithubObject):
     ) -> CommitComment:
         """
         :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
-        :param body: string
-        :param line: integer
-        :param path: string
-        :param position: integer
-        :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(body, str), body
         post_parameters = NotSet.remove_unset_items(
@@ -226,7 +191,6 @@ class Commit(CompletableGithubObject):
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
-        :rtype: :class:`PaginatedList` of :class:`github.CommitComment.CommitComment`
         """
         return PaginatedList(
             github.CommitComment.CommitComment,
@@ -238,7 +202,6 @@ class Commit(CompletableGithubObject):
     def get_statuses(self) -> PaginatedList[CommitStatus]:
         """
         :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/reference/repos#statuses>`_
-        :rtype: :class:`PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
         return PaginatedList(
             github.CommitStatus.CommitStatus,
@@ -250,7 +213,6 @@ class Commit(CompletableGithubObject):
     def get_combined_status(self) -> CommitCombinedStatus:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
-        :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
         return github.CommitCombinedStatus.CommitCombinedStatus(
@@ -260,7 +222,6 @@ class Commit(CompletableGithubObject):
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
-        :rtype: :class:`PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
         return PaginatedList(
             github.PullRequest.PullRequest,
