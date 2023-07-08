@@ -38,6 +38,13 @@ class UserKey(github.GithubObject.CompletableGithubObject):
     This class represents UserKeys. The reference can be found here https://docs.github.com/en/rest/reference/users#keys
     """
 
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = github.GithubObject.NotSet
+        self._key: Attribute[str] = github.GithubObject.NotSet
+        self._title: Attribute[str] = github.GithubObject.NotSet
+        self._url: Attribute[str] = github.GithubObject.NotSet
+        self._verified: Attribute[bool] = github.GithubObject.NotSet
+
     def __repr__(self):
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
@@ -72,13 +79,6 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
-
-    def _initAttributes(self) -> None:
-        self._id: Attribute[int] = github.GithubObject.NotSet
-        self._key: Attribute[str] = github.GithubObject.NotSet
-        self._title: Attribute[str] = github.GithubObject.NotSet
-        self._url: Attribute[str] = github.GithubObject.NotSet
-        self._verified: Attribute[bool] = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
