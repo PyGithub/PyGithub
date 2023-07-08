@@ -36,6 +36,11 @@ class IssuePullRequest(NonCompletableGithubObject):
     This class represents IssuePullRequests
     """
 
+    def _initAttributes(self) -> None:
+        self._diff_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._patch_url: Attribute[str] = NotSet
+
     @property
     def diff_url(self) -> str:
         return self._diff_url.value
@@ -47,11 +52,6 @@ class IssuePullRequest(NonCompletableGithubObject):
     @property
     def patch_url(self) -> str:
         return self._patch_url.value
-
-    def _initAttributes(self) -> None:
-        self._diff_url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._patch_url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes) -> None:
         if "diff_url" in attributes:  # pragma no branch
