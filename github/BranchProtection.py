@@ -51,9 +51,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
-        self._required_pull_request_reviews: Attribute[
-            RequiredPullRequestReviews
-        ] = NotSet
+        self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
 

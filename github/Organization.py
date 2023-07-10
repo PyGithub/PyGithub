@@ -614,9 +614,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         secret_name,
         unencrypted_value,
         visibility="all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
@@ -694,9 +692,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
@@ -711,8 +707,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository)
-                for element in selected_repositories
+                isinstance(element, github.Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is github.GithubObject.NotSet
@@ -723,9 +718,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "visibility": visibility,
         }
         if selected_repositories is not github.GithubObject.NotSet:
-            post_parameters["selected_repository_ids"] = [
-                element.id for element in selected_repositories
-            ]
+            post_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
         status, headers, data = self._requester.requestJson(
             "POST", f"{self.url}/actions/variables", input=post_parameters
         )
@@ -757,9 +750,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/variables/{variable_name}"
-        )
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
     def edit(
@@ -846,9 +837,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
@@ -863,8 +852,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository)
-                for element in selected_repositories
+                isinstance(element, github.Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is github.GithubObject.NotSet
@@ -875,9 +863,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "visibility": visibility,
         }
         if selected_repositories is not github.GithubObject.NotSet:
-            patch_parameters["selected_repository_ids"] = [
-                element.id for element in selected_repositories
-            ]
+            patch_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
         status, headers, data = self._requester.requestJson(
             "PATCH",

@@ -1656,9 +1656,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/variables/{variable_name}"
-        )
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
     def create_source_import(
