@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict
 
 from github.GithubObject import NonCompletableGithubObject
@@ -10,4 +11,8 @@ class IssuePullRequest(NonCompletableGithubObject):
     @property
     def html_url(self) -> str: ...
     @property
+    def merged_at(self) -> datetime: ...
+    @property
     def patch_url(self) -> str: ...
+    @property
+    def url(self) -> str: ...
