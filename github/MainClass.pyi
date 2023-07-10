@@ -110,7 +110,7 @@ class Github:
         sort: Union[str, _NotSetType] = ...,
         order: Union[str, _NotSetType] = ...,
         highlight: bool = ...,
-        **qualifiers: Any
+        **qualifiers: Any,
     ) -> PaginatedList[ContentFile]: ...
     def search_commits(
         self, query: str, sort: Union[str, _NotSetType] = ..., order: Union[str, _NotSetType] = ..., **qualifiers: Any
