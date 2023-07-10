@@ -3498,8 +3498,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self._requester, headers, data, completed=True
             )
         elif isinstance(id, str):
+            path = f"{self.url}/releases/tags/{id}"
+            if id == "latest":
+                path = f"{self.url}/releases/latest"
             headers, data = self._requester.requestJsonAndCheck(
-                "GET", f"{self.url}/releases/tags/{id}"
+                "GET", path
             )
             return github.GitRelease.GitRelease(
                 self._requester, headers, data, completed=True
