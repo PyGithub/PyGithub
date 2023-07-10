@@ -180,6 +180,7 @@ import github.RepositoryAdvisoryCredit
 import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.RepositoryReleaseNotes
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -1183,6 +1184,42 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST", f"{self.url}/releases", input=post_parameters
         )
         return github.GitRelease.GitRelease(
+            self._requester, headers, data, completed=True
+        )
+
+    def generate_release_notes(
+        self,
+        tag_name,
+        target_commitish=github.GithubObject.NotSet,
+        previous_tag_name=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `POST /repos/{owner}/{repo}/releases/generate-notes <https://docs.github.com/en/rest/releases/releases#generate-release-notes-content-for-a-release>`_
+        :param tag_name: string
+        :param target_commitish: string
+        :param previous_tag_name: string
+        :rtype: :class:`github.RepositoryReleaseNotes`
+        """
+
+        assert isinstance(tag_name, str), tag_name
+        assert isinstance(target_commitish, (str, type(github.GithubObject.NotSet))), target_commitish
+        assert isinstance(previous_tag_name, (str, type(github.GithubObject.NotSet))), previous_tag_name
+
+        post_parameters = {
+            "tag_name": tag_name
+        }
+
+        if isinstance(previous_tag_name, str):
+            post_parameters["previous_tag_name"] = previous_tag_name
+
+        if isinstance(target_commitish, str):
+            post_parameters["target_commitish"] = target_commitish
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/releases/generate-notes", input=post_parameters
+        )
+
+        return github.RepositoryReleaseNotes.RepositoryReleaseNotes(
             self._requester, headers, data, completed=True
         )
 

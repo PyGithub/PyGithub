@@ -398,6 +398,26 @@ class Repository(Framework.TestCase):
         ].pop()
         self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
 
+    def testGenerateReleaseNotes(self):
+        notes = self.repo.generate_release_notes("v1.0.0")
+
+        self.assertEqual(notes.name, "v1.0.0")
+        self.assertEqual(notes.body, "##Changes in Release v1.0.0")
+        self.assertEqual(
+            notes.__repr__(),
+            'RepositoryReleaseNotes(name="v1.0.0", body="##Changes in Release v1.0.0")',
+        )
+
+    def testGenerateReleaseNotesWithAllArguments(self):
+        notes = self.repo.generate_release_notes(
+            "v1.2.0",
+            "0b820628236ab8bab3890860fc414fa757ca15f4",
+            "v1.1.0"
+        )
+
+        self.assertEqual(notes.name, "v1.2.0")
+        self.assertEqual(notes.body, "##Changes in Release v1.2.0 ... ##Contributors @FabioBatSilva")
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag(
             "TaggedByPyGithub",
