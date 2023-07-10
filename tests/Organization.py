@@ -13,6 +13,7 @@
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -459,3 +460,9 @@ class Organization(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testOrgVariable(self):
+        self.org = self.g.get_organization("tecnoly")
+        self.assertTrue(self.org.create_variable("variable_name", "variable-value"))
+        self.assertTrue(self.org.update_variable("variable_name", "variable-value123"))
+        self.assertTrue(self.org.delete_variable("variable_name"))

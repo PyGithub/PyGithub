@@ -91,7 +91,7 @@ class GithubRetry(unittest.TestCase):
                         mock.call(20, "Request TEST URL failed with 403: None"),
                         mock.call(10, f"Response body indicates retry-able {'primary' if is_primary else 'secondary'} rate limit error: {expected_rate_limit_error}"),
                     ] + ([
-                        mock.call(10, "Reset occurs in 0:00:12 (1644768012 / 2022-02-13 16:00:12)")
+                        mock.call(10, "Reset occurs in 0:00:12 (1644768012 / 2022-02-13 16:00:12+00:00)")
                     ] if has_reset else []) + ([
                         mock.call(10, f"Retry backoff of {expected_retry_backoff}s exceeds required rate limit backoff of {expected_backoff}s")
                     ] if expected_retry_backoff and expected_backoff > 0 else []) + ([
@@ -124,8 +124,8 @@ class GithubRetry(unittest.TestCase):
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"
         with mock.patch(attr) as dt:
-            dt.now = mock.Mock(return_value=datetime.utcfromtimestamp(now))
-            dt.utcfromtimestamp = datetime.utcfromtimestamp
+            dt.now = lambda tz=None: datetime.fromtimestamp(now, tz=tz)
+            dt.fromtimestamp = datetime.fromtimestamp
             yield
 
     def test_primary_rate_error_with_reset(self):

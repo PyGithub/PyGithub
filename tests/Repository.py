@@ -27,6 +27,7 @@
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1822,6 +1823,11 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.4", refs[3].ref)
         self.assertEqual("refs/tags/v0.5", refs[4].ref)
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
+
+    def testRepoVariable(self):
+        self.assertTrue(self.repo.create_variable("variable_name", "variable-value"))
+        self.assertTrue(self.repo.update_variable("variable_name", "variable-value123"))
+        self.assertTrue(self.repo.delete_variable("variable_name"))
 
 
 class LazyRepository(Framework.TestCase):

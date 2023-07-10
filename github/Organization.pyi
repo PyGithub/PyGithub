@@ -85,6 +85,13 @@ class Organization(CompletableGithubObject):
         privacy: Union[str, _NotSetType] = ...,
         description: Union[str, _NotSetType] = ...,
     ) -> Team: ...
+    def create_variable(
+        self,
+        variable_name: str,
+        value: str,
+        visibility: str = ...,
+        selected_repositories: Union[List[Repository], _NotSetType] = ...,
+    ) -> bool: ...
     @property
     def created_at(self) -> datetime: ...
     def delete_hook(self, id: int) -> None: ...
@@ -95,6 +102,7 @@ class Organization(CompletableGithubObject):
     def description(self) -> str: ...
     @property
     def disk_usage(self) -> int: ...
+    def delete_variable(self, variable_name: str) -> bool: ...
     def edit(
         self,
         billing_email: Union[str, _NotSetType] = ...,
@@ -113,6 +121,13 @@ class Organization(CompletableGithubObject):
         events: Union[_NotSetType, List[str]] = ...,
         active: Union[bool, _NotSetType] = ...,
     ) -> Hook: ...
+    def update_variable(
+        self,
+        variable_name: str,
+        value: str,
+        visibility: str = ...,
+        selected_repositories: Union[List[Repository], _NotSetType] = ...,
+    ) -> bool: ...
     @property
     def email(self) -> Optional[str]: ...
     @property
