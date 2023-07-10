@@ -20,6 +20,12 @@
 #                                                                              #
 ################################################################################
 
+import json
+from io import BytesIO
+from zipfile import ZipFile
+
+import requests
+
 import github.GithubObject
 import github.WorkflowRun
 
@@ -210,6 +216,48 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             None,
             list_item="workflow_runs",
         )
+
+    def get_artifacts(self, run):
+        """
+        Get download url for one single download run of a artifact.
+        :calls: `GET {run.artifacts_url} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :param run: :class:`github.WorkflowRun.WorkflowRun`
+        :rtype: dict or list[dict] e.g. {'name': 'sandbox-package1, 'url': 'https://pipelines.actions.githubusercontent.com/ddYkl%3D'}
+        """
+
+        # get artifact content
+        status, artifactHeader, artifact = run._requester.requestJson(
+            "GET", run.artifacts_url
+        )
+        artifact_content = json.loads(artifact)
+
+        # get archive url
+        ret = []
+        for i in range(artifact_content["total_count"]):
+            name = artifact_content["artifacts"][i]["name"]
+            url = artifact_content["artifacts"][i]["archive_download_url"]
+
+            # generates a download for one time
+            # out = run._requester.requestMultipart(verb = "GET", url = url)
+            _, responseHeaders, output = run._requester.requestMultipart(
+                verb="GET",
+                url=url,
+                parameters=None,
+                headers=None,
+                input=None,
+                cnx=run._requester._Requester__customConnection(url),
+            )
+            # manage return value
+            info_dict = {"name": name, "url": responseHeaders["location"]}
+            ret.append(info_dict)
+
+        # manage return
+        if len(ret) < 1:
+            return None
+        elif len(ret) == 1:
+            return ret[0]
+        else:
+            return ret
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
