@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Union, NamedTuple
+from typing import Any, Dict, List, NamedTuple, Union
 
 from github.Authorization import Authorization
 from github.Event import Event
