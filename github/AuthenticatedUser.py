@@ -825,13 +825,22 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         itemdata = namedtuple("EmailData", data[0].keys())
         return [itemdata._make(item.values()) for item in data]
 
-    def get_events(self):
+    def get_events(self, public=github.GithubObject.NotSet):
         """
-        :calls: `GET /events <http://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{user}/events{/privacy} <https://docs.github.com/en/rest/reference/activity#list-events-for-the-authenticated-user>`_
+        :param public: bool
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
+        assert public is github.GithubObject.NotSet or isinstance(public, bool), public
+        if public is not github.GithubObject.NotSet and public is True:
+            privacy = "/public"
+        else:
+            privacy = ""
         return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, "/events", None
+            github.Event.Event,
+            self._requester,
+            f"/users/{self.login}/events{privacy}",
+            None,
         )
 
     def get_followers(self):
