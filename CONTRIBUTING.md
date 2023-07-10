@@ -25,7 +25,7 @@ Ideally, changes should be made in logical commits and tests added to improve th
 
 ## Coding style
 
-PyGithub adopts the black coding style and uses isort to sort imports.
+PyGithub adopts the black coding style.
 
 To manually format the code:
 ```bash
