@@ -10,17 +10,5 @@ ignore = [
     "E501",
     "E741",
 ]
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    ".eggs",
-    ".git",
-    ".mypy_cache",
-    ".ruff_cache",
-    "__pypackages__",
-    "_build",
-    "build",
-    "dist",
-    "docs"
-]
 ignore-init-module-imports = true
 unfixable = ["F401"]
