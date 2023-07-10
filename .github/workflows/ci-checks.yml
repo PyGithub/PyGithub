@@ -3,7 +3,14 @@ on:
   push:
     branches: main
   pull_request:
+
 jobs:
+
+  build:
+    uses: "./.github/workflows/_build-pkg.yml"
+    with:
+      artifact-name: package
+
   test:
     runs-on: ${{ matrix.os }}
     name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
