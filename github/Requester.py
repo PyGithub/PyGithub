@@ -537,7 +537,7 @@ class Requester:
         status: int,
         headers: Dict[str, Any],
         output: Dict[str, Any],
-    ) -> Any:
+    ) -> GithubException.GithubException:
         message = output.get("message", "").lower() if output is not None else ""
 
         exc = GithubException.GithubException
