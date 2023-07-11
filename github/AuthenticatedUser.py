@@ -456,14 +456,15 @@ class AuthenticatedUser(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
         assert is_optional(private, bool), private
-        post_parameters: dict[str, Any] = {
-            "name": name,
-            "owner": self.login,
-        }
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(private):
-            post_parameters["private"] = private
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "owner": self.login,
+                "description": description,
+                "private": private,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"/repos/{repo.owner.login}/{repo.name}/generate",
