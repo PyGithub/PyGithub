@@ -33,12 +33,14 @@ class AccessToken(NonCompletableGithubObject):
     """
 
     _created: datetime
-    _token: Attribute[str]
-    _type: Attribute[str]
-    _scope: Attribute[str]
-    _expires_in: Attribute[int] | Attribute[None]
-    _refresh_token: Attribute[str]
-    _refresh_expires_in: Attribute[int] | Attribute[None]
+
+    def _initAttributes(self) -> None:
+        self._token: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._scope: Attribute[str] = NotSet
+        self._expires_in: Attribute[int | None] = NotSet
+        self._refresh_token: Attribute[str] = NotSet
+        self._refresh_expires_in: Attribute[int | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -122,14 +124,6 @@ class AccessToken(NonCompletableGithubObject):
         if seconds is not None:
             return self._created + timedelta(seconds=seconds)
         return None
-
-    def _initAttributes(self) -> None:
-        self._token = NotSet
-        self._type = NotSet
-        self._scope = NotSet
-        self._expires_in = NotSet
-        self._refresh_token = NotSet
-        self._refresh_expires_in = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._created = datetime.now(timezone.utc)

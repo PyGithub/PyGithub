@@ -46,15 +46,15 @@ from typing import (
     Any,
     Callable,
     Dict,
-    Generic,
     List,
     Optional,
+    Tuple,
     Type,
     Union,
 )
 
 from dateutil import parser
-from typing_extensions import TypeGuard
+from typing_extensions import Protocol, TypeGuard
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -63,15 +63,18 @@ if TYPE_CHECKING:
     from .Requester import Requester
 
 T = typing.TypeVar("T")
+K = typing.TypeVar("K")
+T_co = typing.TypeVar("T_co", covariant=True)
+T_gh = typing.TypeVar("T_gh", bound="GithubObject")
 
 
-class Attribute(Generic[T]):
+class Attribute(Protocol[T_co]):
     @property
-    def value(self) -> T:
+    def value(self) -> T_co:
         raise NotImplementedError
 
 
-class _NotSetType(Attribute):
+class _NotSetType:
     def __repr__(self) -> str:
         return "NotSet"
 
@@ -97,15 +100,15 @@ def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
     return not isinstance(v, _NotSetType)
 
 
-def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
+def is_undefined(v: Union[T, _NotSetType]) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v: Any, type: Type[T]) -> TypeGuard[Opt[T]]:
+def is_optional(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v: Any, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return (
         isinstance(v, _NotSetType)
         or isinstance(v, list)
@@ -215,8 +218,8 @@ class GithubObject:
 
     @staticmethod
     def __makeTransformedAttribute(
-        value: T, type: Type[T], transform: Callable[[T], Any]
-    ) -> Attribute[T]:
+        value: T, type: Type[T], transform: Callable[[T], K]
+    ) -> Attribute[K]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -248,7 +251,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attribute[int]:
+    def _makeTimestampAttribute(value: int) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(
             value,
             int,
@@ -256,8 +259,8 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attribute:
-        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)
+    def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
     def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
         return GithubObject.__makeTransformedAttribute(
@@ -288,7 +291,9 @@ class GithubObject:
     ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
-    def _makeListOfClassesAttribute(self, klass: Any, value: Any) -> Attribute:
+    def _makeListOfClassesAttribute(
+        self, klass: Type[T_gh], value: Any
+    ) -> Attribute[List[T_gh]]:
         if isinstance(value, list) and all(
             isinstance(element, dict) for element in value
         ):
@@ -400,7 +405,7 @@ class CompletableGithubObject(GithubObject):
 
     def __complete(self) -> None:
         if self._url.value is None:
-            raise IncompletableObject(400, "Returned object contains no URL", None)
+            raise IncompletableObject(400, message="Returned object contains no URL")
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True

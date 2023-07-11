@@ -36,18 +36,19 @@ class Artifact(NonCompletableGithubObject):
     This class represents an Artifact of Github Run
     """
 
-    _archive_download_url: Attribute[str]
-    _created_at: Attribute[datetime]
-    _expired: Attribute[bool]
-    _expires_at: Attribute[datetime]
-    _head_sha: Attribute[str]
-    _id: Attribute[int]
-    _name: Attribute[str]
-    _node_id: Attribute[str]
-    _size_in_bytes: Attribute[int]
-    _updated_at: Attribute[datetime]
-    _url: Attribute[str]
-    _workflow_run: Attribute[WorkflowRun]
+    def _initAttributes(self) -> None:
+        self._archive_download_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._expired: Attribute[bool] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._size_in_bytes: Attribute[int] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._workflow_run: Attribute[WorkflowRun] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -106,20 +107,6 @@ class Artifact(NonCompletableGithubObject):
         """
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
         return status == 204
-
-    def _initAttributes(self) -> None:
-        self._archive_download_url = NotSet
-        self._created_at = NotSet
-        self._expired = NotSet
-        self._expires_at = NotSet
-        self._head_sha = NotSet
-        self._id = NotSet
-        self._name = NotSet
-        self._node_id = NotSet
-        self._size_in_bytes = NotSet
-        self._updated_at = NotSet
-        self._url = NotSet
-        self._workflow_run = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archive_download_url" in attributes:  # pragma no branch

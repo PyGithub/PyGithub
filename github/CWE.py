@@ -20,6 +20,7 @@
 #                                                                              #
 ################################################################################
 
+
 from typing import Any, Dict
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -33,24 +34,16 @@ class CWE(CompletableGithubObject):
 
     @property
     def cwe_id(self) -> str:
-        """
-        :type: string
-        """
         return self._cwe_id.value
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         return self._name.value
 
-    # noinspection PyPep8Naming
     def _initAttributes(self) -> None:
         self._cwe_id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
 
-    # noinspection PyPep8Naming
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "cwe_id" in attributes:  # pragma no branch
             self._cwe_id = self._makeStringAttribute(attributes["cwe_id"])

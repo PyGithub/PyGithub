@@ -21,27 +21,24 @@
 ################################################################################
 from __future__ import annotations
 
-import sys
-import typing
-from typing import Any
+from typing import Any, Union
+
+from typing_extensions import TypedDict
 
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
-if sys.version_info >= (3, 8):
-    # TypedDict is only available in Python 3.8 and later
-    class SimpleCredit(typing.TypedDict):
-        """
-        A simple credit for a security advisory.
-        """
 
-        login: str | github.NamedUser.NamedUser
-        type: str
+class SimpleCredit(TypedDict):
+    """
+    A simple credit for a security advisory.
+    """
 
-else:
-    SimpleCredit = typing.Dict[str, typing.Any]
+    login: str | github.NamedUser.NamedUser
+    type: str
 
-Credit = typing.Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+
+Credit = Union[SimpleCredit, "RepositoryAdvisoryCredit"]
 
 
 class RepositoryAdvisoryCredit(NonCompletableGithubObject):
@@ -64,12 +61,10 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
         """
         return self._type.value
 
-    # noinspection PyPep8Naming
     def _initAttributes(self) -> None:
         self._login: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
 
-    # noinspection PyPep8Naming
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])

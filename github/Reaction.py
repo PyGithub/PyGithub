@@ -21,56 +21,55 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
-import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from . import Consts
 
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
-class Reaction(github.GithubObject.CompletableGithubObject):
+
+class Reaction(CompletableGithubObject):
     """
     This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions
     """
+
+    def _initAttributes(self) -> None:
+        self._content: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def content(self):
-        """
-        :type: string
-        """
+    def content(self) -> str:
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_
         :rtype: None
@@ -81,13 +80,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def _initAttributes(self) -> None:
-        self._content = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "created_at" in attributes:  # pragma no branch

@@ -30,63 +30,48 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class GitBlob(github.GithubObject.CompletableGithubObject):
+class GitBlob(CompletableGithubObject):
     """
     This class represents GitBlobs. The reference can be found here https://docs.github.com/en/rest/reference/git#blobs
     """
+
+    def _initAttributes(self) -> None:
+        self._content: Attribute[str] = NotSet
+        self._encoding: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def content(self):
-        """
-        :type: string
-        """
+    def content(self) -> str:
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
-    def encoding(self):
-        """
-        :type: string
-        """
+    def encoding(self) -> str:
         self._completeIfNotSet(self._encoding)
         return self._encoding.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def size(self):
-        """
-        :type: integer
-        """
+    def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._content = github.GithubObject.NotSet
-        self._encoding = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch

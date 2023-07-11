@@ -28,8 +28,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-import github.GithubObject
+from typing import Any
+
+from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitAuthor:
@@ -37,32 +40,24 @@ class InputGitAuthor:
     This class represents InputGitAuthors
     """
 
-    def __init__(self, name, email, date=github.GithubObject.NotSet):
-        """
-        :param name: string
-        :param email: string
-        :param date: string
-        """
-
+    def __init__(self, name: str, email: str, date: Opt[str] = NotSet):
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert date is github.GithubObject.NotSet or isinstance(
-            date, str
-        ), date  # @todo Datetime?
+        assert is_optional(date, str), date  # @todo Datetime?
 
-        self.__name = name
-        self.__email = email
-        self.__date = date
+        self.__name: str = name
+        self.__email: str = email
+        self.__date: Opt[str] = date
 
     def __repr__(self) -> str:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property
-    def _identity(self):
-        identity = {
+    def _identity(self) -> dict[str, str]:
+        identity: dict[str, Any] = {
             "name": self.__name,
             "email": self.__email,
         }
-        if self.__date is not github.GithubObject.NotSet:
+        if is_defined(self.__date):
             identity["date"] = self.__date
         return identity

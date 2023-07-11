@@ -27,7 +27,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 import json
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
@@ -42,14 +41,20 @@ class GithubException(Exception):
     def __init__(
         self,
         status: int,
-        data: Union[str, Dict[str, Union[str, List[str], List[Dict[str, str]]]]],
-        headers: Optional[Dict[str, str]],
+        data: Any = None,
+        headers: Optional[Dict[str, str]] = None,
+        message: Optional[str] = None,
     ):
         super().__init__()
         self.__status = status
         self.__data = data
         self.__headers = headers
-        self.args = (status, data, headers)
+        self.__message = message
+        self.args = (status, data, headers, message)
+
+    @property
+    def message(self) -> Optional[str]:
+        return self.__message
 
     @property
     def status(self) -> int:
@@ -59,9 +64,7 @@ class GithubException(Exception):
         return self.__status
 
     @property
-    def data(
-        self,
-    ) -> Union[str, Dict[str, Union[str, List[str], List[Dict[str, str]]]]]:
+    def data(self) -> Any:
         """
         The (decoded) data returned by the Github API
         """
@@ -74,8 +77,19 @@ class GithubException(Exception):
         """
         return self.__headers
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.__str__()})"
+
     def __str__(self) -> str:
-        return f"{self.status} {json.dumps(self.data)}"
+        if self.__message:
+            msg = f"{self.__message}: {self.status}"
+        else:
+            msg = f"{self.status}"
+
+        if self.data is not None:
+            msg += " " + json.dumps(self.data)
+
+        return msg
 
 
 class BadCredentialsException(GithubException):

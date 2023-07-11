@@ -22,65 +22,55 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
-import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
-class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
+class InstallationAuthorization(NonCompletableGithubObject):
     """
     This class represents InstallationAuthorizations
     """
+
+    def _initAttributes(self) -> None:
+        self._token: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
+        self._on_behalf_of: Attribute[NamedUser] = NotSet
+        self._permissions: Attribute[dict] = NotSet
+        self._repository_selection: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"expires_at": self._expires_at.value})
 
     @property
-    def token(self):
-        """
-        :type: string
-        """
+    def token(self) -> str:
         return self._token.value
 
     @property
-    def expires_at(self):
-        """
-        :type: datetime
-        """
+    def expires_at(self) -> datetime:
         return self._expires_at.value
 
     @property
-    def on_behalf_of(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def on_behalf_of(self) -> NamedUser:
         return self._on_behalf_of.value
 
     @property
-    def permissions(self):
-        """
-        :type: dict
-        """
+    def permissions(self) -> dict:
         return self._permissions.value
 
     @property
-    def repository_selection(self):
-        """
-        :type: string
-        """
+    def repository_selection(self) -> str:
         return self._repository_selection.value
 
-    def _initAttributes(self) -> None:
-        self._token = github.GithubObject.NotSet
-        self._expires_at = github.GithubObject.NotSet
-        self._on_behalf_of = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._repository_selection = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch

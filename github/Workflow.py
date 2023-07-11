@@ -139,14 +139,21 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         branch=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         status=github.GithubObject.NotSet,
+        created=github.GithubObject.NotSet,
+        exclude_pull_requests=github.GithubObject.NotSet,
         check_suite_id=github.GithubObject.NotSet,
+        head_sha=github.GithubObject.NotSet,
     ):
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-workflow>`_
         :param actor: :class:`github.NamedUser.NamedUser` or string
         :param branch: :class:`github.Branch.Branch` or string
         :param event: string
         :param status: string
+        :param created: string
+        :param exclude_pull_requests: bool
+        :param check_suite_id: int
+        :param head_sha: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
         assert (
@@ -161,9 +168,18 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert created is github.GithubObject.NotSet or isinstance(
+            created, str
+        ), created
+        assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
+            exclude_pull_requests, bool
+        ), exclude_pull_requests
         assert check_suite_id is github.GithubObject.NotSet or isinstance(
             check_suite_id, int
         ), check_suite_id
+        assert head_sha is github.GithubObject.NotSet or isinstance(
+            head_sha, str
+        ), head_sha
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
             url_parameters["actor"] = (
@@ -179,8 +195,14 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
+        if created is not github.GithubObject.NotSet:
+            url_parameters["created"] = created
+        if exclude_pull_requests is not github.GithubObject.NotSet:
+            url_parameters["exclude_pull_requests"] = exclude_pull_requests
         if check_suite_id is not github.GithubObject.NotSet:
             url_parameters["check_suite_id"] = check_suite_id
+        if head_sha is not github.GithubObject.NotSet:
+            url_parameters["head_sha"] = head_sha
 
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,

@@ -30,42 +30,33 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitObject(github.GithubObject.NonCompletableGithubObject):
+class GitObject(NonCompletableGithubObject):
     """
     This class represents GitObjects
     """
+
+    def _initAttributes(self) -> None:
+        self._sha: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._sha = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch

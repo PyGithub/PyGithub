@@ -29,34 +29,28 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
+class GitignoreTemplate(NonCompletableGithubObject):
     """
     This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore
     """
+
+    def _initAttributes(self) -> None:
+        self._source: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def source(self):
-        """
-        :type: string
-        """
+    def source(self) -> str:
         return self._source.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
-
-    def _initAttributes(self) -> None:
-        self._source = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "source" in attributes:  # pragma no branch

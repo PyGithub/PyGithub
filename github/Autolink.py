@@ -22,38 +22,29 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Autolink(github.GithubObject.NonCompletableGithubObject):
+class Autolink(NonCompletableGithubObject):
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._key_prefix: Attribute[str] = NotSet
+        self._url_template: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def key_prefix(self):
-        """
-        :type: string
-        """
+    def key_prefix(self) -> str:
         return self._key_prefix.value
 
     @property
-    def url_template(self):
-        """
-        :type: string
-        """
+    def url_template(self) -> str:
         return self._url_template.value
-
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._key_prefix = github.GithubObject.NotSet
-        self._url_template = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
