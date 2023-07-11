@@ -20,6 +20,7 @@
 #                                                                              #
 ################################################################################
 import contextlib
+import logging
 import sys
 import unittest
 from datetime import datetime
@@ -406,15 +407,17 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual("NOT GOOD", exp.exception.data)
             self.assertEqual({}, exp.exception.headers)
 
-        self.assertListEqual(
-            [
-                (20, "Request TEST URL failed with 403: NOT GOOD"),
-                (30, "Failed to inspect response message"),
-            ],
-            [call[1] for call in log.mock_calls],
-        )
+            self.assertIsInstance(exp.exception.__cause__, RuntimeError)
+            self.assertEqual(
+                ("Failed to inspect response message",), exp.exception.__cause__.args
+            )
 
-        self.assertListEqual(
-            [{}, {"exc_info": "Unable to determine whether fp is closed."}],
-            [{k: str(v) for k, v in call[2].items()} for call in log.mock_calls],
+            self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
+            self.assertEqual(
+                ("Unable to determine whether fp is closed.",),
+                exp.exception.__cause__.__cause__.args,
+            )
+
+        log.assert_called_once_with(
+            logging.INFO, "Request TEST URL failed with 403: NOT GOOD"
         )
