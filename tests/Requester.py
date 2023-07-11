@@ -344,7 +344,7 @@ class Requester(Framework.TestCase):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(
-                    exc, github.GithubException, status, None, {}, f"{status} null"
+                    exc, github.GithubException, status, None, {}, f"{status}"
                 )
 
 

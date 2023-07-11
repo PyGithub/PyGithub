@@ -20,6 +20,7 @@
 #                                                                              #
 ################################################################################
 import contextlib
+import logging
 import sys
 import unittest
 from datetime import datetime
@@ -95,7 +96,7 @@ class GithubRetry(unittest.TestCase):
                         mock.call(20, "Request TEST URL failed with 403: None"),
                         mock.call(10, f"Response body indicates retry-able {'primary' if is_primary else 'secondary'} rate limit error: {expected_rate_limit_error}"),
                     ] + ([
-                        mock.call(10, "Reset occurs in 0:00:12 (1644768012 / 2022-02-13 16:00:12)")
+                        mock.call(10, "Reset occurs in 0:00:12 (1644768012 / 2022-02-13 16:00:12+00:00)")
                     ] if has_reset else []) + ([
                         mock.call(10, f"Retry backoff of {expected_retry_backoff}s exceeds required rate limit backoff of {expected_backoff}s")
                     ] if expected_retry_backoff and expected_backoff > 0 else []) + ([
@@ -132,8 +133,8 @@ class GithubRetry(unittest.TestCase):
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"
         with mock.patch(attr) as dt:
-            dt.now = mock.Mock(return_value=datetime.utcfromtimestamp(now))
-            dt.utcfromtimestamp = datetime.utcfromtimestamp
+            dt.now = lambda tz=None: datetime.fromtimestamp(now, tz=tz)
+            dt.fromtimestamp = datetime.fromtimestamp
             yield
 
     def test_primary_rate_error_with_reset(self):
@@ -406,15 +407,17 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual("NOT GOOD", exp.exception.data)
             self.assertEqual({}, exp.exception.headers)
 
-        self.assertListEqual(
-            [
-                (20, "Request TEST URL failed with 403: NOT GOOD"),
-                (30, "Failed to inspect response message"),
-            ],
-            [call[1] for call in log.mock_calls],
-        )
+            self.assertIsInstance(exp.exception.__cause__, RuntimeError)
+            self.assertEqual(
+                ("Failed to inspect response message",), exp.exception.__cause__.args
+            )
 
-        self.assertListEqual(
-            [{}, {"exc_info": "Unable to determine whether fp is closed."}],
-            [{k: str(v) for k, v in call[2].items()} for call in log.mock_calls],
+            self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
+            self.assertEqual(
+                ("Unable to determine whether fp is closed.",),
+                exp.exception.__cause__.__cause__.args,
+            )
+
+        log.assert_called_once_with(
+            logging.INFO, "Request TEST URL failed with 403: NOT GOOD"
         )

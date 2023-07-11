@@ -112,7 +112,19 @@ class GithubRetry(Retry):
                         content = self.get_content(response, url)
                         content = json.loads(content)
                         message = content.get("message")
+                    except Exception as e:
+                        # we want to fall back to the actual github exception (probably a rate limit error)
+                        # but provide some context why we could not deal with it without another exception
+                        try:
+                            raise RuntimeError(
+                                "Failed to inspect response message"
+                            ) from e
+                        except RuntimeError as e:
+                            raise GithubException(
+                                response.status, content, response.headers
+                            ) from e
 
+                    try:
                         if Requester.isRateLimitError(message):
                             rate_type = (
                                 "primary"
@@ -137,8 +149,8 @@ class GithubRetry(Retry):
                                 if "X-RateLimit-Reset" in response.headers:
                                     value = response.headers.get("X-RateLimit-Reset")
                                     if value and value.isdigit():
-                                        reset = self.__datetime.utcfromtimestamp(
-                                            int(value)
+                                        reset = self.__datetime.fromtimestamp(
+                                            int(value), timezone.utc
                                         )
                                         delta = reset - self.__datetime.now(
                                             timezone.utc
@@ -191,11 +203,16 @@ class GithubRetry(Retry):
                     except (MaxRetryError, GithubException):
                         raise
                     except Exception as e:
-                        self.__log(
-                            logging.WARNING,
-                            "Failed to inspect response message",
-                            exc_info=e,
-                        )
+                        # we want to fall back to the actual github exception (probably a rate limit error)
+                        # but provide some context why we could not deal with it without another exception
+                        try:
+                            raise RuntimeError(
+                                "Failed to determine retry backoff"
+                            ) from e
+                        except RuntimeError as e:
+                            raise GithubException(
+                                response.status, content, response.headers
+                            ) from e
 
                     raise GithubException(response.status, content, response.headers)
 
