@@ -55,7 +55,6 @@ import github.Migration
 import github.NamedUser
 import github.Notification
 import github.Organization
-import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
@@ -70,6 +69,7 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
+from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Authorization import Authorization
@@ -85,7 +85,6 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Notification import Notification
     from github.Organization import Organization
-    from github.PaginatedList import PaginatedList
     from github.Plan import Plan
     from github.Project import Project
     from github.Repository import Repository
@@ -562,67 +561,40 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `POST /user/repos <http://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(homepage) or isinstance(homepage, str), homepage
-        assert is_undefined(private) or isinstance(private, bool), private
-        assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
-        assert is_undefined(has_wiki) or isinstance(has_wiki, bool), has_wiki
-        assert is_undefined(has_downloads) or isinstance(
-            has_downloads, bool
-        ), has_downloads
-        assert is_undefined(has_projects) or isinstance(
-            has_projects, bool
-        ), has_projects
-        assert is_undefined(auto_init) or isinstance(auto_init, bool), auto_init
-        assert is_undefined(license_template) or isinstance(
-            license_template, str
-        ), license_template
-        assert is_undefined(gitignore_template) or isinstance(
-            gitignore_template, str
-        ), gitignore_template
-        assert is_undefined(allow_squash_merge) or isinstance(
-            allow_squash_merge, bool
-        ), allow_squash_merge
-        assert is_undefined(allow_merge_commit) or isinstance(
-            allow_merge_commit, bool
-        ), allow_merge_commit
-        assert is_undefined(allow_rebase_merge) or isinstance(
-            allow_rebase_merge, bool
-        ), allow_rebase_merge
-        assert is_undefined(delete_branch_on_merge) or isinstance(
-            delete_branch_on_merge, bool
-        ), delete_branch_on_merge
-        post_parameters: dict[str, Any] = {
-            "name": name,
-        }
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(homepage):
-            post_parameters["homepage"] = homepage
-        if is_defined(private):
-            post_parameters["private"] = private
-        if is_defined(has_issues):
-            post_parameters["has_issues"] = has_issues
-        if is_defined(has_wiki):
-            post_parameters["has_wiki"] = has_wiki
-        if is_defined(has_downloads):
-            post_parameters["has_downloads"] = has_downloads
-        if is_defined(has_projects):
-            post_parameters["has_projects"] = has_projects
-        if is_defined(auto_init):
-            post_parameters["auto_init"] = auto_init
-        if is_defined(license_template):
-            post_parameters["license_template"] = license_template
-        if is_defined(gitignore_template):
-            post_parameters["gitignore_template"] = gitignore_template
-        if is_defined(allow_squash_merge):
-            post_parameters["allow_squash_merge"] = allow_squash_merge
-        if is_defined(allow_merge_commit):
-            post_parameters["allow_merge_commit"] = allow_merge_commit
-        if is_defined(allow_rebase_merge):
-            post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if is_defined(delete_branch_on_merge):
-            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        assert is_optional(description, str), description
+        assert is_optional(homepage, str), homepage
+        assert is_optional(private, bool), private
+        assert is_optional(has_issues, bool), has_issues
+        assert is_optional(has_wiki, bool), has_wiki
+        assert is_optional(has_downloads, bool), has_downloads
+        assert is_optional(has_projects, bool), has_projects
+        assert is_optional(auto_init, bool), auto_init
+        assert is_optional(license_template, str), license_template
+        assert is_optional(gitignore_template, str), gitignore_template
+        assert is_optional(allow_squash_merge, bool), allow_squash_merge
+        assert is_optional(allow_merge_commit, bool), allow_merge_commit
+        assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
+        assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "homepage": homepage,
+                "private": private,
+                "has_issues": has_issues,
+                "has_wiki": has_wiki,
+                "has_downloads": has_downloads,
+                "has_projects": has_projects,
+                "auto_init": auto_init,
+                "license_template": license_template,
+                "gitignore_template": gitignore_template,
+                "allow_squash_merge": allow_squash_merge,
+                "allow_merge_commit": allow_merge_commit,
+                "allow_rebase_merge": allow_rebase_merge,
+                "delete_branch_on_merge": delete_branch_on_merge,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST", "/user/repos", input=post_parameters
         )
@@ -643,28 +615,25 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `PATCH /user <http://docs.github.com/en/rest/reference/users>`_
         """
-        assert is_undefined(name) or isinstance(name, str), name
-        assert is_undefined(email) or isinstance(email, str), email
-        assert is_undefined(blog) or isinstance(blog, str), blog
-        assert is_undefined(company) or isinstance(company, str), company
-        assert is_undefined(location) or isinstance(location, str), location
-        assert is_undefined(hireable) or isinstance(hireable, bool), hireable
-        assert is_undefined(bio) or isinstance(bio, str), bio
-        post_parameters: dict[str, Any] = {}
-        if is_defined(name):
-            post_parameters["name"] = name
-        if is_defined(email):
-            post_parameters["email"] = email
-        if is_defined(blog):
-            post_parameters["blog"] = blog
-        if is_defined(company):
-            post_parameters["company"] = company
-        if is_defined(location):
-            post_parameters["location"] = location
-        if is_defined(hireable):
-            post_parameters["hireable"] = hireable
-        if is_defined(bio):
-            post_parameters["bio"] = bio
+        assert is_optional(name, str), name
+        assert is_optional(email, str), email
+        assert is_optional(blog, str), blog
+        assert is_optional(company, str), company
+        assert is_optional(location, str), location
+        assert is_optional(hireable, bool), hireable
+        assert is_optional(bio, str), bio
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "email": email,
+                "blog": blog,
+                "company": company,
+                "location": location,
+                "hireable": hireable,
+                "bio": bio,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", "/user", input=post_parameters
         )
@@ -686,7 +655,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /authorizations <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Authorization.Authorization, self._requester, "/authorizations", None
         )
 
@@ -704,15 +673,13 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /events <http://docs.github.com/en/rest/reference/activity#events>`_
         """
-        return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, "/events", None
-        )
+        return PaginatedList(github.Event.Event, self._requester, "/events", None)
 
     def get_followers(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /user/followers <http://docs.github.com/en/rest/reference/users#followers>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser, self._requester, "/user/followers", None
         )
 
@@ -720,7 +687,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/following <http://docs.github.com/en/rest/reference/users#followers>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser, self._requester, "/user/following", None
         )
 
@@ -728,13 +695,13 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /gists <http://docs.github.com/en/rest/reference/gists>`_
         :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
+        :rtype: :class:`PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert is_undefined(since) or isinstance(since, datetime), since
-        url_parameters = dict()
+        assert is_optional(since, datetime), since
+        url_parameters: dict[str, Any] = {}
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Gist.Gist, self._requester, "/gists", url_parameters
         )
 
@@ -769,7 +736,7 @@ class AuthenticatedUser(CompletableGithubObject):
             url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Issue.Issue, self._requester, "/issues", url_parameters
         )
 
@@ -804,7 +771,7 @@ class AuthenticatedUser(CompletableGithubObject):
             url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Issue.Issue, self._requester, "/user/issues", url_parameters
         )
 
@@ -820,7 +787,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/keys <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.UserKey.UserKey, self._requester, "/user/keys", None
         )
 
@@ -865,7 +832,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(before):
             params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Notification.Notification, self._requester, "/notifications", params
         )
 
@@ -874,7 +841,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /users/{user}/events/orgs/{org} <http://docs.github.com/en/rest/reference/activity#events>`_
         """
         assert isinstance(org, github.Organization.Organization), org
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Event.Event,
             self._requester,
             f"/users/{self.login}/events/orgs/{org.login}",
@@ -885,7 +852,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/orgs <http://docs.github.com/en/rest/reference/orgs>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Organization.Organization, self._requester, "/user/orgs", None
         )
 
@@ -917,18 +884,16 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(type, str), type
         assert is_optional(sort, str), sort
         assert is_optional(direction, str), direction
-        url_parameters = dict()
-        if is_defined(visibility):
-            url_parameters["visibility"] = visibility
-        if is_defined(affiliation):
-            url_parameters["affiliation"] = affiliation
-        if is_defined(type):
-            url_parameters["type"] = type
-        if is_defined(sort):
-            url_parameters["sort"] = sort
-        if is_defined(direction):
-            url_parameters["direction"] = direction
-        return github.PaginatedList.PaginatedList(
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "visibility": visibility,
+                "affiliation": affiliation,
+                "type": type,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
+        return PaginatedList(
             github.Repository.Repository, self._requester, "/user/repos", url_parameters
         )
 
@@ -936,7 +901,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/starred <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Repository.Repository, self._requester, "/user/starred", None
         )
 
@@ -944,15 +909,13 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /gists/starred <http://docs.github.com/en/rest/reference/gists>`_
         """
-        return github.PaginatedList.PaginatedList(
-            github.Gist.Gist, self._requester, "/gists/starred", None
-        )
+        return PaginatedList(github.Gist.Gist, self._requester, "/gists/starred", None)
 
     def get_subscriptions(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /user/subscriptions <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Repository.Repository, self._requester, "/user/subscriptions", None
         )
 
@@ -960,15 +923,13 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/teams <http://docs.github.com/en/rest/reference/teams>`_
         """
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, "/user/teams", None
-        )
+        return PaginatedList(github.Team.Team, self._requester, "/user/teams", None)
 
     def get_watched(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /user/subscriptions <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Repository.Repository, self._requester, "/user/subscriptions", None
         )
 
@@ -976,7 +937,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/installations <http://docs.github.com/en/rest/reference/apps>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Installation.Installation,
             self._requester,
             "/user/installations",
@@ -1103,7 +1064,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/repository_invitations <https://docs.github.com/en/rest/reference/repos#invitations>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Invitation.Invitation,
             self._requester,
             "/user/repository_invitations",
@@ -1123,11 +1084,14 @@ class AuthenticatedUser(CompletableGithubObject):
         assert all(isinstance(repo, str) for repo in repos), repos
         assert is_optional(lock_repositories, bool), lock_repositories
         assert is_optional(exclude_attachments, bool), exclude_attachments
-        post_parameters: dict[str, Any] = {"repositories": repos}
-        if is_defined(lock_repositories):
-            post_parameters["lock_repositories"] = lock_repositories
-        if is_defined(exclude_attachments):
-            post_parameters["exclude_attachments"] = exclude_attachments
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "repositories": repos,
+                "lock_repositories": lock_repositories,
+                "exclude_attachments": exclude_attachments,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/migrations",
@@ -1142,7 +1106,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/migrations <https://docs.github.com/en/rest/reference/migrations>`_
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Migration.Migration,
             self._requester,
             "/user/migrations",
