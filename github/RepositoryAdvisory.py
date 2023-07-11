@@ -100,7 +100,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
 
     @property
     def cwe_ids(self) -> list[str]:
-
         return self._cwe_ids.value
 
     @property
@@ -182,11 +181,10 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         """
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            # noinspection PyProtectedMember
             github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
                 vulnerability
             )
-        # noinspection PyProtectedMember
+
         post_parameters = {
             "vulnerabilities": [
                 github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
@@ -226,9 +224,8 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         """
         assert isinstance(credited, Iterable), credited
         for credit in credited:
-            # noinspection PyProtectedMember
             RepositoryAdvisoryCredit._validate_credit(credit)
-        # noinspection PyProtectedMember
+
         patch_parameters = {
             "credits": [
                 RepositoryAdvisoryCredit._to_github_dict(credit)
@@ -302,7 +299,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         ), vulnerabilities
         if isinstance(vulnerabilities, Iterable):
             for vulnerability in vulnerabilities:
-                # noinspection PyProtectedMember
                 github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
                     vulnerability
                 )
@@ -312,7 +308,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         ), cwe_ids
         if isinstance(credits, Iterable):
             for credit in credits:
-                # noinspection PyProtectedMember
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(
                     credit
                 )
@@ -330,7 +325,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         if cve_id is not NotSet:
             patch_parameters["cve_id"] = cve_id
         if isinstance(vulnerabilities, Iterable):
-            # noinspection PyProtectedMember
             patch_parameters["vulnerabilities"] = [
                 github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
                     vulnerability
@@ -340,7 +334,6 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         if isinstance(cwe_ids, Iterable):
             patch_parameters["cwe_ids"] = list(cwe_ids)
         if isinstance(credits, Iterable):
-            # noinspection PyProtectedMember
             patch_parameters["credits"] = [
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(
                     credit
