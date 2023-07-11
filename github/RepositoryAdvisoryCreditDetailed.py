@@ -45,7 +45,6 @@ class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
         """
         return self._type.value
 
-    # noinspection PyPep8Naming
     @property
     def user(self) -> github.NamedUser.NamedUser:
         """
@@ -53,13 +52,11 @@ class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
         """
         return self._user.value
 
-    # noinspection PyPep8Naming
     def _initAttributes(self):
         self._state: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
-    # noinspection PyPep8Naming
     def _useAttributes(self, attributes):
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
