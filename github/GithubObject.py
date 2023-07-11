@@ -78,7 +78,7 @@ class _NotSetType:
         return "NotSet"
 
     @property
-    def value(self):
+    def value(self) -> Any:
         return None
 
     @staticmethod
