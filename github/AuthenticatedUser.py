@@ -400,17 +400,16 @@ class AuthenticatedUser(CompletableGithubObject):
         assert onetime_password is None or isinstance(
             onetime_password, str
         ), onetime_password
-        post_parameters: dict[str, Any] = {}
-        if is_defined(scopes):
-            post_parameters["scopes"] = scopes
-        if is_defined(note):
-            post_parameters["note"] = note
-        if is_defined(note_url):
-            post_parameters["note_url"] = note_url
-        if is_defined(client_id):
-            post_parameters["client_id"] = client_id
-        if is_defined(client_secret):
-            post_parameters["client_secret"] = client_secret
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "scopes": scopes,
+                "note": note,
+                "note_url": note_url,
+                "client_id": client_id,
+                "client_secret": client_secret,
+            }
+        )
+
         if onetime_password is not None:
             request_header = {
                 Consts.headerOTP: onetime_password
