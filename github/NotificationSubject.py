@@ -26,52 +26,41 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
+class NotificationSubject(NonCompletableGithubObject):
     """
     This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
     """
+
+    def _initAttributes(self) -> None:
+        self._title: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._latest_comment_url: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
     @property
-    def latest_comment_url(self):
-        """
-        :type: string
-        """
+    def latest_comment_url(self) -> str:
         return self._latest_comment_url.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
-    def _initAttributes(self):
-        self._title = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._latest_comment_url = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
