@@ -659,7 +659,6 @@ class AuthenticatedUser(CompletableGithubObject):
             github.Authorization.Authorization, self._requester, "/authorizations", None
         )
 
-    # TODO:
     def get_emails(self):
         """
         :calls: `GET /user/emails <http://docs.github.com/en/rest/reference/users#emails>`_
