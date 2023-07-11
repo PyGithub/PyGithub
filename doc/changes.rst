@@ -65,6 +65,8 @@ Bug Fixes
 ^^^^^^^^^
 
 * Fix `Branch.bypass_pull_request_allowances` failing with "nil is not an object" (#2535) (c5542a6a)
+* Add retry issue to GithubException, don't log it (#2611) (3f0c1a6b)
+* Use timezone-aware reset datetime in GithubRetry.py (#2610) (0a7b7bac)
 
 Maintenance
 ^^^^^^^^^^^
