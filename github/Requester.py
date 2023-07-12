@@ -63,20 +63,7 @@ import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timezone
 from io import IOBase
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Generic,
-    ItemsView,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
 
 import requests
 import requests.adapters

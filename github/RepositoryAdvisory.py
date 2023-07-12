@@ -28,10 +28,7 @@ import github.NamedUser
 from github.CWE import CWE
 from github.RepositoryAdvisoryCredit import Credit, RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryCreditDetailed import RepositoryAdvisoryCreditDetailed
-from github.RepositoryAdvisoryVulnerability import (
-    AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
-)
+from github.RepositoryAdvisoryVulnerability import AdvisoryVulnerability, RepositoryAdvisoryVulnerability
 from github.Requester import Requester
 
 

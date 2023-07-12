@@ -34,13 +34,7 @@ from typing import TYPE_CHECKING
 
 import github.GithubObject
 import github.GitObject
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_optional,
-)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 
 if TYPE_CHECKING:
     from github.GitObject import GitObject

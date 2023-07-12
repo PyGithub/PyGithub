@@ -29,13 +29,7 @@ from typing import TYPE_CHECKING, NamedTuple
 import github.GitCommit
 import github.PullRequest
 import github.WorkflowJob
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_optional,
-)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
