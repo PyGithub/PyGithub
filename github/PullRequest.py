@@ -919,12 +919,35 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
+    def restore_branch(self):
+        """
+        Convenience function that calls :meth:`Repository.create_git_ref`
+        :rtype: :class:`github.GitRef.GitRef`
+        """
+        return self.head.repo.create_git_ref(
+            f"refs/heads/{self.head.ref}", sha=self.head.sha
+        )
+
+    def delete_branch(self, force=False):
+        """
+        Convenience function that calls :meth:`GitRef.delete`
+        :rtype: bool
+        """
+        if not force:
+            remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+            if remaining_pulls.totalCount > 0:
+                raise AttributeError(
+                    "PRs referencing this branch remain. Not deleting the branch"
+                )
+        return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
+
     def merge(
         self,
         commit_message=github.GithubObject.NotSet,
         commit_title=github.GithubObject.NotSet,
         merge_method=github.GithubObject.NotSet,
         sha=github.GithubObject.NotSet,
+        deletebranch=False,
     ):
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
@@ -956,6 +979,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/merge", input=post_parameters
         )
+        if deletebranch:
+            self.delete_branch()
+
         return github.PullRequestMergeStatus.PullRequestMergeStatus(
             self._requester, headers, data, completed=True
         )
