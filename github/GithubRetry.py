@@ -110,13 +110,9 @@ class GithubRetry(Retry):
                         # we want to fall back to the actual github exception (probably a rate limit error)
                         # but provide some context why we could not deal with it without another exception
                         try:
-                            raise RuntimeError(
-                                "Failed to inspect response message"
-                            ) from e
+                            raise RuntimeError("Failed to inspect response message") from e
                         except RuntimeError as e:
-                            raise GithubException(
-                                response.status, content, response.headers
-                            ) from e
+                            raise GithubException(response.status, content, response.headers) from e
 
                     try:
                         if Requester.isRateLimitError(message):
@@ -184,13 +180,9 @@ class GithubRetry(Retry):
                         # we want to fall back to the actual github exception (probably a rate limit error)
                         # but provide some context why we could not deal with it without another exception
                         try:
-                            raise RuntimeError(
-                                "Failed to determine retry backoff"
-                            ) from e
+                            raise RuntimeError("Failed to determine retry backoff") from e
                         except RuntimeError as e:
-                            raise GithubException(
-                                response.status, content, response.headers
-                            ) from e
+                            raise GithubException(response.status, content, response.headers) from e
 
                     raise GithubException(response.status, content, response.headers)
 
