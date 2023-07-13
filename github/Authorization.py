@@ -130,9 +130,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert isinstance(scopes, _NotSetType) or all(
-            isinstance(element, str) for element in scopes
-        ), scopes
+        assert isinstance(scopes, _NotSetType) or all(isinstance(element, str) for element in scopes), scopes
         assert isinstance(add_scopes, _NotSetType) or all(
             isinstance(element, str) for element in add_scopes
         ), add_scopes
@@ -152,9 +150,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _useAttributes(self, attributes):

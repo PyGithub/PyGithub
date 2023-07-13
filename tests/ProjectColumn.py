@@ -36,9 +36,7 @@ class ProjectColumn(Framework.TestCase):
             self.get_project_column.cards_url,
             "https://api.github.com/projects/columns/8700460/cards",
         )
-        self.assertEqual(
-            self.get_project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw"
-        )
+        self.assertEqual(self.get_project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw")
         self.assertEqual(
             self.get_project_column.project_url,
             "https://api.github.com/projects/4294766",

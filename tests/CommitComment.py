@@ -40,9 +40,7 @@ class CommitComment(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
-        self.assertEqual(
-            self.comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d"
-        )
+        self.assertEqual(self.comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d")
         self.assertEqual(
             self.comment.created_at,
             datetime(2012, 5, 22, 18, 40, 18, tzinfo=timezone.utc),

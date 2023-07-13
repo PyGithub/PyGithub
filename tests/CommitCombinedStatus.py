@@ -46,9 +46,7 @@ class CommitCombinedStatus(Framework.TestCase):
         )
         self.assertEqual(self.combined_status.statuses[1].id, 390603044)
         self.assertEqual(self.combined_status.statuses[2].state, "success")
-        self.assertEqual(
-            self.combined_status.statuses[3].description, "Build finished."
-        )
+        self.assertEqual(self.combined_status.statuses[3].description, "Build finished.")
         self.assertEqual(
             self.combined_status.statuses[4].target_url,
             "https://build.testeng.edx.org/job/edx-platform-python-unittests-pr/10504/",
@@ -61,9 +59,7 @@ class CommitCombinedStatus(Framework.TestCase):
             self.combined_status.statuses[3].updated_at,
             datetime(2015, 12, 14, 13, 23, 35, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659"
-        )
+        self.assertEqual(self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659")
         self.assertEqual(self.combined_status.total_count, 6)
         self.assertEqual(self.combined_status.repository.id, 10391073)
         self.assertEqual(self.combined_status.repository.full_name, "edx/edx-platform")

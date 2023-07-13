@@ -4,9 +4,12 @@ ignore_missing_imports = true
 namespace_packages = true
 
 [[tool.mypy.overrides]]
-module = [
-    "github.*"
-]
+module = ["github.*"]
 check_untyped_defs = true
 # TODO: enable this later
-# disallow_untyped_defs = True
+# disallow_untyped_defs = true
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 120
+target-version = ['py37']
