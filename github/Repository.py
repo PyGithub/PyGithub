@@ -1708,7 +1708,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 requester=self._requester,
                 headers={},
                 attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
-                completed=False
+                completed=False,
             )
             for secret in data["secrets"]
         ]
@@ -1724,7 +1724,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
-            completed=False
+            completed=False,
         )
 
     def create_secret(self, secret_name, unencrypted_value):
@@ -1760,7 +1760,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 requester=self._requester,
                 headers={},
                 attributes={"url": f"{self.url}/actions/variables/{variable['name']}"},
-                completed=False
+                completed=False,
             )
             for variable in data["variables"]
         ]
@@ -1776,7 +1776,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
-            completed=False
+            completed=False,
         )
 
     def create_variable(self, variable_name: str, value: str) -> bool:

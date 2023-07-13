@@ -23,7 +23,6 @@
 import github
 import github.GithubObject
 import github.Repository
-import github.GithubObject
 
 
 class Secret(github.GithubObject.CompletableGithubObject):
@@ -97,9 +96,7 @@ class Secret(github.GithubObject.CompletableGithubObject):
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repositories/{repo.id}"
-        )
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
         self._selected_repositories.value.append(repo)
         return True
 
@@ -116,7 +113,7 @@ class Secret(github.GithubObject.CompletableGithubObject):
         )
         self._selected_repositories.value.remove(repo)
         return True
-    
+
     def _initAttributes(self):
         self._name = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet

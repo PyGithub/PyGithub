@@ -23,7 +23,6 @@
 import github
 import github.GithubObject
 import github.Repository
-import github.GithubObject
 
 
 class Variable(github.GithubObject.CompletableGithubObject):
@@ -41,7 +40,7 @@ class Variable(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._name)
         return self._name.value
-    
+
     @property
     def value(self):
         """
@@ -89,7 +88,7 @@ class Variable(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         return self._url.value
-    
+
     def delete(self):
         """
         :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
@@ -105,9 +104,7 @@ class Variable(github.GithubObject.CompletableGithubObject):
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repositories/{repo.id}"
-        )
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
         self._selected_repositories.value.append(repo)
         return True
 
@@ -124,7 +121,7 @@ class Variable(github.GithubObject.CompletableGithubObject):
         )
         self._selected_repositories.value.remove(repo)
         return True
-    
+
     def _initAttributes(self):
         self._name = github.GithubObject.NotSet
         self._value = github.GithubObject.NotSet

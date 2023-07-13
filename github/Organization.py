@@ -51,8 +51,8 @@ import github.PaginatedList
 import github.Plan
 import github.Project
 import github.Repository
-import github.Team
 import github.Secret
+import github.Team
 import github.Variable
 
 from . import Consts
@@ -658,7 +658,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
                 requester=self._requester,
                 headers={},
                 attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
-                completed=False
+                completed=False,
             )
             for secret in data["secrets"]
         ]
@@ -674,7 +674,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
-            completed=False
+            completed=False,
         )
 
     def create_secret(
@@ -769,7 +769,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "POST", f"{self.url}/teams", input=post_parameters
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
-    
+
     def get_variables(self):
         """
         Gets all organization variables
@@ -783,7 +783,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
                 requester=self._requester,
                 headers={},
                 attributes={"url": f"{self.url}/actions/variables/{secret['name']}"},
-                completed=False
+                completed=False,
             )
             for secret in data["variables"]
         ]
@@ -799,7 +799,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
-            completed=False
+            completed=False,
         )
 
     def create_variable(
