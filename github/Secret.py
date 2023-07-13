@@ -108,9 +108,7 @@ class Secret(github.GithubObject.CompletableGithubObject):
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/repositories/{repo.id}"
-        )
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
         self._selected_repositories.value.remove(repo)
         return True
 
@@ -132,9 +130,7 @@ class Secret(github.GithubObject.CompletableGithubObject):
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "selected_repositories_url" in attributes:
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET", attributes["selected_repositories_url"]
-            )
+            headers, data = self._requester.requestJsonAndCheck("GET", attributes["selected_repositories_url"])
             self._selected_repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, data["repositories"]
             )

@@ -616,9 +616,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         Gets all organization secrets
         :rtype: List[github.Secret.Secret]
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/secrets"
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets")
         return [
             github.Secret.Secret(
                 requester=self._requester,
@@ -726,9 +724,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         Gets all organization variables
         :rtype: List[github.Variable.Variable]
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/variables"
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/variables")
         return [
             github.Variable.Variable(
                 requester=self._requester,
