@@ -338,36 +338,28 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert all(isinstance(element, str) for element in emails), emails
         post_parameters = {"emails": emails}
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/user/emails", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", "/user/emails", input=post_parameters)
 
     def add_to_following(self, following: NamedUser) -> None:
         """
         :calls: `PUT /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"/user/following/{following._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"/user/following/{following._identity}")
 
     def add_to_starred(self, starred: Repository) -> None:
         """
         :calls: `PUT /user/starred/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"/user/starred/{starred._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"/user/starred/{starred._identity}")
 
     def add_to_subscriptions(self, subscription: Repository) -> None:
         """
         :calls: `PUT /user/subscriptions/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"/user/subscriptions/{subscription._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"/user/subscriptions/{subscription._identity}")
 
     def add_to_watched(self, watched: Repository) -> None:
         """
@@ -397,9 +389,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(note_url, str), note_url
         assert is_optional(client_id, str), client_id
         assert is_optional(client_secret, str), client_secret
-        assert onetime_password is None or isinstance(
-            onetime_password, str
-        ), onetime_password
+        assert onetime_password is None or isinstance(onetime_password, str), onetime_password
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "scopes": scopes,
@@ -411,9 +401,7 @@ class AuthenticatedUser(CompletableGithubObject):
         )
 
         if onetime_password is not None:
-            request_header = {
-                Consts.headerOTP: onetime_password
-            }  # pragma no cover (Should be covered)
+            request_header = {Consts.headerOTP: onetime_password}  # pragma no cover (Should be covered)
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
@@ -422,9 +410,7 @@ class AuthenticatedUser(CompletableGithubObject):
             input=post_parameters,
             headers=request_header,
         )
-        return github.Authorization.Authorization(
-            self._requester, headers, data, completed=True
-        )
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     @staticmethod
     def create_fork(
@@ -471,9 +457,7 @@ class AuthenticatedUser(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
         )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_gist(
         self,
@@ -485,9 +469,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `POST /gists <http://docs.github.com/en/rest/reference/gists>`_
         """
         assert isinstance(public, bool), public
-        assert all(
-            isinstance(element, github.InputFileContent) for element in files.values()
-        ), files
+        assert all(isinstance(element, github.InputFileContent) for element in files.values()), files
         assert is_undefined(description) or isinstance(description, str), description
         post_parameters = {
             "public": public,
@@ -495,9 +477,7 @@ class AuthenticatedUser(CompletableGithubObject):
         }
         if is_defined(description):
             post_parameters["description"] = description
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/gists", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", "/gists", input=post_parameters)
         return github.Gist.Gist(self._requester, headers, data, completed=True)
 
     def create_key(self, title: str, key: str) -> UserKey:
@@ -513,9 +493,7 @@ class AuthenticatedUser(CompletableGithubObject):
             "title": title,
             "key": key,
         }
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/user/keys", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", "/user/keys", input=post_parameters)
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
     def create_project(self, name: str, body: Opt[str] = NotSet) -> Project:
@@ -595,12 +573,8 @@ class AuthenticatedUser(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", "/user/repos", input=post_parameters
-        )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", "/user/repos", input=post_parameters)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def edit(
         self,
@@ -634,9 +608,7 @@ class AuthenticatedUser(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", "/user", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", "/user", input=post_parameters)
         self._useAttributes(data)
 
     def get_authorization(self, id: int) -> Authorization:
@@ -644,20 +616,14 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"/authorizations/{id}"
-        )
-        return github.Authorization.Authorization(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/authorizations/{id}")
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     def get_authorizations(self) -> PaginatedList[Authorization]:
         """
         :calls: `GET /authorizations <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         """
-        return PaginatedList(
-            github.Authorization.Authorization, self._requester, "/authorizations", None
-        )
+        return PaginatedList(github.Authorization.Authorization, self._requester, "/authorizations", None)
 
     def get_emails(self):
         """
@@ -678,17 +644,13 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/followers <http://docs.github.com/en/rest/reference/users#followers>`_
         """
-        return PaginatedList(
-            github.NamedUser.NamedUser, self._requester, "/user/followers", None
-        )
+        return PaginatedList(github.NamedUser.NamedUser, self._requester, "/user/followers", None)
 
     def get_following(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /user/following <http://docs.github.com/en/rest/reference/users#followers>`_
         """
-        return PaginatedList(
-            github.NamedUser.NamedUser, self._requester, "/user/following", None
-        )
+        return PaginatedList(github.NamedUser.NamedUser, self._requester, "/user/following", None)
 
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
@@ -700,9 +662,7 @@ class AuthenticatedUser(CompletableGithubObject):
         url_parameters: dict[str, Any] = {}
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return PaginatedList(
-            github.Gist.Gist, self._requester, "/gists", url_parameters
-        )
+        return PaginatedList(github.Gist.Gist, self._requester, "/gists", url_parameters)
 
     def get_issues(
         self,
@@ -735,9 +695,7 @@ class AuthenticatedUser(CompletableGithubObject):
             url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return PaginatedList(
-            github.Issue.Issue, self._requester, "/issues", url_parameters
-        )
+        return PaginatedList(github.Issue.Issue, self._requester, "/issues", url_parameters)
 
     def get_user_issues(
         self,
@@ -770,9 +728,7 @@ class AuthenticatedUser(CompletableGithubObject):
             url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return PaginatedList(
-            github.Issue.Issue, self._requester, "/user/issues", url_parameters
-        )
+        return PaginatedList(github.Issue.Issue, self._requester, "/user/issues", url_parameters)
 
     def get_key(self, id: int) -> UserKey:
         """
@@ -786,9 +742,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/keys <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
         """
-        return PaginatedList(
-            github.UserKey.UserKey, self._requester, "/user/keys", None
-        )
+        return PaginatedList(github.UserKey.UserKey, self._requester, "/user/keys", None)
 
     def get_notification(self, id: str) -> Notification:
         """
@@ -796,12 +750,8 @@ class AuthenticatedUser(CompletableGithubObject):
         """
 
         assert isinstance(id, str), id
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"/notifications/threads/{id}"
-        )
-        return github.Notification.Notification(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/notifications/threads/{id}")
+        return github.Notification.Notification(self._requester, headers, data, completed=True)
 
     def get_notifications(
         self,
@@ -831,9 +781,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(before):
             params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        return PaginatedList(
-            github.Notification.Notification, self._requester, "/notifications", params
-        )
+        return PaginatedList(github.Notification.Notification, self._requester, "/notifications", params)
 
     def get_organization_events(self, org: Organization) -> PaginatedList[Event]:
         """
@@ -851,21 +799,15 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/orgs <http://docs.github.com/en/rest/reference/orgs>`_
         """
-        return PaginatedList(
-            github.Organization.Organization, self._requester, "/user/orgs", None
-        )
+        return PaginatedList(github.Organization.Organization, self._requester, "/user/orgs", None)
 
     def get_repo(self, name: str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"/repos/{self.login}/{name}"
-        )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/repos/{self.login}/{name}")
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(
         self,
@@ -892,17 +834,13 @@ class AuthenticatedUser(CompletableGithubObject):
                 "direction": direction,
             }
         )
-        return PaginatedList(
-            github.Repository.Repository, self._requester, "/user/repos", url_parameters
-        )
+        return PaginatedList(github.Repository.Repository, self._requester, "/user/repos", url_parameters)
 
     def get_starred(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /user/starred <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
-        return PaginatedList(
-            github.Repository.Repository, self._requester, "/user/starred", None
-        )
+        return PaginatedList(github.Repository.Repository, self._requester, "/user/starred", None)
 
     def get_starred_gists(self) -> PaginatedList[Gist]:
         """
@@ -914,9 +852,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/subscriptions <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
-        return PaginatedList(
-            github.Repository.Repository, self._requester, "/user/subscriptions", None
-        )
+        return PaginatedList(github.Repository.Repository, self._requester, "/user/subscriptions", None)
 
     def get_teams(self) -> PaginatedList[Team]:
         """
@@ -928,9 +864,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /user/subscriptions <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
-        return PaginatedList(
-            github.Repository.Repository, self._requester, "/user/subscriptions", None
-        )
+        return PaginatedList(github.Repository.Repository, self._requester, "/user/subscriptions", None)
 
     def get_installations(self) -> PaginatedList[Installation]:
         """
@@ -950,9 +884,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        status, headers, data = self._requester.requestJson(
-            "GET", f"/user/following/{following._identity}"
-        )
+        status, headers, data = self._requester.requestJson("GET", f"/user/following/{following._identity}")
         return status == 204
 
     def has_in_starred(self, starred: Repository) -> bool:
@@ -960,9 +892,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/starred/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        status, headers, data = self._requester.requestJson(
-            "GET", f"/user/starred/{starred._identity}"
-        )
+        status, headers, data = self._requester.requestJson("GET", f"/user/starred/{starred._identity}")
         return status == 204
 
     def has_in_subscriptions(self, subscription: Repository) -> bool:
@@ -970,9 +900,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/subscriptions/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        status, headers, data = self._requester.requestJson(
-            "GET", f"/user/subscriptions/{subscription._identity}"
-        )
+        status, headers, data = self._requester.requestJson("GET", f"/user/subscriptions/{subscription._identity}")
         return status == 204
 
     def has_in_watched(self, watched: Repository) -> bool:
@@ -980,9 +908,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/subscription <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        status, headers, data = self._requester.requestJson(
-            "GET", f"/repos/{watched._identity}/subscription"
-        )
+        status, headers, data = self._requester.requestJson("GET", f"/repos/{watched._identity}/subscription")
         return status == 200
 
     def mark_notifications_as_read(self, last_read_at: datetime | None = None):
@@ -994,9 +920,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert isinstance(last_read_at, datetime)
         put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", "/notifications", input=put_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PUT", "/notifications", input=put_parameters)
 
     def remove_from_emails(self, *emails: str) -> None:
         """
@@ -1004,53 +928,41 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert all(isinstance(element, str) for element in emails), emails
         post_parameters = {"emails": emails}
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", "/user/emails", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", "/user/emails", input=post_parameters)
 
     def remove_from_following(self, following: NamedUser) -> None:
         """
         :calls: `DELETE /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"/user/following/{following._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"/user/following/{following._identity}")
 
     def remove_from_starred(self, starred: Repository) -> None:
         """
         :calls: `DELETE /user/starred/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"/user/starred/{starred._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"/user/starred/{starred._identity}")
 
     def remove_from_subscriptions(self, subscription: Repository) -> None:
         """
         :calls: `DELETE /user/subscriptions/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"/user/subscriptions/{subscription._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"/user/subscriptions/{subscription._identity}")
 
     def remove_from_watched(self, watched: Repository) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/subscription <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"/repos/{watched._identity}/subscription"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"/repos/{watched._identity}/subscription")
 
     def accept_invitation(self, invitation: Invitation | int) -> None:
         """
         :calls: `PATCH /user/repository_invitations/{invitation_id} <https://docs.github.com/en/rest/reference/repos/invitations#>`_
         """
-        assert isinstance(invitation, github.Invitation.Invitation) or isinstance(
-            invitation, int
-        )
+        assert isinstance(invitation, github.Invitation.Invitation) or isinstance(invitation, int)
 
         if isinstance(invitation, github.Invitation.Invitation):
             invitation = invitation.id
@@ -1097,9 +1009,7 @@ class AuthenticatedUser(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
-        return github.Migration.Migration(
-            self._requester, headers, data, completed=True
-        )
+        return github.Migration.Migration(self._requester, headers, data, completed=True)
 
     def get_migrations(self) -> PaginatedList[Migration]:
         """
@@ -1118,12 +1028,8 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/memberships/orgs/{org} <https://docs.github.com/en/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user>`_
         """
         assert isinstance(org, str)
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"/user/memberships/orgs/{org}"
-        )
-        return github.Membership.Membership(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/user/memberships/orgs/{org}")
+        return github.Membership.Membership(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes) -> None:
         if "avatar_url" in attributes:  # pragma no branch
@@ -1171,13 +1077,9 @@ class AuthenticatedUser(CompletableGithubObject):
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "organizations_url" in attributes:  # pragma no branch
-            self._organizations_url = self._makeStringAttribute(
-                attributes["organizations_url"]
-            )
+            self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
-            self._owned_private_repos = self._makeIntAttribute(
-                attributes["owned_private_repos"]
-            )
+            self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
         if "plan" in attributes:  # pragma no branch
             self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch
@@ -1187,9 +1089,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if "public_repos" in attributes:  # pragma no branch
             self._public_repos = self._makeIntAttribute(attributes["public_repos"])
         if "received_events_url" in attributes:  # pragma no branch
-            self._received_events_url = self._makeStringAttribute(
-                attributes["received_events_url"]
-            )
+            self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "site_admin" in attributes:  # pragma no branch
@@ -1197,13 +1097,9 @@ class AuthenticatedUser(CompletableGithubObject):
         if "starred_url" in attributes:  # pragma no branch
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
-            self._subscriptions_url = self._makeStringAttribute(
-                attributes["subscriptions_url"]
-            )
+            self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "total_private_repos" in attributes:  # pragma no branch
-            self._total_private_repos = self._makeIntAttribute(
-                attributes["total_private_repos"]
-            )
+            self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
@@ -1211,6 +1107,4 @@ class AuthenticatedUser(CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "two_factor_authentication" in attributes:
-            self._two_factor_authentication = self._makeBoolAttribute(
-                attributes["two_factor_authentication"]
-            )
+            self._two_factor_authentication = self._makeBoolAttribute(attributes["two_factor_authentication"])

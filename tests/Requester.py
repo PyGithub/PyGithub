@@ -63,9 +63,7 @@ class Requester(Framework.TestCase):
         kwargs = requester.kwargs
 
         # assert kwargs consists of ALL constructor arguments
-        self.assertEqual(
-            kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys()
-        )
+        self.assertEqual(kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys())
         self.assertEqual(
             kwargs,
             dict(
@@ -201,33 +199,21 @@ class Requester(Framework.TestCase):
 
     def testIsRateLimitError(self):
         for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
-            self.assertTrue(
-                github.Requester.Requester.isRateLimitError(message), message
-            )
+            self.assertTrue(github.Requester.Requester.isRateLimitError(message), message)
         for message in self.OtherErrors:
-            self.assertFalse(
-                github.Requester.Requester.isRateLimitError(message), message
-            )
+            self.assertFalse(github.Requester.Requester.isRateLimitError(message), message)
 
     def testIsPrimaryRateLimitError(self):
         for message in self.PrimaryRateLimitErrors:
-            self.assertTrue(
-                github.Requester.Requester.isPrimaryRateLimitError(message), message
-            )
+            self.assertTrue(github.Requester.Requester.isPrimaryRateLimitError(message), message)
         for message in self.OtherErrors + self.SecondaryRateLimitErrors:
-            self.assertFalse(
-                github.Requester.Requester.isPrimaryRateLimitError(message), message
-            )
+            self.assertFalse(github.Requester.Requester.isPrimaryRateLimitError(message), message)
 
     def testIsSecondaryRateLimitError(self):
         for message in self.SecondaryRateLimitErrors:
-            self.assertTrue(
-                github.Requester.Requester.isSecondaryRateLimitError(message), message
-            )
+            self.assertTrue(github.Requester.Requester.isSecondaryRateLimitError(message), message)
         for message in self.OtherErrors + self.PrimaryRateLimitErrors:
-            self.assertFalse(
-                github.Requester.Requester.isSecondaryRateLimitError(message), message
-            )
+            self.assertFalse(github.Requester.Requester.isSecondaryRateLimitError(message), message)
 
     def assertException(self, exception, exception_type, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
@@ -240,9 +226,7 @@ class Requester(Framework.TestCase):
         self.assertEqual(str(exception), string)
 
     def testShouldCreateBadCredentialsException(self):
-        exc = self.g._Github__requester.createException(
-            401, {"header": "value"}, {"message": "Bad credentials"}
-        )
+        exc = self.g._Github__requester.createException(401, {"header": "value"}, {"message": "Bad credentials"})
         self.assertException(
             exc,
             github.BadCredentialsException,
@@ -291,9 +275,7 @@ class Requester(Framework.TestCase):
     def testShouldCreateRateLimitExceededException(self):
         for message in self.PrimaryRateLimitErrors + self.SecondaryRateLimitErrors:
             with self.subTest(message=message):
-                exc = self.g._Github__requester.createException(
-                    403, {"header": "value"}, {"message": message}
-                )
+                exc = self.g._Github__requester.createException(403, {"header": "value"}, {"message": message})
                 self.assertException(
                     exc,
                     github.RateLimitExceededException,
@@ -304,9 +286,7 @@ class Requester(Framework.TestCase):
                 )
 
     def testShouldCreateUnknownObjectException(self):
-        exc = self.g._Github__requester.createException(
-            404, {"header": "value"}, {"message": "Not Found"}
-        )
+        exc = self.g._Github__requester.createException(404, {"header": "value"}, {"message": "Not Found"})
         self.assertException(
             exc,
             github.UnknownObjectException,
@@ -335,17 +315,13 @@ class Requester(Framework.TestCase):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, {})
-                self.assertException(
-                    exc, github.GithubException, status, {}, {}, f"{status} {{}}"
-                )
+                self.assertException(exc, github.GithubException, status, {}, {}, f"{status} {{}}")
 
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, None)
-                self.assertException(
-                    exc, github.GithubException, status, None, {}, f"{status}"
-                )
+                self.assertException(exc, github.GithubException, status, None, {}, f"{status}")
 
 
 class RequesterThrottleTestCase(Framework.TestCase):
@@ -361,9 +337,9 @@ class RequesterThrottleTestCase(Framework.TestCase):
 
     @contextlib.contextmanager
     def mock_sleep(self):
-        with mock.patch(
-            "github.Requester.time.sleep", side_effect=self.sleep
-        ) as sleep_mock, mock.patch("github.Requester.datetime") as datetime_mock:
+        with mock.patch("github.Requester.time.sleep", side_effect=self.sleep) as sleep_mock, mock.patch(
+            "github.Requester.datetime"
+        ) as datetime_mock:
             datetime_mock.now = self.now
             yield sleep_mock
 
@@ -390,9 +366,7 @@ class RequesterThrottled(RequesterThrottleTestCase):
             releases = [release for release in repository.get_releases()]
             self.assertEqual(len(releases), 30)
 
-        self.assertEqual(
-            sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)]
-        )
+        self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)])
 
     def testShouldDeferWrites(self):
         with self.mock_sleep() as sleep_mock:

@@ -70,6 +70,4 @@ class HookDescription(NonCompletableGithubObject):
         if "schema" in attributes:  # pragma no branch
             self._schema = self._makeListOfListOfStringsAttribute(attributes["schema"])
         if "supported_events" in attributes:  # pragma no branch
-            self._supported_events = self._makeListOfStringsAttribute(
-                attributes["supported_events"]
-            )
+            self._supported_events = self._makeListOfStringsAttribute(attributes["supported_events"])
