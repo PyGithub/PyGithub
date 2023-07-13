@@ -85,9 +85,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
-        self.assertEqual(
-            self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode"
-        )
+        self.assertEqual(self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "PyGithub")
         self.assertEqual(self.pull.base.ref, "topic/RewriteWithGeneratedCode")
@@ -105,13 +103,9 @@ class PullRequest(Framework.TestCase):
             datetime(2012, 5, 27, 9, 25, 36, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.deletions, 384)
-        self.assertEqual(
-            self.pull.diff_url, "https://github.com/PyGithub/PyGithub/pull/31.diff"
-        )
+        self.assertEqual(self.pull.diff_url, "https://github.com/PyGithub/PyGithub/pull/31.diff")
         self.assertEqual(self.pull.head.ref, "master")
-        self.assertEqual(
-            self.pull.html_url, "https://github.com/PyGithub/PyGithub/pull/31"
-        )
+        self.assertEqual(self.pull.html_url, "https://github.com/PyGithub/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
         self.assertEqual(
             self.pull.issue_url,
@@ -127,9 +121,7 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
-        self.assertEqual(
-            self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch"
-        )
+        self.assertEqual(self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch")
         self.assertEqual(self.pull.review_comments, 2)
         self.assertEqual(self.pull.state, "closed")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
@@ -137,9 +129,7 @@ class PullRequest(Framework.TestCase):
             self.pull.updated_at,
             datetime(2018, 6, 25, 12, 54, 43, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.pull.url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"
-        )
+        self.assertEqual(self.pull.url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31")
         self.assertEqual(self.pull.user.login, "jacquev6")
         self.assertEqual(self.pull.draft, False)
         self.assertEqual(self.pull.maintainer_can_modify, False)
@@ -155,9 +145,7 @@ class PullRequest(Framework.TestCase):
 
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
-        comment = self.pull.create_comment(
-            "Comment created by PyGithub", commit, "src/github/Issue.py", 5
-        )
+        comment = self.pull.create_comment("Comment created by PyGithub", commit, "src/github/Issue.py", 5)
         self.assertEqual(comment.id, 886298)
 
     def testCreateReviewCommentInReplyTo(self):
@@ -204,9 +192,7 @@ class PullRequest(Framework.TestCase):
             as_suggestion=True,
         )
         self.assertEqual(comment.id, 886298)
-        self.assertEqual(
-            comment.body, "```suggestion\nComment created by PyGithub\n```"
-        )
+        self.assertEqual(comment.body, "```suggestion\nComment created by PyGithub\n```")
 
     def testCreateMultilineReviewCommentChoosingSide(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
@@ -231,9 +217,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(comment.id, 8387331)
 
     def testGetIssueComments(self):
-        self.assertListKeyEqual(
-            self.pull.get_issue_comments(), lambda c: c.id, [8387331]
-        )
+        self.assertListKeyEqual(self.pull.get_issue_comments(), lambda c: c.id, [8387331])
 
     def testGetIssueComment(self):
         comment = self.pull.get_issue_comment(8387331)
@@ -248,26 +232,18 @@ class PullRequest(Framework.TestCase):
 
     def testGetReviewComments(self):
         epoch = datetime(1970, 1, 1, 0, 0)
-        comments = self.pull.get_review_comments(
-            sort="updated", direction="desc", since=epoch
-        )
+        comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
 
     def testReviewRequests(self):
-        self.pull.create_review_request(
-            reviewers="sfdye", team_reviewers="pygithub-owners"
-        )
+        self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
         review_requests = self.pull.get_review_requests()
         self.assertListKeyEqual(review_requests[0], lambda c: c.login, ["sfdye"])
-        self.assertListKeyEqual(
-            review_requests[1], lambda c: c.slug, ["pygithub-owners"]
-        )
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
         self.pull.delete_review_request(reviewers="sfdye")
         review_requests = self.pull.get_review_requests()
         self.assertEqual(list(review_requests[0]), [])
-        self.assertListKeyEqual(
-            review_requests[1], lambda c: c.slug, ["pygithub-owners"]
-        )
+        self.assertListKeyEqual(review_requests[1], lambda c: c.slug, ["pygithub-owners"])
 
     def testEditWithoutArguments(self):
         self.pull.edit()
@@ -459,13 +435,9 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(self.pull.url, url)
         self.pull.remove_from_assignees(user1, user2)
-        self.assertListKeyEqual(
-            self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"]
-        )
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.pull.url, url)
 
     def testUpdateBranch(self):
-        self.assertTrue(
-            self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36")
-        )
+        self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())

@@ -55,9 +55,7 @@ class SourceImport(Framework.TestCase):
         )
         self.assertEqual(self.source_import.use_lfs, "undecided")
         self.assertEqual(self.source_import.vcs, "mercurial")
-        self.assertEqual(
-            self.source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test"
-        )
+        self.assertEqual(self.source_import.vcs_url, "https://bitbucket.org/hfuss/source-import-test")
 
         self.assertEqual(
             self.source_import.__repr__(),

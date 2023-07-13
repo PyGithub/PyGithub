@@ -57,9 +57,7 @@ class Milestone(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/milestones/1",
         )
         self.assertEqual(self.milestone.creator.login, "jacquev6")
-        self.assertEqual(
-            repr(self.milestone), 'Milestone(title="Version 0.4", number=1)'
-        )
+        self.assertEqual(repr(self.milestone), 'Milestone(title="Version 0.4", number=1)')
 
     def testEditWithMinimalParameters(self):
         self.milestone.edit("Title edited by PyGithub")
