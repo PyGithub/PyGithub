@@ -89,15 +89,15 @@ class RequestsResponse:
     def __init__(self, r: requests.Response):
         self.underlying = r
         # Cached properties
-        self._headers = None
-        self._text = None
+        self._headers: Optional[Dict[str, Any]] = None
+        self._text: Optional[str] = None
 
     @property
     def status(self) -> int:
         return self.underlying.status_code
 
     @property
-    def headers(self) -> Dict[str, str]:
+    def headers(self) -> Dict[str, Any]:
         if self._headers is None:
             self._headers = {k.lower(): v for k, v in self.underlying.headers.items()}
         return self._headers
