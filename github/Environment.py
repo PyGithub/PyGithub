@@ -91,9 +91,7 @@ class Environment(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._protection_rules: Attribute[
-            List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]
-        ] = NotSet
+        self._protection_rules: Attribute[List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._deployment_branch_policy: Attribute[
