@@ -26,9 +26,7 @@ from . import Framework
 class PullRequest1168(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.notifications = self.g.get_repo("PyGithub/PyGithub").get_notifications(
-            all=True
-        )
+        self.notifications = self.g.get_repo("PyGithub/PyGithub").get_notifications(all=True)
 
     def testGetPullRequest(self):
         p = self.notifications[0].get_pull_request()

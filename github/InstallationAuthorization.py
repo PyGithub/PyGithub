@@ -76,12 +76,8 @@ class InstallationAuthorization(NonCompletableGithubObject):
         if "expires_at" in attributes:  # pragma no branch
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "on_behalf_of" in attributes:  # pragma no branch
-            self._on_behalf_of = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["on_behalf_of"]
-            )
+            self._on_behalf_of = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["on_behalf_of"])
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "repository_selection" in attributes:  # pragma no branch
-            self._repository_selection = self._makeStringAttribute(
-                attributes["repository_selection"]
-            )
+            self._repository_selection = self._makeStringAttribute(attributes["repository_selection"])

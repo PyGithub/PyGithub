@@ -170,9 +170,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         assert organization_permission is github.GithubObject.NotSet or isinstance(
             organization_permission, str
         ), organization_permission
-        assert private is github.GithubObject.NotSet or isinstance(
-            private, bool
-        ), private
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         patch_parameters = dict()
         if name is not github.GithubObject.NotSet:
             patch_parameters["name"] = name
@@ -217,9 +215,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/columns", headers=import_header, input=post_parameters
         )
-        return github.ProjectColumn.ProjectColumn(
-            self._requester, headers, data, completed=True
-        )
+        return github.ProjectColumn.ProjectColumn(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
@@ -244,9 +240,7 @@ class Project(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch

@@ -168,23 +168,15 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         if "authors_url" in attributes:  # pragma no branch
             self._authors_url = self._makeStringAttribute(attributes["authors_url"])
         if "has_large_files" in attributes:  # pragma no branch
-            self._has_large_files = self._makeBoolAttribute(
-                attributes["has_large_files"]
-            )
+            self._has_large_files = self._makeBoolAttribute(attributes["has_large_files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "large_files_count" in attributes:  # pragma no branch
-            self._large_files_count = self._makeIntAttribute(
-                attributes["large_files_count"]
-            )
+            self._large_files_count = self._makeIntAttribute(attributes["large_files_count"])
         if "large_files_size" in attributes:  # pragma no branch
-            self._large_files_size = self._makeIntAttribute(
-                attributes["large_files_size"]
-            )
+            self._large_files_size = self._makeIntAttribute(attributes["large_files_size"])
         if "repository_url" in attributes:  # pragma no branch
-            self._repository_url = self._makeStringAttribute(
-                attributes["repository_url"]
-            )
+            self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "status_text" in attributes:  # pragma no branch

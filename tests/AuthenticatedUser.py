@@ -327,9 +327,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertTrue(self.user.has_in_subscriptions(gitflow))
 
     def testGetAuthorizations(self):
-        self.assertListKeyEqual(
-            self.user.get_authorizations(), lambda a: a.id, [372294]
-        )
+        self.assertListKeyEqual(self.user.get_authorizations(), lambda a: a.id, [372294])
 
     def testCreateRepository(self):
         repo = self.user.create_repo(name="TestPyGithub")
@@ -357,9 +355,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.user.create_repo(
-            name="TestPyGithub", auto_init=True, gitignore_template="Python"
-        )
+        repo = self.user.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateAuthorizationWithoutArguments(self):
@@ -391,9 +387,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(gist.files["foobar.txt"].content, "File created by PyGithub")
 
     def testCreateGistWithoutDescription(self):
-        gist = self.user.create_gist(
-            True, {"foobar.txt": github.InputFileContent("File created by PyGithub")}
-        )
+        gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")})
         self.assertEqual(gist.description, None)
         self.assertEqual(list(gist.files.keys()), ["foobar.txt"])
         self.assertEqual(gist.files["foobar.txt"].content, "File created by PyGithub")
@@ -414,9 +408,7 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetOrganizationEvents(self):
         self.assertListKeyBegin(
-            self.user.get_organization_events(
-                self.g.get_organization("BeaverSoftware")
-            ),
+            self.user.get_organization_events(self.g.get_organization("BeaverSoftware")),
             lambda e: e.type,
             ["CreateEvent", "CreateEvent", "PushEvent", "PushEvent"],
         )
@@ -617,9 +609,7 @@ class AuthenticatedUser(Framework.TestCase):
         )
 
     def testGetOrgs(self):
-        self.assertListKeyEqual(
-            self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"]
-        )
+        self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 
     def testGetRepos(self):
         self.assertListKeyEqual(
@@ -670,9 +660,7 @@ class AuthenticatedUser(Framework.TestCase):
     def testCreateRepoFromTemplate(self):
         template_repo = self.g.get_repo("actions/hello-world-docker-action")
 
-        repo = self.user.create_repo_from_template(
-            "hello-world-docker-action-new", template_repo
-        )
+        repo = self.user.create_repo_from_template("hello-world-docker-action-new", template_repo)
         self.assertEqual(
             repo.url,
             "https://api.github.com/repos/jacquev6/hello-world-docker-action-new",
@@ -712,19 +700,13 @@ class AuthenticatedUser(Framework.TestCase):
             repr(notification),
             'Notification(subject=NotificationSubject(title="Feature/coveralls"), id="8406712")',
         )
-        self.assertEqual(
-            repr(notification.subject), 'NotificationSubject(title="Feature/coveralls")'
-        )
+        self.assertEqual(repr(notification.subject), 'NotificationSubject(title="Feature/coveralls")')
 
     def testGetNotifications(self):
-        self.assertListKeyEqual(
-            self.user.get_notifications(participating=True), lambda n: n.id, ["8406712"]
-        )
+        self.assertListKeyEqual(self.user.get_notifications(participating=True), lambda n: n.id, ["8406712"])
 
     def testGetNotificationsWithOtherArguments(self):
-        self.assertListKeyEqual(
-            self.user.get_notifications(all=True), lambda n: n.id, []
-        )
+        self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])
 
     def testMarkNotificationsAsRead(self):
         self.user.mark_notifications_as_read(datetime(2018, 10, 18, 18, 20, 0o1, 0))
@@ -761,19 +743,13 @@ class AuthenticatedUser(Framework.TestCase):
             invitation.url,
             "https://api.github.com/user/repository_invitations/17285388",
         )
-        self.assertEqual(
-            invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations"
-        )
+        self.assertEqual(invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations")
         self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
 
     def testCreateMigration(self):
-        self.assertTrue(
-            isinstance(
-                self.user.create_migration(["sample-repo"]), github.Migration.Migration
-            )
-        )
+        self.assertTrue(isinstance(self.user.create_migration(["sample-repo"]), github.Migration.Migration))
 
     def testGetMigrations(self):
         self.assertEqual(self.user.get_migrations().totalCount, 46)
