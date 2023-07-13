@@ -104,9 +104,7 @@ class GithubObject(unittest.TestCase):
 
         actual = gho.GithubObject._makeTimestampAttribute(1611405296)
         self.assertEqual(gho._ValuedAttribute, type(actual))
-        self.assertEqual(
-            datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc), actual.value
-        )
+        self.assertEqual(datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc), actual.value)
 
     def testMakeTimetsampAttributeBadValues(self):
         for value in ["1611405296", 1234.567]:

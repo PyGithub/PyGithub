@@ -29,12 +29,7 @@ from . import Framework
 class Reaction(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.reactions = (
-            self.g.get_user("PyGithub")
-            .get_repo("PyGithub")
-            .get_issue(28)
-            .get_reactions()
-        )
+        self.reactions = self.g.get_user("PyGithub").get_repo("PyGithub").get_issue(28).get_reactions()
 
     def testAttributes(self):
         self.assertEqual(self.reactions[0].content, "+1")

@@ -194,8 +194,6 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "steps" in attributes:  # pragma no branch
-            self._steps = self._makeListOfClassesAttribute(
-                github.WorkflowStep.WorkflowStep, attributes["steps"]
-            )
+            self._steps = self._makeListOfClassesAttribute(github.WorkflowStep.WorkflowStep, attributes["steps"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -32,22 +32,12 @@ class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issu
 
     def testReservedPaginatedListAttributePreservation(self):
         r1 = self.list.reversed
-        self.assertEqual(
-            self.list._PaginatedList__contentClass, r1._PaginatedList__contentClass
-        )
-        self.assertEqual(
-            self.list._PaginatedList__requester, r1._PaginatedList__requester
-        )
-        self.assertEqual(
-            self.list._PaginatedList__firstUrl, r1._PaginatedList__firstUrl
-        )
-        self.assertEqual(
-            self.list._PaginatedList__firstParams, r1._PaginatedList__firstParams
-        )
+        self.assertEqual(self.list._PaginatedList__contentClass, r1._PaginatedList__contentClass)
+        self.assertEqual(self.list._PaginatedList__requester, r1._PaginatedList__requester)
+        self.assertEqual(self.list._PaginatedList__firstUrl, r1._PaginatedList__firstUrl)
+        self.assertEqual(self.list._PaginatedList__firstParams, r1._PaginatedList__firstParams)
         self.assertEqual(self.list._PaginatedList__headers, r1._PaginatedList__headers)
-        self.assertEqual(
-            self.list._PaginatedList__list_item, r1._PaginatedList__list_item
-        )
+        self.assertEqual(self.list._PaginatedList__list_item, r1._PaginatedList__list_item)
 
         self.assertTrue(self.list_with_headers._PaginatedList__headers is not None)
         r2 = self.list_with_headers.reversed
@@ -59,16 +49,12 @@ class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issu
             self.list_with_headers._PaginatedList__requester,
             r2._PaginatedList__requester,
         )
-        self.assertEqual(
-            self.list_with_headers._PaginatedList__firstUrl, r2._PaginatedList__firstUrl
-        )
+        self.assertEqual(self.list_with_headers._PaginatedList__firstUrl, r2._PaginatedList__firstUrl)
         self.assertEqual(
             self.list_with_headers._PaginatedList__firstParams,
             r2._PaginatedList__firstParams,
         )
-        self.assertEqual(
-            self.list_with_headers._PaginatedList__headers, r2._PaginatedList__headers
-        )
+        self.assertEqual(self.list_with_headers._PaginatedList__headers, r2._PaginatedList__headers)
         self.assertEqual(
             self.list_with_headers._PaginatedList__list_item,
             r2._PaginatedList__list_item,

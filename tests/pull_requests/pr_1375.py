@@ -34,9 +34,7 @@ class PullRequest1375(Framework.TestCase):
         second_reply_body = "Second comment reply created by PyGithub"
 
         first_reply = self.pr.create_review_comment_reply(comment_id, first_reply_body)
-        second_reply = self.pr.create_review_comment_reply(
-            first_reply.id, second_reply_body
-        )
+        second_reply = self.pr.create_review_comment_reply(first_reply.id, second_reply_body)
 
         # ensure both first and second reply have `in_reply_to_id` attr set to top comment
         self.assertEqual(first_reply.in_reply_to_id, comment_id)
