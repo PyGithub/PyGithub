@@ -28,38 +28,32 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
+class AuthorizationApplication(CompletableGithubObject):
     """
     This class represents AuthorizationApplications
     """
+
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
-        self._name = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
