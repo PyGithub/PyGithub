@@ -53,13 +53,9 @@ class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithub
         if "reviewer" in attributes:  # pragma no branch
             assert self._type.value in ("User", "Team")
             if self._type.value == "User":
-                self._reviewer = self._makeClassAttribute(
-                    github.NamedUser.NamedUser, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["reviewer"])
             elif self._type.value == "Team":
-                self._reviewer = self._makeClassAttribute(
-                    github.Team.Team, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.Team.Team, attributes["reviewer"])
 
 
 class ReviewerParams:

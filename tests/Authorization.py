@@ -49,20 +49,14 @@ class Authorization(Framework.TestCase):
         self.assertEqual(self.authorization.note, None)
         self.assertEqual(self.authorization.note_url, None)
         self.assertEqual(self.authorization.scopes, [])
-        self.assertEqual(
-            self.authorization.token, "82459c4500086f8f0cc67d2936c17d1e27ad1c33"
-        )
+        self.assertEqual(self.authorization.token, "82459c4500086f8f0cc67d2936c17d1e27ad1c33")
         self.assertEqual(
             self.authorization.updated_at,
             datetime(2012, 5, 22, 18, 3, 17, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.authorization.url, "https://api.github.com/authorizations/372259"
-        )
+        self.assertEqual(self.authorization.url, "https://api.github.com/authorizations/372259")
         self.assertEqual(repr(self.authorization), "Authorization(scopes=[])")
-        self.assertEqual(
-            repr(self.authorization.app), 'AuthorizationApplication(name="GitHub API")'
-        )
+        self.assertEqual(repr(self.authorization.app), 'AuthorizationApplication(name="GitHub API")')
 
     def testEdit(self):
         self.authorization.edit()
@@ -80,9 +74,7 @@ class Authorization(Framework.TestCase):
             note_url="http://vincent-jacques.net/PyGithub",
         )
         self.assertEqual(self.authorization.note, "Note created by PyGithub")
-        self.assertEqual(
-            self.authorization.note_url, "http://vincent-jacques.net/PyGithub"
-        )
+        self.assertEqual(self.authorization.note_url, "http://vincent-jacques.net/PyGithub")
 
     def testDelete(self):
         self.authorization.delete()

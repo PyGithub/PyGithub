@@ -33,14 +33,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.AuthorizationApplication
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_optional,
-    is_optional_list,
-)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
 
 if TYPE_CHECKING:
     from github.AuthorizationApplication import AuthorizationApplication
@@ -143,9 +136,7 @@ class Authorization(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
