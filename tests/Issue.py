@@ -195,9 +195,7 @@ class Issue(Framework.TestCase):
             ["Project management", "Question"],
         )
         self.issue.remove_from_labels(question)
-        self.assertListKeyEqual(
-            self.issue.get_labels(), lambda lb: lb.name, ["Project management"]
-        )
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Project management"])
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
             self.issue.get_labels(),
@@ -220,9 +218,7 @@ class Issue(Framework.TestCase):
             ["Project management", "Question"],
         )
         self.issue.remove_from_labels(question)
-        self.assertListKeyEqual(
-            self.issue.get_labels(), lambda lb: lb.name, ["Project management"]
-        )
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Project management"])
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
             self.issue.get_labels(),
@@ -241,9 +237,7 @@ class Issue(Framework.TestCase):
         self.issue.delete_labels()
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
-        self.assertListKeyEqual(
-            self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"]
-        )
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"])
 
     def testDeleteAndSetLabelsWithStringArguments(self):
         bug = "Bug"
@@ -256,9 +250,7 @@ class Issue(Framework.TestCase):
         self.issue.delete_labels()
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
-        self.assertListKeyEqual(
-            self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"]
-        )
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"])
 
     def testGetReactions(self):
         reactions = self.issue.get_reactions()

@@ -327,9 +327,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testGetLabels(self):
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testAddAndRemoveLabels(self):
         wip = self.repo.get_label("wip")
@@ -340,13 +338,9 @@ class PullRequest(Framework.TestCase):
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["improvement"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
@@ -363,13 +357,9 @@ class PullRequest(Framework.TestCase):
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["improvement"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
@@ -388,9 +378,7 @@ class PullRequest(Framework.TestCase):
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testDeleteAndSetLabelsWithStringArguments(self):
         wip = "wip"
@@ -403,9 +391,7 @@ class PullRequest(Framework.TestCase):
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(
-            self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"]
-        )
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())
