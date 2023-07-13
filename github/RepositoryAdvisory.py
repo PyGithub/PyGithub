@@ -28,10 +28,7 @@ import github.NamedUser
 from github.CWE import CWE
 from github.RepositoryAdvisoryCredit import Credit, RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryCreditDetailed import RepositoryAdvisoryCreditDetailed
-from github.RepositoryAdvisoryVulnerability import (
-    AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
-)
+from github.RepositoryAdvisoryVulnerability import AdvisoryVulnerability, RepositoryAdvisoryVulnerability
 from github.Requester import Requester
 
 
@@ -215,9 +212,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
             ]
         )
 
-    def add_vulnerabilities(
-        self, vulnerabilities: typing.Iterable[AdvisoryVulnerability]
-    ):
+    def add_vulnerabilities(self, vulnerabilities: typing.Iterable[AdvisoryVulnerability]):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
@@ -231,9 +226,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         # noinspection PyProtectedMember
         post_parameters = {
             "vulnerabilities": [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
-                    vulnerability
-                )
+                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in (self.vulnerabilities + list(vulnerabilities))
             ]
         }
@@ -274,10 +267,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
             RepositoryAdvisoryCredit._validate_credit(credit)
         # noinspection PyProtectedMember
         patch_parameters = {
-            "credits": [
-                RepositoryAdvisoryCredit._to_github_dict(credit)
-                for credit in (self.credits + list(credited))
-            ]
+            "credits": [RepositoryAdvisoryCredit._to_github_dict(credit) for credit in (self.credits + list(credited))]
         }
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -286,23 +276,17 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def revoke_credit(
-        self, login_or_user: typing.Union[str, "github.NamedUser.NamedUser"]
-    ):
+    def revoke_credit(self, login_or_user: typing.Union[str, "github.NamedUser.NamedUser"]):
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param login_or_user: string username or :class:`github.NamedUser.NamedUser`
         """
-        assert isinstance(
-            login_or_user, (str, github.NamedUser.NamedUser)
-        ), login_or_user
+        assert isinstance(login_or_user, (str, github.NamedUser.NamedUser)), login_or_user
         if isinstance(login_or_user, github.NamedUser.NamedUser):
             login_or_user = login_or_user.login
         patch_parameters = {
             "credits": [
-                dict(login=credit.login, type=credit.type)
-                for credit in self.credits
-                if credit.login != login_or_user
+                dict(login=credit.login, type=credit.type) for credit in self.credits if credit.login != login_or_user
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(
@@ -328,19 +312,11 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         self,
         summary: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
         description: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-        severity_or_cvss_vector_string: github.GithubObject.Opt[
-            str
-        ] = github.GithubObject.NotSet,
+        severity_or_cvss_vector_string: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
         cve_id: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
-        vulnerabilities: github.GithubObject.Opt[
-            typing.Iterable[AdvisoryVulnerability]
-        ] = github.GithubObject.NotSet,
-        cwe_ids: github.GithubObject.Opt[
-            typing.Iterable[str]
-        ] = github.GithubObject.NotSet,
-        credits: github.GithubObject.Opt[
-            typing.Iterable[Credit]
-        ] = github.GithubObject.NotSet,
+        vulnerabilities: github.GithubObject.Opt[typing.Iterable[AdvisoryVulnerability]] = github.GithubObject.NotSet,
+        cwe_ids: github.GithubObject.Opt[typing.Iterable[str]] = github.GithubObject.NotSet,
+        credits: github.GithubObject.Opt[typing.Iterable[Credit]] = github.GithubObject.NotSet,
         state: github.GithubObject.Opt[str] = github.GithubObject.NotSet,
     ) -> "RepositoryAdvisory":
         """
@@ -355,16 +331,11 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         :param state: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
-        assert summary is github.GithubObject.NotSet or isinstance(
-            summary, str
-        ), summary
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert (
-            severity_or_cvss_vector_string is github.GithubObject.NotSet
-            or isinstance(severity_or_cvss_vector_string, str)
-        ), (severity_or_cvss_vector_string)
+        assert summary is github.GithubObject.NotSet or isinstance(summary, str), summary
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
+        assert severity_or_cvss_vector_string is github.GithubObject.NotSet or isinstance(
+            severity_or_cvss_vector_string, str
+        ), severity_or_cvss_vector_string
         assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str), cve_id
         assert vulnerabilities is github.GithubObject.NotSet or isinstance(
             vulnerabilities, typing.Iterable
@@ -376,15 +347,12 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
                     vulnerability
                 )
         assert cwe_ids is github.GithubObject.NotSet or (
-            isinstance(cwe_ids, typing.Iterable)
-            and all(isinstance(element, str) for element in cwe_ids)
+            isinstance(cwe_ids, typing.Iterable) and all(isinstance(element, str) for element in cwe_ids)
         ), cwe_ids
         if isinstance(credits, typing.Iterable):
             for credit in credits:
                 # noinspection PyProtectedMember
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(
-                    credit
-                )
+                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
         patch_parameters: typing.Dict[str, typing.Any] = dict()
         if summary is not github.GithubObject.NotSet:
@@ -401,9 +369,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         if isinstance(vulnerabilities, typing.Iterable):
             # noinspection PyProtectedMember
             patch_parameters["vulnerabilities"] = [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(
-                    vulnerability
-                )
+                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in vulnerabilities
             ]
         if isinstance(cwe_ids, typing.Iterable):
@@ -411,10 +377,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         if isinstance(credits, typing.Iterable):
             # noinspection PyProtectedMember
             patch_parameters["credits"] = [
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(
-                    credit
-                )
-                for credit in credits
+                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
         if state is not github.GithubObject.NotSet:
             patch_parameters["state"] = state
@@ -491,18 +454,14 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
     # noinspection PyPep8Naming
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "closed_at" in attributes:  # pragma no branch
-            assert attributes["closed_at"] is None or isinstance(
-                attributes["closed_at"], str
-            ), attributes["closed_at"]
+            assert attributes["closed_at"] is None or isinstance(attributes["closed_at"], str), attributes["closed_at"]
             self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(
-                attributes["created_at"], str
-            ), attributes["created_at"]
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], str), attributes[
+                "created_at"
+            ]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "credits" in attributes:  # pragma no branch
             self._credits = self._makeListOfClassesAttribute(
@@ -527,9 +486,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "published_at" in attributes:  # pragma no branch
-            assert attributes["published_at"] is None or isinstance(
-                attributes["published_at"], str
-            ), attributes["published_at"]
+            assert attributes["published_at"] is None or isinstance(attributes["published_at"], str), attributes[
+                "published_at"
+            ]
             self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
         if "severity" in attributes:  # pragma no branch
             self._severity = self._makeStringAttribute(attributes["severity"])
@@ -538,9 +497,9 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
         if "summary" in attributes:  # pragma no branch
             self._summary = self._makeStringAttribute(attributes["summary"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(
-                attributes["updated_at"], str
-            ), attributes["updated_at"]
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], str), attributes[
+                "updated_at"
+            ]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
@@ -550,7 +509,7 @@ class RepositoryAdvisory(github.GithubObject.NonCompletableGithubObject):
                 attributes["vulnerabilities"],
             )
         if "withdrawn_at" in attributes:  # pragma no branch
-            assert attributes["withdrawn_at"] is None or isinstance(
-                attributes["withdrawn_at"], str
-            ), attributes["withdrawn_at"]
+            assert attributes["withdrawn_at"] is None or isinstance(attributes["withdrawn_at"], str), attributes[
+                "withdrawn_at"
+            ]
             self._withdrawn_at = self._makeDatetimeAttribute(attributes["withdrawn_at"])

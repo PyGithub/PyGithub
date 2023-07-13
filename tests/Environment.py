@@ -62,9 +62,7 @@ class Environment(Framework.TestCase):
             datetime(2022, 4, 13, 15, 6, 32, tzinfo=timezone.utc),
         )
         self.assertTrue(self.environment.deployment_branch_policy.protected_branches)
-        self.assertFalse(
-            self.environment.deployment_branch_policy.custom_branch_policies
-        )
+        self.assertFalse(self.environment.deployment_branch_policy.custom_branch_policies)
 
     def testProtectionRules(self):
         protection_rules = self.environment.protection_rules
@@ -86,17 +84,13 @@ class Environment(Framework.TestCase):
         self.assertEqual(len(reviewers), 2)
         self.assertEqual(reviewers[0].type, "User")
         self.assertIsInstance(reviewers[0].reviewer, github.NamedUser.NamedUser)
-        assert isinstance(
-            reviewers[0].reviewer, github.NamedUser.NamedUser
-        )  # Make type checker happy
+        assert isinstance(reviewers[0].reviewer, github.NamedUser.NamedUser)  # Make type checker happy
         self.assertEqual(reviewers[0].reviewer.id, 19245)
         self.assertEqual(reviewers[0].reviewer.login, "alson")
         self.assertEqual(reviewers[0].reviewer.type, "User")
         self.assertEqual(reviewers[1].type, "Team")
         self.assertIsInstance(reviewers[1].reviewer, github.Team.Team)
-        assert isinstance(
-            reviewers[1].reviewer, github.Team.Team
-        )  # Make type checker happy
+        assert isinstance(reviewers[1].reviewer, github.Team.Team)  # Make type checker happy
         self.assertEqual(reviewers[1].reviewer.id, 1)
         self.assertEqual(reviewers[1].reviewer.slug, "justice-league")
         self.assertEqual(reviewers[1].reviewer.url, "https://api.github.com/teams/1")
@@ -138,11 +132,7 @@ class Environment(Framework.TestCase):
         environment = self.repo.create_environment(
             "test",
             wait_timer=42,
-            reviewers=[
-                github.EnvironmentProtectionRuleReviewer.ReviewerParams(
-                    type_="User", id_=19245
-                )
-            ],
+            reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=19245)],
             deployment_branch_policy=github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams(
                 protected_branches=True, custom_branch_policies=False
             ),
@@ -170,9 +160,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(environment.protection_rules[0].type, "required_reviewers")
         self.assertEqual(len(environment.protection_rules[0].reviewers), 1)
         self.assertEqual(environment.protection_rules[0].reviewers[0].type, "User")
-        self.assertEqual(
-            environment.protection_rules[0].reviewers[0].reviewer.id, 19245
-        )
+        self.assertEqual(environment.protection_rules[0].reviewers[0].reviewer.id, 19245)
         self.assertEqual(environment.protection_rules[1].type, "wait_timer")
         self.assertEqual(environment.protection_rules[1].wait_timer, 42)
         self.assertEqual(environment.protection_rules[2].type, "branch_policy")
