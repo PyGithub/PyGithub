@@ -40,32 +40,15 @@ class ApplicationOAuth(Framework.TestCase):
         BASE_URL = "https://github.com/login/oauth/authorize"
         sample_uri = "https://myapp.com/some/path"
         sample_uri_encoded = "https%3A%2F%2Fmyapp.com%2Fsome%2Fpath"
-        self.assertEqual(
-            self.app.get_login_url(), f"{BASE_URL}?client_id={self.CLIENT_ID}"
-        )
-        self.assertTrue(
-            f"redirect_uri={sample_uri_encoded}"
-            in self.app.get_login_url(redirect_uri=sample_uri)
-        )
-        self.assertTrue(
-            f"client_id={self.CLIENT_ID}"
-            in self.app.get_login_url(redirect_uri=sample_uri)
-        )
-        self.assertTrue(
-            "state=123abc" in self.app.get_login_url(state="123abc", login="user")
-        )
-        self.assertTrue(
-            "login=user" in self.app.get_login_url(state="123abc", login="user")
-        )
-        self.assertTrue(
-            f"client_id={self.CLIENT_ID}"
-            in self.app.get_login_url(state="123abc", login="user")
-        )
+        self.assertEqual(self.app.get_login_url(), f"{BASE_URL}?client_id={self.CLIENT_ID}")
+        self.assertTrue(f"redirect_uri={sample_uri_encoded}" in self.app.get_login_url(redirect_uri=sample_uri))
+        self.assertTrue(f"client_id={self.CLIENT_ID}" in self.app.get_login_url(redirect_uri=sample_uri))
+        self.assertTrue("state=123abc" in self.app.get_login_url(state="123abc", login="user"))
+        self.assertTrue("login=user" in self.app.get_login_url(state="123abc", login="user"))
+        self.assertTrue(f"client_id={self.CLIENT_ID}" in self.app.get_login_url(state="123abc", login="user"))
 
     def testGetAccessToken(self):
-        access_token = self.app.get_access_token(
-            "oauth_code_removed", state="state_removed"
-        )
+        access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),
@@ -83,12 +66,8 @@ class ApplicationOAuth(Framework.TestCase):
 
     def testGetAccessTokenWithExpiry(self):
         with mock.patch("github.AccessToken.datetime") as dt:
-            dt.now = mock.Mock(
-                return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc)
-            )
-            access_token = self.app.get_access_token(
-                "oauth_code_removed", state="state_removed"
-            )
+            dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc))
+            access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),
@@ -111,14 +90,10 @@ class ApplicationOAuth(Framework.TestCase):
         )
 
     def testRefreshAccessToken(self):
-        access_token = self.app.get_access_token(
-            "oauth_code_removed", state="state_removed"
-        )
+        access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
 
         with mock.patch("github.AccessToken.datetime") as dt:
-            dt.now = mock.Mock(
-                return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc))
             refreshed = self.app.refresh_access_token(access_token.refresh_token)
 
         self.assertNotEqual(refreshed.token, access_token.token)

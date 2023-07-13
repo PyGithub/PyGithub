@@ -55,6 +55,4 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(rateLimit.core.limit, 5000)
         self.assertEqual(rateLimit.core.remaining, 4904)
         self.assertEqual(rateLimit.core.used, 96)
-        self.assertEqual(
-            rateLimit.core.reset, datetime(2023, 5, 15, 23, 57, 21, tzinfo=timezone.utc)
-        )
+        self.assertEqual(rateLimit.core.reset, datetime(2023, 5, 15, 23, 57, 21, tzinfo=timezone.utc))

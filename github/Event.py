@@ -110,24 +110,18 @@ class Event(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["actor"]
-            )
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "org" in attributes:  # pragma no branch
-            self._org = self._makeClassAttribute(
-                github.Organization.Organization, attributes["org"]
-            )
+            self._org = self._makeClassAttribute(github.Organization.Organization, attributes["org"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
         if "repo" in attributes:  # pragma no branch
-            self._repo = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repo"]
-            )
+            self._repo = self._makeClassAttribute(github.Repository.Repository, attributes["repo"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])

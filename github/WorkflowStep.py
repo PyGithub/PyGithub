@@ -29,9 +29,7 @@ class WorkflowStep(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__(
-            {"number": self._number.value, "name": self._name.value}
-        )
+        return self.get__repr__({"number": self._number.value, "name": self._name.value})
 
     @property
     def completed_at(self):
