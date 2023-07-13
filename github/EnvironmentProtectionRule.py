@@ -49,9 +49,7 @@ class EnvironmentProtectionRule(github.GithubObject.NonCompletableGithubObject):
     @property
     def reviewers(
         self,
-    ) -> List[
-        github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer
-    ]:
+    ) -> List[github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer]:
         return self._reviewers.value
 
     @property

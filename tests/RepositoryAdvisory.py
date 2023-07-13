@@ -44,9 +44,7 @@ class RepositoryAdvisory(Framework.TestCase):
             self.advisory.created_at,
             datetime(2023, 3, 28, 21, 41, 40, tzinfo=timezone.utc),
         )
-        self.assertListKeyEqual(
-            self.advisory.credits, lambda e: (e.login, e.type), [("octocat", "analyst")]
-        )
+        self.assertListKeyEqual(self.advisory.credits, lambda e: (e.login, e.type), [("octocat", "analyst")])
         self.assertListKeyEqual(
             self.advisory.credits_detailed,
             lambda e: (e.user.login, e.type),

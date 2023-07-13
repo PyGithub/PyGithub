@@ -88,6 +88,4 @@ class Reaction(CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

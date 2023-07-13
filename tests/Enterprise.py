@@ -88,9 +88,7 @@ class Enterprise(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.args[0], "Unknown URL scheme")
 
     def testLongUrl(self):
-        g = github.Github(
-            auth=self.login, base_url="http://my.enterprise.com/path/to/github"
-        )
+        g = github.Github(auth=self.login, base_url="http://my.enterprise.com/path/to/github")
         repos = g.get_user().get_repos()
         self.assertListKeyEqual(
             repos,

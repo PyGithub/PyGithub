@@ -36,9 +36,7 @@ from . import Framework
 class IssueComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = (
-            self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
-        )
+        self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
