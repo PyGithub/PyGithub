@@ -687,6 +687,7 @@ class Requester:
 
         encoded_input = None
         if input is not None:
+            assert encode is not None
             requestHeaders["Content-Type"], encoded_input = encode(input)
 
         self.NEW_DEBUG_FRAME(requestHeaders)
