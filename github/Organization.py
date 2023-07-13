@@ -52,6 +52,8 @@ import github.Plan
 import github.Project
 import github.Repository
 import github.Team
+import github.Secret
+import github.Variable
 
 from . import Consts
 
@@ -643,6 +645,38 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
+    def get_secrets(self):
+        """
+        Gets all organization secrets
+        :rtype: List[github.Secret.Secret]
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/secrets"
+        )
+        return [
+            github.Secret.Secret(
+                requester=self._requester,
+                headers={},
+                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
+                completed=False
+            )
+            for secret in data["secrets"]
+        ]
+
+    def get_secret(self, secret_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.Secret.Secret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False
+        )
+
     def create_secret(
         self,
         secret_name,
@@ -686,7 +720,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
-        return status == 201
+        return github.Secret.Secret(self._requester, headers, data, completed=True)
 
     def create_team(
         self,
@@ -735,6 +769,38 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "POST", f"{self.url}/teams", input=post_parameters
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
+    
+    def get_variables(self):
+        """
+        Gets all organization variables
+        :rtype: List[github.Variable.Variable]
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/actions/variables"
+        )
+        return [
+            github.Variable.Variable(
+                requester=self._requester,
+                headers={},
+                attributes={"url": f"{self.url}/actions/variables/{secret['name']}"},
+                completed=False
+            )
+            for secret in data["variables"]
+        ]
+
+    def get_variable(self, variable_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :param variable_name: string
+        :rtype: github.Variable.Variable
+        """
+        assert isinstance(variable_name, str), variable_name
+        return github.Variable.Variable(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            completed=False
+        )
 
     def create_variable(
         self,
@@ -776,7 +842,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "POST", f"{self.url}/actions/variables", input=post_parameters
         )
-        return status == 201
+
+        return github.Variable.Variable(self._requester, headers, data, completed=True)
 
     def delete_hook(self, id):
         """
@@ -788,30 +855,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/hooks/{id}"
         )
-
-    def delete_secret(self, secret_name):
-        """
-        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-an-organization-secret>`_
-        :param secret_name: string
-        :rtype: bool
-        """
-        assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
-        )
-        return status == 204
-
-    def delete_variable(self, variable_name: str) -> bool:
-        """
-        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#delete-an-organization-variable>`_
-        :param variable_name: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/variables/{variable_name}"
-        )
-        return status == 204
 
     def edit(
         self,
