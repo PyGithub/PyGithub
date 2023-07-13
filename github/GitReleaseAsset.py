@@ -149,6 +149,12 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         return GitReleaseAsset(self._requester, headers, data, completed=True)
 
+    def download_asset(self, io):
+        """
+        Download the asset.
+        """
+        self._requester.download(self.browser_download_url, file_like=io)
+
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet

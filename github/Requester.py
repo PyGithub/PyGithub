@@ -648,6 +648,19 @@ class Requester:
         response = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
         return self.__check(response.status, response.headers, response.text)
 
+    def download(
+        self,
+        public_url: str,
+        file_like: IOBase,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> None:
+        response = self.__requestEncode(
+            cnx, "GET", public_url, None, None, None, None, follow_redirects=True, stream=True
+        )
+        response.underlying.raise_for_status()
+        for chunk in response.underlying.iter_content(chunk_size=128):
+            file_like.write(chunk)
+
     def __requestEncode(
         self,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],

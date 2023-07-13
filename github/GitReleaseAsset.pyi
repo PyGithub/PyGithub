@@ -1,5 +1,6 @@
 from datetime import datetime
-from typing import Any, Dict, Union
+from typing import Any, Dict
+from io import IOBase
 
 from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
@@ -15,6 +16,7 @@ class GitReleaseAsset(CompletableGithubObject):
     @property
     def created_at(self) -> datetime: ...
     def delete_asset(self) -> bool: ...
+    def download_asset(self, io: IOBase) -> None: ...
     @property
     def download_count(self) -> int: ...
     @property
