@@ -63,7 +63,7 @@ import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
 
 import requests
 import requests.adapters
@@ -87,15 +87,26 @@ ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 class RequestsResponse:
     # mimic the httplib response object
     def __init__(self, r: requests.Response):
-        self.status = r.status_code
-        self.headers = r.headers
-        self.text = r.text
+        self.underlying = r
+        # Cached properties
+        self._headers = None
+        self._text = None
 
-    def getheaders(self) -> ItemsView[str, str]:
-        return self.headers.items()
+    @property
+    def status(self) -> int:
+        return self.underlying.status_code
 
-    def read(self) -> str:
-        return self.text
+    @property
+    def headers(self) -> Dict[str, str]:
+        if self._headers is None:
+            self._headers = {k.lower(): v for k, v in self.underlying.headers.items()}
+        return self._headers
+
+    @property
+    def text(self) -> str:
+        if self._text is None:
+            self._text = self.underlying.text
+        return self._text
 
 
 class HTTPSRequestsConnectionClass:
@@ -148,7 +159,7 @@ class HTTPSRequestsConnectionClass:
         self.input = input
         self.headers = headers
 
-    def getresponse(self) -> RequestsResponse:
+    def getresponse(self, allow_redirects: bool = False, stream: bool = False) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
         url = f"{self.protocol}://{self.host}:{self.port}{self.url}"
         r = verb(
@@ -157,7 +168,8 @@ class HTTPSRequestsConnectionClass:
             data=self.input,
             timeout=self.timeout,
             verify=self.verify,
-            allow_redirects=False,
+            stream=stream,
+            allow_redirects=allow_redirects,
         )
         return RequestsResponse(r)
 
@@ -564,7 +576,8 @@ class Requester:
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        response = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return response.status, response.headers, response.text
 
     def requestMultipart(
         self,
@@ -588,7 +601,8 @@ class Requester:
             encoded_input += f"--{boundary}--{eol}"
             return f"multipart/form-data; boundary={boundary}", encoded_input
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        response = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return response.status, response.headers, response.text
 
     def requestBlob(
         self,
@@ -613,16 +627,26 @@ class Requester:
 
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        response = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        return response.status, response.headers, response.text
 
-    def requestMemoryBlobAndCheck(self, verb, url, parameters, headers, file_like, cnx=None):
+    def requestMemoryBlobAndCheck(
+        self,
+        verb: str,
+        url: str,
+        parameters: Optional[Dict[str, str]],
+        headers: Dict[str, str],
+        file_like: IOBase,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> Tuple[Dict[str, Any], Any]:
         # The expected signature of encode means that the argument is ignored.
         def encode(_):
             return headers["Content-Type"], file_like
 
         if not cnx:
             cnx = self.__customConnection(url)
-        return self.__check(*self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode))
+        response = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
+        return self.__check(response.status, response.headers, response.text)
 
     def __requestEncode(
         self,
@@ -632,8 +656,9 @@ class Requester:
         parameters: Optional[Dict[str, str]],
         requestHeaders: Optional[Dict[str, str]],
         input: Optional[T],
-        encode: Callable[[T], Tuple[str, Any]],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        encode: Optional[Callable[[T], Tuple[str, Any]]],
+        **request_kwargs: Any,
+    ) -> RequestsResponse:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = {}
@@ -653,22 +678,22 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        response = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input, **request_kwargs)
 
-        if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
+        if Consts.headerRateRemaining in response.headers and Consts.headerRateLimit in response.headers:
             self.rate_limiting = (
-                int(responseHeaders[Consts.headerRateRemaining]),
-                int(responseHeaders[Consts.headerRateLimit]),
+                int(response.headers[Consts.headerRateRemaining]),
+                int(response.headers[Consts.headerRateLimit]),
             )
-        if Consts.headerRateReset in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
+        if Consts.headerRateReset in response.headers:
+            self.rate_limiting_resettime = int(response.headers[Consts.headerRateReset])
 
-        if Consts.headerOAuthScopes in responseHeaders:
-            self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
+        if Consts.headerOAuthScopes in response.headers:
+            self.oauth_scopes = response.headers[Consts.headerOAuthScopes].split(", ")
 
-        self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
+        self.DEBUG_ON_RESPONSE(response.status, response.headers, response.text)
 
-        return status, responseHeaders, output
+        return response
 
     def __requestRaw(
         self,
@@ -677,7 +702,8 @@ class Requester:
         url: str,
         requestHeaders: Dict[str, str],
         input: Optional[Any],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        **request_kwargs: Any,
+    ) -> RequestsResponse:
         self.__deferRequest(verb)
 
         try:
@@ -685,27 +711,23 @@ class Requester:
             if cnx is None:
                 cnx = self.__createConnection()
             cnx.request(verb, url, input, requestHeaders)
-            response = cnx.getresponse()
-
-            status = response.status
-            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
-            output = response.read()
+            response = cnx.getresponse(**request_kwargs)
 
             cnx.close()
             if input:
                 if isinstance(input, IOBase):
                     input.close()
 
-            self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+            self.__log(verb, url, requestHeaders, input, response)
 
-            if status == 202 and (
+            if response.status == 202 and (
                 verb == "GET" or verb == "HEAD"
             ):  # only for requests that are considered 'safe' in RFC 2616
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
 
-            if status == 301 and "location" in responseHeaders:
-                location = responseHeaders["location"]
+            if response.status == 301 and "location" in response.headers:
+                location = response.headers["location"]
                 o = urllib.parse.urlparse(location)
                 if o.scheme != self.__scheme:
                     raise RuntimeError(
@@ -729,7 +751,7 @@ class Requester:
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
                 return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
-            return status, responseHeaders, output
+            return response
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start
@@ -819,9 +841,7 @@ class Requester:
         url: str,
         requestHeaders: Dict[str, str],
         input: Optional[Any],
-        status: Optional[int],
-        responseHeaders: Dict[str, Any],
-        output: Optional[str],
+        response: RequestsResponse,
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
@@ -844,9 +864,9 @@ class Requester:
                 url,
                 headersForRequest,
                 input,
-                status,
-                responseHeaders,
-                output,
+                response.status,
+                response.headers,
+                response.text,
             )
 
 
