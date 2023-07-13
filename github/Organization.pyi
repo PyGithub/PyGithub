@@ -15,6 +15,8 @@ from github.Project import Project
 from github.PublicKey import PublicKey
 from github.Repository import Repository
 from github.Team import Team
+from github.Secret import Secret
+from github.Variable import Variable
 
 class Organization(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -72,13 +74,20 @@ class Organization(CompletableGithubObject):
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
+    def get_secrets(
+        self,
+    ) -> PaginatedList[Secret]: ...
+    def get_secret(
+        self,
+        secret_name: str,
+    ) -> Secret: ...
     def create_secret(
         self,
         secret_name: str,
         unencrypted_value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> bool: ...
+    ) -> Secret: ...
     def create_team(
         self,
         name: str,
@@ -87,13 +96,20 @@ class Organization(CompletableGithubObject):
         privacy: Union[str, _NotSetType] = ...,
         description: Union[str, _NotSetType] = ...,
     ) -> Team: ...
+    def get_variables(
+        self,
+    ) -> PaginatedList[Variable]: ...
+    def get_variable(
+        self,
+        variable_name: str,
+    ) -> Variable: ...
     def create_variable(
         self,
         variable_name: str,
         value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> bool: ...
+    ) -> Variable: ...
     @property
     def created_at(self) -> datetime: ...
     def delete_hook(self, id: int) -> None: ...
@@ -129,7 +145,7 @@ class Organization(CompletableGithubObject):
         value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> bool: ...
+    ) -> Variable: ...
     @property
     def email(self) -> Optional[str]: ...
     @property
