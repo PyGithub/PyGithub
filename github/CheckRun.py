@@ -73,9 +73,7 @@ class CheckRun(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
 
     def __repr__(self):
-        return self.get__repr__(
-            {"id": self._id.value, "conclusion": self._conclusion.value}
-        )
+        return self.get__repr__({"id": self._id.value, "conclusion": self._conclusion.value})
 
     @property
     def app(self) -> GithubApp:
@@ -210,9 +208,7 @@ class CheckRun(CompletableGithubObject):
         if is_defined(started_at):
             post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
         if is_defined(completed_at):
-            post_parameters["completed_at"] = completed_at.strftime(
-                "%Y-%m-%dT%H:%M:%SZ"
-            )
+            post_parameters["completed_at"] = completed_at.strftime("%Y-%m-%dT%H:%M:%SZ")
         if is_defined(conclusion):
             post_parameters["conclusion"] = conclusion
         if is_defined(output):
@@ -220,23 +216,15 @@ class CheckRun(CompletableGithubObject):
         if is_defined(actions):
             post_parameters["actions"] = actions
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _useAttributes(self, attributes) -> None:
         if "app" in attributes:  # pragma no branch
-            self._app = self._makeClassAttribute(
-                github.GithubApp.GithubApp, attributes["app"]
-            )
+            self._app = self._makeClassAttribute(github.GithubApp.GithubApp, attributes["app"])
         # This only gives us a dictionary with `id` attribute of `check_suite`
-        if (
-            "check_suite" in attributes and "id" in attributes["check_suite"]
-        ):  # pragma no branch
-            self._check_suite_id = self._makeIntAttribute(
-                attributes["check_suite"]["id"]
-            )
+        if "check_suite" in attributes and "id" in attributes["check_suite"]:  # pragma no branch
+            self._check_suite_id = self._makeIntAttribute(attributes["check_suite"]["id"])
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
@@ -256,9 +244,7 @@ class CheckRun(CompletableGithubObject):
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "output" in attributes:  # pragma no branch
-            self._output = self._makeClassAttribute(
-                github.CheckRunOutput.CheckRunOutput, attributes["output"]
-            )
+            self._output = self._makeClassAttribute(github.CheckRunOutput.CheckRunOutput, attributes["output"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
                 github.PullRequest.PullRequest, attributes["pull_requests"]

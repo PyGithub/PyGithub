@@ -29,9 +29,7 @@ from . import Framework
 class DeploymentStatus(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.deployment = (
-            self.g.get_user().get_repo("PyGithub").get_deployment(263877258)
-        )
+        self.deployment = self.g.get_user().get_repo("PyGithub").get_deployment(263877258)
         self.status = self.deployment.get_status(388454671)
 
     def testAttributes(self):

@@ -20,11 +20,10 @@
 #                                                                              #
 ################################################################################
 
-import github.EnvironmentProtectionRuleReviewer
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithubObject):
+class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     """
     This class represents a deployment branch policy for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
@@ -41,18 +40,14 @@ class EnvironmentDeploymentBranchPolicy(github.GithubObject.NonCompletableGithub
         return self._custom_branch_policies.value
 
     def _initAttributes(self):
-        self._protected_branches = github.GithubObject.NotSet
-        self._custom_branch_policies = github.GithubObject.NotSet
+        self._protected_branches: Attribute[bool] = NotSet
+        self._custom_branch_policies: Attribute[bool] = NotSet
 
     def _useAttributes(self, attributes):
         if "protected_branches" in attributes:  # pragma no branch
-            self._protected_branches = self._makeBoolAttribute(
-                attributes["protected_branches"]
-            )
+            self._protected_branches = self._makeBoolAttribute(attributes["protected_branches"])
         if "custom_branch_policies" in attributes:  # pragma no branch
-            self._custom_branch_policies = self._makeBoolAttribute(
-                attributes["custom_branch_policies"]
-            )
+            self._custom_branch_policies = self._makeBoolAttribute(attributes["custom_branch_policies"])
 
 
 class EnvironmentDeploymentBranchPolicyParams:
@@ -60,9 +55,7 @@ class EnvironmentDeploymentBranchPolicyParams:
     This class presents the deployment branch policy parameters as can be configured for an Environment.
     """
 
-    def __init__(
-        self, protected_branches: bool = False, custom_branch_policies: bool = False
-    ):
+    def __init__(self, protected_branches: bool = False, custom_branch_policies: bool = False):
         assert isinstance(protected_branches, bool)
         assert isinstance(custom_branch_policies, bool)
         self.protected_branches = protected_branches

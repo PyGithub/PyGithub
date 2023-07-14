@@ -36,18 +36,19 @@ class Artifact(NonCompletableGithubObject):
     This class represents an Artifact of Github Run
     """
 
-    _archive_download_url: Attribute[str]
-    _created_at: Attribute[datetime]
-    _expired: Attribute[bool]
-    _expires_at: Attribute[datetime]
-    _head_sha: Attribute[str]
-    _id: Attribute[int]
-    _name: Attribute[str]
-    _node_id: Attribute[str]
-    _size_in_bytes: Attribute[int]
-    _updated_at: Attribute[datetime]
-    _url: Attribute[str]
-    _workflow_run: Attribute[WorkflowRun]
+    def _initAttributes(self):
+        self._archive_download_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._expired: Attribute[bool] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._size_in_bytes: Attribute[int] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._workflow_run: Attribute[WorkflowRun] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -107,36 +108,20 @@ class Artifact(NonCompletableGithubObject):
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
         return status == 204
 
-    def _initAttributes(self):
-        self._archive_download_url = NotSet
-        self._created_at = NotSet
-        self._expired = NotSet
-        self._expires_at = NotSet
-        self._head_sha = NotSet
-        self._id = NotSet
-        self._name = NotSet
-        self._node_id = NotSet
-        self._size_in_bytes = NotSet
-        self._updated_at = NotSet
-        self._url = NotSet
-        self._workflow_run = NotSet
-
     def _useAttributes(self, attributes):
         if "archive_download_url" in attributes:  # pragma no branch
-            self._archive_download_url = self._makeStringAttribute(
-                attributes["archive_download_url"]
-            )
+            self._archive_download_url = self._makeStringAttribute(attributes["archive_download_url"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(
-                attributes["created_at"], (str,)
-            ), attributes["created_at"]
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str,)), attributes[
+                "created_at"
+            ]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "expired" in attributes:  # pragma no branch
             self._expired = self._makeBoolAttribute(attributes["expired"])
         if "expires_at" in attributes:  # pragma no branch
-            assert attributes["expires_at"] is None or isinstance(
-                attributes["expires_at"], (str,)
-            ), attributes["expires_at"]
+            assert attributes["expires_at"] is None or isinstance(attributes["expires_at"], (str,)), attributes[
+                "expires_at"
+            ]
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "head_sha" in attributes:  # pragma no branch
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
@@ -149,13 +134,11 @@ class Artifact(NonCompletableGithubObject):
         if "size_in_bytes" in attributes:  # pragma no branch
             self._size_in_bytes = self._makeIntAttribute(attributes["size_in_bytes"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(
-                attributes["updated_at"], (str,)
-            ), attributes["updated_at"]
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str,)), attributes[
+                "updated_at"
+            ]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_run" in attributes:  # pragma no branch
-            self._workflow_run = self._makeClassAttribute(
-                github.WorkflowRun.WorkflowRun, attributes["workflow_run"]
-            )
+            self._workflow_run = self._makeClassAttribute(github.WorkflowRun.WorkflowRun, attributes["workflow_run"])

@@ -66,9 +66,7 @@ class RecordingMockConnection(Framework.RecordingConnection):
     ("replaying_connection_class", "protocol", "response_body", "expected_recording"),
     list(tuple(itertools.chain(*p)) for p in PARAMETERS),
 )
-def testRecordAndReplay(
-    replaying_connection_class, protocol, response_body, expected_recording
-):
+def testRecordAndReplay(replaying_connection_class, protocol, response_body, expected_recording):
     file = StringIO()
     host = "api.github.com"
     verb = "GET"
@@ -84,9 +82,7 @@ def testRecordAndReplay(
     connection.getresponse.return_value = response
 
     # write mock response to buffer
-    recording_connection = RecordingMockConnection(
-        file, protocol, host, None, lambda *args, **kwds: connection
-    )
+    recording_connection = RecordingMockConnection(file, protocol, host, None, lambda *args, **kwds: connection)
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()
     recording_connection.close()

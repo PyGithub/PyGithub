@@ -120,6 +120,4 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
                 attributes["location"],
             )
         if "classifications" in attributes:  # pragma no branch
-            self._classifications = self._makeListOfStringsAttribute(
-                attributes["classifications"]
-            )
+            self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])

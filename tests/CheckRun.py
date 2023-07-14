@@ -48,12 +48,8 @@ class CheckRun(Framework.TestCase):
             self.check_run.details_url,
             "https://github.com/PyGithub/PyGithub/runs/1039891953",
         )
-        self.assertEqual(
-            self.check_run.external_id, "6b512fe7-587c-5ecc-c4a3-03b7358c152d"
-        )
-        self.assertEqual(
-            self.check_run.head_sha, "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a"
-        )
+        self.assertEqual(self.check_run.external_id, "6b512fe7-587c-5ecc-c4a3-03b7358c152d")
+        self.assertEqual(self.check_run.head_sha, "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a")
         self.assertEqual(
             self.check_run.html_url,
             "https://github.com/PyGithub/PyGithub/runs/1039891953",
@@ -72,9 +68,7 @@ class CheckRun(Framework.TestCase):
             self.check_run.url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891953",
         )
-        self.assertEqual(
-            repr(self.check_run), 'CheckRun(id=1039891953, conclusion="success")'
-        )
+        self.assertEqual(repr(self.check_run), 'CheckRun(id=1039891953, conclusion="success")')
 
     def testCheckRunOutputAttributes(self):
         check_run_output = self.repo.get_check_run(1039891917).output
@@ -89,9 +83,7 @@ class CheckRun(Framework.TestCase):
             check_run_output.annotations_url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891917/annotations",
         )
-        self.assertEqual(
-            repr(check_run_output), 'CheckRunOutput(title="test (Python 3.6)")'
-        )
+        self.assertEqual(repr(check_run_output), 'CheckRunOutput(title="test (Python 3.6)")')
 
     def testGetCheckRunsForRef(self):
         check_runs = self.commit.get_check_runs()
@@ -345,6 +337,4 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.status, "completed")
         annotation_list = check_run.get_annotations()
         self.assertEqual(annotation_list.totalCount, 2)
-        self.assertListEqual(
-            [annotation.start_line for annotation in annotation_list], [2, 4]
-        )
+        self.assertListEqual([annotation.start_line for annotation in annotation_list], [2, 4])

@@ -44,16 +44,12 @@ class Installation(Framework.BasicTestCase):
 
         repos = list(installation.get_repos())
         self.assertEqual(len(repos), 2)
-        self.assertListEqual(
-            [repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"]
-        )
+        self.assertListEqual([repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"])
 
     def testGetGithubForInstallation(self):
         # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
         # we ignore InsecureRequestWarning from urllib3.connectionpool
-        with self.ignoreWarning(
-            category=InsecureRequestWarning, module="urllib3.connectionpool"
-        ):
+        with self.ignoreWarning(category=InsecureRequestWarning, module="urllib3.connectionpool"):
             self.auth = AppAuth(319953, GithubIntegration.PRIVATE_KEY)
             self.integration = github.GithubIntegration(
                 auth=self.auth,
@@ -71,18 +67,10 @@ class Installation(Framework.BasicTestCase):
             g = installation.get_github_for_installation()
 
             self.assertIsInstance(g._Github__requester.auth, AppInstallationAuth)
-            self.assertEqual(
-                g._Github__requester._Requester__base_url, "https://api.github.com"
-            )
-            self.assertEqual(
-                g._Github__requester._Requester__timeout, Consts.DEFAULT_TIMEOUT + 10
-            )
-            self.assertEqual(
-                g._Github__requester._Requester__userAgent, "PyGithub/Python-Test"
-            )
-            self.assertEqual(
-                g._Github__requester.per_page, Consts.DEFAULT_PER_PAGE + 10
-            )
+            self.assertEqual(g._Github__requester._Requester__base_url, "https://api.github.com")
+            self.assertEqual(g._Github__requester._Requester__timeout, Consts.DEFAULT_TIMEOUT + 10)
+            self.assertEqual(g._Github__requester._Requester__userAgent, "PyGithub/Python-Test")
+            self.assertEqual(g._Github__requester.per_page, Consts.DEFAULT_PER_PAGE + 10)
             self.assertEqual(g._Github__requester._Requester__verify, False)
             self.assertEqual(g._Github__requester._Requester__retry, 3)
             self.assertEqual(g._Github__requester._Requester__pool_size, 10)

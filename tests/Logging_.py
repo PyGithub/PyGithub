@@ -86,9 +86,7 @@ class Logging(Framework.BasicTestCase):
         self.assertEqual(self.logger.output, output)
 
     def testLoggingWithBasicAuthentication(self):
-        self.assertEqual(
-            github.Github(auth=self.login).get_user().name, "Vincent Jacques"
-        )
+        self.assertEqual(github.Github(auth=self.login).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "Basic (login and password removed)",
@@ -115,9 +113,7 @@ class Logging(Framework.BasicTestCase):
         self.assertLogging("GET", url, requestHeaders, responseHeaders, output)
 
     def testLoggingWithOAuthAuthentication(self):
-        self.assertEqual(
-            github.Github(auth=self.oauth_token).get_user().name, "Vincent Jacques"
-        )
+        self.assertEqual(github.Github(auth=self.oauth_token).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "token (oauth token removed)",
@@ -172,9 +168,7 @@ class Logging(Framework.BasicTestCase):
     def testLoggingWithBaseUrl(self):
         # ReplayData forged, not recorded
         self.assertEqual(
-            github.Github(base_url="http://my.enterprise.com/my/prefix")
-            .get_user("jacquev6")
-            .name,
+            github.Github(base_url="http://my.enterprise.com/my/prefix").get_user("jacquev6").name,
             "Vincent Jacques",
         )
         url = "http://my.enterprise.com/my/prefix/users/jacquev6"
