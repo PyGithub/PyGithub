@@ -56,7 +56,7 @@ from typing import List
 import urllib3
 
 import github.ApplicationOAuth
-from github.Enterprise import Enterprise
+import github.Enterprise
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -351,15 +351,13 @@ class Github:
         """
         assert isinstance(login, str), login
         firstURL = f"/enterprises/{login}"
-        # There is no native "/enterprise/{enterprise}" api, so this function is a hub for under apis of enterprise administration. 
+        # There is no native "/enterprise/{enterprise}" api, so this function is a hub for under apis of enterprise administration.
         headers = {}
         data = {}
         # The response doesn't have the key of login and url, manually add it to data.
         data["login"] = login
         data["url"] = self.__requester.base_url + firstURL
-        return Enterprise(
-            self.__requester, headers, data, completed=True
-        )
+        return github.Enterprise.Enterprise(self.__requester, headers, data, completed=True)
 
     def get_repo(self, full_name_or_id, lazy=False):
         """

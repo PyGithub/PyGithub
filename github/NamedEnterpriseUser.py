@@ -46,7 +46,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._github_com_login)
         return self._github_com_login.value
-    
+
     @property
     def github_com_name(self):
         """
@@ -54,7 +54,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._github_com_name)
         return self._github_com_name.value
-    
+
     @property
     def enterprise_server_user_ids(self):
         """
@@ -62,7 +62,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._enterprise_server_user_ids)
         return self._enterprise_server_user_ids.value
-    
+
     @property
     def github_com_user(self):
         """
@@ -70,7 +70,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._github_com_user)
         return self._github_com_user.value
-            
+
     @property
     def enterprise_server_user(self):
         """
@@ -78,7 +78,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._enterprise_server_user)
         return self._enterprise_server_user.value
-            
+
     @property
     def visual_studio_subscription_user(self):
         """
@@ -86,7 +86,7 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._visual_studio_subscription_user)
         return self._visual_studio_subscription_user.value
-    
+
     @property
     def license_type(self):
         """
@@ -209,13 +209,17 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         if "github_com_name" in attributes:  # pragma no branch
             self._github_com_name = self._makeStringAttribute(attributes["github_com_name"])
         if "enterprise_server_user_ids" in attributes:  # pragma no branch
-            self._enterprise_server_user_ids = self._makeListOfStringsAttribute(attributes["enterprise_server_user_ids"])
+            self._enterprise_server_user_ids = self._makeListOfStringsAttribute(
+                attributes["enterprise_server_user_ids"]
+            )
         if "github_com_user" in attributes:  # pragma no branch
             self._github_com_user = self._makeBoolAttribute(attributes["github_com_user"])
         if "enterprise_server_user" in attributes:  # pragma no branch
             self._enterprise_server_user = self._makeBoolAttribute(attributes["enterprise_server_user"])
         if "visual_studio_subscription_user" in attributes:  # pragma no branch
-            self._visual_studio_subscription_user = self._makeBoolAttribute(attributes["visual_studio_subscription_user"])
+            self._visual_studio_subscription_user = self._makeBoolAttribute(
+                attributes["visual_studio_subscription_user"]
+            )
         if "license_type" in attributes:  # pragma no branch
             self._license_type = self._makeStringAttribute(attributes["license_type"])
         if "github_com_profile" in attributes:  # pragma no branch
@@ -223,21 +227,30 @@ class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
         if "github_com_member_roles" in attributes:  # pragma no branch
             self._github_com_member_roles = self._makeListOfStringsAttribute(attributes["github_com_member_roles"])
         if "github_com_enterprise_roles" in attributes:  # pragma no branch
-            self._github_com_enterprise_roles = self._makeListOfStringsAttribute(attributes["github_com_enterprise_roles"])
+            self._github_com_enterprise_roles = self._makeListOfStringsAttribute(
+                attributes["github_com_enterprise_roles"]
+            )
         if "github_com_verified_domain_emails" in attributes:  # pragma no branch
-            self._github_com_verified_domain_emails = self._makeListOfStringsAttribute(attributes["github_com_verified_domain_emails"])
+            self._github_com_verified_domain_emails = self._makeListOfStringsAttribute(
+                attributes["github_com_verified_domain_emails"]
+            )
         if "github_com_saml_name_id" in attributes:  # pragma no branch
             self._github_com_saml_name_id = self._makeStringAttribute(attributes["github_com_saml_name_id"])
         if "github_com_orgs_with_pending_invites" in attributes:  # pragma no branch
-            self._github_com_orgs_with_pending_invites = self._makeListOfStringsAttribute(attributes["github_com_orgs_with_pending_invites"])
+            self._github_com_orgs_with_pending_invites = self._makeListOfStringsAttribute(
+                attributes["github_com_orgs_with_pending_invites"]
+            )
         if "github_com_two_factor_auth" in attributes:  # pragma no branch
             self._github_com_two_factor_auth = self._makeBoolAttribute(attributes["github_com_two_factor_auth"])
         if "enterprise_server_primary_emails" in attributes:  # pragma no branch
-            self._enterprise_server_primary_emails = self._makeListOfStringsAttribute(attributes["enterprise_server_primary_emails"])
+            self._enterprise_server_primary_emails = self._makeListOfStringsAttribute(
+                attributes["enterprise_server_primary_emails"]
+            )
         if "visual_studio_license_status" in attributes:  # pragma no branch
             self._visual_studio_license_status = self._makeStringAttribute(attributes["visual_studio_license_status"])
         if "visual_studio_subscription_email" in attributes:  # pragma no branch
-            self._visual_studio_subscription_email = self._makeStringAttribute(attributes["visual_studio_subscription_email"])
+            self._visual_studio_subscription_email = self._makeStringAttribute(
+                attributes["visual_studio_subscription_email"]
+            )
         if "total_user_accounts" in attributes:  # pragma no branch
             self._total_user_accounts = self._makeIntAttribute(attributes["total_user_accounts"])
-

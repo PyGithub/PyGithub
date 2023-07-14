@@ -20,9 +20,10 @@
 #                                                                              #
 ################################################################################
 from typing import Any, Dict, Union
+
 from github.GithubObject import CompletableGithubObject, NotSet, _NotSetType
-from github.PaginatedList import PaginatedList
 from github.NamedEnterpriseUser import NamedEnterpriseUser
+from github.PaginatedList import PaginatedList
 
 
 class EnterpriseConsumedLicenses(CompletableGithubObject):
@@ -51,16 +52,13 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-
     def get_enterprise_users(
-        self, filter_:Union[str, _NotSetType]=NotSet, role:Union[str, _NotSetType]=NotSet
+        self, filter_: Union[str, _NotSetType] = NotSet, role: Union[str, _NotSetType] = NotSet
     ) -> PaginatedList[NamedEnterpriseUser]:
         """
         :calls: `GET /enterprise/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """
-        assert filter_ is NotSet or isinstance(
-            filter_, str
-        ), filter_
+        assert filter_ is NotSet or isinstance(filter_, str), filter_
         assert role is NotSet or isinstance(role, str), role
 
         url_parameters = {}
@@ -68,14 +66,7 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             url_parameters["filter"] = filter_
         if role is not NotSet:
             url_parameters["role"] = role
-        return PaginatedList(
-            NamedEnterpriseUser,
-            self._requester,
-            self.url,
-            url_parameters,
-            None,
-            "users"
-        )
+        return PaginatedList(NamedEnterpriseUser, self._requester, self.url, url_parameters, None, "users")
 
     def _initAttributes(self) -> None:
         self._total_seats_consumed = NotSet

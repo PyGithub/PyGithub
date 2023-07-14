@@ -20,8 +20,9 @@
 #                                                                              #
 ################################################################################
 from typing import Any, Dict
-from github.GithubObject import CompletableGithubObject, NotSet
+
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
+from github.GithubObject import CompletableGithubObject, NotSet
 
 
 class Enterprise(CompletableGithubObject):
@@ -52,9 +53,7 @@ class Enterprise(CompletableGithubObject):
         # The response doesn't have the key of login and url, manually add it to data.
         data["login"] = self.login
         data["url"] = self.url + "/consumed-licenses"
-        return EnterpriseConsumedLicenses(
-            self._requester, headers, data, completed=True
-        )
+        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._login = NotSet
