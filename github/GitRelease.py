@@ -228,12 +228,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not github.GithubObject.NotSet:
             post_parameters["target_commitish"] = target_commitish
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
-        return github.GitRelease.GitRelease(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def upload_asset(
         self,
@@ -269,9 +265,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             headers=headers,
             input=path,
         )
-        return github.GitReleaseAsset.GitReleaseAsset(
-            self._requester, resp_headers, data, completed=True
-        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def upload_asset_from_memory(
         self,
@@ -296,11 +290,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         assert isinstance(label, str), label
 
         post_parameters = {"label": label, "name": name}
-        content_type = (
-            content_type
-            if content_type is not github.GithubObject.NotSet
-            else Consts.defaultMediaType
-        )
+        content_type = content_type if content_type is not github.GithubObject.NotSet else Consts.defaultMediaType
         headers = {"Content-Type": content_type, "Content-Length": str(file_size)}
 
         resp_headers, data = self._requester.requestMemoryBlobAndCheck(
@@ -310,9 +300,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             headers=headers,
             file_like=file_like,
         )
-        return github.GitReleaseAsset.GitReleaseAsset(
-            self._requester, resp_headers, data, completed=True
-        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def get_assets(self):
         """
@@ -355,21 +343,15 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
         if "target_commitish" in attributes:
-            self._target_commitish = self._makeStringAttribute(
-                attributes["target_commitish"]
-            )
+            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
         if "draft" in attributes:
             self._draft = self._makeBoolAttribute(attributes["draft"])
         if "prerelease" in attributes:
             self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "generate_release_notes" in attributes:
-            self._generate_release_notes = self._makeBoolAttribute(
-                attributes["generate_release_notes"]
-            )
+            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
         if "author" in attributes:
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:

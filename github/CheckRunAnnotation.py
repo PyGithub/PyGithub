@@ -83,9 +83,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
-            self._annotation_level = self._makeStringAttribute(
-                attributes["annotation_level"]
-            )
+            self._annotation_level = self._makeStringAttribute(attributes["annotation_level"])
         if "end_column" in attributes:  # pragma no branch
             self._end_column = self._makeIntAttribute(attributes["end_column"])
         if "end_line" in attributes:  # pragma no branch

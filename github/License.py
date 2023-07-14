@@ -148,20 +148,12 @@ class License(github.GithubObject.CompletableGithubObject):
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "implementation" in attributes:  # pragma no branch
-            self._implementation = self._makeStringAttribute(
-                attributes["implementation"]
-            )
+            self._implementation = self._makeStringAttribute(attributes["implementation"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "permissions" in attributes:  # pragma no branch
-            self._permissions = self._makeListOfStringsAttribute(
-                attributes["permissions"]
-            )
+            self._permissions = self._makeListOfStringsAttribute(attributes["permissions"])
         if "conditions" in attributes:  # pragma no branch
-            self._conditions = self._makeListOfStringsAttribute(
-                attributes["conditions"]
-            )
+            self._conditions = self._makeListOfStringsAttribute(attributes["conditions"])
         if "limitations" in attributes:  # pragma no branch
-            self._limitations = self._makeListOfStringsAttribute(
-                attributes["limitations"]
-            )
+            self._limitations = self._makeListOfStringsAttribute(attributes["limitations"])

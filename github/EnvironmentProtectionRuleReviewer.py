@@ -36,9 +36,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._type: Attribute[str] = NotSet
-        self._reviewer: Attribute[
-            github.NamedUser.NamedUser | github.Team.Team
-        ] = NotSet
+        self._reviewer: Attribute[github.NamedUser.NamedUser | github.Team.Team] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
@@ -57,13 +55,9 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         if "reviewer" in attributes:  # pragma no branch
             assert self._type.value in ("User", "Team")
             if self._type.value == "User":
-                self._reviewer = self._makeClassAttribute(
-                    github.NamedUser.NamedUser, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["reviewer"])
             elif self._type.value == "Team":
-                self._reviewer = self._makeClassAttribute(
-                    github.Team.Team, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.Team.Team, attributes["reviewer"])
 
 
 class ReviewerParams:

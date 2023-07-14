@@ -159,9 +159,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in events
-        ), events
+        assert events is github.GithubObject.NotSet or all(isinstance(element, str) for element in events), events
         assert add_events is github.GithubObject.NotSet or all(
             isinstance(element, str) for element in add_events
         ), add_events
@@ -181,9 +179,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
             post_parameters["remove_events"] = remove_events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def test(self):

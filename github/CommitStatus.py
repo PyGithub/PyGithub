@@ -128,9 +128,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch

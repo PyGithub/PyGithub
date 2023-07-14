@@ -45,9 +45,7 @@ class Tag(NonCompletableGithubObject):
     """
 
     def __repr__(self) -> str:
-        return self.get__repr__(
-            {"name": self._name.value, "commit": self._commit.value}
-        )
+        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
 
     def _initAttributes(self) -> None:
         self._commit: Attribute[Commit] = NotSet
@@ -73,9 +71,7 @@ class Tag(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(
-                github.Commit.Commit, attributes["commit"]
-            )
+            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "tarball_url" in attributes:  # pragma no branch

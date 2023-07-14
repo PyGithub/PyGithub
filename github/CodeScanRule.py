@@ -84,8 +84,6 @@ class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
         if "severity" in attributes:  # pragma no branch
             self._severity = self._makeStringAttribute(attributes["severity"])
         if "security_severity_level" in attributes:  # pragma no branch
-            self._security_severity_level = self._makeStringAttribute(
-                attributes["security_severity_level"]
-            )
+            self._security_severity_level = self._makeStringAttribute(attributes["security_severity_level"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])

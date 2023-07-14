@@ -27,9 +27,7 @@ import github.EnvironmentProtectionRuleReviewer
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
-    from github.EnvironmentProtectionRuleReviewer import (
-        EnvironmentProtectionRuleReviewer,
-    )
+    from github.EnvironmentProtectionRuleReviewer import EnvironmentProtectionRuleReviewer
 
 
 class EnvironmentProtectionRule(NonCompletableGithubObject):

@@ -99,9 +99,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(
-            archived_state, str
-        ), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, str), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:
@@ -143,9 +141,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(
-            self._requester, headers, data, completed=True
-        )
+        return github.ProjectCard.ProjectCard(self._requester, headers, data, completed=True)
 
     def move(self, position):
         """

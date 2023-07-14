@@ -96,13 +96,9 @@ class RequiredPullRequestReviews(CompletableGithubObject):
                     github.Team.Team, attributes["dismissal_restrictions"]["teams"]
                 )
         if "dismiss_stale_reviews" in attributes:  # pragma no branch
-            self._dismiss_stale_reviews = self._makeBoolAttribute(
-                attributes["dismiss_stale_reviews"]
-            )
+            self._dismiss_stale_reviews = self._makeBoolAttribute(attributes["dismiss_stale_reviews"])
         if "require_code_owner_reviews" in attributes:  # pragma no branch
-            self._require_code_owner_reviews = self._makeBoolAttribute(
-                attributes["require_code_owner_reviews"]
-            )
+            self._require_code_owner_reviews = self._makeBoolAttribute(attributes["require_code_owner_reviews"])
         if "required_approving_review_count" in attributes:  # pragma no branch
             self._required_approving_review_count = self._makeIntAttribute(
                 attributes["required_approving_review_count"]

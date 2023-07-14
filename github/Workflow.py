@@ -162,35 +162,21 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(actor, str)
         ), actor
         assert (
-            branch is github.GithubObject.NotSet
-            or isinstance(branch, github.Branch.Branch)
-            or isinstance(branch, str)
+            branch is github.GithubObject.NotSet or isinstance(branch, github.Branch.Branch) or isinstance(branch, str)
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert created is github.GithubObject.NotSet or isinstance(
-            created, str
-        ), created
+        assert created is github.GithubObject.NotSet or isinstance(created, str), created
         assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
             exclude_pull_requests, bool
         ), exclude_pull_requests
-        assert check_suite_id is github.GithubObject.NotSet or isinstance(
-            check_suite_id, int
-        ), check_suite_id
-        assert head_sha is github.GithubObject.NotSet or isinstance(
-            head_sha, str
-        ), head_sha
+        assert check_suite_id is github.GithubObject.NotSet or isinstance(check_suite_id, int), check_suite_id
+        assert head_sha is github.GithubObject.NotSet or isinstance(head_sha, str), head_sha
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
-            url_parameters["actor"] = (
-                actor._identity
-                if isinstance(actor, github.NamedUser.NamedUser)
-                else actor
-            )
+            url_parameters["actor"] = actor._identity if isinstance(actor, github.NamedUser.NamedUser) else actor
         if branch is not github.GithubObject.NotSet:
-            url_parameters["branch"] = (
-                branch.name if isinstance(branch, github.Branch.Branch) else branch
-            )
+            url_parameters["branch"] = branch.name if isinstance(branch, github.Branch.Branch) else branch
         if event is not github.GithubObject.NotSet:
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:

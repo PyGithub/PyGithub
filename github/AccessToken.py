@@ -49,9 +49,7 @@ class AccessToken(NonCompletableGithubObject):
                 "scope": self.scope,
                 "type": self.type,
                 "expires_in": self.expires_in,
-                "refresh_token": (
-                    f"{self.refresh_token[:5]}..." if self.refresh_token else None
-                ),
+                "refresh_token": (f"{self.refresh_token[:5]}..." if self.refresh_token else None),
                 "refresh_token_expires_in": self.refresh_expires_in,
             }
         )
@@ -138,6 +136,4 @@ class AccessToken(NonCompletableGithubObject):
         if "refresh_token" in attributes:  # pragma no branch
             self._refresh_token = self._makeStringAttribute(attributes["refresh_token"])
         if "refresh_token_expires_in" in attributes:  # pragma no branch
-            self._refresh_expires_in = self._makeIntAttribute(
-                attributes["refresh_token_expires_in"]
-            )
+            self._refresh_expires_in = self._makeIntAttribute(attributes["refresh_token_expires_in"])

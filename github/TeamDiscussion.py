@@ -33,9 +33,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self) -> str:
-        return self.get__repr__(
-            {"number": self._number.value, "title": self._title.value}
-        )
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
     def author(self):
@@ -194,9 +192,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "body_html" in attributes:  # pragma no branch
@@ -212,9 +208,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "last_edited_at" in attributes:  # pragma no branch
-            self._last_edited_at = self._makeDatetimeAttribute(
-                attributes["last_edited_at"]
-            )
+            self._last_edited_at = self._makeDatetimeAttribute(attributes["last_edited_at"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch

@@ -51,9 +51,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
-        self._required_pull_request_reviews: Attribute[
-            RequiredPullRequestReviews
-        ] = NotSet
+        self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
 
@@ -90,9 +88,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
         if not is_defined(self._team_push_restrictions):
             return None
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, self._team_push_restrictions, None
-        )
+        return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
@@ -103,9 +99,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 attributes["required_status_checks"],
             )
         if "enforce_admins" in attributes:  # pragma no branch
-            self._enforce_admins = self._makeBoolAttribute(
-                attributes["enforce_admins"]["enabled"]
-            )
+            self._enforce_admins = self._makeBoolAttribute(attributes["enforce_admins"]["enabled"])
         if "required_pull_request_reviews" in attributes:  # pragma no branch
             self._required_pull_request_reviews = self._makeClassAttribute(
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,

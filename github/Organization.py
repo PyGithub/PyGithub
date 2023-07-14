@@ -425,12 +425,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert private is github.GithubObject.NotSet or isinstance(
-            private, bool
-        ), private
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         post_parameters = {
             "name": name,
             "owner": self.login,
@@ -445,9 +441,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
         )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_hook(
         self,
@@ -466,9 +460,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in events
-        ), events
+        assert events is github.GithubObject.NotSet or all(isinstance(element, str) for element in events), events
         assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,
@@ -478,9 +470,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["events"] = events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/hooks", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/hooks", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def create_project(self, name, body=github.GithubObject.NotSet):
@@ -546,39 +536,17 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert homepage is github.GithubObject.NotSet or isinstance(
-            homepage, str
-        ), homepage
-        assert private is github.GithubObject.NotSet or isinstance(
-            private, bool
-        ), private
-        assert visibility is github.GithubObject.NotSet or isinstance(
-            visibility, str
-        ), visibility
-        assert has_issues is github.GithubObject.NotSet or isinstance(
-            has_issues, bool
-        ), has_issues
-        assert has_wiki is github.GithubObject.NotSet or isinstance(
-            has_wiki, bool
-        ), has_wiki
-        assert has_downloads is github.GithubObject.NotSet or isinstance(
-            has_downloads, bool
-        ), has_downloads
-        assert has_projects is github.GithubObject.NotSet or isinstance(
-            has_projects, bool
-        ), has_projects
-        assert team_id is github.GithubObject.NotSet or isinstance(
-            team_id, int
-        ), team_id
-        assert auto_init is github.GithubObject.NotSet or isinstance(
-            auto_init, bool
-        ), auto_init
-        assert license_template is github.GithubObject.NotSet or isinstance(
-            license_template, str
-        ), license_template
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
+        assert homepage is github.GithubObject.NotSet or isinstance(homepage, str), homepage
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        assert visibility is github.GithubObject.NotSet or isinstance(visibility, str), visibility
+        assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
+        assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
+        assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, int), team_id
+        assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, str), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(
             gitignore_template, str
         ), gitignore_template
@@ -640,18 +608,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
         )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_secret(
         self,
         secret_name,
         unencrypted_value,
         visibility="all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
@@ -666,8 +630,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository)
-                for element in selected_repositories
+                isinstance(element, github.Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is github.GithubObject.NotSet
@@ -680,9 +643,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "visibility": visibility,
         }
         if selected_repositories is not github.GithubObject.NotSet:
-            put_parameters["selected_repository_ids"] = [
-                element.id for element in selected_repositories
-            ]
+            put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
         status, headers, data = self._requester.requestJson(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
@@ -710,31 +671,21 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert repo_names is github.GithubObject.NotSet or all(
             isinstance(element, github.Repository.Repository) for element in repo_names
         ), repo_names
-        assert permission is github.GithubObject.NotSet or isinstance(
-            permission, str
-        ), permission
-        assert privacy is github.GithubObject.NotSet or isinstance(
-            privacy, str
-        ), privacy
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
+        assert permission is github.GithubObject.NotSet or isinstance(permission, str), permission
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, str), privacy
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
         post_parameters = {
             "name": name,
         }
         if repo_names is not github.GithubObject.NotSet:
-            post_parameters["repo_names"] = [
-                element._identity for element in repo_names
-            ]
+            post_parameters["repo_names"] = [element._identity for element in repo_names]
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/teams", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/teams", input=post_parameters)
         return github.Team.Team(self._requester, headers, data, completed=True)
 
     def create_variable(
@@ -742,9 +693,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
@@ -759,8 +708,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository)
-                for element in selected_repositories
+                isinstance(element, github.Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is github.GithubObject.NotSet
@@ -771,9 +719,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "visibility": visibility,
         }
         if selected_repositories is not github.GithubObject.NotSet:
-            post_parameters["selected_repository_ids"] = [
-                element.id for element in selected_repositories
-            ]
+            post_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
         status, headers, data = self._requester.requestJson(
             "POST", f"{self.url}/actions/variables", input=post_parameters
         )
@@ -786,9 +732,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: None`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/hooks/{id}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/hooks/{id}")
 
     def delete_secret(self, secret_name):
         """
@@ -797,9 +741,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/secrets/{secret_name}"
-        )
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
         return status == 204
 
     def delete_variable(self, variable_name: str) -> bool:
@@ -809,9 +751,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/variables/{variable_name}"
-        )
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
     def edit(
@@ -835,20 +775,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: None
         """
-        assert billing_email is github.GithubObject.NotSet or isinstance(
-            billing_email, str
-        ), billing_email
+        assert billing_email is github.GithubObject.NotSet or isinstance(billing_email, str), billing_email
         assert blog is github.GithubObject.NotSet or isinstance(blog, str), blog
-        assert company is github.GithubObject.NotSet or isinstance(
-            company, str
-        ), company
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
+        assert company is github.GithubObject.NotSet or isinstance(company, str), company
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
         assert email is github.GithubObject.NotSet or isinstance(email, str), email
-        assert location is github.GithubObject.NotSet or isinstance(
-            location, str
-        ), location
+        assert location is github.GithubObject.NotSet or isinstance(location, str), location
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
         post_parameters = dict()
         if billing_email is not github.GithubObject.NotSet:
@@ -865,9 +797,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["location"] = location
         if name is not github.GithubObject.NotSet:
             post_parameters["name"] = name
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def edit_hook(
@@ -890,9 +820,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, int), id
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in events
-        ), events
+        assert events is github.GithubObject.NotSet or all(isinstance(element, str) for element in events), events
         assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,
@@ -902,9 +830,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["events"] = events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", f"{self.url}/hooks/{id}", input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/hooks/{id}", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def update_variable(
@@ -912,9 +838,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[
-            list[github.Repository.Repository]
-        ] = github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
@@ -929,8 +853,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository)
-                for element in selected_repositories
+                isinstance(element, github.Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is github.GithubObject.NotSet
@@ -941,9 +864,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "visibility": visibility,
         }
         if selected_repositories is not github.GithubObject.NotSet:
-            patch_parameters["selected_repository_ids"] = [
-                element.id for element in selected_repositories
-            ]
+            patch_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
         status, headers, data = self._requester.requestJson(
             "PATCH",
@@ -957,9 +878,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :calls: `GET /orgs/{org}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
-        return github.PaginatedList.PaginatedList(
-            github.Event.Event, self._requester, f"{self.url}/events", None
-        )
+        return github.PaginatedList.PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
 
     def get_hook(self, id):
         """
@@ -968,9 +887,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Hook.Hook`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/hooks/{id}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/hooks/{id}")
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def get_hooks(self):
@@ -978,13 +895,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :calls: `GET /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Hook.Hook`
         """
-        return github.PaginatedList.PaginatedList(
-            github.Hook.Hook, self._requester, f"{self.url}/hooks", None
-        )
+        return github.PaginatedList.PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
-    def get_hook_delivery(
-        self, hook_id: int, delivery_id: int
-    ) -> github.HookDelivery.HookDelivery:
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
         """
         :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
         :param hook_id: integer
@@ -996,9 +909,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(
-            self._requester, headers, data, completed=True
-        )
+        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
 
     def get_hook_deliveries(
         self, hook_id: int
@@ -1042,9 +953,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             isinstance(element, github.Label.Label) for element in labels
         ), labels
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
-        assert direction is github.GithubObject.NotSet or isinstance(
-            direction, str
-        ), direction
+        assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
         assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
@@ -1063,18 +972,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
             github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters
         )
 
-    def get_members(
-        self, filter_=github.GithubObject.NotSet, role=github.GithubObject.NotSet
-    ):
+    def get_members(self, filter_=github.GithubObject.NotSet, role=github.GithubObject.NotSet):
         """
         :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param filter_: string
         :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert filter_ is github.GithubObject.NotSet or isinstance(
-            filter_, str
-        ), filter_
+        assert filter_ is github.GithubObject.NotSet or isinstance(filter_, str), filter_
         assert role is github.GithubObject.NotSet or isinstance(role, str), role
 
         url_parameters = {}
@@ -1126,9 +1031,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param filter_: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert filter_ is github.GithubObject.NotSet or isinstance(
-            filter_, str
-        ), filter_
+        assert filter_ is github.GithubObject.NotSet or isinstance(filter_, str), filter_
 
         url_parameters = {}
         if filter_ is not github.GithubObject.NotSet:
@@ -1167,12 +1070,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
         :rtype: :class:`github.PublicKey.PublicKey`
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/secrets/public-key"
-        )
-        return github.PublicKey.PublicKey(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets/public-key")
+        return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def get_repo(self, name):
         """
@@ -1186,9 +1085,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             f"/repos/{self.login}/{name}",
             headers={"Accept": Consts.repoVisibilityPreview},
         )
-        return github.Repository.Repository(
-            self._requester, headers, data, completed=True
-        )
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(
         self,
@@ -1205,9 +1102,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert type is github.GithubObject.NotSet or isinstance(type, str), type
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
-        assert direction is github.GithubObject.NotSet or isinstance(
-            direction, str
-        ), direction
+        assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
 
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
@@ -1241,9 +1136,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(slug, str), slug
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/teams/{slug}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
         return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_teams(self):
@@ -1251,9 +1144,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :calls: `GET /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
-        return github.PaginatedList.PaginatedList(
-            github.Team.Team, self._requester, f"{self.url}/teams", None
-        )
+        return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
     def invitations(self):
         """
@@ -1283,9 +1174,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param teams: array of :class:`github.Team.Team`
         :rtype: None
         """
-        assert user is github.GithubObject.NotSet or isinstance(
-            user, github.NamedUser.NamedUser
-        ), user
+        assert user is github.GithubObject.NotSet or isinstance(user, github.NamedUser.NamedUser), user
         assert email is github.GithubObject.NotSet or isinstance(email, str), email
         assert (email is github.GithubObject.NotSet) ^ (
             user is github.GithubObject.NotSet
@@ -1316,9 +1205,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(invitee, github.NamedUser.NamedUser), invitee
-        status, headers, data = self._requester.requestJson(
-            "DELETE", f"{self.url}/invitations/{invitee.id}"
-        )
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/invitations/{invitee.id}")
         return status == 204
 
     def has_in_members(self, member):
@@ -1328,13 +1215,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestJson(
-            "GET", f"{self.url}/members/{member._identity}"
-        )
+        status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
         if status == 302:
-            status, headers, data = self._requester.requestJson(
-                "GET", headers["location"]
-            )
+            status, headers, data = self._requester.requestJson("GET", headers["location"])
         return status == 204
 
     def has_in_public_members(self, public_member):
@@ -1356,9 +1239,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/memberships/{member._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/memberships/{member._identity}")
 
     def remove_from_members(self, member):
         """
@@ -1367,9 +1248,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.url}/members/{member._identity}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
     def remove_from_public_members(self, public_member):
         """
@@ -1397,9 +1276,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(repos, (list, tuple)), repos
         assert all(isinstance(repo, str) for repo in repos), repos
-        assert lock_repositories is github.GithubObject.NotSet or isinstance(
-            lock_repositories, bool
-        ), lock_repositories
+        assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
         assert exclude_attachments is github.GithubObject.NotSet or isinstance(
             exclude_attachments, bool
         ), exclude_attachments
@@ -1414,9 +1291,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
-        return github.Migration.Migration(
-            self._requester, headers, data, completed=True
-        )
+        return github.Migration.Migration(self._requester, headers, data, completed=True)
 
     def get_migrations(self):
         """
@@ -1499,9 +1374,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "default_repository_permission" in attributes:  # pragma no branch
-            self._default_repository_permission = self._makeStringAttribute(
-                attributes["default_repository_permission"]
-            )
+            self._default_repository_permission = self._makeStringAttribute(attributes["default_repository_permission"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "disk_usage" in attributes:  # pragma no branch
@@ -1517,13 +1390,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "gravatar_id" in attributes:  # pragma no branch
             self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
         if "has_organization_projects" in attributes:  # pragma no branch
-            self._has_organization_projects = self._makeBoolAttribute(
-                attributes["has_organization_projects"]
-            )
+            self._has_organization_projects = self._makeBoolAttribute(attributes["has_organization_projects"])
         if "has_repository_projects" in attributes:  # pragma no branch
-            self._has_repository_projects = self._makeBoolAttribute(
-                attributes["has_repository_projects"]
-            )
+            self._has_repository_projects = self._makeBoolAttribute(attributes["has_repository_projects"])
         if "hooks_url" in attributes:  # pragma no branch
             self._hooks_url = self._makeStringAttribute(attributes["hooks_url"])
         if "html_url" in attributes:  # pragma no branch
@@ -1545,9 +1414,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "owned_private_repos" in attributes:  # pragma no branch
-            self._owned_private_repos = self._makeIntAttribute(
-                attributes["owned_private_repos"]
-            )
+            self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
         if "plan" in attributes:  # pragma no branch
             self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch
@@ -1555,21 +1422,15 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "public_gists" in attributes:  # pragma no branch
             self._public_gists = self._makeIntAttribute(attributes["public_gists"])
         if "public_members_url" in attributes:  # pragma no branch
-            self._public_members_url = self._makeStringAttribute(
-                attributes["public_members_url"]
-            )
+            self._public_members_url = self._makeStringAttribute(attributes["public_members_url"])
         if "public_repos" in attributes:  # pragma no branch
             self._public_repos = self._makeIntAttribute(attributes["public_repos"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "total_private_repos" in attributes:  # pragma no branch
-            self._total_private_repos = self._makeIntAttribute(
-                attributes["total_private_repos"]
-            )
+            self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "two_factor_requirement_enabled" in attributes:  # pragma no branch
-            self._two_factor_requirement_enabled = self._makeBoolAttribute(
-                attributes["two_factor_requirement_enabled"]
-            )
+            self._two_factor_requirement_enabled = self._makeBoolAttribute(attributes["two_factor_requirement_enabled"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch

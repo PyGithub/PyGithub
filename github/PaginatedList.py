@@ -263,7 +263,4 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
 
-        return [
-            self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data
-        ]
+        return [self.__contentClass(self.__requester, headers, element, completed=False) for element in data]

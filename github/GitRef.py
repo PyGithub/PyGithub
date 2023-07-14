@@ -34,13 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.GitObject
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_optional,
-)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 
 if TYPE_CHECKING:
     from github.GitObject import GitObject
@@ -87,16 +81,12 @@ class GitRef(CompletableGithubObject):
         assert isinstance(sha, str), sha
         assert is_optional(force, bool), force
         post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(
-                github.GitObject.GitObject, attributes["object"]
-            )
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch

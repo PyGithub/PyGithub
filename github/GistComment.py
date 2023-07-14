@@ -107,9 +107,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def _initAttributes(self) -> None:
@@ -132,6 +130,4 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
