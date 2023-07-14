@@ -29,6 +29,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.HookResponse
 
@@ -38,7 +40,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
     This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -194,7 +196,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._active = github.GithubObject.NotSet
         self._config = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -207,7 +209,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._ping_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "active" in attributes:  # pragma no branch
             self._active = self._makeBoolAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch

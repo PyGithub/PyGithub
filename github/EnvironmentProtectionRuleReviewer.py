@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.NamedUser
 import github.Team
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -32,11 +34,11 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     This class represents a reviewer for an EnvironmentProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._type: Attribute[str] = NotSet
         self._reviewer: Attribute[github.NamedUser.NamedUser | github.Team.Team] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
@@ -47,7 +49,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
         return self._reviewer.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "reviewer" in attributes:  # pragma no branch

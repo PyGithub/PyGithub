@@ -41,7 +41,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author: Attribute[NamedUser] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -62,7 +62,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._vulnerabilities: Attribute[list[RepositoryAdvisoryVulnerability]] = NotSet
         self._withdrawn_at: Attribute[datetime] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
 
     @property
@@ -152,7 +152,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         vulnerable_version_range: str | None = None,
         patched_versions: str | None = None,
         vulnerable_functions: list[str] | None = None,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
         """
@@ -170,7 +170,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
             ]
         )
 
-    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]):
+    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
@@ -197,7 +197,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self,
         login_or_user: str | github.NamedUser.NamedUser,
         credit_type: str,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a user for a vulnerability in a repository.
@@ -208,7 +208,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
     def offer_credits(
         self,
         credited: Iterable[Credit],
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a list of users for a vulnerability in a repository.
@@ -229,7 +229,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def revoke_credit(self, login_or_user: str | NamedUser):
+    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
@@ -248,7 +248,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def clear_credits(self):
+    def clear_credits(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
@@ -326,7 +326,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._useAttributes(data)
         return self
 
-    def accept_report(self):
+    def accept_report(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Accepts the advisory reported from an external reporter via private vulnerability reporting.
@@ -339,7 +339,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def publish(self):
+    def publish(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Publishes the advisory.
@@ -352,7 +352,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def close(self):
+    def close(self) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Closes the advisory.
@@ -365,7 +365,7 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "closed_at" in attributes:  # pragma no branch
