@@ -30,6 +30,10 @@ class Enterprise(CompletableGithubObject):
     This class represents Enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
     """
 
+    def _initAttributes(self) -> None:
+        self._login: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
@@ -54,10 +58,6 @@ class Enterprise(CompletableGithubObject):
         data["login"] = self.login
         data["url"] = self.url + "/consumed-licenses"
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
-
-    def _initAttributes(self) -> None:
-        self._login: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "login" in attributes:  # pragma no branch

@@ -31,6 +31,12 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
     This class represents Enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
     """
 
+    def _initAttributes(self) -> None:
+        self._total_seats_consumed: Attribute[int] = NotSet
+        self._total_seats_purchased: Attribute[int] = NotSet
+        self._login: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
@@ -67,12 +73,6 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         if role is not NotSet:
             url_parameters["role"] = role
         return PaginatedList(NamedEnterpriseUser, self._requester, self.url, url_parameters, None, "users")
-
-    def _initAttributes(self) -> None:
-        self._total_seats_consumed: Attribute[int] = NotSet
-        self._total_seats_purchased: Attribute[int] = NotSet
-        self._login: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "total_seats_consumed" in attributes:  # pragma no branch
