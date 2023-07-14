@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, Iterable, Literal, List, Optional, Union, overload
+from typing import Any, Dict, Iterable, List, Optional, Union, overload
 
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser

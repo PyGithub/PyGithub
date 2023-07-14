@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 

@@ -129,7 +129,6 @@ import typing
 import urllib.parse
 from base64 import b64encode
 from datetime import date, datetime, timezone
-from typing import Union, Literal
 
 from deprecated import deprecated
 
