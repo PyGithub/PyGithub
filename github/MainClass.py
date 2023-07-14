@@ -56,7 +56,7 @@ from typing import List
 import urllib3
 
 import github.ApplicationOAuth
-import github.EnterpriseConsumedLicenses
+from github.Enterprise import Enterprise
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -363,19 +363,21 @@ class Github:
             url_parameters,
         )
 
-    def get_enterprise_consumed_licenses(self, login):
+    def get_enterprise(self, login):
         """
-        :calls: `GET /enterprise/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        :calls: `GET /enterprise/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
         :param login: string
-        :rtype: :class:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses`
+        :rtype: :class:`Enterprise`
         """
         assert isinstance(login, str), login
-        firstURL = f"/enterprises/{login}/consumed-licenses"
-        headers, data = self.__requester.requestJsonAndCheck("GET", firstURL)
+        firstURL = f"/enterprises/{login}"
+        # There is no native "/enterprise/{enterprise}" api, so this function is a hub for under apis of enterprise administration. 
+        headers = {}
+        data = {}
         # The response doesn't have the key of login and url, manually add it to data.
         data["login"] = login
         data["url"] = self.__requester.base_url + firstURL
-        return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
+        return Enterprise(
             self.__requester, headers, data, completed=True
         )
 

@@ -19,27 +19,18 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict, Union
-from github.GithubObject import CompletableGithubObject, NotSet, _NotSetType
-from github.PaginatedList import PaginatedList
-from github.NamedEnterpriseUser import NamedEnterpriseUser
+from typing import Any, Dict
+from github.GithubObject import CompletableGithubObject, NotSet
+from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 
 
-class EnterpriseConsumedLicenses(CompletableGithubObject):
+class Enterprise(CompletableGithubObject):
     """
     This class represents Enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
     """
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
-
-    @property
-    def total_seats_consumed(self) -> int:
-        return self._total_seats_consumed.value
-
-    @property
-    def total_seats_purchased(self) -> int:
-        return self._total_seats_purchased.value
 
     @property
     def login(self) -> str:
@@ -51,43 +42,25 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-
-    def get_enterprise_users(
-        self, filter_:Union[str, _NotSetType]=NotSet, role:Union[str, _NotSetType]=NotSet
-    ) -> PaginatedList[NamedEnterpriseUser]:
+    def get_enterprise_consumed_licenses(self) -> EnterpriseConsumedLicenses:
         """
         :calls: `GET /enterprise/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """
-        assert filter_ is NotSet or isinstance(
-            filter_, str
-        ), filter_
-        assert role is NotSet or isinstance(role, str), role
-
-        url_parameters = {}
-        if filter_ is not NotSet:
-            url_parameters["filter"] = filter_
-        if role is not NotSet:
-            url_parameters["role"] = role
-        return PaginatedList(
-            NamedEnterpriseUser,
-            self._requester,
-            self.url,
-            url_parameters,
-            None,
-            "users"
+        assert isinstance(self.login, str), self.login
+        firstURL = f"/enterprises/{self.login}/consumed-licenses"
+        headers, data = self._requester.requestJsonAndCheck("GET", firstURL)
+        # The response doesn't have the key of login and url, manually add it to data.
+        data["login"] = self.login
+        data["url"] = self.url + "/consumed-licenses"
+        return EnterpriseConsumedLicenses(
+            self._requester, headers, data, completed=True
         )
 
     def _initAttributes(self) -> None:
-        self._total_seats_consumed = NotSet
-        self._total_seats_purchased = NotSet
         self._login = NotSet
         self._url = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "total_seats_consumed" in attributes:  # pragma no branch
-            self._total_seats_consumed = self._makeIntAttribute(attributes["total_seats_consumed"])
-        if "total_seats_purchased" in attributes:  # pragma no branch
-            self._total_seats_purchased = self._makeIntAttribute(attributes["total_seats_purchased"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         if "url" in attributes:  # pragma no branch
