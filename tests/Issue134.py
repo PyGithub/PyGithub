@@ -29,9 +29,7 @@ import github
 from . import Framework
 
 
-class Issue134(
-    Framework.BasicTestCase
-):  # https://github.com/jacquev6/PyGithub/pull/134
+class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/pull/134
     def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
         g = github.Github(auth=self.oauth_token)
         with self.assertRaises(github.GithubException) as raisedexp:

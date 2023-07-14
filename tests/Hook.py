@@ -54,9 +54,7 @@ class Hook(Framework.TestCase):
             self.hook.updated_at,
             datetime(2012, 5, 29, 18, 49, 47, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"
-        )
+        self.assertEqual(self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993")
         self.assertEqual(
             self.hook.test_url,
             "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests",
