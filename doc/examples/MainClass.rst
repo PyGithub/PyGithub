@@ -47,7 +47,7 @@ Get enterprise consumed licenses by name
     >>> enterprise = g.get_enterprise_consumed_licenses("PyGithub")
     >>> enterprise_consumed_licenses = enterprise.get_enterprise_consumed_licenses()
     >>> enterprise_consumed_licenses.total_seats_consumed
-    u'5000'
+    5000
 
 Search repositories by language
 -------------------------------
