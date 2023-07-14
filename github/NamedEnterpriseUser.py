@@ -19,191 +19,130 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Any, Dict
 
-import github.Event
-import github.Gist
-import github.GithubObject
-import github.NamedUser
-import github.Organization
-import github.PaginatedList
-import github.Permissions
-import github.Plan
-import github.Repository
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class NamedEnterpriseUser(github.GithubObject.CompletableGithubObject):
+class NamedEnterpriseUser(CompletableGithubObject):
     """
     This class represents NamedEnterpriseUsers. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._github_com_login: Attribute[str] = NotSet
+        self._github_com_name: Attribute[str] = NotSet
+        self._enterprise_server_user_ids: Attribute[list] = NotSet
+        self._github_com_user: Attribute[bool] = NotSet
+        self._enterprise_server_user: Attribute[bool] = NotSet
+        self._visual_studio_subscription_user: Attribute[bool] = NotSet
+        self._license_type: Attribute[str] = NotSet
+        self._github_com_profile: Attribute[str] = NotSet
+        self._github_com_member_roles: Attribute[list] = NotSet
+        self._github_com_enterprise_roles: Attribute[list] = NotSet
+        self._github_com_verified_domain_emails: Attribute[list] = NotSet
+        self._github_com_saml_name_id: Attribute[str] = NotSet
+        self._github_com_orgs_with_pending_invites: Attribute[list] = NotSet
+        self._github_com_two_factor_auth: Attribute[bool] = NotSet
+        self._enterprise_server_primary_emails: Attribute[list] = NotSet
+        self._visual_studio_license_status: Attribute[str] = NotSet
+        self._visual_studio_subscription_email: Attribute[str] = NotSet
+        self._total_user_accounts: Attribute[int] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"login": self._github_com_login.value})
 
     @property
-    def github_com_login(self):
-        """
-        :type: string
-        """
+    def github_com_login(self) -> str:
         self._completeIfNotSet(self._github_com_login)
         return self._github_com_login.value
 
     @property
-    def github_com_name(self):
-        """
-        :type: string
-        """
+    def github_com_name(self) -> str:
         self._completeIfNotSet(self._github_com_name)
         return self._github_com_name.value
 
     @property
-    def enterprise_server_user_ids(self):
-        """
-        :type: list
-        """
+    def enterprise_server_user_ids(self) -> list:
         self._completeIfNotSet(self._enterprise_server_user_ids)
         return self._enterprise_server_user_ids.value
 
     @property
-    def github_com_user(self):
-        """
-        :type: bool
-        """
+    def github_com_user(self) -> bool:
         self._completeIfNotSet(self._github_com_user)
         return self._github_com_user.value
 
     @property
-    def enterprise_server_user(self):
-        """
-        :type: bool
-        """
+    def enterprise_server_user(self) -> bool:
         self._completeIfNotSet(self._enterprise_server_user)
         return self._enterprise_server_user.value
 
     @property
-    def visual_studio_subscription_user(self):
-        """
-        :type: bool
-        """
+    def visual_studio_subscription_user(self) -> bool:
         self._completeIfNotSet(self._visual_studio_subscription_user)
         return self._visual_studio_subscription_user.value
 
     @property
-    def license_type(self):
-        """
-        :type: string
-        """
+    def license_type(self) -> str:
         self._completeIfNotSet(self._license_type)
         return self._license_type.value
 
     @property
-    def github_com_profile(self):
-        """
-        :type: string
-        """
+    def github_com_profile(self) -> str:
         self._completeIfNotSet(self._github_com_profile)
         return self._github_com_profile.value
 
     @property
-    def github_com_member_roles(self):
-        """
-        :type: list
-        """
+    def github_com_member_roles(self) -> list:
         self._completeIfNotSet(self._github_com_member_roles)
         return self._github_com_member_roles.value
 
     @property
-    def github_com_enterprise_roles(self):
-        """
-        :type: list
-        """
+    def github_com_enterprise_roles(self) -> list:
         self._completeIfNotSet(self._github_com_enterprise_roles)
         return self._github_com_enterprise_roles.value
 
     @property
-    def github_com_verified_domain_emails(self):
-        """
-        :type: list
-        """
+    def github_com_verified_domain_emails(self) -> list:
         self._completeIfNotSet(self._github_com_verified_domain_emails)
         return self._github_com_verified_domain_emails.value
 
     @property
-    def github_com_saml_name_id(self):
-        """
-        :type: string
-        """
+    def github_com_saml_name_id(self) -> str:
         self._completeIfNotSet(self._github_com_saml_name_id)
         return self._github_com_saml_name_id.value
 
     @property
-    def github_com_orgs_with_pending_invites(self):
-        """
-        :type: list
-        """
+    def github_com_orgs_with_pending_invites(self) -> list:
         self._completeIfNotSet(self._github_com_orgs_with_pending_invites)
         return self._github_com_orgs_with_pending_invites.value
 
     @property
-    def github_com_two_factor_auth(self):
-        """
-        :type: bool
-        """
+    def github_com_two_factor_auth(self) -> bool:
         self._completeIfNotSet(self._github_com_two_factor_auth)
         return self._github_com_two_factor_auth.value
 
     @property
-    def enterprise_server_primary_emails(self):
-        """
-        :type: list
-        """
+    def enterprise_server_primary_emails(self) -> list:
         self._completeIfNotSet(self._enterprise_server_primary_emails)
         return self._enterprise_server_primary_emails.value
 
     @property
-    def visual_studio_license_status(self):
-        """
-        :type: string
-        """
+    def visual_studio_license_status(self) -> str:
         self._completeIfNotSet(self._visual_studio_license_status)
         return self._visual_studio_license_status.value
 
     @property
-    def visual_studio_subscription_email(self):
-        """
-        :type: string
-        """
+    def visual_studio_subscription_email(self) -> str:
         self._completeIfNotSet(self._visual_studio_subscription_email)
         return self._visual_studio_subscription_email.value
 
     @property
-    def total_user_accounts(self):
-        """
-        :type: integer
-        """
+    def total_user_accounts(self) -> int:
         self._completeIfNotSet(self._total_user_accounts)
         return self._total_user_accounts.value
 
-    def _initAttributes(self):
-        self._github_com_login = github.GithubObject.NotSet
-        self._github_com_name = github.GithubObject.NotSet
-        self._enterprise_server_user_ids = github.GithubObject.NotSet
-        self._github_com_user = github.GithubObject.NotSet
-        self._enterprise_server_user = github.GithubObject.NotSet
-        self._visual_studio_subscription_user = github.GithubObject.NotSet
-        self._license_type = github.GithubObject.NotSet
-        self._github_com_profile = github.GithubObject.NotSet
-        self._github_com_member_roles = github.GithubObject.NotSet
-        self._github_com_enterprise_roles = github.GithubObject.NotSet
-        self._github_com_verified_domain_emails = github.GithubObject.NotSet
-        self._github_com_saml_name_id = github.GithubObject.NotSet
-        self._github_com_orgs_with_pending_invites = github.GithubObject.NotSet
-        self._github_com_two_factor_auth = github.GithubObject.NotSet
-        self._enterprise_server_primary_emails = github.GithubObject.NotSet
-        self._visual_studio_license_status = github.GithubObject.NotSet
-        self._visual_studio_subscription_email = github.GithubObject.NotSet
-        self._total_user_accounts = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "github_com_login" in attributes:  # pragma no branch
             self._github_com_login = self._makeStringAttribute(attributes["github_com_login"])
         if "github_com_name" in attributes:  # pragma no branch
