@@ -145,7 +145,7 @@ class AuthenticatedUser(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._two_factor_authentication: Attribute[bool] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
     @property
@@ -915,7 +915,7 @@ class AuthenticatedUser(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"/repos/{watched._identity}/subscription")
         return status == 200
 
-    def mark_notifications_as_read(self, last_read_at: datetime | None = None):
+    def mark_notifications_as_read(self, last_read_at: datetime | None = None) -> None:
         """
         :calls: `PUT /notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
@@ -1035,7 +1035,7 @@ class AuthenticatedUser(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/memberships/orgs/{org}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch
