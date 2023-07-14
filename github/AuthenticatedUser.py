@@ -40,9 +40,8 @@
 ################################################################################
 from __future__ import annotations
 
-from collections import namedtuple
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 import github.Authorization
 import github.Event
@@ -90,6 +89,13 @@ if TYPE_CHECKING:
     from github.Repository import Repository
     from github.Team import Team
     from github.UserKey import UserKey
+
+
+class EmailData(NamedTuple):
+    email: str
+    primary: bool
+    verified: bool
+    visibility: str
 
 
 class AuthenticatedUser(CompletableGithubObject):
@@ -625,14 +631,12 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         return PaginatedList(github.Authorization.Authorization, self._requester, "/authorizations", None)
 
-    def get_emails(self):
+    def get_emails(self) -> list[EmailData]:
         """
         :calls: `GET /user/emails <http://docs.github.com/en/rest/reference/users#emails>`_
-        :rtype: list of namedtuples with members email, primary, verified and visibility
         """
         headers, data = self._requester.requestJsonAndCheck("GET", "/user/emails")
-        itemdata = namedtuple("EmailData", data[0].keys())
-        return [itemdata._make(item.values()) for item in data]
+        return [EmailData(**item) for item in data]
 
     def get_events(self) -> PaginatedList[Event]:
         """
