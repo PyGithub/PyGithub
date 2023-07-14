@@ -22,7 +22,7 @@
 from typing import Any, Dict
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
-from github.GithubObject import CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Enterprise(CompletableGithubObject):
@@ -56,8 +56,8 @@ class Enterprise(CompletableGithubObject):
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
-        self._login = NotSet
-        self._url = NotSet
+        self._login: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "login" in attributes:  # pragma no branch

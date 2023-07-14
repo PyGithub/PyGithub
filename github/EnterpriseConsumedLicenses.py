@@ -21,7 +21,7 @@
 ################################################################################
 from typing import Any, Dict, Union
 
-from github.GithubObject import CompletableGithubObject, NotSet, _NotSetType
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _NotSetType
 from github.NamedEnterpriseUser import NamedEnterpriseUser
 from github.PaginatedList import PaginatedList
 
@@ -69,10 +69,10 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         return PaginatedList(NamedEnterpriseUser, self._requester, self.url, url_parameters, None, "users")
 
     def _initAttributes(self) -> None:
-        self._total_seats_consumed = NotSet
-        self._total_seats_purchased = NotSet
-        self._login = NotSet
-        self._url = NotSet
+        self._total_seats_consumed: Attribute[int] = NotSet
+        self._total_seats_purchased: Attribute[int] = NotSet
+        self._login: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "total_seats_consumed" in attributes:  # pragma no branch
