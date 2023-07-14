@@ -179,9 +179,7 @@ class Github(Framework.TestCase):
     def testGetEmojis(self):
         emojis = self.g.get_emojis()
         first = emojis.get("+1")
-        self.assertEqual(
-            first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5"
-        )
+        self.assertEqual(first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5")
 
     def testGetHook(self):
         hook = self.g.get_hook("activecollab")
@@ -220,12 +218,8 @@ class Github(Framework.TestCase):
         self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
         self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
         self.assertEqual(delivery.request.payload, {"action": "opened"})
-        self.assertIsInstance(
-            delivery.response, github.HookDelivery.HookDeliveryResponse
-        )
-        self.assertEqual(
-            delivery.response.headers, {"content-type": "text/html;charset=utf-8"}
-        )
+        self.assertIsInstance(delivery.response, github.HookDelivery.HookDeliveryResponse)
+        self.assertEqual(delivery.response.headers, {"content-type": "text/html;charset=utf-8"})
         self.assertEqual(delivery.response.payload, "ok")
 
     def testGetHookDeliveries(self):
@@ -474,9 +468,7 @@ class Github(Framework.TestCase):
         )
 
     def testGetUsersSince(self):
-        self.assertListKeyBegin(
-            self.g.get_users(since=1000), lambda u: u.login, ["sbecker"]
-        )
+        self.assertListKeyBegin(self.g.get_users(since=1000), lambda u: u.login, ["sbecker"])
 
     def testGetOrganizations(self):
         self.assertListKeyBegin(

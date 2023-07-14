@@ -19,30 +19,29 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import sys
-import typing
+from typing import Union
 
-import github.GithubObject
+from typing_extensions import TypedDict
+
 import github.NamedUser
-
-if sys.version_info >= (3, 8):
-    # TypedDict is only available in Python 3.8 and later
-    class SimpleCredit(typing.TypedDict):
-        """
-        A simple credit for a security advisory.
-        """
-
-        login: typing.Union[str, "github.NamedUser.NamedUser"]
-        type: str
-
-else:
-    SimpleCredit = typing.Dict[str, typing.Any]
-
-Credit = typing.Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
+class SimpleCredit(TypedDict):
+    """
+    A simple credit for a security advisory.
+    """
+
+    login: str | github.NamedUser.NamedUser
+    type: str
+
+
+Credit = Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+
+
+class RepositoryAdvisoryCredit(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -62,12 +61,10 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
         """
         return self._type.value
 
-    # noinspection PyPep8Naming
     def _initAttributes(self):
-        self._login = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
+        self._login: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
 
-    # noinspection PyPep8Naming
     def _useAttributes(self, attributes):
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
@@ -80,9 +77,7 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
-            assert isinstance(
-                credit["login"], (str, github.NamedUser.NamedUser)
-            ), credit["login"]
+            assert isinstance(credit["login"], (str, github.NamedUser.NamedUser)), credit["login"]
             assert isinstance(credit["type"], str), credit["type"]
         else:
             assert isinstance(credit.login, str), credit.login
@@ -94,9 +89,7 @@ class RepositoryAdvisoryCredit(github.GithubObject.NonCompletableGithubObject):
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
-            assert isinstance(
-                credit["login"], (str, github.NamedUser.NamedUser)
-            ), credit["login"]
+            assert isinstance(credit["login"], (str, github.NamedUser.NamedUser)), credit["login"]
             login = credit["login"]
             if isinstance(login, github.NamedUser.NamedUser):
                 login = login.login

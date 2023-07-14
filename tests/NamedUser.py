@@ -196,9 +196,7 @@ class NamedUser(Framework.TestCase):
         self.assertTrue(self.user.has_in_following(nvie))
 
     def testGetOrgs(self):
-        self.assertListKeyEqual(
-            self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"]
-        )
+        self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 
     def testGetOrganizationMembership(self):
         o = self.user.get_orgs()
@@ -215,9 +213,7 @@ class NamedUser(Framework.TestCase):
             "https://api.github.com/orgs/BeaverSoftware/memberships/jacquev6",
         )
         self.assertEqual(membership.organization.login, "BeaverSoftware")
-        self.assertEqual(
-            membership.organization_url, "https://api.github.com/orgs/BeaverSoftware"
-        )
+        self.assertEqual(membership.organization_url, "https://api.github.com/orgs/BeaverSoftware")
 
     def testGetOrganizationMembershipNotMember(self):
         from github import UnknownObjectException

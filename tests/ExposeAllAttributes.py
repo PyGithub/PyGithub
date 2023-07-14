@@ -42,9 +42,7 @@ class ExposeAllAttributes(Framework.TestCase):
         gistComment = gist.get_comment(4565)
         gistFile = gist.files[".gitignore"]
         gistHistoryState = gist.history[0]
-        gitCommit = repository.get_git_commit(
-            "be37b8a7f3a68631c32672dcd84d9eba27438ee6"
-        )
+        gitCommit = repository.get_git_commit("be37b8a7f3a68631c32672dcd84d9eba27438ee6")
         gitAuthor = gitCommit.author
         gitTree = repository.get_git_tree("6f7c2d8c66d78863f7b91792deaead619799a1ce")
         gitTreeElement = gitTree.tree[0]
