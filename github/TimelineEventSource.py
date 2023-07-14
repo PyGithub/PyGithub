@@ -20,40 +20,39 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import github.Issue
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Issue import Issue
 
 
-class TimelineEventSource(github.GithubObject.NonCompletableGithubObject):
+class TimelineEventSource(NonCompletableGithubObject):
     """
     This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
+
+    def _initAttributes(self) -> None:
+        self._type: Attribute[str] = NotSet
+        self._issue: Attribute[Issue] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
-    def issue(self):
-        """
-        :type: :class:`github.Issue.Issue`
-        """
+    def issue(self) -> Issue:
         return self._issue.value
 
-    def _initAttributes(self):
-        self._type = github.GithubObject.NotSet
-        self._issue = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch
-            self._issue = self._makeClassAttribute(
-                github.Issue.Issue, attributes["issue"]
-            )
+            self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])

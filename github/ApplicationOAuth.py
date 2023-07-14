@@ -41,8 +41,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
     The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
     """
 
-    _client_id: Attribute[str]
-    _client_secret: Attribute[str]
+    def _initAttributes(self) -> None:
+        self._client_id: Attribute[str] = NotSet
+        self._client_secret: Attribute[str] = NotSet
 
     def __init__(self, requester, headers, attributes, completed):
         # this object requires a request without authentication
@@ -59,10 +60,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
     @property
     def client_secret(self) -> str:
         return self._client_secret.value
-
-    def _initAttributes(self) -> None:
-        self._client_id = NotSet
-        self._client_secret = NotSet
 
     def _useAttributes(self, attributes):
         if "client_id" in attributes:  # pragma no branch

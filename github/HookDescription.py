@@ -27,53 +27,42 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookDescription(github.GithubObject.NonCompletableGithubObject):
+class HookDescription(NonCompletableGithubObject):
     """
     This class represents HookDescriptions
     """
+
+    def _initAttributes(self) -> None:
+        self._events: Attribute[list[str]] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._schema: Attribute[list[list[str]]] = NotSet
+        self._supported_events: Attribute[list[str]] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def events(self):
-        """
-        :type: list of string
-        """
+    def events(self) -> list[str]:
         return self._events.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def schema(self):
-        """
-        :type: list of list of string
-        """
+    def schema(self) -> list[list[str]]:
         return self._schema.value
 
     @property
-    def supported_events(self):
-        """
-        :type: list of string
-        """
+    def supported_events(self) -> list[str]:
         return self._supported_events.value
 
-    def _initAttributes(self):
-        self._events = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._schema = github.GithubObject.NotSet
-        self._supported_events = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch
@@ -81,6 +70,4 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         if "schema" in attributes:  # pragma no branch
             self._schema = self._makeListOfListOfStringsAttribute(attributes["schema"])
         if "supported_events" in attributes:  # pragma no branch
-            self._supported_events = self._makeListOfStringsAttribute(
-                attributes["supported_events"]
-            )
+            self._supported_events = self._makeListOfStringsAttribute(attributes["supported_events"])
