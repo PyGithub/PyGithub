@@ -29,6 +29,10 @@ class CWE(CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
+    def _initAttributes(self):
+        self._cwe_id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+
     @property
     def cwe_id(self) -> str:
         return self._cwe_id.value
@@ -36,10 +40,6 @@ class CWE(CompletableGithubObject):
     @property
     def name(self) -> str:
         return self._name.value
-
-    def _initAttributes(self):
-        self._cwe_id: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes):
         if "cwe_id" in attributes:  # pragma no branch
