@@ -39,6 +39,15 @@ Get organization by name
     >>> org.login
     u'PyGithub'
 
+Get enterprise consumed licenses by name
+------------------------
+
+.. code-block:: python
+
+    >>> enterprise_consumed_licenses = g.get_enterprise_consumed_licenses("PyGithub")
+    >>> enterprise_consumed_licenses.total_seats_cunsumed
+    u'5000'
+
 Search repositories by language
 -------------------------------
 

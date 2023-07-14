@@ -28,6 +28,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,6 +56,7 @@ from typing import List
 import urllib3
 
 import github.ApplicationOAuth
+import github.EnterpriseConsumedLicenses
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -359,6 +361,22 @@ class Github:
             self.__requester,
             "/organizations",
             url_parameters,
+        )
+
+    def get_enterprise_consumed_licenses(self, login):
+        """
+        :calls: `GET /enterprise/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        :param login: string
+        :rtype: :class:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses`
+        """
+        assert isinstance(login, str), login
+        firstURL = f"/enterprises/{login}/consumed-licenses"
+        headers, data = self.__requester.requestJsonAndCheck("GET", firstURL)
+        # The response doesn't have the key of login and url, manually add it to data.
+        data["login"] = login
+        data["url"] = self.__requester.base_url + firstURL
+        return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
+            self.__requester, headers, data, completed=True
         )
 
     def get_repo(self, full_name_or_id, lazy=False):
