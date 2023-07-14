@@ -19,7 +19,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -28,6 +27,7 @@ class Autolink(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._key_prefix: Attribute[str] = NotSet
         self._url_template: Attribute[str] = NotSet
+        self._is_alphanumeric: Attribute[bool] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
@@ -44,6 +44,10 @@ class Autolink(NonCompletableGithubObject):
     def url_template(self) -> str:
         return self._url_template.value
 
+    @property
+    def is_alphanumeric(self) -> bool:
+        return self._is_alphanumeric.value
+    
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
@@ -51,3 +55,5 @@ class Autolink(NonCompletableGithubObject):
             self._key_prefix = self._makeStringAttribute(attributes["key_prefix"])
         if "url_template" in attributes:  # pragma no branch
             self._url_template = self._makeStringAttribute(attributes["url_template"])
+        if "is_alphanumeric" in attributes:  # pragma no branch
+            self._is_alphanumeric = self._makeBoolAttribute(attributes["is_alphanumeric"])
