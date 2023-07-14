@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.CommitStats
 import github.Gist
 import github.GithubObject

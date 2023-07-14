@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.CheckRun
 import github.CheckSuite
 import github.CommitCombinedStatus

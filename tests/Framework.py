@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import contextlib
 import io
 import json
@@ -41,7 +43,6 @@ import os
 import traceback
 import unittest
 import warnings
-from typing import Optional
 
 import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
@@ -265,8 +266,8 @@ class BasicTestCase(unittest.TestCase):
     per_page = Consts.DEFAULT_PER_PAGE
     retry = None
     pool_size = None
-    seconds_between_requests: Optional[float] = None
-    seconds_between_writes: Optional[float] = None
+    seconds_between_requests: float | None = None
+    seconds_between_writes: float | None = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):

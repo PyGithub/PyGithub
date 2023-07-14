@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 

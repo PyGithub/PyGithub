@@ -31,6 +31,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState

@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from urllib3.exceptions import InsecureRequestWarning
 
 import github

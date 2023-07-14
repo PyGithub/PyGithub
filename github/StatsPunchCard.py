@@ -23,7 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Dict, Tuple
+from __future__ import annotations
 
 import github.GithubObject
 import github.NamedUser  # TODO remove unused
@@ -34,7 +34,7 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     This class represents StatsPunchCards. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day
     """
 
-    _dict: Dict[Tuple[int, int], int]
+    _dict: dict[tuple[int, int], int]
 
     def get(self, day: int, hour: int) -> int:
         """Get a specific element"""

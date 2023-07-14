@@ -34,7 +34,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
+from __future__ import annotations
+
+from typing import Any, Generic, Iterator, TypeVar
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -44,18 +46,18 @@ T = TypeVar("T", bound=GithubObject)
 
 
 class PaginatedListBase(Generic[T]):
-    __elements: List[T]
+    __elements: list[T]
 
     def _couldGrow(self) -> bool:
         raise NotImplementedError
 
-    def _fetchNextPage(self) -> List[T]:
+    def _fetchNextPage(self) -> list[T]:
         raise NotImplementedError
 
     def __init__(self):
         self.__elements = []
 
-    def __getitem__(self, index: Union[int, slice]) -> Any:
+    def __getitem__(self, index: int | slice) -> Any:
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
             self.__fetchToIndex(index)
@@ -76,13 +78,13 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> List[T]:
+    def _grow(self) -> list[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
 
     class _Slice:
-        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice):
+        def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop
@@ -132,11 +134,11 @@ class PaginatedList(PaginatedListBase[T]):
 
     def __init__(
         self,
-        contentClass: Type[T],
+        contentClass: type[T],
         requester: Requester,
         firstUrl: str,
         firstParams: Any,
-        headers: Optional[Dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
         list_item: str = "items",
     ):
         super().__init__()
@@ -151,7 +153,7 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self.__totalCount: Optional[int] = None
+        self.__totalCount: int | None = None
 
     @property
     def totalCount(self) -> int:
@@ -180,7 +182,7 @@ class PaginatedList(PaginatedListBase[T]):
                     self.__totalCount = 0
         return self.__totalCount  # type: ignore
 
-    def _getLastPageUrl(self) -> Optional[str]:
+    def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers
         )
@@ -188,7 +190,7 @@ class PaginatedList(PaginatedListBase[T]):
         return links.get("last")
 
     @property
-    def reversed(self) -> "PaginatedList[T]":
+    def reversed(self) -> PaginatedList[T]:
         r = PaginatedList(
             self.__contentClass,
             self.__requester,
@@ -209,7 +211,7 @@ class PaginatedList(PaginatedListBase[T]):
     def _couldGrow(self):
         return self.__nextUrl is not None
 
-    def _fetchNextPage(self) -> List[T]:
+    def _fetchNextPage(self) -> list[T]:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
@@ -238,7 +240,7 @@ class PaginatedList(PaginatedListBase[T]):
             return content[::-1]
         return content
 
-    def __parseLinkHeader(self, headers: Dict[str, str]) -> Dict[str, str]:
+    def __parseLinkHeader(self, headers: dict[str, str]) -> dict[str, str]:
         links = {}
         if "link" in headers:
             linkHeaders = headers["link"].split(", ")
@@ -249,7 +251,7 @@ class PaginatedList(PaginatedListBase[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page: int) -> List[T]:
+    def get_page(self, page: int) -> list[T]:
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1

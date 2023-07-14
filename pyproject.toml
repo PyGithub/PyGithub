@@ -9,6 +9,15 @@ check_untyped_defs = true
 # TODO: enable this later
 # disallow_untyped_defs = true
 
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 120
+add_imports = ['from __future__ import annotations']
+known_first_party = ['github', 'tests']
+
 [tool.black]
 # https://github.com/psf/black
 line-length = 120

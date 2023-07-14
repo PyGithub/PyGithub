@@ -1,4 +1,6 @@
-from typing import Union, Optional, Dict
+from __future__ import annotations
+
+from typing import Dict, Optional, Union
 
 from urllib3 import Retry
 

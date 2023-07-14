@@ -51,6 +51,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import io
 import json
 import logging
@@ -63,7 +65,7 @@ import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Generic, ItemsView, TypeVar
 
 import requests
 import requests.adapters
@@ -99,17 +101,17 @@ class RequestsResponse:
 
 
 class HTTPSRequestsConnectionClass:
-    retry: Union[int, Retry]
+    retry: int | Retry
 
     # mimic the httplib connection object
     def __init__(
         self,
         host,
-        port: Optional[int] = None,
+        port: int | None = None,
         strict: bool = False,
-        timeout: Optional[int] = None,
-        retry: Optional[Union[int, Retry]] = None,
-        pool_size: Optional[int] = None,
+        timeout: int | None = None,
+        retry: int | Retry | None = None,
+        pool_size: int | None = None,
         **kwargs: Any,
     ):
         self.port = port if port else 443
@@ -140,8 +142,8 @@ class HTTPSRequestsConnectionClass:
         self,
         verb: str,
         url: str,
-        input: Optional[Union[str, io.BufferedReader]],
-        headers: Dict[str, str],
+        input: str | io.BufferedReader | None,
+        headers: dict[str, str],
     ):
         self.verb = verb
         self.url = url
@@ -170,11 +172,11 @@ class HTTPRequestsConnectionClass:
     def __init__(
         self,
         host: str,
-        port: Optional[int] = None,
+        port: int | None = None,
         strict: bool = False,
-        timeout: Optional[int] = None,
-        retry: Optional[Union[int, Retry]] = None,
-        pool_size: Optional[int] = None,
+        timeout: int | None = None,
+        retry: int | Retry | None = None,
+        pool_size: int | None = None,
         **kwargs: Any,
     ):
         self.port = port if port else 80
@@ -201,7 +203,7 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]):
+    def request(self, verb: str, url: str, input: None, headers: dict[str, str]):
         self.verb = verb
         self.url = url
         self.input = input
@@ -225,8 +227,8 @@ class HTTPRequestsConnectionClass:
 
 
 class Requester:
-    __installation_authorization: Optional["InstallationAuthorization"]
-    __app_auth: Optional["AppAuthentication"]
+    __installation_authorization: InstallationAuthorization | None
+    __app_auth: AppAuthentication | None
 
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
@@ -234,13 +236,13 @@ class Requester:
     __persist = True
     __logger = None
 
-    _frameBuffer: List[Any]
+    _frameBuffer: list[Any]
 
     @classmethod
     def injectConnectionClasses(
         cls,
-        httpConnectionClass: Type[HTTPRequestsConnectionClass],
-        httpsConnectionClass: Type[HTTPSRequestsConnectionClass],
+        httpConnectionClass: type[HTTPRequestsConnectionClass],
+        httpsConnectionClass: type[HTTPSRequestsConnectionClass],
     ):
         cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
@@ -276,9 +278,9 @@ class Requester:
 
     DEBUG_HEADER_KEY = "DEBUG_FRAME"
 
-    ON_CHECK_ME: Optional[Callable] = None
+    ON_CHECK_ME: Callable | None = None
 
-    def NEW_DEBUG_FRAME(self, requestHeader: Dict[str, str]) -> None:
+    def NEW_DEBUG_FRAME(self, requestHeader: dict[str, str]) -> None:
         """
         Initialize a debug frame with requestHeader
         Frame count is updated and will be attached to respond header
@@ -294,7 +296,7 @@ class Requester:
 
             self._frameCount = len(self._frameBuffer) - 1
 
-    def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str):
+    def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: dict[str, str | int], data: str):
         """
         Update current frame with response
         Current frame index will be attached to responseHeader
@@ -307,7 +309,7 @@ class Requester:
             ]
             responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
-    def check_me(self, obj: "GithubObject"):
+    def check_me(self, obj: GithubObject):
         if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
@@ -322,26 +324,26 @@ class Requester:
     #############################################################
 
     _frameCount: int
-    __connectionClass: Union[Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]]
+    __connectionClass: type[HTTPRequestsConnectionClass] | type[HTTPSRequestsConnectionClass]
     __hostname: str
-    __authorizationHeader: Optional[str]
-    __last_requests: Dict[str, float]
-    __seconds_between_requests: Optional[float]
-    __seconds_between_writes: Optional[float]
+    __authorizationHeader: str | None
+    __last_requests: dict[str, float]
+    __seconds_between_requests: float | None
+    __seconds_between_writes: float | None
 
     # keep arguments in-sync with github.MainClass and GithubIntegration
     def __init__(
         self,
-        auth: Optional["Auth"],
+        auth: Auth | None,
         base_url: str,
         timeout: int,
         user_agent: str,
         per_page: int,
-        verify: Union[bool, str],
-        retry: Optional[Union[int, Retry]],
-        pool_size: Optional[int],
-        seconds_between_requests: Optional[float] = None,
-        seconds_between_writes: Optional[float] = None,
+        verify: bool | str,
+        retry: int | Retry | None,
+        pool_size: int | None,
+        seconds_between_requests: float | None = None,
+        seconds_between_writes: float | None = None,
     ):
         self._initializeDebugFeature()
 
@@ -410,10 +412,10 @@ class Requester:
         return self.__base_url
 
     @property
-    def auth(self) -> Optional["Auth"]:
+    def auth(self) -> Auth | None:
         return self.__auth
 
-    def withAuth(self, auth: Optional["Auth"]) -> "Requester":
+    def withAuth(self, auth: Auth | None) -> Requester:
         """
         Create a new requester instance with identical configuration but the given authentication method.
         :param auth: authentication method
@@ -427,48 +429,46 @@ class Requester:
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, str]] = None,
-        input: Optional[Any] = None,
-    ) -> Tuple[Dict[str, Any], Any]:
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        input: Any | None = None,
+    ) -> tuple[dict[str, Any], Any]:
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, Any]] = None,
-        input: Optional[Dict[str, str]] = None,
-    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, Any] | None = None,
+        input: dict[str, str] | None = None,
+    ) -> tuple[dict[str, Any], dict[str, Any] | None]:
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, str]] = None,
-        headers: Optional[Dict[str, str]] = None,
-        input: Optional[str] = None,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        parameters: dict[str, str] | None = None,
+        headers: dict[str, str] | None = None,
+        input: str | None = None,
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def __check(
         self,
         status: int,
-        responseHeaders: Dict[str, Any],
+        responseHeaders: dict[str, Any],
         output: str,
-    ) -> Tuple[Dict[str, Any], Any]:
+    ) -> tuple[dict[str, Any], Any]:
         data = self.__structuredFromJson(output)
         if status >= 400:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
-    def __customConnection(
-        self, url: str
-    ) -> Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]]:
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None
+    def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
         if not url.startswith("/"):
             o = urllib.parse.urlparse(url)
             if (
@@ -496,8 +496,8 @@ class Requester:
     def createException(
         cls,
         status: int,
-        headers: Dict[str, Any],
-        output: Dict[str, Any],
+        headers: dict[str, Any],
+        output: dict[str, Any],
     ) -> GithubException.GithubException:
         message = output.get("message", "").lower() if output is not None else ""
 
@@ -556,11 +556,11 @@ class Requester:
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, Any]] = None,
-        input: Optional[Any] = None,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[int, Dict[str, Any], str]:
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, Any] | None = None,
+        input: Any | None = None,
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None,
+    ) -> tuple[int, dict[str, Any], str]:
         def encode(input):
             return "application/json", json.dumps(input)
 
@@ -570,11 +570,11 @@ class Requester:
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, Any]] = None,
-        input: Optional[Dict[str, str]] = None,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[int, Dict[str, Any], str]:
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, Any] | None = None,
+        input: dict[str, str] | None = None,
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None,
+    ) -> tuple[int, dict[str, Any], str]:
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -594,11 +594,11 @@ class Requester:
         self,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, str]] = None,
-        headers: Optional[Dict[str, str]] = None,
-        input: Optional[str] = None,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[int, Dict[str, Any], str]:
+        parameters: dict[str, str] | None = None,
+        headers: dict[str, str] | None = None,
+        input: str | None = None,
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None,
+    ) -> tuple[int, dict[str, Any], str]:
         if headers is None:
             headers = {}
 
@@ -626,14 +626,14 @@ class Requester:
 
     def __requestEncode(
         self,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None,
         verb: str,
         url: str,
-        parameters: Optional[Dict[str, str]],
-        requestHeaders: Optional[Dict[str, str]],
-        input: Optional[T],
-        encode: Callable[[T], Tuple[str, Any]],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        parameters: dict[str, str] | None,
+        requestHeaders: dict[str, str] | None,
+        input: T | None,
+        encode: Callable[[T], tuple[str, Any]],
+    ) -> tuple[int, dict[str, Any], str]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = {}
@@ -672,12 +672,12 @@ class Requester:
 
     def __requestRaw(
         self,
-        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]],
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None,
         verb: str,
         url: str,
-        requestHeaders: Dict[str, str],
-        input: Optional[Any],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        requestHeaders: dict[str, str],
+        input: Any | None,
+    ) -> tuple[int, dict[str, Any], str]:
         self.__deferRequest(verb)
 
         try:
@@ -783,7 +783,7 @@ class Requester:
     def __addParametersToUrl(
         self,
         url: str,
-        parameters: Dict[str, Any],
+        parameters: dict[str, Any],
     ):
         if len(parameters) == 0:
             return url
@@ -792,7 +792,7 @@ class Requester:
 
     def __createConnection(
         self,
-    ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]:
+    ) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
@@ -817,11 +817,11 @@ class Requester:
         self,
         verb: str,
         url: str,
-        requestHeaders: Dict[str, str],
-        input: Optional[Any],
-        status: Optional[int],
-        responseHeaders: Dict[str, Any],
-        output: Optional[str],
+        requestHeaders: dict[str, str],
+        input: Any | None,
+        status: int | None,
+        responseHeaders: dict[str, Any],
+        output: str | None,
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
@@ -858,13 +858,13 @@ class WithRequester(Generic[T]):
     __requester: Requester
 
     def __init__(self):
-        self.__requester: Optional[Requester] = None  # type: ignore
+        self.__requester: Requester | None = None  # type: ignore
 
     @property
     def requester(self) -> Requester:
         return self.__requester
 
-    def withRequester(self, requester: Requester) -> "WithRequester[T]":
+    def withRequester(self, requester: Requester) -> WithRequester[T]:
         assert isinstance(requester, Requester), requester
         self.__requester = requester
         return self

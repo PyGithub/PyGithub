@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.Authorization
 import github.Event
 import github.Gist

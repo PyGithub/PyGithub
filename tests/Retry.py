@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import requests
 import urllib3  # type: ignore
 from httpretty import httpretty  # type: ignore

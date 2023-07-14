@@ -1,5 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
 
+from datetime import datetime
 from typing import Any, Dict
 
 from github.GithubObject import NonCompletableGithubObject

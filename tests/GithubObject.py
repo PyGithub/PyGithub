@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import unittest
 from datetime import datetime, timedelta, timezone
 

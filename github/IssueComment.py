@@ -32,6 +32,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.GithubObject
 import github.NamedUser
 

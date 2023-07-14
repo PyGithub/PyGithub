@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitTree

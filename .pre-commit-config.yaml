@@ -7,18 +7,11 @@ repos:
       - id: mixed-line-ending
         args: [ --fix=lf ]
 
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
-    hooks:
-      - id: black
-  - repo: https://github.com/asottile/seed-isort-config
-    rev: v2.2.0
-    hooks:
-      - id: seed-isort-config
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
     hooks:
       - id: isort
+
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.1
     hooks:
@@ -27,12 +20,19 @@ repos:
         args:
           - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
           - --quiet-level=2
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.1.0
     hooks:
       - id: pyupgrade
         args:
           - --py37-plus
+
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+
   - repo: https://github.com/pycqa/flake8
     rev: 3.9.2
     hooks:

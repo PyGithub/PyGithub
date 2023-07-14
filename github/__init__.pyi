@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from github import Auth as Auth
 from github.AppAuthentication import AppAuthentication as AppAuthentication
 from github.GithubIntegration import GithubIntegration as GithubIntegration

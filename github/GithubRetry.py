@@ -20,11 +20,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import json
 import logging
 from datetime import datetime, timezone
 from logging import Logger
-from typing import Optional
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
@@ -52,7 +53,7 @@ class GithubRetry(Retry):
     This can be configured via the `allowed_methods` argument.
     """
 
-    __logger: Optional[Logger] = None
+    __logger: Logger | None = None
 
     # used to mock datetime, mock.patch("github.GithubRetry.date") does not work as this
     # references the class, not the module (due to re-exporting in github/__init__.py)

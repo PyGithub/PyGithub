@@ -40,6 +40,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import urllib.parse
 from datetime import datetime
 

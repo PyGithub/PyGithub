@@ -29,6 +29,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import urllib.parse
 
 import github.GithubObject

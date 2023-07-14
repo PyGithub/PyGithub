@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import date, datetime
 from typing import Any, Dict, Iterable, List, Optional, Union, overload
 
@@ -16,9 +18,7 @@ from github.ContentFile import ContentFile
 from github.Deployment import Deployment
 from github.Download import Download
 from github.Environment import Environment
-from github.EnvironmentDeploymentBranchPolicy import (
-    EnvironmentDeploymentBranchPolicyParams,
-)
+from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
 from github.EnvironmentProtectionRuleReviewer import ReviewerParams
 from github.Event import Event
 from github.GitBlob import GitBlob
@@ -52,10 +52,7 @@ from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
 from github.RepositoryAdvisory import RepositoryAdvisory
 from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
-from github.RepositoryAdvisoryVulnerability import (
-    AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
-)
+from github.RepositoryAdvisoryVulnerability import AdvisoryVulnerability
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner

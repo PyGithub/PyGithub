@@ -124,6 +124,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import collections
 import typing
 import urllib.parse
@@ -1440,12 +1442,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         summary: str,
         description: str,
         severity_or_cvss_vector_string: str,
-        cve_id: typing.Optional[str] = None,
-        vulnerabilities: typing.Optional[
-            typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]
-        ] = None,
-        cwe_ids: typing.Optional[typing.Iterable[str]] = None,
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]] = None,
+        cve_id: str | None = None,
+        vulnerabilities: None | (typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]) = None,
+        cwe_ids: typing.Iterable[str] | None = None,
+        credits: typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
@@ -1474,12 +1474,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         summary: str,
         description: str,
         severity_or_cvss_vector_string: str,
-        cve_id: typing.Optional[str] = None,
-        vulnerabilities: typing.Optional[
-            typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]
-        ] = None,
-        cwe_ids: typing.Optional[typing.Iterable[str]] = None,
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]] = None,
+        cve_id: str | None = None,
+        vulnerabilities: None | (typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]) = None,
+        cwe_ids: typing.Iterable[str] | None = None,
+        credits: typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
@@ -1508,10 +1506,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         summary: str,
         description: str,
         severity_or_cvss_vector_string: str,
-        cve_id: typing.Optional[str],
-        vulnerabilities: typing.Optional[typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]],
-        cwe_ids: typing.Optional[typing.Iterable[str]],
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]],
+        cve_id: str | None,
+        vulnerabilities: typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None,
+        cwe_ids: typing.Iterable[str] | None,
+        credits: typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         if vulnerabilities is None:
@@ -2262,7 +2260,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_repository_advisories(
         self,
-    ) -> "github.PaginatedList.PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]":
+    ) -> github.PaginatedList.PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]:
         """
         :calls: `GET /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryAdvisory.RepositoryAdvisory`

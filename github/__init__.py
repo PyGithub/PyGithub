@@ -34,6 +34,8 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
+from __future__ import annotations
+
 __all__ = [
     "Auth",
     "AppAuthentication",

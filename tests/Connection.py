@@ -21,6 +21,8 @@
 ################################################################################
 
 
+from __future__ import annotations
+
 import itertools
 from io import StringIO
 from unittest.mock import Mock

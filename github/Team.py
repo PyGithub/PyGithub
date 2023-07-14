@@ -39,6 +39,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from deprecated import deprecated
 
 import github.GithubObject

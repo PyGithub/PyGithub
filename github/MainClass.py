@@ -47,10 +47,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import pickle
 import warnings
 from datetime import datetime
-from typing import List
 
 import urllib3
 
@@ -708,7 +709,7 @@ class Github:
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
         return HookDelivery.HookDelivery(self.__requester, headers, attributes, completed=True)
 
-    def get_hook_deliveries(self, hook_id: int) -> List[HookDeliverySummary]:
+    def get_hook_deliveries(self, hook_id: int) -> list[HookDeliverySummary]:
         """
         :calls: `GET /hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param hook_id: integer

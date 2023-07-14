@@ -26,6 +26,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet

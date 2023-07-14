@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github.CodeScanAlertInstanceLocation
 import github.GithubObject
 

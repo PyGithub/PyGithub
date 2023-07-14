@@ -38,10 +38,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import typing
 from datetime import datetime, timezone
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Union
 
 from dateutil import parser
 from typing_extensions import Protocol, TypeGuard
@@ -73,7 +75,7 @@ class _NotSetType:
         return None
 
     @staticmethod
-    def remove_unset_items(data: Dict[str, Any]) -> Dict[str, Any]:
+    def remove_unset_items(data: dict[str, Any]) -> dict[str, Any]:
         return {key: value for key, value in data.items() if not isinstance(value, _NotSetType)}
 
 
@@ -82,19 +84,19 @@ NotSet = _NotSetType()
 Opt = Union[T, _NotSetType]
 
 
-def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
+def is_defined(v: T | _NotSetType) -> TypeGuard[T]:
     return not isinstance(v, _NotSetType)
 
 
-def is_undefined(v: Union[T, _NotSetType]) -> TypeGuard[_NotSetType]:
+def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
+def is_optional(v, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v, type: Union[Type, Tuple[Type, ...]]) -> bool:
+def is_optional_list(v, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
 
 
@@ -108,7 +110,7 @@ class _ValuedAttribute(Attribute[T]):
 
 
 class _BadAttribute(Attribute):
-    def __init__(self, value: Any, expectedType: Any, exception: Optional[Exception] = None):
+    def __init__(self, value: Any, expectedType: Any, exception: Exception | None = None):
         self.__value = value
         self.__expectedType = expectedType
         self.__exception = exception
@@ -137,8 +139,8 @@ class GithubObject:
 
     def __init__(
         self,
-        requester: "Requester",
-        headers: Dict[str, Union[str, int]],
+        requester: Requester,
+        headers: dict[str, str | int],
         attributes: Any,
         completed: bool,
     ):
@@ -151,7 +153,7 @@ class GithubObject:
         if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
             requester.check_me(self)
 
-    def _storeAndUseAttributes(self, headers: Dict[str, Union[str, int]], attributes: Any) -> None:
+    def _storeAndUseAttributes(self, headers: dict[str, str | int], attributes: Any) -> None:
         # Make sure headers are assigned before calling _useAttributes
         # (Some derived classes will use headers in _useAttributes)
         self._headers = headers
@@ -159,7 +161,7 @@ class GithubObject:
         self._useAttributes(attributes)
 
     @property
-    def raw_data(self) -> Dict[str, Any]:
+    def raw_data(self) -> dict[str, Any]:
         """
         :type: dict
         """
@@ -167,7 +169,7 @@ class GithubObject:
         return self._rawData
 
     @property
-    def raw_headers(self) -> Dict[str, Union[str, int]]:
+    def raw_headers(self) -> dict[str, str | int]:
         """
         :type: dict
         """
@@ -179,21 +181,21 @@ class GithubObject:
         return "/".join(url.split("/")[:-1])
 
     @staticmethod
-    def __makeSimpleAttribute(value: Any, type: Type[T]) -> Attribute[T]:
+    def __makeSimpleAttribute(value: Any, type: type[T]) -> Attribute[T]:
         if value is None or isinstance(value, type):
             return _ValuedAttribute(value)  # type: ignore
         else:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def __makeSimpleListAttribute(value: list, type: Type[T]) -> Attribute[T]:
+    def __makeSimpleListAttribute(value: list, type: type[T]) -> Attribute[T]:
         if isinstance(value, list) and all(isinstance(element, type) for element in value):
             return _ValuedAttribute(value)  # type: ignore
         else:
             return _BadAttribute(value, [type])  # type: ignore
 
     @staticmethod
-    def __makeTransformedAttribute(value: T, type: Type[T], transform: Callable[[T], K]) -> Attribute[K]:
+    def __makeTransformedAttribute(value: T, type: type[T], transform: Callable[[T], K]) -> Attribute[K]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -205,23 +207,23 @@ class GithubObject:
             return _BadAttribute(value, type)  # type: ignore
 
     @staticmethod
-    def _makeStringAttribute(value: Optional[Union[int, str]]) -> Attribute[str]:
+    def _makeStringAttribute(value: int | str | None) -> Attribute[str]:
         return GithubObject.__makeSimpleAttribute(value, str)
 
     @staticmethod
-    def _makeIntAttribute(value: Optional[Union[int, str]]) -> Attribute[int]:
+    def _makeIntAttribute(value: int | str | None) -> Attribute[int]:
         return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
-    def _makeFloatAttribute(value: Optional[float]) -> Attribute[float]:
+    def _makeFloatAttribute(value: float | None) -> Attribute[float]:
         return GithubObject.__makeSimpleAttribute(value, float)
 
     @staticmethod
-    def _makeBoolAttribute(value: Optional[bool]) -> Attribute[bool]:
+    def _makeBoolAttribute(value: bool | None) -> Attribute[bool]:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[dict]:
+    def _makeDictAttribute(value: dict[str, Any]) -> Attribute[dict]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
@@ -233,7 +235,7 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+    def _makeDatetimeAttribute(value: str | None) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
     def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
@@ -244,26 +246,24 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeListOfStringsAttribute(value: Union[List[List[str]], List[str], List[Union[str, int]]]) -> Attribute:
+    def _makeListOfStringsAttribute(value: list[list[str]] | list[str] | list[str | int]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, str)
 
     @staticmethod
-    def _makeListOfIntsAttribute(value: List[int]) -> Attribute:
+    def _makeListOfIntsAttribute(value: list[int]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, int)
 
     @staticmethod
-    def _makeListOfDictsAttribute(
-        value: List[Dict[str, Union[str, List[Dict[str, Union[str, List[int]]]]]]]
-    ) -> Attribute:
+    def _makeListOfDictsAttribute(value: list[dict[str, str | list[dict[str, str | list[int]]]]]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, dict)
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(
-        value: List[List[str]],
+        value: list[list[str]],
     ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
-    def _makeListOfClassesAttribute(self, klass: Type[T_gh], value: Any) -> Attribute[List[T_gh]]:
+    def _makeListOfClassesAttribute(self, klass: type[T_gh], value: Any) -> Attribute[list[T_gh]]:
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute(
                 [klass(self._requester, self._headers, element, completed=False) for element in value]
@@ -273,12 +273,12 @@ class GithubObject:
 
     def _makeDictOfStringsToClassesAttribute(
         self,
-        klass: Type["NonCompletableGithubObject"],
-        value: Dict[
+        klass: type[NonCompletableGithubObject],
+        value: dict[
             str,
-            Union[int, Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]],
+            int | dict[str, str | int | None] | dict[str, str | int],
         ],
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    ) -> _ValuedAttribute | _BadAttribute:
         if isinstance(value, dict) and all(
             isinstance(key, str) and isinstance(element, dict) for key, element in value.items()
         ):
@@ -289,20 +289,20 @@ class GithubObject:
             return _BadAttribute(value, {str: dict})
 
     @property
-    def etag(self) -> Optional[str]:
+    def etag(self) -> str | None:
         """
         :type: str
         """
         return self._headers.get(Consts.RES_ETAG)  # type: ignore
 
     @property
-    def last_modified(self) -> Optional[str]:
+    def last_modified(self) -> str | None:
         """
         :type: str
         """
         return self._headers.get(Consts.RES_LAST_MODIFIED)  # type: ignore
 
-    def get__repr__(self, params: Dict[str, Any]) -> str:
+    def get__repr__(self, params: dict[str, Any]) -> str:
         """
         Converts the object to a nicely printable string.
         """
@@ -339,9 +339,9 @@ class NonCompletableGithubObject(GithubObject):
 class CompletableGithubObject(GithubObject):
     def __init__(
         self,
-        requester: "Requester",
-        headers: Dict[str, Union[str, int]],
-        attributes: Dict[str, Any],
+        requester: Requester,
+        headers: dict[str, str | int],
+        attributes: dict[str, Any],
         completed: bool,
     ):
         super().__init__(requester, headers, attributes, completed)
@@ -371,7 +371,7 @@ class CompletableGithubObject(GithubObject):
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
 
-    def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
+    def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
         """
         Check and update the object with conditional request
         :rtype: Boolean value indicating whether the object is changed

@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
