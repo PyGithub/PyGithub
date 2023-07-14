@@ -154,26 +154,18 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "rule" in attributes:  # pragma no branch
-            self._rule = self._makeClassAttribute(
-                github.CodeScanRule.CodeScanRule, attributes["rule"]
-            )
+            self._rule = self._makeClassAttribute(github.CodeScanRule.CodeScanRule, attributes["rule"])
         if "tool" in attributes:  # pragma no branch
-            self._tool = self._makeClassAttribute(
-                github.CodeScanTool.CodeScanTool, attributes["tool"]
-            )
+            self._tool = self._makeClassAttribute(github.CodeScanTool.CodeScanTool, attributes["tool"])
 
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
-            self._dismissed_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["dismissed_by"]
-            )
+            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
         if "dismissed_reason" in attributes:  # pragma no branch
-            self._dismissed_reason = self._makeStringAttribute(
-                attributes["dismissed_reason"]
-            )
+            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
 
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

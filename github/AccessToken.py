@@ -19,9 +19,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -37,9 +37,9 @@ class AccessToken(NonCompletableGithubObject):
         self._token: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._scope: Attribute[str] = NotSet
-        self._expires_in: Attribute[Optional[int]] = NotSet
+        self._expires_in: Attribute[int | None] = NotSet
         self._refresh_token: Attribute[str] = NotSet
-        self._refresh_expires_in: Attribute[Optional[int]] = NotSet
+        self._refresh_expires_in: Attribute[int | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -48,9 +48,7 @@ class AccessToken(NonCompletableGithubObject):
                 "scope": self.scope,
                 "type": self.type,
                 "expires_in": self.expires_in,
-                "refresh_token": (
-                    f"{self.refresh_token[:5]}..." if self.refresh_token else None
-                ),
+                "refresh_token": (f"{self.refresh_token[:5]}..." if self.refresh_token else None),
                 "refresh_token_expires_in": self.refresh_expires_in,
             }
         )
@@ -84,14 +82,14 @@ class AccessToken(NonCompletableGithubObject):
         return self._created
 
     @property
-    def expires_in(self) -> Optional[int]:
+    def expires_in(self) -> int | None:
         """
         :type: Optional[int]
         """
         return self._expires_in.value
 
     @property
-    def expires_at(self) -> Optional[datetime]:
+    def expires_at(self) -> datetime | None:
         """
         :type: Optional[datetime]
         """
@@ -101,21 +99,21 @@ class AccessToken(NonCompletableGithubObject):
         return None
 
     @property
-    def refresh_token(self) -> Optional[str]:
+    def refresh_token(self) -> str | None:
         """
         :type: Optional[string]
         """
         return self._refresh_token.value
 
     @property
-    def refresh_expires_in(self) -> Optional[int]:
+    def refresh_expires_in(self) -> int | None:
         """
         :type: Optional[int]
         """
         return self._refresh_expires_in.value
 
     @property
-    def refresh_expires_at(self) -> Optional[datetime]:
+    def refresh_expires_at(self) -> datetime | None:
         """
         :type: Optional[datetime]
         """
@@ -137,6 +135,4 @@ class AccessToken(NonCompletableGithubObject):
         if "refresh_token" in attributes:  # pragma no branch
             self._refresh_token = self._makeStringAttribute(attributes["refresh_token"])
         if "refresh_token_expires_in" in attributes:  # pragma no branch
-            self._refresh_expires_in = self._makeIntAttribute(
-                attributes["refresh_token_expires_in"]
-            )
+            self._refresh_expires_in = self._makeIntAttribute(attributes["refresh_token_expires_in"])

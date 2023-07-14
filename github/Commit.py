@@ -42,13 +42,7 @@ import github.CommitStatus
 import github.File
 import github.GitCommit
 import github.NamedUser
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_optional,
-)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -145,16 +139,10 @@ class Commit(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         assert isinstance(body, str), body
-        post_parameters = NotSet.remove_unset_items(
-            {"body": body, "line": line, "path": path, "position": position}
-        )
+        post_parameters = NotSet.remove_unset_items({"body": body, "line": line, "path": path, "position": position})
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/comments", input=post_parameters
-        )
-        return github.CommitComment.CommitComment(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
+        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
     def create_status(
         self,
@@ -184,9 +172,7 @@ class Commit(CompletableGithubObject):
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
@@ -215,9 +201,7 @@ class Commit(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
@@ -243,9 +227,7 @@ class Commit(CompletableGithubObject):
         assert is_optional(check_name, str), check_name
         assert is_optional(status, str), status
         assert is_optional(filter, str), filter
-        url_parameters = NotSet.remove_unset_items(
-            {"check_name": check_name, "status": status, "filter": filter}
-        )
+        url_parameters = NotSet.remove_unset_items({"check_name": check_name, "status": status, "filter": filter})
 
         return PaginatedList(
             github.CheckRun.CheckRun,
@@ -267,9 +249,7 @@ class Commit(CompletableGithubObject):
         assert is_optional(app_id, int), app_id
         assert is_optional(check_name, str), check_name
 
-        parameters = NotSet.remove_unset_items(
-            {"app_id": app_id, "check_name": check_name}
-        )
+        parameters = NotSet.remove_unset_items({"app_id": app_id, "check_name": check_name})
 
         request_headers = {"Accept": "application/vnd.github.v3+json"}
         return PaginatedList(
@@ -287,34 +267,22 @@ class Commit(CompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
             self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["commit"]
-            )
+            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
-            self._committer = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["committer"]
-            )
+            self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(
-                github.File.File, attributes["files"]
-            )
+            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch
-            self._parents = self._makeListOfClassesAttribute(
-                Commit, attributes["parents"]
-            )
+            self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
-            self._stats = self._makeClassAttribute(
-                github.CommitStats.CommitStats, attributes["stats"]
-            )
+            self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
