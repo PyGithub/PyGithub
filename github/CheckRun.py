@@ -72,7 +72,7 @@ class CheckRun(CompletableGithubObject):
         self._status: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "conclusion": self._conclusion.value})
 
     @property
