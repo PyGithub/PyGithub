@@ -76,7 +76,7 @@ class Commit(CompletableGithubObject):
         self._stats: Attribute[CommitStats] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -261,7 +261,7 @@ class Commit(CompletableGithubObject):
         )
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return self.sha
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
