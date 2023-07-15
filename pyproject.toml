@@ -6,12 +6,6 @@ namespace_packages = true
 [[tool.mypy.overrides]]
 module = ["github.*"]
 check_untyped_defs = true
-# TODO: enable this later
-# disallow_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["github.AuthenticatedUser"]
-check_untyped_defs = true
 disallow_untyped_defs = true
 
 [tool.black]

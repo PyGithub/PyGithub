@@ -25,6 +25,8 @@
 ################################################################################
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -45,7 +47,7 @@ class StatsParticipation(NonCompletableGithubObject):
     def owner(self) -> list[int]:
         return self._owner.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "all" in attributes:  # pragma no branch
             self._all = self._makeListOfIntsAttribute(attributes["all"])
         if "owner" in attributes:  # pragma no branch

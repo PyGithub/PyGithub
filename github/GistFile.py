@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -36,7 +38,7 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
     This class represents GistFiles
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"filename": self._filename.value})
 
     @property
@@ -81,7 +83,7 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
@@ -89,7 +91,7 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "filename" in attributes:  # pragma no branch
