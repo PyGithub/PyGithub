@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 from . import Consts
@@ -36,7 +38,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
     This class represents Project Cards. The reference can be found here https://docs.github.com/en/rest/reference/projects#cards
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -188,7 +190,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._archived = github.GithubObject.NotSet
         self._column_url = github.GithubObject.NotSet
         self._content_url = github.GithubObject.NotSet
@@ -200,7 +202,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "column_url" in attributes:  # pragma no branch

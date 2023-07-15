@@ -65,7 +65,7 @@ class Branch(NonCompletableGithubObject):
     This class represents Branches. The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -90,7 +90,7 @@ class Branch(NonCompletableGithubObject):
         self._protection_url: Attribute[str] = github.GithubObject.NotSet
         self._protected: Attribute[bool] = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
@@ -134,7 +134,7 @@ class Branch(NonCompletableGithubObject):
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         block_creations: Opt[bool] = NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
 
@@ -297,7 +297,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -311,7 +311,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def remove_required_status_checks(self):
+    def remove_required_status_checks(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -341,7 +341,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
-    ):
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -373,7 +373,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def remove_required_pull_request_reviews(self):
+    def remove_required_pull_request_reviews(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """

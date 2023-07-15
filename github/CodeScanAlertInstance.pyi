@@ -1,10 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,40 +23,27 @@
 from typing import Any, Dict
 
 import github.GithubObject
+import github.CodeScanAlertInstanceLocation
 
-
-class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents statistics of StatsCodeFrequencies. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity
-    """
-
+class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
+    def __repr__(self) -> str: ...
     @property
-    def week(self):
-        """
-        :type: datetime.datetime
-        """
-        return self._week.value
-
+    def ref(self) -> str: ...
     @property
-    def additions(self):
-        """
-        :type: int
-        """
-        return self._additions.value
-
+    def analysis_key(self) -> str: ...
     @property
-    def deletions(self):
-        """
-        :type: int
-        """
-        return self._deletions.value
-
-    def _initAttributes(self) -> None:
-        self._week = github.GithubObject.NotSet
-        self._additions = github.GithubObject.NotSet
-        self._deletions = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        self._week = self._makeTimestampAttribute(attributes[0])
-        self._additions = self._makeIntAttribute(attributes[1])
-        self._deletions = self._makeIntAttribute(attributes[2])
+    def environment(self) -> str: ...
+    @property
+    def state(self) -> str: ...
+    @property
+    def commit_sha(self) -> str: ...
+    @property
+    def message(self) -> str: ...
+    @property
+    def location(
+        self,
+    ) -> github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation: ...
+    @property
+    def classifications(self) -> list[str]: ...
+    def _initAttributes(self) -> None: ...
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...

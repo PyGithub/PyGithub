@@ -21,7 +21,7 @@
 ################################################################################
 from __future__ import annotations
 
-from typing import Union
+from typing import Any, Union
 
 from typing_extensions import TypedDict
 
@@ -61,11 +61,11 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._login: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         if "type" in attributes:  # pragma no branch
