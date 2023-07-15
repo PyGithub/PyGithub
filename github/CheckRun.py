@@ -219,7 +219,7 @@ class CheckRun(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(github.GithubApp.GithubApp, attributes["app"])
         # This only gives us a dictionary with `id` attribute of `check_suite`

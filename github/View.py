@@ -23,8 +23,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from datetime import datetime
+from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -40,7 +40,7 @@ class View(NonCompletableGithubObject):
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "timestamp": self._timestamp.value,
@@ -61,7 +61,7 @@ class View(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "timestamp" in attributes:  # pragma no branch
             self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "count" in attributes:  # pragma no branch
