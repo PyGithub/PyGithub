@@ -23,7 +23,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 import github.CommitStatus
 import github.Repository
@@ -75,7 +77,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     def statuses(self) -> Any:
         return self._statuses.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "sha" in attributes:  # pragma no branch

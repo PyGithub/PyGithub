@@ -30,7 +30,6 @@ from typing import Any, Dict
 
 import github.Commit
 import github.File
-import github.GithubObject
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
