@@ -23,15 +23,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class StatsCodeFrequency(NonCompletableGithubObject):
     """
-    This class represents statistics of StatsCodeFrequencies. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity
+    This class represents statistics of StatsCodeFrequencies.
+    The reference can be found here https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
     """
 
     def _initAttributes(self) -> None:
@@ -51,7 +53,7 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     def deletions(self) -> int:
         return self._deletions.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: tuple[int]) -> None:
         self._week = self._makeTimestampAttribute(attributes[0])
         self._additions = self._makeIntAttribute(attributes[1])
         self._deletions = self._makeIntAttribute(attributes[2])
