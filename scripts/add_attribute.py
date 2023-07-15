@@ -37,7 +37,6 @@ from __future__ import annotations
 
 import os.path
 import sys
-from typing import NamedTuple
 
 className, attributeName, attributeType = sys.argv[1:4]
 if len(sys.argv) > 4:
@@ -45,34 +44,26 @@ if len(sys.argv) > 4:
 else:
     attributeClassType = ""
 
-
-class T(NamedTuple):
-    final_type: str
-    raw_type: str | None
-    make_attribute: str
-    final_py_type: str
-
-
 types = {
-    "string": T(
+    "string": (
         "str",
         None,
         'self._makeStringAttribute(attributes["' + attributeName + '"])',
         "str",
     ),
-    "int": T(
+    "int": (
         "int",
         None,
         'self._makeIntAttribute(attributes["' + attributeName + '"])',
         "int",
     ),
-    "bool": T(
+    "bool": (
         "bool",
         None,
         'self._makeBoolAttribute(attributes["' + attributeName + '"])',
         "bool",
     ),
-    "datetime": T(
+    "datetime": (
         "datetime",
         "str",
         'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
