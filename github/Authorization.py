@@ -30,7 +30,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.AuthorizationApplication
 import github.GithubObject
@@ -45,7 +45,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._app: Attribute[AuthorizationApplication] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
@@ -153,7 +153,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.AuthorizationApplication.AuthorizationApplication,

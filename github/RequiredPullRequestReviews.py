@@ -22,7 +22,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Team
@@ -45,7 +45,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         self._users: Attribute[list[NamedUser]] = NotSet
         self._teams: Attribute[list[Team]] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "url": self._url.value,
@@ -84,7 +84,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         self._completeIfNotSet(self._teams)
         return self._teams.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "dismissal_restrictions" in attributes:  # pragma no branch
             if "users" in attributes["dismissal_restrictions"]:
                 self._users = self._makeListOfClassesAttribute(
