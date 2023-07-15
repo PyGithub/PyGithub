@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -32,7 +34,7 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
     def __str__(self):
         return f"{self.path} @ l{self.start_line}:c{self.start_column}-l{self.end_line}:c{self.end_column}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "path": self.path,
@@ -78,14 +80,14 @@ class CodeScanAlertInstanceLocation(github.GithubObject.NonCompletableGithubObje
         """
         return self._end_column.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._path = github.GithubObject.NotSet
         self._start_line = github.GithubObject.NotSet
         self._start_column = github.GithubObject.NotSet
         self._end_line = github.GithubObject.NotSet
         self._end_column = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "start_line" in attributes:  # pragma no branch
