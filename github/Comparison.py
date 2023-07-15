@@ -26,137 +26,101 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
 import github.Commit
 import github.File
 import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class Comparison(github.GithubObject.CompletableGithubObject):
+class Comparison(CompletableGithubObject):
     """
     This class represents Comparisons
     """
 
+    def _initAttributes(self) -> None:
+        self._ahead_by: Attribute[int] = NotSet
+        self._base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._behind_by: Attribute[int] = NotSet
+        self._commits: Attribute[Any] = NotSet
+        self._diff_url: Attribute[str] = NotSet
+        self._files: Attribute[Any] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._merge_base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._patch_url: Attribute[str] = NotSet
+        self._permalink_url: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._total_commits: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"url": self._url.value})
+
     @property
-    def ahead_by(self):
-        """
-        :type: integer
-        """
+    def ahead_by(self) -> int:
         self._completeIfNotSet(self._ahead_by)
         return self._ahead_by.value
 
     @property
-    def base_commit(self):
-        """
-        :type: :class:`github.Commit.Commit`
-        """
+    def base_commit(self) -> github.Commit.Commit:
         self._completeIfNotSet(self._base_commit)
         return self._base_commit.value
 
     @property
-    def behind_by(self):
-        """
-        :type: integer
-        """
+    def behind_by(self) -> int:
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
     @property
-    def commits(self):
-        """
-        :type: list of :class:`github.Commit.Commit`
-        """
+    def commits(self) -> Any:
         self._completeIfNotSet(self._commits)
         return self._commits.value
 
     @property
-    def diff_url(self):
-        """
-        :type: string
-        """
+    def diff_url(self) -> str:
         self._completeIfNotSet(self._diff_url)
         return self._diff_url.value
 
     @property
-    def files(self):
-        """
-        :type: list of :class:`github.File.File`
-        """
+    def files(self) -> Any:
         self._completeIfNotSet(self._files)
         return self._files.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def merge_base_commit(self):
-        """
-        :type: :class:`github.Commit.Commit`
-        """
+    def merge_base_commit(self) -> github.Commit.Commit:
         self._completeIfNotSet(self._merge_base_commit)
         return self._merge_base_commit.value
 
     @property
-    def patch_url(self):
-        """
-        :type: string
-        """
+    def patch_url(self) -> str:
         self._completeIfNotSet(self._patch_url)
         return self._patch_url.value
 
     @property
-    def permalink_url(self):
-        """
-        :type: string
-        """
+    def permalink_url(self) -> str:
         self._completeIfNotSet(self._permalink_url)
         return self._permalink_url.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
 
     @property
-    def total_commits(self):
-        """
-        :type: integer
-        """
+    def total_commits(self) -> int:
         self._completeIfNotSet(self._total_commits)
         return self._total_commits.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    def _initAttributes(self) -> None:
-        self._ahead_by = github.GithubObject.NotSet
-        self._base_commit = github.GithubObject.NotSet
-        self._behind_by = github.GithubObject.NotSet
-        self._commits = github.GithubObject.NotSet
-        self._diff_url = github.GithubObject.NotSet
-        self._files = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._merge_base_commit = github.GithubObject.NotSet
-        self._patch_url = github.GithubObject.NotSet
-        self._permalink_url = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._total_commits = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "ahead_by" in attributes:  # pragma no branch

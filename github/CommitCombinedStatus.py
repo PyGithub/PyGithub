@@ -23,79 +23,57 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
 import github.CommitStatus
-import github.GithubObject
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
+class CommitCombinedStatus(NonCompletableGithubObject):
     """
     This class represents CommitCombinedStatuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
+
+    def _initAttributes(self) -> None:
+        self._state: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._total_count: Attribute[int] = NotSet
+        self._commit_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._repository: Attribute[github.Repository.Repository] = NotSet
+        self._statuses: Attribute[Any] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     @property
-    def total_count(self):
-        """
-        :type: integer
-        """
+    def total_count(self) -> int:
         return self._total_count.value
 
     @property
-    def commit_url(self):
-        """
-        :type: string
-        """
+    def commit_url(self) -> str:
         return self._commit_url.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
     @property
-    def repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repository(self) -> github.Repository.Repository:
         return self._repository.value
 
     @property
-    def statuses(self):
-        """
-        :type: list of :class:`CommitStatus`
-        """
+    def statuses(self) -> Any:
         return self._statuses.value
-
-    def _initAttributes(self) -> None:
-        self._state = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._total_count = github.GithubObject.NotSet
-        self._commit_url = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-        self._statuses = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch
