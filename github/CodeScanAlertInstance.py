@@ -101,7 +101,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         if "commit_sha" in attributes:  # pragma no branch
             self._commit_sha = self._makeStringAttribute(attributes["commit_sha"])
         if "message" in attributes:  # pragma no branch
-            self._message = self._makeDictAttribute(attributes["message"])
+            self._message = self._makeDictAttribute(attributes["message"])  # type: ignore
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
                 github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation,
