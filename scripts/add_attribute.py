@@ -210,4 +210,4 @@ source = add_initAttributes_assignment(source)
 source = add_useAttributes(source)
 
 with open(fileName, "w", newline="\n") as f:
-    f.write("\n".join(source))
+    f.write("\n".join(source) + "\n")
