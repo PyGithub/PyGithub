@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -31,7 +33,7 @@ class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
 
     @property
@@ -69,14 +71,14 @@ class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
         """
         return self._description.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._severity = github.GithubObject.NotSet
         self._security_severity_level = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

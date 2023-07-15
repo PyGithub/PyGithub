@@ -30,6 +30,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -38,7 +40,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
     This class represents Plans
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -83,7 +85,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         """
         return self._seats.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._collaborators = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._private_repos = github.GithubObject.NotSet
@@ -91,7 +93,7 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         self._filled_seats = github.GithubObject.NotSet
         self._seats = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch

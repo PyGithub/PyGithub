@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
@@ -32,7 +34,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -119,7 +121,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -132,7 +134,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         self._author_association = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "commit_id" in attributes:  # pragma no branch

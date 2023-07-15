@@ -129,11 +129,11 @@ while not added:
 
 added = False
 
-inInit = line.endswith("def _initAttributes(self):")
+inInit = line.endswith("def _initAttributes(self) -> None:")
 while not added:
     line = lines[i].rstrip()
     i += 1
-    if line == "    def _initAttributes(self):":
+    if line == "    def _initAttributes(self) -> None:":
         inInit = True
     if inInit:
         if not line or line.endswith(" = github.GithubObject.NotSet"):
@@ -153,7 +153,7 @@ while not added:
     except IndexError:
         line = ""
     i += 1
-    if line == "    def _useAttributes(self, attributes):":
+    if line == "    def _useAttributes(self, attributes:Dict[str,Any]) -> None:":
         inUse = True
     if inUse:
         if not line or line.endswith(" in attributes:  # pragma no branch"):

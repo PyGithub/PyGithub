@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 from github import Consts
 
@@ -31,7 +33,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
     This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "vcs_url": self._vcs_url.value,
@@ -149,7 +151,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         return super().update(additional_headers=import_header)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._authors_count = github.GithubObject.NotSet
         self._authors_url = github.GithubObject.NotSet
         self._has_large_files = github.GithubObject.NotSet
@@ -164,7 +166,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         self._vcs = github.GithubObject.NotSet
         self._vcs_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch
             self._authors_count = self._makeIntAttribute(attributes["authors_count"])
         if "authors_url" in attributes:  # pragma no branch

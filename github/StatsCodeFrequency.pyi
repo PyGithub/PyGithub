@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List
 
 from github.GithubObject import NonCompletableGithubObject
 
 class StatsCodeFrequency(NonCompletableGithubObject):
-    def _initAttributes(self) -> None: ...
-    def _useAttributes(self, attributes: List[int]) -> None: ...
     @property
     def additions(self) -> int: ...
     @property

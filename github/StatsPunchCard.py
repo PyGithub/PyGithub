@@ -25,6 +25,8 @@
 ################################################################################
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser  # TODO remove unused
 
@@ -43,6 +45,6 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._dict = {}
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Any) -> None:
         for day, hour, commits in attributes:
             self._dict[(day, hour)] = commits

@@ -30,6 +30,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -45,7 +47,7 @@ class GitBlob(CompletableGithubObject):
         self._size: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -73,7 +75,7 @@ class GitBlob(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch

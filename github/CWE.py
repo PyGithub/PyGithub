@@ -20,7 +20,10 @@
 #                                                                              #
 ################################################################################
 
+
 from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -31,7 +34,7 @@ class CWE(CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._cwe_id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
 
@@ -43,7 +46,7 @@ class CWE(CompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "cwe_id" in attributes:  # pragma no branch
             self._cwe_id = self._makeStringAttribute(attributes["cwe_id"])
         if "name" in attributes:  # pragma no branch

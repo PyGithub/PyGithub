@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.WorkflowStep
 
@@ -31,7 +33,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
     This class represents Workflow Jobs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-jobs
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -154,7 +156,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         headers, _ = self._requester.requestBlobAndCheck("GET", f"{self.url}/logs")
         return headers["location"]
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._check_run_url = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
@@ -170,7 +172,7 @@ class WorkflowJob(github.GithubObject.CompletableGithubObject):
         self._steps = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "check_run_url" in attributes:  # pragma no branch
             self._check_run_url = self._makeStringAttribute(attributes["check_run_url"])
         if "completed_at" in attributes:  # pragma no branch

@@ -35,6 +35,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -43,7 +45,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
     This class represents RepositoryKeys. The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
@@ -109,7 +111,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._key = github.GithubObject.NotSet
@@ -118,7 +120,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._verified = github.GithubObject.NotSet
         self._read_only = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch

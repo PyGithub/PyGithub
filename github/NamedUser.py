@@ -38,6 +38,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 import github.Event
 import github.Gist
@@ -57,7 +58,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
     @property
@@ -619,7 +620,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{self.login}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
         self._blog = github.GithubObject.NotSet
@@ -666,7 +667,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch

@@ -30,6 +30,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
@@ -41,7 +43,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
 
     @property
@@ -100,7 +102,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -110,7 +112,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         self._repo = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "created_at" in attributes:  # pragma no branch

@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.WorkflowRun
 
@@ -31,7 +33,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
 
     @property
@@ -199,7 +201,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             list_item="workflow_runs",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
@@ -210,7 +212,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._badge_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -30,7 +32,7 @@ class License(github.GithubObject.CompletableGithubObject):
     This class represents Licenses. The reference can be found here https://docs.github.com/en/rest/reference/licenses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -121,7 +123,7 @@ class License(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._limitations)
         return self._limitations.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._key = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._spdx_id = github.GithubObject.NotSet
@@ -134,7 +136,7 @@ class License(github.GithubObject.CompletableGithubObject):
         self._conditions = github.GithubObject.NotSet
         self._limitations = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "name" in attributes:  # pragma no branch

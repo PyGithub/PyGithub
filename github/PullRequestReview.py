@@ -26,6 +26,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser
 
@@ -35,7 +37,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
     This class represents PullRequestReviews. The reference can be found here https://docs.github.com/en/rest/reference/pulls#reviews
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
@@ -114,7 +116,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
@@ -124,7 +126,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         self._pull_request_url = github.GithubObject.NotSet
         self._submitted_at = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "user" in attributes:  # pragma no branch

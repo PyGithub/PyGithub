@@ -31,6 +31,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 from github.GithubObject import Attribute
 
@@ -47,7 +49,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         self._url: Attribute[str] = github.GithubObject.NotSet
         self._verified: Attribute[bool] = github.GithubObject.NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
@@ -82,7 +84,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch

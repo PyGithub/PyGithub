@@ -31,6 +31,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.Issue
 import github.NamedUser
@@ -41,7 +43,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
     This class represents IssueEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#events
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -188,7 +190,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._lock_reason)
         return self._lock_reason.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -208,7 +210,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         self._dismissed_review = github.GithubObject.NotSet
         self._lock_reason = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "commit_id" in attributes:  # pragma no branch

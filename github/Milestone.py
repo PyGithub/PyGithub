@@ -31,6 +31,7 @@
 from __future__ import annotations
 
 from datetime import date
+from typing import Any
 
 import github.GithubObject
 import github.Label
@@ -199,7 +200,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.number
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._closed_issues = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
@@ -214,7 +215,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "closed_issues" in attributes:  # pragma no branch
             self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch

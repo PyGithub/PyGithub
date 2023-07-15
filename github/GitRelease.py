@@ -36,6 +36,7 @@
 from __future__ import annotations
 
 from os.path import basename
+from typing import Any
 
 import github.GithubObject
 import github.GitReleaseAsset
@@ -49,7 +50,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -315,7 +316,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
@@ -334,7 +335,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._zipball_url = github.GithubObject.NotSet
         self._assets = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "body" in attributes:

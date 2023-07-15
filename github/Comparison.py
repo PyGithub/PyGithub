@@ -29,6 +29,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.Commit
 import github.File
 import github.GithubObject
@@ -143,7 +145,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._ahead_by = github.GithubObject.NotSet
         self._base_commit = github.GithubObject.NotSet
         self._behind_by = github.GithubObject.NotSet
@@ -158,7 +160,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         self._total_commits = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch

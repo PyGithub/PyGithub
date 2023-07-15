@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.CodeScanAlertInstance
 import github.CodeScanRule
 import github.CodeScanTool
@@ -36,7 +38,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
 
     @property
@@ -135,7 +137,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._number = github.GithubObject.NotSet
         self._rule = github.GithubObject.NotSet
         self._tool = github.GithubObject.NotSet
@@ -152,7 +154,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         self._most_recent_instance = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "rule" in attributes:  # pragma no branch

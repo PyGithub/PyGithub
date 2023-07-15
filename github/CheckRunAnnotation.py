@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -42,7 +44,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         self._start_line: Attribute[int] = NotSet
         self._title: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -81,7 +83,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     def title(self) -> str:
         return self._title.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
             self._annotation_level = self._makeStringAttribute(attributes["annotation_level"])
         if "end_column" in attributes:  # pragma no branch

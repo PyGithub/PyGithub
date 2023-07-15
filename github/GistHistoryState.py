@@ -29,6 +29,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.CommitStats
 import github.Gist
 import github.GithubObject
@@ -208,7 +210,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._version)
         return self._version.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._change_status = github.GithubObject.NotSet
         self._comments = github.GithubObject.NotSet
         self._comments_url = github.GithubObject.NotSet
@@ -231,7 +233,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         self._user = github.GithubObject.NotSet
         self._version = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "change_status" in attributes:  # pragma no branch
             self._change_status = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["change_status"])
         if "comments" in attributes:  # pragma no branch

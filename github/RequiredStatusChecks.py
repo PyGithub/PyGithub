@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -30,7 +32,7 @@ class RequiredStatusChecks(github.GithubObject.CompletableGithubObject):
     This class represents Required Status Checks. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
 
     @property
@@ -57,12 +59,12 @@ class RequiredStatusChecks(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._strict = github.GithubObject.NotSet
         self._contexts = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "strict" in attributes:  # pragma no branch
             self._strict = self._makeBoolAttribute(attributes["strict"])
         if "contexts" in attributes:  # pragma no branch

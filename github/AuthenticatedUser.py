@@ -43,6 +43,7 @@ from __future__ import annotations
 
 from collections import namedtuple
 from datetime import datetime, timezone
+from typing import Any
 
 import github.Authorization
 import github.Event
@@ -70,7 +71,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
     @property
@@ -1238,7 +1239,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/memberships/orgs/{org}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet
         self._blog = github.GithubObject.NotSet
@@ -1278,7 +1279,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._two_factor_authentication = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch

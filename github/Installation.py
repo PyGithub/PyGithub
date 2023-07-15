@@ -26,6 +26,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.Authorization
 import github.Event
 import github.Gist
@@ -59,7 +61,7 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
             auth = auth.get_installation_auth(self.id, requester=self._requester)
             self._requester = self._requester.withAuth(auth)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     def get_github_for_installation(self):
@@ -109,13 +111,13 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
             list_item="repositories",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._app_id = github.GithubObject.NotSet
         self._target_id = github.GithubObject.NotSet
         self._target_type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "app_id" in attributes:  # pragma no branch

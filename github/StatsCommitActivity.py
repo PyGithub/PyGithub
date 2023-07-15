@@ -26,6 +26,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 from github.GithubObject import Attribute
@@ -53,7 +54,7 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     def days(self) -> int:
         return self._days.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "week" in attributes:  # pragma no branch
             self._week = self._makeTimestampAttribute(attributes["week"])
         if "total" in attributes:  # pragma no branch

@@ -29,6 +29,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -54,7 +56,7 @@ class CommitStats(NonCompletableGithubObject):
     def total(self) -> int:
         return self._total.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "deletions" in attributes:  # pragma no branch

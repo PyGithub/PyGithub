@@ -32,6 +32,7 @@
 from __future__ import annotations
 
 import urllib.parse
+from typing import Any
 
 import github.GithubObject
 
@@ -43,7 +44,7 @@ class Label(github.GithubObject.CompletableGithubObject):
     This class represents Labels. The reference can be found here https://docs.github.com/en/rest/reference/issues#labels
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -114,13 +115,13 @@ class Label(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return urllib.parse.quote(self.name)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._color = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
         if "description" in attributes:  # pragma no branch

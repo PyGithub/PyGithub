@@ -30,6 +30,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -42,7 +44,7 @@ class AuthorizationApplication(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -55,7 +57,7 @@ class AuthorizationApplication(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch

@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github
 
 
@@ -30,7 +32,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
     This class represents check suites. The reference can be found here https://docs.github.com/en/rest/reference/checks#check-suites
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -202,7 +204,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
             list_item="check_runs",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._after = github.GithubObject.NotSet
         self._app = github.GithubObject.NotSet
         self._before = github.GithubObject.NotSet
@@ -220,7 +222,7 @@ class CheckSuite(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "after" in attributes:  # pragma no branch
             self._after = self._makeStringAttribute(attributes["after"])
         if "app" in attributes:  # pragma no branch

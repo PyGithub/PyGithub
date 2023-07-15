@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
@@ -34,7 +36,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
     This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -190,7 +192,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._cards_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -200,7 +202,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "cards_url" in attributes:  # pragma no branch
             self._cards_url = self._makeStringAttribute(attributes["cards_url"])
         if "created_at" in attributes:  # pragma no branch

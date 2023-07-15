@@ -30,6 +30,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -46,7 +48,7 @@ class GitTreeElement(NonCompletableGithubObject):
         self._type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
 
     @property
@@ -73,7 +75,7 @@ class GitTreeElement(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

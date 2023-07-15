@@ -23,6 +23,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser
 
@@ -32,7 +34,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     This class represents TeamDiscussions. The reference can be found here https://docs.github.com/en/rest/reference/teams#discussions
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
@@ -171,7 +173,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._body_html = github.GithubObject.NotSet
@@ -190,7 +192,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "body" in attributes:  # pragma no branch

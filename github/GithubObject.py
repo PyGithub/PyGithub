@@ -67,7 +67,7 @@ class Attribute(Protocol[T_co]):
 
 
 class _NotSetType:
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "NotSet"
 
     @property
@@ -92,11 +92,11 @@ def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:
     return isinstance(v, _NotSetType)
 
 
-def is_optional(v, type: type | tuple[type, ...]) -> bool:
+def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
-def is_optional_list(v, type: type | tuple[type, ...]) -> bool:
+def is_optional_list(v: Any, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
 
 
@@ -116,7 +116,7 @@ class _BadAttribute(Attribute):
         self.__exception = exception
 
     @property
-    def value(self):
+    def value(self) -> Any:
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
@@ -307,7 +307,7 @@ class GithubObject:
         Converts the object to a nicely printable string.
         """
 
-        def format_params(params):
+        def format_params(params: dict[str, Any]) -> typing.Generator[str, None, None]:
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):
@@ -324,10 +324,10 @@ class GithubObject:
     def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
-    def _completeIfNeeded(self):
+    def _completeIfNeeded(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
 
 
@@ -350,7 +350,7 @@ class CompletableGithubObject(GithubObject):
     def __eq__(self, other: Any) -> bool:
         return other.__class__ is self.__class__ and other._url.value == self._url.value
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self._url.value)
 
     def __ne__(self, other: Any) -> bool:
@@ -364,7 +364,7 @@ class CompletableGithubObject(GithubObject):
         if not self.__completed:
             self.__complete()
 
-    def __complete(self):
+    def __complete(self) -> None:
         if self._url.value is None:
             raise IncompletableObject(400, message="Returned object contains no URL")
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)

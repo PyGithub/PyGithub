@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import github.GithubObject
 
 
@@ -30,7 +32,7 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
     This class represents topics as used by https://github.com/topics. The object reference can be found here https://docs.github.com/en/rest/reference/search#search-topics
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -110,7 +112,7 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
         """
         return self._score.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._display_name = github.GithubObject.NotSet
         self._short_description = github.GithubObject.NotSet
@@ -123,7 +125,7 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
         self._curated = github.GithubObject.NotSet
         self._score = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "display_name" in attributes:  # pragma no branch
