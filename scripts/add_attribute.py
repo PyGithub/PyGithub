@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -34,9 +33,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import os.path
 import sys
+from typing import NamedTuple
 
 className, attributeName, attributeType = sys.argv[1:4]
 if len(sys.argv) > 4:
@@ -45,30 +46,37 @@ else:
     attributeClassType = ""
 
 
+class T(NamedTuple):
+    final_type: str
+    raw_type: str | None
+    make_attribute: str
+    final_py_type: str
+
+
 types = {
-    "string": (
-        "string",
+    "string": T(
+        "str",
         None,
         'self._makeStringAttribute(attributes["' + attributeName + '"])',
         "str",
     ),
-    "int": (
-        "integer",
+    "int": T(
+        "int",
         None,
         'self._makeIntAttribute(attributes["' + attributeName + '"])',
         "int",
     ),
-    "bool": (
+    "bool": T(
         "bool",
         None,
         'self._makeBoolAttribute(attributes["' + attributeName + '"])',
         "bool",
     ),
-    "datetime": (
-        "datetime.datetime",
+    "datetime": T(
+        "datetime",
         "str",
         'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
-        "datetime.datetime",
+        "datetime",
     ),
     "class": (
         ":class:`" + attributeClassType + "`",
@@ -83,104 +91,132 @@ if attributeType == "class":
     # Wrap in quotes to avoid an explicit import requirement which can cause circular import errors
     attributeClassType = f"'{attributeClassType}'"
 
-
 fileName = os.path.join("github", className + ".py")
 
-with open(fileName) as f:
-    lines = list(f)
 
-newLines = []
+def add_class_attribute(lines: list[str]) -> list[str]:
+    newLines = []
+    i = 0
 
-i = 0
+    added = False
 
-added = False
-
-isCompletable = True
-isProperty = False
-while not added:
-    line = lines[i].rstrip()
-    i += 1
-    if line.startswith("class "):
-        if "NonCompletableGithubObject" in line:
-            isCompletable = False
-    elif line == "    @property":
-        isProperty = True
-    elif line.startswith("    def "):
-        attrName = line[8:-7]
-        # Properties will be inserted after __repr__, but before any other function.
-        if attrName != "__repr__" and (attrName == "_identity" or attrName > attributeName or not isProperty):
-            if not isProperty:
-                newLines.append("    @property")
-            newLines.append("    def " + attributeName + "(self) -> " + attributeClassType + ":")
-            newLines.append('        """')
-            newLines.append("        :type: " + attributeDocType)
-            newLines.append('        """')
-            if isCompletable:
-                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
-            newLines.append("        return self._" + attributeName + ".value")
-            newLines.append("")
-            if isProperty:
-                newLines.append("    @property")
-            added = True
-        isProperty = False
-    newLines.append(line)
-
-added = False
-
-inInit = line.endswith("def _initAttributes(self) -> None:")
-while not added:
-    line = lines[i].rstrip()
-    i += 1
-    if line == "    def _initAttributes(self) -> None:":
-        inInit = True
-    if inInit:
-        if not line or line.endswith(" = github.GithubObject.NotSet"):
-            if line:
-                attrName = line[14:-29]
-            if not line or attrName > attributeName:
-                newLines.append("        self._" + attributeName + " = github.GithubObject.NotSet")
-                added = True
-    newLines.append(line)
-
-added = False
-
-inUse = False
-while not added:
-    try:
+    isCompletable = True
+    isProperty = False
+    while not added:
         line = lines[i].rstrip()
-    except IndexError:
-        line = ""
-    i += 1
-    if line == "    def _useAttributes(self, attributes:Dict[str,Any]) -> None:":
-        inUse = True
-    if inUse:
-        if not line or line.endswith(" in attributes:  # pragma no branch"):
-            if line:
-                attrName = line[12:-36]
-            if not line or attrName > attributeName:
-                newLines.append('        if "' + attributeName + '" in attributes:  # pragma no branch')
-                if attributeAssertType:
-                    newLines.append(
-                        '            assert attributes["'
-                        + attributeName
-                        + '"] is None or isinstance(attributes["'
-                        + attributeName
-                        + '"], '
-                        + attributeAssertType
-                        + '), attributes["'
-                        + attributeName
-                        + '"]'
-                    )
-                newLines.append("            self._" + attributeName + " = " + attributeValue)
+        i += 1
+        if line.startswith("class "):
+            if "NonCompletableGithubObject" in line:
+                isCompletable = False
+        elif line == "    @property":
+            isProperty = True
+        elif line.startswith("    def "):
+            attrName = line[8:-7]
+            # Properties will be inserted after __repr__, but before any other function.
+            if (not attrName.startswith("__repr__") and not attrName.startswith("_initAttributes")) and (
+                attrName == "_identity" or attrName > attributeName or not isProperty
+            ):
+                if not isProperty:
+                    newLines.append("    @property")
+                newLines.append("    def " + attributeName + "(self) -> " + attributeClassType + ":")
+                if isCompletable:
+                    newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
+                newLines.append("        return self._" + attributeName + ".value")
+                newLines.append("")
+                if isProperty:
+                    newLines.append("    @property")
                 added = True
-    newLines.append(line)
+            isProperty = False
+        newLines.append(line)
+
+    while i < len(lines):
+        line = lines[i].rstrip()
+        i += 1
+        newLines.append(line)
+
+    return newLines
 
 
-while i < len(lines):
-    line = lines[i].rstrip()
-    i += 1
-    newLines.append(line)
+def add_initAttributes_assignment(lines: list[str]) -> list[str]:
+    newLines = []
+    added = False
 
-with open(fileName, "w") as f:
-    for line in newLines:
-        f.write(line + "\n")
+    i = 0
+    inInit = False
+
+    while not added:
+        line = lines[i].rstrip()
+        i += 1
+        if line.strip().startswith("def _initAttributes(self)"):
+            inInit = True
+        if inInit:
+            if not line or line.endswith(" = github.GithubObject.NotSet") or line.endswith(" = NotSet"):
+                if line:
+                    attrName = line[14:-29]
+                if not line or attrName > attributeName:
+                    newLines.append(f"        self._{attributeName}: Attribute[{attributeClassType}] = NotSet")
+                    added = True
+        newLines.append(line)
+
+    while i < len(lines):
+        line = lines[i].rstrip()
+        i += 1
+        newLines.append(line)
+
+    return newLines
+
+
+def add_useAttributes(lines: list[str]) -> list[str]:
+    i = 0
+    newLines = []
+    added = False
+    inUse = False
+    while not added:
+        try:
+            line = lines[i].rstrip()
+        except IndexError:
+            line = ""
+        i += 1
+        if line.strip().startswith("def _useAttributes(self, attributes:"):
+            inUse = True
+        if inUse:
+            if not line or line.endswith(" in attributes:  # pragma no branch"):
+                if line:
+                    attrName = line[12:-36]
+                if not line or attrName > attributeName:
+                    newLines.append('        if "' + attributeName + '" in attributes:  # pragma no branch')
+                    if attributeAssertType:
+                        newLines.append(
+                            '            assert attributes["'
+                            + attributeName
+                            + '"] is None or isinstance(attributes["'
+                            + attributeName
+                            + '"], '
+                            + attributeAssertType
+                            + '), attributes["'
+                            + attributeName
+                            + '"]'
+                        )
+                    newLines.append(
+                        f"            self._{attributeName}: Attribute[{attributeClassType}] = {attributeValue}"
+                    )
+                    added = True
+        newLines.append(line)
+
+    while i < len(lines):
+        line = lines[i].rstrip()
+        i += 1
+        newLines.append(line)
+
+    return newLines
+
+
+with open(fileName) as f:
+    source = f.readlines()
+
+source = add_class_attribute(source)
+source = add_initAttributes_assignment(source)
+source = add_useAttributes(source)
+
+with open(fileName, "w", newline="\n") as f:
+    f.write("\n".join(source))
