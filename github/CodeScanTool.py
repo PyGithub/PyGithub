@@ -36,7 +36,7 @@ class CodeScanTool(NonCompletableGithubObject):
         self._version: Attribute[str] = NotSet
         self._guid: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "guid": self.guid,

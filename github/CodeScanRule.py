@@ -19,6 +19,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -29,14 +32,14 @@ class CodeScanRule(NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._severity: Attribute[str] = NotSet
         self._security_severity_level: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
 
     @property
@@ -59,7 +62,7 @@ class CodeScanRule(NonCompletableGithubObject):
     def description(self) -> str:
         return self._description.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

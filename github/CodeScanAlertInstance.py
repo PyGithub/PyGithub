@@ -21,13 +21,19 @@
 ################################################################################
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from typing_extensions import TypedDict
 
 import github.CodeScanAlertInstanceLocation
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.CodeScanAlertInstanceLocation import CodeScanAlertInstanceLocation
+
+
+class Message(TypedDict):
+    text: str
 
 
 class CodeScanAlertInstance(NonCompletableGithubObject):
@@ -42,11 +48,11 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         self._environment: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._commit_sha: Attribute[str] = NotSet
-        self._message: Attribute[str] = NotSet
+        self._message: Attribute[Message] = NotSet
         self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
         self._classifications: Attribute[list[str]] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
 
     @property
@@ -70,7 +76,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         return self._commit_sha.value
 
     @property
-    def message(self) -> str:
+    def message(self) -> Message:
         return self._message.value
 
     @property
@@ -81,7 +87,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     def classifications(self) -> list[str]:
         return self._classifications.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "analysis_key" in attributes:  # pragma no branch
