@@ -26,7 +26,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 import github.Commit
 import github.File
@@ -121,7 +123,7 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch
