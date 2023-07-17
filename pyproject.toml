@@ -1,3 +1,13 @@
+[tool.mypy]
+python_version = '3.7'
+ignore_missing_imports = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = ["github.*"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+
 [tool.black]
 # https://github.com/psf/black
 line-length = 120

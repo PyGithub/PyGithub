@@ -29,7 +29,7 @@
 ################################################################################
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Repository
@@ -52,7 +52,7 @@ class PullRequestPart(NonCompletableGithubObject):
         self._sha: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -75,7 +75,7 @@ class PullRequestPart(NonCompletableGithubObject):
     def user(self) -> NamedUser:
         return self._user.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "ref" in attributes:  # pragma no branch
