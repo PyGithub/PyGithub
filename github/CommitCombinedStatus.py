@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.CommitStatus
 import github.GithubObject
 import github.Repository
@@ -34,7 +36,7 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
     This class represents CommitCombinedStatuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
 
     @property
@@ -86,7 +88,7 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
         """
         return self._statuses.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._state = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._total_count = github.GithubObject.NotSet
@@ -95,7 +97,7 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
         self._repository = github.GithubObject.NotSet
         self._statuses = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "sha" in attributes:  # pragma no branch

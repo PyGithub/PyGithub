@@ -30,6 +30,7 @@
 ################################################################################
 
 import base64
+from typing import Any, Dict
 
 import github.GithubObject
 import github.Repository
@@ -40,7 +41,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     This class represents ContentFiles. The reference can be found here https://docs.github.com/en/rest/reference/repos#contents
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
 
     @property
@@ -168,7 +169,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._text_matches = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
@@ -183,7 +184,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "download_url" in attributes:  # pragma no branch
