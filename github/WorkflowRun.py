@@ -24,7 +24,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 import github.GitCommit
 import github.PullRequest
@@ -50,7 +50,7 @@ class WorkflowRun(CompletableGithubObject):
     This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
     """
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
@@ -79,7 +79,7 @@ class WorkflowRun(CompletableGithubObject):
         self._repository: Attribute[Repository] = NotSet
         self._head_repository: Attribute[Repository] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -276,7 +276,7 @@ class WorkflowRun(CompletableGithubObject):
             list_item="jobs",
         )
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

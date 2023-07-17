@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -36,7 +38,7 @@ class Download(github.GithubObject.CompletableGithubObject):
     This class represents Downloads. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -206,7 +208,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._accesskeyid = github.GithubObject.NotSet
         self._acl = github.GithubObject.NotSet
         self._bucket = github.GithubObject.NotSet
@@ -228,7 +230,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "accesskeyid" in attributes:  # pragma no branch
             self._accesskeyid = self._makeStringAttribute(
                 attributes["accesskeyid"]

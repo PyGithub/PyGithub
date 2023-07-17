@@ -22,7 +22,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.Issue
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -40,7 +40,7 @@ class TimelineEventSource(NonCompletableGithubObject):
         self._type: Attribute[str] = NotSet
         self._issue: Attribute[Issue] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
@@ -51,7 +51,7 @@ class TimelineEventSource(NonCompletableGithubObject):
     def issue(self) -> Issue:
         return self._issue.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch
