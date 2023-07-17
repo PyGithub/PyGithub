@@ -168,6 +168,17 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def rerequest(self):
+        """
+        :calls: `POST /repos/{owner}/{repo}/check-runs/{check_run_id}/rerequest https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#rerequest-a-check-run`_
+        :rtype: bool
+        """
+        request_headers = {"Accept": "application/vnd.github.v3+json"}
+        status, _, _ = self._requester.requestJson(
+            "POST", f"{self.url}/rerequest", headers=request_headers
+        )
+        return status == 201
+
     def get_annotations(self):
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
