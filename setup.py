@@ -43,7 +43,6 @@ import os
 import textwrap
 
 import setuptools
-from pkg_resources import parse_requirements
 
 _PATH_ROOT = os.path.dirname(__file__)
 _PATH_REQUIRES = os.path.join(_PATH_ROOT, "requirements")
