@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -33,7 +35,7 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "referrer": self._referrer.value,
@@ -63,12 +65,12 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
         """
         return self._uniques.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._referrer = github.GithubObject.NotSet
         self._count = github.GithubObject.NotSet
         self._uniques = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "referrer" in attributes:  # pragma no branch
             self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "count" in attributes:  # pragma no branch

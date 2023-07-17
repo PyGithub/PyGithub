@@ -49,7 +49,7 @@ class InputGitAuthor:
         self.__email: str = email
         self.__date: Opt[str] = date
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property

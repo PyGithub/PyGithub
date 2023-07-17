@@ -19,18 +19,21 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 import json
 import logging
 from datetime import datetime, timezone
 from logging import Logger
-from typing import Optional
+from types import TracebackType
+from typing import Any, Optional
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
-from urllib3 import HTTPResponse, Retry
+from typing_extensions import Self
+from urllib3 import Retry
+from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
+from urllib3.response import HTTPResponse
 
 from github.GithubException import GithubException
 from github.Requester import Requester
@@ -58,7 +61,7 @@ class GithubRetry(Retry):
     # references the class, not the module (due to re-exporting in github/__init__.py)
     __datetime = datetime
 
-    def __init__(self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs):
+    def __init__(self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs: Any) -> None:
         """
         :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
         :param kwargs: see urllib3.Retry for more arguments
@@ -71,18 +74,18 @@ class GithubRetry(Retry):
         kwargs["allowed_methods"] = kwargs.get("allowed_methods", Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"}))
         super().__init__(**kwargs)
 
-    def new(self, **kw):
+    def new(self, **kw: Any) -> Self:
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)
 
     def increment(
         self,
-        method=None,
-        url=None,
-        response=None,
-        error=None,
-        _pool=None,
-        _stacktrace=None,
+        method: Optional[str] = None,
+        url: Optional[str] = None,
+        response: Optional[HTTPResponse] = None,
+        error: Optional[Exception] = None,
+        _pool: Optional[ConnectionPool] = None,
+        _stacktrace: Optional[TracebackType] = None,
     ) -> Retry:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
@@ -103,16 +106,16 @@ class GithubRetry(Retry):
 
                     # to identify retry-able methods, we inspect the response body
                     try:
-                        content = self.get_content(response, url)
-                        content = json.loads(content)
-                        message = content.get("message")
+                        content = self.get_content(response, url)  # type: ignore
+                        content = json.loads(content)  # type: ignore
+                        message = content.get("message")  # type: ignore
                     except Exception as e:
                         # we want to fall back to the actual github exception (probably a rate limit error)
                         # but provide some context why we could not deal with it without another exception
                         try:
                             raise RuntimeError("Failed to inspect response message") from e
                         except RuntimeError as e:
-                            raise GithubException(response.status, content, response.headers) from e
+                            raise GithubException(response.status, content, response.headers) from e  # type: ignore
 
                     try:
                         if Requester.isRateLimitError(message):
@@ -159,7 +162,7 @@ class GithubRetry(Retry):
                                     )
                                 backoff = retry_backoff
 
-                            def get_backoff_time():
+                            def get_backoff_time() -> float:
                                 return backoff
 
                             self.__log(
@@ -173,7 +176,7 @@ class GithubRetry(Retry):
                             logging.DEBUG,
                             "Response message does not indicate retry-able error",
                         )
-                        raise Requester.createException(response.status, response.headers, content)
+                        raise Requester.createException(response.status, response.headers, content)  # type: ignore
                     except (MaxRetryError, GithubException):
                         raise
                     except Exception as e:
@@ -182,9 +185,13 @@ class GithubRetry(Retry):
                         try:
                             raise RuntimeError("Failed to determine retry backoff") from e
                         except RuntimeError as e:
-                            raise GithubException(response.status, content, response.headers) from e
+                            raise GithubException(response.status, content, response.headers) from e  # type: ignore
 
-                    raise GithubException(response.status, content, response.headers)
+                    raise GithubException(
+                        response.status,  # type: ignore
+                        content,  # type: ignore
+                        response.headers,  # type: ignore
+                    )  # type: ignore
 
         # retry the request as usual
         return super().increment(method, url, response, error, _pool, _stacktrace)
@@ -209,7 +216,7 @@ class GithubRetry(Retry):
 
         return response.content
 
-    def __log(self, level: int, message: str, **kwargs) -> None:
+    def __log(self, level: int, message: str, **kwargs: Any) -> None:
         if self.__logger is None:
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(level):

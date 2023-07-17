@@ -26,9 +26,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-import github
+import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
@@ -45,8 +45,10 @@ class Stargazer(NonCompletableGithubObject):
         self._user: Attribute[NamedUser] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
-        return self.get__repr__({"user": self._user.value._login.value})
+    def __repr__(self) -> str:
+        # this is not a type error, just we didn't type `NamedUser` yet.
+        # enable type checker here after we typed attribute of `NamedUser`
+        return self.get__repr__({"user": self._user.value._login.value})  # type: ignore
 
     @property
     def starred_at(self) -> datetime:
@@ -56,7 +58,7 @@ class Stargazer(NonCompletableGithubObject):
     def user(self) -> NamedUser:
         return self._user.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "starred_at" in attributes:
             self._starred_at = self._makeDatetimeAttribute(attributes["starred_at"])
         if "user" in attributes:
