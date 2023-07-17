@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -33,7 +35,7 @@ class Path(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "path": self._path.value,
@@ -71,13 +73,13 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         """
         return self._uniques.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._path = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._count = github.GithubObject.NotSet
         self._uniques = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch

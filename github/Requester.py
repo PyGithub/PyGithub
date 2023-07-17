@@ -104,14 +104,14 @@ class HTTPSRequestsConnectionClass:
     # mimic the httplib connection object
     def __init__(
         self,
-        host,
+        host: str,
         port: Optional[int] = None,
         strict: bool = False,
         timeout: Optional[int] = None,
         retry: Optional[Union[int, Retry]] = None,
         pool_size: Optional[int] = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         self.port = port if port else 443
         self.host = host
         self.protocol = "https"
@@ -142,7 +142,7 @@ class HTTPSRequestsConnectionClass:
         url: str,
         input: Optional[Union[str, io.BufferedReader]],
         headers: Dict[str, str],
-    ):
+    ) -> None:
         self.verb = verb
         self.url = url
         self.input = input
@@ -161,7 +161,7 @@ class HTTPSRequestsConnectionClass:
         )
         return RequestsResponse(r)
 
-    def close(self):
+    def close(self) -> None:
         return
 
 
@@ -201,7 +201,7 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]):
+    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]) -> None:
         self.verb = verb
         self.url = url
         self.input = input
@@ -232,7 +232,7 @@ class Requester:
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
     __persist = True
-    __logger = None
+    __logger: Optional[logging.Logger] = None
 
     _frameBuffer: List[Any]
 
@@ -241,7 +241,7 @@ class Requester:
         cls,
         httpConnectionClass: Type[HTTPRequestsConnectionClass],
         httpsConnectionClass: Type[HTTPSRequestsConnectionClass],
-    ):
+    ) -> None:
         cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
@@ -253,11 +253,11 @@ class Requester:
         cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
     @classmethod
-    def injectLogger(cls, logger):
+    def injectLogger(cls, logger: logging.Logger) -> None:
         cls.__logger = logger
 
     @classmethod
-    def resetLogger(cls):
+    def resetLogger(cls) -> None:
         cls.__logger = None
 
     #############################################################
@@ -294,7 +294,7 @@ class Requester:
 
             self._frameCount = len(self._frameBuffer) - 1
 
-    def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str):
+    def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str) -> None:
         """
         Update current frame with response
         Current frame index will be attached to responseHeader
@@ -307,7 +307,7 @@ class Requester:
             ]
             responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
-    def check_me(self, obj: "GithubObject"):
+    def check_me(self, obj: "GithubObject") -> None:
         if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
@@ -315,7 +315,7 @@ class Requester:
                 frame = self._frameBuffer[frame_index]  # type: ignore
             self.ON_CHECK_ME(obj, frame)
 
-    def _initializeDebugFeature(self):
+    def _initializeDebugFeature(self) -> None:
         self._frameCount = 0
         self._frameBuffer = []
 
@@ -386,7 +386,7 @@ class Requester:
             self.__auth.withRequester(self)
 
     @property
-    def kwargs(self):
+    def kwargs(self) -> Dict[str, Any]:
         """
         Returns arguments required to recreate this Requester with Requester.__init__, as well as
         with MainClass.__init__ and GithubIntegration.__init__.
@@ -485,7 +485,7 @@ class Requester:
                     )
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
-                        o.hostname,
+                        o.hostname,  # type: ignore
                         o.port,
                         retry=self.__retry,
                         pool_size=self.__pool_size,
@@ -561,7 +561,7 @@ class Requester:
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
-        def encode(input):
+        def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
@@ -575,7 +575,7 @@ class Requester:
         input: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
-        def encode(input):
+        def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
 
@@ -602,7 +602,7 @@ class Requester:
         if headers is None:
             headers = {}
 
-        def encode(local_path: str):
+        def encode(local_path: str) -> Tuple[str, Any]:
             if "Content-Type" in headers:  # type: ignore
                 mime_type = headers["Content-Type"]  # type: ignore
             else:
@@ -615,9 +615,17 @@ class Requester:
             headers["Content-Length"] = str(os.path.getsize(input))
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestMemoryBlobAndCheck(self, verb, url, parameters, headers, file_like, cnx=None):
+    def requestMemoryBlobAndCheck(
+        self,
+        verb: str,
+        url: str,
+        parameters: Any,
+        headers: Dict[str, Any],
+        file_like: io.TextIOBase,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> Tuple[Dict[str, Any], Any]:
         # The expected signature of encode means that the argument is ignored.
-        def encode(_):
+        def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like
 
         if not cnx:
@@ -784,7 +792,7 @@ class Requester:
         self,
         url: str,
         parameters: Dict[str, Any],
-    ):
+    ) -> str:
         if len(parameters) == 0:
             return url
         else:
@@ -857,8 +865,8 @@ class WithRequester(Generic[T]):
 
     __requester: Requester
 
-    def __init__(self):
-        self.__requester: Optional[Requester] = None
+    def __init__(self) -> None:
+        self.__requester: Optional[Requester] = None  # type: ignore
 
     @property
     def requester(self) -> Requester:

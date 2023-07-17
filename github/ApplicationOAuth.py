@@ -23,12 +23,13 @@
 from __future__ import annotations
 
 import urllib.parse
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.AccessToken
 import github.Auth
 from github.GithubException import BadCredentialsException, GithubException
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AccessToken import AccessToken
@@ -45,12 +46,18 @@ class ApplicationOAuth(NonCompletableGithubObject):
         self._client_id: Attribute[str] = NotSet
         self._client_secret: Attribute[str] = NotSet
 
-    def __init__(self, requester, headers, attributes, completed):
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, Any],
+        attributes: Any,
+        completed: bool,
+    ) -> None:
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
         super().__init__(requester, headers, attributes, completed)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"client_id": self._client_id.value})
 
     @property
@@ -61,7 +68,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
     def client_secret(self) -> str:
         return self._client_secret.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "client_id" in attributes:  # pragma no branch
             self._client_id = self._makeStringAttribute(attributes["client_id"])
         if "client_secret" in attributes:  # pragma no branch
@@ -162,7 +169,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
         )
 
     @staticmethod
-    def _checkError(headers, data):
+    def _checkError(headers: dict[str, Any], data: Any) -> tuple[dict[str, Any], Any]:
         if isinstance(data, dict) and "error" in data:
             if data["error"] == "bad_verification_code":
                 raise BadCredentialsException(200, data, headers)

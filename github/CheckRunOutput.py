@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -33,7 +35,7 @@ class CheckRunOutput(NonCompletableGithubObject):
         self._text: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -56,7 +58,7 @@ class CheckRunOutput(NonCompletableGithubObject):
     def title(self) -> str:
         return self._title.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(attributes["annotations_count"])
         if "annotations_url" in attributes:  # pragma no branch
