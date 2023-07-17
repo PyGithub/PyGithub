@@ -49,8 +49,8 @@ _PATH_REQUIRES = os.path.join(_PATH_ROOT, "requirements")
 
 
 def _load_requirements(path_dir: str = _PATH_ROOT, file_name: str = "requirements.txt") -> list[str]:
-    with open(os.path.join(path_dir, file_name)) as f:
-        return [x for x in f if x and not x.startswith('#')]
+    with open(os.path.join(path_dir, file_name)) as fo:
+        return [r.strip() for r in fo.readlines() if x and not x.startswith('#')]
 
 
 if __name__ == "__main__":
