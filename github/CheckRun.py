@@ -21,6 +21,7 @@
 ################################################################################
 
 from datetime import datetime
+from typing import Any, Dict
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -37,9 +38,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__(
-            {"id": self._id.value, "conclusion": self._conclusion.value}
-        )
+        return self.get__repr__({"id": self._id.value, "conclusion": self._conclusion.value})
 
     @property
     def app(self):
@@ -210,29 +209,15 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert name is github.GithubObject.NotSet or isinstance(name, str), name
-        assert head_sha is github.GithubObject.NotSet or isinstance(
-            head_sha, str
-        ), head_sha
-        assert details_url is github.GithubObject.NotSet or isinstance(
-            details_url, str
-        ), details_url
-        assert external_id is github.GithubObject.NotSet or isinstance(
-            external_id, str
-        ), external_id
+        assert head_sha is github.GithubObject.NotSet or isinstance(head_sha, str), head_sha
+        assert details_url is github.GithubObject.NotSet or isinstance(details_url, str), details_url
+        assert external_id is github.GithubObject.NotSet or isinstance(external_id, str), external_id
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert started_at is github.GithubObject.NotSet or isinstance(
-            started_at, datetime
-        ), started_at
-        assert conclusion is github.GithubObject.NotSet or isinstance(
-            conclusion, str
-        ), conclusion
-        assert completed_at is github.GithubObject.NotSet or isinstance(
-            completed_at, datetime
-        ), completed_at
+        assert started_at is github.GithubObject.NotSet or isinstance(started_at, datetime), started_at
+        assert conclusion is github.GithubObject.NotSet or isinstance(conclusion, str), conclusion
+        assert completed_at is github.GithubObject.NotSet or isinstance(completed_at, datetime), completed_at
         assert output is github.GithubObject.NotSet or isinstance(output, dict), output
-        assert actions is github.GithubObject.NotSet or all(
-            isinstance(element, dict) for element in actions
-        ), actions
+        assert actions is github.GithubObject.NotSet or all(isinstance(element, dict) for element in actions), actions
 
         post_parameters = dict()
         if name is not github.GithubObject.NotSet:
@@ -248,9 +233,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         if started_at is not github.GithubObject.NotSet:
             post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
         if completed_at is not github.GithubObject.NotSet:
-            post_parameters["completed_at"] = completed_at.strftime(
-                "%Y-%m-%dT%H:%M:%SZ"
-            )
+            post_parameters["completed_at"] = completed_at.strftime("%Y-%m-%dT%H:%M:%SZ")
         if conclusion is not github.GithubObject.NotSet:
             post_parameters["conclusion"] = conclusion
         if output is not github.GithubObject.NotSet:
@@ -258,12 +241,10 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         if actions is not github.GithubObject.NotSet:
             post_parameters["actions"] = actions
 
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._app = github.GithubObject.NotSet
         self._check_suite_id = github.GithubObject.NotSet
         self._completed_at = github.GithubObject.NotSet
@@ -281,18 +262,12 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         self._status = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
-            self._app = self._makeClassAttribute(
-                github.GithubApp.GithubApp, attributes["app"]
-            )
+            self._app = self._makeClassAttribute(github.GithubApp.GithubApp, attributes["app"])
         # This only gives us a dictionary with `id` attribute of `check_suite`
-        if (
-            "check_suite" in attributes and "id" in attributes["check_suite"]
-        ):  # pragma no branch
-            self._check_suite_id = self._makeIntAttribute(
-                attributes["check_suite"]["id"]
-            )
+        if "check_suite" in attributes and "id" in attributes["check_suite"]:  # pragma no branch
+            self._check_suite_id = self._makeIntAttribute(attributes["check_suite"]["id"])
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
@@ -312,9 +287,7 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "output" in attributes:  # pragma no branch
-            self._output = self._makeClassAttribute(
-                github.CheckRunOutput.CheckRunOutput, attributes["output"]
-            )
+            self._output = self._makeClassAttribute(github.CheckRunOutput.CheckRunOutput, attributes["output"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
                 github.PullRequest.PullRequest, attributes["pull_requests"]

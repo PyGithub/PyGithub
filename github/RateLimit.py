@@ -27,7 +27,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.Rate
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -46,7 +46,7 @@ class RateLimit(NonCompletableGithubObject):
         self._search: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
 
     @property
@@ -76,14 +76,10 @@ class RateLimit(NonCompletableGithubObject):
         """
         return self._graphql.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
         if "search" in attributes:  # pragma no branch
-            self._search = self._makeClassAttribute(
-                github.Rate.Rate, attributes["search"]
-            )
+            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
         if "graphql" in attributes:  # pragma no branch
-            self._graphql = self._makeClassAttribute(
-                github.Rate.Rate, attributes["graphql"]
-            )
+            self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])

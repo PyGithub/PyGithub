@@ -34,9 +34,7 @@ from github.Requester import Requester, WithRequester
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
-TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(
-    seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS
-)
+TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS)
 
 
 class Auth(abc.ABC):
@@ -51,7 +49,6 @@ class Auth(abc.ABC):
         The type of the auth token as used in the HTTP Authorization header, e.g. Bearer or Basic.
         :return: token type
         """
-        pass
 
     @property
     @abc.abstractmethod
@@ -60,7 +57,6 @@ class Auth(abc.ABC):
         The auth token as used in the HTTP Authorization header.
         :return: token
         """
-        pass
 
 
 class Login(Auth):
@@ -91,11 +87,7 @@ class Login(Auth):
 
     @property
     def token(self) -> str:
-        return (
-            base64.b64encode(f"{self.login}:{self.password}".encode())
-            .decode("utf-8")
-            .replace("\n", "")
-        )
+        return base64.b64encode(f"{self.login}:{self.password}".encode()).decode("utf-8").replace("\n", "")
 
 
 class Token(Auth):
@@ -183,7 +175,7 @@ class AppAuth(JWT):
         """
         return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
-    def create_jwt(self, expiration=None) -> str:
+    def create_jwt(self, expiration: Optional[int] = None) -> str:
         """
         Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
@@ -192,9 +184,7 @@ class AppAuth(JWT):
         """
         if expiration is not None:
             assert isinstance(expiration, int), expiration
-            assert (
-                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
-            ), expiration
+            assert Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY, expiration
 
         now = int(time.time())
         payload = {
@@ -202,9 +192,7 @@ class AppAuth(JWT):
             "exp": now + (expiration if expiration is not None else self._jwt_expiry),
             "iss": self._app_id,
         }
-        encrypted = jwt.encode(
-            payload, key=self.private_key, algorithm=self._jwt_algorithm
-        )
+        encrypted = jwt.encode(payload, key=self.private_key, algorithm=self._jwt_algorithm)
 
         if isinstance(encrypted, bytes):
             return encrypted.decode("utf-8")
@@ -251,9 +239,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 
         assert isinstance(app_auth, AppAuth), app_auth
         assert isinstance(installation_id, int), installation_id
-        assert token_permissions is None or isinstance(
-            token_permissions, dict
-        ), token_permissions
+        assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
 
         self._app_auth = app_auth
         self._installation_id = installation_id
@@ -303,16 +289,11 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     @property
     def _is_expired(self) -> bool:
         assert self.__installation_authorization is not None
-        token_expires_at = (
-            self.__installation_authorization.expires_at
-            - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
-        )
+        token_expires_at = self.__installation_authorization.expires_at - TOKEN_REFRESH_THRESHOLD_TIMEDELTA
         return token_expires_at < datetime.now(timezone.utc)
 
     def _get_installation_authorization(self) -> InstallationAuthorization:
-        assert (
-            self.__integration is not None
-        ), "Method withRequester(Requester) must be called first"
+        assert self.__integration is not None, "Method withRequester(Requester) must be called first"
         return self.__integration.get_access_token(
             self._installation_id,
             permissions=self._token_permissions,
@@ -346,10 +327,10 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         token: str,
         token_type: Optional[str] = None,
         expires_at: Optional[datetime] = None,
-        refresh_token=None,
-        refresh_expires_at=None,
+        refresh_token: Optional[str] = None,
+        refresh_expires_at: Optional[datetime] = None,
         requester: Optional[Requester] = None,
-    ):
+    ) -> None:
         assert isinstance(client_id, str)
         assert len(client_id) > 0
         assert isinstance(client_secret, str)
@@ -413,22 +394,13 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
 
     @property
     def _is_expired(self) -> bool:
-        return self._expires_at is not None and self._expires_at < datetime.now(
-            timezone.utc
-        )
+        return self._expires_at is not None and self._expires_at < datetime.now(timezone.utc)
 
-    def _refresh(self):
+    def _refresh(self) -> None:
         if self._refresh_token is None:
-            raise RuntimeError(
-                "Cannot refresh expired token because no refresh token has been provided"
-            )
-        if (
-            self._refresh_expires_at is not None
-            and self._refresh_expires_at < datetime.now(timezone.utc)
-        ):
-            raise RuntimeError(
-                "Cannot refresh expired token because refresh token also expired"
-            )
+            raise RuntimeError("Cannot refresh expired token because no refresh token has been provided")
+        if self._refresh_expires_at is not None and self._refresh_expires_at < datetime.now(timezone.utc):
+            raise RuntimeError("Cannot refresh expired token because refresh token also expired")
 
         # refresh token
         token = self.__app.refresh_access_token(self._refresh_token)

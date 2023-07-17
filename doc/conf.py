@@ -362,7 +362,5 @@ with open("apis.rst", "w") as apis:
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
-                apis.write(
-                    "  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n"
-                )
+                apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")

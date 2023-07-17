@@ -81,14 +81,10 @@ class GithubRetry(unittest.TestCase):
 
                     self.assertEqual(expected_total, retry.total)
                     self.assertEqual(
-                        expected_backoff
-                        if expected_retry_backoff is None
-                        else expected_retry_backoff,
+                        expected_backoff if expected_retry_backoff is None else expected_retry_backoff,
                         retry.get_backoff_time(),
                     )
-                    self.assertEqual(
-                        orig_retry.secondary_rate_wait, retry.secondary_rate_wait
-                    )
+                    self.assertEqual(orig_retry.secondary_rate_wait, retry.secondary_rate_wait)
 
                 # fmt: off
                 log.assert_has_calls(
@@ -124,11 +120,7 @@ class GithubRetry(unittest.TestCase):
 
     @contextlib.contextmanager
     def mock_retry_now(self, now):
-        if (
-            sys.version_info[0] > 3
-            or sys.version_info[0] == 3
-            and sys.version_info[1] >= 11
-        ):
+        if sys.version_info[0] > 3 or sys.version_info[0] == 3 and sys.version_info[1] >= 11:
             attr = "github.GithubRetry.GithubRetry._GithubRetry__datetime"
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"
@@ -162,9 +154,7 @@ class GithubRetry(unittest.TestCase):
 
         # test 2 seconds after reset, no backoff expected
         with self.mock_retry_now(1644768014):
-            retry = test_increment(
-                retry, response(), expected_total=0, expected_backoff=0
-            )
+            retry = test_increment(retry, response(), expected_total=0, expected_backoff=0)
             test_increment(retry, response(), expect_retry_error=True)
 
     def test_primary_rate_error_with_reset_and_exponential_backoff(self):
@@ -267,9 +257,7 @@ class GithubRetry(unittest.TestCase):
 
         # test 2 seconds after reset, still expect secondary wait seconds of 60
         with self.mock_retry_now(1644768014):
-            retry = test_increment(
-                retry, response(), expected_total=0, expected_backoff=60
-            )
+            retry = test_increment(retry, response(), expected_total=0, expected_backoff=60)
             test_increment(retry, response(), expect_retry_error=True)
 
     def test_secondary_rate_error_with_reset_and_exponential_backoff(self):
@@ -370,9 +358,7 @@ class GithubRetry(unittest.TestCase):
 
     def test_403_with_retry_after(self):
         retry = github.GithubRetry(total=3)
-        response = urllib3.response.HTTPResponse(
-            status=403, headers={"Retry-After": "123"}
-        )
+        response = urllib3.response.HTTPResponse(status=403, headers={"Retry-After": "123"})
         self.do_test_default_behaviour(retry, response)
 
     def test_403_with_non_retryable_error(self):
@@ -381,9 +367,7 @@ class GithubRetry(unittest.TestCase):
             retry.increment(
                 "TEST",
                 "URL",
-                self.response_func(
-                    '{"message":"Missing or invalid User Agent string."}'
-                )(),
+                self.response_func('{"message":"Missing or invalid User Agent string."}')(),
             )
 
     def test_misc_response(self):
@@ -408,9 +392,7 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual({}, exp.exception.headers)
 
             self.assertIsInstance(exp.exception.__cause__, RuntimeError)
-            self.assertEqual(
-                ("Failed to inspect response message",), exp.exception.__cause__.args
-            )
+            self.assertEqual(("Failed to inspect response message",), exp.exception.__cause__.args)
 
             self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
             self.assertEqual(
@@ -418,6 +400,4 @@ class GithubRetry(unittest.TestCase):
                 exp.exception.__cause__.__cause__.args,
             )
 
-        log.assert_called_once_with(
-            logging.INFO, "Request TEST URL failed with 403: NOT GOOD"
-        )
+        log.assert_called_once_with(logging.INFO, "Request TEST URL failed with 403: NOT GOOD")

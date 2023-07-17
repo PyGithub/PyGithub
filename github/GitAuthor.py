@@ -28,6 +28,7 @@
 #                                                                              #
 ################################################################################
 from datetime import datetime
+from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -42,7 +43,7 @@ class GitAuthor(NonCompletableGithubObject):
         self._email: Attribute[str] = NotSet
         self._date: Attribute[datetime] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -57,7 +58,7 @@ class GitAuthor(NonCompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "date" in attributes:  # pragma no branch
             self._date = self._makeDatetimeAttribute(attributes["date"])
         if "email" in attributes:  # pragma no branch
