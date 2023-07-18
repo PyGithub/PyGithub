@@ -82,12 +82,7 @@ class Label(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(color, str), color
         assert is_optional(description, str), description
-        post_parameters = {
-            "new_name": name,
-            "color": color,
-        }
-        if description is not NotSet:
-            post_parameters["description"] = description
+        post_parameters = NotSet.remove_unset_items({"new_name": name, "color": color, "description": description})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
