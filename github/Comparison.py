@@ -46,7 +46,7 @@ class Comparison(CompletableGithubObject):
         self._behind_by: Attribute[int] = NotSet
         self._commits: Attribute[Any] = NotSet
         self._diff_url: Attribute[str] = NotSet
-        self._files: Attribute[Any] = NotSet
+        self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._merge_base_commit: Attribute[github.Commit.Commit] = NotSet
         self._patch_url: Attribute[str] = NotSet
@@ -74,7 +74,7 @@ class Comparison(CompletableGithubObject):
         return self._behind_by.value
 
     @property
-    def commits(self) -> Any:
+    def commits(self) -> list[github.Commit.Commit]:
         self._completeIfNotSet(self._commits)
         return self._commits.value
 
@@ -84,7 +84,7 @@ class Comparison(CompletableGithubObject):
         return self._diff_url.value
 
     @property
-    def files(self) -> Any:
+    def files(self) -> list[github.File.File]:
         self._completeIfNotSet(self._files)
         return self._files.value
 

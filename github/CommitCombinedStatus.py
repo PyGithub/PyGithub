@@ -44,7 +44,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         self._commit_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._repository: Attribute[github.Repository.Repository] = NotSet
-        self._statuses: Attribute[Any] = NotSet
+        self._statuses: Attribute[list[github.CommitStatus.CommitStatus]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
@@ -74,7 +74,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         return self._repository.value
 
     @property
-    def statuses(self) -> Any:
+    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
         return self._statuses.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
