@@ -41,16 +41,18 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._number: Attribute[int] = NotSet
-        self._rule: Attribute[Any] = NotSet
-        self._tool: Attribute[Any] = NotSet
-        self._created_at: Attribute[Any] = NotSet
-        self._dismissed_at: Attribute[Any] = NotSet
-        self._dismissed_by: Attribute[Any] = NotSet
+        self._rule: Attribute[github.CodeScanRule.CodeScanRule] = NotSet
+        self._tool: Attribute[
+            github.CodeScanTool.CodeScanTool,
+        ] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._dismissed_at: Attribute[datetime | None] = NotSet
+        self._dismissed_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
         self._dismissed_reason: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._instances_url: Attribute[str] = NotSet
-        self._most_recent_instance: Attribute[Any] = NotSet
+        self._most_recent_instance: Attribute[github.CodeScanAlertInstance.CodeScanAlertInstance] = NotSet
         self._state: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
