@@ -23,83 +23,70 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
+class PullRequestReview(NonCompletableGithubObject):
     """
     This class represents PullRequestReviews. The reference can be found here https://docs.github.com/en/rest/reference/pulls#reviews
     """
+
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._commit_id: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._pull_request_url: Attribute[str] = NotSet
+        self._submitted_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> github.NamedUser.NamedUser:
         return self._user.value
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         return self._body.value
 
     @property
-    def commit_id(self):
-        """
-        :type: string
-        """
+    def commit_id(self) -> str:
         return self._commit_id.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         return self._html_url.value
 
     @property
-    def pull_request_url(self):
-        """
-        :type: string
-        """
+    def pull_request_url(self) -> str:
         return self._pull_request_url.value
 
     @property
-    def submitted_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def submitted_at(self) -> datetime:
         return self._submitted_at.value
 
-    def dismiss(self, message):
+    def dismiss(self, message: str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
-        :rtype: None
         """
-        assert isinstance(message, str), message
         post_parameters = {"message": message}
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -107,24 +94,13 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
             input=post_parameters,
         )
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-        self._body = github.GithubObject.NotSet
-        self._commit_id = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._pull_request_url = github.GithubObject.NotSet
-        self._submitted_at = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "user" in attributes:  # pragma no branch
