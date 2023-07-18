@@ -61,9 +61,9 @@ class Gist(CompletableGithubObject):
         self._commits_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
-        self._files: Attribute[None] = NotSet  # TODO: Any
+        self._files: Attribute[dict[str, github.GistFile.GistFile]] = NotSet
         self._fork_of: Attribute[Gist] = NotSet
-        self._forks: Attribute[list[Gist]] = NotSet  # TODO: Any
+        self._forks: Attribute[list[Gist]] = NotSet
         self._forks_url: Attribute[str] = NotSet
         self._git_pull_url: Attribute[str] = NotSet
         self._git_push_url: Attribute[str] = NotSet
@@ -105,7 +105,7 @@ class Gist(CompletableGithubObject):
         return self._description.value
 
     @property
-    def files(self) -> Any:
+    def files(self) -> dict[str, github.GistFile.GistFile]:
         self._completeIfNeeded()
         return self._files.value
 
@@ -115,7 +115,7 @@ class Gist(CompletableGithubObject):
         return self._fork_of.value
 
     @property
-    def forks(self) -> Any:
+    def forks(self) -> list[Gist]:
         self._completeIfNotSet(self._forks)
         return self._forks.value
 
@@ -135,7 +135,7 @@ class Gist(CompletableGithubObject):
         return self._git_push_url.value
 
     @property
-    def history(self) -> Any:
+    def history(self) -> list[GistHistoryState]:
         self._completeIfNotSet(self._history)
         return self._history.value
 
