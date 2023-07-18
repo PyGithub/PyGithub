@@ -27,8 +27,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
@@ -47,7 +49,7 @@ class Event(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[str] = NotSet
         self._org: Attribute[github.Organization.Organization] = NotSet
-        self._payload: Attribute[Dict[str, Any]] = NotSet
+        self._payload: Attribute[dict[str, Any]] = NotSet
         self._public: Attribute[bool] = NotSet
         self._repo: Attribute[github.Repository.Repository] = NotSet
         self._type: Attribute[str] = NotSet
@@ -72,7 +74,7 @@ class Event(NonCompletableGithubObject):
         return self._org.value
 
     @property
-    def payload(self) -> Dict[str, Any]:
+    def payload(self) -> dict[str, Any]:
         return self._payload.value
 
     @property
@@ -87,7 +89,7 @@ class Event(NonCompletableGithubObject):
     def type(self) -> str:
         return self._type.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "created_at" in attributes:  # pragma no branch
