@@ -1,3 +1,5 @@
+name: Label conflicts
+
 on:
   push: { branches: ["main"] }
 
@@ -5,7 +7,7 @@ jobs:
   triage-conflicts:
     runs-on: ubuntu-latest
     steps:
-      - uses: mschilde/auto-label-merge-conflicts@v2.0
+      - uses: mschilde/auto-label-merge-conflicts@5981f8933e92b78098af86b9e33fe0871cc7a3be  # v2.0
         with:
           CONFLICT_LABEL_NAME: "has conflicts"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
