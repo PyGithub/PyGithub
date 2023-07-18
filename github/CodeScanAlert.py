@@ -42,9 +42,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._number: Attribute[int] = NotSet
         self._rule: Attribute[github.CodeScanRule.CodeScanRule] = NotSet
-        self._tool: Attribute[
-            github.CodeScanTool.CodeScanTool,
-        ] = NotSet
+        self._tool: Attribute[github.CodeScanTool.CodeScanTool] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
         self._dismissed_by: Attribute[dict | None] = NotSet
