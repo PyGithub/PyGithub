@@ -23,17 +23,22 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Path(github.GithubObject.NonCompletableGithubObject):
+class Path(NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
+
+    def _initAttributes(self) -> None:
+        self._path: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._count: Attribute[int] = NotSet
+        self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -46,38 +51,20 @@ class Path(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         return self._path.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
     @property
-    def count(self):
-        """
-        :type: integer
-        """
+    def count(self) -> int:
         return self._count.value
 
     @property
-    def uniques(self):
-        """
-        :type: integer
-        """
+    def uniques(self) -> int:
         return self._uniques.value
-
-    def _initAttributes(self) -> None:
-        self._path = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-        self._count = github.GithubObject.NotSet
-        self._uniques = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "path" in attributes:  # pragma no branch
