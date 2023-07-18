@@ -23,17 +23,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import TypedDict
-
 import github.CodeScanAlertInstanceLocation
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.CodeScanAlertInstanceLocation import CodeScanAlertInstanceLocation
-
-
-class Message(TypedDict):
-    text: str
 
 
 class CodeScanAlertInstance(NonCompletableGithubObject):
@@ -48,7 +42,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         self._environment: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._commit_sha: Attribute[str] = NotSet
-        self._message: Attribute[Message] = NotSet
+        self._message: Attribute[dict[str, Any]] = NotSet
         self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
         self._classifications: Attribute[list[str]] = NotSet
 
@@ -76,7 +70,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         return self._commit_sha.value
 
     @property
-    def message(self) -> Message:
+    def message(self) -> dict[str, Any]:
         return self._message.value
 
     @property
@@ -101,7 +95,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         if "commit_sha" in attributes:  # pragma no branch
             self._commit_sha = self._makeStringAttribute(attributes["commit_sha"])
         if "message" in attributes:  # pragma no branch
-            self._message = self._makeDictAttribute(attributes["message"])  # type: ignore
+            self._message = self._makeDictAttribute(attributes["message"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
                 github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation,
