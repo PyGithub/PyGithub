@@ -19,17 +19,31 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
 from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class SourceImport(github.GithubObject.CompletableGithubObject):
+class SourceImport(CompletableGithubObject):
     """
     This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
     """
+
+    def _initAttributes(self) -> None:
+        self._authors_count: Attribute[int] = NotSet
+        self._authors_url: Attribute[str] = NotSet
+        self._has_large_files: Attribute[bool] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._large_files_count: Attribute[int] = NotSet
+        self._large_files_size: Attribute[int] = NotSet
+        self._repository_url: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._status_text: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._use_lfs: Attribute[str] = NotSet
+        self._vcs: Attribute[str] = NotSet
+        self._vcs_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -42,127 +56,73 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         )
 
     @property
-    def authors_count(self):
-        """
-        :type: integer
-        """
+    def authors_count(self) -> int:
         self._completeIfNotSet(self._authors_count)
         return self._authors_count.value
 
     @property
-    def authors_url(self):
-        """
-        :type: string
-        """
+    def authors_url(self) -> str:
         self._completeIfNotSet(self._authors_url)
         return self._authors_url.value
 
     @property
-    def has_large_files(self):
-        """
-        :type: bool
-        """
+    def has_large_files(self) -> bool:
         self._completeIfNotSet(self._has_large_files)
         return self._has_large_files.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def large_files_count(self):
-        """
-        :type: integer
-        """
+    def large_files_count(self) -> int:
         self._completeIfNotSet(self._large_files_count)
         return self._large_files_count.value
 
     @property
-    def large_files_size(self):
-        """
-        :type: integer
-        """
+    def large_files_size(self) -> int:
         self._completeIfNotSet(self._large_files_size)
         return self._large_files_size.value
 
     @property
-    def repository_url(self):
-        """
-        :type: string
-        """
+    def repository_url(self) -> str:
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
 
     @property
-    def status_text(self):
-        """
-        :type: string
-        """
+    def status_text(self) -> str:
         self._completeIfNotSet(self._status_text)
         return self._status_text.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def use_lfs(self):
-        """
-        :type: string
-        """
+    def use_lfs(self) -> str:
         self._completeIfNotSet(self._use_lfs)
         return self._use_lfs.value
 
     @property
-    def vcs(self):
-        """
-        :type: string
-        """
+    def vcs(self) -> str:
         self._completeIfNotSet(self._vcs)
         return self._vcs.value
 
     @property
-    def vcs_url(self):
-        """
-        :type: string
-        """
+    def vcs_url(self) -> str:
         self._completeIfNotSet(self._vcs_url)
         return self._vcs_url.value
 
     def update(self):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         return super().update(additional_headers=import_header)
-
-    def _initAttributes(self) -> None:
-        self._authors_count = github.GithubObject.NotSet
-        self._authors_url = github.GithubObject.NotSet
-        self._has_large_files = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._large_files_count = github.GithubObject.NotSet
-        self._large_files_size = github.GithubObject.NotSet
-        self._repository_url = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._status_text = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._use_lsf = github.GithubObject.NotSet
-        self._vcs = github.GithubObject.NotSet
-        self._vcs_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch
