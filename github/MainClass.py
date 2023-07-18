@@ -47,9 +47,10 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import pickle
 import warnings
+from datetime import datetime
+from typing import List
 
 import urllib3
 
@@ -67,11 +68,14 @@ from . import (
     AuthenticatedUser,
     Consts,
     GithubApp,
+    GithubRetry,
     GitignoreTemplate,
+    HookDelivery,
     HookDescription,
     RateLimit,
     Repository,
 )
+from .HookDelivery import HookDeliverySummary
 from .Requester import Requester
 
 
@@ -80,9 +84,12 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    # v2: remove login_or_token, password, jwt and app_auth
-    # v2: move auth to the front of arguments
-    # v2: add * before first argument so all arguments must be named,
+    default_retry = GithubRetry.GithubRetry()
+
+    # keep non-deprecated arguments in-sync with Requester
+    # v3: remove login_or_token, password, jwt and app_auth
+    # v3: move auth to the front of arguments
+    # v3: add * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
@@ -92,25 +99,31 @@ class Github:
         app_auth=None,
         base_url=Consts.DEFAULT_BASE_URL,
         timeout=Consts.DEFAULT_TIMEOUT,
-        user_agent="PyGithub/Python",
+        user_agent=Consts.DEFAULT_USER_AGENT,
         per_page=Consts.DEFAULT_PER_PAGE,
         verify=True,
-        retry=None,
+        retry=default_retry,
         pool_size=None,
+        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         auth=None,
     ):
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
         :param password: string deprecated, use auth=github.Auth.Login(...) instead
-        :param jwt: string deprecated, use auth=github.Auth.AppAuthToken(...) instead
+        :param jwt: string deprecated, use auth=github.Auth.AppAuth(...) or auth=github.Auth.AppAuthToken(...) instead
         :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
         :param per_page: int
         :param verify: boolean or string
-        :param retry: int or urllib3.util.retry.Retry object
+        :param retry: int or urllib3.util.retry.Retry object,
+                      defaults to github.Github.default_retry,
+                      set to None to disable retries
         :param pool_size: int
+        :param seconds_between_requests: float
+        :param seconds_between_writes: float
         :param auth: authentication method
         """
 
@@ -120,12 +133,12 @@ class Github:
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
-        assert (
-            retry is None
-            or isinstance(retry, int)
-            or isinstance(retry, urllib3.util.Retry)
-        ), retry
+        assert isinstance(per_page, int), per_page
+        assert isinstance(verify, (bool, str)), verify
+        assert retry is None or isinstance(retry, int) or isinstance(retry, urllib3.util.Retry), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert seconds_between_requests is None or seconds_between_requests >= 0
+        assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, Auth.Auth), auth
 
         if password is not None:
@@ -137,8 +150,7 @@ class Github:
             auth = Auth.Login(login_or_token, password)
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use "
-                "auth=github.Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
             )
             auth = Auth.Token(login_or_token)
@@ -152,8 +164,7 @@ class Github:
             auth = Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use "
-                "auth=github.Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
             )
             auth = app_auth
@@ -167,6 +178,8 @@ class Github:
             verify,
             retry,
             pool_size,
+            seconds_between_requests,
+            seconds_between_writes,
         )
 
     @property
@@ -180,7 +193,7 @@ class Github:
     def FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    # v3: Remove this property? Why should it be necessary to read/modify it after construction
     @property
     def per_page(self):
         """
@@ -192,9 +205,9 @@ class Github:
     def per_page(self, value):
         self.__requester.per_page = value
 
-    # v2: Provide a unified way to access values of headers of last response
-    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
-    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
+    # v3: Provide a unified way to access values of headers of last response
+    # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -254,9 +267,7 @@ class Github:
 
         url_parameters = dict()
 
-        return github.PaginatedList.PaginatedList(
-            github.License.License, self.__requester, "/licenses", url_parameters
-        )
+        return github.PaginatedList.PaginatedList(github.License.License, self.__requester, "/licenses", url_parameters)
 
     def get_events(self):
         """
@@ -264,9 +275,7 @@ class Github:
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
 
-        return github.PaginatedList.PaginatedList(
-            github.Event.Event, self.__requester, "/events", None
-        )
+        return github.PaginatedList.PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
     def get_user(self, login=github.GithubObject.NotSet):
         """
@@ -276,16 +285,10 @@ class Github:
         """
         assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser(
-                self.__requester, {}, {"url": "/user"}, completed=False
-            )
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
-            headers, data = self.__requester.requestJsonAndCheck(
-                "GET", f"/users/{login}"
-            )
-            return github.NamedUser.NamedUser(
-                self.__requester, headers, data, completed=True
-            )
+            headers, data = self.__requester.requestJsonAndCheck("GET", f"/users/{login}")
+            return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_user_by_id(self, user_id):
         """
@@ -295,9 +298,7 @@ class Github:
         """
         assert isinstance(user_id, int), user_id
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
-        return github.NamedUser.NamedUser(
-            self.__requester, headers, data, completed=True
-        )
+        return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
@@ -321,9 +322,7 @@ class Github:
         """
         assert isinstance(login, str), login
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
-        return github.Organization.Organization(
-            self.__requester, headers, data, completed=True
-        )
+        return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_organizations(self, since=github.GithubObject.NotSet):
         """
@@ -351,15 +350,11 @@ class Github:
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
         if lazy:
-            return Repository.Repository(
-                self.__requester, {}, {"url": url}, completed=False
-            )
+            return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
         headers, data = self.__requester.requestJsonAndCheck("GET", url)
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
-    def get_repos(
-        self, since=github.GithubObject.NotSet, visibility=github.GithubObject.NotSet
-    ):
+    def get_repos(self, since=github.GithubObject.NotSet, visibility=github.GithubObject.NotSet):
         """
         :calls: `GET /repositories <https://docs.github.com/en/rest/reference/repos#list-public-repositories>`_
         :param since: integer
@@ -404,9 +399,7 @@ class Github:
             "/projects/columns/%d" % id,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return github.ProjectColumn.ProjectColumn(
-            self.__requester, headers, data, completed=True
-        )
+        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data, completed=True)
 
     def get_gist(self, id):
         """
@@ -421,18 +414,14 @@ class Github:
     def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
-        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
+        :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
-            github.Gist.Gist, self.__requester, "/gists/public", url_parameters
-        )
+        return github.PaginatedList.PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
 
     def search_repositories(
         self,
@@ -451,14 +440,10 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert sort in ("stars", "forks", "updated"), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
@@ -577,14 +562,10 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert sort in ("indexed",), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
@@ -686,16 +667,12 @@ class Github:
         :rtype: string
         """
         assert isinstance(text, str), text
-        assert context is github.GithubObject.NotSet or isinstance(
-            context, github.Repository.Repository
-        ), context
+        assert context is github.GithubObject.NotSet or isinstance(context, github.Repository.Repository), context
         post_parameters = {"text": text}
         if context is not github.GithubObject.NotSet:
             post_parameters["mode"] = "gfm"
             post_parameters["context"] = context._identity
-        status, headers, data = self.__requester.requestJson(
-            "POST", "/markdown", input=post_parameters
-        )
+        status, headers, data = self.__requester.requestJson("POST", "/markdown", input=post_parameters)
         return data
 
     def get_hook(self, name):
@@ -705,12 +682,8 @@ class Github:
         :rtype: :class:`github.HookDescription.HookDescription`
         """
         assert isinstance(name, str), name
-        headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", f"/hooks/{name}"
-        )
-        return HookDescription.HookDescription(
-            self.__requester, headers, attributes, completed=True
-        )
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
+        return HookDescription.HookDescription(self.__requester, headers, attributes, completed=True)
 
     def get_hooks(self):
         """
@@ -719,9 +692,32 @@ class Github:
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
         return [
-            HookDescription.HookDescription(
-                self.__requester, headers, attributes, completed=True
-            )
+            HookDescription.HookDescription(self.__requester, headers, attributes, completed=True)
+            for attributes in data
+        ]
+
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
+        return HookDelivery.HookDelivery(self.__requester, headers, attributes, completed=True)
+
+    def get_hook_deliveries(self, hook_id: int) -> List[HookDeliverySummary]:
+        """
+        :calls: `GET /hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :param hook_id: integer
+        :rtype: list of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries")
+        return [
+            HookDelivery.HookDeliverySummary(self.__requester, headers, attributes, completed=True)
             for attributes in data
         ]
 
@@ -730,9 +726,7 @@ class Github:
         :calls: `GET /gitignore/templates <https://docs.github.com/en/rest/reference/gitignore>`_
         :rtype: list of string
         """
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", "/gitignore/templates"
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", "/gitignore/templates")
         return data
 
     def get_gitignore_template(self, name):
@@ -741,12 +735,8 @@ class Github:
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
         assert isinstance(name, str), name
-        headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", f"/gitignore/templates/{name}"
-        )
-        return GitignoreTemplate.GitignoreTemplate(
-            self.__requester, headers, attributes, completed=True
-        )
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/gitignore/templates/{name}")
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
     def get_emojis(self):
         """
@@ -808,13 +798,15 @@ class Github:
         if slug is github.GithubObject.NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}
-            headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
-            return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+            warnings.warn(
+                "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
+                "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
+                category=DeprecationWarning,
+            )
+            return GithubIntegration(auth=self.__requester.auth).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
-            )
+            return GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
 
 
 # Retrocompatibility

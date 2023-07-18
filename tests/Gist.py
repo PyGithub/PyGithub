@@ -26,7 +26,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
@@ -37,7 +37,10 @@ class Gist(Framework.TestCase):
     def testAttributes(self):
         gist = self.g.get_gist("6296732")
         self.assertEqual(gist.comments, 0)
-        self.assertEqual(gist.created_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(
+            gist.created_at,
+            datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
+        )
         self.assertEqual(gist.description, "Github API")
         self.assertEqual(list(gist.files.keys()), ["GithubAPI.lua"])
         self.assertEqual(gist.files["GithubAPI.lua"].size, 21229)
@@ -56,7 +59,8 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].change_status.deletions, 0)
         self.assertEqual(gist.history[0].change_status.total, 793)
         self.assertEqual(
-            gist.history[0].committed_at, datetime.datetime(2013, 8, 21, 16, 12, 27)
+            gist.history[0].committed_at,
+            datetime(2013, 8, 21, 16, 12, 27, tzinfo=timezone.utc),
         )
         self.assertEqual(
             gist.history[0].url,
@@ -64,13 +68,14 @@ class Gist(Framework.TestCase):
         )
         self.assertEqual(gist.history[0].user, None)
         self.assertEqual(gist.history[0].owner.login, "jacquev6")
-        self.assertEqual(
-            gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2"
-        )
+        self.assertEqual(gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2")
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.id, "6296732")
         self.assertTrue(gist.public)
-        self.assertEqual(gist.updated_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(
+            gist.updated_at,
+            datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
+        )
         self.assertEqual(gist.url, "https://api.github.com/gists/6296732")
         self.assertEqual(gist.user, None)
         self.assertEqual(gist.owner.login, "jacquev6")
@@ -79,15 +84,16 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.url, "https://api.github.com/gists/6296732")
         self.assertEqual(repr(gist), 'Gist(id="6296732")')
-        self.assertEqual(
-            repr(gist.files["GithubAPI.lua"]), 'GistFile(filename="GithubAPI.lua")'
-        )
+        self.assertEqual(repr(gist.files["GithubAPI.lua"]), 'GistFile(filename="GithubAPI.lua")')
 
     def testEditWithoutParameters(self):
         gist = self.g.get_gist("2729810")
         gist.edit()
         self.assertEqual(gist.description, "Gist created by PyGithub")
-        self.assertEqual(gist.updated_at, datetime.datetime(2012, 5, 19, 7, 0, 58))
+        self.assertEqual(
+            gist.updated_at,
+            datetime(2012, 5, 19, 7, 0, 58, tzinfo=timezone.utc),
+        )
 
     def testEditWithAllParameters(self):
         gist = self.g.get_gist("2729810")
@@ -96,7 +102,10 @@ class Gist(Framework.TestCase):
             {"barbaz.txt": github.InputFileContent("File also created by PyGithub")},
         )
         self.assertEqual(gist.description, "Description edited by PyGithub")
-        self.assertEqual(gist.updated_at, datetime.datetime(2012, 5, 19, 7, 6, 10))
+        self.assertEqual(
+            gist.updated_at,
+            datetime(2012, 5, 19, 7, 6, 10, tzinfo=timezone.utc),
+        )
         self.assertEqual(set(gist.files.keys()), {"foobar.txt", "barbaz.txt"})
 
     def testDeleteFile(self):
@@ -108,13 +117,7 @@ class Gist(Framework.TestCase):
     def testRenameFile(self):
         gist = self.g.get_gist("5339374")
         self.assertEqual(list(gist.files.keys()), ["bar.txt"])
-        gist.edit(
-            files={
-                "bar.txt": github.InputFileContent(
-                    gist.files["bar.txt"].content, new_name="baz.txt"
-                )
-            }
-        )
+        gist.edit(files={"bar.txt": github.InputFileContent(gist.files["bar.txt"].content, new_name="baz.txt")})
         self.assertEqual(list(gist.files.keys()), ["baz.txt"])
 
     def testCreateComment(self):

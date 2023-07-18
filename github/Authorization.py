@@ -27,9 +27,17 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
 import github.AuthorizationApplication
 import github.GithubObject
+from github.GithubObject import Attribute, NotSet, Opt, _NotSetType
+
+if TYPE_CHECKING:
+    from github.AuthorizationApplication import AuthorizationApplication
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):
@@ -37,19 +45,27 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     This class represents Authorizations. The reference can be found here https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._app: Attribute[AuthorizationApplication] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._note: Attribute[str | None] = NotSet
+        self._note_url: Attribute[str | None] = NotSet
+        self._scopes: Attribute[str] = NotSet
+        self._token: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"scopes": self._scopes.value})
 
     @property
-    def app(self):
-        """
-        :type: :class:`github.AuthorizationApplication.AuthorizationApplication`
-        """
+    def app(self) -> AuthorizationApplication:
         self._completeIfNotSet(self._app)
         return self._app.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -57,76 +73,54 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def note(self):
-        """
-        :type: string
-        """
+    def note(self) -> str | None:
         self._completeIfNotSet(self._note)
         return self._note.value
 
     @property
-    def note_url(self):
-        """
-        :type: string
-        """
+    def note_url(self) -> str | None:
         self._completeIfNotSet(self._note_url)
         return self._note_url.value
 
     @property
-    def scopes(self):
-        """
-        :type: list of string
-        """
+    def scopes(self) -> str:
         self._completeIfNotSet(self._scopes)
         return self._scopes.value
 
     @property
-    def token(self):
-        """
-        :type: string
-        """
+    def token(self) -> str:
         self._completeIfNotSet(self._token)
         return self._token.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
         self,
-        scopes=github.GithubObject.NotSet,
-        add_scopes=github.GithubObject.NotSet,
-        remove_scopes=github.GithubObject.NotSet,
-        note=github.GithubObject.NotSet,
-        note_url=github.GithubObject.NotSet,
-    ):
+        scopes: Opt[list[str]] = NotSet,
+        add_scopes: Opt[list[str]] = NotSet,
+        remove_scopes: Opt[list[str]] = NotSet,
+        note: Opt[str] = NotSet,
+        note_url: Opt[str] = NotSet,
+    ) -> None:
         """
         :calls: `PATCH /authorizations/{id} <https://docs.github.com/en/developers/apps/authorizing-oauth-apps>`_
         :param scopes: list of string
@@ -136,47 +130,30 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert scopes is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in scopes
-        ), scopes
-        assert add_scopes is github.GithubObject.NotSet or all(
+        assert isinstance(scopes, _NotSetType) or all(isinstance(element, str) for element in scopes), scopes
+        assert isinstance(add_scopes, _NotSetType) or all(
             isinstance(element, str) for element in add_scopes
         ), add_scopes
-        assert remove_scopes is github.GithubObject.NotSet or all(
+        assert isinstance(remove_scopes, _NotSetType) or all(
             isinstance(element, str) for element in remove_scopes
         ), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, str), note
-        assert note_url is github.GithubObject.NotSet or isinstance(
-            note_url, str
-        ), note_url
-        post_parameters = dict()
-        if scopes is not github.GithubObject.NotSet:
-            post_parameters["scopes"] = scopes
-        if add_scopes is not github.GithubObject.NotSet:
-            post_parameters["add_scopes"] = add_scopes
-        if remove_scopes is not github.GithubObject.NotSet:
-            post_parameters["remove_scopes"] = remove_scopes
-        if note is not github.GithubObject.NotSet:
-            post_parameters["note"] = note
-        if note_url is not github.GithubObject.NotSet:
-            post_parameters["note_url"] = note_url
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
+        assert isinstance(note, (_NotSetType, str)), note
+        assert isinstance(note_url, (_NotSetType, str)), note_url
+
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "scopes": scopes,
+                "add_scopes": add_scopes,
+                "remove_scopes": remove_scopes,
+                "note": note,
+                "note_url": note_url,
+            }
         )
+
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _initAttributes(self):
-        self._app = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._note = github.GithubObject.NotSet
-        self._note_url = github.GithubObject.NotSet
-        self._scopes = github.GithubObject.NotSet
-        self._token = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "app" in attributes:  # pragma no branch
             self._app = self._makeClassAttribute(
                 github.AuthorizationApplication.AuthorizationApplication,

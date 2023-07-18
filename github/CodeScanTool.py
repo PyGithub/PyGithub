@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -29,7 +31,7 @@ class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "guid": self.guid,
@@ -59,12 +61,12 @@ class CodeScanTool(github.GithubObject.NonCompletableGithubObject):
         """
         return self._guid.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._version = github.GithubObject.NotSet
         self._guid = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "version" in attributes:  # pragma no branch

@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -36,18 +36,18 @@ from . import Framework
 class IssueComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = (
-            self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
-        )
+        self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
-            self.comment.created_at, datetime.datetime(2012, 5, 20, 11, 46, 42)
+            self.comment.created_at,
+            datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 5808311)
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 46, 42)
+            self.comment.updated_at,
+            datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.url,
@@ -67,7 +67,8 @@ class IssueComment(Framework.TestCase):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 53, 59)
+            self.comment.updated_at,
+            datetime(2012, 5, 20, 11, 53, 59, tzinfo=timezone.utc),
         )
 
     def testDelete(self):

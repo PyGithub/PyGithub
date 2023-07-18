@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.CodeScanAlertInstanceLocation
 import github.GithubObject
 
@@ -30,7 +32,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
 
     @property
@@ -89,7 +91,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
         """
         return self._classifications.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._ref = github.GithubObject.NotSet
         self._analysis_key = github.GithubObject.NotSet
         self._environment = github.GithubObject.NotSet
@@ -99,7 +101,7 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._classifications = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "analysis_key" in attributes:  # pragma no branch
@@ -120,6 +122,4 @@ class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
                 attributes["location"],
             )
         if "classifications" in attributes:  # pragma no branch
-            self._classifications = self._makeListOfStringsAttribute(
-                attributes["classifications"]
-            )
+            self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])

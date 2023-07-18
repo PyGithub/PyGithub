@@ -30,6 +30,7 @@
 ################################################################################
 
 import base64
+from typing import Any, Dict
 
 import github.GithubObject
 import github.Repository
@@ -40,7 +41,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     This class represents ContentFiles. The reference can be found here https://docs.github.com/en/rest/reference/repos#contents
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
 
     @property
@@ -122,13 +123,9 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
-            repo_url = "/".join(
-                self.url.split("/")[:6]
-            )  # pragma no cover (Should be covered)
+            repo_url = "/".join(self.url.split("/")[:6])  # pragma no cover (Should be covered)
             self._repository = github.GithubObject._ValuedAttribute(
-                github.Repository.Repository(
-                    self._requester, self._headers, {"url": repo_url}, completed=False
-                )
+                github.Repository.Repository(self._requester, self._headers, {"url": repo_url}, completed=False)
             )  # pragma no cover (Should be covered)
         return self._repository.value
 
@@ -172,7 +169,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._content = github.GithubObject.NotSet
         self._text_matches = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
@@ -187,7 +184,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "download_url" in attributes:  # pragma no branch
@@ -199,17 +196,13 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "license" in attributes:  # pragma no branch
-            self._license = self._makeClassAttribute(
-                github.License.License, attributes["license"]
-            )
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
-            )
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
@@ -219,6 +212,4 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "text_matches" in attributes:  # pragma no branch
-            self._text_matches = self._makeListOfDictsAttribute(
-                attributes["text_matches"]
-            )
+            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])

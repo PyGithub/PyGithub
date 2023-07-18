@@ -34,6 +34,8 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
+
+
 __all__ = [
     "Auth",
     "AppAuthentication",
@@ -44,6 +46,7 @@ __all__ = [
     "Github",
     "GithubException",
     "GithubIntegration",
+    "GithubRetry",
     "IncompletableObject",
     "InputFileContent",
     "InputGitAuthor",
@@ -70,6 +73,7 @@ from .GithubException import (
     TwoFactorException,
     UnknownObjectException,
 )
+from .GithubRetry import GithubRetry
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement

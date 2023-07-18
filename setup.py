@@ -54,7 +54,7 @@ if __name__ == "__main__":
         author_email="vincent@vincent-jacques.net",
         url="https://github.com/pygithub/pygithub",
         project_urls={
-            "Documentation": "http://pygithub.readthedocs.io/en/latest/",
+            "Documentation": "http://pygithub.readthedocs.io/en/stable/",
             "Source": "https://github.com/pygithub/pygithub",
             "Tracker": "https://github.com/pygithub/pygithub/issues",
         },
@@ -67,22 +67,30 @@ if __name__ == "__main__":
 
                 from github import Github
 
-                # using username and password
-                g = Github("user", "password")
+                # Authentication is defined via github.Auth
+                from github import Auth
 
-                # or using an access token
-                g = Github("access_token")
+                # using an access token
+                auth = Auth.Token("access_token")
+
+                # Public Web Github
+                g = Github(auth=auth)
+
+                # Github Enterprise with custom hostname
+                g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
             Then play with your Github objects::
 
                 for repo in g.get_user().get_repos():
                     print(repo.name)
                     repo.edit(has_wiki=False)
+                    # to see all the available attributes and methods
+                    print(dir(repo))
 
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""
+            See http://pygithub.readthedocs.io/en/stable/"""
         ),
         packages=["github"],
         package_data={"github": ["py.typed", "*.pyi"]},
@@ -107,6 +115,8 @@ if __name__ == "__main__":
             "pyjwt[crypto]>=2.4.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
+            "python-dateutil",
+            "typing-extensions>=4.0.0",
         ],
         # can be removed, still here to avoid breaking user code
         extras_require={"integrations": []},

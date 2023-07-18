@@ -29,6 +29,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.HookResponse
 
@@ -38,7 +40,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
     This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -157,9 +159,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in events
-        ), events
+        assert events is github.GithubObject.NotSet or all(isinstance(element, str) for element in events), events
         assert add_events is github.GithubObject.NotSet or all(
             isinstance(element, str) for element in add_events
         ), add_events
@@ -179,9 +179,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
             post_parameters["remove_events"] = remove_events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def test(self):
@@ -198,7 +196,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._active = github.GithubObject.NotSet
         self._config = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -211,7 +209,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
         self._ping_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "active" in attributes:  # pragma no branch
             self._active = self._makeBoolAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch

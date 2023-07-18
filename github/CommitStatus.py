@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -39,7 +41,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     This class represents CommitStatuses.The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "id": self._id.value,
@@ -111,7 +113,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
@@ -122,13 +124,11 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch

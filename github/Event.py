@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.Organization
@@ -39,7 +41,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
 
     @property
@@ -98,7 +100,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         """
         return self._type.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -108,26 +110,20 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         self._repo = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["actor"]
-            )
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "org" in attributes:  # pragma no branch
-            self._org = self._makeClassAttribute(
-                github.Organization.Organization, attributes["org"]
-            )
+            self._org = self._makeClassAttribute(github.Organization.Organization, attributes["org"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
         if "repo" in attributes:  # pragma no branch
-            self._repo = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repo"]
-            )
+            self._repo = self._makeClassAttribute(github.Repository.Repository, attributes["repo"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])

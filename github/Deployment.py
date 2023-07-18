@@ -22,6 +22,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.Consts
 import github.DeploymentStatus
 import github.GithubObject
@@ -32,7 +34,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
     This class represents Deployments. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -188,9 +190,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             f"{self.url}/statuses/{id_}",
             headers={"Accept": self._get_accept_header()},
         )
-        return github.DeploymentStatus.DeploymentStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.DeploymentStatus.DeploymentStatus(self._requester, headers, data, completed=True)
 
     def create_status(
         self,
@@ -212,21 +212,11 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
         """
         assert isinstance(state, str), state
-        assert target_url is github.GithubObject.NotSet or isinstance(
-            target_url, str
-        ), target_url
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert environment is github.GithubObject.NotSet or isinstance(
-            environment, str
-        ), environment
-        assert environment_url is github.GithubObject.NotSet or isinstance(
-            environment_url, str
-        ), environment_url
-        assert auto_inactive is github.GithubObject.NotSet or isinstance(
-            auto_inactive, bool
-        ), auto_inactive
+        assert target_url is github.GithubObject.NotSet or isinstance(target_url, str), target_url
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
+        assert environment is github.GithubObject.NotSet or isinstance(environment, str), environment
+        assert environment_url is github.GithubObject.NotSet or isinstance(environment_url, str), environment_url
+        assert auto_inactive is github.GithubObject.NotSet or isinstance(auto_inactive, bool), auto_inactive
 
         post_parameters = {"state": state}
         if target_url is not github.GithubObject.NotSet:
@@ -246,9 +236,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": self._get_accept_header()},
         )
-        return github.DeploymentStatus.DeploymentStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.DeploymentStatus.DeploymentStatus(self._requester, headers, data, completed=True)
 
     @staticmethod
     def _get_accept_header():
@@ -259,7 +247,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             ]
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._production_environment = github.GithubObject.NotSet
         self._ref = github.GithubObject.NotSet
@@ -277,19 +265,15 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         self._statuses_url = github.GithubObject.NotSet
         self._repository_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "production_environment" in attributes:  # pragma no branch
-            self._production_environment = self._makeBoolAttribute(
-                attributes["production_environment"]
-            )
+            self._production_environment = self._makeBoolAttribute(attributes["production_environment"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "transient_environment" in attributes:  # pragma no branch
-            self._transient_environment = self._makeBoolAttribute(
-                attributes["transient_environment"]
-            )
+            self._transient_environment = self._makeBoolAttribute(attributes["transient_environment"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "sha" in attributes:  # pragma no branch
@@ -299,17 +283,13 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
         if "original_environment" in attributes:  # pragma no branch
-            self._original_environment = self._makeStringAttribute(
-                attributes["original_environment"]
-            )
+            self._original_environment = self._makeStringAttribute(attributes["original_environment"])
         if "environment" in attributes:  # pragma no branch
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:  # pragma no branch
@@ -317,6 +297,4 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         if "statuses_url" in attributes:  # pragma no branch
             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "repository_url" in attributes:  # pragma no branch
-            self._repository_url = self._makeStringAttribute(
-                attributes["repository_url"]
-            )
+            self._repository_url = self._makeStringAttribute(attributes["repository_url"])

@@ -21,7 +21,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -29,17 +29,13 @@ from . import Framework
 class Reaction(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.reactions = (
-            self.g.get_user("PyGithub")
-            .get_repo("PyGithub")
-            .get_issue(28)
-            .get_reactions()
-        )
+        self.reactions = self.g.get_user("PyGithub").get_repo("PyGithub").get_issue(28).get_reactions()
 
     def testAttributes(self):
         self.assertEqual(self.reactions[0].content, "+1")
         self.assertEqual(
-            self.reactions[0].created_at, datetime.datetime(2017, 12, 5, 1, 59, 33)
+            self.reactions[0].created_at,
+            datetime(2017, 12, 5, 1, 59, 33, tzinfo=timezone.utc),
         )
         self.assertEqual(self.reactions[0].id, 16916340)
         self.assertEqual(self.reactions[0].user.login, "nicolastrres")

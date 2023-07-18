@@ -20,38 +20,37 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
-class RepositoryPreferences(github.GithubObject.NonCompletableGithubObject):
+class RepositoryPreferences(NonCompletableGithubObject):
     """
     This class represents repository preferences.
     The reference can be found here https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
     """
 
+    def _initAttributes(self) -> None:
+        self._preferences: Attribute[dict[str, list[dict[str, bool | int]]]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+
     @property
-    def preferences(self):
-        """
-        :type: dict
-        """
+    def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
         return self._preferences.value
 
     @property
-    def repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repository(self) -> Repository:
         return self._repository.value
 
-    def _initAttributes(self):
-        self._preferences = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "preferences" in attributes:  # pragma no branch
             self._preferences = self._makeDictAttribute(attributes["preferences"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repository"]
-            )
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

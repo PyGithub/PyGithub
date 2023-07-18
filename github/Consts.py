@@ -92,9 +92,7 @@ mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview
 mediaTypeTeamDiscussionsPreview = "application/vnd.github.echo-preview+json"
 
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
-mediaTypeRequireMultipleApprovingReviews = (
-    "application/vnd.github.luke-cage-preview+json"
-)
+mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
@@ -134,6 +132,7 @@ repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
+DEFAULT_USER_AGENT = "PyGithub/Python"
 # As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
 # Thus, the timeout should be slightly > 10s to account for network/front-end
 # latency.
@@ -151,3 +150,7 @@ DEFAULT_JWT_ISSUED_AT = -60
 # https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
 # "Your JWT must be signed using the RS256 algorithm"
 DEFAULT_JWT_ALGORITHM = "RS256"
+
+# https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
+DEFAULT_SECONDS_BETWEEN_WRITES = 1.0

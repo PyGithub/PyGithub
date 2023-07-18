@@ -28,7 +28,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import date
+from typing import Any, Dict
 
 import github.GithubObject
 import github.Label
@@ -42,9 +43,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__(
-            {"number": self._number.value, "title": self._title.value}
-        )
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
     def closed_issues(self):
@@ -57,7 +56,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -81,7 +80,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def due_on(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._due_on)
         return self._due_on.value
@@ -137,7 +136,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -174,12 +173,8 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(title, str), title
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert due_on is github.GithubObject.NotSet or isinstance(
-            due_on, datetime.date
-        ), due_on
+        assert description is github.GithubObject.NotSet or isinstance(description, str), description
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, date), due_on
         post_parameters = {
             "title": title,
         }
@@ -189,9 +184,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def get_labels(self):
@@ -199,15 +192,13 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
-        return github.PaginatedList.PaginatedList(
-            github.Label.Label, self._requester, f"{self.url}/labels", None
-        )
+        return github.PaginatedList.PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
 
     @property
     def _identity(self):
         return self.number
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._closed_issues = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
@@ -222,15 +213,13 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "closed_issues" in attributes:  # pragma no branch
             self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "due_on" in attributes:  # pragma no branch

@@ -23,17 +23,24 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
+from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class View(github.GithubObject.NonCompletableGithubObject):
+class View(NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._timestamp: Attribute[datetime] = NotSet
+        self._count: Attribute[int] = NotSet
+        self._uniques: Attribute[int] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "timestamp": self._timestamp.value,
@@ -43,32 +50,18 @@ class View(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def timestamp(self):
-        """
-        :type: datetime.datetime
-        """
+    def timestamp(self) -> datetime:
         return self._timestamp.value
 
     @property
-    def count(self):
-        """
-        :type: integer
-        """
+    def count(self) -> int:
         return self._count.value
 
     @property
-    def uniques(self):
-        """
-        :type: integer
-        """
+    def uniques(self) -> int:
         return self._uniques.value
 
-    def _initAttributes(self):
-        self._timestamp = github.GithubObject.NotSet
-        self._count = github.GithubObject.NotSet
-        self._uniques = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "timestamp" in attributes:  # pragma no branch
             self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "count" in attributes:  # pragma no branch

@@ -30,6 +30,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
@@ -42,7 +44,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
     This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
@@ -172,7 +174,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
         self._guid = github.GithubObject.NotSet
@@ -184,25 +186,19 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
-            self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
-            )
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "guid" in attributes:
             self._guid = self._makeStringAttribute(attributes["guid"])
         if "state" in attributes:
             self._state = self._makeStringAttribute(attributes["state"])
         if "lock_repositories" in attributes:
-            self._lock_repositories = self._makeBoolAttribute(
-                attributes["lock_repositories"]
-            )
+            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
         if "exclude_attachments" in attributes:
-            self._exclude_attachments = self._makeBoolAttribute(
-                attributes["exclude_attachments"]
-            )
+            self._exclude_attachments = self._makeBoolAttribute(attributes["exclude_attachments"])
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, attributes["repositories"]

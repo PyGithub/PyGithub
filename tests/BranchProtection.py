@@ -26,17 +26,11 @@ from . import Framework
 class BranchProtection(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.branch_protection = (
-            self.g.get_repo("curvewise-forks/PyGithub")
-            .get_branch("master")
-            .get_protection()
-        )
+        self.branch_protection = self.g.get_repo("curvewise-forks/PyGithub").get_branch("master").get_protection()
 
     def testAttributes(self):
         self.assertTrue(self.branch_protection.required_status_checks.strict)
-        self.assertEqual(
-            self.branch_protection.required_status_checks.contexts, ["build (3.10)"]
-        )
+        self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
         self.assertTrue(self.branch_protection.required_linear_history)
         self.assertEqual(
             self.branch_protection.url,

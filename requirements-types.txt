@@ -1,0 +1,5 @@
+mypy
+types-deprecated
+types-jwt
+types-python-dateutil
+types-requests

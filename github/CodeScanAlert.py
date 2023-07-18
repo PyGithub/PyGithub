@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.CodeScanAlertInstance
 import github.CodeScanRule
 import github.CodeScanTool
@@ -34,7 +36,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
 
     @property
@@ -133,7 +135,7 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._number = github.GithubObject.NotSet
         self._rule = github.GithubObject.NotSet
         self._tool = github.GithubObject.NotSet
@@ -150,30 +152,22 @@ class CodeScanAlert(github.GithubObject.NonCompletableGithubObject):
         self._most_recent_instance = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "rule" in attributes:  # pragma no branch
-            self._rule = self._makeClassAttribute(
-                github.CodeScanRule.CodeScanRule, attributes["rule"]
-            )
+            self._rule = self._makeClassAttribute(github.CodeScanRule.CodeScanRule, attributes["rule"])
         if "tool" in attributes:  # pragma no branch
-            self._tool = self._makeClassAttribute(
-                github.CodeScanTool.CodeScanTool, attributes["tool"]
-            )
+            self._tool = self._makeClassAttribute(github.CodeScanTool.CodeScanTool, attributes["tool"])
 
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
-            self._dismissed_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["dismissed_by"]
-            )
+            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
         if "dismissed_reason" in attributes:  # pragma no branch
-            self._dismissed_reason = self._makeStringAttribute(
-                attributes["dismissed_reason"]
-            )
+            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
 
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -45,7 +45,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime
+
+from dateutil.tz.tz import tzoffset
 
 import github
 
@@ -67,14 +69,14 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(len(self.migration.repositories), 1)
         self.assertEqual(self.migration.repositories[0].name, "sample-repo")
+        self.assertEqual(self.migration.url, "https://api.github.com/user/migrations/25320")
         self.assertEqual(
-            self.migration.url, "https://api.github.com/user/migrations/25320"
+            self.migration.created_at,
+            datetime(2018, 9, 14, 1, 35, 35, tzinfo=tzoffset(None, 19800)),
         )
         self.assertEqual(
-            self.migration.created_at, datetime.datetime(2018, 9, 14, 1, 35, 35)
-        )
-        self.assertEqual(
-            self.migration.updated_at, datetime.datetime(2018, 9, 14, 1, 35, 46)
+            self.migration.updated_at,
+            datetime(2018, 9, 14, 1, 35, 46, tzinfo=tzoffset(None, 19800)),
         )
         self.assertEqual(
             repr(self.migration),
@@ -82,9 +84,7 @@ class Migration(Framework.TestCase):
         )
 
     def testGetArchiveUrlWhenNotExported(self):
-        self.assertRaises(
-            github.UnknownObjectException, lambda: self.migration.get_archive_url()
-        )
+        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
 
     def testGetStatus(self):
         self.assertEqual(self.migration.get_status(), "exported")
@@ -99,9 +99,7 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.delete(), None)
 
     def testGetArchiveUrlWhenDeleted(self):
-        self.assertRaises(
-            github.UnknownObjectException, lambda: self.migration.get_archive_url()
-        )
+        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
 
     def testUnlockRepo(self):
         self.assertEqual(self.migration.unlock_repo("sample-repo"), None)

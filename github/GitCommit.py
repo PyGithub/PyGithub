@@ -28,6 +28,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GitAuthor
 import github.GithubObject
 import github.GitTree
@@ -38,7 +40,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     This class represents GitCommits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
@@ -109,7 +111,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.sha
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._committer = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -119,28 +121,20 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         self._tree = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.GitAuthor.GitAuthor, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
         if "committer" in attributes:  # pragma no branch
-            self._committer = self._makeClassAttribute(
-                github.GitAuthor.GitAuthor, attributes["committer"]
-            )
+            self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "parents" in attributes:  # pragma no branch
-            self._parents = self._makeListOfClassesAttribute(
-                GitCommit, attributes["parents"]
-            )
+            self._parents = self._makeListOfClassesAttribute(GitCommit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
-            self._tree = self._makeClassAttribute(
-                github.GitTree.GitTree, attributes["tree"]
-            )
+            self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
