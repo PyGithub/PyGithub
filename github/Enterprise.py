@@ -22,45 +22,48 @@
 from typing import Any, Dict
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 
-class Enterprise(CompletableGithubObject):
+class Enterprise(NonCompletableGithubObject):
     """
-    This class represents Enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+    This class represents Enterprises. Such objects do not exist in the Github API, so this class merely collects all endpoints the start with /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
     """
+
+    def __init__(
+        self,
+        requester: Requester,
+        enterprise: str,
+    ):
+        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"}, True)
 
     def _initAttributes(self) -> None:
-        self._login: Attribute[str] = NotSet
+        self._enterprise: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"login": self._login.value})
+        return self.get__repr__({"enterprise": self._enterprise.value})
 
     @property
-    def login(self) -> str:
-        self._completeIfNotSet(self._login)
-        return self._login.value
+    def enterprise(self) -> str:
+        return self._enterprise.value
 
     @property
     def url(self) -> str:
-        self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_enterprise_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+    def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
         """
-        :calls: `GET /enterprise/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """
-        assert isinstance(self.login, str), self.login
-        firstURL = f"/enterprises/{self.login}/consumed-licenses"
-        headers, data = self._requester.requestJsonAndCheck("GET", firstURL)
-        # The response doesn't have the key of login and url, manually add it to data.
-        data["login"] = self.login
+        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
         data["url"] = self.url + "/consumed-licenses"
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "login" in attributes:  # pragma no branch
-            self._login = self._makeStringAttribute(attributes["login"])
+        if "enterprise" in attributes:  # pragma no branch
+            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -343,21 +343,15 @@ class Github:
             url_parameters,
         )
 
-    def get_enterprise(self, login):
+    def get_enterprise(self, enterprise):
         """
-        :calls: `GET /enterprise/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
-        :param login: string
+        :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
+        :param enterprise: string
         :rtype: :class:`Enterprise`
         """
-        assert isinstance(login, str), login
-        firstURL = f"/enterprises/{login}"
-        # There is no native "/enterprise/{enterprise}" api, so this function is a hub for under apis of enterprise administration.
-        headers = {}
-        data = {}
-        # The response doesn't have the key of login and url, manually add it to data.
-        data["login"] = login
-        data["url"] = self.__requester.base_url + firstURL
-        return github.Enterprise.Enterprise(self.__requester, headers, data, completed=True)
+        assert isinstance(enterprise, str), enterprise
+        # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
+        return github.Enterprise.Enterprise(self.__requester, enterprise)
 
     def get_repo(self, full_name_or_id, lazy=False):
         """
