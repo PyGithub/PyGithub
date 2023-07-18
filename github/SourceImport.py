@@ -19,7 +19,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -120,11 +122,11 @@ class SourceImport(CompletableGithubObject):
         self._completeIfNotSet(self._vcs_url)
         return self._vcs_url.value
 
-    def update(self):
+    def update(self, additional_headers: None | dict[str, Any] = None) -> bool:
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         return super().update(additional_headers=import_header)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch
             self._authors_count = self._makeIntAttribute(attributes["authors_count"])
         if "authors_url" in attributes:  # pragma no branch
