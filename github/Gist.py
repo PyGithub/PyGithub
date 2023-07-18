@@ -41,7 +41,7 @@ import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_optional
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -203,8 +203,8 @@ class Gist(CompletableGithubObject):
         :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert is_optional(description, str), description
-        # mypy bug, can't use `is_undefined`
-        assert isinstance(files, _NotSetType) or all(
+        # limitation of `TypeGuard`
+        assert (not is_defined(files)) or all(
             element is None or isinstance(element, github.InputFileContent) for element in files.values()
         ), files
         post_parameters: dict[str, Any] = {}
