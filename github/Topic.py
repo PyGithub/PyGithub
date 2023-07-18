@@ -19,8 +19,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import github.GithubObject
 
@@ -123,7 +124,7 @@ class Topic(github.GithubObject.NonCompletableGithubObject):
         self._curated = github.GithubObject.NotSet
         self._score = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "display_name" in attributes:  # pragma no branch
