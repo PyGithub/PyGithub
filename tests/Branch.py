@@ -61,6 +61,7 @@ class Branch(Framework.TestCase):
         self.assertTrue(branch_protection.required_status_checks.strict)
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
+        self.assertFalse(branch_protection.required_linear_history)
         self.assertFalse(branch_protection.required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(branch_protection.required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
