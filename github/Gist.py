@@ -41,7 +41,7 @@ import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -204,7 +204,7 @@ class Gist(CompletableGithubObject):
         """
         assert is_optional(description, str), description
         # limitation of `TypeGuard`
-        assert (not is_defined(files)) or all(
+        assert isinstance(files, _NotSetType) or all(
             element is None or isinstance(element, github.InputFileContent) for element in files.values()
         ), files
         post_parameters: dict[str, Any] = {}
