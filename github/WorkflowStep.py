@@ -19,75 +19,57 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
+from datetime import datetime
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class WorkflowStep(github.GithubObject.CompletableGithubObject):
+class WorkflowStep(CompletableGithubObject):
     """
     This class represents steps in a Workflow Job. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-jobs
     """
+
+    def _initAttributes(self) -> None:
+        self._completed_at: Attribute[datetime] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._number: Attribute[int] = NotSet
+        self._started_at: Attribute[datetime] = NotSet
+        self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "name": self._name.value})
 
     @property
-    def completed_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def completed_at(self) -> datetime:
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
     @property
-    def conclusion(self):
-        """
-        :type: string
-        """
+    def conclusion(self) -> str:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def number(self):
-        """
-        :type: integer
-        """
+    def number(self) -> int:
         self._completeIfNotSet(self._number)
         return self._number.value
 
     @property
-    def started_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def started_at(self) -> datetime:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
-
-    def _initAttributes(self) -> None:
-        self._completed_at = github.GithubObject.NotSet
-        self._conclusion = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._number = github.GithubObject.NotSet
-        self._started_at = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "completed_at" in attributes:  # pragma no branch

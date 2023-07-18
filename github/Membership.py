@@ -38,74 +38,62 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
-import github.GithubObject
+import github.NamedUser
+import github.Organization
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
-class Membership(github.GithubObject.CompletableGithubObject):
+class Membership(CompletableGithubObject):
     """
     This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
+
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._role: Attribute[str] = NotSet
+        self._organization_url: Attribute[str] = NotSet
+        self._organization: Attribute[Organization] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def role(self):
-        """
-        :type: string
-        """
+    def role(self) -> str:
         self._completeIfNotSet(self._role)
         return self._role.value
 
     @property
-    def organization_url(self):
-        """
-        :type: string
-        """
+    def organization_url(self) -> str:
         self._completeIfNotSet(self._organization_url)
         return self._organization_url.value
 
     @property
-    def organization(self):
-        """
-        :type: :class:`github.Organization.Organization`
-        """
+    def organization(self) -> Organization:
         self._completeIfNotSet(self._organization)
         return self._organization.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
-
-    def _initAttributes(self) -> None:
-        self._url = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._role = github.GithubObject.NotSet
-        self._organization_url = github.GithubObject.NotSet
-        self._organization = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
