@@ -47,8 +47,8 @@ class CodeScanAlert(NonCompletableGithubObject):
         ] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
-        self._dismissed_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
-        self._dismissed_reason: Attribute[str] = NotSet
+        self._dismissed_by: Attribute[dict | None] = NotSet
+        self._dismissed_reason: Attribute[str | None] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._instances_url: Attribute[str] = NotSet
@@ -75,15 +75,15 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def dismissed_at(self) -> datetime:
+    def dismissed_at(self) -> datetime | None:
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self) -> dict:
+    def dismissed_by(self) -> dict | None:
         return self._dismissed_by.value
 
     @property
-    def dismissed_reason(self) -> str:
+    def dismissed_reason(self) -> str | None:
         return self._dismissed_reason.value
 
     @property
