@@ -75,136 +75,87 @@ class GitRelease(CompletableGithubObject):
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def body(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
     def title(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
     def tag_name(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._tag_name)
         return self._tag_name.value
 
     @property
     def target_commitish(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._target_commitish)
         return self._target_commitish.value
 
     @property
     def draft(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._draft)
         return self._draft.value
 
     @property
     def prerelease(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._prerelease)
         return self._prerelease.value
 
     @property
     def author(self) -> github.NamedUser.NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
         self._completeIfNotSet(self._author)
         return self._author.value
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def published_at(self) -> datetime:
-        """
-        :type: datetime.datetime
-        """
         self._completeIfNotSet(self._published_at)
         return self._published_at.value
 
     @property
     def url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
     def upload_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
 
     @property
     def html_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def tarball_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._tarball_url)
         return self._tarball_url.value
 
     @property
     def zipball_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._zipball_url)
         return self._zipball_url.value
 
     @property
     def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
-        """
-        :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
-        """
         self._completeIfNotSet(self._assets)
         return self._assets.value
 
     def delete_release(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#delete-a-release>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -219,13 +170,6 @@ class GitRelease(CompletableGithubObject):
     ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
-        :param name: string
-        :param message: string
-        :param draft: bool
-        :param prerelease: bool
-        :param tag_name: string
-        :param target_commitish: string
-        :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert tag_name is NotSet or isinstance(tag_name, str), "tag_name must be a str/unicode object"
         assert target_commitish is NotSet or isinstance(
@@ -256,11 +200,6 @@ class GitRelease(CompletableGithubObject):
     ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
-        :param path: string
-        :param label: string
-        :param content_type: string
-        :param name: string
-        :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
@@ -296,9 +235,6 @@ class GitRelease(CompletableGithubObject):
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
-        :param content_type: string
-        :param name: string
-        :param label: string
         """
         assert isinstance(name, str), name
         assert isinstance(file_size, int), file_size
