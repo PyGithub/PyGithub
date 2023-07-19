@@ -34,9 +34,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import github.Event
 import github.Gist
@@ -47,8 +48,18 @@ import github.PaginatedList
 import github.Permissions
 import github.Plan
 import github.Repository
-
-from . import Consts
+from github import Consts
+from github.Event import Event
+from github.Gist import Gist
+from github.GithubObject import Opt
+from github.Membership import Membership
+from github.Organization import Organization
+from github.PaginatedList import PaginatedList
+from github.Permissions import Permissions
+from github.Plan import Plan
+from github.Project import Project
+from github.Repository import Repository
+from github.UserKey import UserKey
 
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
@@ -60,7 +71,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"login": self._login.value})
 
     @property
-    def node_id(self):
+    def node_id(self) -> str:
         """
         :type: string
         """
@@ -68,21 +79,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def twitter_username(self):
+    def twitter_username(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._twitter_username)
         return self._twitter_username.value
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.id, self.login))
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
 
     @property
-    def avatar_url(self):
+    def avatar_url(self) -> str:
         """
         :type: string
         """
@@ -90,7 +101,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._avatar_url.value
 
     @property
-    def bio(self):
+    def bio(self) -> str | None:
         """
         :type: string
         """
@@ -98,7 +109,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._bio.value
 
     @property
-    def blog(self):
+    def blog(self) -> str:
         """
         :type: string
         """
@@ -106,7 +117,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._blog.value
 
     @property
-    def collaborators(self):
+    def collaborators(self) -> int | None:
         """
         :type: integer
         """
@@ -114,7 +125,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._collaborators.value
 
     @property
-    def company(self):
+    def company(self) -> str:
         """
         :type: string
         """
@@ -122,7 +133,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._company.value
 
     @property
-    def contributions(self):
+    def contributions(self) -> int:
         """
         :type: integer
         """
@@ -130,7 +141,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._contributions.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -138,7 +149,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def disk_usage(self):
+    def disk_usage(self) -> int | None:
         """
         :type: integer
         """
@@ -146,7 +157,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._disk_usage.value
 
     @property
-    def email(self):
+    def email(self) -> str:
         """
         :type: string
         """
@@ -154,7 +165,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._email.value
 
     @property
-    def events_url(self):
+    def events_url(self) -> str:
         """
         :type: string
         """
@@ -162,7 +173,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._events_url.value
 
     @property
-    def followers(self):
+    def followers(self) -> int:
         """
         :type: integer
         """
@@ -170,7 +181,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._followers.value
 
     @property
-    def followers_url(self):
+    def followers_url(self) -> str:
         """
         :type: string
         """
@@ -178,7 +189,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._followers_url.value
 
     @property
-    def following(self):
+    def following(self) -> int:
         """
         :type: integer
         """
@@ -186,7 +197,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._following.value
 
     @property
-    def following_url(self):
+    def following_url(self) -> str:
         """
         :type: string
         """
@@ -194,7 +205,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._following_url.value
 
     @property
-    def gists_url(self):
+    def gists_url(self) -> str:
         """
         :type: string
         """
@@ -202,7 +213,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._gists_url.value
 
     @property
-    def gravatar_id(self):
+    def gravatar_id(self) -> str:
         """
         :type: string
         """
@@ -210,7 +221,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._gravatar_id.value
 
     @property
-    def hireable(self):
+    def hireable(self) -> bool:
         """
         :type: bool
         """
@@ -218,7 +229,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._hireable.value
 
     @property
-    def html_url(self):
+    def html_url(self) -> str:
         """
         :type: string
         """
@@ -226,7 +237,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def id(self):
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -234,7 +245,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def invitation_teams_url(self):
+    def invitation_teams_url(self) -> str:
         """
         :type: string
         """
@@ -242,7 +253,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._invitation_teams_url.value
 
     @property
-    def inviter(self):
+    def inviter(self) -> NamedUser:
         """
         :type: github.NamedUser.NamedUser
         """
@@ -250,7 +261,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._inviter.value
 
     @property
-    def location(self):
+    def location(self) -> str:
         """
         :type: string
         """
@@ -258,7 +269,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._location.value
 
     @property
-    def login(self):
+    def login(self) -> str:
         """
         :type: string
         """
@@ -266,7 +277,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._login.value
 
     @property
-    def name(self):
+    def name(self) -> str | None:
         """
         :type: string
         """
@@ -274,7 +285,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
-    def organizations_url(self):
+    def organizations_url(self) -> str:
         """
         :type: string
         """
@@ -282,7 +293,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._organizations_url.value
 
     @property
-    def owned_private_repos(self):
+    def owned_private_repos(self) -> int | None:
         """
         :type: integer
         """
@@ -290,7 +301,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._owned_private_repos.value
 
     @property
-    def permissions(self):
+    def permissions(self) -> Permissions:
         """
         :type: :class:`github.Permissions.Permissions`
         """
@@ -298,7 +309,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._permissions.value
 
     @property
-    def plan(self):
+    def plan(self) -> Plan | None:
         """
         :type: :class:`github.Plan.Plan`
         """
@@ -306,7 +317,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._plan.value
 
     @property
-    def private_gists(self):
+    def private_gists(self) -> int | None:
         """
         :type: integer
         """
@@ -314,7 +325,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._private_gists.value
 
     @property
-    def public_gists(self):
+    def public_gists(self) -> int:
         """
         :type: integer
         """
@@ -322,7 +333,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._public_gists.value
 
     @property
-    def public_repos(self):
+    def public_repos(self) -> int:
         """
         :type: integer
         """
@@ -330,7 +341,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._public_repos.value
 
     @property
-    def received_events_url(self):
+    def received_events_url(self) -> str:
         """
         :type: string
         """
@@ -338,7 +349,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._received_events_url.value
 
     @property
-    def repos_url(self):
+    def repos_url(self) -> str:
         """
         :type: string
         """
@@ -346,7 +357,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._repos_url.value
 
     @property
-    def role(self):
+    def role(self) -> str:
         """
         :type: string
         """
@@ -354,7 +365,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._role.value
 
     @property
-    def site_admin(self):
+    def site_admin(self) -> bool:
         """
         :type: bool
         """
@@ -362,7 +373,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._site_admin.value
 
     @property
-    def starred_url(self):
+    def starred_url(self) -> str:
         """
         :type: string
         """
@@ -370,7 +381,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._starred_url.value
 
     @property
-    def subscriptions_url(self):
+    def subscriptions_url(self) -> str:
         """
         :type: string
         """
@@ -378,7 +389,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._subscriptions_url.value
 
     @property
-    def suspended_at(self):
+    def suspended_at(self) -> datetime | None:
         """
         :type: datetime
         """
@@ -386,7 +397,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._suspended_at.value
 
     @property
-    def team_count(self):
+    def team_count(self) -> int:
         """
         :type: integer
         """
@@ -394,7 +405,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._team_count.value
 
     @property
-    def total_private_repos(self):
+    def total_private_repos(self) -> int | None:
         """
         :type: integer
         """
@@ -402,7 +413,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
-    def type(self):
+    def type(self) -> str:
         """
         :type: string
         """
@@ -410,7 +421,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._type.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime
         """
@@ -418,35 +429,35 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_events(self):
+    def get_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /users/{user}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
 
-    def get_followers(self):
+    def get_followers(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /users/{user}/followers <https://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(NamedUser, self._requester, f"{self.url}/followers", None)
 
-    def get_following(self):
+    def get_following(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /users/{user}/following <https://docs.github.com/en/rest/reference/users#followers>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(NamedUser, self._requester, f"{self.url}/following", None)
 
-    def get_gists(self, since=github.GithubObject.NotSet):
+    def get_gists(self, since: Opt[datetime] = github.GithubObject.NotSet) -> PaginatedList[Gist]:
         """
         :calls: `GET /users/{user}/gists <https://docs.github.com/en/rest/reference/gists>`_
         :param since: datetime format YYYY-MM-DDTHH:MM:SSZ
@@ -460,14 +471,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Gist.Gist, self._requester, f"{self.url}/gists", url_parameters
         )
 
-    def get_keys(self):
+    def get_keys(self) -> PaginatedList[UserKey]:
         """
         :calls: `GET /users/{user}/keys <https://docs.github.com/en/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.UserKey.UserKey`
         """
         return github.PaginatedList.PaginatedList(github.UserKey.UserKey, self._requester, f"{self.url}/keys", None)
 
-    def get_orgs(self):
+    def get_orgs(self) -> PaginatedList[Organization]:
         """
         :calls: `GET /users/{user}/orgs <https://docs.github.com/en/rest/reference/orgs>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
@@ -476,7 +487,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Organization.Organization, self._requester, f"{self.url}/orgs", None
         )
 
-    def get_projects(self, state="open"):
+    def get_projects(self, state: str = "open") -> PaginatedList[Project]:
         """
         :calls: `GET /users/{user}/projects <https://docs.github.com/en/rest/reference/projects#list-user-projects>`_
         :param state: string
@@ -492,7 +503,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    def get_public_events(self):
+    def get_public_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /users/{user}/events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
@@ -501,7 +512,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Event.Event, self._requester, f"{self.url}/events/public", None
         )
 
-    def get_public_received_events(self):
+    def get_public_received_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /users/{user}/received_events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
@@ -513,7 +524,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_received_events(self):
+    def get_received_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /users/{user}/received_events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
@@ -522,7 +533,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Event.Event, self._requester, f"{self.url}/received_events", None
         )
 
-    def get_repo(self, name):
+    def get_repo(self, name: str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         :param name: string
@@ -534,10 +545,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_repos(
         self,
-        type=github.GithubObject.NotSet,
-        sort=github.GithubObject.NotSet,
-        direction=github.GithubObject.NotSet,
-    ):
+        type: Opt[str] = github.GithubObject.NotSet,
+        sort: Opt[str] = github.GithubObject.NotSet,
+        direction: Opt[str] = github.GithubObject.NotSet,
+    ) -> PaginatedList[Repository]:
         """
         :calls: `GET /users/{user}/repos <https://docs.github.com/en/rest/reference/repos>`_
         :param type: string
@@ -562,7 +573,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             url_parameters,
         )
 
-    def get_starred(self):
+    def get_starred(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /users/{user}/starred <https://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -571,7 +582,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository, self._requester, f"{self.url}/starred", None
         )
 
-    def get_subscriptions(self):
+    def get_subscriptions(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /users/{user}/subscriptions <https://docs.github.com/en/rest/reference/activity#watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -583,7 +594,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_watched(self):
+    def get_watched(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /users/{user}/watched <https://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -592,7 +603,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Repository.Repository, self._requester, f"{self.url}/watched", None
         )
 
-    def has_in_following(self, following):
+    def has_in_following(self, following: NamedUser) -> bool:
         """
         :calls: `GET /users/{user}/following/{target_user} <https://docs.github.com/en/rest/reference/users#check-if-a-user-follows-another-user>`_
         :param following: :class:`github.NamedUser.NamedUser`
@@ -603,10 +614,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return status == 204
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return self.login
 
-    def get_organization_membership(self, org):
+    def get_organization_membership(self, org: int) -> Membership:
         """
         :calls: `GET /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#check-organization-membership-for-a-user>`_
         :param org: string or :class:`github.Organization.Organization`
@@ -665,7 +676,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch
