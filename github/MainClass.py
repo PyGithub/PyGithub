@@ -51,7 +51,6 @@ from __future__ import annotations
 import pickle
 import warnings
 from datetime import datetime
-from io import BytesIO
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
 
 import urllib3
@@ -754,7 +753,7 @@ class Github:
         """
         pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
 
-    def load(self, f: BytesIO) -> Any:
+    def load(self, f: BinaryIO) -> Any:
         """
         Loads (unpickles) a PyGithub object from a file-like object.
 
