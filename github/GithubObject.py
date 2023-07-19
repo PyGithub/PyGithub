@@ -221,7 +221,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[dict]:
+    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[Dict[str, Any]]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod

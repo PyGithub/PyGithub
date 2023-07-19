@@ -25,7 +25,7 @@ Ideally, changes should be made in logical commits and tests added to improve th
 
 ## Coding style
 
-PyGithub adopts the black coding style and uses isort to sort imports.
+PyGithub adopts the black coding style.
 
 To manually format the code:
 ```bash
@@ -74,7 +74,7 @@ def get_protected_branch(self):
 
 First you need to install the test dependencies:
 ```bash
-pip install -r test-requirements.txt
+pip install -r requirements/test.txt
 ```
 
 Then you can run the tests through `pytest`.
