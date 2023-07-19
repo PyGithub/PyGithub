@@ -16,14 +16,7 @@ repos:
     rev: 23.3.0
     hooks:
       - id: black
-  - repo: https://github.com/asottile/seed-isort-config
-    rev: v2.2.0
-    hooks:
-      - id: seed-isort-config
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
-    hooks:
-      - id: isort
+
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.5
     hooks:
@@ -36,9 +29,10 @@ repos:
     rev: v3.8.0
     hooks:
       - id: pyupgrade
-        args:
-          - "--py37-plus"
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+        args: ["--py37-plus"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.278
     hooks:
-      - id: flake8
+      - id: ruff
+        args: ["--fix"]
