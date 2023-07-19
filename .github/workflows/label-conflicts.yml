@@ -2,6 +2,14 @@ name: Label conflicts
 
 on:
   push: { branches: ["main"] }
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - synchronize
+      - reopened
+      - opened
+      - closed
 
 jobs:
   triage-conflicts:
