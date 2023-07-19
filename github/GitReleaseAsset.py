@@ -27,7 +27,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-import github.GithubObject
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -114,18 +113,16 @@ class GitReleaseAsset(CompletableGithubObject):
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 
-    def delete_asset(self):
+    def delete_asset(self) -> bool:
         """
         Delete asset from the release.
-        :rtype: bool
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
-    def update_asset(self, name, label=""):
+    def update_asset(self, name, label="") -> GitReleaseAsset:
         """
         Update asset metadata.
-        :rtype: github.GitReleaseAsset.GitReleaseAsset
         """
         assert isinstance(name, str), name
         assert isinstance(label, str), label
