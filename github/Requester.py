@@ -63,7 +63,21 @@ import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    BinaryIO,
+    Callable,
+    Dict,
+    Generic,
+    ItemsView,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 import requests
 import requests.adapters
@@ -621,7 +635,7 @@ class Requester:
         url: str,
         parameters: Any,
         headers: Dict[str, Any],
-        file_like: io.TextIOBase,
+        file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
         # The expected signature of encode means that the argument is ignored.
