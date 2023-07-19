@@ -28,7 +28,7 @@ from github.PaginatedList import PaginatedList
 
 class EnterpriseConsumedLicenses(CompletableGithubObject):
     """
-    This class represents Enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+    This class represents license consumed by enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
     """
 
     def _initAttributes(self) -> None:
@@ -58,7 +58,7 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_enterprise_users(self) -> PaginatedList[NamedEnterpriseUser]:
+    def get_users(self) -> PaginatedList[NamedEnterpriseUser]:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """

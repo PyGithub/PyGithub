@@ -59,7 +59,9 @@ class Enterprise(NonCompletableGithubObject):
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
-        data["url"] = self.url + "/consumed-licenses"
+        if "url" not in data:
+            data["url"] = self.url + "/consumed-licenses"
+
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
