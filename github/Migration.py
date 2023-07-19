@@ -31,6 +31,7 @@
 ################################################################################
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 import github.GithubObject
@@ -39,7 +40,6 @@ import github.PaginatedList
 import github.Repository
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
-from github.PaginatedList import PaginatedList
 
 
 class Migration(CompletableGithubObject):
@@ -54,7 +54,7 @@ class Migration(CompletableGithubObject):
         self._state: Attribute[str] = NotSet
         self._lock_repositories: Attribute[bool] = NotSet
         self._exclude_attachments: Attribute[bool] = NotSet
-        self._repositories: Attribute[PaginatedList[github.Repository.Repository]] = NotSet
+        self._repositories: Attribute[list[github.Repository.Repository]] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -90,7 +90,7 @@ class Migration(CompletableGithubObject):
         return self._exclude_attachments.value
 
     @property
-    def repositories(self) -> PaginatedList[github.Repository.Repository]:
+    def repositories(self) -> list[github.Repository.Repository]:
         self._completeIfNotSet(self._repositories)
         return self._repositories.value
 
@@ -100,27 +100,18 @@ class Migration(CompletableGithubObject):
         return self._url.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        :rtype: None
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        :rtype: None
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
-    def get_status(self):
+    def get_status(self) -> str:
         """
         :calls: `GET /user/migrations/{migration_id} <https://docs.github.com/en/rest/reference/migrations>`_
-        :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET", self.url, headers={"Accept": Consts.mediaTypeMigrationPreview}
@@ -128,10 +119,9 @@ class Migration(CompletableGithubObject):
         self._useAttributes(data)
         return self.state
 
-    def get_archive_url(self):
+    def get_archive_url(self) -> str:
         """
         :calls: `GET /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
-        :rtype: str
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -140,7 +130,7 @@ class Migration(CompletableGithubObject):
         )
         return data["data"]
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /user/migrations/{migration_id}/archive <https://docs.github.com/en/rest/reference/migrations>`_
         """
@@ -150,11 +140,9 @@ class Migration(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def unlock_repo(self, repo_name):
+    def unlock_repo(self, repo_name: str) -> None:
         """
         :calls: `DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock <https://docs.github.com/en/rest/reference/migrations>`_
-        :param repo_name: str
-        :rtype: None
         """
         assert isinstance(repo_name, str), repo_name
         headers, data = self._requester.requestJsonAndCheck(
