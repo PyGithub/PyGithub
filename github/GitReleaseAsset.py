@@ -120,7 +120,7 @@ class GitReleaseAsset(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
-    def update_asset(self, name, label="") -> GitReleaseAsset:
+    def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
         Update asset metadata.
         """
