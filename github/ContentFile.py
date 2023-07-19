@@ -28,125 +28,163 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from __future__ import annotations
 
 import base64
-from typing import TYPE_CHECKING, Any
+from typing import Any, Dict
 
 import github.GithubObject
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _ValuedAttribute
-
-if TYPE_CHECKING:
-    from github.License import License
-    from github.Repository import Repository
 
 
-class ContentFile(CompletableGithubObject):
+class ContentFile(github.GithubObject.CompletableGithubObject):
     """
     This class represents ContentFiles. The reference can be found here https://docs.github.com/en/rest/reference/repos#contents
     """
-
-    def _initAttributes(self) -> None:
-        self._content: Attribute[str] = NotSet
-        self._download_url: Attribute[str] = NotSet
-        self._encoding: Attribute[str] = NotSet
-        self._git_url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._license: Attribute[License] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._path: Attribute[str] = NotSet
-        self._repository: Attribute[Repository] = NotSet
-        self._sha: Attribute[str] = NotSet
-        self._size: Attribute[int] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._text_matches: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
 
     @property
-    def content(self) -> str:
+    def content(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
-    def decoded_content(self) -> bytes:
+    def decoded_content(self):
+        """
+        :type: bytes
+        """
         assert self.encoding == "base64", f"unsupported encoding: {self.encoding}"
         return base64.b64decode(bytearray(self.content, "utf-8"))
 
     @property
-    def download_url(self) -> str:
+    def download_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._download_url)
         return self._download_url.value
 
     @property
-    def encoding(self) -> str:
+    def encoding(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._encoding)
         return self._encoding.value
 
     @property
-    def git_url(self) -> str:
+    def git_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._git_url)
         return self._git_url.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def license(self) -> License:
+    def license(self):
+        """
+        :type: :class:`github.License.License`
+        """
         self._completeIfNotSet(self._license)
         return self._license.value
 
     @property
-    def name(self) -> str:
+    def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def path(self) -> str:
+    def path(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
-    def repository(self) -> Repository:
-        if self._repository is NotSet:
+    def repository(self):
+        """
+        :type: :class:`github.Repository.Repository`
+        """
+        if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:6])  # pragma no cover (Should be covered)
-            self._repository = _ValuedAttribute(
+            self._repository = github.GithubObject._ValuedAttribute(
                 github.Repository.Repository(self._requester, self._headers, {"url": repo_url}, completed=False)
             )  # pragma no cover (Should be covered)
         return self._repository.value
 
     @property
-    def sha(self) -> str:
+    def sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def size(self) -> int:
+    def size(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._size)
         return self._size.value
 
     @property
-    def type(self) -> str:
+    def type(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._type)
         return self._type.value
 
     @property
-    def url(self) -> str:
+    def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def text_matches(self) -> str:
+    def text_matches(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+    def _initAttributes(self) -> None:
+        self._content = github.GithubObject.NotSet
+        self._text_matches = github.GithubObject.NotSet
+        self._encoding = github.GithubObject.NotSet
+        self._download_url = github.GithubObject.NotSet
+        self._git_url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._path = github.GithubObject.NotSet
+        self._repository = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "download_url" in attributes:  # pragma no branch
