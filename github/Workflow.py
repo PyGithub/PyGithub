@@ -39,6 +39,17 @@ class Workflow(CompletableGithubObject):
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
 
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._badge_url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
 
@@ -161,17 +172,6 @@ class Workflow(CompletableGithubObject):
             None,
             list_item="workflow_runs",
         )
-
-    def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._path: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._badge_url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
