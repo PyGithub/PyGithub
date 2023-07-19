@@ -41,8 +41,6 @@ from typing import Any, BinaryIO
 import github.GitReleaseAsset
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
-from github.GitReleaseAsset import GitReleaseAsset
-from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList
 
 from . import Consts
@@ -62,7 +60,7 @@ class GitRelease(CompletableGithubObject):
         self._draft: Attribute[bool] = NotSet
         self._prerelease: Attribute[bool] = NotSet
         self._generate_release_notes: Attribute[bool] = NotSet
-        self._author: Attribute[NamedUser] = NotSet
+        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
         self._url: Attribute[str] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -70,7 +68,7 @@ class GitRelease(CompletableGithubObject):
         self._published_at: Attribute[datetime] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
-        self._assets: Attribute[list[GitReleaseAsset]] = NotSet
+        self._assets: Attribute[list[github.GitReleaseAsset.GitReleaseAsset]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
@@ -132,7 +130,7 @@ class GitRelease(CompletableGithubObject):
         return self._prerelease.value
 
     @property
-    def author(self) -> NamedUser:
+    def author(self) -> github.NamedUser.NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
@@ -196,7 +194,7 @@ class GitRelease(CompletableGithubObject):
         return self._zipball_url.value
 
     @property
-    def assets(self) -> list[GitReleaseAsset]:
+    def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
         """
         :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
@@ -255,7 +253,7 @@ class GitRelease(CompletableGithubObject):
 
     def upload_asset(
         self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
-    ) -> GitReleaseAsset:
+    ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param path: string
