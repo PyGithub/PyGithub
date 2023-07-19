@@ -29,84 +29,73 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+import github.Repository
+from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
-from . import Consts
 
-
-class Migration(github.GithubObject.CompletableGithubObject):
+class Migration(CompletableGithubObject):
     """
     This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
     """
+
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._guid: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._lock_repositories: Attribute[bool] = NotSet
+        self._exclude_attachments: Attribute[bool] = NotSet
+        self._repositories: Attribute[PaginatedList[github.Repository.Repository]] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def owner(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def owner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
     @property
-    def guid(self):
-        """
-        :type: str
-        """
+    def guid(self) -> str:
         self._completeIfNotSet(self._guid)
         return self._guid.value
 
     @property
-    def state(self):
-        """
-        :type: str
-        """
+    def state(self) -> str:
         self._completeIfNotSet(self._guid)
         return self._state.value
 
     @property
-    def lock_repositories(self):
-        """
-        :type: bool
-        """
+    def lock_repositories(self) -> bool:
         self._completeIfNotSet(self._repositories)
         return self._lock_repositories.value
 
     @property
-    def exclude_attachments(self):
-        """
-        :type: bool
-        """
+    def exclude_attachments(self) -> bool:
         self._completeIfNotSet(self._exclude_attachments)
         return self._exclude_attachments.value
 
     @property
-    def repositories(self):
-        """
-        :type: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
-        """
+    def repositories(self) -> PaginatedList[github.Repository.Repository]:
         self._completeIfNotSet(self._repositories)
         return self._repositories.value
 
     @property
-    def url(self):
-        """
-        :type: str
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -174,19 +163,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
-        self._guid = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._lock_repositories = github.GithubObject.NotSet
-        self._exclude_attachments = github.GithubObject.NotSet
-        self._repositories = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
