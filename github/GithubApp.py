@@ -37,13 +37,13 @@ class GithubApp(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
-        self._events: Attribute[...] = NotSet  # TODO: Any
+        self._events: Attribute[list[str]] = NotSet
         self._external_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._permissions: Attribute[...] = NotSet  # TODO: Any
+        self._permissions: Attribute[dict[str, str]] = NotSet
         self._slug: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -62,7 +62,7 @@ class GithubApp(CompletableGithubObject):
         return self._description.value
 
     @property
-    def events(self) -> Any:
+    def events(self) -> list[str]:
         self._completeIfNotSet(self._events)
         return self._events.value
 
@@ -92,7 +92,7 @@ class GithubApp(CompletableGithubObject):
         return self._owner.value
 
     @property
-    def permissions(self) -> Any:
+    def permissions(self) -> dict[str, str]:
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
