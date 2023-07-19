@@ -59,8 +59,7 @@ jobs:
         with:
           python-version: "3.8"
 
-      - run: pip install -r requirements.txt
-      - run: pip install -e .
+      - run: pip install -e . -r requirements/docs.txt
       - run: sphinx-build doc build
 
 
