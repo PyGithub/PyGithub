@@ -178,7 +178,6 @@ import github.Project
 import github.PublicKey
 import github.PullRequest
 import github.Referrer
-import github.Repository
 import github.RepositoryAdvisory
 import github.RepositoryAdvisoryCredit
 import github.RepositoryAdvisoryVulnerability
