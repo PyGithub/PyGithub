@@ -22,17 +22,23 @@
 
 from __future__ import annotations
 
-import github.GithubObject
+from typing import Any
+
 import github.NamedUser
 import github.Team
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithubObject):
+class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     """
     This class represents a reviewer for an EnvironmentProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._type: Attribute[str] = NotSet
+        self._reviewer: Attribute[github.NamedUser.NamedUser | github.Team.Team] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
@@ -43,23 +49,15 @@ class EnvironmentProtectionRuleReviewer(github.GithubObject.NonCompletableGithub
     def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
         return self._reviewer.value
 
-    def _initAttributes(self):
-        self._type = github.GithubObject.NotSet
-        self._reviewer = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "reviewer" in attributes:  # pragma no branch
             assert self._type.value in ("User", "Team")
             if self._type.value == "User":
-                self._reviewer = self._makeClassAttribute(
-                    github.NamedUser.NamedUser, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["reviewer"])
             elif self._type.value == "Team":
-                self._reviewer = self._makeClassAttribute(
-                    github.Team.Team, attributes["reviewer"]
-                )
+                self._reviewer = self._makeClassAttribute(github.Team.Team, attributes["reviewer"])
 
 
 class ReviewerParams:

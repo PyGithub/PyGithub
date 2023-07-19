@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 from . import Consts
@@ -36,7 +38,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
     This class represents Project Cards. The reference can be found here https://docs.github.com/en/rest/reference/projects#cards
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -118,9 +120,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         :param content_type: string, optional
         :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
-        assert content_type is github.GithubObject.NotSet or isinstance(
-            content_type, str
-        ), content_type
+        assert content_type is github.GithubObject.NotSet or isinstance(content_type, str), content_type
         if self.content_url is None:
             return None
 
@@ -143,14 +143,10 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(position, str), position
-        assert isinstance(column, github.ProjectColumn.ProjectColumn) or isinstance(
-            column, int
-        ), column
+        assert isinstance(column, github.ProjectColumn.ProjectColumn) or isinstance(column, int), column
         post_parameters = {
             "position": position,
-            "column_id": column.id
-            if isinstance(column, github.ProjectColumn.ProjectColumn)
-            else column,
+            "column_id": column.id if isinstance(column, github.ProjectColumn.ProjectColumn) else column,
         }
         status, _, _ = self._requester.requestJson(
             "POST",
@@ -172,9 +168,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def edit(
-        self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet
-    ):
+    def edit(self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet):
         """
         :calls: `PATCH /projects/columns/cards/{card_id} <https://docs.github.com/en/rest/reference/projects#cards>`_
         :param note: string
@@ -182,9 +176,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert note is github.GithubObject.NotSet or isinstance(note, str), note
-        assert archived is github.GithubObject.NotSet or isinstance(
-            archived, bool
-        ), archived
+        assert archived is github.GithubObject.NotSet or isinstance(archived, bool), archived
         patch_parameters = dict()
         if note is not github.GithubObject.NotSet:
             patch_parameters["note"] = note
@@ -198,7 +190,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._archived = github.GithubObject.NotSet
         self._column_url = github.GithubObject.NotSet
         self._content_url = github.GithubObject.NotSet
@@ -210,7 +202,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
         if "column_url" in attributes:  # pragma no branch
@@ -220,9 +212,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch

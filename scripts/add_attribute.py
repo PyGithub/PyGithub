@@ -73,18 +73,12 @@ types = {
     "class": (
         ":class:`" + attributeClassType + "`",
         None,
-        "self._makeClassAttribute("
-        + attributeClassType
-        + ', attributes["'
-        + attributeName
-        + '"])',
+        "self._makeClassAttribute(" + attributeClassType + ', attributes["' + attributeName + '"])',
         attributeClassType,
     ),
 }
 
-attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[
-    attributeType
-]
+attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[attributeType]
 if attributeType == "class":
     # Wrap in quotes to avoid an explicit import requirement which can cause circular import errors
     attributeClassType = f"'{attributeClassType}'"
@@ -114,21 +108,15 @@ while not added:
     elif line.startswith("    def "):
         attrName = line[8:-7]
         # Properties will be inserted after __repr__, but before any other function.
-        if attrName != "__repr__" and (
-            attrName == "_identity" or attrName > attributeName or not isProperty
-        ):
+        if attrName != "__repr__" and (attrName == "_identity" or attrName > attributeName or not isProperty):
             if not isProperty:
                 newLines.append("    @property")
-            newLines.append(
-                "    def " + attributeName + "(self) -> " + attributeClassType + ":"
-            )
+            newLines.append("    def " + attributeName + "(self) -> " + attributeClassType + ":")
             newLines.append('        """')
             newLines.append("        :type: " + attributeDocType)
             newLines.append('        """')
             if isCompletable:
-                newLines.append(
-                    "        self._completeIfNotSet(self._" + attributeName + ")"
-                )
+                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
             newLines.append("        return self._" + attributeName + ".value")
             newLines.append("")
             if isProperty:
@@ -139,20 +127,18 @@ while not added:
 
 added = False
 
-inInit = line.endswith("def _initAttributes(self):")
+inInit = line.endswith("def _initAttributes(self) -> None:")
 while not added:
     line = lines[i].rstrip()
     i += 1
-    if line == "    def _initAttributes(self):":
+    if line == "    def _initAttributes(self) -> None:":
         inInit = True
     if inInit:
         if not line or line.endswith(" = github.GithubObject.NotSet"):
             if line:
                 attrName = line[14:-29]
             if not line or attrName > attributeName:
-                newLines.append(
-                    "        self._" + attributeName + " = github.GithubObject.NotSet"
-                )
+                newLines.append("        self._" + attributeName + " = github.GithubObject.NotSet")
                 added = True
     newLines.append(line)
 
@@ -165,18 +151,14 @@ while not added:
     except IndexError:
         line = ""
     i += 1
-    if line == "    def _useAttributes(self, attributes):":
+    if line == "    def _useAttributes(self, attributes:Dict[str,Any]) -> None:":
         inUse = True
     if inUse:
         if not line or line.endswith(" in attributes:  # pragma no branch"):
             if line:
                 attrName = line[12:-36]
             if not line or attrName > attributeName:
-                newLines.append(
-                    '        if "'
-                    + attributeName
-                    + '" in attributes:  # pragma no branch'
-                )
+                newLines.append('        if "' + attributeName + '" in attributes:  # pragma no branch')
                 if attributeAssertType:
                     newLines.append(
                         '            assert attributes["'
@@ -189,9 +171,7 @@ while not added:
                         + attributeName
                         + '"]'
                     )
-                newLines.append(
-                    "            self._" + attributeName + " = " + attributeValue
-                )
+                newLines.append("            self._" + attributeName + " = " + attributeValue)
                 added = True
     newLines.append(line)
 

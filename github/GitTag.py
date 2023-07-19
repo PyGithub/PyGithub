@@ -30,7 +30,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
 import github.GithubObject
@@ -56,7 +56,7 @@ class GitTag(CompletableGithubObject):
         self._tagger: Attribute[GitAuthor] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
 
     @property
@@ -89,20 +89,16 @@ class GitTag(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(
-                github.GitObject.GitObject, attributes["object"]
-            )
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tag" in attributes:  # pragma no branch
             self._tag = self._makeStringAttribute(attributes["tag"])
         if "tagger" in attributes:  # pragma no branch
-            self._tagger = self._makeClassAttribute(
-                github.GitAuthor.GitAuthor, attributes["tagger"]
-            )
+            self._tagger = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["tagger"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

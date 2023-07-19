@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
@@ -30,7 +32,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
     This class represents IssueTimelineEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -88,10 +90,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         :type: :class:`github.TimelineEventSource.TimelineEventSource`
         """
         # only available on `cross-referenced` events.
-        if (
-            self.event == "cross-referenced"
-            and self._source is not github.GithubObject.NotSet
-        ):
+        if self.event == "cross-referenced" and self._source is not github.GithubObject.NotSet:
             return self._source.value
         return None
 
@@ -109,10 +108,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         """
         :type string
         """
-        if (
-            self.event == "commented"
-            and self._author_association is not github.GithubObject.NotSet
-        ):
+        if self.event == "commented" and self._author_association is not github.GithubObject.NotSet:
             return self._author_association.value
         return None
 
@@ -123,7 +119,7 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._actor = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -136,11 +132,9 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         self._author_association = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["actor"]
-            )
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "created_at" in attributes:  # pragma no branch
@@ -160,8 +154,6 @@ class TimelineEvent(github.GithubObject.NonCompletableGithubObject):
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeStringAttribute(
-                attributes["author_association"]
-            )
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
