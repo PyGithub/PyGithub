@@ -70,7 +70,7 @@ import github.License
 import github.NamedUser
 import github.Topic
 from github import Consts
-from github.GithubObject import GithubObject, NotSet, Opt, _NotSetType, is_defined
+from github.GithubObject import GithubObject, NotSet, Opt, is_defined
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
@@ -86,6 +86,8 @@ if TYPE_CHECKING:
     from github.ContentFile import ContentFile
     from github.Event import Event
     from github.Gist import Gist
+    from github.GithubApp import GithubApp
+    from github.GitignoreTemplate import GitignoreTemplate
     from github.Issue import Issue
     from github.License import License
     from github.NamedUser import NamedUser
@@ -419,14 +421,13 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[github.Repository.Repository]:
+    ) -> PaginatedList[Repository]:
         """
         :calls: `GET /search/repositories <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('stars', 'forks', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.Repository.Repository`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -647,7 +648,7 @@ class Github:
             headers={"Accept": Consts.mediaTypeTopicsPreview},
         )
 
-    def render_markdown(self, text: str, context: github.Repository.Repository | _NotSetType = NotSet) -> str:
+    def render_markdown(self, text: str, context: Opt[Repository] = NotSet) -> str:
         """
         :calls: `POST /markdown <https://docs.github.com/en/rest/reference/markdown>`_
         :param text: string
@@ -708,7 +709,7 @@ class Github:
         headers, data = self.__requester.requestJsonAndCheck("GET", "/gitignore/templates")
         return data
 
-    def get_gitignore_template(self, name: str) -> github.GitignoreTemplate.GitignoreTemplate:
+    def get_gitignore_template(self, name: str) -> GitignoreTemplate:
         """
         :calls: `GET /gitignore/templates/{name} <https://docs.github.com/en/rest/reference/gitignore>`_
         """
@@ -770,7 +771,7 @@ class Github:
             completed=False,
         )
 
-    def get_app(self, slug: Opt[str] = NotSet) -> github.GithubApp.GithubApp:
+    def get_app(self, slug: Opt[str] = NotSet) -> GithubApp:
         """
         :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
