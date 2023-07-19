@@ -37,6 +37,21 @@ class Project(CompletableGithubObject):
     This class represents Projects. The reference can be found here https://docs.github.com/en/rest/reference/projects
     """
 
+    def _initAttributes(self) -> None:
+        self._body: Attribute[str] = NotSet
+        self._columns_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._number: Attribute[int] = NotSet
+        self._owner_url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
@@ -171,21 +186,6 @@ class Project(CompletableGithubObject):
             "POST", f"{self.url}/columns", headers=import_header, input=post_parameters
         )
         return github.ProjectColumn.ProjectColumn(self._requester, headers, data, completed=True)
-
-    def _initAttributes(self) -> None:
-        self._body: Attribute[str] = NotSet
-        self._columns_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._number: Attribute[int] = NotSet
-        self._owner_url: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
