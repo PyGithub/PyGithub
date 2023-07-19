@@ -34,6 +34,7 @@ from typing import Any
 import github.GithubObject
 import github.Issue
 import github.NotificationSubject
+import github.PullRequest
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -102,7 +103,7 @@ class Notification(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def mark_as_read(self):
+    def mark_as_read(self) -> None:
         """
         :calls: `PATCH /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
@@ -111,17 +112,11 @@ class Notification(CompletableGithubObject):
             self.url,
         )
 
-    def get_pull_request(self):
-        """
-        :type: :class:github.PullRequest.PullRequest
-        """
+    def get_pull_request(self) -> github.PullRequest.PullRequest:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
-    def get_issue(self):
-        """
-        :type: :class:github.Issue.Issue
-        """
+    def get_issue(self) -> github.Issue.Issue:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
