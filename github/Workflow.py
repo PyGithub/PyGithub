@@ -19,14 +19,22 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
+import github.Branch
+import github.Commit
 import github.GithubObject
+import github.NamedUser
+import github.Tag
 import github.WorkflowRun
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.PaginatedList import PaginatedList
 
 
-class Workflow(github.GithubObject.CompletableGithubObject):
+class Workflow(CompletableGithubObject):
     """
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
@@ -35,83 +43,55 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
 
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def badge_url(self):
-        """
-        :type: string
-        """
+    def badge_url(self) -> str:
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
 
-    def create_dispatch(self, ref, inputs=github.GithubObject.NotSet):
+    def create_dispatch(
+        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+    ) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
-        :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or :class:`github.Commit.Commit` or string
-        :param inputs: dict
-        :rtype: bool
         """
         assert (
             isinstance(ref, github.Branch.Branch)
@@ -119,14 +99,14 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(ref, github.Commit.Commit)
             or isinstance(ref, str)
         ), ref
-        assert inputs is github.GithubObject.NotSet or isinstance(inputs, dict), inputs
+        assert inputs is NotSet or isinstance(inputs, dict), inputs
         if isinstance(ref, github.Branch.Branch):
             ref = ref.name
         elif isinstance(ref, github.Commit.Commit):
             ref = ref.sha
         elif isinstance(ref, github.Tag.Tag):
             ref = ref.name
-        if inputs is github.GithubObject.NotSet:
+        if inputs is NotSet:
             inputs = {}
         status, _, _ = self._requester.requestJson(
             "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
@@ -135,62 +115,45 @@ class Workflow(github.GithubObject.CompletableGithubObject):
 
     def get_runs(
         self,
-        actor=github.GithubObject.NotSet,
-        branch=github.GithubObject.NotSet,
-        event=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        created=github.GithubObject.NotSet,
-        exclude_pull_requests=github.GithubObject.NotSet,
-        check_suite_id=github.GithubObject.NotSet,
-        head_sha=github.GithubObject.NotSet,
-    ):
+        actor: Opt[github.NamedUser.NamedUser] = NotSet,
+        branch: Opt[github.Branch.Branch] = NotSet,
+        event: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
+        created: Opt[str] = NotSet,
+        exclude_pull_requests: Opt[bool] = NotSet,
+        check_suite_id: Opt[int] = NotSet,
+        head_sha: Opt[str] = NotSet,
+    ) -> PaginatedList[github.WorkflowRun.WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-workflow>`_
-        :param actor: :class:`github.NamedUser.NamedUser` or string
-        :param branch: :class:`github.Branch.Branch` or string
-        :param event: string
-        :param status: string
-        :param created: string
-        :param exclude_pull_requests: bool
-        :param check_suite_id: int
-        :param head_sha: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
-        assert (
-            actor is github.GithubObject.NotSet
-            or isinstance(actor, github.NamedUser.NamedUser)
-            or isinstance(actor, str)
-        ), actor
-        assert (
-            branch is github.GithubObject.NotSet or isinstance(branch, github.Branch.Branch) or isinstance(branch, str)
-        ), branch
-        assert event is github.GithubObject.NotSet or isinstance(event, str), event
-        assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert created is github.GithubObject.NotSet or isinstance(created, str), created
-        assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
-            exclude_pull_requests, bool
-        ), exclude_pull_requests
-        assert check_suite_id is github.GithubObject.NotSet or isinstance(check_suite_id, int), check_suite_id
-        assert head_sha is github.GithubObject.NotSet or isinstance(head_sha, str), head_sha
+        assert actor is NotSet or isinstance(actor, github.NamedUser.NamedUser) or isinstance(actor, str), actor
+        assert branch is NotSet or isinstance(branch, github.Branch.Branch) or isinstance(branch, str), branch
+        assert event is NotSet or isinstance(event, str), event
+        assert status is NotSet or isinstance(status, str), status
+        assert created is NotSet or isinstance(created, str), created
+        assert exclude_pull_requests is NotSet or isinstance(exclude_pull_requests, bool), exclude_pull_requests
+        assert check_suite_id is NotSet or isinstance(check_suite_id, int), check_suite_id
+        assert head_sha is NotSet or isinstance(head_sha, str), head_sha
         url_parameters = dict()
-        if actor is not github.GithubObject.NotSet:
+        if actor is not NotSet:
             url_parameters["actor"] = actor._identity if isinstance(actor, github.NamedUser.NamedUser) else actor
-        if branch is not github.GithubObject.NotSet:
+        if branch is not NotSet:
             url_parameters["branch"] = branch.name if isinstance(branch, github.Branch.Branch) else branch
-        if event is not github.GithubObject.NotSet:
+        if event is not NotSet:
             url_parameters["event"] = event
-        if status is not github.GithubObject.NotSet:
+        if status is not NotSet:
             url_parameters["status"] = status
-        if created is not github.GithubObject.NotSet:
+        if created is not NotSet:
             url_parameters["created"] = created
-        if exclude_pull_requests is not github.GithubObject.NotSet:
+        if exclude_pull_requests is not NotSet:
             url_parameters["exclude_pull_requests"] = exclude_pull_requests
-        if check_suite_id is not github.GithubObject.NotSet:
+        if check_suite_id is not NotSet:
             url_parameters["check_suite_id"] = check_suite_id
-        if head_sha is not github.GithubObject.NotSet:
+        if head_sha is not NotSet:
             url_parameters["head_sha"] = head_sha
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,
             f"{self.url}/runs",
@@ -200,17 +163,17 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         )
 
     def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._badge_url = github.GithubObject.NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._badge_url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
