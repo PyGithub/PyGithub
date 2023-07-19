@@ -9,7 +9,6 @@ on:
       - synchronize
       - reopened
       - opened
-      - closed
 
 jobs:
   triage-conflicts:
