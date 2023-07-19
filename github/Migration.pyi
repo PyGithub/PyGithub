@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 
 from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
