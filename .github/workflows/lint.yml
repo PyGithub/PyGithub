@@ -5,6 +5,7 @@ on:
       - main
   pull_request:
 jobs:
+
   mypy:
     runs-on: ubuntu-latest
     steps:
