@@ -256,6 +256,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         self.__integration = GithubIntegration(
             auth=self._app_auth,
             base_url=requester.base_url,
+            verify=self._WithRequester__requester._Requester__verify,
         )
 
         return self
