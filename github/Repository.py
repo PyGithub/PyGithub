@@ -992,7 +992,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester, headers, data, completed=True
         )
 
-    def create_autolink(self, key_prefix, url_template, is_alphanumeric=True):
+    def create_autolink(
+        self, key_prefix, url_template, is_alphanumeric=github.GithubObject.NotSet
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
@@ -1002,10 +1004,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
-        assert isinstance(is_alphanumeric, bool), is_alphanumeric
+        assert is_alphanumeric is github.GithubObject.NotSet or isinstance(
+            is_alphanumeric, bool
+        ), is_alphanumeric
 
-        post_parameters = {"key_prefix": key_prefix, "url_template": url_template, "is_alphanumeric": is_alphanumeric}
-        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/autolinks", input=post_parameters)
+        post_parameters = {"key_prefix": key_prefix, "url_template": url_template}
+        if is_alphanumeric is not github.GithubObject.NotSet:
+            post_parameters["is_alphanumeric"] = is_alphanumeric
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/autolinks", input=post_parameters
+        )
         return github.Autolink.Autolink(self._requester, headers, data, completed=True)
 
     def create_git_blob(self, content, encoding):
