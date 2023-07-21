@@ -85,7 +85,7 @@ if attributeType == "class":
 fileName = os.path.join("github", className + ".py")
 
 
-def add_class_attribute(lines: list[str]) -> list[str]:
+def add_as_class_property(lines: list[str]) -> list[str]:
     newLines = []
     i = 0
 
@@ -128,7 +128,7 @@ def add_class_attribute(lines: list[str]) -> list[str]:
     return newLines
 
 
-def add_initAttributes_assignment(lines: list[str]) -> list[str]:
+def add_to_initAttributes(lines: list[str]) -> list[str]:
     newLines = []
     added = False
 
@@ -157,7 +157,7 @@ def add_initAttributes_assignment(lines: list[str]) -> list[str]:
     return newLines
 
 
-def add_useAttributes(lines: list[str]) -> list[str]:
+def add_to_useAttributes(lines: list[str]) -> list[str]:
     i = 0
     newLines = []
     added = False
@@ -205,9 +205,9 @@ def add_useAttributes(lines: list[str]) -> list[str]:
 with open(fileName) as f:
     source = f.readlines()
 
-source = add_class_attribute(source)
-source = add_initAttributes_assignment(source)
-source = add_useAttributes(source)
+source = add_as_class_property(source)
+source = add_to_initAttributes(source)
+source = add_to_useAttributes(source)
 
 with open(fileName, "w", newline="\n") as f:
     f.write("\n".join(source) + "\n")
