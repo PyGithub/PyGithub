@@ -9,10 +9,6 @@ function publish {
     push
 }
 
-function check {
-    flake8
-}
-
 function fix_headers {
     python scripts/fix_headers.py
 }
