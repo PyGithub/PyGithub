@@ -447,7 +447,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "RIGHT",
         ], start_side
         assert in_reply_to is github.GithubObject.NotSet or isinstance(in_reply_to, int), in_reply_to
-        assert subject_type is github.GithubObject.NotSet or subject_type.lower() in [
+        assert subject_type is github.GithubObject.NotSet or subject_type in [
             "line",
             "file",
             "side",
