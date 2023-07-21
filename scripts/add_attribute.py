@@ -188,9 +188,7 @@ def add_to_useAttributes(lines: list[str]) -> list[str]:
                             + attributeName
                             + '"]'
                         )
-                    newLines.append(
-                        f"            self._{attributeName} = {attributeValue}"
-                    )
+                    newLines.append(f"            self._{attributeName} = {attributeValue}")
                     added = True
         newLines.append(line)
 
