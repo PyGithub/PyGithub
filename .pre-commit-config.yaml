@@ -7,19 +7,6 @@ repos:
       - id: mixed-line-ending
         args: [ --fix=lf ]
 
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
-    hooks:
-      - id: black
-
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.1
-    hooks:
-      - id: codespell
-        exclude: tests/
-        args:
-          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
-          - --quiet-level=2
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.1.0
     hooks:
@@ -31,4 +18,18 @@ repos:
     rev: 'v0.0.278'
     hooks:
       - id: ruff
-        args: ["--fix"]
+        args: [ "--fix", "--fixable=ALL", "--exit-non-zero-on-fix" ]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.1
+    hooks:
+      - id: codespell
+        exclude: tests/
+        args:
+          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
+          - --quiet-level=2
+
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
