@@ -12,10 +12,18 @@ repos:
       - id: mixed-line-ending
         args: [ --fix=lf ]
 
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.1.0
     hooks:
-      - id: black
+      - id: pyupgrade
+        args:
+          - --py37-plus
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 'v0.0.278'
+    hooks:
+      - id: ruff
+        args: [ "--fix", "--fixable=ALL", "--exit-non-zero-on-fix" ]
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.5
@@ -25,14 +33,8 @@ repos:
         args:
           - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
           - --quiet-level=2
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.8.0
-    hooks:
-      - id: pyupgrade
-        args: ["--py37-plus"]
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.278
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
     hooks:
-      - id: ruff
-        args: ["--fix"]
+      - id: black
