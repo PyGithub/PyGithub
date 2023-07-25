@@ -43,14 +43,13 @@ class OrganizationVariable(Variable):
         return self._visibility.value
 
     @property
-    def selected_repositories(self) -> PaginatedList[Repository]:
-        return PaginatedList(
-            Repository,
-            self._requester,
-            self._selected_repositories_url,
-            {},
-            list_item="repositories",
-        )
+    def selected_repositories(self):
+        """
+        :calls: `GET {secret_url}/repositories <https://docs.github.com/en/rest/actions/variables#list-selected-repositories-for-an-organization-secret>`_
+        :type: List of type Repository
+        """
+        self._completeIfNotSet(self._selected_repositories)
+        return self._selected_repositories.value
 
     def edit(
         self,

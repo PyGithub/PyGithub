@@ -33,9 +33,6 @@ class Variable(CompletableGithubObject):
     This class represents a GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
     """
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self.name})
-
     @property
     def name(self) -> str:
         """
@@ -119,3 +116,6 @@ class Variable(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self.name})

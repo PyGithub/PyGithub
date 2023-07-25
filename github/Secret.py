@@ -31,9 +31,6 @@ class Secret(CompletableGithubObject):
     This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
     """
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self.name})
-
     @property
     def name(self) -> str:
         """
@@ -87,3 +84,6 @@ class Secret(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self.name})
