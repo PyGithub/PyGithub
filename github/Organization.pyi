@@ -14,8 +14,8 @@ from github.Plan import Plan
 from github.Project import Project
 from github.PublicKey import PublicKey
 from github.Repository import Repository
-from github.Team import Team
 from github.Secret import Secret
+from github.Team import Team
 from github.Variable import Variable
 
 class Organization(CompletableGithubObject):

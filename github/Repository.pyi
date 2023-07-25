@@ -57,6 +57,7 @@ from github.RepositoryAdvisoryVulnerability import (
 )
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
+from github.Secret import Secret
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from github.SourceImport import SourceImport
 from github.Stargazer import Stargazer
@@ -67,11 +68,10 @@ from github.StatsParticipation import StatsParticipation
 from github.StatsPunchCard import StatsPunchCard
 from github.Tag import Tag
 from github.Team import Team
+from github.Variable import Variable
 from github.View import View
 from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
-from github.Secret import Secret
-from github.Variable import Variable
 
 class Repository(CompletableGithubObject):
     def __repr__(self) -> str: ...
