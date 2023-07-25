@@ -54,7 +54,6 @@ from github.RepositoryAdvisory import RepositoryAdvisory
 from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryVulnerability import (
     AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
 )
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
@@ -405,7 +404,7 @@ class Repository(CompletableGithubObject):
         self,
         organization: Union[Organization, str, _NotSetType] = ...,
         name: Union[str, _NotSetType] = ...,
-        default_branch_only: Union[str, _NotSetType] = ...,
+        default_branch_only: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
     def get_git_blob(self, sha: str) -> GitBlob: ...
     def get_git_commit(self, sha: str) -> GitCommit: ...

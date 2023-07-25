@@ -45,7 +45,7 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.IssueComment
@@ -116,7 +116,7 @@ class Issue(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
@@ -495,7 +495,7 @@ class Issue(CompletableGithubObject):
     def _identity(self) -> int:
         return self.number
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "assignee" in attributes:  # pragma no branch

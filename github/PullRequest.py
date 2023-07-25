@@ -42,6 +42,7 @@
 
 import urllib.parse
 from datetime import datetime
+from typing import Any, Dict
 
 import github.Commit
 import github.File
@@ -447,8 +448,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         ], start_side
         assert in_reply_to is github.GithubObject.NotSet or isinstance(in_reply_to, int), in_reply_to
         assert subject_type is github.GithubObject.NotSet or subject_type in [
-            "LINE",
-            "FILE",
+            "line",
+            "file",
             "side",
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
@@ -938,7 +939,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return status == 202
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._additions = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
         self._assignees = github.GithubObject.NotSet
@@ -981,7 +982,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._requested_reviewers = github.GithubObject.NotSet
         self._requested_teams = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch

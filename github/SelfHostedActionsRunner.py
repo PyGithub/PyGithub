@@ -22,6 +22,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -39,7 +41,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         self._busy: Attribute[bool] = NotSet
         self._labels: Attribute[list[dict[str, int | str]]] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -65,7 +67,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     def labels(self) -> list[dict[str, int | str]]:
         return self._labels.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

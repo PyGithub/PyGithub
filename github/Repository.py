@@ -129,6 +129,7 @@ import typing
 import urllib.parse
 from base64 import b64encode
 from datetime import date, datetime, timezone
+from typing import Any, Dict
 
 from deprecated import deprecated
 
@@ -202,7 +203,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     This class represents Repositories. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"full_name": self._full_name.value})
 
     @property
@@ -1524,7 +1525,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, typing.Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            # noinspection PyProtectedMember
             github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
                 vulnerability
             )
@@ -1533,9 +1533,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(credits, (typing.Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                # noinspection PyProtectedMember
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
-        # noinspection PyProtectedMember
         post_parameters = {
             "summary": summary,
             "description": description,
@@ -1548,7 +1546,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if cve_id is not None:
             post_parameters["cve_id"] = cve_id
         if credits is not None:
-            # noinspection PyProtectedMember
             post_parameters["credits"] = [
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
@@ -3850,7 +3847,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._allow_auto_merge = github.GithubObject.NotSet
         self._allow_forking = github.GithubObject.NotSet
         self._allow_merge_commit = github.GithubObject.NotSet
@@ -3939,7 +3936,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
             self._allow_auto_merge = self._makeBoolAttribute(attributes["allow_auto_merge"])
         if "allow_forking" in attributes:  # pragma no branch
