@@ -31,6 +31,9 @@ class Secret(CompletableGithubObject):
     This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
     """
 
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self.name})
+
     @property
     def name(self) -> str:
         """
@@ -62,13 +65,6 @@ class Secret(CompletableGithubObject):
         """
         return self._url.value
 
-    def delete(self) -> None:
-        """
-        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
-        :rtype: None
-        """
-        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
-
     def _initAttributes(self) -> None:
         self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -85,5 +81,9 @@ class Secret(CompletableGithubObject):
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self.name})
+    def delete(self) -> None:
+        """
+        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("DELETE", self.url)

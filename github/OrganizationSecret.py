@@ -52,6 +52,29 @@ class OrganizationSecret(Secret):
             list_item="repositories",
         )
 
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._visibility: Attribute[str] = NotSet
+        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
+        self._selected_repositories_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "selected_repositories_url" in attributes:
+            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
+
     def add_repo(self, repo: Repository) -> bool:
         """
         :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
@@ -75,26 +98,3 @@ class OrganizationSecret(Secret):
         self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
         self._selected_repositories.value.remove(repo)
         return True
-
-    def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._visibility: Attribute[str] = NotSet
-        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
-        self._selected_repositories_url: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
-        if "selected_repositories_url" in attributes:
-            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
