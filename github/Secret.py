@@ -20,6 +20,9 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime
+from typing import Any
+
 import github
 import github.GithubObject
 import github.Repository
@@ -31,11 +34,11 @@ class Secret(CompletableGithubObject):
     This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -43,7 +46,7 @@ class Secret(CompletableGithubObject):
         return self._name.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -51,7 +54,7 @@ class Secret(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -59,26 +62,26 @@ class Secret(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:

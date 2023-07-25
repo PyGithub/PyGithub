@@ -408,9 +408,6 @@ class Organization(Framework.TestCase):
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
         self.assertTrue(self.org.create_secret("secret-name", "secret-value", "selected", repos))
 
-    def testDeleteSecret(self):
-        self.assertTrue(self.org.delete_secret("secret-name"))
-
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
             self.org.invite_user()
@@ -463,6 +460,6 @@ class Organization(Framework.TestCase):
 
     def testOrgVariable(self):
         self.org = self.g.get_organization("tecnoly")
-        self.assertTrue(self.org.create_variable("variable_name", "variable-value"))
-        self.assertTrue(self.org.update_variable("variable_name", "variable-value123"))
-        self.assertTrue(self.org.delete_variable("variable_name"))
+        variable = self.org.create_variable("variable_name", "variable-value")
+        self.assertTrue(variable.edit("variable-value123"))
+        variable.delete()

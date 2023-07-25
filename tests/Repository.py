@@ -433,9 +433,6 @@ class Repository(Framework.TestCase):
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
         self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
 
-    def testDeleteSecret(self):
-        self.assertTrue(self.repo.delete_secret("secret_name"))
-
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
         self.assertListKeyEqual(
@@ -1825,9 +1822,9 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
 
     def testRepoVariable(self):
-        self.assertTrue(self.repo.create_variable("variable_name", "variable-value"))
-        self.assertTrue(self.repo.update_variable("variable_name", "variable-value123"))
-        self.assertTrue(self.repo.delete_variable("variable_name"))
+        variable = self.repo.create_variable("variable_name", "variable-value")
+        self.assertTrue(variable.edit("variable-value123"))
+        variable.delete()
 
 
 class LazyRepository(Framework.TestCase):

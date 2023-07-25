@@ -19,11 +19,12 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Any
 
-from github import Secret
 from github.GithubObject import NotSet
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
+from github.Secret import Secret
 
 
 class OrganizationSecret(Secret):
@@ -32,7 +33,7 @@ class OrganizationSecret(Secret):
     """
 
     @property
-    def visibility(self):
+    def visibility(self) -> str:
         """
         :type: string
         """
@@ -73,7 +74,7 @@ class OrganizationSecret(Secret):
         self._selected_repositories.value.remove(repo)
         return True
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = NotSet
         self._created_at = NotSet
         self._updated_at = NotSet
@@ -82,7 +83,7 @@ class OrganizationSecret(Secret):
         self._selected_repositories_url = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:

@@ -19,11 +19,12 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Any
 
-from github import Variable
 from github.GithubObject import NotSet, Opt
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
+from github.Variable import Variable
 
 
 class OrganizationVariable(Variable):
@@ -32,7 +33,7 @@ class OrganizationVariable(Variable):
     """
 
     @property
-    def visibility(self):
+    def visibility(self) -> str:
         """
         :type: string
         """
@@ -51,10 +52,9 @@ class OrganizationVariable(Variable):
 
     def edit(
         self,
-        variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: Opt[list[Repository]] = NotSet,
+        selected_repositories: Opt[PaginatedList[Repository]] = NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
@@ -64,18 +64,17 @@ class OrganizationVariable(Variable):
         :param selected_repositories: Optional list of :class:`github.Repository.Repository`
         :rtype: bool
         """
-        assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
-            assert isinstance(selected_repositories, list) and all(
+            assert isinstance(selected_repositories, PaginatedList) and all(
                 isinstance(element, Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is NotSet
 
         patch_parameters = {
-            "name": variable_name,
+            "name": self.name,
             "value": value,
             "visibility": visibility,
         }
@@ -84,7 +83,7 @@ class OrganizationVariable(Variable):
 
         status, headers, data = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
+            f"{self.url}/actions/variables/{self.name}",
             input=patch_parameters,
         )
         return status == 204
@@ -113,7 +112,7 @@ class OrganizationVariable(Variable):
         self._selected_repositories.value.remove(repo)
         return True
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = NotSet
         self._created_at = NotSet
         self._updated_at = NotSet
@@ -122,7 +121,7 @@ class OrganizationVariable(Variable):
         self._selected_repositories_url = NotSet
         self._url = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:

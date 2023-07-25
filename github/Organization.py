@@ -726,14 +726,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         value: str,
         visibility: str = "all",
         selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
-    ) -> bool:
+    ) -> github.OrganizationVariable.OrganizationVariable:
         """
         :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
         :param selected_repositories: list of :class:`github.Repository.Repository`
-        :rtype: bool
+        :rtype: github.OrganizationVariable.OrganizationVariable
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -752,11 +752,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
         }
         if selected_repositories is not github.GithubObject.NotSet:
             post_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
-        )
+        _, headers, _ = self._requester.requestJson("POST", f"{self.url}/actions/variables", input=post_parameters)
 
-        return github.OrganizationVariable.OrganizationVariable(self._requester, headers, data, completed=True)
+        return github.OrganizationVariable.OrganizationVariable(
+            self._requester,
+            headers,
+            {
+                "name": variable_name,
+                "visibility": visibility,
+                "value": value,
+                "url": self.url,
+            },
+            completed=True,
+        )
 
     def get_variables(self):
         """

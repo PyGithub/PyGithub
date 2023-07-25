@@ -20,7 +20,10 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
 
 import github
 import github.GithubObject
@@ -33,11 +36,11 @@ class Variable(CompletableGithubObject):
     This class represents a GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
@@ -45,7 +48,7 @@ class Variable(CompletableGithubObject):
         return self._name.value
 
     @property
-    def value(self):
+    def value(self) -> str:
         """
         :type: string
         """
@@ -53,7 +56,7 @@ class Variable(CompletableGithubObject):
         return self._value.value
 
     @property
-    def created_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -61,7 +64,7 @@ class Variable(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self):
+    def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
@@ -69,38 +72,37 @@ class Variable(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self):
+    def url(self) -> str:
         """
         :type: string
         """
         return self._url.value
 
-    def edit(self, variable_name: str, value: str) -> bool:
+    def edit(self, value: str) -> Variable:
         """
         :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
         :param variable_name: string
         :param value: string
         :rtype: bool
         """
-        assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
         patch_parameters = {
-            "name": variable_name,
+            "name": self.name,
             "value": value,
         }
         status, headers, data = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
+            f"{self.url}/actions/variables/{self.name}",
             input=patch_parameters,
         )
-        return github.Variable.Variable(self._requester, headers, data, completed=True)
+        return Variable(self._requester, headers, data, completed=True)
 
     def delete(self) -> None:
         """
         :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/actions/variables/{self.name}")
 
     def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
@@ -109,7 +111,7 @@ class Variable(CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "value" in attributes:

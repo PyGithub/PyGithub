@@ -1644,7 +1644,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "POST", f"{self.url}/actions/variables", input=post_parameters
         )
-        return github.Variable.Variable(self._requester, headers, data, completed=True)
+        return github.Variable.Variable(
+            self._requester,
+            headers,
+            {
+                "name": variable_name,
+                "value": value,
+                "url": self.url,
+            },
+            completed=True,
+        )
 
     def get_variables(self):
         """

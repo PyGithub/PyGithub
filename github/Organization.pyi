@@ -9,14 +9,14 @@ from github.Issue import Issue
 from github.Label import Label
 from github.Migration import Migration
 from github.NamedUser import NamedUser
+from github.OrganizationSecret import OrganizationSecret
+from github.OrganizationVariable import OrganizationVariable
 from github.PaginatedList import PaginatedList
 from github.Plan import Plan
 from github.Project import Project
 from github.PublicKey import PublicKey
 from github.Repository import Repository
-from github.Secret import Secret
 from github.Team import Team
-from github.Variable import Variable
 
 class Organization(CompletableGithubObject):
     def __repr__(self) -> str: ...
@@ -74,18 +74,18 @@ class Organization(CompletableGithubObject):
     ) -> Repository: ...
     def get_secrets(
         self,
-    ) -> PaginatedList[Secret]: ...
+    ) -> PaginatedList[OrganizationSecret]: ...
     def get_secret(
         self,
         secret_name: str,
-    ) -> Secret: ...
+    ) -> OrganizationSecret: ...
     def create_secret(
         self,
         secret_name: str,
         unencrypted_value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> Secret: ...
+    ) -> OrganizationSecret: ...
     def create_team(
         self,
         name: str,
@@ -96,29 +96,27 @@ class Organization(CompletableGithubObject):
     ) -> Team: ...
     def get_variables(
         self,
-    ) -> PaginatedList[Variable]: ...
+    ) -> PaginatedList[OrganizationVariable]: ...
     def get_variable(
         self,
         variable_name: str,
-    ) -> Variable: ...
+    ) -> OrganizationVariable: ...
     def create_variable(
         self,
         variable_name: str,
         value: str,
         visibility: str = ...,
         selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> Variable: ...
+    ) -> OrganizationVariable: ...
     @property
     def created_at(self) -> datetime: ...
     def delete_hook(self, id: int) -> None: ...
     @property
     def default_repository_permission(self) -> str: ...
-    def delete_secret(self, secret_name: str) -> bool: ...
     @property
     def description(self) -> str: ...
     @property
     def disk_usage(self) -> int: ...
-    def delete_variable(self, variable_name: str) -> bool: ...
     def edit(
         self,
         billing_email: Union[str, _NotSetType] = ...,
@@ -137,13 +135,6 @@ class Organization(CompletableGithubObject):
         events: Union[_NotSetType, List[str]] = ...,
         active: Union[bool, _NotSetType] = ...,
     ) -> Hook: ...
-    def update_variable(
-        self,
-        variable_name: str,
-        value: str,
-        visibility: str = ...,
-        selected_repositories: Union[List[Repository], _NotSetType] = ...,
-    ) -> Variable: ...
     @property
     def email(self) -> Optional[str]: ...
     @property
