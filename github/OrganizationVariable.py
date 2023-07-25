@@ -19,9 +19,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any
 
-from github.GithubObject import NotSet, Opt
+from datetime import datetime
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NotSet, Opt
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 from github.Variable import Variable
@@ -113,15 +115,15 @@ class OrganizationVariable(Variable):
         return True
 
     def _initAttributes(self) -> None:
-        self._name = NotSet
-        self._created_at = NotSet
-        self._updated_at = NotSet
-        self._visibility = NotSet
-        self._selected_repositories = NotSet
-        self._selected_repositories_url = NotSet
-        self._url = NotSet
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._visibility: Attribute[str] = NotSet
+        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
+        self._selected_repositories_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:

@@ -21,12 +21,9 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict
 
-import github
-import github.GithubObject
-import github.Repository
-from github.GithubObject import CompletableGithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Secret(CompletableGithubObject):
@@ -76,12 +73,12 @@ class Secret(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _initAttributes(self) -> None:
-        self._name = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:

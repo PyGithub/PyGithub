@@ -25,10 +25,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-import github
-import github.GithubObject
-import github.Repository
-from github.GithubObject import CompletableGithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Variable(CompletableGithubObject):
@@ -78,7 +75,7 @@ class Variable(CompletableGithubObject):
         """
         return self._url.value
 
-    def edit(self, value: str) -> Variable:
+    def edit(self, value: str) -> bool:
         """
         :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
         :param variable_name: string
@@ -95,7 +92,7 @@ class Variable(CompletableGithubObject):
             f"{self.url}/actions/variables/{self.name}",
             input=patch_parameters,
         )
-        return Variable(self._requester, headers, data, completed=True)
+        return status == 204
 
     def delete(self) -> None:
         """
@@ -105,11 +102,11 @@ class Variable(CompletableGithubObject):
         self._requester.requestJsonAndCheck("DELETE", f"{self.url}/actions/variables/{self.name}")
 
     def _initAttributes(self) -> None:
-        self._name = github.GithubObject.NotSet
-        self._value = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._name: Attribute[str] = NotSet
+        self._value: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
