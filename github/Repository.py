@@ -1568,7 +1568,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_repository_dispatch(self, event_type, client_payload=github.GithubObject.NotSet):
         """
-        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event>
+        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/repos#create-a-repository-dispatch-event>
         :param event_type: string
         :param client_payload: dict
         :rtype: bool
@@ -1581,39 +1581,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
 
-    def get_secrets(self):
-        """
-        Gets all organization secrets
-        :rtype: List[github.Secret.Secret]
-        """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets")
-        return [
-            github.Secret.Secret(
-                requester=self._requester,
-                headers={},
-                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
-                completed=False,
-            )
-            for secret in data["secrets"]
-        ]
-
-    def get_secret(self, secret_name: str):
-        """
-        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
-        :param secret_name: string
-        :rtype: github.Secret.Secret
-        """
-        assert isinstance(secret_name, str), secret_name
-        return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
-            completed=False,
-        )
-
     def create_secret(self, secret_name, unencrypted_value):
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions#get-a-repository-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
         :rtype: bool
@@ -1631,9 +1601,57 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Secret.Secret(self._requester, headers, data, completed=True)
 
+    def get_secrets(self):
+        """
+        Gets all repository secrets
+        :rtype: List[github.Secret.Secret]
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets")
+        return [
+            github.Secret.Secret(
+                requester=self._requester,
+                headers={},
+                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
+                completed=False,
+            )
+            for secret in data["secrets"]
+        ]
+
+    def get_secret(self, secret_name: str):
+        """
+        :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.Secret.Secret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False,
+        )
+
+    def create_variable(self, variable_name: str, value: str) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
+        :param variable_name: string
+        :param value: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        post_parameters = {
+            "name": variable_name,
+            "value": value,
+        }
+        status, headers, data = self._requester.requestJson(
+            "POST", f"{self.url}/actions/variables", input=post_parameters
+        )
+        return github.Variable.Variable(self._requester, headers, data, completed=True)
+
     def get_variables(self):
         """
-        Gets all organization variables
+        Gets all repository variables
         :rtype: List[github.Variable.Variable]
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/variables")
@@ -1660,44 +1678,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
             completed=False,
         )
-
-    def create_variable(self, variable_name: str, value: str) -> bool:
-        """
-        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
-        :param variable_name: string
-        :param value: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        assert isinstance(value, str), value
-        post_parameters = {
-            "name": variable_name,
-            "value": value,
-        }
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
-        )
-        return github.Variable.Variable(self._requester, headers, data, completed=True)
-
-    def update_variable(self, variable_name: str, value: str) -> bool:
-        """
-        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
-        :param variable_name: string
-        :param value: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        assert isinstance(value, str), value
-        patch_parameters = {
-            "name": variable_name,
-            "value": value,
-        }
-        status, headers, data = self._requester.requestJson(
-            "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
-            input=patch_parameters,
-        )
-        return github.Variable.Variable(self._requester, headers, data, completed=True)
 
     def create_source_import(
         self,

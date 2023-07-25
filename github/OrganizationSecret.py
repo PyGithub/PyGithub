@@ -20,63 +20,67 @@
 #                                                                              #
 ################################################################################
 
-import github
-import github.GithubObject
-import github.Repository
-from github.GithubObject import CompletableGithubObject
+from github import Secret
+from github.GithubObject import NotSet
+from github.PaginatedList import PaginatedList
+from github.Repository import Repository
 
 
-class Secret(CompletableGithubObject):
+class OrganizationSecret(Secret):
     """
-    This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
+    This class represents a org level GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
     """
-
-    def __repr__(self):
-        return self.get__repr__({"name": self.name})
 
     @property
-    def name(self):
+    def visibility(self):
         """
         :type: string
         """
-        self._completeIfNotSet(self._name)
-        return self._name.value
+        self._completeIfNotSet(self._visibility)
+        return self._visibility.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
-        self._completeIfNotSet(self._created_at)
-        return self._created_at.value
+    def selected_repositories(self) -> PaginatedList[Repository]:
+        return PaginatedList(
+            Repository,
+            self._requester,
+            self._selected_repositories_url,
+            {},
+            list_item="repositories",
+        )
 
-    @property
-    def updated_at(self):
+    def add_repo(self, repo: Repository) -> bool:
         """
-        :type: datetime.datetime
+        :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :param repo: github.Repository.Repository
+        :rtype: bool
         """
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
+        if self.visibility != "selected":
+            return False
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
+        self._selected_repositories.value.append(repo)
+        return True
 
-    @property
-    def url(self):
+    def remove_repo(self, repo: Repository) -> bool:
         """
-        :type: string
+        :calls: 'DELETE {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :param repo: github.Repository.Repository
+        :rtype: bool
         """
-        return self._url.value
-
-    def delete(self):
-        """
-        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
-        :rtype: None
-        """
-        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+        if self.visibility != "selected":
+            return False
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
+        self._selected_repositories.value.remove(repo)
+        return True
 
     def _initAttributes(self):
-        self._name = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+        self._name = NotSet
+        self._created_at = NotSet
+        self._updated_at = NotSet
+        self._visibility = NotSet
+        self._selected_repositories = NotSet
+        self._selected_repositories_url = NotSet
+        self._url = NotSet
 
     def _useAttributes(self, attributes):
         if "name" in attributes:
@@ -85,5 +89,9 @@ class Secret(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "selected_repositories_url" in attributes:
+            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

@@ -20,12 +20,15 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github
 import github.GithubObject
 import github.Repository
+from github.GithubObject import CompletableGithubObject
 
 
-class Variable(github.GithubObject.CompletableGithubObject):
+class Variable(CompletableGithubObject):
     """
     This class represents a GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
     """
@@ -66,70 +69,47 @@ class Variable(github.GithubObject.CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def visibility(self):
-        """
-        :type: string
-        """
-        self._completeIfNotSet(self._visibility)
-        return self._visibility.value
-
-    @property
-    def selected_repositories(self):
-        """
-        :calls: `GET {secret_url}/repositories <https://docs.github.com/en/rest/actions/variables#list-selected-repositories-for-an-organization-secret>`_
-        :type: List of type Repository
-        """
-        self._completeIfNotSet(self._selected_repositories)
-        return self._selected_repositories.value
-
-    @property
     def url(self):
         """
         :type: string
         """
         return self._url.value
 
-    def delete(self):
+    def edit(self, variable_name: str, value: str) -> bool:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        :param variable_name: string
+        :param value: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        patch_parameters = {
+            "name": variable_name,
+            "value": value,
+        }
+        status, headers, data = self._requester.requestJson(
+            "PATCH",
+            f"{self.url}/actions/variables/{variable_name}",
+            input=patch_parameters,
+        )
+        return github.Variable.Variable(self._requester, headers, data, completed=True)
+
+    def delete(self) -> None:
         """
         :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def add_repo(self, repo):
-        """
-        :calls: 'PUT {org_url}/actions/variables/{secret_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
-        :param repo: github.Repository.Repository
-        :rtype: bool
-        """
-        if self.visibility != "selected":
-            return False
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.append(repo)
-        return True
-
-    def remove_repo(self, repo):
-        """
-        :calls: 'DELETE {org_url}/actions/variables/{secret_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
-        :param repo: github.Repository.Repository
-        :rtype: bool
-        """
-        if self.visibility != "selected":
-            return False
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.remove(repo)
-        return True
-
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._name = github.GithubObject.NotSet
         self._value = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
-        self._visibility = github.GithubObject.NotSet
-        self._selected_repositories = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "value" in attributes:
@@ -138,12 +118,5 @@ class Variable(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
-        if "selected_repositories_url" in attributes:
-            headers, data = self._requester.requestJsonAndCheck("GET", attributes["selected_repositories_url"])
-            self._selected_repositories = self._makeListOfClassesAttribute(
-                github.Repository.Repository, data["repositories"]
-            )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
