@@ -751,6 +751,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._releases_url.value
 
     @property
+    def squash_merge_commit_message(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_message)
+        return self._squash_merge_commit_message.value
+
+    @property
+    def squash_merge_commit_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_title)
+        return self._squash_merge_commit_title.value
+
+    @property
     def size(self):
         """
         :type: integer
@@ -1717,6 +1733,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         delete_branch_on_merge=github.GithubObject.NotSet,
         allow_update_branch=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
+        squash_merge_commit_message=github.GithubObject.NotSet,
+        squash_merge_commit_title=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -1735,7 +1753,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
         :param allow_update_branch: bool
-        :param archived: bool
+        :param squash_merge_commit_message: str
+        :param squash_merge_commit_title: str
         :rtype: None
         """
         if name is None:
@@ -1767,6 +1786,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             allow_update_branch, bool
         ), allow_update_branch
         assert archived is github.GithubObject.NotSet or isinstance(archived, bool), archived
+        assert squash_merge_commit_message is github.GithubObject.NotSet or isinstance(
+            squash_merge_commit_message, str
+        ), squash_merge_commit_message
+        assert squash_merge_commit_title is github.GithubObject.NotSet or isinstance(
+            squash_merge_commit_title, str
+        ), squash_merge_commit_title
         post_parameters = {
             "name": name,
         }
@@ -1802,6 +1827,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_update_branch"] = allow_update_branch
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
+        if squash_merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
+        if squash_merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
@@ -3898,6 +3927,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._releases_url = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
+        self._squash_merge_commit_message = github.GithubObject.NotSet
+        self._squash_merge_commit_title = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
         self._stargazers_count = github.GithubObject.NotSet
         self._stargazers_url = github.GithubObject.NotSet
@@ -4057,6 +4088,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeClassAttribute(Repository, attributes["source"])
+        if "squash_merge_commit_message" in attributes:  # pragma no branch
+            self._squash_merge_commit_message = self._makeStringAttribute(attributes["squash_merge_commit_message"])
+        if "squash_merge_commit_title" in attributes:  # pragma no branch
+            self._squash_merge_commit_title = self._makeStringAttribute(attributes["squash_merge_commit_title"])
         if "ssh_url" in attributes:  # pragma no branch
             self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
         if "stargazers_count" in attributes:  # pragma no branch

@@ -513,6 +513,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
         allow_update_branch=github.GithubObject.NotSet,
+        squash_merge_commit_message=github.GithubObject.NotSet,
+        squash_merge_commit_title=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -533,6 +535,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
         :param allow_update_branch: bool
+        :param squash_merge_commit_message: string
+        :param squash_merge_commit_title: string
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -565,6 +569,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert allow_update_branch is github.GithubObject.NotSet or isinstance(
             allow_update_branch, bool
         ), allow_update_branch
+        assert squash_merge_commit_message is github.GithubObject.NotSet or isinstance(
+            squash_merge_commit_message, str
+        ), squash_merge_commit_message
+        assert squash_merge_commit_title is github.GithubObject.NotSet or isinstance(
+            squash_merge_commit_title, str
+        ), squash_merge_commit_title
         post_parameters = {
             "name": name,
         }
@@ -602,6 +612,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if allow_update_branch is not github.GithubObject.NotSet:
             post_parameters["allow_update_branch"] = allow_update_branch
+        if squash_merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
+        if squash_merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/repos",
