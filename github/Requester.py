@@ -665,6 +665,7 @@ class Requester:
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
             self.rate_limiting = (
+                # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
                 int(float(responseHeaders[Consts.headerRateRemaining])),
                 int(float(responseHeaders[Consts.headerRateLimit])),
             )
