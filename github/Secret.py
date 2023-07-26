@@ -31,6 +31,12 @@ class Secret(CompletableGithubObject):
     This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
     """
 
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
 
@@ -65,11 +71,12 @@ class Secret(CompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
+    def delete(self) -> None:
+        """
+        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:
@@ -80,10 +87,3 @@ class Secret(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
-
-    def delete(self) -> None:
-        """
-        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
-        :rtype: None
-        """
-        self._requester.requestJsonAndCheck("DELETE", self.url)

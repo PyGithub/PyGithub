@@ -34,6 +34,15 @@ class OrganizationVariable(Variable):
     This class represents a org level GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
     """
 
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._visibility: Attribute[str] = NotSet
+        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
+        self._selected_repositories_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     @property
     def visibility(self) -> str:
         """
@@ -50,29 +59,6 @@ class OrganizationVariable(Variable):
         """
         self._completeIfNotSet(self._selected_repositories)
         return self._selected_repositories.value
-
-    def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._visibility: Attribute[str] = NotSet
-        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
-        self._selected_repositories_url: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
-        if "selected_repositories_url" in attributes:
-            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
 
     def edit(
         self,
@@ -135,3 +121,17 @@ class OrganizationVariable(Variable):
         self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
         self._selected_repositories.value.remove(repo)
         return True
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "selected_repositories_url" in attributes:
+            self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])

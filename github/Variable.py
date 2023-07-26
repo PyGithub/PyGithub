@@ -33,6 +33,13 @@ class Variable(CompletableGithubObject):
     This class represents a GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
     """
 
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._value: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
 
@@ -75,25 +82,6 @@ class Variable(CompletableGithubObject):
         """
         return self._url.value
 
-    def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._value: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "value" in attributes:
-            self._value = self._makeStringAttribute(attributes["value"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
-
     def edit(self, value: str) -> bool:
         """
         :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
@@ -106,7 +94,7 @@ class Variable(CompletableGithubObject):
             "name": self.name,
             "value": value,
         }
-        status, headers, data = self._requester.requestJson(
+        status, _, _ = self._requester.requestJson(
             "PATCH",
             f"{self.url}/actions/variables/{self.name}",
             input=patch_parameters,
@@ -119,3 +107,15 @@ class Variable(CompletableGithubObject):
         :rtype: None
         """
         self._requester.requestJsonAndCheck("DELETE", f"{self.url}/actions/variables/{self.name}")
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "value" in attributes:
+            self._value = self._makeStringAttribute(attributes["value"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
