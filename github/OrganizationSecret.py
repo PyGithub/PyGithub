@@ -61,6 +61,34 @@ class OrganizationSecret(Secret):
             list_item="repositories",
         )
 
+    def edit(
+        self,
+        value: str,
+        visibility: str = "all",
+    ) -> bool:
+        """
+        :calls: `PATCH /orgs/{org}/actions/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
+        :param variable_name: string
+        :param value: string
+        :param visibility: string
+        :rtype: bool
+        """
+        assert isinstance(value, str), value
+        assert isinstance(visibility, str), visibility
+
+        patch_parameters: Dict[str, Any] = {
+            "name": self.name,
+            "value": value,
+            "visibility": visibility,
+        }
+
+        status, _, _ = self._requester.requestJson(
+            "PATCH",
+            f"{self.url}/actions/secrets/{self.name}",
+            input=patch_parameters,
+        )
+        return status == 204
+
     def add_repo(self, repo: Repository) -> bool:
         """
         :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_

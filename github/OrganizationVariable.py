@@ -21,9 +21,9 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict
 
-from github.GithubObject import Attribute, NotSet, Opt
+from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 from github.Variable import Variable
@@ -65,32 +65,22 @@ class OrganizationVariable(Variable):
         self,
         value: str,
         visibility: str = "all",
-        selected_repositories: Opt[List[Repository]] = NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
-        :param selected_repositories: Optional list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
-        if visibility == "selected":
-            assert isinstance(selected_repositories, List) and all(
-                isinstance(element, Repository) for element in selected_repositories
-            ), selected_repositories
-        else:
-            assert selected_repositories is NotSet
 
         patch_parameters: Dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
         }
-        if selected_repositories is not NotSet:
-            patch_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]  # type: ignore
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
