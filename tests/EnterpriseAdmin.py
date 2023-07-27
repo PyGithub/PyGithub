@@ -27,7 +27,6 @@ from . import Framework
 class EnterpriseAdmin(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # self.enterprise = self.g.get_enterprise("BeaverSoftware")
         self.enterprise = self.g.get_enterprise("beaver-group")
 
     def testAttributes(self):
