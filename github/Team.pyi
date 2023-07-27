@@ -1,9 +1,9 @@
 from typing import Any, Dict, Union
 
 from github.GithubObject import CompletableGithubObject, _NotSetType
+from github.Membership import Membership
 from github.NamedUser import NamedUser
 from github.Organization import Organization
-from github.Membership import Membership
 from github.PaginatedList import PaginatedList
 from github.Permissions import Permissions
 from github.Repository import Repository
