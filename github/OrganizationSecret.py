@@ -56,7 +56,7 @@ class OrganizationSecret(Secret):
         return PaginatedList(
             Repository,
             self._requester,
-            self._selected_repositories_url,
+            self._selected_repositories_url.value,
             {},
             list_item="repositories",
         )
@@ -69,8 +69,7 @@ class OrganizationSecret(Secret):
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.append(repo)
+        self._requester.requestJsonAndCheck("PUT", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
     def remove_repo(self, repo: Repository) -> bool:
@@ -81,8 +80,7 @@ class OrganizationSecret(Secret):
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.remove(repo)
+        self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:

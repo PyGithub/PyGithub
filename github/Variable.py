@@ -56,7 +56,7 @@ class Variable(CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self.value)
+        self._completeIfNotSet(self._value)
         return self._value.value
 
     @property

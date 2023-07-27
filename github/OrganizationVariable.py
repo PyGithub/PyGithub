@@ -21,7 +21,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from github.GithubObject import Attribute, NotSet, Opt
 from github.PaginatedList import PaginatedList
@@ -52,19 +52,20 @@ class OrganizationVariable(Variable):
         return self._visibility.value
 
     @property
-    def selected_repositories(self):
-        """
-        :calls: `GET {secret_url}/repositories <https://docs.github.com/en/rest/actions/variables#list-selected-repositories-for-an-organization-secret>`_
-        :type: List of type Repository
-        """
-        self._completeIfNotSet(self._selected_repositories)
-        return self._selected_repositories.value
+    def selected_repositories(self) -> PaginatedList[Repository]:
+        return PaginatedList(
+            Repository,
+            self._requester,
+            self._selected_repositories_url.value,
+            {},
+            list_item="repositories",
+        )
 
     def edit(
         self,
         value: str,
         visibility: str = "all",
-        selected_repositories: Opt[PaginatedList[Repository]] = NotSet,
+        selected_repositories: Opt[List[Repository]] = NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
@@ -77,21 +78,21 @@ class OrganizationVariable(Variable):
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
-            assert isinstance(selected_repositories, PaginatedList) and all(
+            assert isinstance(selected_repositories, List) and all(
                 isinstance(element, Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert selected_repositories is NotSet
 
-        patch_parameters = {
+        patch_parameters: Dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
         }
         if selected_repositories is not NotSet:
-            patch_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            patch_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]  # type: ignore
 
-        status, headers, data = self._requester.requestJson(
+        status, _, _ = self._requester.requestJson(
             "PATCH",
             f"{self.url}/actions/variables/{self.name}",
             input=patch_parameters,
@@ -100,26 +101,24 @@ class OrganizationVariable(Variable):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'PUT {org_url}/actions/variables/{secret_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: 'PUT {org_url}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.append(repo)
+        self._requester.requestJsonAndCheck("PUT", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'DELETE {org_url}/actions/variables/{secret_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: 'DELETE {org_url}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
         if self.visibility != "selected":
             return False
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repositories/{repo.id}")
-        self._selected_repositories.value.remove(repo)
+        self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
