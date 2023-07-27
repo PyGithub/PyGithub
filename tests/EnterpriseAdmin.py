@@ -20,19 +20,8 @@
 #                                                                              #
 ################################################################################
 
-import os
-import sys
-from datetime import datetime, timezone
-from unittest import mock
-
-# print(os.getcwd())
-import github
 
 from . import Framework
-
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# tests_dir = os.path.dirname(current_dir)
-# sys.path.append(tests_dir)
 
 
 class EnterpriseAdmin(Framework.TestCase):
