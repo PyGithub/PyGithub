@@ -118,6 +118,7 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        self.session.auth = self.__authorization_config
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -160,6 +161,19 @@ class HTTPSRequestsConnectionClass:
             allow_redirects=False,
         )
         return RequestsResponse(r)
+
+    def __authorization_config(self, request):
+        if "Authorization" in request.headers:
+            return request
+
+        if "client_id" in urllib.parse.parse_qs(urllib.parse.urlsplit(request.url).query):
+            return request
+
+        netrc = requests.utils.get_netrc_auth(request.url)
+        if not netrc:
+            return request
+
+        return requests.auth.HTTPBasicAuth(*netrc)(request)
 
     def close(self) -> None:
         return

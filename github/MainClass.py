@@ -141,6 +141,16 @@ class Github:
         assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, Auth.Auth), auth
 
+        # The 'requests' package can attempt to use a .netrc or other method to log in to github.
+        # This check minimizes user error where no login credentials are provided.
+        assert (
+            login_or_token is not None
+            or password is not None
+            or jwt is not None
+            or app_auth is not None
+            or auth is not None
+        ), "At least one authorization method is required."
+
         if password is not None:
             warnings.warn(
                 "Arguments login_or_token and password are deprecated, please use "
