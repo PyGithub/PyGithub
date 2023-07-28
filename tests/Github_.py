@@ -159,6 +159,19 @@ class Github(Framework.TestCase):
             ],
         )
 
+    def testGetGlobalAdvisories(self):
+        self.assertListKeyBegin(
+            self.g.get_global_advisories(ecosystem="pub"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+                "GHSA-9f2c-xxfm-32mj",
+                "GHSA-4xh4-v2pq-jvhm",
+                "GHSA-jwpw-q68h-r678",
+                "GHSA-4rgh-jx4f-qfcq",
+            ],
+        )
+
     def testGetHooks(self):
         hooks = self.g.get_hooks()
         hook = hooks[0]

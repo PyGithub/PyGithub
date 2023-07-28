@@ -1,6 +1,10 @@
 from datetime import date, datetime
 from typing import Any, Dict, Iterable, List, Optional, Union, overload
 
+from github.AdvisoryCredit import AdvisoryCredit
+from github.AdvisoryVulnerability import (
+    AdvisoryVulnerabilityInput,
+)
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Autolink import Autolink
@@ -51,10 +55,6 @@ from github.PullRequest import PullRequest
 from github.PullRequestComment import PullRequestComment
 from github.Referrer import Referrer
 from github.RepositoryAdvisory import RepositoryAdvisory
-from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
-from github.RepositoryAdvisoryVulnerability import (
-    AdvisoryVulnerability,
-)
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
 from github.SelfHostedActionsRunner import SelfHostedActionsRunner
@@ -265,9 +265,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: Optional[str] = ...,
-        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerabilityInput]] = ...,
         cwe_ids: Optional[Iterable[str]] = ...,
-        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+        credits: Optional[Iterable[AdvisoryCredit]] = ...,
     ) -> RepositoryAdvisory: ...
     def report_security_vulnerability(
         self,
@@ -275,9 +275,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: Optional[str] = ...,
-        vulnerabilities: Optional[Iterable[AdvisoryVulnerability]] = ...,
+        vulnerabilities: Optional[Iterable[AdvisoryVulnerabilityInput]] = ...,
         cwe_ids: Optional[Iterable[str]] = ...,
-        credits: Optional[Iterable[RepositoryAdvisoryCredit]] = ...,
+        credits: Optional[Iterable[AdvisoryCredit]] = ...,
     ) -> RepositoryAdvisory: ...
     def create_repository_dispatch(
         self, event_type: str, client_payload: Union[Dict[str, Any], _NotSetType] = ...

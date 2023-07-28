@@ -58,6 +58,7 @@ import github.ApplicationOAuth
 import github.Event
 import github.Gist
 import github.GithubObject
+import github.GlobalAdvisory
 import github.License
 import github.NamedUser
 import github.PaginatedList
@@ -422,6 +423,124 @@ class Github:
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
+
+    def get_global_advisory(self, ghsa_id):
+        """
+        :calls: `GET /advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/global-advisories>`_
+        :param ghsa_id: string
+        :rtype: :class:`github.GlobalAdvisory.GlobalAdvisory`
+        """
+        assert isinstance(ghsa_id, str), ghsa_id
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/advisories/{ghsa_id}")
+        return github.GlobalAdvisory.GlobalAdvisory(self.__requester, headers, data, completed=True)
+
+    def get_global_advisories(
+        self,
+        type=github.GithubObject.NotSet,
+        ghsa_id=github.GithubObject.NotSet,
+        cve_id=github.GithubObject.NotSet,
+        ecosystem=github.GithubObject.NotSet,
+        severity=github.GithubObject.NotSet,
+        cwes=github.GithubObject.NotSet,
+        credits=github.GithubObject.NotSet,
+        is_withdrawn=github.GithubObject.NotSet,
+        affects=github.GithubObject.NotSet,
+        published=github.GithubObject.NotSet,
+        updated=github.GithubObject.NotSet,
+        modified=github.GithubObject.NotSet,
+        keywords=github.GithubObject.NotSet,
+        before=github.GithubObject.NotSet,
+        after=github.GithubObject.NotSet,
+        per_page=github.GithubObject.NotSet,
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+    ):
+        """
+        :calls: `GET /advisories <https://docs.github.com/en/rest/security-advisories/global-advisories>`
+        :param type: string
+        :param ghsa_id: string
+        :param cve_id: string
+        :param ecosystem: string
+        :param severity: string
+        :param cwes: list of integer
+        :param credits: list of string
+        :param is_withdrawn: bool
+        :param affects: list of string
+        :param published: string
+        :param updated: string
+        :param modified: string
+        :param keywords: list of string
+        :param before: string
+        :param after: string
+        :param sort: string
+        :param direction: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GlobalAdvisory.GlobalAdvisory`
+        """
+        assert type is github.GithubObject.NotSet or isinstance(type, str), type
+        assert ghsa_id is github.GithubObject.NotSet or isinstance(ghsa_id, str)
+        assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str)
+        assert ecosystem is github.GithubObject.NotSet or isinstance(ecosystem, str)
+        assert severity is github.GithubObject.NotSet or isinstance(severity, str), severity
+        assert cwes is github.GithubObject.NotSet or isinstance(cwes, list), cwes
+        assert credits is github.GithubObject.NotSet or isinstance(credits, list), credits
+        assert is_withdrawn is github.GithubObject.NotSet or isinstance(is_withdrawn, bool), is_withdrawn
+        assert affects is github.GithubObject.NotSet or isinstance(affects, list), affects
+        assert published is github.GithubObject.NotSet or isinstance(published, str), published
+        assert updated is github.GithubObject.NotSet or isinstance(updated, str), updated
+        assert modified is github.GithubObject.NotSet or isinstance(modified, str), modified
+        assert keywords is github.GithubObject.NotSet or isinstance(keywords, list), keywords
+        assert before is github.GithubObject.NotSet or isinstance(before, str), before
+        assert after is github.GithubObject.NotSet or isinstance(after, str), after
+        assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
+
+        url_parameters = dict()
+        if type is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert type in ("reviewed", "unreviewed", "malware"), type
+            url_parameters["type"] = type
+        if ghsa_id is not github.GithubObject.NotSet:
+            url_parameters["ghsa_id"] = ghsa_id
+        if cve_id is not github.GithubObject.NotSet:
+            url_parameters["cve_id"] = cve_id
+        # Can be one of: actions, composer, erlang, go, maven, npm, nuget, other, pip, pub, rubygems, rust
+        # Not asserting in that list so that the package doesn't need to be updated when a new ecosystem is added
+        if ecosystem is not github.GithubObject.NotSet:
+            url_parameters["ecosystem"] = ecosystem
+        if severity is not github.GithubObject.NotSet:
+            assert severity in ("null", "low", "medium", "high", "critical"), severity
+            url_parameters["severity"] = severity
+        if cwes is not github.GithubObject.NotSet:
+            url_parameters["cwes"] = cwes
+        if credits is not github.GithubObject.NotSet:
+            url_parameters["credits"] = credits
+        if is_withdrawn is not github.GithubObject.NotSet:
+            url_parameters["is_withdrawn"] = is_withdrawn
+        if affects is not github.GithubObject.NotSet:
+            url_parameters["affects"] = affects
+        if published is not github.GithubObject.NotSet:
+            url_parameters["published"] = published
+        if updated is not github.GithubObject.NotSet:
+            url_parameters["updated"] = updated
+        if modified is not github.GithubObject.NotSet:
+            url_parameters["modified"] = modified
+        if keywords is not github.GithubObject.NotSet:
+            url_parameters["keywords"] = keywords
+        if before is not github.GithubObject.NotSet:
+            url_parameters["before"] = before
+        if after is not github.GithubObject.NotSet:
+            url_parameters["after"] = after
+        if sort is not github.GithubObject.NotSet:
+            assert sort in ("published", "updated"), sort
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            assert direction in ("asc", "desc"), direction
+            url_parameters["direction"] = direction
+        return github.PaginatedList.PaginatedList(
+            github.GlobalAdvisory.GlobalAdvisory,
+            self.__requester,
+            "/advisories",
+            url_parameters,
+        )
 
     def search_repositories(
         self,

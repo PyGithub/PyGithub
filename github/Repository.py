@@ -133,6 +133,8 @@ from typing import Any, Dict
 
 from deprecated import deprecated
 
+import github.AdvisoryCredit
+import github.AdvisoryVulnerability
 import github.Artifact
 import github.Autolink
 import github.Branch
@@ -177,8 +179,6 @@ import github.PullRequest
 import github.Referrer
 import github.Repository
 import github.RepositoryAdvisory
-import github.RepositoryAdvisoryCredit
-import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.SelfHostedActionsRunner
@@ -1442,11 +1442,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: typing.Optional[str] = None,
-        vulnerabilities: typing.Optional[
-            typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]
-        ] = None,
+        vulnerabilities: typing.Optional[typing.Iterable[github.AdvisoryVulnerability.AdvisoryVulnerability]] = None,
         cwe_ids: typing.Optional[typing.Iterable[str]] = None,
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]] = None,
+        credits: typing.Optional[typing.Iterable[github.AdvisoryCredit.AdvisoryCredit]] = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
@@ -1454,9 +1452,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1476,11 +1474,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: typing.Optional[str] = None,
-        vulnerabilities: typing.Optional[
-            typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]
-        ] = None,
+        vulnerabilities: typing.Optional[typing.Iterable[github.AdvisoryVulnerability.AdvisoryVulnerability]] = None,
         cwe_ids: typing.Optional[typing.Iterable[str]] = None,
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]] = None,
+        credits: typing.Optional[typing.Iterable[github.AdvisoryCredit.AdvisoryCredit]] = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
@@ -1488,9 +1484,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1510,9 +1506,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: typing.Optional[str],
-        vulnerabilities: typing.Optional[typing.Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability]],
+        vulnerabilities: typing.Optional[typing.Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput]],
         cwe_ids: typing.Optional[typing.Iterable[str]],
-        credits: typing.Optional[typing.Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit]],
+        credits: typing.Optional[typing.Iterable[github.AdvisoryCredit.AdvisoryCredit]],
         private_vulnerability_reporting: bool,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         if vulnerabilities is None:
@@ -1525,20 +1521,18 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, typing.Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
-                vulnerability
-            )
+            github.AdvisoryVulnerability.AdvisoryVulnerability._validate_vulnerability(vulnerability)
         assert isinstance(cwe_ids, typing.Iterable), cwe_ids
         assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
         assert isinstance(credits, (typing.Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
+                github.AdvisoryCredit.AdvisoryCredit._validate_credit(credit)
         post_parameters = {
             "summary": summary,
             "description": description,
             "vulnerabilities": [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
+                github.AdvisoryVulnerability.AdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in vulnerabilities
             ],
             "cwe_ids": list(cwe_ids),
@@ -1547,7 +1541,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["cve_id"] = cve_id
         if credits is not None:
             post_parameters["credits"] = [
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
+                github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
         if severity_or_cvss_vector_string.startswith("CVSS:"):
             post_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
