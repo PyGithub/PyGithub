@@ -40,6 +40,7 @@
 
 import typing
 from datetime import datetime, timezone
+from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
@@ -211,6 +212,10 @@ class GithubObject:
     @staticmethod
     def _makeIntAttribute(value: Optional[Union[int, str]]) -> Attribute[int]:
         return GithubObject.__makeSimpleAttribute(value, int)
+
+    @staticmethod
+    def _makeDecimalAttribute(value: Optional[Decimal]) -> Attribute[Decimal]:
+        return GithubObject.__makeSimpleAttribute(value, Decimal)
 
     @staticmethod
     def _makeFloatAttribute(value: Optional[float]) -> Attribute[float]:

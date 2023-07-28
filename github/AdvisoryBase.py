@@ -70,14 +70,6 @@ class AdvisoryBase(NonCompletableGithubObject):
         return self._cwes.value
 
     @property
-    def closed_at(self) -> datetime:
-        return self._closed_at.value
-
-    @property
-    def created_at(self) -> datetime:
-        return self._created_at.value
-
-    @property
     def description(self) -> str:
         return self._description.value
 
@@ -90,7 +82,7 @@ class AdvisoryBase(NonCompletableGithubObject):
         return self._html_url.value
 
     @property
-    def identifiers(self) -> str:
+    def identifiers(self) -> list[dict]:
         return self._identifiers.value
 
     @property
@@ -124,6 +116,8 @@ class AdvisoryBase(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "cve_id" in attributes:  # pragma no branch
             self._cve_id = self._makeStringAttribute(attributes["cve_id"])
+        if "cvss" in attributes:  # pragma no branch
+            self._cvss = self._makeClassAttribute(CVSS, attributes["cvss"])
         if "cwes" in attributes:  # pragma no branch
             self._cwes = self._makeListOfClassesAttribute(CWE, attributes["cwes"])
         if "description" in attributes:  # pragma no branch

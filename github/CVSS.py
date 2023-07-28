@@ -21,6 +21,7 @@
 ################################################################################
 
 from decimal import Decimal
+from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -33,16 +34,24 @@ class CVSS(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._vector_string: Attribute[str] = NotSet
-        self._score: Attribute[str] = NotSet
+        self._score: Attribute[Decimal] = NotSet
 
     @property
     def score(self) -> Decimal:
-        return Decimal(self._score)
+        return self._score.value
 
     @property
-    def cvss_version(self) -> Decimal:
-        return Decimal(self._vector_string.split(":")[0])
+    def version(self) -> Decimal:
+        version = self.vector_string.split(":")[1].split("/")[0]
+        return Decimal(version)
 
     @property
     def vector_string(self) -> str:
-        return self._vector_string
+        return self._vector_string.value
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "score" in attributes:  # pragma no branch
+            # ensure string so we don't have all the float extra nonsense
+            self._score = self._makeDecimalAttribute(Decimal(str(attributes["score"])))
+        if "vector_string" in attributes:  # pragma no branch
+            self._vector_string = self._makeStringAttribute(attributes["vector_string"])

@@ -33,7 +33,7 @@ import github.NamedUser
 from github.AdvisoryBase import AdvisoryBase
 from github.AdvisoryCredit import AdvisoryCredit, Credit
 from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
-from github.AdvisoryVulnerability import AdvisoryVulnerability
+from github.AdvisoryVulnerability import AdvisoryVulnerabilityInput
 from github.GithubObject import Attribute, NotSet, Opt
 
 if TYPE_CHECKING:
@@ -113,7 +113,7 @@ class RepositoryAdvisory(AdvisoryBase):
             ]
         )
 
-    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerability]) -> None:
+    def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerabilityInput]) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
@@ -207,7 +207,7 @@ class RepositoryAdvisory(AdvisoryBase):
         description: Opt[str] = NotSet,
         severity_or_cvss_vector_string: Opt[str] = NotSet,
         cve_id: Opt[str] = NotSet,
-        vulnerabilities: Opt[Iterable[AdvisoryVulnerability]] = NotSet,
+        vulnerabilities: Opt[Iterable[AdvisoryVulnerabilityInput]] = NotSet,
         cwe_ids: Opt[Iterable[str]] = NotSet,
         credits: Opt[Iterable[Credit]] = NotSet,
         state: Opt[str] = NotSet,

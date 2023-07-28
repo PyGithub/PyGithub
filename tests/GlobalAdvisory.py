@@ -21,6 +21,7 @@
 ################################################################################
 
 from datetime import datetime, timezone
+from decimal import Decimal
 
 import github.GlobalAdvisory
 
@@ -47,6 +48,9 @@ class GlobalAdvisory(Framework.TestCase):
             ],
         )
         self.assertEqual(self.advisory.cve_id, "CVE-2023-37271")
+        self.assertEqual(self.advisory.cvss.version, Decimal("3.1"))
+        self.assertEqual(self.advisory.cvss.score, Decimal("8.4"))
+        self.assertEqual(self.advisory.cvss.vector_string, "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:L")
         self.assertListKeyEqual(
             self.advisory.cwes,
             lambda e: (e.cwe_id, e.name),
