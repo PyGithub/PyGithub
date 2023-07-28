@@ -62,7 +62,7 @@ class AdvisoryBase(NonCompletableGithubObject):
         return self._cve_id.value
 
     @property
-    def cvss(self) -> str:
+    def cvss(self) -> CVSS:
         return self._cvss.value
 
     @property
