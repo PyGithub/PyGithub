@@ -18,7 +18,12 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
