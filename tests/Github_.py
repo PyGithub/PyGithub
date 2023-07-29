@@ -159,7 +159,7 @@ class Github(Framework.TestCase):
         )
 
     def testGetGlobalAdvisories(self):
-        self.assertListKeyBegin(
+        self.assertListKeyEqual(
             self.g.get_global_advisories(ecosystem="pub"),
             lambda a: a.ghsa_id,
             [
@@ -170,6 +170,52 @@ class Github(Framework.TestCase):
                 "GHSA-4rgh-jx4f-qfcq",
             ],
         )
+
+    def testGetGlobalAdvisoriesByGHSA(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(ghsa_id="GHSA-9324-jv53-9cc8"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesByCVE(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(cve_id="CVE-2023-38503"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-gggm-66rh-pp98",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesManyFilters(self):
+        cases = [
+            {"cwes": [200, 900], "affects": ["directus", "made_up"], "modified": ">2023-07-01"},
+            {"cwes": ["200", "900"], "affects": ["directus"], "updated": ">2023-07-01"},
+            {"cwes": "200,900", "affects": "directus", "published": ">2023-07-01"},
+        ]
+        for case in cases:
+            with self.subTest(**case):
+                advisories = self.g.get_global_advisories(
+                    type="reviewed",
+                    ecosystem="npm",
+                    severity="medium",
+                    #  cwes=case["cwes"],
+                    is_withdrawn=False,
+                    #  affects=case["affects"],
+                    #  modified=">2023-07-01",
+                    direction="desc",
+                    sort="updated",
+                    **case,
+                )
+                self.assertListKeyEqual(
+                    advisories,
+                    lambda a: a.ghsa_id,
+                    [
+                        "GHSA-gggm-66rh-pp98",
+                    ],
+                )
 
     def testGetHooks(self):
         hooks = self.g.get_hooks()

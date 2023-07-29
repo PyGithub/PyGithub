@@ -476,7 +476,6 @@ class Github:
         ecosystem=github.GithubObject.NotSet,
         severity=github.GithubObject.NotSet,
         cwes=github.GithubObject.NotSet,
-        credits=github.GithubObject.NotSet,
         is_withdrawn=github.GithubObject.NotSet,
         affects=github.GithubObject.NotSet,
         published=github.GithubObject.NotSet,
@@ -491,23 +490,21 @@ class Github:
     ):
         """
         :calls: `GET /advisories <https://docs.github.com/en/rest/security-advisories/global-advisories>`
-        :param type: string
-        :param ghsa_id: string
-        :param cve_id: string
-        :param ecosystem: string
-        :param severity: string
-        :param cwes: list of integer
-        :param credits: list of string
-        :param is_withdrawn: bool
-        :param affects: list of string
-        :param published: string
-        :param updated: string
-        :param modified: string
-        :param keywords: list of string
-        :param before: string
-        :param after: string
-        :param sort: string
-        :param direction: string
+        :param type: Optional string
+        :param ghsa_id: Optional string
+        :param cve_id: Optional string
+        :param ecosystem: Optional string
+        :param severity: Optional string
+        :param cwes: Optional comma separated string or list of integer or string
+        :param is_withdrawn: Optional bool
+        :param affects: Optional comma separated string or list of string
+        :param published: Optional string
+        :param updated: Optional string
+        :param modified: Optional string
+        :param before: Optional string
+        :param after: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GlobalAdvisory.GlobalAdvisory`
         """
         assert type is github.GithubObject.NotSet or isinstance(type, str), type
@@ -515,14 +512,12 @@ class Github:
         assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str)
         assert ecosystem is github.GithubObject.NotSet or isinstance(ecosystem, str)
         assert severity is github.GithubObject.NotSet or isinstance(severity, str), severity
-        assert cwes is github.GithubObject.NotSet or isinstance(cwes, list), cwes
-        assert credits is github.GithubObject.NotSet or isinstance(credits, list), credits
+        assert cwes is github.GithubObject.NotSet or isinstance(cwes, list) or isinstance(cwes, str), cwes
         assert is_withdrawn is github.GithubObject.NotSet or isinstance(is_withdrawn, bool), is_withdrawn
-        assert affects is github.GithubObject.NotSet or isinstance(affects, list), affects
+        #  assert affects is github.GithubObject.NotSet or isinstance(affects, list), affects
         assert published is github.GithubObject.NotSet or isinstance(published, str), published
         assert updated is github.GithubObject.NotSet or isinstance(updated, str), updated
         assert modified is github.GithubObject.NotSet or isinstance(modified, str), modified
-        assert keywords is github.GithubObject.NotSet or isinstance(keywords, list), keywords
         assert before is github.GithubObject.NotSet or isinstance(before, str), before
         assert after is github.GithubObject.NotSet or isinstance(after, str), after
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
@@ -544,12 +539,14 @@ class Github:
             assert severity in ("null", "low", "medium", "high", "critical"), severity
             url_parameters["severity"] = severity
         if cwes is not github.GithubObject.NotSet:
+            if isinstance(cwes, list):
+                cwes = ",".join([str(cwe) for cwe in cwes])
             url_parameters["cwes"] = cwes
-        if credits is not github.GithubObject.NotSet:
-            url_parameters["credits"] = credits
         if is_withdrawn is not github.GithubObject.NotSet:
             url_parameters["is_withdrawn"] = is_withdrawn
         if affects is not github.GithubObject.NotSet:
+            if isinstance(affects, list):
+                affects = ",".join(affects)
             url_parameters["affects"] = affects
         if published is not github.GithubObject.NotSet:
             url_parameters["published"] = published
@@ -557,8 +554,6 @@ class Github:
             url_parameters["updated"] = updated
         if modified is not github.GithubObject.NotSet:
             url_parameters["modified"] = modified
-        if keywords is not github.GithubObject.NotSet:
-            url_parameters["keywords"] = keywords
         if before is not github.GithubObject.NotSet:
             url_parameters["before"] = before
         if after is not github.GithubObject.NotSet:
