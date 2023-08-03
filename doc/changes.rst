@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.0.1 (August 03, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+* Safely coerce responseHeaders to int (#2697) (64705bfd)
+
 Version 2.0.0 (July 04, 2023)
 -----------------------------------
 
