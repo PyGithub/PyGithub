@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.59.1 (July 03, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+* Safely coerce responseHeaders to int (#2697) (adbfce92)
+
 Version 1.59.0 (June 22, 2023)
 -----------------------------------
 
