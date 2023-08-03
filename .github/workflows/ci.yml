@@ -1,7 +1,9 @@
 name: CI
 on:
   push:
-    branches: master
+    branches:
+      - master
+      - release-v*
   pull_request:
 jobs:
   test:
