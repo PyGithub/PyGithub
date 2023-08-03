@@ -734,7 +734,9 @@ class Requester:
             )
         if Consts.headerRateReset in responseHeaders:
             # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
-            self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
+            self.rate_limiting_resettime = int(
+                float(responseHeaders[Consts.headerRateReset])
+            )
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
