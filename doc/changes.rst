@@ -4,7 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.59.1 (July 03, 2023)
+Version 1.59.1 (August 03, 2023)
 -----------------------------------
 
 **Bug Fixes**
