@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - release-v*
   pull_request:
 jobs:
   mypy:
