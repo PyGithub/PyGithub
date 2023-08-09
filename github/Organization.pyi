@@ -70,6 +70,13 @@ class Organization(CompletableGithubObject):
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
     ) -> Repository: ...
+    def create_repo_from_template(
+        self,
+        name: str,
+        repo: Repository
+        description: Union[str, _NotSetType] = ...,
+        private: Union[bool, _NotSetType] = ...,
+    ) -> Repository: ...    
     def create_secret(
         self,
         secret_name: str,
