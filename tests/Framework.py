@@ -330,7 +330,7 @@ class BasicTestCase(unittest.TestCase):
             yield
 
     def __openFile(self, mode):
-        for (_, _, functionName, _) in traceback.extract_stack():
+        for _, _, functionName, _ in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
                 if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
                     fileName = os.path.join(
