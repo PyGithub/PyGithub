@@ -44,7 +44,9 @@ class PaginatedList(Framework.TestCase):
 
     def testIterationWithPrefetchedFirstPage(self):
         # test data taken from EnterpriseAdmin.testGetEnterpriseUsers
-        self.assertEqual(len(list(self.licenses.get_users())), 102)
+        users = self.licenses.get_users()
+        self.assertEqual(len(list(users)), 102)
+        self.assertEqual(len({user.github_com_login for user in users}), 102)
 
     def testSeveralIterations(self):
         self.assertEqual(len(list(self.list)), 333)
