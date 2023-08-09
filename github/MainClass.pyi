@@ -2,9 +2,11 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
-from github.Auth import Auth
+from urllib3.util import Retry
+
 from github.AppAuthentication import AppAuthentication
 from github.ApplicationOAuth import ApplicationOAuth
+from github.Auth import Auth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -24,8 +26,6 @@ from github.ProjectColumn import ProjectColumn
 from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Topic import Topic
-
-from urllib3.util import Retry
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
