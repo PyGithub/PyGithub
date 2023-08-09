@@ -166,7 +166,7 @@ class PullRequest(Framework.TestCase):
             commit,
             "src/github/Issue.py",
             5,
-            subject_type="FILE",
+            subject_type="file",
         )
         self.assertEqual(comment.id, 886298)
 
