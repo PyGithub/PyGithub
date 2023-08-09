@@ -64,7 +64,16 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         """
 
         url_parameters: Dict[str, Any] = {}
-        return PaginatedList(NamedEnterpriseUser, self._requester, self.url, url_parameters, None, "users", self.raw_data, self.raw_headers)
+        return PaginatedList(
+            NamedEnterpriseUser,
+            self._requester,
+            self.url,
+            url_parameters,
+            None,
+            "users",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "total_seats_consumed" in attributes:  # pragma no branch

@@ -139,7 +139,7 @@ class PaginatedList(PaginatedListBase[T]):
         headers: Optional[Dict[str, str]] = None,
         list_item: str = "items",
         firstData: Optional[Any] = None,
-        firstHeaders: Optional[Dict[str, str]] = None,
+        firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
     ):
         self.__requester = requester
         self.__contentClass = contentClass
@@ -222,7 +222,7 @@ class PaginatedList(PaginatedListBase[T]):
         data = data if data else []
         return self._getPage(data, headers)
 
-    def _getPage(self, data, headers) -> List[T]:
+    def _getPage(self, data: Any, headers: Dict[str, Any]) -> List[T]:
         self.__nextUrl = None  # type: ignore
         if len(data) > 0:
             links = self.__parseLinkHeader(headers)
