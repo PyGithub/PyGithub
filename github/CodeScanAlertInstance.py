@@ -19,89 +19,69 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any
 
 import github.CodeScanAlertInstanceLocation
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CodeScanAlertInstanceLocation import CodeScanAlertInstanceLocation
 
 
-class CodeScanAlertInstance(github.GithubObject.NonCompletableGithubObject):
+class CodeScanAlertInstance(NonCompletableGithubObject):
     """
     This class represents code scanning alert instances.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
+    def _initAttributes(self) -> None:
+        self._ref: Attribute[str] = NotSet
+        self._analysis_key: Attribute[str] = NotSet
+        self._environment: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._commit_sha: Attribute[str] = NotSet
+        self._message: Attribute[dict[str, Any]] = NotSet
+        self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
+        self._classifications: Attribute[list[str]] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
 
     @property
-    def ref(self):
-        """
-        :type: str
-        """
+    def ref(self) -> str:
         return self._ref.value
 
     @property
-    def analysis_key(self):
-        """
-        :type: str
-        """
+    def analysis_key(self) -> str:
         return self._analysis_key.value
 
     @property
-    def environment(self):
-        """
-        :type: str
-        """
+    def environment(self) -> str:
         return self._environment.value
 
     @property
-    def state(self):
-        """
-        :type: str
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def commit_sha(self):
-        """
-        :type: str
-        """
+    def commit_sha(self) -> str:
         return self._commit_sha.value
 
     @property
-    def message(self):
-        """
-        :type: str
-        """
+    def message(self) -> dict[str, Any]:
         return self._message.value
 
     @property
-    def location(self):
-        """
-        :type: :class: `github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation`
-        """
+    def location(self) -> CodeScanAlertInstanceLocation:
         return self._location.value
 
     @property
-    def classifications(self):
-        """
-        :type: list of str
-        """
+    def classifications(self) -> list[str]:
         return self._classifications.value
 
-    def _initAttributes(self) -> None:
-        self._ref = github.GithubObject.NotSet
-        self._analysis_key = github.GithubObject.NotSet
-        self._environment = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._commit_sha = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._location = github.GithubObject.NotSet
-        self._classifications = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "analysis_key" in attributes:  # pragma no branch

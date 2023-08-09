@@ -51,6 +51,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
+        self._required_linear_history: Attribute[bool] = github.GithubObject.NotSet
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
@@ -69,6 +70,11 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def enforce_admins(self) -> bool:
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
+
+    @property
+    def required_linear_history(self) -> bool:
+        self._completeIfNotSet(self._required_linear_history)
+        return self._required_linear_history.value
 
     @property
     def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
@@ -105,6 +111,8 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,
                 attributes["required_pull_request_reviews"],
             )
+        if "required_linear_history" in attributes:  # pragma no branch
+            self._required_linear_history = self._makeBoolAttribute(attributes["required_linear_history"]["enabled"])
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]

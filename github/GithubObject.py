@@ -221,7 +221,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
-    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[dict]:
+    def _makeDictAttribute(value: Dict[str, Any]) -> Attribute[Dict[str, Any]]:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
@@ -324,7 +324,7 @@ class GithubObject:
     def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: Any) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
     def _completeIfNeeded(self) -> None:
