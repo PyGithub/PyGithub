@@ -1596,7 +1596,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
         )
-        return status == 201
+        return status == 201 or status == 204
 
     def create_variable(self, variable_name: str, value: str) -> bool:
         """
