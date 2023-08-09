@@ -3,6 +3,10 @@ name: Label conflicts
 on:
   push: { branches: ["main"] }
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   triage-conflicts:
     runs-on: ubuntu-latest
@@ -11,5 +15,5 @@ jobs:
         with:
           CONFLICT_LABEL_NAME: "has conflicts"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAX_RETRIES: 5
-          WAIT_MS: 5000
+          MAX_RETRIES: 10
+          WAIT_MS: 30000
