@@ -27,69 +27,50 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Plan(github.GithubObject.NonCompletableGithubObject):
+class Plan(NonCompletableGithubObject):
     """
     This class represents Plans
     """
+
+    def _initAttributes(self) -> None:
+        self._collaborators: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._private_repos: Attribute[int] = NotSet
+        self._space: Attribute[int] = NotSet
+        self._filled_seats: Attribute[int] = NotSet
+        self._seats: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def collaborators(self):
-        """
-        :type: integer
-        """
+    def collaborators(self) -> int:
         return self._collaborators.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def private_repos(self):
-        """
-        :type: integer
-        """
+    def private_repos(self) -> int:
         return self._private_repos.value
 
     @property
-    def space(self):
-        """
-        :type: integer
-        """
+    def space(self) -> int:
         return self._space.value
 
     @property
-    def filled_seats(self):
-        """
-        :type: integer
-        """
+    def filled_seats(self) -> int:
         return self._filled_seats.value
 
     @property
-    def seats(self):
-        """
-        :type: integer
-        """
+    def seats(self) -> int:
         return self._seats.value
-
-    def _initAttributes(self) -> None:
-        self._collaborators = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._private_repos = github.GithubObject.NotSet
-        self._space = github.GithubObject.NotSet
-        self._filled_seats = github.GithubObject.NotSet
-        self._seats = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
