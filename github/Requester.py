@@ -665,11 +665,13 @@ class Requester:
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
             self.rate_limiting = (
-                int(responseHeaders[Consts.headerRateRemaining]),
-                int(responseHeaders[Consts.headerRateLimit]),
+                # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+                int(float(responseHeaders[Consts.headerRateRemaining])),
+                int(float(responseHeaders[Consts.headerRateLimit])),
             )
         if Consts.headerRateReset in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
+            # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+            self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
