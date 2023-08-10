@@ -1580,10 +1580,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_secret(self, secret_name, unencrypted_value):
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
-        :rtype: bool
+        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -1593,26 +1593,29 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        status, headers, data = self._requester.requestJson(
-            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": secret_name,
+                "url": f"{self.url}/actions/secrets/{secret_name}",
+            },
+            completed=False,
         )
-        return github.Secret.Secret(self._requester, headers, data, completed=True)
 
     def get_secrets(self):
         """
         Gets all repository secrets
-        :rtype: List[github.Secret.Secret]
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets")
-        return [
-            github.Secret.Secret(
-                requester=self._requester,
-                headers={},
-                attributes={"url": f"{self.url}/actions/secrets/{secret['name']}"},
-                completed=False,
-            )
-            for secret in data["secrets"]
-        ]
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
 
     def get_secret(self, secret_name: str):
         """
@@ -1641,35 +1644,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "name": variable_name,
             "value": value,
         }
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
-        )
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
         return github.Variable.Variable(
             self._requester,
-            headers,
-            {
+            headers={},
+            attributes={
                 "name": variable_name,
                 "value": value,
                 "url": self.url,
             },
-            completed=True,
+            completed=False,
         )
 
     def get_variables(self):
         """
         Gets all repository variables
-        :rtype: List[github.Variable.Variable]
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Variable.Variable`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/variables")
-        return [
-            github.Variable.Variable(
-                requester=self._requester,
-                headers={},
-                attributes={"url": f"{self.url}/actions/variables/{variable['name']}"},
-                completed=False,
-            )
-            for variable in data["variables"]
-        ]
+        return github.PaginatedList.PaginatedList(
+            github.Variable.Variable,
+            self._requester,
+            f"{self.url}/actions/variables",
+            None,
+            list_item="variables",
+        )
 
     def get_variable(self, variable_name: str):
         """

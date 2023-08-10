@@ -431,7 +431,8 @@ class Repository(Framework.TestCase):
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
+        secret = self.repo.create_secret("secret-name", "secret-value")
+        self.assertIsNotNone(secret)
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()

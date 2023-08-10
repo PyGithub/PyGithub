@@ -57,7 +57,7 @@ class OrganizationVariable(Variable):
             Repository,
             self._requester,
             self._selected_repositories_url.value,
-            {},
+            None,
             list_item="repositories",
         )
 
