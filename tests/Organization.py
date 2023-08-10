@@ -401,17 +401,32 @@ class Organization(Framework.TestCase):
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.org.create_secret("secret-name", "secret-value", "all"))
+        secret = self.org.create_secret("secret-name", "secret-value", "all")
+        self.assertIsNotNone(secret)
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecretSelected(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.org.create_secret("secret-name", "secret-value", "selected", repos))
+        secret = self.org.create_secret("secret-name", "secret-value", "selected", repos)
+        self.assertIsNotNone(secret)
+        self.assertEqual(secret.visibility, "selected")
+        self.assertEqual(list(secret.selected_repositories), repos)
 
-    def testDeleteSecret(self):
-        self.assertTrue(self.org.delete_secret("secret-name"))
+    def testGetSecret(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        secret = self.org.get_secret("secret-name")
+        self.assertEqual(secret.name, "secret-name")
+        self.assertEqual(secret.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(secret.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(secret.visibility, "selected")
+        self.assertEqual(list(secret.selected_repositories), repos)
+        self.assertEqual(secret.url, "https://api.github.com/orgs/BeaverSoftware/actions/secrets/secret-name")
+
+    def testGetSecrets(self):
+        secrets = self.org.get_secrets()
+        self.assertEqual(len(list(secrets)), 1)
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
@@ -463,8 +478,26 @@ class Organization(Framework.TestCase):
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
 
-    def testOrgVariable(self):
-        self.org = self.g.get_organization("tecnoly")
-        self.assertTrue(self.org.create_variable("variable_name", "variable-value"))
-        self.assertTrue(self.org.update_variable("variable_name", "variable-value123"))
-        self.assertTrue(self.org.delete_variable("variable_name"))
+    def testCreateVariable(self):
+        variable = self.org.create_variable("variable-name", "variable-value", "all")
+        self.assertIsNotNone(variable)
+
+    def testCreateVariableSelected(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        variable = self.org.create_variable("variable-name", "variable-value", "selected", repos)
+        self.assertIsNotNone(variable)
+        self.assertEqual(list(variable.selected_repositories), repos)
+
+    def testGetVariable(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        variable = self.org.get_variable("variable-name")
+        self.assertEqual(variable.name, "variable-name")
+        self.assertEqual(variable.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(variable.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(variable.visibility, "selected")
+        self.assertEqual(list(variable.selected_repositories), repos)
+        self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
+
+    def testGetVariables(self):
+        variables = self.org.get_variables()
+        self.assertEqual(len(list(variables)), 1)
