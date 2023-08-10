@@ -386,11 +386,13 @@ class Organization(Framework.TestCase):
 
         description = "My repo from template"
         private = True
+        include_all_branches = True
         repo = self.org.create_repo_from_template(
             "hello-world-docker-action-new",
             template_repo,
             description=description,
             private=private,
+            include_all_branches=include_all_branches,
         )
         self.assertEqual(repo.description, description)
         self.assertTrue(repo.private)

@@ -414,6 +414,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         repo,
         description=github.GithubObject.NotSet,
         private=github.GithubObject.NotSet,
+        include_all_branches=github.GithubObject.NotSet,
     ):
         """self.name
         :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
@@ -427,6 +428,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         assert description is github.GithubObject.NotSet or isinstance(description, str), description
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        assert include_all_branches is github.GithubObject.NotSet or isinstance(
+            include_all_branches, bool
+        ), include_all_branches
         post_parameters = {
             "name": name,
             "owner": self.login,
@@ -435,6 +439,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["description"] = description
         if private is not github.GithubObject.NotSet:
             post_parameters["private"] = private
+        if include_all_branches is not github.GithubObject.NotSet:
+            post_parameters["include_all_branches"] = include_all_branches
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"/repos/{repo.owner.login}/{repo.name}/generate",

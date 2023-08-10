@@ -440,6 +440,7 @@ class AuthenticatedUser(CompletableGithubObject):
         repo: Repository,
         description: Opt[str] = NotSet,
         private: Opt[bool] = NotSet,
+        include_all_branches: Opt[bool] = NotSet,
     ) -> Repository:
         """
         :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
@@ -448,12 +449,14 @@ class AuthenticatedUser(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
         assert is_optional(private, bool), private
+        assert is_optional(include_all_branches, bool), include_all_branches
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "name": name,
                 "owner": self.login,
                 "description": description,
                 "private": private,
+                "include_all_branches": include_all_branches,
             }
         )
 
