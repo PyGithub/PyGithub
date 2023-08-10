@@ -3217,7 +3217,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
         if (
-            type(id_or_name).__name__ == "str"
+            isinstance(id_or_name, str)
             and not id_or_name.isnumeric()
             and (".yml" not in id_or_name and ".yaml" not in id_or_name)
         ):
