@@ -105,6 +105,7 @@
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -3215,6 +3216,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
+        if type(id_or_name).__name__ == "str" and not id_or_name.isnumeric():
+            for workflow in self.get_workflows():
+                if workflow.name == id_or_name:
+                    return workflow
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
