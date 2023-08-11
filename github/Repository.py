@@ -3215,7 +3215,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_file_name, int) or isinstance(id_or_file_name, str), id_or_file_name
+        assert isinstance(id_or_file_name, (int, str)), id_or_file_name
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
