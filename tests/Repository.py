@@ -1111,10 +1111,6 @@ class Repository(Framework.TestCase):
         workflows = self.g.get_repo("PyGithub/PyGithub").get_workflow("1122712")
         self.assertEqual(workflows.id, 1122712)
 
-    def testGetWorkflowName(self):
-        workflows = self.g.get_repo("PyGithub/PyGithub").get_workflow("Publish to PyPI")
-        self.assertEqual(workflows.name, "Publish to PyPI")
-
     def testGetWorkflowRuns(self):
         self.assertListKeyEqual(
             self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(),

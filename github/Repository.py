@@ -3208,23 +3208,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow(self, id_or_name):
+    def get_workflow(self, id_or_file_name):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
-        :param id_or_name: int or string
+        :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
-        if (
-            isinstance(id_or_name, str)
-            and not id_or_name.isnumeric()
-            and (".yml" not in id_or_name and ".yaml" not in id_or_name)
-        ):
-            for workflow in self.get_workflows():
-                if workflow.name == id_or_name:
-                    return workflow
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_name}")
+        assert isinstance(id_or_file_name, int) or isinstance(id_or_file_name, str), id_or_file_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
