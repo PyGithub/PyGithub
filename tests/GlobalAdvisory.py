@@ -33,9 +33,9 @@ class GlobalAdvisory(Framework.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.advisory = self.g.get_global_advisory("GHSA-wqc8-x2pr-7jqh")
 
     def testAttributes(self):
+        self.advisory = self.g.get_global_advisory("GHSA-wqc8-x2pr-7jqh")
         self.assertListKeyEqual(
             self.advisory.credits,
             lambda e: (e.user.login, e.type),
@@ -128,5 +128,92 @@ class GlobalAdvisory(Framework.TestCase):
                 (("pip", "RestrictedPython"), None, [], ">= 6.0a1.dev0, < 6.1"),
                 (("pip", "restrictedpython"), None, [], ">= 0, < 5.3"),
             ],
+        )
+        self.assertEqual(self.advisory.withdrawn_at, None)
+
+    def testNewlyReleased(self):
+        """Test an advisory that was freshly released and does not have values for all fields."""
+        self.advisory = self.g.get_global_advisory("GHSA-cx3j-qqxj-9597")
+        self.assertListKeyEqual(
+            self.advisory.credits,
+            lambda e: (e.user.login, e.type),
+            [],
+        )
+        self.assertEqual(self.advisory.cve_id, "CVE-2023-3481")
+        self.assertEqual(self.advisory.cvss.version, None)
+        self.assertEqual(self.advisory.cvss.score, None)
+        self.assertEqual(self.advisory.cvss.vector_string, None)
+        self.assertListKeyEqual(
+            self.advisory.cwes,
+            lambda e: (e.cwe_id, e.name),
+            [
+                ("CWE-80", "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)"),
+                ("CWE-116", "Improper Encoding or Escaping of Output"),
+            ],
+        )
+        self.assertEqual(
+            self.advisory.description, "### Impact\nCritters version 0.0.17-0.0.19 have an issue when parsing..."
+        )
+        self.assertEqual(self.advisory.ghsa_id, "GHSA-cx3j-qqxj-9597")
+        self.assertEqual(
+            self.advisory.github_reviewed_at,
+            datetime(2023, 8, 11, 18, 57, 53, tzinfo=timezone.utc),
+        )
+        self.assertEqual(
+            self.advisory.html_url,
+            "https://github.com/advisories/GHSA-cx3j-qqxj-9597",
+        )
+        self.assertListEqual(
+            self.advisory.identifiers,
+            [{"type": "GHSA", "value": "GHSA-cx3j-qqxj-9597"}, {"type": "CVE", "value": "CVE-2023-3481"}],
+        )
+        self.assertEqual(self.advisory.nvd_published_at, None)
+        self.assertEqual(
+            self.advisory.published_at,
+            datetime(2023, 8, 11, 18, 57, 53, tzinfo=timezone.utc),
+        )
+        self.assertListEqual(
+            self.advisory.references,
+            [
+                "https://github.com/GoogleChromeLabs/critters/security/advisories/GHSA-cx3j-qqxj-9597",
+                "https://github.com/GoogleChromeLabs/critters/pull/133",
+                "https://github.com/GoogleChromeLabs/critters/commit/7757902c9e0b3285d516359b3cb602cd9d50d80e",
+                "https://github.com/advisories/GHSA-cx3j-qqxj-9597",
+            ],
+        )
+        self.assertEqual(
+            self.advisory.repository_advisory_url,
+            "https://api.github.com/repos/GoogleChromeLabs/critters/security-advisories/GHSA-cx3j-qqxj-9597",
+        )
+        self.assertEqual(self.advisory.severity, "high")
+        self.assertEqual(
+            self.advisory.source_code_location,
+            "https://github.com/GoogleChromeLabs/critters",
+        )
+        self.assertEqual(
+            self.advisory.summary,
+            "Critters Cross-site Scripting Vulnerability",
+        )
+        self.assertEqual(
+            self.advisory.type,
+            "reviewed",
+        )
+        self.assertEqual(
+            self.advisory.updated_at,
+            datetime(2023, 8, 11, 18, 57, 54, tzinfo=timezone.utc),
+        )
+        self.assertEqual(
+            self.advisory.url,
+            "https://api.github.com/advisories/GHSA-cx3j-qqxj-9597",
+        )
+        self.assertListKeyEqual(
+            self.advisory.vulnerabilities,
+            lambda e: (
+                (e.package.ecosystem, e.package.name),
+                e.patched_versions,
+                e.vulnerable_functions,
+                e.vulnerable_version_range,
+            ),
+            [(("npm", "critters"), None, [], ">= 0.0.17, <= 0.0.19")],
         )
         self.assertEqual(self.advisory.withdrawn_at, None)
