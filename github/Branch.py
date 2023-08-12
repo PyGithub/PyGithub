@@ -149,6 +149,7 @@ class Branch(NonCompletableGithubObject):
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         block_creations: Opt[bool] = NotSet,
+        require_last_push_approval: Opt[bool] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -174,6 +175,7 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(users_bypass_pull_request_allowances, str), users_bypass_pull_request_allowances
         assert is_optional_list(teams_bypass_pull_request_allowances, str), teams_bypass_pull_request_allowances
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
+        assert is_optional(require_last_push_approval, bool), require_last_push_approval
 
         post_parameters: dict[str, Any] = {}
         if is_defined(strict) or is_defined(contexts):
@@ -203,6 +205,7 @@ class Branch(NonCompletableGithubObject):
             or is_defined(users_bypass_pull_request_allowances)
             or is_defined(teams_bypass_pull_request_allowances)
             or is_defined(apps_bypass_pull_request_allowances)
+            or is_defined(require_last_push_approval)
         ):
             post_parameters["required_pull_request_reviews"] = {}
             if is_defined(dismiss_stale_reviews):
@@ -215,6 +218,10 @@ class Branch(NonCompletableGithubObject):
                 post_parameters["required_pull_request_reviews"][
                     "required_approving_review_count"
                 ] = required_approving_review_count
+            if is_defined(require_last_push_approval):
+                post_parameters["required_pull_request_reviews"][
+                    "require_last_push_approval"
+                ] = require_last_push_approval
 
             dismissal_restrictions = {}
             if is_defined(dismissal_users):
@@ -360,6 +367,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
+        require_last_push_approval: Opt[bool] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
@@ -369,12 +377,14 @@ class Branch(NonCompletableGithubObject):
         assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
         assert is_optional(required_approving_review_count, int), required_approving_review_count
+        assert is_optional(require_last_push_approval, bool), require_last_push_approval
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "dismiss_stale_reviews": dismiss_stale_reviews,
                 "require_code_owner_reviews": require_code_owner_reviews,
                 "required_approving_review_count": required_approving_review_count,
+                "require_last_push_approval": require_last_push_approval,
             }
         )
 
