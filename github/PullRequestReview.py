@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -33,7 +35,7 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
     This class represents PullRequestReviews. The reference can be found here https://docs.github.com/en/rest/reference/pulls#reviews
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
@@ -110,11 +112,9 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
         :rtype: None
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", f"{self.pull_request_url}/reviews/{self.id}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
@@ -124,13 +124,11 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         self._pull_request_url = github.GithubObject.NotSet
         self._submitted_at = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
@@ -140,8 +138,6 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_request_url" in attributes:  # pragma no branch
-            self._pull_request_url = self._makeStringAttribute(
-                attributes["pull_request_url"]
-            )
+            self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
         if "submitted_at" in attributes:  # pragma no branch
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])

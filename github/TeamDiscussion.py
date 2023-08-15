@@ -21,6 +21,8 @@
 ################################################################################
 
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -30,10 +32,8 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
     This class represents TeamDiscussions. The reference can be found here https://docs.github.com/en/rest/reference/teams#discussions
     """
 
-    def __repr__(self):
-        return self.get__repr__(
-            {"number": self._number.value, "title": self._title.value}
-        )
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
     def author(self):
@@ -171,7 +171,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._author = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._body_html = github.GithubObject.NotSet
@@ -190,11 +190,9 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "body_html" in attributes:  # pragma no branch
@@ -210,9 +208,7 @@ class TeamDiscussion(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "last_edited_at" in attributes:  # pragma no branch
-            self._last_edited_at = self._makeDatetimeAttribute(
-                attributes["last_edited_at"]
-            )
+            self._last_edited_at = self._makeDatetimeAttribute(attributes["last_edited_at"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch

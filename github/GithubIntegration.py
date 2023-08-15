@@ -64,19 +64,13 @@ class GithubIntegration:
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
         if private_key is not None:
-            assert isinstance(
-                private_key, str
-            ), "supplied private key should be a string"
+            assert isinstance(private_key, str), "supplied private key should be a string"
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert isinstance(per_page, int), per_page
         assert isinstance(verify, (bool, str)), verify
-        assert (
-            retry is None
-            or isinstance(retry, int)
-            or isinstance(retry, urllib3.util.Retry)
-        ), retry
+        assert retry is None or isinstance(retry, int) or isinstance(retry, urllib3.util.Retry), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0
@@ -127,9 +121,7 @@ class GithubIntegration:
 
     def get_github_for_installation(self, installation_id):
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(
-            installation_id, requester=self.__requester
-        )
+        auth = self.auth.get_installation_auth(installation_id, requester=self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self):
@@ -149,9 +141,7 @@ class GithubIntegration:
         :param url: str
         :rtype: :class:`github.Installation.Installation`
         """
-        headers, response = self.__requester.requestJsonAndCheck(
-            "GET", url, headers=self._get_headers()
-        )
+        headers, response = self.__requester.requestJsonAndCheck("GET", url, headers=self._get_headers())
 
         return Installation(
             requester=self.__requester,
@@ -183,9 +173,7 @@ class GithubIntegration:
             permissions = {}
 
         if not isinstance(permissions, dict):
-            raise GithubException(
-                status=400, data={"message": "Invalid permissions"}, headers=None
-            )
+            raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
         body = {"permissions": permissions}
         headers, response = self.__requester.requestJsonAndCheck(
@@ -267,9 +255,5 @@ class GithubIntegration:
         :rtype: :class:`github.GithubApp.GithubApp`
         """
 
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", "/app", headers=self._get_headers()
-        )
-        return GithubApp(
-            requester=self.__requester, headers=headers, attributes=data, completed=True
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())
+        return GithubApp(requester=self.__requester, headers=headers, attributes=data, completed=True)

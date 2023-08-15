@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
@@ -32,7 +34,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
     This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -97,9 +99,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(
-            archived_state, str
-        ), archived_state
+        assert archived_state is github.GithubObject.NotSet or isinstance(archived_state, str), archived_state
 
         url_parameters = dict()
         if archived_state is not github.GithubObject.NotSet:
@@ -141,9 +141,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(
-            self._requester, headers, data, completed=True
-        )
+        return github.ProjectCard.ProjectCard(self._requester, headers, data, completed=True)
 
     def move(self, position):
         """
@@ -192,7 +190,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._cards_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -202,7 +200,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "cards_url" in attributes:  # pragma no branch
             self._cards_url = self._makeStringAttribute(attributes["cards_url"])
         if "created_at" in attributes:  # pragma no branch

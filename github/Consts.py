@@ -92,9 +92,7 @@ mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview
 mediaTypeTeamDiscussionsPreview = "application/vnd.github.echo-preview+json"
 
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
-mediaTypeRequireMultipleApprovingReviews = (
-    "application/vnd.github.luke-cage-preview+json"
-)
+mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"

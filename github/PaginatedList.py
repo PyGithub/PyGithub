@@ -52,7 +52,7 @@ class PaginatedListBase(Generic[T]):
     def _fetchNextPage(self) -> List[T]:
         raise NotImplementedError
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__elements = []
 
     def __getitem__(self, index: Union[int, slice]) -> Any:
@@ -72,7 +72,7 @@ class PaginatedListBase(Generic[T]):
     def _isBiggerThan(self, index: int) -> bool:
         return len(self.__elements) > index or self._couldGrow()
 
-    def __fetchToIndex(self, index):
+    def __fetchToIndex(self, index: int) -> None:
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
@@ -200,13 +200,13 @@ class PaginatedList(PaginatedListBase[T]):
         r.__reverse()
         return r
 
-    def __reverse(self):
+    def __reverse(self) -> None:
         self._reversed = True
         lastUrl = self._getLastPageUrl()
         if lastUrl:
             self.__nextUrl = lastUrl
 
-    def _couldGrow(self):
+    def _couldGrow(self) -> bool:
         return self.__nextUrl is not None
 
     def _fetchNextPage(self) -> List[T]:
@@ -263,7 +263,4 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
 
-        return [
-            self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data
-        ]
+        return [self.__contentClass(self.__requester, headers, element, completed=False) for element in data]

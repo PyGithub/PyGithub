@@ -32,6 +32,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.NamedUser
 
@@ -43,7 +45,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
     This class represents IssueComments. The reference can be found here https://docs.github.com/en/rest/reference/issues#comments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
@@ -127,9 +129,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
     def get_reactions(self):
@@ -180,7 +180,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._body = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
@@ -190,7 +190,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
@@ -206,6 +206,4 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

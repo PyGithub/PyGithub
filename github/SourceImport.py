@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 from github import Consts
 
@@ -29,7 +31,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
     This class represents SourceImports. The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "vcs_url": self._vcs_url.value,
@@ -147,7 +149,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         return super().update(additional_headers=import_header)
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._authors_count = github.GithubObject.NotSet
         self._authors_url = github.GithubObject.NotSet
         self._has_large_files = github.GithubObject.NotSet
@@ -162,29 +164,21 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         self._vcs = github.GithubObject.NotSet
         self._vcs_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch
             self._authors_count = self._makeIntAttribute(attributes["authors_count"])
         if "authors_url" in attributes:  # pragma no branch
             self._authors_url = self._makeStringAttribute(attributes["authors_url"])
         if "has_large_files" in attributes:  # pragma no branch
-            self._has_large_files = self._makeBoolAttribute(
-                attributes["has_large_files"]
-            )
+            self._has_large_files = self._makeBoolAttribute(attributes["has_large_files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "large_files_count" in attributes:  # pragma no branch
-            self._large_files_count = self._makeIntAttribute(
-                attributes["large_files_count"]
-            )
+            self._large_files_count = self._makeIntAttribute(attributes["large_files_count"])
         if "large_files_size" in attributes:  # pragma no branch
-            self._large_files_size = self._makeIntAttribute(
-                attributes["large_files_size"]
-            )
+            self._large_files_size = self._makeIntAttribute(attributes["large_files_size"])
         if "repository_url" in attributes:  # pragma no branch
-            self._repository_url = self._makeStringAttribute(
-                attributes["repository_url"]
-            )
+            self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "status_text" in attributes:  # pragma no branch

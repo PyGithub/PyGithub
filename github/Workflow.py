@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 import github.WorkflowRun
 
@@ -29,7 +31,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
     This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
 
     @property
@@ -160,35 +162,21 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             or isinstance(actor, str)
         ), actor
         assert (
-            branch is github.GithubObject.NotSet
-            or isinstance(branch, github.Branch.Branch)
-            or isinstance(branch, str)
+            branch is github.GithubObject.NotSet or isinstance(branch, github.Branch.Branch) or isinstance(branch, str)
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert created is github.GithubObject.NotSet or isinstance(
-            created, str
-        ), created
+        assert created is github.GithubObject.NotSet or isinstance(created, str), created
         assert exclude_pull_requests is github.GithubObject.NotSet or isinstance(
             exclude_pull_requests, bool
         ), exclude_pull_requests
-        assert check_suite_id is github.GithubObject.NotSet or isinstance(
-            check_suite_id, int
-        ), check_suite_id
-        assert head_sha is github.GithubObject.NotSet or isinstance(
-            head_sha, str
-        ), head_sha
+        assert check_suite_id is github.GithubObject.NotSet or isinstance(check_suite_id, int), check_suite_id
+        assert head_sha is github.GithubObject.NotSet or isinstance(head_sha, str), head_sha
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
-            url_parameters["actor"] = (
-                actor._identity
-                if isinstance(actor, github.NamedUser.NamedUser)
-                else actor
-            )
+            url_parameters["actor"] = actor._identity if isinstance(actor, github.NamedUser.NamedUser) else actor
         if branch is not github.GithubObject.NotSet:
-            url_parameters["branch"] = (
-                branch.name if isinstance(branch, github.Branch.Branch) else branch
-            )
+            url_parameters["branch"] = branch.name if isinstance(branch, github.Branch.Branch) else branch
         if event is not github.GithubObject.NotSet:
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
@@ -211,7 +199,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             list_item="workflow_runs",
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
@@ -222,7 +210,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._badge_url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

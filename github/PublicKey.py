@@ -32,6 +32,7 @@
 from __future__ import annotations
 
 from base64 import b64encode
+from typing import Any
 
 from nacl import encoding, public
 
@@ -57,7 +58,7 @@ class PublicKey(CompletableGithubObject):
         self._key_id: Attribute[str | int] = NotSet
         self._key: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
 
     @property
@@ -70,7 +71,7 @@ class PublicKey(CompletableGithubObject):
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch

@@ -19,62 +19,50 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import github.GithubObject
+from typing import Any
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
+class CodeScanRule(NonCompletableGithubObject):
     """
     This class represents Alerts from code scanning.
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._severity: Attribute[str] = NotSet
+        self._security_severity_level: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
 
     @property
-    def id(self):
-        """
-        :type: str
-        """
+    def id(self) -> str:
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: str
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def severity(self):
-        """
-        :type: str
-        """
+    def severity(self) -> str:
         return self._severity.value
 
     @property
-    def security_severity_level(self):
-        """
-        :type: str
-        """
+    def security_severity_level(self) -> str:
         return self._security_severity_level.value
 
     @property
-    def description(self):
-        """
-        :type: str
-        """
+    def description(self) -> str:
         return self._description.value
 
-    def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._severity = github.GithubObject.NotSet
-        self._security_severity_level = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
@@ -82,8 +70,6 @@ class CodeScanRule(github.GithubObject.NonCompletableGithubObject):
         if "severity" in attributes:  # pragma no branch
             self._severity = self._makeStringAttribute(attributes["severity"])
         if "security_severity_level" in attributes:  # pragma no branch
-            self._security_severity_level = self._makeStringAttribute(
-                attributes["security_severity_level"]
-            )
+            self._security_severity_level = self._makeStringAttribute(attributes["security_severity_level"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
