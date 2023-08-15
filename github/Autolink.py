@@ -57,7 +57,6 @@ class Autolink(NonCompletableGithubObject):
         return self._is_alphanumeric.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key_prefix" in attributes:  # pragma no branch
