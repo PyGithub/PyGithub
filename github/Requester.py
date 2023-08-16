@@ -57,6 +57,7 @@ import logging
 import mimetypes
 import os
 import re
+import threading
 import time
 import urllib
 import urllib.parse
@@ -377,6 +378,7 @@ class Requester:
         else:
             assert False, "Unknown URL scheme"
         self.__connection = None
+        self.__connection_lock = threading.Lock()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
@@ -401,9 +403,10 @@ class Requester:
         """
         Close the connection to the server.
         """
-        if self.__connection is not None:
-            self.__connection.close()
-            self.__connection = None
+        with self.__connection_lock:
+            if self.__connection is not None:
+                self.__connection.close()
+                self.__connection = None
 
     @property
     def kwargs(self) -> Dict[str, Any]:
@@ -829,14 +832,19 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        self.__connection = self.__connectionClass(
-            self.__hostname,
-            self.__port,
-            retry=self.__retry,
-            pool_size=self.__pool_size,
-            timeout=self.__timeout,
-            verify=self.__verify,
-        )
+        with self.__connection_lock:
+            if self.__connection is not None:
+                if self.__persist:
+                    return self.__connection
+                self.__connection.close()
+            self.__connection = self.__connectionClass(
+                self.__hostname,
+                self.__port,
+                retry=self.__retry,
+                pool_size=self.__pool_size,
+                timeout=self.__timeout,
+                verify=self.__verify,
+            )
 
         return self.__connection
 
