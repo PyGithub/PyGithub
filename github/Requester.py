@@ -238,7 +238,6 @@ class Requester:
 
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
-    __connection = None
     __persist = True
     __logger: Optional[logging.Logger] = None
 
@@ -377,6 +376,7 @@ class Requester:
             self.__connectionClass = self.__httpConnectionClass
         else:
             assert False, "Unknown URL scheme"
+        self.__connection = None
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
