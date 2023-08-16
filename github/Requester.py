@@ -61,7 +61,7 @@ import threading
 import time
 import urllib
 import urllib.parse
-from collections import defaultdict
+from collections import defaultdict, deque
 from datetime import datetime, timezone
 from io import IOBase
 from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
@@ -379,6 +379,7 @@ class Requester:
             assert False, "Unknown URL scheme"
         self.__connection = None
         self.__connection_lock = threading.Lock()
+        self.__custom_connections = deque()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
@@ -407,6 +408,8 @@ class Requester:
             if self.__connection is not None:
                 self.__connection.close()
                 self.__connection = None
+        while self.__custom_connections:
+            self.__custom_connections.popleft().close()
 
     @property
     def kwargs(self) -> Dict[str, Any]:
@@ -510,6 +513,7 @@ class Requester:
                         retry=self.__retry,
                         pool_size=self.__pool_size,
                     )
+                    self.__custom_connections.append(cnx)
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
                         o.hostname,  # type: ignore
@@ -517,6 +521,7 @@ class Requester:
                         retry=self.__retry,
                         pool_size=self.__pool_size,
                     )
+                    self.__custom_connections.append(cnx)
         return cnx
 
     @classmethod

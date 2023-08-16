@@ -145,10 +145,13 @@ class Requester(Framework.TestCase):
         )
         mocked_connection = mock.MagicMock()
         requester._Requester__connection = mocked_connection
+        mocked_custom_connection = mock.MagicMock()
+        requester._Requester__custom_connections.append(mocked_custom_connection)
 
         requester.close()
 
         mocked_connection.close.assert_called_once_with()
+        mocked_custom_connection.close.assert_called_once_with()
         self.assertIsNone(requester._Requester__connection)
 
 
