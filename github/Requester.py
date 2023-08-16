@@ -166,7 +166,7 @@ class HTTPSRequestsConnectionClass:
         return RequestsResponse(r)
 
     def close(self) -> None:
-        return
+        self.session.close()
 
 
 class HTTPRequestsConnectionClass:
@@ -229,7 +229,7 @@ class HTTPRequestsConnectionClass:
         return RequestsResponse(r)
 
     def close(self) -> None:
-        return
+        self.session.close()
 
 
 class Requester:
@@ -396,6 +396,14 @@ class Requester:
         # provide auth implementations that require a requester with this requester
         if isinstance(self.__auth, WithRequester):
             self.__auth.withRequester(self)
+
+    def close(self) -> None:
+        """
+        Close the connection to the server.
+        """
+        if self.__connection is not None:
+            self.__connection.close()
+            self.__connection = None
 
     @property
     def kwargs(self) -> Dict[str, Any]:
@@ -717,7 +725,6 @@ class Requester:
             responseHeaders = {k.lower(): v for k, v in response.getheaders()}
             output = response.read()
 
-            cnx.close()
             if input:
                 if isinstance(input, IOBase):
                     input.close()

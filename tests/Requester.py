@@ -132,6 +132,26 @@ class Requester(Framework.TestCase):
             ),
         )
 
+    def testClose(self):
+        requester = github.Requester.Requester(
+            auth=None,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+        )
+        mocked_connection = mock.MagicMock()
+        requester._Requester__connection = mocked_connection
+
+        requester.close()
+
+        mocked_connection.close.assert_called_once_with()
+        self.assertIsNone(requester._Requester__connection)
+
+
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
         self.logger.info.assert_called_once_with(
