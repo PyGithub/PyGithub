@@ -133,27 +133,17 @@ class Requester(Framework.TestCase):
         )
 
     def testClose(self):
-        requester = github.Requester.Requester(
-            auth=None,
-            base_url="https://base.url",
-            timeout=1,
-            user_agent="user agent",
-            per_page=123,
-            verify=False,
-            retry=3,
-            pool_size=5,
-        )
         mocked_connection = mock.MagicMock()
-        requester._Requester__connection = mocked_connection
         mocked_custom_connection = mock.MagicMock()
-        requester._Requester__custom_connections.append(mocked_custom_connection)
 
-        requester.close()
+        with github.Github() as gh:
+            requester = gh._Github__requester
+            requester._Requester__connection = mocked_connection
+            requester._Requester__custom_connections.append(mocked_custom_connection)
 
         mocked_connection.close.assert_called_once_with()
         mocked_custom_connection.close.assert_called_once_with()
         self.assertIsNone(requester._Requester__connection)
-
 
     def testLoggingRedirection(self):
         self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
