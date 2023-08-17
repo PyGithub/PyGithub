@@ -28,6 +28,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,6 +60,7 @@ from urllib3.util import Retry
 import github.ApplicationOAuth
 import github.Auth
 import github.AuthenticatedUser
+import github.Enterprise
 import github.Event
 import github.Gist
 import github.GithubApp
@@ -337,6 +339,16 @@ class Github:
             "/organizations",
             url_parameters,
         )
+
+    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+        """
+        :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
+        :param enterprise: string
+        :rtype: :class:`Enterprise`
+        """
+        assert isinstance(enterprise, str), enterprise
+        # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
+        return github.Enterprise.Enterprise(self.__requester, enterprise)
 
     def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
         """

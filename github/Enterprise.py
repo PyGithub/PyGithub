@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Marco Köpcke  <hello@parakoopa.de>                            #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,42 +19,53 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
+from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 
-class Autolink(NonCompletableGithubObject):
+class Enterprise(NonCompletableGithubObject):
     """
-    This class represents Repository autolinks.
-    The reference can be found here https://docs.github.com/en/rest/repos/autolinks?apiVersion=2022-11-28
+    This class represents Enterprises. Such objects do not exist in the Github API, so this class merely collects all endpoints the start with /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
     """
+
+    def __init__(
+        self,
+        requester: Requester,
+        enterprise: str,
+    ):
+        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"}, True)
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._key_prefix: Attribute[str] = NotSet
-        self._url_template: Attribute[str] = NotSet
+        self._enterprise: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"id": self._id.value})
+        return self.get__repr__({"enterprise": self._enterprise.value})
 
     @property
-    def id(self) -> int:
-        return self._id.value
+    def enterprise(self) -> str:
+        return self._enterprise.value
 
     @property
-    def key_prefix(self) -> str:
-        return self._key_prefix.value
+    def url(self) -> str:
+        return self._url.value
 
-    @property
-    def url_template(self) -> str:
-        return self._url_template.value
+    def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+        """
+        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
+        if "url" not in data:
+            data["url"] = self.url + "/consumed-licenses"
+
+        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "key_prefix" in attributes:  # pragma no branch
-            self._key_prefix = self._makeStringAttribute(attributes["key_prefix"])
-        if "url_template" in attributes:  # pragma no branch
-            self._url_template = self._makeStringAttribute(attributes["url_template"])
+        if "enterprise" in attributes:  # pragma no branch
+            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
