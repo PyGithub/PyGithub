@@ -28,6 +28,7 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1103,6 +1104,10 @@ class Repository(Framework.TestCase):
     def testGetWorkflows(self):
         workflows = self.g.get_repo("PyGithub/PyGithub").get_workflows()
         self.assertListKeyEqual(workflows, lambda w: w.name, ["check", "Publish to PyPI"])
+
+    def testGetWorkflowId(self):
+        workflows = self.g.get_repo("PyGithub/PyGithub").get_workflow("1122712")
+        self.assertEqual(workflows.id, 1122712)
 
     def testGetWorkflowRuns(self):
         self.assertListKeyEqual(
