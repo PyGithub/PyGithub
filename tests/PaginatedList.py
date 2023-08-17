@@ -37,9 +37,16 @@ class PaginatedList(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
+        self.licenses = self.g.get_enterprise("beaver-group").get_consumed_licenses()
 
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
+
+    def testIterationWithPrefetchedFirstPage(self):
+        # test data taken from EnterpriseAdmin.testGetEnterpriseUsers
+        users = self.licenses.get_users()
+        self.assertEqual(len(list(users)), 102)
+        self.assertEqual(len({user.github_com_login for user in users}), 102)
 
     def testSeveralIterations(self):
         self.assertEqual(len(list(self.list)), 333)
