@@ -105,6 +105,7 @@
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -3234,15 +3235,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow(self, id_or_name):
+    def get_workflow(self, id_or_file_name):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
-        :param id_or_name: int or string
+        :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_name}")
+        assert isinstance(id_or_file_name, (int, str)), id_or_file_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
