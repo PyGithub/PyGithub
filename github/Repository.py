@@ -105,6 +105,7 @@
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1565,7 +1566,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_repository_dispatch(self, event_type, client_payload=github.GithubObject.NotSet):
         """
-        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event>
+        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/repos#create-a-repository-dispatch-event>
         :param event_type: string
         :param client_payload: dict
         :rtype: bool
@@ -1580,10 +1581,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_secret(self, secret_name, unencrypted_value):
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
-        :rtype: bool
+        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -1593,14 +1594,47 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        status, headers, data = self._requester.requestJson(
-            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": secret_name,
+                "url": f"{self.url}/actions/secrets/{secret_name}",
+            },
+            completed=False,
         )
-        return status == 201
+
+    def get_secrets(self):
+        """
+        Gets all repository secrets
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
+
+    def get_secret(self, secret_name: str):
+        """
+        :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.Secret.Secret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False,
+        )
 
     def create_variable(self, variable_name: str, value: str) -> bool:
         """
-        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
         :param variable_name: string
         :param value: string
         :rtype: bool
@@ -1611,50 +1645,44 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "name": variable_name,
             "value": value,
         }
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
+        return github.Variable.Variable(
+            self._requester,
+            headers={},
+            attributes={
+                "name": variable_name,
+                "value": value,
+                "url": self.url,
+            },
+            completed=False,
         )
-        return status == 201
 
-    def update_variable(self, variable_name: str, value: str) -> bool:
+    def get_variables(self):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        Gets all repository variables
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Variable.Variable`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Variable.Variable,
+            self._requester,
+            f"{self.url}/actions/variables",
+            None,
+            list_item="variables",
+        )
+
+    def get_variable(self, variable_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
-        :param value: string
-        :rtype: bool
+        :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
-        assert isinstance(value, str), value
-        patch_parameters = {
-            "name": variable_name,
-            "value": value,
-        }
-        status, headers, data = self._requester.requestJson(
-            "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
-            input=patch_parameters,
+        return github.Variable.Variable(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            completed=False,
         )
-        return status == 204
-
-    def delete_secret(self, secret_name):
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
-        :param secret_name: string
-        :rtype: bool
-        """
-        assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
-        return status == 204
-
-    def delete_variable(self, variable_name: str) -> bool:
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
-        :param variable_name: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
-        return status == 204
 
     def create_source_import(
         self,
@@ -3207,15 +3235,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow(self, id_or_name):
+    def get_workflow(self, id_or_file_name):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
-        :param id_or_name: int or string
+        :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_name}")
+        assert isinstance(id_or_file_name, (int, str)), id_or_file_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
