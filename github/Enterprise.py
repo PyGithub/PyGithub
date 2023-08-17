@@ -1,10 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
-# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
-# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
-# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
-# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,45 +21,51 @@
 ################################################################################
 from typing import Any, Dict
 
+from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 
-class Referrer(NonCompletableGithubObject):
+class Enterprise(NonCompletableGithubObject):
     """
-    This class represents a popylar Referrer for a GitHub repository.
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
+    This class represents Enterprises. Such objects do not exist in the Github API, so this class merely collects all endpoints the start with /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
     """
+
+    def __init__(
+        self,
+        requester: Requester,
+        enterprise: str,
+    ):
+        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"}, True)
 
     def _initAttributes(self) -> None:
-        self._referrer: Attribute[str] = NotSet
-        self._count: Attribute[int] = NotSet
-        self._uniques: Attribute[int] = NotSet
+        self._enterprise: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__(
-            {
-                "referrer": self._referrer.value,
-                "count": self._count.value,
-                "uniques": self._uniques.value,
-            }
-        )
+        return self.get__repr__({"enterprise": self._enterprise.value})
 
     @property
-    def referrer(self) -> str:
-        return self._referrer.value
+    def enterprise(self) -> str:
+        return self._enterprise.value
 
     @property
-    def count(self) -> int:
-        return self._count.value
+    def url(self) -> str:
+        return self._url.value
 
-    @property
-    def uniques(self) -> int:
-        return self._uniques.value
+    def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+        """
+        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
+        if "url" not in data:
+            data["url"] = self.url + "/consumed-licenses"
+
+        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "referrer" in attributes:  # pragma no branch
-            self._referrer = self._makeStringAttribute(attributes["referrer"])
-        if "count" in attributes:  # pragma no branch
-            self._count = self._makeIntAttribute(attributes["count"])
-        if "uniques" in attributes:  # pragma no branch
-            self._uniques = self._makeIntAttribute(attributes["uniques"])
+        if "enterprise" in attributes:  # pragma no branch
+            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
