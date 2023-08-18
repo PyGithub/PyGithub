@@ -42,10 +42,10 @@ if len(sys.argv) < 4 or len(sys.argv) > 6:
     print(f"usage: {sys.argv[0]} <class> <attribute> [list] [class] <attribute-type>")
     print()
     print("examples:")
-    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cve_id string")
-    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory author class NamedUser")
-    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cwe_ids list string")
-    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cwes list class CWE")
+    print(f"  {sys.executable} {sys.argv[0]} Commit url string")
+    print(f"  {sys.executable} {sys.argv[0]} Commit author class NamedUser")
+    print(f"  {sys.executable} {sys.argv[0]} Commit ids list string")
+    print(f"  {sys.executable} {sys.argv[0]} Commit parents list class Commit")
     sys.exit(1)
 
 className, attributeName, attributeType = sys.argv[1:4]
