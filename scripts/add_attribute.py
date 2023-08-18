@@ -36,11 +36,22 @@
 from __future__ import annotations
 
 import os.path
+import re
 import sys
 
 className, attributeName, attributeType = sys.argv[1:4]
 if len(sys.argv) > 4:
     attributeClassType = sys.argv[4]
+
+    # extract module and class from attributeClassType
+    attributeModuleClass = re.match(r"^(([^.]+\.)*[^.]+)\.([^.]+)$", attributeClassType.strip())
+    if attributeModuleClass:
+        importModule = attributeModuleClass.group(1)
+        importClass = attributeModuleClass.group(3)
+        attributeClassType = importClass
+    else:
+        importModule = f"github.{attributeClassType}"
+        importClass = attributeClassType
 else:
     attributeClassType = ""
 
@@ -83,6 +94,40 @@ if attributeType == "class":
     attributeClassType = f"'{attributeClassType}'"
 
 fileName = os.path.join("github", className + ".py")
+
+
+def add_imports(lines: list[str]) -> list[str]:
+    if not (importModule and importClass):
+        return lines
+
+    newLines = []
+    i = 0
+
+    added = False
+    while not added:
+        if i < len(lines):
+            line = lines[i].rstrip()
+        else:
+            line = ""
+
+        i += 1
+        if line and not line.startswith("#") and not line.startswith("import "):
+            # precommit will move the import into the right place
+            if not line.startswith("from ") or line.startswith("from github."):
+                import_line = f"from {importModule} import {importClass}"
+                if line == import_line:
+                    added = True
+                elif not line.startswith("from ") or line[5:] > importModule:
+                    newLines.append(import_line)
+                    added = True
+        newLines.append(line)
+
+    while i < len(lines):
+        line = lines[i].rstrip()
+        i += 1
+        newLines.append(line)
+
+    return newLines
 
 
 def add_as_class_property(lines: list[str]) -> list[str]:
@@ -163,10 +208,11 @@ def add_to_useAttributes(lines: list[str]) -> list[str]:
     added = False
     inUse = False
     while not added:
-        try:
+        if i < len(lines):
             line = lines[i].rstrip()
-        except IndexError:
+        else:
             line = ""
+
         i += 1
         if line.strip().startswith("def _useAttributes(self, attributes:"):
             inUse = True
@@ -203,6 +249,7 @@ def add_to_useAttributes(lines: list[str]) -> list[str]:
 with open(fileName) as f:
     source = f.readlines()
 
+source = add_imports(source)
 source = add_as_class_property(source)
 source = add_to_initAttributes(source)
 source = add_to_useAttributes(source)
