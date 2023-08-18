@@ -100,7 +100,7 @@ def extractBodyLines(lines):
 
 class PythonHeader:
     def fix(self, filename, lines):
-        isExecutable = len(lines) > 0 and lines[0].startswith("#!")
+        isExecutable = lines[0].startswith("#!")
         newLines = []
 
         if isExecutable:
@@ -140,7 +140,7 @@ class StandardHeader:
 
 def findHeadersAndFiles():
     for root, dirs, files in os.walk(".", topdown=True):
-        for excluded in [".git", "developer.github.com", "build", ".tox", ".venv", "PyGithub.egg-info"]:
+        for excluded in [".git", "developer.github.com", "build", ".tox", ".venv", "venv", "PyGithub.egg-info", ".eggs"]:
             if excluded in dirs:
                 dirs.remove(excluded)
 
