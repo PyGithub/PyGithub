@@ -11,6 +11,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 #                                                                              #
@@ -140,7 +141,10 @@ class StandardHeader:
 
 def findHeadersAndFiles():
     for root, dirs, files in os.walk(".", topdown=True):
-        for excluded in [".git", "developer.github.com", "build", ".tox", ".venv", "venv", "PyGithub.egg-info", ".eggs"]:
+        for dir in list(dirs):
+            if dir.startswith("."):
+                dirs.remove(dir)
+        for excluded in ["developer.github.com", "build", "venv", "PyGithub.egg-info", "requirements"]:
             if excluded in dirs:
                 dirs.remove(excluded)
 
@@ -150,7 +154,7 @@ def findHeadersAndFiles():
                 pass
             elif filename.endswith(".py"):
                 yield (PythonHeader(), fullname)
-            elif filename in ["COPYING", "COPYING.LESSER"]:
+            elif filename in ["COPYING", "COPYING.LESSER", "MAINTAINERS"]:
                 pass
             elif filename.endswith(".rst") or filename.endswith(".md"):
                 pass
@@ -158,10 +162,12 @@ def findHeadersAndFiles():
                 yield (StandardHeader(), fullname)
             elif "ReplayData" in fullname:
                 pass
+            elif fullname.endswith(".pyi"):
+                pass
             elif fullname.endswith(".pyc"):
                 pass
             else:
-                print("Don't know what to do with", filename)
+                print(f"Don't know what to do with {filename} in {root}")
 
 
 def main():
