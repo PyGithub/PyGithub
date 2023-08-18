@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ############################ Copyrights and license ############################
 #                                                                              #
@@ -10,6 +11,8 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -97,7 +100,7 @@ def extractBodyLines(lines):
 
 class PythonHeader:
     def fix(self, filename, lines):
-        isExecutable = lines[0].startswith("#!")
+        isExecutable = len(lines) > 0 and lines[0].startswith("#!")
         newLines = []
 
         if isExecutable:
@@ -137,18 +140,9 @@ class StandardHeader:
 
 def findHeadersAndFiles():
     for root, dirs, files in os.walk(".", topdown=True):
-        if ".git" in dirs:
-            dirs.remove(".git")
-        if "developer.github.com" in dirs:
-            dirs.remove("developer.github.com")
-        if "build" in dirs:
-            dirs.remove("build")
-        if ".tox" in dirs:
-            dirs.remove(".tox")
-        if ".venv" in dirs:
-            dirs.remove(".venv")
-        if "PyGithub.egg-info" in dirs:
-            dirs.remove("PyGithub.egg-info")
+        for excluded in [".git", "developer.github.com", "build", ".tox", ".venv", "PyGithub.egg-info"]:
+            if excluded in dirs:
+                dirs.remove(excluded)
 
         for filename in files:
             fullname = os.path.join(root, filename)
