@@ -42,8 +42,10 @@ if len(sys.argv) < 4 or len(sys.argv) > 6:
     print(f"usage: {sys.argv[0]} <class> <attribute> [list] [class] <attribute-type>")
     print()
     print("examples:")
-    print(f"  {sys.executable} {sys.argv[0]} Repository name string")
-    print(f"  {sys.executable} {sys.argv[0]} Repository owner class NamedUser")
+    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cve_id string")
+    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory author class NamedUser")
+    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cwe_ids list string")
+    print(f"  {sys.executable} {sys.argv[0]} RepositoryAdvisory cwes list class CWE")
     sys.exit(1)
 
 className, attributeName, attributeType = sys.argv[1:4]
@@ -60,7 +62,7 @@ elif attributeType == "class":
         raise ValueError("Too many arguments")
     attributeClassType = sys.argv[4]
 else:
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         raise ValueError("Too many arguments")
 
 types = {
@@ -97,8 +99,8 @@ types = {
 }
 
 listValueTypes = {
-    "string": "self._makeListOfStringsAttribute(" + attributeClassType + ', attributes["' + attributeName + '"])',
-    "int": "self._makeListOfIntsAttribute(" + attributeClassType + ', attributes["' + attributeName + '"])',
+    "string": 'self._makeListOfStringsAttribute(attributes["' + attributeName + '"])',
+    "int": 'self._makeListOfIntsAttribute(attributes["' + attributeName + '"])',
     "class": "self._makeListOfClassesAttribute(" + attributeClassType + ', attributes["' + attributeName + '"])',
 }
 
