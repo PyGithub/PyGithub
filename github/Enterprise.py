@@ -1,15 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,38 +21,51 @@
 ################################################################################
 from typing import Any, Dict
 
+from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.Requester import Requester
 
 
-class PullRequestMergeStatus(NonCompletableGithubObject):
+class Enterprise(NonCompletableGithubObject):
     """
-    This class represents PullRequestMergeStatuses. The reference can be found here https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
+    This class represents Enterprises. Such objects do not exist in the Github API, so this class merely collects all endpoints the start with /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
     """
+
+    def __init__(
+        self,
+        requester: Requester,
+        enterprise: str,
+    ):
+        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"}, True)
 
     def _initAttributes(self) -> None:
-        self._merged: Attribute[bool] = NotSet
-        self._message: Attribute[str] = NotSet
-        self._sha: Attribute[str] = NotSet
+        self._enterprise: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
+        return self.get__repr__({"enterprise": self._enterprise.value})
 
     @property
-    def merged(self) -> bool:
-        return self._merged.value
+    def enterprise(self) -> str:
+        return self._enterprise.value
 
     @property
-    def message(self) -> str:
-        return self._message.value
+    def url(self) -> str:
+        return self._url.value
 
-    @property
-    def sha(self) -> str:
-        return self._sha.value
+    def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+        """
+        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
+        if "url" not in data:
+            data["url"] = self.url + "/consumed-licenses"
+
+        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "merged" in attributes:  # pragma no branch
-            self._merged = self._makeBoolAttribute(attributes["merged"])
-        if "message" in attributes:  # pragma no branch
-            self._message = self._makeStringAttribute(attributes["message"])
-        if "sha" in attributes:  # pragma no branch
-            self._sha = self._makeStringAttribute(attributes["sha"])
+        if "enterprise" in attributes:  # pragma no branch
+            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
