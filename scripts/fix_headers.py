@@ -100,7 +100,7 @@ def extractBodyLines(lines):
 
 class PythonHeader:
     def fix(self, filename, lines):
-        isExecutable = lines[0].startswith("#!")
+        isExecutable = len(lines) > 0 and lines[0].startswith("#!")
         newLines = []
 
         if isExecutable:
