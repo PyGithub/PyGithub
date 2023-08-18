@@ -28,45 +28,35 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
+class PullRequestMergeStatus(NonCompletableGithubObject):
     """
     This class represents PullRequestMergeStatuses. The reference can be found here https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
     """
+
+    def _initAttributes(self) -> None:
+        self._merged: Attribute[bool] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
 
     @property
-    def merged(self):
-        """
-        :type: bool
-        """
+    def merged(self) -> bool:
         return self._merged.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
-
-    def _initAttributes(self) -> None:
-        self._merged = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "merged" in attributes:  # pragma no branch
