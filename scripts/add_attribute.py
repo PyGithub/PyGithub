@@ -148,7 +148,7 @@ def add_to_initAttributes(lines: list[str]) -> list[str]:
                     else:  # line.endswith(" = NotSet")
                         attrName = line[14:-9]
                     if ":" in attrName:
-                        attrName = attrName[0:attrName.find(":")].strip()
+                        attrName = attrName[0 : attrName.find(":")].strip()
                 if not line or attrName > attributeName:
                     newLines.append(f"        self._{attributeName}: Attribute[{attributeClassType}] = NotSet")
                     added = True
