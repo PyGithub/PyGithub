@@ -19,122 +19,90 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class License(github.GithubObject.CompletableGithubObject):
+class License(CompletableGithubObject):
     """
     This class represents Licenses. The reference can be found here https://docs.github.com/en/rest/reference/licenses
     """
+
+    def _initAttributes(self) -> None:
+        self._key: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._spdx_id: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._implementation: Attribute[str] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._permissions: Attribute[list[str]] = NotSet
+        self._conditions: Attribute[list[str]] = NotSet
+        self._limitations: Attribute[list[str]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def key(self):
-        """
-        :type: string
-        """
+    def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def spdx_id(self):
-        """
-        :type: string
-        """
+    def spdx_id(self) -> str:
         self._completeIfNotSet(self._spdx_id)
         return self._spdx_id.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def implementation(self):
-        """
-        :type: string
-        """
+    def implementation(self) -> str:
         self._completeIfNotSet(self._implementation)
         return self._implementation.value
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def permissions(self):
-        """
-        :type: list of string
-        """
+    def permissions(self) -> list[str]:
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
     @property
-    def conditions(self):
-        """
-        :type: list of string
-        """
+    def conditions(self) -> list[str]:
         self._completeIfNotSet(self._conditions)
         return self._conditions.value
 
     @property
-    def limitations(self):
-        """
-        :type: list of string
-        """
+    def limitations(self) -> list[str]:
         self._completeIfNotSet(self._limitations)
         return self._limitations.value
 
-    def _initAttributes(self) -> None:
-        self._key = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._spdx_id = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._implementation = github.GithubObject.NotSet
-        self._body = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._conditions = github.GithubObject.NotSet
-        self._limitations = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "name" in attributes:  # pragma no branch
