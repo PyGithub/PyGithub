@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -106,8 +104,6 @@ class PythonHeader:
 
         if isExecutable:
             newLines.append("#!/usr/bin/env python")
-        newLines.append("# -*- coding: utf-8 -*-")
-        newLines.append("")
 
         for line in generateLicenseSection(filename):
             newLines.append(line)
