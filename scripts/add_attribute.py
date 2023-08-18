@@ -41,7 +41,7 @@ import sys
 if len(sys.argv) == 1:
     print(f"usage: {sys.argv[0]} <class> <attribute> <attribute-type> [<attribute-class-type>]")
     print()
-    print(f"examples:")
+    print("examples:")
     print(f"  {sys.executable} {sys.argv[0]} Repository name string")
     print(f"  {sys.executable} {sys.argv[0]} Repository owner class NamedUser")
     sys.exit(1)
