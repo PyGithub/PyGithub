@@ -61,7 +61,7 @@ import threading
 import time
 import urllib
 import urllib.parse
-from collections import defaultdict, deque
+from collections import deque
 from datetime import datetime, timezone
 from io import IOBase
 from typing import (
@@ -351,7 +351,6 @@ class Requester:
     __connectionClass: Union[Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]]
     __hostname: str
     __authorizationHeader: Optional[str]
-    __last_requests: Dict[str, float]
     __seconds_between_requests: Optional[float]
     __seconds_between_writes: Optional[float]
 
@@ -383,7 +382,7 @@ class Requester:
         self.__pool_size = pool_size
         self.__seconds_between_requests = seconds_between_requests
         self.__seconds_between_writes = seconds_between_writes
-        self.__last_requests = defaultdict(lambda: 0.0)
+        self.__last_requests: Dict[str, float] = dict()
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -413,6 +412,16 @@ class Requester:
         # provide auth implementations that require a requester with this requester
         if isinstance(self.__auth, WithRequester):
             self.__auth.withRequester(self)
+
+    def __getstate__(self) -> Dict[str, Any]:
+        state = self.__dict__.copy()
+        # __connection_lock is not picklable
+        del state["_Requester__connection_lock"]
+        return state
+
+    def __setstate__(self, state: Dict[str, Any]) -> None:
+        self.__dict__.update(state)
+        self.__connection_lock = threading.Lock()
 
     def close(self) -> None:
         """
