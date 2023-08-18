@@ -143,7 +143,12 @@ def add_to_initAttributes(lines: list[str]) -> list[str]:
         if inInit:
             if not line or line.endswith(" = github.GithubObject.NotSet") or line.endswith(" = NotSet"):
                 if line:
-                    attrName = line[14:-29]
+                    if line.endswith(" = github.GithubObject.NotSet"):
+                        attrName = line[14:-29]
+                    else:  # line.endswith(" = NotSet")
+                        attrName = line[14:-9]
+                    if ":" in attrName:
+                        attrName = attrName[0:attrName.find(":")].strip()
                 if not line or attrName > attributeName:
                     newLines.append(f"        self._{attributeName}: Attribute[{attributeClassType}] = NotSet")
                     added = True
