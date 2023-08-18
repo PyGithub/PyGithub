@@ -89,13 +89,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def avatar_url(self) -> str:
-
         self._completeIfNotSet(self._avatar_url)
         return self._avatar_url.value
 
     @property
     def bio(self) -> str | None:
-
         self._completeIfNotSet(self._bio)
         return self._bio.value
 
@@ -106,7 +104,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def collaborators(self) -> int | None:
-
         self._completeIfNotSet(self._collaborators)
         return self._collaborators.value
 
@@ -137,37 +134,31 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def events_url(self) -> str:
-
         self._completeIfNotSet(self._events_url)
         return self._events_url.value
 
     @property
     def followers(self) -> int:
-
         self._completeIfNotSet(self._followers)
         return self._followers.value
 
     @property
     def followers_url(self) -> str:
-
         self._completeIfNotSet(self._followers_url)
         return self._followers_url.value
 
     @property
     def following(self) -> int:
-
         self._completeIfNotSet(self._following)
         return self._following.value
 
     @property
     def following_url(self) -> str:
-
         self._completeIfNotSet(self._following_url)
         return self._following_url.value
 
     @property
     def gists_url(self) -> str:
-
         self._completeIfNotSet(self._gists_url)
         return self._gists_url.value
 
@@ -183,25 +174,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def html_url(self) -> str:
-
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def id(self) -> int:
-
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def invitation_teams_url(self) -> str:
-
         self._completeIfNotSet(self._invitation_teams_url)
         return self._invitation_teams_url.value
 
     @property
     def inviter(self) -> NamedUser:
-
         self._completeIfNotSet(self._inviter)
         return self._inviter.value
 
@@ -212,25 +199,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def login(self) -> str:
-
         self._completeIfNotSet(self._login)
         return self._login.value
 
     @property
     def name(self) -> str | None:
-
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def organizations_url(self) -> str:
-
         self._completeIfNotSet(self._organizations_url)
         return self._organizations_url.value
 
     @property
     def owned_private_repos(self) -> int | None:
-
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
 
@@ -246,37 +229,31 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def private_gists(self) -> int | None:
-
         self._completeIfNotSet(self._private_gists)
         return self._private_gists.value
 
     @property
     def public_gists(self) -> int:
-
         self._completeIfNotSet(self._public_gists)
         return self._public_gists.value
 
     @property
     def public_repos(self) -> int:
-
         self._completeIfNotSet(self._public_repos)
         return self._public_repos.value
 
     @property
     def received_events_url(self) -> str:
-
         self._completeIfNotSet(self._received_events_url)
         return self._received_events_url.value
 
     @property
     def repos_url(self) -> str:
-
         self._completeIfNotSet(self._repos_url)
         return self._repos_url.value
 
     @property
     def role(self) -> str:
-
         self._completeIfNotSet(self._role)
         return self._role.value
 
@@ -287,13 +264,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def starred_url(self) -> str:
-
         self._completeIfNotSet(self._starred_url)
         return self._starred_url.value
 
     @property
     def subscriptions_url(self) -> str:
-
         self._completeIfNotSet(self._subscriptions_url)
         return self._subscriptions_url.value
 
@@ -304,19 +279,16 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def team_count(self) -> int:
-
         self._completeIfNotSet(self._team_count)
         return self._team_count.value
 
     @property
     def total_private_repos(self) -> int | None:
-
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
 
     @property
     def type(self) -> str:
-
         self._completeIfNotSet(self._type)
         return self._type.value
 
@@ -327,7 +299,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     @property
     def url(self) -> str:
-
         self._completeIfNotSet(self._url)
         return self._url.value
 
