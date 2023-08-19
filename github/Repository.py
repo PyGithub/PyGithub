@@ -2932,6 +2932,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         direction=github.GithubObject.NotSet,
         base=github.GithubObject.NotSet,
         head=github.GithubObject.NotSet,
+        per_page=github.GithubObject.NotSet,
+        page=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
@@ -2940,6 +2942,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param direction: string
         :param base: string
         :param head: string
+        :param per_page: int
+        :param page: int
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
         assert state is github.GithubObject.NotSet or isinstance(state, str), state
@@ -2947,6 +2951,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
         assert base is github.GithubObject.NotSet or isinstance(base, str), base
         assert head is github.GithubObject.NotSet or isinstance(head, str), head
+        assert per_page is github.GithubObject.NotSet or isinstance(per_page, int), per_page
+        assert page is github.GithubObject.NotSet or isinstance(page, int), page
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
@@ -2958,6 +2964,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["base"] = base
         if head is not github.GithubObject.NotSet:
             url_parameters["head"] = head
+        if per_page is not github.GithubObject.NotSet:
+            url_parameters["per_page"] = per_page
+        if page is not github.GithubObject.NotSet:
+            url_parameters["page"] = page
         return github.PaginatedList.PaginatedList(
             github.PullRequest.PullRequest,
             self._requester,
