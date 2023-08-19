@@ -132,12 +132,30 @@ class Requester(Framework.TestCase):
             ),
         )
 
-    def testClose(self):
+    def testCloseGithub(self):
         mocked_connection = mock.MagicMock()
         mocked_custom_connection = mock.MagicMock()
 
         with github.Github() as gh:
             requester = gh._Github__requester
+            requester._Requester__connection = mocked_connection
+            requester._Requester__custom_connections.append(mocked_custom_connection)
+
+        mocked_connection.close.assert_called_once_with()
+        mocked_custom_connection.close.assert_called_once_with()
+        self.assertIsNone(requester._Requester__connection)
+
+    def testCloseGithubIntegration(self):
+        mocked_connection = mock.MagicMock()
+        mocked_custom_connection = mock.MagicMock()
+
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        auth = TestAuth(123, "key")
+
+        with github.GithubIntegration(auth=auth) as gi:
+            requester = gi._GithubIntegration__requester
             requester._Requester__connection = mocked_connection
             requester._Requester__custom_connections.append(mocked_custom_connection)
 
