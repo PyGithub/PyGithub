@@ -120,6 +120,14 @@ class GithubIntegration:
         )
 
     def close(self) -> None:
+        """
+        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
+
+        .. code-block:: python
+
+          with github.GithubIntegration(...) as gi:
+            # do something
+        """
         self.__requester.close()
 
     def __enter__(self) -> "GithubIntegration":
