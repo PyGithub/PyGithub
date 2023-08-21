@@ -417,11 +417,17 @@ class Requester:
         state = self.__dict__.copy()
         # __connection_lock is not picklable
         del state["_Requester__connection_lock"]
+        # __connection is not usable on remote, so ignore it
+        del state["_Requester__connection"]
+        # __custom_connections is not usable on remote, so ignore it
+        del state["_Requester__custom_connections"]
         return state
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         self.__dict__.update(state)
         self.__connection_lock = threading.Lock()
+        self.__connection = None
+        self.__custom_connections = deque()
 
     def close(self) -> None:
         """
