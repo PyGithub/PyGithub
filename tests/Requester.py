@@ -26,6 +26,7 @@ from unittest import mock
 import github
 
 from . import Framework
+from .GithubIntegration import APP_ID, PRIVATE_KEY
 
 REPO_NAME = "PyGithub/PyGithub"
 
@@ -149,11 +150,7 @@ class Requester(Framework.TestCase):
         mocked_connection = mock.MagicMock()
         mocked_custom_connection = mock.MagicMock()
 
-        class TestAuth(github.Auth.AppAuth):
-            pass
-
-        auth = TestAuth(123, "key")
-
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         with github.GithubIntegration(auth=auth) as gi:
             requester = gi._GithubIntegration__requester
             requester._Requester__connection = mocked_connection

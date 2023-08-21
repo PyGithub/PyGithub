@@ -38,6 +38,7 @@ Then play with your Github objects::
 To close connections after use::
 
     g.close()
+
 Download and install
 --------------------
 
