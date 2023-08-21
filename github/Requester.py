@@ -60,7 +60,6 @@ import re
 import time
 import urllib
 import urllib.parse
-from collections import defaultdict
 from datetime import datetime, timezone
 from io import IOBase
 from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
@@ -357,7 +356,7 @@ class Requester:
         self.__pool_size = pool_size
         self.__seconds_between_requests = seconds_between_requests
         self.__seconds_between_writes = seconds_between_writes
-        self.__last_requests = defaultdict(lambda: 0.0)
+        self.__last_requests: Dict[str, float] = dict()
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
