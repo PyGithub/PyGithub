@@ -15,6 +15,7 @@ from github.Gist import Gist
 from github.GithubApp import GithubApp
 from github.GithubObject import GithubObject, _NotSetType
 from github.GitignoreTemplate import GitignoreTemplate
+from github.GlobalAdvisory import GlobalAdvisory
 from github.HookDescription import HookDescription
 from github.Issue import Issue
 from github.License import License
@@ -73,6 +74,27 @@ class Github:
     def get_gists(self, since: Union[datetime, _NotSetType] = ...) -> PaginatedList[Gist]: ...
     def get_gitignore_template(self, name: str) -> GitignoreTemplate: ...
     def get_gitignore_templates(self) -> List[str]: ...
+    def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory: ...
+    def get_global_advisories(
+        self,
+        type: Union[str, _NotSetType],
+        ghsa_id: Union[str, _NotSetType],
+        cve_id: Union[str, _NotSetType],
+        ecosystem: Union[str, _NotSetType],
+        severity: Union[str, _NotSetType],
+        cwes: Union[list[Union[int, str]], str, _NotSetType],
+        is_withdrawn: Union[bool, _NotSetType],
+        affects: Union[list[str], str, _NotSetType],
+        published: Union[str, _NotSetType],
+        updated: Union[str, _NotSetType],
+        modified: Union[str, _NotSetType],
+        keywords: Union[str, _NotSetType],
+        before: Union[str, _NotSetType],
+        after: Union[str, _NotSetType],
+        per_page: Union[str, _NotSetType],
+        sort: Union[str, _NotSetType],
+        direction: Union[str, _NotSetType],
+    ) -> PaginatedList[GlobalAdvisory]: ...
     def get_hook(self, name: str) -> HookDescription: ...
     def get_hooks(self) -> List[HookDescription]: ...
     def get_license(self, key: Union[str, _NotSetType] = ...) -> License: ...

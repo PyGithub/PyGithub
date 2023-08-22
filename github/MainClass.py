@@ -509,12 +509,12 @@ class Github:
         """
         assert type is github.GithubObject.NotSet or isinstance(type, str), type
         assert ghsa_id is github.GithubObject.NotSet or isinstance(ghsa_id, str)
-        assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str)
-        assert ecosystem is github.GithubObject.NotSet or isinstance(ecosystem, str)
+        assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str), cve_id
+        assert ecosystem is github.GithubObject.NotSet or isinstance(ecosystem, str), ecosystem
         assert severity is github.GithubObject.NotSet or isinstance(severity, str), severity
         assert cwes is github.GithubObject.NotSet or isinstance(cwes, list) or isinstance(cwes, str), cwes
         assert is_withdrawn is github.GithubObject.NotSet or isinstance(is_withdrawn, bool), is_withdrawn
-        #  assert affects is github.GithubObject.NotSet or isinstance(affects, list), affects
+        assert affects is github.GithubObject.NotSet or isinstance(affects, list) or isinstance(affects, str), affects
         assert published is github.GithubObject.NotSet or isinstance(published, str), published
         assert updated is github.GithubObject.NotSet or isinstance(updated, str), updated
         assert modified is github.GithubObject.NotSet or isinstance(modified, str), modified
