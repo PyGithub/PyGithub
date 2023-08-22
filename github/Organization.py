@@ -45,6 +45,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+import github.CopilotSeat
 import github.Event
 import github.GithubObject
 import github.NamedUser
@@ -1335,6 +1336,21 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             None,
             list_item="installations",
+        )
+
+    def get_all_copilot_seat_assignments(self):
+        """
+        :calls: `GET /orgs/{org}/copilot/billing/seats <https://docs.github.com/en/rest/copilot/copilot-for-business?apiVersion=2022-11-28#list-all-copilot-for-business-seat-assignments-for-an-organization>`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CopilotSeat.CopilotSeat`
+        """
+
+        return github.PaginatedList.PaginatedList(
+            github.CopilotSeat.CopilotSeat,
+            self._requester,
+            f"{self.url}/copilot/billing/seats",
+            None,
+            None,
+            list_item="seats",
         )
 
     def _initAttributes(self) -> None:
