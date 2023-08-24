@@ -44,6 +44,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         self._required_approving_review_count: Attribute[int] = NotSet
         self._users: Attribute[list[NamedUser]] = NotSet
         self._teams: Attribute[list[Team]] = NotSet
+        self._require_last_push_approval: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -51,6 +52,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
                 "url": self._url.value,
                 "dismiss_stale_reviews": self._dismiss_stale_reviews.value,
                 "require_code_owner_reviews": self._require_code_owner_reviews.value,
+                "require_last_push_approval": self._require_last_push_approval.value,
             }
         )
 
@@ -68,6 +70,11 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     def required_approving_review_count(self) -> int:
         self._completeIfNotSet(self._required_approving_review_count)
         return self._required_approving_review_count.value
+
+    @property
+    def require_last_push_approval(self) -> bool:
+        self._completeIfNotSet(self._require_last_push_approval)
+        return self._require_last_push_approval.value
 
     @property
     def url(self) -> str:
@@ -103,5 +110,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
             self._required_approving_review_count = self._makeIntAttribute(
                 attributes["required_approving_review_count"]
             )
+        if "require_last_push_approval" in attributes:  # pragma no branch
+            self._require_last_push_approval = self._makeBoolAttribute(attributes["require_last_push_approval"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
