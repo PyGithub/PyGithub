@@ -71,6 +71,7 @@ class Branch(Framework.TestCase):
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_linear_history)
+        self.assertFalse(branch_protection.allow_deletions)
         self.assertFalse(branch_protection.required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(branch_protection.required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
@@ -207,6 +208,12 @@ class Branch(Framework.TestCase):
         self.assertFalse(self.protected_branch.get_admin_enforcement())
         self.protected_branch.set_admin_enforcement()
         self.assertTrue(self.protected_branch.get_admin_enforcement())
+
+    def testAllowDeletions(self):
+        self.protected_branch.set_allow_deletions()
+        self.assertTrue(self.protected_branch.get_allow_deletions())
+        self.protected_branch.remove_allow_deletions()
+        self.assertFalse(self.protected_branch.get_allow_deletions())
 
     def testAddUserPushRestrictions(self):
         self.organization_branch.add_user_push_restrictions("sfdye")
