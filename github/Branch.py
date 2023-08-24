@@ -150,6 +150,7 @@ class Branch(NonCompletableGithubObject):
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         block_creations: Opt[bool] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
+        allow_deletions: Opt[bool] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -176,6 +177,7 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(teams_bypass_pull_request_allowances, str), teams_bypass_pull_request_allowances
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
         assert is_optional(require_last_push_approval, bool), require_last_push_approval
+        assert is_optional(allow_deletions, bool), allow_deletions
 
         post_parameters: dict[str, Any] = {}
         if is_defined(strict) or is_defined(contexts):
@@ -290,6 +292,10 @@ class Branch(NonCompletableGithubObject):
             post_parameters["block_creations"] = block_creations
         else:
             post_parameters["block_creations"] = None
+        if is_defined(allow_deletions):
+            post_parameters["allow_deletions"] = allow_deletions
+        else:
+            post_parameters["allow_deletions"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -556,3 +562,22 @@ class Branch(NonCompletableGithubObject):
             f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
+
+    def get_allow_deletions(self) -> bool:
+        """
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.protection_url}/allow_deletions")
+        return data["enabled"]
+
+    def set_allow_deletions(self) -> None:
+        """
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.protection_url}/allow_deletions")
+
+    def remove_allow_deletions(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/allow_deletions")
