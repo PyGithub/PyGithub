@@ -55,6 +55,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
+        self._allow_deletions: Attribute[bool] = NotSet
 
     @property
     def url(self) -> str:
@@ -80,6 +81,11 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
         self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
+
+    @property
+    def allow_deletions(self) -> bool:
+        self._completeIfNotSet(self._allow_deletions)
+        return self._allow_deletions.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
         if not is_defined(self._user_push_restrictions):
@@ -113,6 +119,8 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             )
         if "required_linear_history" in attributes:  # pragma no branch
             self._required_linear_history = self._makeBoolAttribute(attributes["required_linear_history"]["enabled"])
+        if "allow_deletions" in attributes:
+            self._allow_deletions = self._makeBoolAttribute(attributes["allow_deletions"]["enabled"])
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
