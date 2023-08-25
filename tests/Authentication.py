@@ -186,12 +186,12 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(user.login, "EnricoMi")
 
     def testNetrcAuth(self):
-        with NamedTemporaryFile("wt") as tmp:
+        with NamedTemporaryFile("wt", delete=False) as tmp:
             # write temporary netrc file
             tmp.write("machine api.github.com\n")
             tmp.write("login github-user\n")
             tmp.write("password github-password\n")
-            tmp.flush()
+            tmp.close()
 
             auth = github.Auth.NetrcAuth()
             with mock.patch.dict(os.environ, {"NETRC": tmp.name}):
@@ -204,7 +204,8 @@ class Authentication(Framework.BasicTestCase):
 
     def testNetrcAuthFails(self):
         # provide an empty netrc file to make sure this test does not find one
-        with NamedTemporaryFile("wt") as tmp:
+        with NamedTemporaryFile("wt", delete=False) as tmp:
+            tmp.close()
             auth = github.Auth.NetrcAuth()
             with mock.patch.dict(os.environ, {"NETRC": tmp.name}):
                 with self.assertRaises(RuntimeError) as exc:
