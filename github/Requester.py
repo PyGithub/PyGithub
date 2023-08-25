@@ -422,6 +422,10 @@ class Requester:
         return self.__base_url
 
     @property
+    def hostname(self) -> str:
+        return self.__hostname
+
+    @property
     def auth(self) -> Optional["Auth"]:
         return self.__auth
 

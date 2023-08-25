@@ -26,13 +26,14 @@
 #                                                                              #
 ################################################################################
 
+import os
 from datetime import datetime, timezone
+from tempfile import NamedTemporaryFile
 from unittest import mock
 
 import jwt
 
 import github
-
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
 
@@ -182,6 +183,32 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=auth)
         user = g.get_user()
         self.assertEqual(user.login, "EnricoMi")
+
+    def testNetrcAuth(self):
+        with NamedTemporaryFile("wt") as tmp:
+            # write temporary netrc file
+            tmp.write("machine api.github.com\n")
+            tmp.write("login github-user\n")
+            tmp.write("password github-password\n")
+            tmp.flush()
+
+            auth = github.Auth.NetrcAuth()
+            with mock.patch.dict(os.environ, {"NETRC": tmp.name}):
+                github.Github(auth=auth)
+
+            self.assertEqual(auth.login, "github-user")
+            self.assertEqual(auth.password, "github-password")
+            self.assertEqual(auth.token, "Z2l0aHViLXVzZXI6Z2l0aHViLXBhc3N3b3Jk")
+            self.assertEqual(auth.token_type, "Basic")
+
+    def testNetrcAuthFails(self):
+        # provide an empty netrc file to make sure this test does not find one
+        with NamedTemporaryFile("wt") as tmp:
+            auth = github.Auth.NetrcAuth()
+            with mock.patch.dict(os.environ, {"NETRC": tmp.name}):
+                with self.assertRaises(RuntimeError) as exc:
+                    github.Github(auth=auth)
+                self.assertEqual(exc.exception.args, ("Could not get credentials from netrc for host api.github.com", ))
 
     def testCreateJWT(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
