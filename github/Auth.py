@@ -446,9 +446,13 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         return self._refresh_expires_at
 
 
-class NetrcAuth(HTTPBasicAuth, WithRequester["NetRcAuth"]):
-    def __init__(self):
-        super(NetrcAuth, self).__init__()
+class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
+    """
+    This class is used to authenticate Requester via .netrc.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
 
         self._login: Optional[str] = None
         self._password: Optional[str] = None
@@ -468,7 +472,7 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetRcAuth"]):
         return self._password
 
     def withRequester(self, requester: Requester) -> "NetrcAuth":
-        super(NetrcAuth, self).withRequester(requester)
+        super().withRequester(requester)
 
         auth = utils.get_netrc_auth(requester.base_url, raise_errors=True)
         if auth is None:
