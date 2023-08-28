@@ -27,16 +27,22 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Permissions(github.GithubObject.NonCompletableGithubObject):
+class Permissions(NonCompletableGithubObject):
     """
     This class represents Permissions
     """
+
+    def _initAttributes(self) -> None:
+        self._admin: Attribute[bool] = NotSet
+        self._maintain: Attribute[bool] = NotSet
+        self._pull: Attribute[bool] = NotSet
+        self._push: Attribute[bool] = NotSet
+        self._triage: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -50,46 +56,24 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def admin(self):
-        """
-        :type: bool
-        """
+    def admin(self) -> bool:
         return self._admin.value
 
     @property
-    def maintain(self):
-        """
-        :type: bool
-        """
+    def maintain(self) -> bool:
         return self._maintain.value
 
     @property
-    def pull(self):
-        """
-        :type: bool
-        """
+    def pull(self) -> bool:
         return self._pull.value
 
     @property
-    def push(self):
-        """
-        :type: bool
-        """
+    def push(self) -> bool:
         return self._push.value
 
     @property
-    def triage(self):
-        """
-        :type: bool
-        """
+    def triage(self) -> bool:
         return self._triage.value
-
-    def _initAttributes(self) -> None:
-        self._admin = github.GithubObject.NotSet
-        self._maintain = github.GithubObject.NotSet
-        self._pull = github.GithubObject.NotSet
-        self._push = github.GithubObject.NotSet
-        self._triage = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "admin" in attributes:  # pragma no branch
