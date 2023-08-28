@@ -83,7 +83,7 @@ class HTTPBasicAuth(Auth, abc.ABC):
     @property
     def token(self) -> str:
         return (
-            base64.b64encode(f"{self.login}:{self.password}".encode())
+            base64.b64encode(f"{self.username}:{self.password}".encode())
             .decode("utf-8")
             .replace("\n", "")
         )
@@ -491,12 +491,16 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
 
     @property
     def login(self) -> str:
-        assert self._login is not None, "Method withRequester(Requester) must be called first"
+        assert (
+            self._login is not None
+        ), "Method withRequester(Requester) must be called first"
         return self._login
 
     @property
     def password(self) -> str:
-        assert self._password is not None, "Method withRequester(Requester) must be called first"
+        assert (
+            self._password is not None
+        ), "Method withRequester(Requester) must be called first"
         return self._password
 
     def withRequester(self, requester: Requester) -> "NetrcAuth":
@@ -504,7 +508,9 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
 
         auth = utils.get_netrc_auth(requester.base_url, raise_errors=True)
         if auth is None:
-            raise RuntimeError(f"Could not get credentials from netrc for host {requester.hostname}")
+            raise RuntimeError(
+                f"Could not get credentials from netrc for host {requester.hostname}"
+            )
 
         self._login, self._password = auth
 

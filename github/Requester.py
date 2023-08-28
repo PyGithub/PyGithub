@@ -258,7 +258,9 @@ class Requester:
     _frameBuffer: List[Any]
 
     @staticmethod
-    def noopAuth(request: requests.models.PreparedRequest) -> requests.models.PreparedRequest:
+    def noopAuth(
+        request: requests.models.PreparedRequest,
+    ) -> requests.models.PreparedRequest:
         return request
 
     @classmethod

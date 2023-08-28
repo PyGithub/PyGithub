@@ -220,7 +220,10 @@ class Authentication(Framework.BasicTestCase):
             with mock.patch.dict(os.environ, {"NETRC": tmp.name}):
                 with self.assertRaises(RuntimeError) as exc:
                     github.Github(auth=auth)
-                self.assertEqual(exc.exception.args, ("Could not get credentials from netrc for host api.github.com",))
+                self.assertEqual(
+                    exc.exception.args,
+                    ("Could not get credentials from netrc for host api.github.com",),
+                )
 
     def testCreateJWT(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
