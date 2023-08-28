@@ -131,6 +131,10 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -196,6 +200,10 @@ class HTTPRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -248,6 +256,10 @@ class Requester:
     __logger = None
 
     _frameBuffer: List[Any]
+
+    @staticmethod
+    def noopAuth(request: requests.models.PreparedRequest) -> requests.models.PreparedRequest:
+        return request
 
     @classmethod
     def injectConnectionClasses(
@@ -429,6 +441,10 @@ class Requester:
     @property
     def base_url(self) -> str:
         return self.__base_url
+
+    @property
+    def hostname(self) -> str:
+        return self.__hostname
 
     @property
     def auth(self) -> Optional["Auth"]:
