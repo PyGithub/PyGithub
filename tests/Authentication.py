@@ -99,8 +99,63 @@ class Authentication(Framework.BasicTestCase):
 
     def testAppAuthTokenAuthentication(self):
         # test data copied from testJWTAuthentication to test parity
-        g = github.Github(auth=self.app_auth)
+        g = github.Github(auth=self.jwt)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    def testAppAuthAuthentication(self):
+        # test data copied from testAppAuthentication to test parity
+        g = github.Github(auth=self.app_auth.get_installation_auth(29782936))
+        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+
+    def assert_requester_args(self, g, expected_requester):
+        expected_args = expected_requester.kwargs
+        expected_args.pop("auth")
+
+        auth_args = g._Github__requester.auth.requester.kwargs
+        auth_args.pop("auth")
+
+        self.assertEqual(expected_args, auth_args)
+
+        auth_integration_args = (
+            g._Github__requester.auth._AppInstallationAuth__integration._GithubIntegration__requester.kwargs
+        )
+        auth_integration_args.pop("auth")
+
+        self.assertEqual(expected_args, auth_integration_args)
+
+    def testAppAuthAuthenticationWithGithubRequesterArgs(self):
+        # test that Requester arguments given to github.Github are passed to auth and auth.__integration
+        g = github.Github(
+            auth=self.app_auth.get_installation_auth(29782936),
+            base_url="https://base.net/",
+            timeout=60,
+            user_agent="agent",
+            per_page=100,
+            verify="cert",
+            retry=999,
+            pool_size=10,
+            seconds_between_requests=100,
+            seconds_between_writes=1000,
+        )
+
+        self.assert_requester_args(g, g._Github__requester)
+
+    def testAppAuthAuthenticationWithGithubIntegrationRequesterArgs(self):
+        # test that Requester arguments given to github.GithubIntegration are passed to auth and auth.__integration
+        gi = github.GithubIntegration(
+            auth=self.app_auth,
+            base_url="https://base.net/",
+            timeout=60,
+            user_agent="agent",
+            per_page=100,
+            verify="cert",
+            retry=999,
+            pool_size=10,
+            seconds_between_requests=100,
+            seconds_between_writes=1000,
+        )
+
+        self.assert_requester_args(gi.get_github_for_installation(29782936), gi._GithubIntegration__requester)
 
     def testAppInstallationAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
@@ -138,6 +193,12 @@ class Authentication(Framework.BasicTestCase):
         # use the token
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
         self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+
+    def testAppInstallationAuthAuthenticationRequesterArgs(self):
+        installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
+        github.Github(
+            auth=installation_auth,
+        )
 
     def testAppUserAuthentication(self):
         client_id = "removed client id"
