@@ -23,17 +23,23 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Referrer(github.GithubObject.NonCompletableGithubObject):
+class Referrer(NonCompletableGithubObject):
     """
     This class represents a popylar Referrer for a GitHub repository.
     The reference can be found here https://docs.github.com/en/rest/reference/repos#traffic
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._referrer: Attribute[str] = NotSet
+        self._count: Attribute[int] = NotSet
+        self._uniques: Attribute[int] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "referrer": self._referrer.value,
@@ -43,32 +49,18 @@ class Referrer(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def referrer(self):
-        """
-        :type: string
-        """
+    def referrer(self) -> str:
         return self._referrer.value
 
     @property
-    def count(self):
-        """
-        :type: integer
-        """
+    def count(self) -> int:
         return self._count.value
 
     @property
-    def uniques(self):
-        """
-        :type: integer
-        """
+    def uniques(self) -> int:
         return self._uniques.value
 
-    def _initAttributes(self):
-        self._referrer = github.GithubObject.NotSet
-        self._count = github.GithubObject.NotSet
-        self._uniques = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "referrer" in attributes:  # pragma no branch
             self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "count" in attributes:  # pragma no branch

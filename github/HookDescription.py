@@ -29,6 +29,8 @@
 ################################################################################
 from __future__ import annotations
 
+from typing import Any
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -43,7 +45,7 @@ class HookDescription(NonCompletableGithubObject):
         self._schema: Attribute[list[list[str]]] = NotSet
         self._supported_events: Attribute[list[str]] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
@@ -62,7 +64,7 @@ class HookDescription(NonCompletableGithubObject):
     def supported_events(self) -> list[str]:
         return self._supported_events.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch
@@ -70,6 +72,4 @@ class HookDescription(NonCompletableGithubObject):
         if "schema" in attributes:  # pragma no branch
             self._schema = self._makeListOfListOfStringsAttribute(attributes["schema"])
         if "supported_events" in attributes:  # pragma no branch
-            self._supported_events = self._makeListOfStringsAttribute(
-                attributes["supported_events"]
-            )
+            self._supported_events = self._makeListOfStringsAttribute(attributes["supported_events"])

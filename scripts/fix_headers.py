@@ -112,11 +112,7 @@ class PythonHeader:
 
         if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
-            if (
-                "import " not in bodyLines[0]
-                and bodyLines[0] != '"""'
-                and not bodyLines[0].startswith("##########")
-            ):
+            if "import " not in bodyLines[0] and bodyLines[0] != '"""' and not bodyLines[0].startswith("##########"):
                 newLines.append("")
         newLines += bodyLines
 

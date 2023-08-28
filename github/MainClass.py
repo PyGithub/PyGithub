@@ -28,6 +28,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,6 +56,7 @@ from typing import List
 import urllib3
 
 import github.ApplicationOAuth
+import github.Enterprise
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -135,11 +137,7 @@ class Github:
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert isinstance(per_page, int), per_page
         assert isinstance(verify, (bool, str)), verify
-        assert (
-            retry is None
-            or isinstance(retry, int)
-            or isinstance(retry, urllib3.util.Retry)
-        ), retry
+        assert retry is None or isinstance(retry, int) or isinstance(retry, urllib3.util.Retry), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0
@@ -154,8 +152,7 @@ class Github:
             auth = Auth.Login(login_or_token, password)
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use "
-                "auth=github.Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
             )
             auth = Auth.Token(login_or_token)
@@ -169,8 +166,7 @@ class Github:
             auth = Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use "
-                "auth=github.Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
             )
             auth = app_auth
@@ -273,9 +269,7 @@ class Github:
 
         url_parameters = dict()
 
-        return github.PaginatedList.PaginatedList(
-            github.License.License, self.__requester, "/licenses", url_parameters
-        )
+        return github.PaginatedList.PaginatedList(github.License.License, self.__requester, "/licenses", url_parameters)
 
     def get_events(self):
         """
@@ -283,9 +277,7 @@ class Github:
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
 
-        return github.PaginatedList.PaginatedList(
-            github.Event.Event, self.__requester, "/events", None
-        )
+        return github.PaginatedList.PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
     def get_user(self, login=github.GithubObject.NotSet):
         """
@@ -295,16 +287,10 @@ class Github:
         """
         assert login is github.GithubObject.NotSet or isinstance(login, str), login
         if login is github.GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser(
-                self.__requester, {}, {"url": "/user"}, completed=False
-            )
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
-            headers, data = self.__requester.requestJsonAndCheck(
-                "GET", f"/users/{login}"
-            )
-            return github.NamedUser.NamedUser(
-                self.__requester, headers, data, completed=True
-            )
+            headers, data = self.__requester.requestJsonAndCheck("GET", f"/users/{login}")
+            return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_user_by_id(self, user_id):
         """
@@ -314,9 +300,7 @@ class Github:
         """
         assert isinstance(user_id, int), user_id
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
-        return github.NamedUser.NamedUser(
-            self.__requester, headers, data, completed=True
-        )
+        return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
@@ -340,9 +324,7 @@ class Github:
         """
         assert isinstance(login, str), login
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
-        return github.Organization.Organization(
-            self.__requester, headers, data, completed=True
-        )
+        return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_organizations(self, since=github.GithubObject.NotSet):
         """
@@ -361,6 +343,16 @@ class Github:
             url_parameters,
         )
 
+    def get_enterprise(self, enterprise):
+        """
+        :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
+        :param enterprise: string
+        :rtype: :class:`Enterprise`
+        """
+        assert isinstance(enterprise, str), enterprise
+        # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
+        return github.Enterprise.Enterprise(self.__requester, enterprise)
+
     def get_repo(self, full_name_or_id, lazy=False):
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
@@ -370,15 +362,11 @@ class Github:
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
         if lazy:
-            return Repository.Repository(
-                self.__requester, {}, {"url": url}, completed=False
-            )
+            return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
         headers, data = self.__requester.requestJsonAndCheck("GET", url)
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
-    def get_repos(
-        self, since=github.GithubObject.NotSet, visibility=github.GithubObject.NotSet
-    ):
+    def get_repos(self, since=github.GithubObject.NotSet, visibility=github.GithubObject.NotSet):
         """
         :calls: `GET /repositories <https://docs.github.com/en/rest/reference/repos#list-public-repositories>`_
         :param since: integer
@@ -423,9 +411,7 @@ class Github:
             "/projects/columns/%d" % id,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return github.ProjectColumn.ProjectColumn(
-            self.__requester, headers, data, completed=True
-        )
+        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data, completed=True)
 
     def get_gist(self, id):
         """
@@ -447,9 +433,7 @@ class Github:
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
-            github.Gist.Gist, self.__requester, "/gists/public", url_parameters
-        )
+        return github.PaginatedList.PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
 
     def search_repositories(
         self,
@@ -468,14 +452,10 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert sort in ("stars", "forks", "updated"), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
@@ -594,14 +574,10 @@ class Github:
         """
         assert isinstance(query, str), query
         url_parameters = dict()
-        if (
-            sort is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert sort in ("indexed",), sort
             url_parameters["sort"] = sort
-        if (
-            order is not github.GithubObject.NotSet
-        ):  # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
             url_parameters["order"] = order
 
@@ -703,16 +679,12 @@ class Github:
         :rtype: string
         """
         assert isinstance(text, str), text
-        assert context is github.GithubObject.NotSet or isinstance(
-            context, github.Repository.Repository
-        ), context
+        assert context is github.GithubObject.NotSet or isinstance(context, github.Repository.Repository), context
         post_parameters = {"text": text}
         if context is not github.GithubObject.NotSet:
             post_parameters["mode"] = "gfm"
             post_parameters["context"] = context._identity
-        status, headers, data = self.__requester.requestJson(
-            "POST", "/markdown", input=post_parameters
-        )
+        status, headers, data = self.__requester.requestJson("POST", "/markdown", input=post_parameters)
         return data
 
     def get_hook(self, name):
@@ -722,12 +694,8 @@ class Github:
         :rtype: :class:`github.HookDescription.HookDescription`
         """
         assert isinstance(name, str), name
-        headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", f"/hooks/{name}"
-        )
-        return HookDescription.HookDescription(
-            self.__requester, headers, attributes, completed=True
-        )
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
+        return HookDescription.HookDescription(self.__requester, headers, attributes, completed=True)
 
     def get_hooks(self):
         """
@@ -736,9 +704,7 @@ class Github:
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
         return [
-            HookDescription.HookDescription(
-                self.__requester, headers, attributes, completed=True
-            )
+            HookDescription.HookDescription(self.__requester, headers, attributes, completed=True)
             for attributes in data
         ]
 
@@ -751,12 +717,8 @@ class Github:
         """
         assert isinstance(hook_id, int), hook_id
         assert isinstance(delivery_id, int), delivery_id
-        headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", f"/hooks/{hook_id}/deliveries/{delivery_id}"
-        )
-        return HookDelivery.HookDelivery(
-            self.__requester, headers, attributes, completed=True
-        )
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
+        return HookDelivery.HookDelivery(self.__requester, headers, attributes, completed=True)
 
     def get_hook_deliveries(self, hook_id: int) -> List[HookDeliverySummary]:
         """
@@ -765,13 +727,9 @@ class Github:
         :rtype: list of :class:`github.HookDelivery.HookDeliverySummary`
         """
         assert isinstance(hook_id, int), hook_id
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", f"/hooks/{hook_id}/deliveries"
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries")
         return [
-            HookDelivery.HookDeliverySummary(
-                self.__requester, headers, attributes, completed=True
-            )
+            HookDelivery.HookDeliverySummary(self.__requester, headers, attributes, completed=True)
             for attributes in data
         ]
 
@@ -780,9 +738,7 @@ class Github:
         :calls: `GET /gitignore/templates <https://docs.github.com/en/rest/reference/gitignore>`_
         :rtype: list of string
         """
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", "/gitignore/templates"
-        )
+        headers, data = self.__requester.requestJsonAndCheck("GET", "/gitignore/templates")
         return data
 
     def get_gitignore_template(self, name):
@@ -791,12 +747,8 @@ class Github:
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
         assert isinstance(name, str), name
-        headers, attributes = self.__requester.requestJsonAndCheck(
-            "GET", f"/gitignore/templates/{name}"
-        )
-        return GitignoreTemplate.GitignoreTemplate(
-            self.__requester, headers, attributes, completed=True
-        )
+        headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/gitignore/templates/{name}")
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
     def get_emojis(self):
         """
@@ -863,12 +815,10 @@ class Github:
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
             )
-            return GithubIntegration(auth=self.__requester.auth).get_app()
+            return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
-            )
+            return GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
 
 
 # Retrocompatibility

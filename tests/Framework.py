@@ -180,9 +180,7 @@ class ReplayingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        full_url = Url(
-            scheme=self.__protocol, host=self.__host, port=self.__port, path=url
-        )
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
@@ -217,9 +215,7 @@ class ReplayingConnection:
         return (base, sorted(qs.split("&")))
 
     def __request_callback(self, request, uri, response_headers):
-        self.__readNextRequest(
-            self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers
-        )
+        self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
@@ -281,12 +277,8 @@ class BasicTestCase(unittest.TestCase):
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(
-                    self.__openFile("w"), *args, **kwds
-                ),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(
-                    self.__openFile("w"), *args, **kwds
-                ),
+                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("w"), *args, **kwds),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("w"), *args, **kwds),
             )
             import GithubCredentials  # type: ignore
 
@@ -296,30 +288,18 @@ class BasicTestCase(unittest.TestCase):
                 else None
             )
             self.oauth_token = (
-                github.Auth.Token(GithubCredentials.oauth_token)
-                if GithubCredentials.oauth_token
-                else None
+                github.Auth.Token(GithubCredentials.oauth_token) if GithubCredentials.oauth_token else None
             )
-            self.jwt = (
-                github.Auth.AppAuthToken(GithubCredentials.jwt)
-                if GithubCredentials.jwt
-                else None
-            )
+            self.jwt = github.Auth.AppAuthToken(GithubCredentials.jwt) if GithubCredentials.jwt else None
             self.app_auth = (
-                github.Auth.AppAuth(
-                    GithubCredentials.app_id, GithubCredentials.app_private_key
-                )
+                github.Auth.AppAuth(GithubCredentials.app_id, GithubCredentials.app_private_key)
                 if GithubCredentials.app_id and GithubCredentials.app_private_key
                 else None
             )
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(
-                    self.__openFile("r"), *args, **kwds
-                ),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(
-                    self.__openFile("r"), *args, **kwds
-                ),
+                lambda ignored, *args, **kwds: ReplayingHttpConnection(self.__openFile("r"), *args, **kwds),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self.__openFile("r"), *args, **kwds),
             )
             self.login = github.Auth.Login("login", "password")
             self.oauth_token = github.Auth.Token("oauth_token")
@@ -339,14 +319,8 @@ class BasicTestCase(unittest.TestCase):
         self.assertWarnings(warning, expected)
 
     def assertWarnings(self, warning, *expecteds):
-        actual = [
-            (type(message), type(message.message), message.message.args)
-            for message in warning.warnings
-        ]
-        expected = [
-            (warnings.WarningMessage, DeprecationWarning, (expected,))
-            for expected in expecteds
-        ]
+        actual = [(type(message), type(message.message), message.message.args) for message in warning.warnings]
+        expected = [(warnings.WarningMessage, DeprecationWarning, (expected,)) for expected in expecteds]
         self.assertSequenceEqual(actual, expected)
 
     @contextlib.contextmanager
@@ -356,15 +330,9 @@ class BasicTestCase(unittest.TestCase):
             yield
 
     def __openFile(self, mode):
-        for (_, _, functionName, _) in traceback.extract_stack():
-            if (
-                functionName.startswith("test")
-                or functionName == "setUp"
-                or functionName == "tearDown"
-            ):
-                if (
-                    functionName != "test"
-                ):  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+        for _, _, functionName, _ in traceback.extract_stack():
+            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
+                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
                     fileName = os.path.join(
                         self.replayDataFolder,
                         f"{self.__class__.__name__}.{functionName}.txt",

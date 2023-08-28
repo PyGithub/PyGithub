@@ -52,8 +52,8 @@ class PaginatedListBase(Generic[T]):
     def _fetchNextPage(self) -> List[T]:
         raise NotImplementedError
 
-    def __init__(self):
-        self.__elements = []
+    def __init__(self, elements: Optional[List[T]] = None) -> None:
+        self.__elements = [] if elements is None else elements
 
     def __getitem__(self, index: Union[int, slice]) -> Any:
         assert isinstance(index, (int, slice))
@@ -72,7 +72,7 @@ class PaginatedListBase(Generic[T]):
     def _isBiggerThan(self, index: int) -> bool:
         return len(self.__elements) > index or self._couldGrow()
 
-    def __fetchToIndex(self, index):
+    def __fetchToIndex(self, index: int) -> None:
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
@@ -138,8 +138,9 @@ class PaginatedList(PaginatedListBase[T]):
         firstParams: Any,
         headers: Optional[Dict[str, str]] = None,
         list_item: str = "items",
+        firstData: Optional[Any] = None,
+        firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
     ):
-        super().__init__()
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
@@ -152,6 +153,11 @@ class PaginatedList(PaginatedListBase[T]):
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
         self.__totalCount: Optional[int] = None
+
+        first_page = []
+        if firstData is not None and firstHeaders is not None:
+            first_page = self._getPage(firstData, firstHeaders)
+        super().__init__(first_page)
 
     @property
     def totalCount(self) -> int:
@@ -200,13 +206,13 @@ class PaginatedList(PaginatedListBase[T]):
         r.__reverse()
         return r
 
-    def __reverse(self):
+    def __reverse(self) -> None:
         self._reversed = True
         lastUrl = self._getLastPageUrl()
         if lastUrl:
             self.__nextUrl = lastUrl
 
-    def _couldGrow(self):
+    def _couldGrow(self) -> bool:
         return self.__nextUrl is not None
 
     def _fetchNextPage(self) -> List[T]:
@@ -214,7 +220,9 @@ class PaginatedList(PaginatedListBase[T]):
             "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
         )
         data = data if data else []
+        return self._getPage(data, headers)
 
+    def _getPage(self, data: Any, headers: Dict[str, Any]) -> List[T]:
         self.__nextUrl = None  # type: ignore
         if len(data) > 0:
             links = self.__parseLinkHeader(headers)
@@ -263,7 +271,4 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
 
-        return [
-            self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data
-        ]
+        return [self.__contentClass(self.__requester, headers, element, completed=False) for element in data]

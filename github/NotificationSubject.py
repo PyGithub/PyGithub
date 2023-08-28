@@ -27,6 +27,8 @@
 ################################################################################
 
 
+from typing import Any, Dict
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -41,7 +43,7 @@ class NotificationSubject(NonCompletableGithubObject):
         self._latest_comment_url: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
@@ -60,14 +62,12 @@ class NotificationSubject(NonCompletableGithubObject):
     def type(self) -> str:
         return self._type.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "latest_comment_url" in attributes:  # pragma no branch
-            self._latest_comment_url = self._makeStringAttribute(
-                attributes["latest_comment_url"]
-            )
+            self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])

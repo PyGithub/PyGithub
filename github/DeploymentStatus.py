@@ -21,6 +21,8 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 import github.GithubObject
 
 
@@ -29,7 +31,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
     This class represents Deployment Statuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
@@ -136,7 +138,7 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
         self._deployment_url = github.GithubObject.NotSet
@@ -151,11 +153,9 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._node_id = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "environment_url" in attributes:  # pragma no branch
-            self._environment_url = self._makeStringAttribute(
-                attributes["environment_url"]
-            )
+            self._environment_url = self._makeStringAttribute(attributes["environment_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "id" in attributes:  # pragma no branch
@@ -165,21 +165,15 @@ class DeploymentStatus(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "deployment_url" in attributes:  # pragma no branch
-            self._deployment_url = self._makeStringAttribute(
-                attributes["deployment_url"]
-            )
+            self._deployment_url = self._makeStringAttribute(attributes["deployment_url"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "environment" in attributes:  # pragma no branch
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "repository_url" in attributes:  # pragma no branch
-            self._repository_url = self._makeStringAttribute(
-                attributes["repository_url"]
-            )
+            self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "target_url" in attributes:  # pragma no branch

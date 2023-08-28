@@ -20,16 +20,23 @@
 #                                                                              #
 ################################################################################
 
+from typing import Any, Dict
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Autolink(NonCompletableGithubObject):
+    """
+    This class represents Repository autolinks.
+    The reference can be found here https://docs.github.com/en/rest/repos/autolinks?apiVersion=2022-11-28
+    """
+
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._key_prefix: Attribute[str] = NotSet
         self._url_template: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
@@ -44,7 +51,7 @@ class Autolink(NonCompletableGithubObject):
     def url_template(self) -> str:
         return self._url_template.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key_prefix" in attributes:  # pragma no branch
