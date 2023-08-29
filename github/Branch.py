@@ -153,7 +153,7 @@ class Branch(NonCompletableGithubObject):
         assert is_optional(required_approving_review_count, int), required_approving_review_count
         assert is_optional(required_linear_history, bool), required_linear_history
         assert is_optional(allow_force_pushes, bool), allow_force_pushes
-        assert is_optional(required_linear_history, bool), required_conversation_resolution
+        assert is_optional(required_conversation_resolution, bool), required_conversation_resolution
         assert is_optional(lock_branch, bool), lock_branch
         assert is_optional(allow_fork_syncing, bool), allow_fork_syncing
         assert is_optional_list(users_bypass_pull_request_allowances, str), users_bypass_pull_request_allowances
