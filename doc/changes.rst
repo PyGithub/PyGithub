@@ -4,6 +4,23 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.0.2
+-----------------------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+A Netrc file (e.g. ``~/.netrc``) does not override PyGithub authentication, any more.
+If you require authentication through Netrc, then this is a breaking change.
+Use a ``github.Auth.Netrc`` instance to use Netrc credentials:
+
+.. code-block:: python
+
+    >>> auth = Auth.Netrc()
+    >>> g = Github(auth=auth)
+    >>> g.get_user().login
+    'login'
+
 Version 2.0.0 (July 04, 2023)
 -----------------------------------
 
@@ -18,7 +35,7 @@ https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion
 The default throttling of 1 second between writes and 0.25 second between any requests can be configured
 for ``github.Github`` and ``github.GithubIntegration``:
 
-.. code-block::
+.. code-block:: python
 
     g = github.Github(seconds_between_requests=0.25, seconds_between_writes=1)
 
@@ -31,7 +48,7 @@ This release introduces a default retry mechanism to retry retry-able 403 respon
 Class ``github.GithubRetry`` implements this behavior, and can be configured via the ``retry`` argument of ``github.Github`` and ``github.GithubIntegration``.
 Retry behavior is configured similar to ``urllib3.Retry``: https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html
 
-.. code-block::
+.. code-block:: python
 
     g = github.Github(retry=github.GithubRetry())
 
@@ -45,7 +62,7 @@ Before this release, timestamps used to be naive ``datetime`` instances without 
 Comparing (other than ``==``) these timestamps with naive ``datetime`` instances used to work but will now break.
 Add a timezone information to your ``datetime`` instances before comparison:
 
-.. code-block::
+.. code-block:: python
 
     if g.get_repo("PyGithub/PyGithub").created_at < datetime(2012, 2, 26, tzinfo=timezone.utc):
         ...
