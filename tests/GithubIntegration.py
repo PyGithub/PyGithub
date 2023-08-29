@@ -91,28 +91,32 @@ class GithubIntegration(Framework.BasicTestCase):
         # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
         # we ignore InsecureRequestWarning from urllib3.connectionpool
         with self.ignoreWarning(category=InsecureRequestWarning, module="urllib3.connectionpool"):
-            auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
-            github_integration = github.GithubIntegration(
-                auth=auth,
-                base_url="https://api.github.com",
+            kwargs = dict(
+                auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY),
+                # http protocol used to deviate from default base url, recording data might require https
+                base_url="http://api.github.com",
                 timeout=Consts.DEFAULT_TIMEOUT + 10,
                 user_agent="PyGithub/Python-Test",
                 per_page=Consts.DEFAULT_PER_PAGE + 10,
                 verify=False,
                 retry=3,
                 pool_size=10,
+                seconds_between_requests=100,
+                seconds_between_writes=1000,
             )
 
+            # assert kwargs consists of ALL requester constructor arguments
+            self.assertEqual(kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys())
+
+            github_integration = github.GithubIntegration(**kwargs)
             g = github_integration.get_github_for_installation(36541767)
 
             self.assertIsInstance(g._Github__requester.auth, AppInstallationAuth)
-            self.assertEqual(g._Github__requester._Requester__base_url, "https://api.github.com")
-            self.assertEqual(g._Github__requester._Requester__timeout, Consts.DEFAULT_TIMEOUT + 10)
-            self.assertEqual(g._Github__requester._Requester__userAgent, "PyGithub/Python-Test")
-            self.assertEqual(g._Github__requester.per_page, Consts.DEFAULT_PER_PAGE + 10)
-            self.assertEqual(g._Github__requester._Requester__verify, False)
-            self.assertEqual(g._Github__requester._Requester__retry, 3)
-            self.assertEqual(g._Github__requester._Requester__pool_size, 10)
+
+            actual = g._Github__requester.kwargs
+            kwargs.update(auth=str(AppInstallationAuth))
+            actual.update(auth=str(type(actual["auth"])))
+            self.assertDictEqual(kwargs, actual)
 
             repo = g.get_repo("PyGithub/PyGithub")
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
