@@ -126,9 +126,11 @@ class GithubIntegration:
             seconds_between_writes=seconds_between_writes,
         )
 
-    def get_github_for_installation(self, installation_id: int) -> github.Github:
+    def get_github_for_installation(
+        self, installation_id: int, token_permissions: dict[str, str] | None = None
+    ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(installation_id, requester=self.__requester)
+        auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self) -> dict[str, str]:
