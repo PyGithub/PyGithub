@@ -71,6 +71,7 @@ import github.License
 import github.NamedUser
 import github.Topic
 from github import Consts
+from github.GithubIntegration import GithubIntegration
 from github.GithubObject import GithubObject, NotSet, Opt, is_defined
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
@@ -796,7 +797,7 @@ class Github:
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
             )
-            return github.GithubIntegration(auth=self.__requester.auth).get_app()  # type: ignore
+            return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
