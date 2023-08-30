@@ -27,90 +27,69 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Event(github.GithubObject.NonCompletableGithubObject):
+class Event(NonCompletableGithubObject):
     """
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
     """
+
+    def _initAttributes(self) -> None:
+        self._actor: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[str] = NotSet
+        self._org: Attribute[github.Organization.Organization] = NotSet
+        self._payload: Attribute[dict[str, Any]] = NotSet
+        self._public: Attribute[bool] = NotSet
+        self._repo: Attribute[github.Repository.Repository] = NotSet
+        self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
 
     @property
-    def actor(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def actor(self) -> github.NamedUser.NamedUser:
         return self._actor.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: string
-        """
+    def id(self) -> str:
         return self._id.value
 
     @property
-    def org(self):
-        """
-        :type: :class:`github.Organization.Organization`
-        """
+    def org(self) -> github.Organization.Organization:
         return self._org.value
 
     @property
-    def payload(self):
-        """
-        :type: dict
-        """
+    def payload(self) -> dict[str, Any]:
         return self._payload.value
 
     @property
-    def public(self):
-        """
-        :type: bool
-        """
+    def public(self) -> bool:
         return self._public.value
 
     @property
-    def repo(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repo(self) -> github.Repository.Repository:
         return self._repo.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
-    def _initAttributes(self) -> None:
-        self._actor = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._org = github.GithubObject.NotSet
-        self._payload = github.GithubObject.NotSet
-        self._public = github.GithubObject.NotSet
-        self._repo = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "created_at" in attributes:  # pragma no branch
