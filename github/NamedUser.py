@@ -68,6 +68,53 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
     """
 
+    def _initAttributes(self) -> None:
+        self._avatar_url: Attribute[str] = NotSet
+        self._bio: Attribute[str | None] = NotSet
+        self._blog: Attribute[str | None] = NotSet
+        self._collaborators: Attribute[int] = NotSet
+        self._company: Attribute[str | None] = NotSet
+        self._contributions: Attribute[int] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._disk_usage: Attribute[int] = NotSet
+        self._email: Attribute[str | None] = NotSet
+        self._events_url: Attribute[str] = NotSet
+        self._followers: Attribute[int] = NotSet
+        self._followers_url: Attribute[str] = NotSet
+        self._following: Attribute[int] = NotSet
+        self._following_url: Attribute[str] = NotSet
+        self._gists_url: Attribute[str] = NotSet
+        self._gravatar_id: Attribute[str | None] = NotSet
+        self._hireable: Attribute[bool | None] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._invitation_teams_url: Attribute[str] = NotSet
+        self._inviter: Attribute[NamedUser] = NotSet
+        self._location: Attribute[str | None] = NotSet
+        self._login: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._organizations_url: Attribute[str] = NotSet
+        self._owned_private_repos: Attribute[int] = NotSet
+        self._permissions: Attribute[Permissions] = NotSet
+        self._plan: Attribute[Plan] = NotSet
+        self._private_gists: Attribute[int] = NotSet
+        self._public_gists: Attribute[int] = NotSet
+        self._public_repos: Attribute[int] = NotSet
+        self._received_events_url: Attribute[str] = NotSet
+        self._repos_url: Attribute[str] = NotSet
+        self._role: Attribute[str] = NotSet
+        self._site_admin: Attribute[bool] = NotSet
+        self._starred_url: Attribute[str] = NotSet
+        self._subscriptions_url: Attribute[str] = NotSet
+        self._suspended_at: Attribute[datetime | None] = NotSet
+        self._team_count: Attribute[int] = NotSet
+        self._total_private_repos: Attribute[int] = NotSet
+        self._twitter_username: Attribute[str | None] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
@@ -469,53 +516,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             org = org.login  # type: ignore
         headers, data = self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{self.login}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
-
-    def _initAttributes(self) -> None:
-        self._avatar_url: Attribute[str] = NotSet
-        self._bio: Attribute[str | None] = NotSet
-        self._blog: Attribute[str | None] = NotSet
-        self._collaborators: Attribute[int] = NotSet
-        self._company: Attribute[str | None] = NotSet
-        self._contributions: Attribute[int] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._disk_usage: Attribute[int] = NotSet
-        self._email: Attribute[str | None] = NotSet
-        self._events_url: Attribute[str] = NotSet
-        self._followers: Attribute[int] = NotSet
-        self._followers_url: Attribute[str] = NotSet
-        self._following: Attribute[int] = NotSet
-        self._following_url: Attribute[str] = NotSet
-        self._gists_url: Attribute[str] = NotSet
-        self._gravatar_id: Attribute[str | None] = NotSet
-        self._hireable: Attribute[bool | None] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._invitation_teams_url: Attribute[str] = NotSet
-        self._inviter: Attribute[NamedUser] = NotSet
-        self._location: Attribute[str | None] = NotSet
-        self._login: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._organizations_url: Attribute[str] = NotSet
-        self._owned_private_repos: Attribute[int] = NotSet
-        self._permissions: Attribute[Permissions] = NotSet
-        self._plan: Attribute[Plan] = NotSet
-        self._private_gists: Attribute[int] = NotSet
-        self._public_gists: Attribute[int] = NotSet
-        self._public_repos: Attribute[int] = NotSet
-        self._received_events_url: Attribute[str] = NotSet
-        self._repos_url: Attribute[str] = NotSet
-        self._role: Attribute[str] = NotSet
-        self._site_admin: Attribute[bool] = NotSet
-        self._starred_url: Attribute[str] = NotSet
-        self._subscriptions_url: Attribute[str] = NotSet
-        self._suspended_at: Attribute[datetime | None] = NotSet
-        self._team_count: Attribute[int] = NotSet
-        self._total_private_repos: Attribute[int] = NotSet
-        self._twitter_username: Attribute[str | None] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
