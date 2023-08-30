@@ -27,81 +27,71 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class GistComment(github.GithubObject.CompletableGithubObject):
+class GistComment(CompletableGithubObject):
     """
     This class represents GistComments. The reference can be found here https://docs.github.com/en/rest/reference/gists#comments
     """
+
+    def _initAttributes(self) -> None:
+        self._body: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, body):
+    def edit(self, body: str) -> None:
         """
         :calls: `PATCH /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
-        :param body: string
-        :rtype: None
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -110,15 +100,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _initAttributes(self) -> None:
-        self._body = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
