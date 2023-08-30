@@ -19,8 +19,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -90,7 +92,7 @@ class Topic(NonCompletableGithubObject):
     def score(self) -> float:
         return self._score.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "display_name" in attributes:  # pragma no branch

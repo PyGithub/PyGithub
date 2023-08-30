@@ -273,12 +273,12 @@ class GithubObject:
 
     def _makeDictOfStringsToClassesAttribute(
         self,
-        klass: Type["NonCompletableGithubObject"],
+        klass: Type[T_gh],
         value: Dict[
             str,
             Union[int, Dict[str, Union[str, int, None]], Dict[str, Union[str, int]]],
         ],
-    ) -> Union[_ValuedAttribute, _BadAttribute]:
+    ) -> Attribute[Dict[str, T_gh]]:
         if isinstance(value, dict) and all(
             isinstance(key, str) and isinstance(element, dict) for key, element in value.items()
         ):
