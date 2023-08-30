@@ -427,7 +427,7 @@ class Repository(CompletableGithubObject):
         sort: Union[str, _NotSetType] = ...,
         direction: Union[str, _NotSetType] = ...,
         since: Union[_NotSetType, datetime] = ...,
-        creator: Union[NamedUser, _NotSetType] = ...,
+        creator: Union[NamedUser, str, _NotSetType] = ...,
     ) -> PaginatedList[Issue]: ...
     def get_issues_comments(
         self,
