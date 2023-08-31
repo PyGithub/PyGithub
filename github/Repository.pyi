@@ -330,6 +330,7 @@ class Repository(CompletableGithubObject):
         description: Union[str, _NotSetType] = ...,
         homepage: Union[str, _NotSetType] = ...,
         private: Union[bool, _NotSetType] = ...,
+        visibility: Union[str, _NotSetType] = ...,
         has_issues: Union[bool, _NotSetType] = ...,
         has_projects: Union[bool, _NotSetType] = ...,
         has_wiki: Union[bool, _NotSetType] = ...,
