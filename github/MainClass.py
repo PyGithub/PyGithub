@@ -28,6 +28,7 @@
 # Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 # Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,6 +56,7 @@ from typing import List
 import urllib3
 
 import github.ApplicationOAuth
+import github.Enterprise
 import github.Event
 import github.Gist
 import github.GithubObject
@@ -181,6 +183,23 @@ class Github:
             seconds_between_requests,
             seconds_between_writes,
         )
+
+    def close(self) -> None:
+        """
+        Close connections to the server. Alternatively, use the Github object as a context manager:
+
+        .. code-block:: python
+
+          with github.Github(...) as gh:
+            # do something
+        """
+        self.__requester.close()
+
+    def __enter__(self) -> "Github":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
 
     @property
     def FIX_REPO_GET_GIT_REF(self):
@@ -340,6 +359,16 @@ class Github:
             "/organizations",
             url_parameters,
         )
+
+    def get_enterprise(self, enterprise):
+        """
+        :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
+        :param enterprise: string
+        :rtype: :class:`Enterprise`
+        """
+        assert isinstance(enterprise, str), enterprise
+        # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
+        return github.Enterprise.Enterprise(self.__requester, enterprise)
 
     def get_repo(self, full_name_or_id, lazy=False):
         """
@@ -803,7 +832,7 @@ class Github:
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
             )
-            return GithubIntegration(auth=self.__requester.auth).get_app()
+            return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
             return GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
