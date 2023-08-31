@@ -35,6 +35,10 @@ Then play with your Github objects::
         # to see all the available attributes and methods
         print(dir(repo))
 
+To close connections after use::
+
+    g.close()
+
 Download and install
 --------------------
 
