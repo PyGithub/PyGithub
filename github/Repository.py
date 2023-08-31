@@ -1732,6 +1732,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         homepage=github.GithubObject.NotSet,
         private=github.GithubObject.NotSet,
+        visibility=github.GithubObject.NotSet,
         has_issues=github.GithubObject.NotSet,
         has_projects=github.GithubObject.NotSet,
         has_wiki=github.GithubObject.NotSet,
@@ -1752,6 +1753,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param homepage: string
         :param private: bool
+        :param visibility: string
         :param has_issues: bool
         :param has_projects: bool
         :param has_wiki: bool
@@ -1772,6 +1774,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, str), description
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, str), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        assert visibility is github.GithubObject.NotSet or isinstance(private, string), visibility
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
@@ -1804,6 +1807,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["homepage"] = homepage
         if private is not github.GithubObject.NotSet:
             post_parameters["private"] = private
+        if visibility is not github.GithubObject.NotSet:
+            post_parameters["visibility"] = visibility
         if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
         if has_projects is not github.GithubObject.NotSet:
