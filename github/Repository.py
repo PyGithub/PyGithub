@@ -1774,7 +1774,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, str), description
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, str), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
-        assert visibility is github.GithubObject.NotSet or isinstance(private, string), visibility
+        assert visibility is github.GithubObject.NotSet or isinstance(visibility, string), visibility
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
