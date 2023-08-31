@@ -28,188 +28,143 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.HookResponse
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
 
 
-class Hook(github.GithubObject.CompletableGithubObject):
+class Hook(CompletableGithubObject):
     """
     This class represents Hooks. The reference can be found here https://docs.github.com/en/rest/reference/repos#webhooks
     """
+
+    def _initAttributes(self) -> None:
+        self._active: Attribute[bool] = NotSet
+        self._config: Attribute[dict] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._events: Attribute[list[str]] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._last_response: Attribute[github.HookResponse.HookResponse] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._test_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._ping_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def active(self):
-        """
-        :type: bool
-        """
+    def active(self) -> bool:
         self._completeIfNotSet(self._active)
         return self._active.value
 
     @property
-    def config(self):
-        """
-        :type: dict
-        """
+    def config(self) -> dict:
         self._completeIfNotSet(self._config)
         return self._config.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def events(self):
-        """
-        :type: list of string
-        """
+    def events(self) -> list[str]:
         self._completeIfNotSet(self._events)
         return self._events.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def last_response(self):
-        """
-        :type: :class:`github.HookResponse.HookResponse`
-        """
+    def last_response(self) -> github.HookResponse.HookResponse:
         self._completeIfNotSet(self._last_response)
         return self._last_response.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def test_url(self):
-        """
-        :type: string
-        """
+    def test_url(self) -> str:
         self._completeIfNotSet(self._test_url)
         return self._test_url.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def ping_url(self):
-        """
-        :type: string
-        """
+    def ping_url(self) -> str:
         self._completeIfNotSet(self._ping_url)
         return self._ping_url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
         self,
-        name,
-        config,
-        events=github.GithubObject.NotSet,
-        add_events=github.GithubObject.NotSet,
-        remove_events=github.GithubObject.NotSet,
-        active=github.GithubObject.NotSet,
-    ):
+        name: str,
+        config: dict,
+        events: Opt[list[str]] = NotSet,
+        add_events: Opt[list[str]] = NotSet,
+        remove_events: Opt[list[str]] = NotSet,
+        active: Opt[bool] = NotSet,
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
-        :param name: string
-        :param config: dict
-        :param events: list of string
-        :param add_events: list of string
-        :param remove_events: list of string
-        :param active: bool
-        :rtype: None
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(isinstance(element, str) for element in events), events
-        assert add_events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in add_events
-        ), add_events
-        assert remove_events is github.GithubObject.NotSet or all(
-            isinstance(element, str) for element in remove_events
-        ), remove_events
-        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
-        post_parameters = {
-            "name": name,
-            "config": config,
-        }
-        if events is not github.GithubObject.NotSet:
-            post_parameters["events"] = events
-        if add_events is not github.GithubObject.NotSet:
-            post_parameters["add_events"] = add_events
-        if remove_events is not github.GithubObject.NotSet:
-            post_parameters["remove_events"] = remove_events
-        if active is not github.GithubObject.NotSet:
-            post_parameters["active"] = active
+        assert is_optional_list(events, str), events
+        assert is_optional_list(add_events, str), add_events
+        assert is_optional_list(remove_events, str), remove_events
+        assert is_optional(active, bool), active
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "config": config,
+                "events": events,
+                "add_events": add_events,
+                "remove_events": remove_events,
+                "active": active,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def test(self):
+    def test(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
-    def ping(self):
+    def ping(self) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
-    def _initAttributes(self) -> None:
-        self._active = github.GithubObject.NotSet
-        self._config = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._events = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._last_response = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._test_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._ping_url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active" in attributes:  # pragma no branch
             self._active = self._makeBoolAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch
