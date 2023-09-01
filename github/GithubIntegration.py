@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import warnings
+from typing import Any
 
 import deprecated
 import urllib3
@@ -140,7 +141,7 @@ class GithubIntegration:
     def __enter__(self) -> GithubIntegration:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.close()
 
     def get_github_for_installation(
