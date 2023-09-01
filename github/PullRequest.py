@@ -65,6 +65,7 @@ from github.GithubObject import (
     NotSet,
     Opt,
     is_defined,
+    is_optional,
     is_optional_list,
 )
 from github.Issue import Issue
@@ -458,8 +459,8 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         """
-        assert isinstance(reviewers, str) or is_optional_list(reviewers, str), reviewers
-        assert isinstance(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
+        assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
+        assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
 
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
