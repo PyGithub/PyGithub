@@ -207,6 +207,23 @@ class Github:
             seconds_between_writes,
         )
 
+    def close(self) -> None:
+        """
+        Close connections to the server. Alternatively, use the Github object as a context manager:
+
+        .. code-block:: python
+
+          with github.Github(...) as gh:
+            # do something
+        """
+        self.__requester.close()
+
+    def __enter__(self) -> "Github":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
+
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool:
         return self.__requester.FIX_REPO_GET_GIT_REF
