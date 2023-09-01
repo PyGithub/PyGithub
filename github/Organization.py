@@ -55,10 +55,10 @@ import github.Project
 import github.Repository
 import github.Team
 from github import Consts
-from github.Event import Event
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional_list
 
 if TYPE_CHECKING:
+    from github.Event import Event
     from github.Hook import Hook
     from github.Installation import Installation
     from github.Issue import Issue
