@@ -49,13 +49,13 @@ import github.GithubObject
 import github.NamedUser
 import github.OrganizationSecret
 import github.OrganizationVariable
-import github.PaginatedList
 import github.Plan
 import github.Project
 import github.Repository
 import github.Team
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional_list
+from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Event import Event
@@ -67,7 +67,6 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
-    from github.PaginatedList import PaginatedList
     from github.Plan import Plan
     from github.Project import Project
     from github.PublicKey import PublicKey
@@ -557,9 +556,9 @@ class Organization(CompletableGithubObject):
     def get_secrets(self) -> PaginatedList[OrganizationSecret]:
         """
         Gets all organization secrets
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
             f"{self.url}/actions/secrets",
@@ -666,9 +665,9 @@ class Organization(CompletableGithubObject):
     def get_variables(self) -> PaginatedList[OrganizationVariable]:
         """
         Gets all organization variables
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.OrganizationVariable.OrganizationVariable,
             self._requester,
             f"{self.url}/actions/variables",
@@ -773,9 +772,9 @@ class Organization(CompletableGithubObject):
     def get_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /orgs/{org}/events <https://docs.github.com/en/rest/reference/activity#events>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        :rtype: :class:`PaginatedList` of :class:`github.Event.Event`
         """
-        return github.PaginatedList.PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
+        return PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
 
     def get_hook(self, id: int) -> github.Hook.Hook:
         """
@@ -789,7 +788,7 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
-        return github.PaginatedList.PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
+        return PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
     def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
         """
@@ -805,16 +804,14 @@ class Organization(CompletableGithubObject):
         )
         return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
 
-    def get_hook_deliveries(
-        self, hook_id: int
-    ) -> github.PaginatedList.PaginatedList[github.HookDelivery.HookDeliverySummary]:
+    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
         :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
         :param hook_id: integer
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
+        :rtype: :class:`PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
         """
         assert isinstance(hook_id, int), hook_id
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.HookDelivery.HookDeliverySummary,
             self._requester,
             f"{self.url}/hooks/{hook_id}/deliveries",
@@ -832,14 +829,14 @@ class Organization(CompletableGithubObject):
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /orgs/{org}/issues <https://docs.github.com/en/rest/reference/issues>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         :param filter: string
         :param state: string
         :param labels: list of :class:`github.Label.Label`
         :param sort: string
         :param direction: string
         :param since: datetime
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
         assert filter is NotSet or isinstance(filter, str), filter
         assert state is NotSet or isinstance(state, str), state
@@ -860,9 +857,7 @@ class Organization(CompletableGithubObject):
             url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return github.PaginatedList.PaginatedList(
-            github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters
-        )
+        return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
 
     def get_members(
         self,
@@ -880,7 +875,7 @@ class Organization(CompletableGithubObject):
             url_parameters["filter"] = filter_
         if role is not NotSet:
             url_parameters["role"] = role
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             f"{self.url}/members",
@@ -896,7 +891,7 @@ class Organization(CompletableGithubObject):
         if state is not NotSet:
             url_parameters["state"] = state
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Project.Project,
             self._requester,
             f"{self.url}/projects",
@@ -907,9 +902,9 @@ class Organization(CompletableGithubObject):
     def get_public_members(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/public_members <https://docs.github.com/en/rest/reference/orgs#members>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             f"{self.url}/public_members",
@@ -920,14 +915,14 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/outside_collaborators <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param filter_: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         assert filter_ is NotSet or isinstance(filter_, str), filter_
 
         url_parameters = {}
         if filter_ is not NotSet:
             url_parameters["filter"] = filter_
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             f"{self.url}/outside_collaborators",
@@ -1001,7 +996,7 @@ class Organization(CompletableGithubObject):
             url_parameters["sort"] = sort
         if direction is not NotSet:
             url_parameters["direction"] = direction
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Repository.Repository,
             self._requester,
             f"{self.url}/repos",
@@ -1032,16 +1027,16 @@ class Organization(CompletableGithubObject):
     def get_teams(self) -> PaginatedList[Team]:
         """
         :calls: `GET /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        :rtype: :class:`PaginatedList` of :class:`github.Team.Team`
         """
-        return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
+        return PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
     def invitations(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             f"{self.url}/invitations",
@@ -1187,9 +1182,9 @@ class Organization(CompletableGithubObject):
     def get_migrations(self) -> PaginatedList[Migration]:
         """
         :calls: `GET /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
+        :rtype: :class:`PaginatedList` of :class:`github.Migration.Migration`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Migration.Migration,
             self._requester,
             f"/orgs/{self.login}/migrations",
@@ -1200,10 +1195,10 @@ class Organization(CompletableGithubObject):
     def get_installations(self) -> PaginatedList[Installation]:
         """
         :calls: `GET /orgs/{org}/installations <https://docs.github.com/en/rest/reference/orgs#list-app-installations-for-an-organization>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Installation.Installation`
+        :rtype: :class:`PaginatedList` of :class:`github.Installation.Installation`
         """
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Installation.Installation,
             self._requester,
             f"{self.url}/installations",
