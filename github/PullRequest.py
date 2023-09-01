@@ -39,18 +39,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any, Dict
 
 import github.Commit
 import github.File
+import github.GithubObject
 import github.IssueComment
-import github.IssueEvent
-import github.Label
-import github.Milestone
 import github.NamedUser
 import github.PaginatedList
 import github.PullRequestComment
@@ -58,350 +55,433 @@ import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
 import github.Team
-from github import Consts
-from github.GithubObject import (
-    Attribute,
-    CompletableGithubObject,
-    NotSet,
-    Opt,
-    is_defined,
-    is_optional,
-    is_optional_list,
-)
-from github.Issue import Issue
-from github.PaginatedList import PaginatedList
 
-if TYPE_CHECKING:
-    from github.NamedUser import NamedUser
+from . import Consts
 
 
-class PullRequest(CompletableGithubObject):
+class PullRequest(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequests. The reference can be found here https://docs.github.com/en/rest/reference/pulls
     """
 
-    def _initAttributes(self) -> None:
-        self._additions: Attribute[int] = NotSet
-        self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._assignees: Attribute[list[github.NamedUser.NamedUser]] = NotSet
-        self._base: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
-        self._body: Attribute[str] = NotSet
-        self._changed_files: Attribute[int] = NotSet
-        self._closed_at: Attribute[datetime | None] = NotSet
-        self._comments: Attribute[int] = NotSet
-        self._comments_url: Attribute[str] = NotSet
-        self._commits: Attribute[int] = NotSet
-        self._commits_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._deletions: Attribute[int] = NotSet
-        self._diff_url: Attribute[str] = NotSet
-        self._draft: Attribute[bool] = NotSet
-        self._head: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._issue_url: Attribute[str] = NotSet
-        self._labels: Attribute[list[github.Label.Label]] = NotSet
-        self._merge_commit_sha: Attribute[str] = NotSet
-        self._mergeable: Attribute[bool] = NotSet
-        self._mergeable_state: Attribute[str] = NotSet
-        self._merged: Attribute[bool] = NotSet
-        self._merged_at: Attribute[datetime | None] = NotSet
-        self._merged_by: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._milestone: Attribute[github.Milestone.Milestone] = NotSet
-        self._number: Attribute[int] = NotSet
-        self._patch_url: Attribute[str] = NotSet
-        self._rebaseable: Attribute[bool] = NotSet
-        self._requested_reviewers: Attribute[list[NamedUser]] = NotSet
-        self._review_comment_url: Attribute[str] = NotSet
-        self._review_comments: Attribute[int] = NotSet
-        self._review_comments_url: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime | None] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._maintainer_can_modify: Attribute[bool] = NotSet
-
-    def __repr__(self) -> str:
+    def __repr__(self):
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
-    def additions(self) -> int:
+    def additions(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._additions)
         return self._additions.value
 
     @property
-    def assignee(self) -> github.NamedUser.NamedUser:
+    def assignee(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    def assignees(self) -> list[github.NamedUser.NamedUser]:
+    def assignees(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._assignees)
         return self._assignees.value
 
     @property
-    def base(self) -> github.PullRequestPart.PullRequestPart:
+    def base(self):
+        """
+        :type: :class:`github.PullRequestPart.PullRequestPart`
+        """
         self._completeIfNotSet(self._base)
         return self._base.value
 
     @property
-    def body(self) -> str:
+    def body(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def changed_files(self) -> int:
+    def changed_files(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._changed_files)
         return self._changed_files.value
 
     @property
-    def closed_at(self) -> datetime | None:
+    def closed_at(self):
+        """
+        :type: datetime
+        """
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
 
     @property
-    def comments(self) -> int:
+    def comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._comments)
         return self._comments.value
 
     @property
-    def comments_url(self) -> str:
+    def comments_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
-    def commits(self) -> int:
+    def commits(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._commits)
         return self._commits.value
 
     @property
-    def commits_url(self) -> str:
+    def commits_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._commits_url)
         return self._commits_url.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self):
+        """
+        :type: datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def deletions(self) -> int:
+    def deletions(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._deletions)
         return self._deletions.value
 
     @property
-    def diff_url(self) -> str:
+    def diff_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._diff_url)
         return self._diff_url.value
 
     @property
-    def draft(self) -> bool:
+    def draft(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._draft)
         return self._draft.value
 
     @property
-    def head(self) -> github.PullRequestPart.PullRequestPart:
+    def head(self):
+        """
+        :type: :class:`github.PullRequestPart.PullRequestPart`
+        """
         self._completeIfNotSet(self._head)
         return self._head.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self) -> int:
+    def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def issue_url(self) -> str:
+    def issue_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._issue_url)
         return self._issue_url.value
 
     @property
-    def labels(self) -> list[github.Label.Label]:
+    def labels(self):
+        """
+        :type: list of :class:`github.Label.Label`
+        """
         self._completeIfNotSet(self._labels)
         return self._labels.value
 
     @property
-    def merge_commit_sha(self) -> str:
+    def merge_commit_sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._merge_commit_sha)
         return self._merge_commit_sha.value
 
     @property
-    def mergeable(self) -> bool:
+    def mergeable(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._mergeable)
         return self._mergeable.value
 
     @property
-    def mergeable_state(self) -> str:
+    def mergeable_state(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._mergeable_state)
         return self._mergeable_state.value
 
     @property
-    def merged(self) -> bool:
+    def merged(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._merged)
         return self._merged.value
 
     @property
-    def merged_at(self) -> datetime | None:
+    def merged_at(self):
+        """
+        :type: datetime
+        """
         self._completeIfNotSet(self._merged_at)
         return self._merged_at.value
 
     @property
-    def merged_by(self) -> github.NamedUser.NamedUser:
+    def merged_by(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._merged_by)
         return self._merged_by.value
 
     @property
-    def milestone(self) -> github.Milestone.Milestone:
+    def milestone(self):
+        """
+        :type: :class:`github.Milestone.Milestone`
+        """
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
     @property
-    def number(self) -> int:
+    def number(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._number)
         return self._number.value
 
     @property
-    def patch_url(self) -> str:
+    def patch_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._patch_url)
         return self._patch_url.value
 
     @property
-    def rebaseable(self) -> bool:
+    def rebaseable(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._rebaseable)
         return self._rebaseable.value
 
     @property
-    def review_comment_url(self) -> str:
+    def review_comment_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._review_comment_url)
         return self._review_comment_url.value
 
     @property
-    def review_comments(self) -> int:
+    def review_comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._review_comments)
         return self._review_comments.value
 
     @property
-    def review_comments_url(self) -> str:
+    def review_comments_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._review_comments_url)
         return self._review_comments_url.value
 
     @property
-    def state(self) -> str:
+    def state(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def title(self) -> str:
+    def title(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
-    def updated_at(self) -> datetime | None:
+    def updated_at(self):
+        """
+        :type: datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def requested_reviewers(self) -> list[github.NamedUser.NamedUser]:
+    def requested_reviewers(self):
         self._completeIfNotSet(self._requested_reviewers)
         return self._requested_reviewers.value
 
     @property
-    def requested_teams(self) -> list[github.Team.Team]:
+    def requested_teams(self):
         self._completeIfNotSet(self._requested_teams)
         return self._requested_teams.value
 
     @property
-    def url(self) -> str:
+    def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._user.value
 
     @property
-    def maintainer_can_modify(self) -> bool:
+    def maintainer_can_modify(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._maintainer_can_modify)
         return self._maintainer_can_modify.value
 
-    def as_issue(self) -> Issue:
+    def as_issue(self):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
+        :rtype: :class:`github.Issue.Issue`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_comment(
-        self, body: str, commit: github.Commit.Commit, path: str, position: int
-    ) -> github.PullRequestComment.PullRequestComment:
+    def create_comment(self, body, commit, path, position):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param body: string
+        :param commit: :class:`github.Commit.Commit`
+        :param path: string
+        :param position: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.create_review_comment(body, commit, path, position)
 
     def create_review_comment(
         self,
-        body: str,
-        commit: github.Commit.Commit,
-        path: str,
+        body,
+        commit,
+        path,
         # line replaces deprecated position argument, so we put it between path and side
-        line: Opt[int] = NotSet,
-        side: Opt[str] = NotSet,
-        start_line: Opt[int] = NotSet,
-        start_side: Opt[int] = NotSet,
-        in_reply_to: Opt[int] = NotSet,
-        subject_type: Opt[str] = NotSet,
-        as_suggestion: bool = False,
-    ) -> github.PullRequestComment.PullRequestComment:
+        line=github.GithubObject.NotSet,
+        side=github.GithubObject.NotSet,
+        start_line=github.GithubObject.NotSet,
+        start_side=github.GithubObject.NotSet,
+        in_reply_to=github.GithubObject.NotSet,
+        subject_type=github.GithubObject.NotSet,
+        as_suggestion=False,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param body: string
+        :param commit: :class:`github.Commit.Commit`
+        :param path: string
+        :param line: integer
+        :param side: string
+        :param start_line: integer
+        :param start_side: string
+        :param in_reply_to: integer
+        :param subject_type: string
+        :param as_suggestion: bool interprets the body as suggested code and modifies it accordingly
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(body, str), body
         assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
-        assert line is NotSet or isinstance(line, int), line
-        assert side is NotSet or side in ["LEFT", "RIGHT"], side
-        assert start_line is NotSet or isinstance(start_line, int), start_line
-        assert start_side is NotSet or start_side in [
+        assert line is github.GithubObject.NotSet or isinstance(line, int), line
+        assert side is github.GithubObject.NotSet or side in ["LEFT", "RIGHT"], side
+        assert start_line is github.GithubObject.NotSet or isinstance(start_line, int), start_line
+        assert start_side is github.GithubObject.NotSet or start_side in [
             "LEFT",
             "RIGHT",
-            "side",
         ], start_side
-        assert in_reply_to is NotSet or isinstance(in_reply_to, int), in_reply_to
-        assert subject_type is NotSet or subject_type in [
-            "line",
-            "file",
+        assert in_reply_to is github.GithubObject.NotSet or isinstance(in_reply_to, int), in_reply_to
+        assert subject_type is github.GithubObject.NotSet or subject_type in [
+            "LINE",
+            "FILE",
+            "side",
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
-        post_parameters = NotSet.remove_unset_items(
-            {
-                "body": body,
-                "commit_id": commit._identity,
-                "path": path,
-                "line": line,
-                "side": side,
-                "start_line": start_line,
-                "start_side": start_side,
-                "in_reply_to": in_reply_to,
-                "subject_type": subject_type,
-            }
-        )
-
+        post_parameters = {
+            "body": body,
+            "commit_id": commit._identity,
+            "path": path,
+        }
+        if line is not github.GithubObject.NotSet:
+            post_parameters["line"] = line
+        if side is not github.GithubObject.NotSet:
+            post_parameters["side"] = side
+        if start_line is not github.GithubObject.NotSet:
+            post_parameters["start_line"] = start_line
+        if start_side is not github.GithubObject.NotSet:
+            post_parameters["start_side"] = start_side
+        if in_reply_to is not github.GithubObject.NotSet:
+            post_parameters["in_reply_to"] = in_reply_to
+        if subject_type is not github.GithubObject.NotSet:
+            post_parameters["subject_type"] = subject_type
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    def create_review_comment_reply(self, comment_id: int, body: str) -> github.PullRequestComment.PullRequestComment:
+    def create_review_comment_reply(self, comment_id, body):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param comment_id: int
+        :param body: string
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(comment_id, int), comment_id
         assert isinstance(body, str), body
@@ -413,9 +493,11 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    def create_issue_comment(self, body: str) -> github.IssueComment.IssueComment:
+    def create_issue_comment(self, body):
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :param body: string
+        :rtype: :class:`github.IssueComment.IssueComment`
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -426,25 +508,30 @@ class PullRequest(CompletableGithubObject):
 
     def create_review(
         self,
-        commit: Opt[github.Commit.Commit] = NotSet,
-        body: Opt[str] = NotSet,
-        event: Opt[str] = NotSet,
-        comments: Opt[list] = NotSet,
-    ) -> github.PullRequestReview.PullRequestReview:
+        commit=github.GithubObject.NotSet,
+        body=github.GithubObject.NotSet,
+        event=github.GithubObject.NotSet,
+        comments=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :param commit: github.Commit.Commit
+        :param body: string
+        :param event: string
+        :param comments: list
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
-        assert commit is NotSet or isinstance(commit, github.Commit.Commit), commit
-        assert body is NotSet or isinstance(body, str), body
-        assert event is NotSet or isinstance(event, str), event
-        assert comments is NotSet or isinstance(comments, list), comments
-        post_parameters: dict[str, Any] = {}
-        if is_defined(commit):
+        assert commit is github.GithubObject.NotSet or isinstance(commit, github.Commit.Commit), commit
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        assert event is github.GithubObject.NotSet or isinstance(event, str), event
+        assert comments is github.GithubObject.NotSet or isinstance(comments, list), comments
+        post_parameters = dict()
+        if commit is not github.GithubObject.NotSet:
             post_parameters["commit_id"] = commit.sha
-        if is_defined(body):
+        if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
-        post_parameters["event"] = "COMMENT" if event == NotSet else event
-        if comments is NotSet:
+        post_parameters["event"] = "COMMENT" if event == github.GithubObject.NotSet else event
+        if comments is github.GithubObject.NotSet:
             post_parameters["comments"] = []
         else:
             post_parameters["comments"] = comments
@@ -453,70 +540,99 @@ class PullRequest(CompletableGithubObject):
 
     def create_review_request(
         self,
-        reviewers: Opt[list[str] | str] = NotSet,
-        team_reviewers: Opt[list[str] | str] = NotSet,
-    ) -> None:
+        reviewers=github.GithubObject.NotSet,
+        team_reviewers=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
         """
-        assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
-        assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
-
-        post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
-
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, str) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, str) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/requested_reviewers", input=post_parameters
         )
 
     def delete_review_request(
         self,
-        reviewers: Opt[list[str] | str] = NotSet,
-        team_reviewers: Opt[list[str] | str] = NotSet,
-    ) -> None:
+        reviewers=github.GithubObject.NotSet,
+        team_reviewers=github.GithubObject.NotSet,
+    ):
         """
         :calls: `DELETE /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
+        :param reviewers: list of strings
+        :param team_reviewers: list of strings
+        :rtype: None
         """
-        assert isinstance(reviewers, str) or is_optional_list(reviewers, str), reviewers
-        assert isinstance(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
-
-        post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
-
+        post_parameters = dict()
+        if reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, str) for element in reviewers), reviewers
+            post_parameters["reviewers"] = reviewers
+        if team_reviewers is not github.GithubObject.NotSet:
+            assert all(isinstance(element, str) for element in team_reviewers), team_reviewers
+            post_parameters["team_reviewers"] = team_reviewers
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE", f"{self.url}/requested_reviewers", input=post_parameters
         )
 
     def edit(
         self,
-        title: Opt[str] = NotSet,
-        body: Opt[str] = NotSet,
-        state: Opt[str] = NotSet,
-        base: Opt[str] = NotSet,
-        maintainer_can_modify: Opt[bool] = NotSet,
-    ) -> None:
+        title=github.GithubObject.NotSet,
+        body=github.GithubObject.NotSet,
+        state=github.GithubObject.NotSet,
+        base=github.GithubObject.NotSet,
+        maintainer_can_modify=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PATCH /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
+        :param title: string
+        :param body: string
+        :param state: string
+        :param base: string
+        :param maintainer_can_modify: bool
+        :rtype: None
         """
-        assert title is NotSet or isinstance(title, str), title
-        assert body is NotSet or isinstance(body, str), body
-        assert state is NotSet or isinstance(state, str), state
-        assert base is NotSet or isinstance(base, str), base
-        assert maintainer_can_modify is NotSet or isinstance(maintainer_can_modify, bool), maintainer_can_modify
-        post_parameters = NotSet.remove_unset_items(
-            {"title": title, "body": body, "state": state, "base": base, "maintainer_can_modify": maintainer_can_modify}
-        )
-
+        assert title is github.GithubObject.NotSet or isinstance(title, str), title
+        assert body is github.GithubObject.NotSet or isinstance(body, str), body
+        assert state is github.GithubObject.NotSet or isinstance(state, str), state
+        assert base is github.GithubObject.NotSet or isinstance(base, str), base
+        assert maintainer_can_modify is github.GithubObject.NotSet or isinstance(
+            maintainer_can_modify, bool
+        ), maintainer_can_modify
+        post_parameters = dict()
+        if title is not github.GithubObject.NotSet:
+            post_parameters["title"] = title
+        if body is not github.GithubObject.NotSet:
+            post_parameters["body"] = body
+        if state is not github.GithubObject.NotSet:
+            post_parameters["state"] = state
+        if base is not github.GithubObject.NotSet:
+            post_parameters["base"] = base
+        if maintainer_can_modify is not github.GithubObject.NotSet:
+            post_parameters["maintainer_can_modify"] = maintainer_can_modify
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_comment(self, id: int) -> github.PullRequestComment.PullRequestComment:
+    def get_comment(self, id):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comment(id)
 
-    def get_review_comment(self, id: int) -> github.PullRequestComment.PullRequestComment:
+    def get_review_comment(self, id):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.url)}/comments/{id}")
@@ -524,10 +640,10 @@ class PullRequest(CompletableGithubObject):
 
     def get_comments(
         self,
-        sort: Opt[str] = NotSet,
-        direction: Opt[str] = NotSet,
-        since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+    ):
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
@@ -535,6 +651,7 @@ class PullRequest(CompletableGithubObject):
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comments(sort=sort, direction=direction, since=since)
 
@@ -542,80 +659,90 @@ class PullRequest(CompletableGithubObject):
     def get_review_comments(
         self,
         *,
-        sort: Opt[str] = NotSet,
-        direction: Opt[str] = NotSet,
-        since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+        sort=github.GithubObject.NotSet,
+        direction=github.GithubObject.NotSet,
+        since=github.GithubObject.NotSet,
+    ):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert sort is NotSet or isinstance(sort, str), sort
-        assert direction is NotSet or isinstance(direction, str), direction
-        assert since is NotSet or isinstance(since, datetime), since
-
-        url_parameters = NotSet.remove_unset_items({"sort": sort, "direction": direction})
-        if is_defined(since):
+        assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
+        if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-
-        return PaginatedList(
+        return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
             f"{self.url}/comments",
             url_parameters,
         )
 
-    def get_single_review_comments(self, id: int) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+    def get_single_review_comments(self, id):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/review/{id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :param id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         assert isinstance(id, int), id
-        return PaginatedList(
+        return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
             f"{self.url}/reviews/{id}/comments",
             None,
         )
 
-    def get_commits(self) -> PaginatedList[github.Commit.Commit]:
+    def get_commits(self):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
-        return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", None)
+        return github.PaginatedList.PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", None)
 
-    def get_files(self) -> PaginatedList[github.File.File]:
+    def get_files(self):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/files <https://docs.github.com/en/rest/reference/pulls>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.File.File`
         """
-        return PaginatedList(github.File.File, self._requester, f"{self.url}/files", None)
+        return github.PaginatedList.PaginatedList(github.File.File, self._requester, f"{self.url}/files", None)
 
-    def get_issue_comment(self, id: int) -> github.IssueComment.IssueComment:
+    def get_issue_comment(self, id):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :param id: integer
+        :rtype: :class:`github.IssueComment.IssueComment`
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.issue_url)}/comments/{id}")
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def get_issue_comments(self) -> PaginatedList[github.IssueComment.IssueComment]:
+    def get_issue_comments(self):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        return PaginatedList(
+        return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
             f"{self.issue_url}/comments",
             None,
         )
 
-    def get_issue_events(self) -> PaginatedList[github.IssueEvent.IssueEvent]:
+    def get_issue_events(self):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
         """
-        return PaginatedList(
+        return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
             self._requester,
             f"{self.issue_url}/events",
@@ -623,7 +750,7 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    def get_review(self, id: int) -> github.PullRequestReview.PullRequestReview:
+    def get_review(self, id):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews/{id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :param id: integer
@@ -636,32 +763,32 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
-    def get_reviews(self) -> PaginatedList[github.PullRequestReview.PullRequestReview]:
+    def get_reviews(self):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReview.PullRequestReview`
         """
-        return PaginatedList(
+        return github.PaginatedList.PaginatedList(
             github.PullRequestReview.PullRequestReview,
             self._requester,
             f"{self.url}/reviews",
             None,
         )
 
-    def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[github.Team.Team]]:
+    def get_review_requests(self):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return (
-            PaginatedList(
+            github.PaginatedList.PaginatedList(
                 github.NamedUser.NamedUser,
                 self._requester,
                 f"{self.url}/requested_reviewers",
                 None,
                 list_item="users",
             ),
-            PaginatedList(
+            github.PaginatedList.PaginatedList(
                 github.Team.Team,
                 self._requester,
                 f"{self.url}/requested_reviewers",
@@ -670,29 +797,35 @@ class PullRequest(CompletableGithubObject):
             ),
         )
 
-    def get_labels(self) -> PaginatedList[github.Label.Label]:
+    def get_labels(self):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
-        return PaginatedList(github.Label.Label, self._requester, f"{self.issue_url}/labels", None)
+        return github.PaginatedList.PaginatedList(github.Label.Label, self._requester, f"{self.issue_url}/labels", None)
 
-    def add_to_labels(self, *labels: github.Label.Label | str) -> None:
+    def add_to_labels(self, *labels):
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :param label: :class:`github.Label.Label` or string
+        :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.issue_url}/labels", input=post_parameters)
 
-    def delete_labels(self) -> None:
+    def delete_labels(self):
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels")
 
-    def remove_from_labels(self, label: github.Label.Label | str) -> None:
+    def remove_from_labels(self, label):
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :param label: :class:`github.Label.Label` or string
+        :rtype: None
         """
         assert isinstance(label, (github.Label.Label, str)), label
         if isinstance(label, github.Label.Label):
@@ -701,50 +834,60 @@ class PullRequest(CompletableGithubObject):
             label = urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels/{label}")
 
-    def set_labels(self, *labels: github.Label.Label | str) -> None:
+    def set_labels(self, *labels):
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :param labels: list of :class:`github.Label.Label` or strings
+        :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.issue_url}/labels", input=post_parameters)
 
-    def is_merged(self) -> bool:
+    def is_merged(self):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
+        :rtype: bool
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
     def merge(
         self,
-        commit_message: Opt[str] = NotSet,
-        commit_title: Opt[str] = NotSet,
-        merge_method: Opt[str] = NotSet,
-        sha: Opt[str] = NotSet,
-    ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
+        commit_message=github.GithubObject.NotSet,
+        commit_title=github.GithubObject.NotSet,
+        merge_method=github.GithubObject.NotSet,
+        sha=github.GithubObject.NotSet,
+    ):
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
+        :param commit_message: string
+        :param commit_title: string
+        :param merge_method: string
+        :param sha: string
+        :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
-        assert commit_message is NotSet or isinstance(commit_message, str), commit_message
-        assert commit_title is NotSet or isinstance(commit_title, str), commit_title
-        assert merge_method is NotSet or isinstance(merge_method, str), merge_method
-        assert sha is NotSet or isinstance(sha, str), sha
+        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, str), commit_message
+        assert commit_title is github.GithubObject.NotSet or isinstance(commit_title, str), commit_title
+        assert merge_method is github.GithubObject.NotSet or isinstance(merge_method, str), merge_method
+        assert sha is github.GithubObject.NotSet or isinstance(sha, str), sha
         post_parameters = dict()
-        if commit_message is not NotSet:
+        if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
-        if commit_title is not NotSet:
+        if commit_title is not github.GithubObject.NotSet:
             post_parameters["commit_title"] = commit_title
-        if merge_method is not NotSet:
+        if merge_method is not github.GithubObject.NotSet:
             post_parameters["merge_method"] = merge_method
-        if sha is not NotSet:
+        if sha is not github.GithubObject.NotSet:
             post_parameters["sha"] = sha
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
-    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser) -> None:
+    def add_to_assignees(self, *assignees):
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
+        :param assignees: list of :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
@@ -759,9 +902,11 @@ class PullRequest(CompletableGithubObject):
         # Only use the assignees attribute, since we call this PR as an issue
         self._useAttributes({"assignees": data["assignees"]})
 
-    def remove_from_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
+    def remove_from_assignees(self, *assignees):
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
+        :param assignees: list of :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
@@ -776,13 +921,15 @@ class PullRequest(CompletableGithubObject):
         # Only use the assignees attribute, since we call this PR as an issue
         self._useAttributes({"assignees": data["assignees"]})
 
-    def update_branch(self, expected_head_sha: Opt[str] = NotSet) -> bool:
+    def update_branch(self, expected_head_sha=github.GithubObject.NotSet):
         """
         :calls `PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch <https://docs.github.com/en/rest/reference/pulls>`_
+        :param expected_head_sha: string
+        :rtype: bool
         """
-        assert expected_head_sha is NotSet or isinstance(expected_head_sha, str), expected_head_sha
+        assert expected_head_sha is github.GithubObject.NotSet or isinstance(expected_head_sha, str), expected_head_sha
         post_parameters = {}
-        if expected_head_sha is not NotSet:
+        if expected_head_sha is not github.GithubObject.NotSet:
             post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
@@ -792,7 +939,50 @@ class PullRequest(CompletableGithubObject):
         )
         return status == 202
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+    def _initAttributes(self) -> None:
+        self._additions = github.GithubObject.NotSet
+        self._assignee = github.GithubObject.NotSet
+        self._assignees = github.GithubObject.NotSet
+        self._base = github.GithubObject.NotSet
+        self._body = github.GithubObject.NotSet
+        self._changed_files = github.GithubObject.NotSet
+        self._closed_at = github.GithubObject.NotSet
+        self._comments = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
+        self._commits = github.GithubObject.NotSet
+        self._commits_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._deletions = github.GithubObject.NotSet
+        self._diff_url = github.GithubObject.NotSet
+        self._draft = github.GithubObject.NotSet
+        self._head = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._issue_url = github.GithubObject.NotSet
+        self._labels = github.GithubObject.NotSet
+        self._maintainer_can_modify = github.GithubObject.NotSet
+        self._merge_commit_sha = github.GithubObject.NotSet
+        self._mergeable = github.GithubObject.NotSet
+        self._mergeable_state = github.GithubObject.NotSet
+        self._merged = github.GithubObject.NotSet
+        self._merged_at = github.GithubObject.NotSet
+        self._merged_by = github.GithubObject.NotSet
+        self._milestone = github.GithubObject.NotSet
+        self._number = github.GithubObject.NotSet
+        self._patch_url = github.GithubObject.NotSet
+        self._rebaseable = github.GithubObject.NotSet
+        self._review_comment_url = github.GithubObject.NotSet
+        self._review_comments = github.GithubObject.NotSet
+        self._review_comments_url = github.GithubObject.NotSet
+        self._state = github.GithubObject.NotSet
+        self._title = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+        self._user = github.GithubObject.NotSet
+        self._requested_reviewers = github.GithubObject.NotSet
+        self._requested_teams = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
