@@ -134,7 +134,6 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
-            has_downloads=True,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
