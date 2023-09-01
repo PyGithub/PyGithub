@@ -48,6 +48,7 @@ from typing import TYPE_CHECKING, Any
 import github.Commit
 import github.File
 import github.IssueComment
+import github.IssueEvent
 import github.Label
 import github.Milestone
 import github.NamedUser
@@ -521,10 +522,10 @@ class PullRequest(CompletableGithubObject):
 
     def get_comments(
         self,
-        sort=NotSet,
-        direction=NotSet,
-        since=NotSet,
-    ):
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
+    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
@@ -532,7 +533,6 @@ class PullRequest(CompletableGithubObject):
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comments(sort=sort, direction=direction, since=since)
 
@@ -540,23 +540,23 @@ class PullRequest(CompletableGithubObject):
     def get_review_comments(
         self,
         *,
-        sort=NotSet,
-        direction=NotSet,
-        since=NotSet,
-    ):
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
+    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         assert sort is NotSet or isinstance(sort, str), sort
         assert direction is NotSet or isinstance(direction, str), direction
         assert since is NotSet or isinstance(since, datetime), since
-        url_parameters = NotSet.remove_unset_items(
-            {"sort": sort, "direction": direction, "since": since.strftime("%Y-%m-%dT%H:%M:%SZ")}
-        )
+
+        url_parameters = NotSet.remove_unset_items({"sort": sort, "direction": direction})
+        if is_defined(since):
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         return PaginatedList(
             github.PullRequestComment.PullRequestComment,
@@ -608,7 +608,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    def get_issue_events(self):
+    def get_issue_events(self) -> PaginatedList[github.IssueEvent.IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
@@ -621,7 +621,7 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    def get_review(self, id):
+    def get_review(self, id: int) -> github.PullRequestReview.PullRequestReview:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews/{id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :param id: integer
@@ -646,7 +646,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    def get_review_requests(self):
+    def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[github.Team.Team]]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
@@ -668,18 +668,15 @@ class PullRequest(CompletableGithubObject):
             ),
         )
 
-    def get_labels(self):
+    def get_labels(self) -> PaginatedList[github.Label.Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.issue_url}/labels", None)
 
-    def add_to_labels(self, *labels):
+    def add_to_labels(self, *labels: github.Label.Label | str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param label: :class:`github.Label.Label` or string
-        :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
@@ -691,11 +688,9 @@ class PullRequest(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels")
 
-    def remove_from_labels(self, label):
+    def remove_from_labels(self, label: github.Label.Label | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param label: :class:`github.Label.Label` or string
-        :rtype: None
         """
         assert isinstance(label, (github.Label.Label, str)), label
         if isinstance(label, github.Label.Label):
@@ -704,38 +699,30 @@ class PullRequest(CompletableGithubObject):
             label = urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels/{label}")
 
-    def set_labels(self, *labels):
+    def set_labels(self, *labels: github.Label.Label | str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param labels: list of :class:`github.Label.Label` or strings
-        :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.issue_url}/labels", input=post_parameters)
 
-    def is_merged(self):
+    def is_merged(self) -> bool:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
-        :rtype: bool
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
     def merge(
         self,
-        commit_message=NotSet,
-        commit_title=NotSet,
-        merge_method=NotSet,
-        sha=NotSet,
-    ):
+        commit_message: Opt[str] = NotSet,
+        commit_title: Opt[str] = NotSet,
+        merge_method: Opt[str] = NotSet,
+        sha: Opt[str] = NotSet,
+    ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
-        :param commit_message: string
-        :param commit_title: string
-        :param merge_method: string
-        :param sha: string
-        :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
         assert commit_message is NotSet or isinstance(commit_message, str), commit_message
         assert commit_title is NotSet or isinstance(commit_title, str), commit_title
