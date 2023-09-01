@@ -123,10 +123,10 @@ class Repository(Framework.TestCase):
         self.assertIn(self.repo.permissions.triage, [None, False, True])
 
         self.assertTrue(self.repo.use_squash_pr_title_as_default)
-        self.assertEqual(self.squash_merge_commit_title, "PR_TITLE")
-        self.assertEqual(self.squash_merge_commit_message, "COMMIT_MESSAGES")
-        self.assertEqual(self.merge_commit_title, "PR_TITLE")
-        self.assertEqual(self.merge_commit_message, "PR_BODY")
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
 
     def testEditWithoutArguments(self):
@@ -171,10 +171,10 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
         self.assertTrue(self.repo.use_squash_pr_title_as_default)
-        self.assertEqual(self.squash_merge_commit_title, "PR_TITLE")
-        self.assertEqual(self.squash_merge_commit_message, "COMMIT_MESSAGES")
-        self.assertEqual(self.merge_commit_title, "PR_TITLE")
-        self.assertEqual(self.merge_commit_message, "PR_BODY")
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
 
     def testEditWithDefaultBranch(self):
