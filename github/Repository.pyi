@@ -123,7 +123,12 @@ class Repository(CompletableGithubObject):
     def contents_url(self) -> str: ...
     @property
     def contributors_url(self) -> str: ...
-    def create_autolink(self, key_prefix: str, url_template: str) -> Autolink: ...
+    def create_autolink(
+        self,
+        key_prefix: str,
+        url_template: str,
+        is_alphanumeric: Union[bool, _NotSetType] = ...,
+    ) -> Autolink: ...
     def create_check_run(
         self,
         name: str,

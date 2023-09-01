@@ -27,69 +27,50 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GistFile(github.GithubObject.NonCompletableGithubObject):
+class GistFile(NonCompletableGithubObject):
     """
     This class represents GistFiles
     """
+
+    def _initAttributes(self) -> None:
+        self._content: Attribute[str] = NotSet
+        self._filename: Attribute[str] = NotSet
+        self._language: Attribute[str] = NotSet
+        self._raw_url: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"filename": self._filename.value})
 
     @property
-    def content(self):
-        """
-        :type: string
-        """
+    def content(self) -> str:
         return self._content.value
 
     @property
-    def filename(self):
-        """
-        :type: string
-        """
+    def filename(self) -> str:
         return self._filename.value
 
     @property
-    def language(self):
-        """
-        :type: string
-        """
+    def language(self) -> str:
         return self._language.value
 
     @property
-    def raw_url(self):
-        """
-        :type: string
-        """
+    def raw_url(self) -> str:
         return self._raw_url.value
 
     @property
-    def size(self):
-        """
-        :type: integer
-        """
+    def size(self) -> int:
         return self._size.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
-
-    def _initAttributes(self) -> None:
-        self._content = github.GithubObject.NotSet
-        self._filename = github.GithubObject.NotSet
-        self._language = github.GithubObject.NotSet
-        self._raw_url = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
