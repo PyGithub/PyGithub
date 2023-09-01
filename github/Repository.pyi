@@ -339,6 +339,7 @@ class Repository(CompletableGithubObject):
         has_issues: Union[bool, _NotSetType] = ...,
         has_projects: Union[bool, _NotSetType] = ...,
         has_wiki: Union[bool, _NotSetType] = ...,
+        is_template: Union[bool, _NotSetType] = ...,
         has_downloads: Union[bool, _NotSetType] = ...,
         default_branch: Union[str, _NotSetType] = ...,
         allow_forking: Union[bool, _NotSetType] = ...,

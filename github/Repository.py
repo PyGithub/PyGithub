@@ -1743,6 +1743,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         has_issues=github.GithubObject.NotSet,
         has_projects=github.GithubObject.NotSet,
         has_wiki=github.GithubObject.NotSet,
+        is_template=github.GithubObject.NotSet,
         has_downloads=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
         allow_auto_merge=github.GithubObject.NotSet,
@@ -1764,6 +1765,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_issues: bool
         :param has_projects: bool
         :param has_wiki: bool
+        :param is_template: bool
         :param has_downloads: bool
         :param default_branch: string
         :param allow_forking: bool
@@ -1787,6 +1789,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
+        assert is_template is github.GithubObject.NotSet or isinstance(is_template, bool), is_template
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, str), default_branch
         assert allow_auto_merge is github.GithubObject.NotSet or isinstance(allow_auto_merge, bool), allow_auto_merge
@@ -1824,6 +1827,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["has_projects"] = has_projects
         if has_wiki is not github.GithubObject.NotSet:
             post_parameters["has_wiki"] = has_wiki
+        if is_template is not github.GithubObject.NotSet:
+            post_parameters["is_template"] = is_template
         if has_downloads is not github.GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
         if default_branch is not github.GithubObject.NotSet:
