@@ -452,14 +452,23 @@ class PullRequest(CompletableGithubObject):
 
     def create_review_request(
         self,
-        reviewers: Opt[list[str]] = NotSet,
-        team_reviewers: Opt[list[str]] = NotSet,
+        reviewers: Opt[list[str] | str] = NotSet,
+        team_reviewers: Opt[list[str] | str] = NotSet,
     ) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         """
-        assert is_optional_list(reviewers, str), reviewers
-        assert is_optional_list(team_reviewers, str), team_reviewers
+        assert isinstance(reviewers, str) or is_optional_list(reviewers, str), reviewers
+        assert isinstance(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
+
+        if is_defined(reviewers):
+            if isinstance(reviewers, str):
+                reviewers = [reviewers]
+
+        if is_defined(team_reviewers):
+            if isinstance(team_reviewers, str):
+                team_reviewers = [team_reviewers]
+
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
         headers, data = self._requester.requestJsonAndCheck(
