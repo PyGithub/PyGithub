@@ -1745,14 +1745,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         has_wiki=github.GithubObject.NotSet,
         is_template=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
-        allow_auto_merge=github.GithubObject.NotSet,
-        allow_forking=github.GithubObject.NotSet,
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
+        allow_auto_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
         allow_update_branch=github.GithubObject.NotSet,
+        use_squash_pr_title_as_default=github.GithubObject.NotSet,
+        squash_merge_commit_title=github.GithubObject.NotSet,
+        squash_merge_commit_message=github.GithubObject.NotSet,
+        merge_commit_title=github.GithubObject.NotSet,
+        merge_commit_message=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
+        allow_forking=github.GithubObject.NotSet,
+        web_commit_signoff_required=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -1766,13 +1772,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param is_template: bool
         :param default_branch: string
-        :param allow_forking: bool
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
+        :param allow_auto_merge: bool
         :param delete_branch_on_merge: bool
         :param allow_update_branch: bool
+        :param use_squash_pr_title_as_default: bool
+        :param squash_merge_commit_title : string
+        :param squash_merge_commit_message : string
+        :param merge_commit_title : string
+        :param merge_commit_message : string
         :param archived: bool
+        :param allow_forking: bool
+        :param web_commit_signoff_required: bool
         :rtype: None
         """
         if name is None:
@@ -1789,8 +1802,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert is_template is github.GithubObject.NotSet or isinstance(is_template, bool), is_template
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, str), default_branch
-        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(allow_auto_merge, bool), allow_auto_merge
-        assert allow_forking is github.GithubObject.NotSet or isinstance(allow_forking, bool), allow_forking
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(
             allow_squash_merge, bool
         ), allow_squash_merge
@@ -1800,16 +1811,40 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
+        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(allow_auto_merge, bool), allow_auto_merge
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
         assert allow_update_branch is github.GithubObject.NotSet or isinstance(
             allow_update_branch, bool
         ), allow_update_branch
+        assert use_squash_pr_title_as_default is github.GithubObject.NotSet or isinstance(
+            use_squash_pr_title_as_default, bool
+        ), use_squash_pr_title_as_default
+        assert squash_merge_commit_title is github.GithubObject.NotSet or (
+            isinstance(squash_merge_commit_title, str)
+            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
+        ), squash_merge_commit_title
+        assert squash_merge_commit_message is github.GithubObject.NotSet or (
+            isinstance(squash_merge_commit_message, str)
+            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
+        ), squash_merge_commit_message
+        assert merge_commit_title is github.GithubObject.NotSet or (
+            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
+        ), merge_commit_title
+        assert merge_commit_message is github.GithubObject.NotSet or (
+            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
+        ), merge_commit_message
         assert archived is github.GithubObject.NotSet or isinstance(archived, bool), archived
+        assert allow_forking is github.GithubObject.NotSet or isinstance(allow_forking, bool), allow_forking
+        assert web_commit_signoff_required is github.GithubObject.NotSet or isinstance(
+            web_commit_signoff_required, bool
+        ), web_commit_signoff_required
+
         post_parameters = {
             "name": name,
         }
+
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if homepage is not github.GithubObject.NotSet:
@@ -1830,20 +1865,32 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["default_branch"] = default_branch
         if allow_squash_merge is not github.GithubObject.NotSet:
             post_parameters["allow_squash_merge"] = allow_squash_merge
-        if allow_auto_merge is not github.GithubObject.NotSet:
-            post_parameters["allow_auto_merge"] = allow_auto_merge
-        if allow_forking is not github.GithubObject.NotSet:
-            post_parameters["allow_forking"] = allow_forking
         if allow_merge_commit is not github.GithubObject.NotSet:
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if allow_auto_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_auto_merge"] = allow_auto_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if allow_update_branch is not github.GithubObject.NotSet:
             post_parameters["allow_update_branch"] = allow_update_branch
+        if use_squash_pr_title_as_default is not github.GithubObject.NotSet:
+            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
+        if squash_merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
+        if squash_merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
+        if merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["merge_commit_title"] = merge_commit_title
+        if merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["merge_commit_message"] = merge_commit_message
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
+        if allow_forking is not github.GithubObject.NotSet:
+            post_parameters["allow_forking"] = allow_forking
+        if web_commit_signoff_required is not github.GithubObject.NotSet:
+            post_parameters["web_commit_signoff_required"] = web_commit_signoff_required
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 

@@ -341,13 +341,20 @@ class Repository(CompletableGithubObject):
         has_wiki: Union[bool, _NotSetType] = ...,
         is_template: Union[bool, _NotSetType] = ...,
         default_branch: Union[str, _NotSetType] = ...,
-        allow_forking: Union[bool, _NotSetType] = ...,
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
+        allow_auto_merge: Union[bool, _NotSetType] = ...,
         delete_branch_on_merge: Union[bool, _NotSetType] = ...,
         allow_update_branch: Union[bool, _NotSetType] = ...,
+        use_squash_pr_title_as_default: Union[bool, _NotSetType] = ...,
+        squash_merge_commit_title: Union[str, _NotSetType] = ...,
+        squash_merge_commit_message: Union[str, _NotSetType] = ...,
+        merge_commit_title: Union[str, _NotSetType] = ...,
+        merge_commit_message: Union[str, _NotSetType] = ...,
         archived: Union[bool, _NotSetType] = ...,
+        allow_forking: Union[bool, _NotSetType] = ...,
+        web_commit_signoff_required: Union[bool, _NotSetType] = ...,
     ) -> None: ...
     def enable_automated_security_fixes(self) -> bool: ...
     def enable_vulnerability_alert(self) -> bool: ...
