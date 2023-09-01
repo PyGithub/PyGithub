@@ -624,6 +624,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._master_branch.value
 
     @property
+    def merge_commit_message(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._merge_commit_message)
+        return self._merge_commit_message.value
+
+    @property
+    def merge_commit_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._merge_commit_title)
+        return self._merge_commit_title.value
+
+    @property
     def merges_url(self):
         """
         :type: string
@@ -768,6 +784,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._source.value
 
     @property
+    def squash_merge_commit_message(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_message)
+        return self._squash_merge_commit_message.value
+
+    @property
+    def squash_merge_commit_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_title)
+        return self._squash_merge_commit_title.value
+
+    @property
     def ssh_url(self):
         """
         :type: string
@@ -880,6 +912,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def use_squash_pr_title_as_default(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._use_squash_pr_title_as_default)
+        return self._use_squash_pr_title_as_default.value
+
+    @property
     def visibility(self):
         """
         :type: string
@@ -902,6 +942,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
+
+    @property
+    def web_commit_signoff_required(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._web_commit_signoff_required)
+        return self._web_commit_signoff_required.value
 
     def add_to_collaborators(self, collaborator, permission=github.GithubObject.NotSet):
         """
@@ -3969,6 +4017,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._language = github.GithubObject.NotSet
         self._languages_url = github.GithubObject.NotSet
         self._master_branch = github.GithubObject.NotSet
+        self._merge_commit_message = github.GithubObject.NotSet
+        self._merge_commit_title = github.GithubObject.NotSet
         self._merges_url = github.GithubObject.NotSet
         self._milestones_url = github.GithubObject.NotSet
         self._mirror_url = github.GithubObject.NotSet
@@ -3987,6 +4037,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._releases_url = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
+        self._squash_merge_commit_message = github.GithubObject.NotSet
+        self._squash_merge_commit_title = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
         self._stargazers_count = github.GithubObject.NotSet
         self._stargazers_url = github.GithubObject.NotSet
@@ -4001,9 +4053,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._use_squash_pr_title_as_default = github.GithubObject.NotSet
         self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
+        self._web_commit_signoff_required = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
@@ -4112,6 +4166,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._master_branch = self._makeStringAttribute(attributes["master_branch"])
         if "merges_url" in attributes:  # pragma no branch
             self._merges_url = self._makeStringAttribute(attributes["merges_url"])
+        if "merge_commit_message" in attributes:  # pragma no branch
+            self._merge_commit_message = self._makeStringAttribute(attributes["merge_commit_message"])
+        if "merge_commit_title" in attributes:  # pragma no branch
+            self._merge_commit_title = self._makeStringAttribute(attributes["merge_commit_title"])
         if "milestones_url" in attributes:  # pragma no branch
             self._milestones_url = self._makeStringAttribute(attributes["milestones_url"])
         if "mirror_url" in attributes:  # pragma no branch
@@ -4146,6 +4204,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeClassAttribute(Repository, attributes["source"])
+        if "squash_merge_commit_message" in attributes:  # pragma no branch
+            self._squash_merge_commit_message = self._makeStringAttribute(attributes["squash_merge_commit_message"])
+        if "squash_merge_commit_title" in attributes:  # pragma no branch
+            self._squash_merge_commit_title = self._makeStringAttribute(attributes["squash_merge_commit_title"])
         if "ssh_url" in attributes:  # pragma no branch
             self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
         if "stargazers_count" in attributes:  # pragma no branch
@@ -4174,9 +4236,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
+            self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch
             self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch
             self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
+        if "web_commit_signoff_required" in attributes:  # pragma no branch
+            self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
