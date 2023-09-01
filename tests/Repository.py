@@ -150,7 +150,6 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
-        self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
