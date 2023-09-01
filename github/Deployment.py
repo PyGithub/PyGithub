@@ -21,156 +21,129 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.Consts
 import github.DeploymentStatus
-import github.GithubObject
+import github.NamedUser
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.PaginatedList import PaginatedList
 
 
-class Deployment(github.GithubObject.CompletableGithubObject):
+class Deployment(CompletableGithubObject):
     """
     This class represents Deployments. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
     """
+
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._task: Attribute[str] = NotSet
+        self._payload: Attribute[dict[str, Any]] = NotSet
+        self._original_environment: Attribute[str] = NotSet
+        self._environment: Attribute[str] = NotSet
+        self._production_environment: Attribute[bool] = NotSet
+        self._transient_environment: Attribute[bool] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
+        self._statuses_url: Attribute[str] = NotSet
+        self._repository_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def ref(self):
-        """
-        :type: string
-        """
+    def ref(self) -> str:
         self._completeIfNotSet(self._ref)
         return self._ref.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def task(self):
-        """
-        :type: string
-        """
+    def task(self) -> str:
         self._completeIfNotSet(self._task)
         return self._task.value
 
     @property
-    def payload(self):
-        """
-        :type: dict
-        """
+    def payload(self) -> dict[str, Any]:
         self._completeIfNotSet(self._payload)
         return self._payload.value
 
     @property
-    def original_environment(self):
-        """
-        :type: string
-        """
+    def original_environment(self) -> str:
         self._completeIfNotSet(self._original_environment)
         return self._original_environment.value
 
     @property
-    def environment(self):
-        """
-        :type: string
-        """
+    def environment(self) -> str:
         self._completeIfNotSet(self._environment)
         return self._environment.value
 
     @property
-    def production_environment(self):
-        """
-        :type: bool
-        """
+    def production_environment(self) -> bool:
         self._completeIfNotSet(self._production_environment)
         return self._production_environment.value
 
     @property
-    def transient_environment(self):
-        """
-        :type: bool
-        """
+    def transient_environment(self) -> bool:
         self._completeIfNotSet(self._transient_environment)
         return self._transient_environment.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def creator(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def creator(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime
-        """
+    def updated_at(self) -> datetime | None:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def statuses_url(self):
-        """
-        :type: string
-        """
+    def statuses_url(self) -> str:
         self._completeIfNotSet(self._statuses_url)
         return self._statuses_url.value
 
     @property
-    def repository_url(self):
-        """
-        :type: string
-        """
+    def repository_url(self) -> str:
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
 
-    def get_statuses(self):
+    def get_statuses(self) -> PaginatedList[github.DeploymentStatus.DeploymentStatus]:
         """
         :calls: `GET /repos/{owner}/deployments/{deployment_id}/statuses <https://docs.github.com/en/rest/reference/repos#list-deployments>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.DeploymentStatus.DeploymentStatus`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.DeploymentStatus.DeploymentStatus,
             self._requester,
             f"{self.url}/statuses",
@@ -178,11 +151,9 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": self._get_accept_header()},
         )
 
-    def get_status(self, id_):
+    def get_status(self, id_: int) -> github.DeploymentStatus.DeploymentStatus:
         """
         :calls: `GET /repos/{owner}/deployments/{deployment_id}/statuses/{status_id}  <https://docs.github.com/en/rest/reference/repos#get-a-deployment>`_
-        :param id_: int
-        :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
         """
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
@@ -194,41 +165,33 @@ class Deployment(github.GithubObject.CompletableGithubObject):
 
     def create_status(
         self,
-        state,
-        target_url=github.GithubObject.NotSet,
-        description=github.GithubObject.NotSet,
-        environment=github.GithubObject.NotSet,
-        environment_url=github.GithubObject.NotSet,
-        auto_inactive=github.GithubObject.NotSet,
-    ):
+        state: str,
+        target_url: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        environment: Opt[str] = NotSet,
+        environment_url: Opt[str] = NotSet,
+        auto_inactive: Opt[bool] = NotSet,
+    ) -> github.DeploymentStatus.DeploymentStatus:
         """
         :calls: `POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses <https://docs.github.com/en/rest/reference/repos#create-a-deployment-status>`_
-        :param: state: string
-        :param: target_url: string
-        :param: description: string
-        :param: environment: string
-        :param: environment_url: string
-        :param: auto_inactive: bool
-        :rtype: :class:`github.DeploymentStatus.DeploymentStatus`
         """
         assert isinstance(state, str), state
-        assert target_url is github.GithubObject.NotSet or isinstance(target_url, str), target_url
-        assert description is github.GithubObject.NotSet or isinstance(description, str), description
-        assert environment is github.GithubObject.NotSet or isinstance(environment, str), environment
-        assert environment_url is github.GithubObject.NotSet or isinstance(environment_url, str), environment_url
-        assert auto_inactive is github.GithubObject.NotSet or isinstance(auto_inactive, bool), auto_inactive
+        assert target_url is NotSet or isinstance(target_url, str), target_url
+        assert description is NotSet or isinstance(description, str), description
+        assert environment is NotSet or isinstance(environment, str), environment
+        assert environment_url is NotSet or isinstance(environment_url, str), environment_url
+        assert auto_inactive is NotSet or isinstance(auto_inactive, bool), auto_inactive
 
-        post_parameters = {"state": state}
-        if target_url is not github.GithubObject.NotSet:
-            post_parameters["target_url"] = target_url
-        if description is not github.GithubObject.NotSet:
-            post_parameters["description"] = description
-        if environment is not github.GithubObject.NotSet:
-            post_parameters["environment"] = environment
-        if environment_url is not github.GithubObject.NotSet:
-            post_parameters["environment_url"] = environment_url
-        if auto_inactive is not github.GithubObject.NotSet:
-            post_parameters["auto_inactive"] = auto_inactive
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "target_url": target_url,
+                "description": description,
+                "environment": environment,
+                "environment_url": environment_url,
+                "auto_inactive": auto_inactive,
+            }
+        )
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -239,7 +202,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
         return github.DeploymentStatus.DeploymentStatus(self._requester, headers, data, completed=True)
 
     @staticmethod
-    def _get_accept_header():
+    def _get_accept_header() -> str:
         return ", ".join(
             [
                 github.Consts.deploymentEnhancementsPreview,
@@ -247,25 +210,7 @@ class Deployment(github.GithubObject.CompletableGithubObject):
             ]
         )
 
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._production_environment = github.GithubObject.NotSet
-        self._ref = github.GithubObject.NotSet
-        self._transient_environment = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._task = github.GithubObject.NotSet
-        self._payload = github.GithubObject.NotSet
-        self._original_environment = github.GithubObject.NotSet
-        self._environment = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._creator = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._statuses_url = github.GithubObject.NotSet
-        self._repository_url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "production_environment" in attributes:  # pragma no branch
