@@ -218,10 +218,10 @@ class Github:
         """
         self.__requester.close()
 
-    def __enter__(self) -> "Github":
+    def __enter__(self) -> Github:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.close()
 
     @property
