@@ -148,12 +148,12 @@ class Repository(Framework.TestCase):
             allow_merge_commit=True,
             allow_rebase_merge=True,
             delete_branch_on_merge=True,
-            use_squash_pr_title_as_default= True,
-            squash_merge_commit_title= "PR_TITLE",
-            squash_merge_commit_message= "COMMIT_MESSAGES",
-            merge_commit_title= "PR_TITLE",
-            merge_commit_message= "PR_BODY",
-            web_commit_signoff_required= True,
+            use_squash_pr_title_as_default=True,
+            squash_merge_commit_title="PR_TITLE",
+            squash_merge_commit_message="COMMIT_MESSAGES",
+            merge_commit_title="PR_TITLE",
+            merge_commit_message="PR_BODY",
+            web_commit_signoff_required=True,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
