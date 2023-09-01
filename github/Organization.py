@@ -56,7 +56,7 @@ import github.Repository
 import github.Team
 from github import Consts
 from github.Event import Event
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_optional_list
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional_list
 
 if TYPE_CHECKING:
     from github.Hook import Hook
@@ -140,41 +140,26 @@ class Organization(CompletableGithubObject):
 
     @property
     def collaborators(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._collaborators)
         return self._collaborators.value
 
     @property
     def company(self) -> str | None:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._company)
         return self._company.value
 
     @property
     def created_at(self) -> datetime:
-        """
-        :type: datetime
-        """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def default_repository_permission(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._default_repository_permission)
         return self._default_repository_permission.value
 
     @property
     def description(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._description)
         return self._description.value
 
@@ -185,145 +170,91 @@ class Organization(CompletableGithubObject):
 
     @property
     def email(self) -> str | None:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._email)
         return self._email.value
 
     @property
     def events_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._events_url)
         return self._events_url.value
 
     @property
     def followers(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._followers)
         return self._followers.value
 
     @property
     def following(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._following)
         return self._following.value
 
     @property
     def gravatar_id(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._gravatar_id)
         return self._gravatar_id.value
 
     @property
     def has_organization_projects(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_organization_projects)
         return self._has_organization_projects.value
 
     @property
     def has_repository_projects(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._has_repository_projects)
         return self._has_repository_projects.value
 
     @property
     def hooks_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._hooks_url)
         return self._hooks_url.value
 
     @property
     def html_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
     def id(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def issues_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._issues_url)
         return self._issues_url.value
 
     @property
     def location(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._location)
         return self._location.value
 
     @property
     def login(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._login)
         return self._login.value
 
     @property
     def members_can_create_repositories(self) -> bool:
-        """
-        :type: bool
-        """
         self._completeIfNotSet(self._members_can_create_repositories)
         return self._members_can_create_repositories.value
 
     @property
     def members_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._members_url)
         return self._members_url.value
 
     @property
     def name(self) -> str | None:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
     def owned_private_repos(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
 
     @property
     def plan(self) -> Plan:
-        """
-        :type: :class:`github.Plan.Plan`
-        """
         self._completeIfNotSet(self._plan)
         return self._plan.value
 
@@ -339,17 +270,11 @@ class Organization(CompletableGithubObject):
 
     @property
     def public_members_url(self) -> str:
-        """
-        :type: string
-        """
         self._completeIfNotSet(self._public_members_url)
         return self._public_members_url.value
 
     @property
     def public_repos(self) -> int:
-        """
-        :type: integer
-        """
         self._completeIfNotSet(self._public_repos)
         return self._public_repos.value
 
@@ -383,12 +308,9 @@ class Organization(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def add_to_members(self, member: NamedUser, role: _NotSetType | str = NotSet) -> None:
+    def add_to_members(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
         :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
-        :param member: :class:`github.NamedUser.NamedUser`
-        :param role: string
-        :rtype: None
         """
         assert role is NotSet or isinstance(role, str), role
         assert isinstance(member, github.NamedUser.NamedUser), member
@@ -402,8 +324,6 @@ class Organization(CompletableGithubObject):
     def add_to_public_members(self, public_member: NamedUser) -> None:
         """
         :calls: `PUT /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
-        :param public_member: :class:`github.NamedUser.NamedUser`
-        :rtype: None
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
@@ -460,8 +380,8 @@ class Organization(CompletableGithubObject):
         self,
         name: str,
         config: dict[str, str],
-        events: _NotSetType | list[str] = NotSet,
-        active: bool | _NotSetType = NotSet,
+        events: Opt[list[str]] = NotSet,
+        active: Opt[bool] = NotSet,
     ) -> Hook:
         """
         :calls: `POST /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
@@ -664,10 +584,10 @@ class Organization(CompletableGithubObject):
     def create_team(
         self,
         name: str,
-        repo_names: list[Repository] | _NotSetType = NotSet,
-        permission: str | _NotSetType = NotSet,
-        privacy: str | _NotSetType = NotSet,
-        description: str | _NotSetType = NotSet,
+        repo_names: Opt[list[Repository]] = NotSet,
+        permission: Opt[str] = NotSet,
+        privacy: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
     ) -> Team:
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
@@ -781,24 +701,16 @@ class Organization(CompletableGithubObject):
 
     def edit(
         self,
-        billing_email: str | _NotSetType = NotSet,
-        blog: str | _NotSetType = NotSet,
-        company: str | _NotSetType = NotSet,
-        description: str | _NotSetType = NotSet,
-        email: str | _NotSetType = NotSet,
-        location: str | _NotSetType = NotSet,
-        name: str | _NotSetType = NotSet,
+        billing_email: Opt[str] = NotSet,
+        blog: Opt[str] = NotSet,
+        company: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        email: Opt[str] = NotSet,
+        location: Opt[str] = NotSet,
+        name: Opt[str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
-        :param billing_email: string
-        :param blog: string
-        :param company: string
-        :param description: string
-        :param email: string
-        :param location: string
-        :param name: string
-        :rtype: None
         """
         assert billing_email is NotSet or isinstance(billing_email, str), billing_email
         assert blog is NotSet or isinstance(blog, str), blog
@@ -830,8 +742,8 @@ class Organization(CompletableGithubObject):
         id: int,
         name: str,
         config: dict[str, str],
-        events: _NotSetType | list[str] = NotSet,
-        active: bool | _NotSetType = NotSet,
+        events: Opt[list[str]] = NotSet,
+        active: Opt[bool] = NotSet,
     ) -> Hook:
         """
         :calls: `PATCH /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
@@ -911,12 +823,12 @@ class Organization(CompletableGithubObject):
 
     def get_issues(
         self,
-        filter: str | _NotSetType = NotSet,
-        state: str | _NotSetType = NotSet,
-        labels: list[Label] | _NotSetType = NotSet,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
+        filter: Opt[str] = NotSet,
+        state: Opt[str] = NotSet,
+        labels: Opt[list[Label]] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /orgs/{org}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -954,14 +866,11 @@ class Organization(CompletableGithubObject):
 
     def get_members(
         self,
-        filter_: str | _NotSetType = NotSet,
-        role: str | _NotSetType = NotSet,
+        filter_: Opt[str] = NotSet,
+        role: Opt[str] = NotSet,
     ) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
-        :param filter_: string
-        :param role: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         assert filter_ is NotSet or isinstance(filter_, str), filter_
         assert role is NotSet or isinstance(role, str), role
@@ -978,11 +887,9 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_projects(self, state: _NotSetType | str = NotSet) -> PaginatedList[Project]:
+    def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
         """
         :calls: `GET /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#list-organization-projects>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Project.Project`
-        :param state: string
         """
 
         url_parameters = dict()
@@ -1009,7 +916,7 @@ class Organization(CompletableGithubObject):
             None,
         )
 
-    def get_outside_collaborators(self, filter_: str | _NotSetType = NotSet) -> PaginatedList[NamedUser]:
+    def get_outside_collaborators(self, filter_: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/outside_collaborators <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param filter_: string
@@ -1073,16 +980,15 @@ class Organization(CompletableGithubObject):
 
     def get_repos(
         self,
-        type: str | _NotSetType = NotSet,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
+        type: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
     ) -> PaginatedList[Repository]:
         """
         :calls: `GET /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
         :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member')
         :param sort: string ('created', 'updated', 'pushed', 'full_name')
         :param direction: string ('asc', desc')
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert type is NotSet or isinstance(type, str), type
         assert sort is NotSet or isinstance(sort, str), sort
@@ -1145,10 +1051,10 @@ class Organization(CompletableGithubObject):
 
     def invite_user(
         self,
-        user: _NotSetType | NamedUser = NotSet,
-        email: str | _NotSetType = NotSet,
-        role: str | _NotSetType = NotSet,
-        teams: list[Team] | _NotSetType = NotSet,
+        user: Opt[NamedUser] = NotSet,
+        email: Opt[str] = NotSet,
+        role: Opt[str] = NotSet,
+        teams: Opt[list[Team]] = NotSet,
     ) -> None:
         """
         :calls: `POST /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
@@ -1246,8 +1152,8 @@ class Organization(CompletableGithubObject):
     def create_migration(
         self,
         repos: list[str],
-        lock_repositories: bool | _NotSetType = NotSet,
-        exclude_attachments: bool | _NotSetType = NotSet,
+        lock_repositories: Opt[bool] = NotSet,
+        exclude_attachments: Opt[bool] = NotSet,
     ) -> Migration:
         """
         :calls: `POST /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
