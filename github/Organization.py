@@ -1033,7 +1033,7 @@ class Organization(CompletableGithubObject):
         """
         assert is_optional(user, github.NamedUser.NamedUser), user
         assert is_optional(email, str), email
-        assert not (is_defined(email) and is_defined(user)), "specify only one of email or user"
+        assert is_undefined(email) ^ is_undefined(user), "specify only one of email or user"
 
         assert is_undefined(role) or role in ["admin", "direct_member", "billing_manager"], role
         assert is_optional_list(teams, github.Team.Team), teams
