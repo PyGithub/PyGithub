@@ -63,6 +63,7 @@ from github.GithubObject import (
     is_defined,
     is_optional,
     is_optional_list,
+    is_undefined,
 )
 from github.PaginatedList import PaginatedList
 
@@ -1032,19 +1033,18 @@ class Organization(CompletableGithubObject):
         """
         assert is_optional(user, github.NamedUser.NamedUser), user
         assert is_optional(email, str), email
-        assert is_defined(email) or is_defined(user), "specify only one of email or user"
-        parameters: dict[str, Any] = {}
+        assert not (is_defined(email) and is_defined(user)), "specify only one of email or user"
+
+        assert is_undefined(role) or role in ["admin", "direct_member", "billing_manager"], role
+        assert is_optional_list(teams, github.Team.Team), teams
+
+        parameters: dict[str, Any] = NotSet.remove_unset_items({"email": email, "role": role})
+
         if is_defined(user):
             parameters["invitee_id"] = user.id
-        elif email is not NotSet:
-            parameters["email"] = email
-        if role is not NotSet:
-            assert isinstance(role, str), role
-            assert role in ["admin", "direct_member", "billing_manager"]
-            parameters["role"] = role
         if is_defined(teams):
-            assert all(isinstance(team, github.Team.Team) for team in teams)
             parameters["team_ids"] = [t.id for t in teams]
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/invitations",
