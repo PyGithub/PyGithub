@@ -29,6 +29,7 @@
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 # Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
+# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -90,6 +91,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.id, 3544490)
         self.assertIs(self.repo.is_template, None)
         self.assertEqual(self.repo.language, "Python")
+        self.assertEqual(self.repo.license.spdx_id, "LGPL-3.0")
         self.assertEqual(self.repo.master_branch, None)
         self.assertEqual(self.repo.name, "PyGithub")
         self.assertEqual(self.repo.open_issues, 16)

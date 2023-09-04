@@ -106,6 +106,7 @@
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 # Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
+# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -166,6 +167,7 @@ import github.Invitation
 import github.Issue
 import github.IssueEvent
 import github.Label
+import github.License
 import github.Milestone
 import github.NamedUser
 import github.Organization
@@ -614,6 +616,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._languages_url)
         return self._languages_url.value
+
+    @property
+    def license(self):
+        """
+        :type: :class:`github.License.License`
+        """
+        self._completeIfNotSet(self._license)
+        return self._license.value
 
     @property
     def master_branch(self):
@@ -4016,6 +4026,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._labels_url = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
         self._languages_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
         self._master_branch = github.GithubObject.NotSet
         self._merge_commit_message = github.GithubObject.NotSet
         self._merge_commit_title = github.GithubObject.NotSet
@@ -4162,6 +4173,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._language = self._makeStringAttribute(attributes["language"])
         if "languages_url" in attributes:  # pragma no branch
             self._languages_url = self._makeStringAttribute(attributes["languages_url"])
+        if "license" in attributes:  # pragma no branch
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "master_branch" in attributes:  # pragma no branch
             self._master_branch = self._makeStringAttribute(attributes["master_branch"])
         if "merges_url" in attributes:  # pragma no branch
