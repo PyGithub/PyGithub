@@ -82,10 +82,10 @@ class ReviewComment(TypedDict):
     path: str
     position: NotRequired[int]
     body: str
-    line: int
-    side: str
-    start_line: int
-    start_dist: str
+    line: NotRequired[int]
+    side: NotRequired[str]
+    start_line: NotRequired[int]
+    start_side: NotRequired[str]
 
 
 class PullRequest(CompletableGithubObject):
