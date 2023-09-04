@@ -373,8 +373,8 @@ class PullRequest(CompletableGithubObject):
             "RIGHT",
             "side",
         ], start_side
-        assert in_reply_to is NotSet or isinstance(in_reply_to, int), in_reply_to
-        assert subject_type is NotSet or subject_type in [
+        assert is_optional(in_reply_to, int), in_reply_to
+        assert is_undefined(subject_type) or subject_type in [
             "line",
             "file",
         ], subject_type
@@ -434,10 +434,10 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
-        assert commit is NotSet or isinstance(commit, github.Commit.Commit), commit
-        assert body is NotSet or isinstance(body, str), body
-        assert event is NotSet or isinstance(event, str), event
-        assert comments is NotSet or isinstance(comments, list), comments
+        assert is_optional(commit, github.Commit.Commit), commit
+        assert is_optional(body, str), body
+        assert is_optional(event, str), event
+        assert is_optional(comments, list), comments
         post_parameters: dict[str, Any] = {}
         if is_defined(commit):
             post_parameters["commit_id"] = commit.sha
@@ -496,11 +496,11 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `PATCH /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        assert title is NotSet or isinstance(title, str), title
-        assert body is NotSet or isinstance(body, str), body
-        assert state is NotSet or isinstance(state, str), state
-        assert base is NotSet or isinstance(base, str), base
-        assert maintainer_can_modify is NotSet or isinstance(maintainer_can_modify, bool), maintainer_can_modify
+        assert is_optional(title, str), title
+        assert is_optional(body, str), body
+        assert is_optional(state, str), state
+        assert is_optional(base, str), base
+        assert is_optional(maintainer_can_modify, bool), maintainer_can_modify
         post_parameters = NotSet.remove_unset_items(
             {"title": title, "body": body, "state": state, "base": base, "maintainer_can_modify": maintainer_can_modify}
         )
@@ -552,9 +552,9 @@ class PullRequest(CompletableGithubObject):
         :param direction: string 'asc' or 'desc'
         :param since: datetime
         """
-        assert sort is NotSet or isinstance(sort, str), sort
-        assert direction is NotSet or isinstance(direction, str), direction
-        assert since is NotSet or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
 
         url_parameters = NotSet.remove_unset_items({"sort": sort, "direction": direction})
         if is_defined(since):
@@ -726,10 +726,10 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        assert commit_message is NotSet or isinstance(commit_message, str), commit_message
-        assert commit_title is NotSet or isinstance(commit_title, str), commit_title
-        assert merge_method is NotSet or isinstance(merge_method, str), merge_method
-        assert sha is NotSet or isinstance(sha, str), sha
+        assert is_optional(commit_message, str), commit_message
+        assert is_optional(commit_title, str), commit_title
+        assert is_optional(merge_method, str), merge_method
+        assert is_optional(sha, str), sha
         post_parameters = dict()
         if commit_message is not NotSet:
             post_parameters["commit_message"] = commit_message
@@ -782,7 +782,7 @@ class PullRequest(CompletableGithubObject):
         """
         assert expected_head_sha is NotSet or isinstance(expected_head_sha, str), expected_head_sha
         post_parameters = {}
-        if expected_head_sha is not NotSet:
+        if is_defined(expected_head_sha):
             post_parameters["expected_head_sha"] = expected_head_sha
         status, headers, data = self._requester.requestJson(
             "PUT",
