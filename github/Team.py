@@ -291,6 +291,24 @@ class Team(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
+    def remove_team_repository(self, repo):
+        """
+        :calls: `DELETE /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams?apiVersion=2022-11-28#remove-a-repository-from-a-team>`_
+        :param repo: string or :class:`github.Repository.Repository`
+        :rtype: bool
+        """
+        assert isinstance(repo, github.Repository.Repository) or isinstance(
+            repo, str
+        ), repo
+        repo_url_param = repo
+        if isinstance(repo, github.Repository.Repository):
+            repo_url_param = repo._identity
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            f"{self.organization.url}/team/{self.slug}/repos/{repo_url_param}",
+        )
+        return status == 204
+
     def delete(self):
         """
         :calls: `DELETE /teams/{id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
