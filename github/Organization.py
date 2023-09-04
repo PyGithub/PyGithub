@@ -311,10 +311,10 @@ class Organization(CompletableGithubObject):
         """
         :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
         """
-        assert role is NotSet or isinstance(role, str), role
+        assert is_optional(role, str), role
         assert isinstance(member, github.NamedUser.NamedUser), member
         put_parameters = {}
-        if role is not NotSet:
+        if is_defined(role):
             put_parameters["role"] = role
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/memberships/{member._identity}", input=put_parameters
@@ -357,8 +357,8 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
-        assert description is NotSet or isinstance(description, str), description
-        assert private is NotSet or isinstance(private, bool), private
+        assert is_optional(description, str), description
+        assert is_optional(private, bool), private
         post_parameters: dict[str, Any] = {
             "name": name,
             "owner": self.login,
@@ -393,7 +393,7 @@ class Organization(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
-        assert active is NotSet or isinstance(active, bool), active
+        assert is_optional(active, bool), active
         post_parameters: dict[str, Any] = {
             "name": name,
             "config": config,
@@ -410,7 +410,7 @@ class Organization(CompletableGithubObject):
         :calls: `POST /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#create-an-organization-project>`_
         """
         assert isinstance(name, str), name
-        assert body is NotSet or isinstance(body, str), body
+        assert is_optional(body, str), body
         post_parameters: dict[str, Any] = {"name": name}
         if body is not NotSet:
             post_parameters["body"] = body
