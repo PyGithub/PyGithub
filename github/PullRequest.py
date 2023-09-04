@@ -67,6 +67,7 @@ from github.GithubObject import (
     is_defined,
     is_optional,
     is_optional_list,
+    is_undefined,
 )
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
@@ -365,10 +366,10 @@ class PullRequest(CompletableGithubObject):
         assert isinstance(body, str), body
         assert isinstance(commit, github.Commit.Commit), commit
         assert isinstance(path, str), path
-        assert line is NotSet or isinstance(line, int), line
-        assert side is NotSet or side in ["LEFT", "RIGHT"], side
-        assert start_line is NotSet or isinstance(start_line, int), start_line
-        assert start_side is NotSet or start_side in [
+        assert is_optional(line, int), line
+        assert is_undefined(side) or side in ["LEFT", "RIGHT"], side
+        assert is_optional(start_line, int), start_line
+        assert is_undefined(start_side) or start_side in [
             "LEFT",
             "RIGHT",
             "side",
@@ -438,16 +439,12 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(body, str), body
         assert is_optional(event, str), event
         assert is_optional(comments, list), comments
-        post_parameters: dict[str, Any] = {}
-        if is_defined(commit):
-            post_parameters["commit_id"] = commit.sha
-        if is_defined(body):
-            post_parameters["body"] = body
-        post_parameters["event"] = "COMMENT" if event == NotSet else event
-        if comments is NotSet:
-            post_parameters["comments"] = []
-        else:
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"commit_id": commit.sha, "body": body})
+        post_parameters["event"] = "COMMENT" if is_undefined(event) else event
+        if is_defined(comments):
             post_parameters["comments"] = comments
+        else:
+            post_parameters["comments"] = []
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
@@ -780,7 +777,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls `PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        assert expected_head_sha is NotSet or isinstance(expected_head_sha, str), expected_head_sha
+        assert is_optional(expected_head_sha, str), expected_head_sha
         post_parameters = {}
         if is_defined(expected_head_sha):
             post_parameters["expected_head_sha"] = expected_head_sha
