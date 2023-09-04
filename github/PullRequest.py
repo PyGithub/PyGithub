@@ -784,9 +784,7 @@ class PullRequest(CompletableGithubObject):
         :calls `PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch <https://docs.github.com/en/rest/reference/pulls>`_
         """
         assert is_optional(expected_head_sha, str), expected_head_sha
-        post_parameters = {}
-        if is_defined(expected_head_sha):
-            post_parameters["expected_head_sha"] = expected_head_sha
+        post_parameters = NotSet.remove_unset_items({"expected_head_sha": expected_head_sha})
         status, headers, data = self._requester.requestJson(
             "PUT",
             f"{self.url}/update-branch",
