@@ -747,14 +747,10 @@ class Organization(CompletableGithubObject):
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
         assert is_optional(active, bool), active
-        post_parameters: dict[str, Any] = {
-            "name": name,
-            "config": config,
-        }
-        if events is not NotSet:
-            post_parameters["events"] = events
-        if active is not NotSet:
-            post_parameters["active"] = active
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"name": name, "config": config, "events": events, "active": active}
+        )
+
         headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/hooks/{id}", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
