@@ -32,190 +32,154 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
+from datetime import datetime
 from os.path import basename
-from typing import Any, Dict
+from typing import Any, BinaryIO
 
-import github.GithubObject
 import github.GitReleaseAsset
 import github.NamedUser
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.PaginatedList import PaginatedList
 
 from . import Consts
 
 
-class GitRelease(github.GithubObject.CompletableGithubObject):
+class GitRelease(CompletableGithubObject):
     """
     This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
     """
+
+    def _initAttributes(self) -> None:
+        self._id: Attribute[int] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._tag_name: Attribute[str] = NotSet
+        self._target_commitish: Attribute[str] = NotSet
+        self._draft: Attribute[bool] = NotSet
+        self._prerelease: Attribute[bool] = NotSet
+        self._generate_release_notes: Attribute[bool] = NotSet
+        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._upload_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._published_at: Attribute[datetime] = NotSet
+        self._tarball_url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str] = NotSet
+        self._assets: Attribute[list[github.GitReleaseAsset.GitReleaseAsset]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
-    def tag_name(self):
-        """
-        :type: string
-        """
+    def tag_name(self) -> str:
         self._completeIfNotSet(self._tag_name)
         return self._tag_name.value
 
     @property
-    def target_commitish(self):
-        """
-        :type: string
-        """
+    def target_commitish(self) -> str:
         self._completeIfNotSet(self._target_commitish)
         return self._target_commitish.value
 
     @property
-    def draft(self):
-        """
-        :type: bool
-        """
+    def draft(self) -> bool:
         self._completeIfNotSet(self._draft)
         return self._draft.value
 
     @property
-    def prerelease(self):
-        """
-        :type: bool
-        """
+    def prerelease(self) -> bool:
         self._completeIfNotSet(self._prerelease)
         return self._prerelease.value
 
     @property
-    def author(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def author(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._author)
         return self._author.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def published_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def published_at(self) -> datetime:
         self._completeIfNotSet(self._published_at)
         return self._published_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def upload_url(self):
-        """
-        :type: string
-        """
+    def upload_url(self) -> str:
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def tarball_url(self):
-        """
-        :type: string
-        """
+    def tarball_url(self) -> str:
         self._completeIfNotSet(self._tarball_url)
         return self._tarball_url.value
 
     @property
-    def zipball_url(self):
-        """
-        :type: string
-        """
+    def zipball_url(self) -> str:
         self._completeIfNotSet(self._zipball_url)
         return self._zipball_url.value
 
     @property
-    def assets(self):
-        """
-        :type: list of :class:`github.GitReleaseAsset.GitReleaseAsset`
-        """
+    def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
         self._completeIfNotSet(self._assets)
         return self._assets.value
 
-    def delete_release(self):
+    def delete_release(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#delete-a-release>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def update_release(
         self,
-        name,
-        message,
-        draft=False,
-        prerelease=False,
-        tag_name=github.GithubObject.NotSet,
-        target_commitish=github.GithubObject.NotSet,
-    ):
+        name: str,
+        message: str,
+        draft: bool = False,
+        prerelease: bool = False,
+        tag_name: Opt[str] = NotSet,
+        target_commitish: Opt[str] = NotSet,
+    ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
-        :param name: string
-        :param message: string
-        :param draft: bool
-        :param prerelease: bool
-        :param tag_name: string
-        :param target_commitish: string
-        :rtype: :class:`github.GitRelease.GitRelease`
         """
-        assert tag_name is github.GithubObject.NotSet or isinstance(
-            tag_name, str
-        ), "tag_name must be a str/unicode object"
-        assert target_commitish is github.GithubObject.NotSet or isinstance(
+        assert tag_name is NotSet or isinstance(tag_name, str), "tag_name must be a str/unicode object"
+        assert target_commitish is NotSet or isinstance(
             target_commitish, str
         ), "target_commitish must be a str/unicode object"
         assert isinstance(name, str), name
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        if tag_name is github.GithubObject.NotSet:
+        if tag_name is NotSet:
             tag_name = self.tag_name
         post_parameters = {
             "tag_name": tag_name,
@@ -226,37 +190,28 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         }
         # Do not set target_commitish to self.target_commitish when omitted, just don't send it
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
-        if target_commitish is not github.GithubObject.NotSet:
+        if target_commitish is not NotSet:
             post_parameters["target_commitish"] = target_commitish
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def upload_asset(
-        self,
-        path,
-        label="",
-        content_type=github.GithubObject.NotSet,
-        name=github.GithubObject.NotSet,
-    ):
+        self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
+    ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
-        :param path: string
-        :param label: string
-        :param content_type: string
-        :param name: string
-        :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
-        assert name is github.GithubObject.NotSet or isinstance(name, str), name
+        assert name is NotSet or isinstance(name, str), name
 
-        post_parameters = {"label": label}
-        if name is github.GithubObject.NotSet:
+        post_parameters: dict[str, Any] = {"label": label}
+        if name is NotSet:
             post_parameters["name"] = basename(path)
         else:
             post_parameters["name"] = name
-        headers = {}
-        if content_type is not github.GithubObject.NotSet:
+        headers: dict[str, Any] = {}
+        if content_type is not NotSet:
             headers["Content-Type"] = content_type
         resp_headers, data = self._requester.requestBlobAndCheck(
             "POST",
@@ -269,28 +224,24 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
 
     def upload_asset_from_memory(
         self,
-        file_like,
-        file_size,
-        name,
-        content_type=github.GithubObject.NotSet,
-        label="",
-    ):
+        file_like: BinaryIO,
+        file_size: int,
+        name: str,
+        content_type: Opt[str] = NotSet,
+        label: str = "",
+    ) -> github.GitReleaseAsset.GitReleaseAsset:
         """Uploads an asset. Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
         Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
-        :param content_type: string
-        :param name: string
-        :param label: string
-        :rtype: :class:`github.GitReleaseAsset.GitReleaseAsset`
         """
         assert isinstance(name, str), name
         assert isinstance(file_size, int), file_size
         assert isinstance(label, str), label
 
         post_parameters = {"label": label, "name": name}
-        content_type = content_type if content_type is not github.GithubObject.NotSet else Consts.defaultMediaType
+        content_type = content_type if content_type is not NotSet else Consts.defaultMediaType
         headers = {"Content-Type": content_type, "Content-Length": str(file_size)}
 
         resp_headers, data = self._requester.requestMemoryBlobAndCheck(
@@ -302,10 +253,9 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         )
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
-    def get_assets(self):
+    def get_assets(self) -> PaginatedList[github.GitReleaseAsset.GitReleaseAsset]:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#list-release-assets>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList`
         """
         return github.PaginatedList.PaginatedList(
             github.GitReleaseAsset.GitReleaseAsset,
@@ -314,26 +264,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._body = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-        self._tag_name = github.GithubObject.NotSet
-        self._target_commitish = github.GithubObject.NotSet
-        self._draft = github.GithubObject.NotSet
-        self._prerelease = github.GithubObject.NotSet
-        self._generate_release_notes = github.GithubObject.NotSet
-        self._author = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._upload_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._published_at = github.GithubObject.NotSet
-        self._tarball_url = github.GithubObject.NotSet
-        self._zipball_url = github.GithubObject.NotSet
-        self._assets = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "body" in attributes:
