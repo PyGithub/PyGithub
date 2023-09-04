@@ -46,6 +46,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.Event
 import github.GithubObject
+import github.HookDelivery
 import github.NamedUser
 import github.OrganizationSecret
 import github.OrganizationVariable
