@@ -45,6 +45,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import NotRequired, TypedDict
+
 import github.Commit
 import github.File
 import github.IssueComment
@@ -74,6 +76,16 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
+
+
+class ReviewComment(TypedDict):
+    path: str
+    position: NotRequired[int]
+    body: str
+    line: int
+    side: str
+    start_line: int
+    start_dist: str
 
 
 class PullRequest(CompletableGithubObject):
@@ -430,10 +442,10 @@ class PullRequest(CompletableGithubObject):
         commit: Opt[github.Commit.Commit] = NotSet,
         body: Opt[str] = NotSet,
         event: Opt[str] = NotSet,
-        comments: Opt[list] = NotSet,
+        comments: Opt[list[ReviewComment]] = NotSet,
     ) -> github.PullRequestReview.PullRequestReview:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
         """
         assert is_optional(commit, github.Commit.Commit), commit
         assert is_optional(body, str), body
@@ -727,15 +739,9 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(commit_title, str), commit_title
         assert is_optional(merge_method, str), merge_method
         assert is_optional(sha, str), sha
-        post_parameters = dict()
-        if commit_message is not NotSet:
-            post_parameters["commit_message"] = commit_message
-        if commit_title is not NotSet:
-            post_parameters["commit_title"] = commit_title
-        if merge_method is not NotSet:
-            post_parameters["merge_method"] = merge_method
-        if sha is not NotSet:
-            post_parameters["sha"] = sha
+        post_parameters = NotSet.remove_unset_items(
+            {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
+        )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
