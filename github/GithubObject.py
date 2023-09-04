@@ -236,7 +236,7 @@ class GithubObject:
     def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
-    def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
+    def _makeClassAttribute(self, klass: Type[T_gh], value: Any) -> Attribute[T_gh]:
         return GithubObject.__makeTransformedAttribute(
             value,
             dict,
