@@ -54,7 +54,15 @@ import github.Project
 import github.Repository
 import github.Team
 from github import Consts
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional_list
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    is_defined,
+    is_optional,
+    is_optional_list,
+)
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -72,7 +80,6 @@ if TYPE_CHECKING:
     from github.PublicKey import PublicKey
     from github.Repository import Repository
     from github.Team import Team
-from github.GithubObject import is_defined
 
 
 class Organization(CompletableGithubObject):
@@ -447,23 +454,23 @@ class Organization(CompletableGithubObject):
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        assert description is NotSet or isinstance(description, str), description
-        assert homepage is NotSet or isinstance(homepage, str), homepage
-        assert private is NotSet or isinstance(private, bool), private
-        assert visibility is NotSet or isinstance(visibility, str), visibility
-        assert has_issues is NotSet or isinstance(has_issues, bool), has_issues
-        assert has_wiki is NotSet or isinstance(has_wiki, bool), has_wiki
-        assert has_downloads is NotSet or isinstance(has_downloads, bool), has_downloads
-        assert has_projects is NotSet or isinstance(has_projects, bool), has_projects
-        assert team_id is NotSet or isinstance(team_id, int), team_id
-        assert auto_init is NotSet or isinstance(auto_init, bool), auto_init
-        assert license_template is NotSet or isinstance(license_template, str), license_template
-        assert gitignore_template is NotSet or isinstance(gitignore_template, str), gitignore_template
-        assert allow_squash_merge is NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
-        assert allow_merge_commit is NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
-        assert allow_rebase_merge is NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
-        assert delete_branch_on_merge is NotSet or isinstance(delete_branch_on_merge, bool), delete_branch_on_merge
-        assert allow_update_branch is NotSet or isinstance(allow_update_branch, bool), allow_update_branch
+        assert is_optional(description, str), description
+        assert is_optional(homepage, str), homepage
+        assert is_optional(private, bool), private
+        assert is_optional(visibility, str), visibility
+        assert is_optional(has_issues, bool), has_issues
+        assert is_optional(has_wiki, bool), has_wiki
+        assert is_optional(has_downloads, bool), has_downloads
+        assert is_optional(has_projects, bool), has_projects
+        assert is_optional(team_id, int), team_id
+        assert is_optional(auto_init, bool), auto_init
+        assert is_optional(license_template, str), license_template
+        assert is_optional(gitignore_template, str), gitignore_template
+        assert is_optional(allow_squash_merge, bool), allow_squash_merge
+        assert is_optional(allow_merge_commit, bool), allow_merge_commit
+        assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
+        assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
+        assert is_optional(allow_update_branch, bool), allow_update_branch
         post_parameters: dict[str, Any] = {
             "name": name,
         }
@@ -599,9 +606,9 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert is_optional_list(repo_names, github.Repository.Repository), repo_names
-        assert permission is NotSet or isinstance(permission, str), permission
-        assert privacy is NotSet or isinstance(privacy, str), privacy
-        assert description is NotSet or isinstance(description, str), description
+        assert is_optional(permission, str), permission
+        assert is_optional(privacy, str), privacy
+        assert is_optional(description, str), description
         post_parameters: dict[str, Any] = {"name": name}
         if is_defined(repo_names):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
@@ -711,28 +718,25 @@ class Organization(CompletableGithubObject):
         """
         :calls: `PATCH /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
-        assert billing_email is NotSet or isinstance(billing_email, str), billing_email
-        assert blog is NotSet or isinstance(blog, str), blog
-        assert company is NotSet or isinstance(company, str), company
-        assert description is NotSet or isinstance(description, str), description
-        assert email is NotSet or isinstance(email, str), email
-        assert location is NotSet or isinstance(location, str), location
-        assert name is NotSet or isinstance(name, str), name
-        post_parameters = dict()
-        if billing_email is not NotSet:
-            post_parameters["billing_email"] = billing_email
-        if blog is not NotSet:
-            post_parameters["blog"] = blog
-        if company is not NotSet:
-            post_parameters["company"] = company
-        if description is not NotSet:
-            post_parameters["description"] = description
-        if email is not NotSet:
-            post_parameters["email"] = email
-        if location is not NotSet:
-            post_parameters["location"] = location
-        if name is not NotSet:
-            post_parameters["name"] = name
+        assert is_optional(billing_email, str), billing_email
+        assert is_optional(blog, str), blog
+        assert is_optional(company, str), company
+        assert is_optional(description, str), description
+        assert is_optional(email, str), email
+        assert is_optional(location, str), location
+        assert is_optional(name, str), name
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "billing_email": billing_email,
+                "blog": blog,
+                "company": company,
+                "description": description,
+                "email": email,
+                "location": location,
+                "name": name,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
@@ -746,18 +750,12 @@ class Organization(CompletableGithubObject):
     ) -> Hook:
         """
         :calls: `PATCH /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
-        :param id: integer
-        :param name: string
-        :param config: dict
-        :param events: list of string
-        :param active: bool
-        :rtype: :class:`github.Hook.Hook`
         """
         assert isinstance(id, int), id
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
-        assert active is NotSet or isinstance(active, bool), active
+        assert is_optional(active, bool), active
         post_parameters: dict[str, Any] = {
             "name": name,
             "config": config,
@@ -838,12 +836,12 @@ class Organization(CompletableGithubObject):
         :param since: datetime
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert filter is NotSet or isinstance(filter, str), filter
-        assert state is NotSet or isinstance(state, str), state
+        assert is_optional(filter, str), filter
+        assert is_optional(state, str), state
         assert is_optional_list(labels, github.Label.Label), labels
-        assert sort is NotSet or isinstance(sort, str), sort
-        assert direction is NotSet or isinstance(direction, str), direction
-        assert since is NotSet or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
         url_parameters: dict[str, Any] = {}
         if is_defined(filter):
             url_parameters["filter"] = filter
@@ -867,8 +865,8 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
-        assert filter_ is NotSet or isinstance(filter_, str), filter_
-        assert role is NotSet or isinstance(role, str), role
+        assert is_optional(filter_, str), filter_
+        assert is_optional(role, str), role
 
         url_parameters = {}
         if filter_ is not NotSet:
@@ -917,7 +915,7 @@ class Organization(CompletableGithubObject):
         :param filter_: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert filter_ is NotSet or isinstance(filter_, str), filter_
+        assert is_optional(filter_, str), filter_
 
         url_parameters = {}
         if filter_ is not NotSet:
@@ -985,9 +983,9 @@ class Organization(CompletableGithubObject):
         :param sort: string ('created', 'updated', 'pushed', 'full_name')
         :param direction: string ('asc', desc')
         """
-        assert type is NotSet or isinstance(type, str), type
-        assert sort is NotSet or isinstance(sort, str), sort
-        assert direction is NotSet or isinstance(direction, str), direction
+        assert is_optional(type, str), type
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
 
         url_parameters = dict()
         if type is not NotSet:
@@ -1007,8 +1005,6 @@ class Organization(CompletableGithubObject):
     def get_team(self, id: int) -> Team:
         """
         :calls: `GET /teams/{id} <https://docs.github.com/en/rest/reference/teams>`_
-        :param id: integer
-        :rtype: :class:`github.Team.Team`
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/teams/{id}")
@@ -1017,8 +1013,6 @@ class Organization(CompletableGithubObject):
     def get_team_by_slug(self, slug: str) -> Team:
         """
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
-        :param slug: string
-        :rtype: :class:`github.Team.Team`
         """
         assert isinstance(slug, str), slug
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
@@ -1027,14 +1021,12 @@ class Organization(CompletableGithubObject):
     def get_teams(self) -> PaginatedList[Team]:
         """
         :calls: `GET /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
-        :rtype: :class:`PaginatedList` of :class:`github.Team.Team`
         """
         return PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
     def invitations(self) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
-        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return PaginatedList(
             github.NamedUser.NamedUser,
@@ -1059,9 +1051,9 @@ class Organization(CompletableGithubObject):
         :param teams: array of :class:`github.Team.Team`
         :rtype: None
         """
-        assert user is NotSet or isinstance(user, github.NamedUser.NamedUser), user
-        assert email is NotSet or isinstance(email, str), email
-        assert (email is NotSet) ^ (user is NotSet), "specify only one of email or user"
+        assert is_optional(user, github.NamedUser.NamedUser), user
+        assert is_optional(email, str), email
+        assert is_defined(email) or is_defined(user), "specify only one of email or user"
         parameters: dict[str, Any] = {}
         if is_defined(user):
             parameters["invitee_id"] = user.id
@@ -1159,8 +1151,8 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(repos, (list, tuple)), repos
         assert all(isinstance(repo, str) for repo in repos), repos
-        assert lock_repositories is NotSet or isinstance(lock_repositories, bool), lock_repositories
-        assert exclude_attachments is NotSet or isinstance(exclude_attachments, bool), exclude_attachments
+        assert is_optional(lock_repositories, bool), lock_repositories
+        assert is_optional(exclude_attachments, bool), exclude_attachments
         post_parameters = {"repositories": repos}
         post_parameters.update(
             NotSet.remove_unset_items(
