@@ -406,10 +406,14 @@ class Organization(CompletableGithubObject):
             "name": name,
             "config": config,
         }
-        if events is not NotSet:
-            post_parameters["events"] = events
-        if active is not NotSet:
-            post_parameters["active"] = active
+        post_parameters.update(
+            NotSet.remove_unset_items(
+                {
+                    "events": events,
+                    "active": active,
+                }
+            )
+        )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/hooks", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -472,43 +476,29 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
-        post_parameters: dict[str, Any] = {
-            "name": name,
-        }
-        if description is not NotSet:
-            post_parameters["description"] = description
-        if homepage is not NotSet:
-            post_parameters["homepage"] = homepage
-        if private is not NotSet:
-            post_parameters["private"] = private
-        if visibility is not NotSet:
-            post_parameters["visibility"] = visibility
-        if has_issues is not NotSet:
-            post_parameters["has_issues"] = has_issues
-        if has_wiki is not NotSet:
-            post_parameters["has_wiki"] = has_wiki
-        if has_downloads is not NotSet:
-            post_parameters["has_downloads"] = has_downloads
-        if has_projects is not NotSet:
-            post_parameters["has_projects"] = has_projects
-        if team_id is not NotSet:
-            post_parameters["team_id"] = team_id
-        if auto_init is not NotSet:
-            post_parameters["auto_init"] = auto_init
-        if license_template is not NotSet:
-            post_parameters["license_template"] = license_template
-        if gitignore_template is not NotSet:
-            post_parameters["gitignore_template"] = gitignore_template
-        if allow_squash_merge is not NotSet:
-            post_parameters["allow_squash_merge"] = allow_squash_merge
-        if allow_merge_commit is not NotSet:
-            post_parameters["allow_merge_commit"] = allow_merge_commit
-        if allow_rebase_merge is not NotSet:
-            post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if delete_branch_on_merge is not NotSet:
-            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
-        if allow_update_branch is not NotSet:
-            post_parameters["allow_update_branch"] = allow_update_branch
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "homepage": homepage,
+                "private": private,
+                "visibility": visibility,
+                "has_issues": has_issues,
+                "has_wiki": has_wiki,
+                "has_downloads": has_downloads,
+                "has_projects": has_projects,
+                "team_id": team_id,
+                "auto_init": auto_init,
+                "license_template": license_template,
+                "gitignore_template": gitignore_template,
+                "allow_squash_merge": allow_squash_merge,
+                "allow_merge_commit": allow_merge_commit,
+                "allow_rebase_merge": allow_rebase_merge,
+                "delete_branch_on_merge": delete_branch_on_merge,
+                "allow_update_branch": allow_update_branch,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/repos",
@@ -869,11 +859,8 @@ class Organization(CompletableGithubObject):
         assert is_optional(filter_, str), filter_
         assert is_optional(role, str), role
 
-        url_parameters = {}
-        if filter_ is not NotSet:
-            url_parameters["filter"] = filter_
-        if role is not NotSet:
-            url_parameters["role"] = role
+        url_parameters = NotSet.remove_unset_items({"filter": filter_, "role": role})
+
         return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
@@ -988,13 +975,8 @@ class Organization(CompletableGithubObject):
         assert is_optional(sort, str), sort
         assert is_optional(direction, str), direction
 
-        url_parameters = dict()
-        if type is not NotSet:
-            url_parameters["type"] = type
-        if sort is not NotSet:
-            url_parameters["sort"] = sort
-        if direction is not NotSet:
-            url_parameters["direction"] = direction
+        url_parameters = NotSet.remove_unset_items({"type": type, "sort": sort, "direction": direction})
+
         return PaginatedList(
             github.Repository.Repository,
             self._requester,
