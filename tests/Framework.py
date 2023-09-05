@@ -308,11 +308,24 @@ class BasicTestCase(unittest.TestCase):
 
             httpretty.enable(allow_net_connect=False)
 
+    @property
+    def thisTestFailed(self) -> bool:
+        if hasattr(self._outcome, "errors"):
+            # Python 3.4 - 3.10
+            result = self.defaultTestResult()
+            self._feedErrorsToResult(result, self._outcome.errors)
+            ok = all(test != self for test, text in result.errors + result.failures)
+            return not ok
+        else:
+            # Python 3.11+
+            return self._outcome.result._excinfo is not None and self._outcome.result._excinfo
+
     def tearDown(self):
         super().tearDown()
         httpretty.disable()
         httpretty.reset()
-        self.__closeReplayFileIfNeeded()
+
+        self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
 
     def assertWarning(self, warning, expected):
@@ -343,12 +356,12 @@ class BasicTestCase(unittest.TestCase):
             self.__file = open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
-    def __closeReplayFileIfNeeded(self):
+    def __closeReplayFileIfNeeded(self, silent=False):
         if self.__file is not None:
             if (
-                not self.recordMode
+                not self.recordMode and not silent
             ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
-                self.assertEqual(readLine(self.__file), "")
+                self.assertEqual(readLine(self.__file), "", self.__fileName)
             self.__file.close()
 
     def assertListKeyEqual(self, elements, key, expectedKeys):
