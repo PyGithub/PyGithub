@@ -96,7 +96,7 @@ class PullRequest(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._additions: Attribute[int] = NotSet
         self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._assignees: Attribute[list[github.NamedUser.NamedUser]] = NotSet
+        self._assignees: Attribute[list[NamedUser]] = NotSet
         self._base: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
         self._body: Attribute[str] = NotSet
         self._changed_files: Attribute[int] = NotSet
