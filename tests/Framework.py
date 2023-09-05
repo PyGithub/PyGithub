@@ -310,15 +310,15 @@ class BasicTestCase(unittest.TestCase):
 
     @property
     def thisTestFailed(self) -> bool:
-        if hasattr(self._outcome, "errors"):
+        if hasattr(self._outcome, "errors"):  # type: ignore
             # Python 3.4 - 3.10
             result = self.defaultTestResult()
-            self._feedErrorsToResult(result, self._outcome.errors)
+            self._feedErrorsToResult(result, self._outcome.errors)  # type: ignore
             ok = all(test != self for test, text in result.errors + result.failures)
             return not ok
         else:
             # Python 3.11+
-            return self._outcome.result._excinfo is not None and self._outcome.result._excinfo
+            return self._outcome.result._excinfo is not None and self._outcome.result._excinfo  # type: ignore
 
     def tearDown(self):
         super().tearDown()
