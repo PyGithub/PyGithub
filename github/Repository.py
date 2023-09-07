@@ -131,7 +131,7 @@ import collections
 import urllib.parse
 from base64 import b64encode
 from datetime import date, datetime, timezone
-from typing import Any, Iterable, overload
+from typing import TYPE_CHECKING, Any, Iterable, overload
 
 from deprecated import deprecated
 
@@ -196,72 +196,73 @@ import github.Team
 import github.View
 import github.Workflow
 import github.WorkflowRun
-from github.Artifact import Artifact
-from github.AuthenticatedUser import AuthenticatedUser
-from github.Autolink import Autolink
-from github.Branch import Branch
-from github.CheckRun import CheckRun
-from github.CheckSuite import CheckSuite
-from github.Clones import Clones
-from github.CodeScanAlert import CodeScanAlert
-from github.Commit import Commit
-from github.CommitComment import CommitComment
-from github.Comparison import Comparison
-from github.ContentFile import ContentFile
-from github.Deployment import Deployment
-from github.Download import Download
-from github.Environment import Environment
-from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
-from github.EnvironmentProtectionRuleReviewer import ReviewerParams
-from github.Event import Event
-from github.GitBlob import GitBlob
-from github.GitCommit import GitCommit
-from github.GithubObject import Opt, _NotSetType
-from github.GitRef import GitRef
-from github.GitRelease import GitRelease
-from github.GitReleaseAsset import GitReleaseAsset
-from github.GitTag import GitTag
-from github.GitTree import GitTree
-from github.Hook import Hook
-from github.InputGitAuthor import InputGitAuthor
-from github.InputGitTreeElement import InputGitTreeElement
-from github.Invitation import Invitation
-from github.Issue import Issue
-from github.IssueComment import IssueComment
-from github.IssueEvent import IssueEvent
-from github.Label import Label
-from github.Milestone import Milestone
-from github.NamedUser import NamedUser
-from github.Notification import Notification
-from github.Organization import Organization
-from github.PaginatedList import PaginatedList
-from github.Path import Path
-from github.Permissions import Permissions
-from github.Project import Project
-from github.PublicKey import PublicKey
-from github.PullRequest import PullRequest
-from github.PullRequestComment import PullRequestComment
-from github.Referrer import Referrer
-from github.RepositoryKey import RepositoryKey
-from github.RepositoryPreferences import RepositoryPreferences
-from github.SelfHostedActionsRunner import SelfHostedActionsRunner
-from github.SourceImport import SourceImport
-from github.Stargazer import Stargazer
-from github.StatsCodeFrequency import StatsCodeFrequency
-from github.StatsCommitActivity import StatsCommitActivity
-from github.StatsContributor import StatsContributor
-from github.StatsParticipation import StatsParticipation
-from github.StatsPunchCard import StatsPunchCard
-from github.Tag import Tag
-from github.Team import Team
-from github.View import View
-from github.Workflow import Workflow
-from github.WorkflowRun import WorkflowRun
+from github import Consts
+from github.GithubObject import CompletableGithubObject, NotSet, Opt, _NotSetType
 
-from . import Consts
+if TYPE_CHECKING:
+    from github.Artifact import Artifact
+    from github.AuthenticatedUser import AuthenticatedUser
+    from github.Autolink import Autolink
+    from github.Branch import Branch
+    from github.CheckRun import CheckRun
+    from github.CheckSuite import CheckSuite
+    from github.Clones import Clones
+    from github.CodeScanAlert import CodeScanAlert
+    from github.Commit import Commit
+    from github.CommitComment import CommitComment
+    from github.Comparison import Comparison
+    from github.ContentFile import ContentFile
+    from github.Deployment import Deployment
+    from github.Download import Download
+    from github.Environment import Environment
+    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentProtectionRuleReviewer import ReviewerParams
+    from github.Event import Event
+    from github.GitBlob import GitBlob
+    from github.GitCommit import GitCommit
+    from github.GitRef import GitRef
+    from github.GitRelease import GitRelease
+    from github.GitReleaseAsset import GitReleaseAsset
+    from github.GitTag import GitTag
+    from github.GitTree import GitTree
+    from github.Hook import Hook
+    from github.InputGitAuthor import InputGitAuthor
+    from github.InputGitTreeElement import InputGitTreeElement
+    from github.Invitation import Invitation
+    from github.Issue import Issue
+    from github.IssueComment import IssueComment
+    from github.IssueEvent import IssueEvent
+    from github.Label import Label
+    from github.Milestone import Milestone
+    from github.NamedUser import NamedUser
+    from github.Notification import Notification
+    from github.Organization import Organization
+    from github.PaginatedList import PaginatedList
+    from github.Path import Path
+    from github.Permissions import Permissions
+    from github.Project import Project
+    from github.PublicKey import PublicKey
+    from github.PullRequest import PullRequest
+    from github.PullRequestComment import PullRequestComment
+    from github.Referrer import Referrer
+    from github.RepositoryKey import RepositoryKey
+    from github.RepositoryPreferences import RepositoryPreferences
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
+    from github.SourceImport import SourceImport
+    from github.Stargazer import Stargazer
+    from github.StatsCodeFrequency import StatsCodeFrequency
+    from github.StatsCommitActivity import StatsCommitActivity
+    from github.StatsContributor import StatsContributor
+    from github.StatsParticipation import StatsParticipation
+    from github.StatsPunchCard import StatsPunchCard
+    from github.Tag import Tag
+    from github.Team import Team
+    from github.View import View
+    from github.Workflow import Workflow
+    from github.WorkflowRun import WorkflowRun
 
 
-class Repository(github.GithubObject.CompletableGithubObject):
+class Repository(CompletableGithubObject):
     """
     This class represents Repositories. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
@@ -1842,7 +1843,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
             completed=False,
         )
-        return status == 204
 
     def delete_secret(self, secret_name: str) -> bool:
         """
@@ -1908,31 +1908,31 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def edit(
         self,
-        name=None,
-        description=github.GithubObject.NotSet,
-        homepage=github.GithubObject.NotSet,
-        private=github.GithubObject.NotSet,
-        visibility=github.GithubObject.NotSet,
-        has_issues=github.GithubObject.NotSet,
-        has_projects=github.GithubObject.NotSet,
-        has_wiki=github.GithubObject.NotSet,
-        is_template=github.GithubObject.NotSet,
-        default_branch=github.GithubObject.NotSet,
-        allow_squash_merge=github.GithubObject.NotSet,
-        allow_merge_commit=github.GithubObject.NotSet,
-        allow_rebase_merge=github.GithubObject.NotSet,
-        allow_auto_merge=github.GithubObject.NotSet,
-        delete_branch_on_merge=github.GithubObject.NotSet,
-        allow_update_branch=github.GithubObject.NotSet,
-        use_squash_pr_title_as_default=github.GithubObject.NotSet,
-        squash_merge_commit_title=github.GithubObject.NotSet,
-        squash_merge_commit_message=github.GithubObject.NotSet,
-        merge_commit_title=github.GithubObject.NotSet,
-        merge_commit_message=github.GithubObject.NotSet,
-        archived=github.GithubObject.NotSet,
-        allow_forking=github.GithubObject.NotSet,
-        web_commit_signoff_required=github.GithubObject.NotSet,
-    ):
+        name: str | None = None,
+        description: Opt[str] = NotSet,
+        homepage: Opt[str] = NotSet,
+        private: Opt[bool] = NotSet,
+        visibility: Opt[str] = NotSet,
+        has_issues: Opt[bool] = NotSet,
+        has_projects: Opt[bool] = NotSet,
+        has_wiki: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        default_branch: Opt[str] = NotSet,
+        allow_squash_merge: Opt[bool] = NotSet,
+        allow_merge_commit: Opt[bool] = NotSet,
+        allow_rebase_merge: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
+        delete_branch_on_merge: Opt[bool] = NotSet,
+        allow_update_branch: Opt[bool] = NotSet,
+        use_squash_pr_title_as_default: Opt[bool] = NotSet,
+        squash_merge_commit_title: Opt[str] = NotSet,
+        squash_merge_commit_message: Opt[str] = NotSet,
+        merge_commit_title: Opt[str] = NotSet,
+        merge_commit_message: Opt[str] = NotSet,
+        archived: Opt[bool] = NotSet,
+        allow_forking: Opt[bool] = NotSet,
+        web_commit_signoff_required: Opt[bool] = NotSet,
+    ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         :param name: string
