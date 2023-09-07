@@ -208,6 +208,7 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
+from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Artifact import Artifact
@@ -248,7 +249,6 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Notification import Notification
     from github.Organization import Organization
-    from github.PaginatedList import PaginatedList
     from github.Path import Path
     from github.Permissions import Permissions
     from github.Project import Project
