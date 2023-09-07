@@ -368,14 +368,10 @@ class Organization(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
         assert is_optional(private, bool), private
-        post_parameters: dict[str, Any] = {
-            "name": name,
-            "owner": self.login,
-        }
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(private):
-            post_parameters["private"] = private
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"name": name, "owner": self.login, "description": description, "private": private}
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"/repos/{repo.owner.login}/{repo.name}/generate",
@@ -403,17 +399,13 @@ class Organization(CompletableGithubObject):
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
         assert is_optional(active, bool), active
-        post_parameters: dict[str, Any] = {
-            "name": name,
-            "config": config,
-        }
-        post_parameters.update(
-            NotSet.remove_unset_items(
-                {
-                    "events": events,
-                    "active": active,
-                }
-            )
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "config": config,
+                "events": events,
+                "active": active,
+            }
         )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/hooks", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
