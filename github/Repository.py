@@ -197,7 +197,7 @@ import github.View
 import github.Workflow
 import github.WorkflowRun
 from github import Consts
-from github.GithubObject import CompletableGithubObject, NotSet, Opt, _NotSetType
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType
 
 if TYPE_CHECKING:
     from github.Artifact import Artifact
@@ -233,6 +233,7 @@ if TYPE_CHECKING:
     from github.IssueComment import IssueComment
     from github.IssueEvent import IssueEvent
     from github.Label import Label
+    from github.License import License
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.Notification import Notification
@@ -4080,100 +4081,100 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
 
     def _initAttributes(self) -> None:
-        self._allow_auto_merge = github.GithubObject.NotSet
-        self._allow_forking = github.GithubObject.NotSet
-        self._allow_merge_commit = github.GithubObject.NotSet
-        self._allow_rebase_merge = github.GithubObject.NotSet
-        self._allow_squash_merge = github.GithubObject.NotSet
-        self._allow_update_branch = github.GithubObject.NotSet
-        self._archived = github.GithubObject.NotSet
-        self._archive_url = github.GithubObject.NotSet
-        self._assignees_url = github.GithubObject.NotSet
-        self._blobs_url = github.GithubObject.NotSet
-        self._branches_url = github.GithubObject.NotSet
-        self._clone_url = github.GithubObject.NotSet
-        self._collaborators_url = github.GithubObject.NotSet
-        self._comments_url = github.GithubObject.NotSet
-        self._commits_url = github.GithubObject.NotSet
-        self._compare_url = github.GithubObject.NotSet
-        self._contents_url = github.GithubObject.NotSet
-        self._contributors_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._default_branch = github.GithubObject.NotSet
-        self._delete_branch_on_merge = github.GithubObject.NotSet
-        self._deployments_url = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._downloads_url = github.GithubObject.NotSet
-        self._events_url = github.GithubObject.NotSet
-        self._fork = github.GithubObject.NotSet
-        self._forks = github.GithubObject.NotSet
-        self._forks_count = github.GithubObject.NotSet
-        self._forks_url = github.GithubObject.NotSet
-        self._full_name = github.GithubObject.NotSet
-        self._git_commits_url = github.GithubObject.NotSet
-        self._git_refs_url = github.GithubObject.NotSet
-        self._git_tags_url = github.GithubObject.NotSet
-        self._git_url = github.GithubObject.NotSet
-        self._has_downloads = github.GithubObject.NotSet
-        self._has_issues = github.GithubObject.NotSet
-        self._has_pages = github.GithubObject.NotSet
-        self._has_projects = github.GithubObject.NotSet
-        self._has_wiki = github.GithubObject.NotSet
-        self._homepage = github.GithubObject.NotSet
-        self._hooks_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._is_template = github.GithubObject.NotSet
-        self._issue_comment_url = github.GithubObject.NotSet
-        self._issue_events_url = github.GithubObject.NotSet
-        self._issues_url = github.GithubObject.NotSet
-        self._keys_url = github.GithubObject.NotSet
-        self._labels_url = github.GithubObject.NotSet
-        self._language = github.GithubObject.NotSet
-        self._languages_url = github.GithubObject.NotSet
-        self._license = github.GithubObject.NotSet
-        self._master_branch = github.GithubObject.NotSet
-        self._merge_commit_message = github.GithubObject.NotSet
-        self._merge_commit_title = github.GithubObject.NotSet
-        self._merges_url = github.GithubObject.NotSet
-        self._milestones_url = github.GithubObject.NotSet
-        self._mirror_url = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._network_count = github.GithubObject.NotSet
-        self._notifications_url = github.GithubObject.NotSet
-        self._open_issues = github.GithubObject.NotSet
-        self._open_issues_count = github.GithubObject.NotSet
-        self._organization = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
-        self._parent = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._private = github.GithubObject.NotSet
-        self._pulls_url = github.GithubObject.NotSet
-        self._pushed_at = github.GithubObject.NotSet
-        self._releases_url = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._source = github.GithubObject.NotSet
-        self._squash_merge_commit_message = github.GithubObject.NotSet
-        self._squash_merge_commit_title = github.GithubObject.NotSet
-        self._ssh_url = github.GithubObject.NotSet
-        self._stargazers_count = github.GithubObject.NotSet
-        self._stargazers_url = github.GithubObject.NotSet
-        self._statuses_url = github.GithubObject.NotSet
-        self._subscribers_url = github.GithubObject.NotSet
-        self._subscribers_count = github.GithubObject.NotSet
-        self._subscription_url = github.GithubObject.NotSet
-        self._svn_url = github.GithubObject.NotSet
-        self._tags_url = github.GithubObject.NotSet
-        self._teams_url = github.GithubObject.NotSet
-        self._topics = github.GithubObject.NotSet
-        self._trees_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._use_squash_pr_title_as_default = github.GithubObject.NotSet
-        self._visibility = github.GithubObject.NotSet
-        self._watchers = github.GithubObject.NotSet
-        self._watchers_count = github.GithubObject.NotSet
-        self._web_commit_signoff_required = github.GithubObject.NotSet
+        self._allow_auto_merge: Attribute[bool] = NotSet
+        self._allow_forking: Attribute[bool] = NotSet
+        self._allow_merge_commit: Attribute[bool] = NotSet
+        self._allow_rebase_merge: Attribute[bool] = NotSet
+        self._allow_squash_merge: Attribute[bool] = NotSet
+        self._allow_update_branch: Attribute[bool] = NotSet
+        self._archived: Attribute[bool] = NotSet
+        self._archive_url: Attribute[str] = NotSet
+        self._assignees_url: Attribute[str] = NotSet
+        self._blobs_url: Attribute[str] = NotSet
+        self._branches_url: Attribute[str] = NotSet
+        self._clone_url: Attribute[str] = NotSet
+        self._collaborators_url: Attribute[str] = NotSet
+        self._comments_url: Attribute[str] = NotSet
+        self._commits_url: Attribute[str] = NotSet
+        self._compare_url: Attribute[str] = NotSet
+        self._contents_url: Attribute[str] = NotSet
+        self._contributors_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._default_branch: Attribute[str] = NotSet
+        self._delete_branch_on_merge: Attribute[bool] = NotSet
+        self._deployments_url: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._downloads_url: Attribute[str] = NotSet
+        self._events_url: Attribute[str] = NotSet
+        self._fork: Attribute[bool] = NotSet
+        self._forks: Attribute[int] = NotSet
+        self._forks_count: Attribute[int] = NotSet
+        self._forks_url: Attribute[str] = NotSet
+        self._full_name: Attribute[str] = NotSet
+        self._git_commits_url: Attribute[str] = NotSet
+        self._git_refs_url: Attribute[str] = NotSet
+        self._git_tags_url: Attribute[str] = NotSet
+        self._git_url: Attribute[str] = NotSet
+        self._has_downloads: Attribute[bool] = NotSet
+        self._has_issues: Attribute[bool] = NotSet
+        self._has_pages: Attribute[bool] = NotSet
+        self._has_projects: Attribute[bool] = NotSet
+        self._has_wiki: Attribute[bool] = NotSet
+        self._homepage: Attribute[str] = NotSet
+        self._hooks_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._is_template: Attribute[bool] = NotSet
+        self._issue_comment_url: Attribute[str] = NotSet
+        self._issue_events_url: Attribute[str] = NotSet
+        self._issues_url: Attribute[str] = NotSet
+        self._keys_url: Attribute[str] = NotSet
+        self._labels_url: Attribute[str] = NotSet
+        self._language: Attribute[str] = NotSet
+        self._languages_url: Attribute[str] = NotSet
+        self._license: Attribute[License] = NotSet
+        self._master_branch: Attribute[str] = NotSet
+        self._merge_commit_message: Attribute[str] = NotSet
+        self._merge_commit_title: Attribute[str] = NotSet
+        self._merges_url: Attribute[str] = NotSet
+        self._milestones_url: Attribute[str] = NotSet
+        self._mirror_url: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._network_count: Attribute[int] = NotSet
+        self._notifications_url: Attribute[str] = NotSet
+        self._open_issues: Attribute[int] = NotSet
+        self._open_issues_count: Attribute[int] = NotSet
+        self._organization: Attribute[Organization] = NotSet
+        self._owner: Attribute[NamedUser] = NotSet
+        self._parent: Attribute[Repository] = NotSet
+        self._permissions: Attribute[Permissions] = NotSet
+        self._private: Attribute[bool] = NotSet
+        self._pulls_url: Attribute[str] = NotSet
+        self._pushed_at: Attribute[datetime] = NotSet
+        self._releases_url: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._source: Attribute[Repository] = NotSet
+        self._squash_merge_commit_message: Attribute[str] = NotSet
+        self._squash_merge_commit_title: Attribute[str] = NotSet
+        self._ssh_url: Attribute[str] = NotSet
+        self._stargazers_count: Attribute[int] = NotSet
+        self._stargazers_url: Attribute[str] = NotSet
+        self._statuses_url: Attribute[str] = NotSet
+        self._subscribers_url: Attribute[str] = NotSet
+        self._subscribers_count: Attribute[int] = NotSet
+        self._subscription_url: Attribute[str] = NotSet
+        self._svn_url: Attribute[str] = NotSet
+        self._tags_url: Attribute[str] = NotSet
+        self._teams_url: Attribute[str] = NotSet
+        self._topics: Attribute[str] = NotSet
+        self._trees_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._use_squash_pr_title_as_default: Attribute[bool] = NotSet
+        self._visibility: Attribute[str] = NotSet
+        self._watchers: Attribute[int] = NotSet
+        self._watchers_count: Attribute[int] = NotSet
+        self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
