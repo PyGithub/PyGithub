@@ -322,9 +322,7 @@ class Organization(CompletableGithubObject):
         """
         assert is_optional(role, str), role
         assert isinstance(member, github.NamedUser.NamedUser), member
-        put_parameters = {}
-        if is_defined(role):
-            put_parameters["role"] = role
+        put_parameters = NotSet.remove_unset_items({"role": role})
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/memberships/{member._identity}", input=put_parameters
         )
@@ -416,9 +414,8 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert is_optional(body, str), body
-        post_parameters: dict[str, Any] = {"name": name}
-        if body is not NotSet:
-            post_parameters["body"] = body
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"name": name, "body": body})
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/projects",
@@ -593,15 +590,11 @@ class Organization(CompletableGithubObject):
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy
         assert is_optional(description, str), description
-        post_parameters: dict[str, Any] = {"name": name}
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"name": name, "permission": permission, "privacy": privacy, "description": description}
+        )
         if is_defined(repo_names):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
-        if is_defined(permission):
-            post_parameters["permission"] = permission
-        if is_defined(privacy):
-            post_parameters["privacy"] = privacy
-        if is_defined(description):
-            post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/teams", input=post_parameters)
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -822,17 +815,11 @@ class Organization(CompletableGithubObject):
         assert is_optional(sort, str), sort
         assert is_optional(direction, str), direction
         assert is_optional(since, datetime), since
-        url_parameters: dict[str, Any] = {}
-        if is_defined(filter):
-            url_parameters["filter"] = filter
-        if is_defined(state):
-            url_parameters["state"] = state
+        url_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"filter": filter, "state": state, "sort": sort, "direction": direction}
+        )
         if is_defined(labels):
             url_parameters["labels"] = ",".join(label.name for label in labels)
-        if is_defined(sort):
-            url_parameters["sort"] = sort
-        if is_defined(direction):
-            url_parameters["direction"] = direction
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
@@ -862,9 +849,7 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#list-organization-projects>`_
         """
 
-        url_parameters = dict()
-        if state is not NotSet:
-            url_parameters["state"] = state
+        url_parameters = NotSet.remove_unset_items({"state": state})
 
         return PaginatedList(
             github.Project.Project,
@@ -889,14 +874,10 @@ class Organization(CompletableGithubObject):
     def get_outside_collaborators(self, filter_: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/outside_collaborators <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
-        :param filter_: string
-        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         assert is_optional(filter_, str), filter_
 
-        url_parameters = {}
-        if filter_ is not NotSet:
-            url_parameters["filter"] = filter_
+        url_parameters = NotSet.remove_unset_items({"filter": filter_})
         return PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
@@ -1124,14 +1105,12 @@ class Organization(CompletableGithubObject):
         assert all(isinstance(repo, str) for repo in repos), repos
         assert is_optional(lock_repositories, bool), lock_repositories
         assert is_optional(exclude_attachments, bool), exclude_attachments
-        post_parameters = {"repositories": repos}
-        post_parameters.update(
-            NotSet.remove_unset_items(
-                {
-                    "lock_repositories": lock_repositories,
-                    "exclude_attachments": exclude_attachments,
-                }
-            )
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "repositories": repos,
+                "lock_repositories": lock_repositories,
+                "exclude_attachments": exclude_attachments,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck(
