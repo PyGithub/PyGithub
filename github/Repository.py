@@ -197,7 +197,17 @@ import github.View
 import github.Workflow
 import github.WorkflowRun
 from github import Consts
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_undefined
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+    is_defined,
+    is_optional,
+    is_optional_list,
+    is_undefined,
+)
 
 if TYPE_CHECKING:
     from github.Artifact import Artifact
@@ -1975,7 +1985,7 @@ class Repository(CompletableGithubObject):
             web_commit_signoff_required, bool
         ), web_commit_signoff_required
 
-        post_parameters = {
+        post_parameters: dict[str, Any] = {
             "name": name,
         }
 
@@ -2360,7 +2370,6 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
-        :rtype: None or list of :class:`github.View.View`
         """
         assert is_undefined(per) or (
             isinstance(per, str) and (per == "day" or per == "week")
@@ -2374,8 +2383,9 @@ class Repository(CompletableGithubObject):
         if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
             data["views"] = [github.View.View(self._requester, headers, item, completed=True) for item in data["views"]]
             return data
+        return
 
-    def get_clones_traffic(self, per: str | _NotSetType = NotSet) -> dict[str, int | list[Clones]]:
+    def get_clones_traffic(self, per: str | _NotSetType = NotSet) -> dict[str, int | list[Clones]] | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/clones <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2454,7 +2464,7 @@ class Repository(CompletableGithubObject):
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
         content = b64encode(content).decode("utf-8")
-        put_parameters = {"message": message, "content": content}
+        put_parameters: dict[str, Any] = {"message": message, "content": content}
 
         if is_defined(branch):
             put_parameters["branch"] = branch
@@ -2681,7 +2691,7 @@ class Repository(CompletableGithubObject):
         :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
-        post_parameters = {}
+        post_parameters: dict[str, Any] = {}
         if isinstance(organization, github.Organization.Organization):
             post_parameters["organization"] = organization.login
         elif isinstance(organization, str):
@@ -3219,10 +3229,9 @@ class Repository(CompletableGithubObject):
             list_item="runners",
         )
 
-    def get_source_import(self) -> SourceImport:
+    def get_source_import(self) -> SourceImport | None:
         """
         :calls: `GET /repos/{owner}/{repo}/import <https://docs.github.com/en/rest/reference/migrations#source-imports>`_
-        :rtype: :class:`github.SourceImport.SourceImport`
         """
         import_header = {"Accept": Consts.mediaTypeImportPreview}
         headers, data = self._requester.requestJsonAndCheck(
@@ -3431,14 +3440,14 @@ class Repository(CompletableGithubObject):
 
         :rtype: :class:`PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
-        assert is_undefined(actor) or isinstance(actor, github.NamedUser.NamedUser) or isinstance(actor, str), actor
-        assert is_undefined(branch) or isinstance(branch, github.Branch.Branch) or isinstance(branch, str), branch
-        assert is_undefined(event) or isinstance(event, str), event
-        assert is_undefined(status) or isinstance(status, str), status
-        assert is_undefined(exclude_pull_requests) or isinstance(exclude_pull_requests, bool), exclude_pull_requests
-        assert is_undefined(head_sha) or isinstance(head_sha, str), head_sha
+        assert is_optional(actor, (github.NamedUser.NamedUser, str)), actor
+        assert is_optional(branch, (github.Branch.Branch, str)), branch
+        assert is_optional(event, str), event
+        assert is_optional(status, str), status
+        assert is_optional(exclude_pull_requests, bool), exclude_pull_requests
+        assert is_optional(head_sha, str), head_sha
 
-        url_parameters = dict()
+        url_parameters: dict[str, Any] = {}
         if is_defined(actor):
             if isinstance(actor, github.NamedUser.NamedUser):
                 url_parameters["actor"] = actor._identity
@@ -3546,10 +3555,10 @@ class Repository(CompletableGithubObject):
 
     def get_notifications(
         self,
-        all: bool | _NotSetType = NotSet,
-        participating: bool | _NotSetType = NotSet,
-        since: datetime | _NotSetType = NotSet,
-        before: datetime | _NotSetType = NotSet,
+        all: Opt[bool] = NotSet,
+        participating: Opt[bool] = NotSet,
+        since: Opt[datetime] = NotSet,
+        before: Opt[datetime] = NotSet,
     ) -> PaginatedList[Notification]:
         """
         :calls: `GET /repos/{owner}/{repo}/notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
@@ -3560,16 +3569,12 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Notification.Notification`
         """
 
-        assert is_undefined(all) or isinstance(all, bool), all
-        assert is_undefined(participating) or isinstance(participating, bool), participating
-        assert is_undefined(since) or isinstance(since, datetime), since
-        assert is_undefined(before) or isinstance(before, datetime), before
+        assert is_optional(all, bool), all
+        assert is_optional(participating, bool), participating
+        assert is_optional(since, datetime), since
+        assert is_optional(before, datetime), before
 
-        params = dict()
-        if is_defined(all):
-            params["all"] = all
-        if is_defined(participating):
-            params["participating"] = participating
+        params = NotSet.remove_unset_items({"all": all, "participating": participating})
         if is_defined(since):
             params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if is_defined(before):
@@ -3728,7 +3733,7 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
+            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
         )
         return status == 204
 
@@ -3851,14 +3856,14 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(head_sha, str), head_sha
-        assert is_undefined(details_url) or isinstance(details_url, str), details_url
-        assert is_undefined(external_id) or isinstance(external_id, str), external_id
-        assert is_undefined(status) or isinstance(status, str), status
-        assert is_undefined(started_at) or isinstance(started_at, datetime), started_at
-        assert is_undefined(conclusion) or isinstance(conclusion, str), conclusion
-        assert is_undefined(completed_at) or isinstance(completed_at, datetime), completed_at
-        assert is_undefined(output) or isinstance(output, dict), output
-        assert is_undefined(actions) or all(isinstance(element, dict) for element in actions), actions
+        assert is_optional(details_url, str), details_url
+        assert is_optional(external_id, str), external_id
+        assert is_optional(status, str), status
+        assert is_optional(started_at, datetime), started_at
+        assert is_optional(conclusion, str), conclusion
+        assert is_optional(completed_at, datetime), completed_at
+        assert is_optional(output, dict), output
+        assert is_optional_list(actions, dict), actions
 
         post_parameters = NotSet.remove_unset_items(
             {
