@@ -1024,7 +1024,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/invitations/{invite_id}")
 
-    def compare(self, base, head):
+    def compare(self, base, head, twodot=False):
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param base: string
@@ -1033,7 +1033,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
+        assert isinstance(twodot, bool), twodot
+        if twodot:
+            dots = ".."
+        else:
+            dots = "..."
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}{dots}{head}")
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_autolink(self, key_prefix, url_template, is_alphanumeric=github.GithubObject.NotSet):
