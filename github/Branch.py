@@ -134,7 +134,7 @@ class Branch(NonCompletableGithubObject):
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         block_creations: Opt[bool] = NotSet,
-    ) -> None:
+    ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
 
@@ -276,6 +276,8 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
+        return github.BranchProtection.BranchProtection(self._requester, headers, data, completed=True)
+
     def remove_protection(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
@@ -297,7 +299,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-    ) -> None:
+    ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -310,6 +312,8 @@ class Branch(NonCompletableGithubObject):
             f"{self.protection_url}/required_status_checks",
             input=post_parameters,
         )
+
+        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
 
     def remove_required_status_checks(self) -> None:
         """
@@ -341,7 +345,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
-    ) -> None:
+    ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -372,6 +376,8 @@ class Branch(NonCompletableGithubObject):
             headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
             input=post_parameters,
         )
+
+        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
 
     def remove_required_pull_request_reviews(self) -> None:
         """
