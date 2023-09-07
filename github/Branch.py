@@ -299,7 +299,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-    ) -> BranchProtection:
+    ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -313,7 +313,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-        return github.BranchProtection.BranchProtection(self._requester, headers, data, completed=True)
+        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
 
     def remove_required_status_checks(self) -> None:
         """
@@ -345,7 +345,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
-    ) -> BranchProtection:
+    ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -377,7 +377,7 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-        return github.BranchProtection.BranchProtection(self._requester, headers, data, completed=True)
+        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
 
     def remove_required_pull_request_reviews(self) -> None:
         """
