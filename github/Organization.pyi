@@ -71,8 +71,11 @@ class Organization(CompletableGithubObject):
         allow_squash_merge: Union[bool, _NotSetType] = ...,
         allow_merge_commit: Union[bool, _NotSetType] = ...,
         allow_rebase_merge: Union[bool, _NotSetType] = ...,
-        squash_merge_commit_message: Union[str, _NotSetType] = ...,
+        use_squash_pr_title_as_default: Union[bool, _NotSetType] = ...,
         squash_merge_commit_title: Union[str, _NotSetType] = ...,
+        squash_merge_commit_message: Union[str, _NotSetType] = ...,
+        merge_commit_title: Union[str, _NotSetType] = ...,
+        merge_commit_message: Union[str, _NotSetType] = ...,
     ) -> Repository: ...
     def get_secrets(
         self,
