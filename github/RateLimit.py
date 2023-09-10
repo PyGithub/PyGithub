@@ -57,7 +57,7 @@ class RateLimit(NonCompletableGithubObject):
 
         :type: class:`github.Rate.Rate`
         """
-        return self._core_search
+        return self._code_search
 
     @property
     def core(self) -> Rate:
