@@ -45,19 +45,19 @@ class RateLimit(NonCompletableGithubObject):
         self._core: Attribute[Rate] = NotSet
         self._search: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
-        self._code_search: Attribute[Rate] = NotSet
+        # self._code_search: Attribute[Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
 
-    @property
-    def code_search(self) -> Rate:
-        """
-        Rate limit for code-searchig API
-        
-        :type: class:`github.Rate.Rate`
-        """
-        return self._core_search
+    # @property
+    # def code_search(self) -> Rate:
+    #     """
+    #     Rate limit for code-searchig API
+
+    #     :type: class:`github.Rate.Rate`
+    #     """
+    #     return self._core_search
 
     @property
     def core(self) -> Rate:
@@ -93,5 +93,5 @@ class RateLimit(NonCompletableGithubObject):
             self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
         if "graphql" in attributes:  # pragma no branch
             self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
-        if "code_search" in attributes: # pragma no branch
-            self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
+        # if "code_search" in attributes: # pragma no branch
+        #     self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
