@@ -28,6 +28,8 @@
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
+# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -89,6 +91,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.id, 3544490)
         self.assertIs(self.repo.is_template, None)
         self.assertEqual(self.repo.language, "Python")
+        self.assertEqual(self.repo.license.spdx_id, "LGPL-3.0")
         self.assertEqual(self.repo.master_branch, None)
         self.assertEqual(self.repo.name, "PyGithub")
         self.assertEqual(self.repo.open_issues, 16)
@@ -121,6 +124,13 @@ class Repository(Framework.TestCase):
         self.assertIn(self.repo.permissions.maintain, [None, False, True])
         self.assertIn(self.repo.permissions.triage, [None, False, True])
 
+        self.assertTrue(self.repo.use_squash_pr_title_as_default)
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
+        self.assertTrue(self.repo.web_commit_signoff_required)
+
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
 
@@ -133,7 +143,6 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
-            has_downloads=True,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
@@ -141,6 +150,13 @@ class Repository(Framework.TestCase):
             allow_merge_commit=True,
             allow_rebase_merge=True,
             delete_branch_on_merge=True,
+            use_squash_pr_title_as_default=True,
+            is_template=True,
+            squash_merge_commit_title="PR_TITLE",
+            squash_merge_commit_message="COMMIT_MESSAGES",
+            merge_commit_title="PR_TITLE",
+            merge_commit_message="PR_BODY",
+            web_commit_signoff_required=True,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -150,13 +166,18 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
-        self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
         self.assertTrue(self.repo.allow_merge_commit)
         self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
+        self.assertTrue(self.repo.use_squash_pr_title_as_default)
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
+        self.assertTrue(self.repo.web_commit_signoff_required)
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
@@ -431,10 +452,8 @@ class Repository(Framework.TestCase):
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.repo.create_secret("secret-name", "secret-value"))
-
-    def testDeleteSecret(self):
-        self.assertTrue(self.repo.delete_secret("secret_name"))
+        secret = self.repo.create_secret("secret-name", "secret-value")
+        self.assertIsNotNone(secret)
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
@@ -1105,6 +1124,10 @@ class Repository(Framework.TestCase):
     def testGetWorkflows(self):
         workflows = self.g.get_repo("PyGithub/PyGithub").get_workflows()
         self.assertListKeyEqual(workflows, lambda w: w.name, ["check", "Publish to PyPI"])
+
+    def testGetWorkflowId(self):
+        workflows = self.g.get_repo("PyGithub/PyGithub").get_workflow("1122712")
+        self.assertEqual(workflows.id, 1122712)
 
     def testGetWorkflowRuns(self):
         self.assertListKeyEqual(
@@ -1825,9 +1848,9 @@ class Repository(Framework.TestCase):
         self.assertEqual("refs/tags/v0.6", refs[5].ref)
 
     def testRepoVariable(self):
-        self.assertTrue(self.repo.create_variable("variable_name", "variable-value"))
-        self.assertTrue(self.repo.update_variable("variable_name", "variable-value123"))
-        self.assertTrue(self.repo.delete_variable("variable_name"))
+        variable = self.repo.create_variable("variable_name", "variable-value")
+        self.assertTrue(variable.edit("variable-value123"))
+        variable.delete()
 
 
 class LazyRepository(Framework.TestCase):

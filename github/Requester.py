@@ -57,13 +57,29 @@ import logging
 import mimetypes
 import os
 import re
+import threading
 import time
 import urllib
 import urllib.parse
-from collections import defaultdict
+from collections import deque
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generic, ItemsView, List, Optional, Tuple, Type, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    BinaryIO,
+    Callable,
+    Deque,
+    Dict,
+    Generic,
+    ItemsView,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 import requests
 import requests.adapters
@@ -118,6 +134,10 @@ class HTTPSRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -162,7 +182,7 @@ class HTTPSRequestsConnectionClass:
         return RequestsResponse(r)
 
     def close(self) -> None:
-        return
+        self.session.close()
 
 
 class HTTPRequestsConnectionClass:
@@ -183,6 +203,10 @@ class HTTPRequestsConnectionClass:
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
         self.session = requests.Session()
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -221,7 +245,7 @@ class HTTPRequestsConnectionClass:
         return RequestsResponse(r)
 
     def close(self) -> None:
-        return
+        self.session.close()
 
 
 class Requester:
@@ -230,11 +254,14 @@ class Requester:
 
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
-    __connection = None
     __persist = True
     __logger: Optional[logging.Logger] = None
 
     _frameBuffer: List[Any]
+
+    @staticmethod
+    def noopAuth(request: requests.models.PreparedRequest) -> requests.models.PreparedRequest:
+        return request
 
     @classmethod
     def injectConnectionClasses(
@@ -325,7 +352,6 @@ class Requester:
     __connectionClass: Union[Type[HTTPRequestsConnectionClass], Type[HTTPSRequestsConnectionClass]]
     __hostname: str
     __authorizationHeader: Optional[str]
-    __last_requests: Dict[str, float]
     __seconds_between_requests: Optional[float]
     __seconds_between_writes: Optional[float]
 
@@ -357,7 +383,7 @@ class Requester:
         self.__pool_size = pool_size
         self.__seconds_between_requests = seconds_between_requests
         self.__seconds_between_writes = seconds_between_writes
-        self.__last_requests = defaultdict(lambda: 0.0)
+        self.__last_requests: Dict[str, float] = dict()
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -365,6 +391,9 @@ class Requester:
             self.__connectionClass = self.__httpConnectionClass
         else:
             assert False, "Unknown URL scheme"
+        self.__connection: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None
+        self.__connection_lock = threading.Lock()
+        self.__custom_connections: Deque[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = deque()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
@@ -384,6 +413,33 @@ class Requester:
         # provide auth implementations that require a requester with this requester
         if isinstance(self.__auth, WithRequester):
             self.__auth.withRequester(self)
+
+    def __getstate__(self) -> Dict[str, Any]:
+        state = self.__dict__.copy()
+        # __connection_lock is not picklable
+        del state["_Requester__connection_lock"]
+        # __connection is not usable on remote, so ignore it
+        del state["_Requester__connection"]
+        # __custom_connections is not usable on remote, so ignore it
+        del state["_Requester__custom_connections"]
+        return state
+
+    def __setstate__(self, state: Dict[str, Any]) -> None:
+        self.__dict__.update(state)
+        self.__connection_lock = threading.Lock()
+        self.__connection = None
+        self.__custom_connections = deque()
+
+    def close(self) -> None:
+        """
+        Close the connection to the server.
+        """
+        with self.__connection_lock:
+            if self.__connection is not None:
+                self.__connection.close()
+                self.__connection = None
+        while self.__custom_connections:
+            self.__custom_connections.popleft().close()
 
     @property
     def kwargs(self) -> Dict[str, Any]:
@@ -408,6 +464,10 @@ class Requester:
     @property
     def base_url(self) -> str:
         return self.__base_url
+
+    @property
+    def hostname(self) -> str:
+        return self.__hostname
 
     @property
     def auth(self) -> Optional["Auth"]:
@@ -483,6 +543,7 @@ class Requester:
                         retry=self.__retry,
                         pool_size=self.__pool_size,
                     )
+                    self.__custom_connections.append(cnx)
                 elif o.scheme == "https":
                     cnx = self.__httpsConnectionClass(
                         o.hostname,  # type: ignore
@@ -490,6 +551,7 @@ class Requester:
                         retry=self.__retry,
                         pool_size=self.__pool_size,
                     )
+                    self.__custom_connections.append(cnx)
         return cnx
 
     @classmethod
@@ -621,7 +683,7 @@ class Requester:
         url: str,
         parameters: Any,
         headers: Dict[str, Any],
-        file_like: io.TextIOBase,
+        file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
         # The expected signature of encode means that the argument is ignored.
@@ -665,11 +727,13 @@ class Requester:
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
             self.rate_limiting = (
-                int(responseHeaders[Consts.headerRateRemaining]),
-                int(responseHeaders[Consts.headerRateLimit]),
+                # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+                int(float(responseHeaders[Consts.headerRateRemaining])),
+                int(float(responseHeaders[Consts.headerRateLimit])),
             )
         if Consts.headerRateReset in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
+            # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+            self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
@@ -699,7 +763,6 @@ class Requester:
             responseHeaders = {k.lower(): v for k, v in response.getheaders()}
             output = response.read()
 
-            cnx.close()
             if input:
                 if isinstance(input, IOBase):
                     input.close()
@@ -804,14 +867,19 @@ class Requester:
         if self.__persist and self.__connection is not None:
             return self.__connection
 
-        self.__connection = self.__connectionClass(
-            self.__hostname,
-            self.__port,
-            retry=self.__retry,
-            pool_size=self.__pool_size,
-            timeout=self.__timeout,
-            verify=self.__verify,
-        )
+        with self.__connection_lock:
+            if self.__connection is not None:
+                if self.__persist:
+                    return self.__connection
+                self.__connection.close()
+            self.__connection = self.__connectionClass(
+                self.__hostname,
+                self.__port,
+                retry=self.__retry,
+                pool_size=self.__pool_size,
+                timeout=self.__timeout,
+                verify=self.__verify,
+            )
 
         return self.__connection
 

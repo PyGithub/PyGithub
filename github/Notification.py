@@ -26,95 +26,84 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
+import github.Issue
 import github.NotificationSubject
+import github.PullRequest
 import github.Repository
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class Notification(github.GithubObject.CompletableGithubObject):
+class Notification(CompletableGithubObject):
     """
     This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
     """
+
+    def _initAttributes(self) -> None:
+        self._id: Attribute[str] = NotSet
+        self._last_read_at: Attribute[datetime] = NotSet
+        self._repository: Attribute[github.Repository.Repository] = NotSet
+        self._subject: Attribute[github.NotificationSubject.NotificationSubject] = NotSet
+        self._reason: Attribute[str] = NotSet
+        self._subscription_url: Attribute[str] = NotSet
+        self._unread: Attribute[bool] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "subject": self._subject.value})
 
     @property
-    def id(self):
-        """
-        :type: string
-        """
+    def id(self) -> str:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def last_read_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def last_read_at(self) -> datetime:
         self._completeIfNotSet(self._last_read_at)
         return self._last_read_at.value
 
     @property
-    def repository(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repository(self) -> github.Repository.Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
-    def subject(self):
-        """
-        :type: :class:`github.NotificationSubject.NotificationSubject`
-        """
+    def subject(self) -> github.NotificationSubject.NotificationSubject:
         self._completeIfNotSet(self._subject)
         return self._subject.value
 
     @property
-    def reason(self):
-        """
-        :type: string
-        """
+    def reason(self) -> str:
         self._completeIfNotSet(self._reason)
         return self._reason.value
 
     @property
-    def subscription_url(self):
-        """
-        :type: string
-        """
+    def subscription_url(self) -> str:
         self._completeIfNotSet(self._subscription_url)
         return self._subscription_url.value
 
     @property
-    def unread(self):
-        """
-        :type: bool
-        """
+    def unread(self) -> bool:
         self._completeIfNotSet(self._unread)
         return self._unread.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def mark_as_read(self):
+    def mark_as_read(self) -> None:
         """
         :calls: `PATCH /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
@@ -123,31 +112,15 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self.url,
         )
 
-    def get_pull_request(self):
-        """
-        :type: :class:github.PullRequest.PullRequest
-        """
+    def get_pull_request(self) -> github.PullRequest.PullRequest:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
-    def get_issue(self):
-        """
-        :type: :class:github.Issue.Issue
-        """
+    def get_issue(self) -> github.Issue.Issue:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def _initAttributes(self) -> None:
-        self._id = github.GithubObject.NotSet
-        self._last_read_at = github.GithubObject.NotSet
-        self._repository = github.GithubObject.NotSet
-        self._reason = github.GithubObject.NotSet
-        self._subscription_url = github.GithubObject.NotSet
-        self._unread = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch

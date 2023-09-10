@@ -35,6 +35,47 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
 
+import logging
+
+from . import Auth
+from .AppAuthentication import AppAuthentication
+from .GithubException import (
+    BadAttributeException,
+    BadCredentialsException,
+    BadUserAgentException,
+    GithubException,
+    IncompletableObject,
+    RateLimitExceededException,
+    TwoFactorException,
+    UnknownObjectException,
+)
+from .GithubIntegration import GithubIntegration
+from .GithubRetry import GithubRetry
+from .InputFileContent import InputFileContent
+from .InputGitAuthor import InputGitAuthor
+from .InputGitTreeElement import InputGitTreeElement
+from .MainClass import Github
+
+# set log level to INFO for github
+logger = logging.getLogger("github")
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
+
+
+def set_log_level(level: int) -> None:
+    """
+    Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
+    :param level: log level
+    """
+    logger.setLevel(level)
+
+
+def enable_console_debug_logging() -> None:  # pragma no cover (Function useful only outside test environment)
+    """
+    This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
+    """
+    set_log_level(logging.DEBUG)
+
 
 __all__ = [
     "Auth",
@@ -55,45 +96,3 @@ __all__ = [
     "TwoFactorException",
     "UnknownObjectException",
 ]
-
-import logging
-
-from github import Auth
-from github.AppAuthentication import AppAuthentication
-from github.GithubIntegration import GithubIntegration
-from github.MainClass import Github
-
-from .GithubException import (
-    BadAttributeException,
-    BadCredentialsException,
-    BadUserAgentException,
-    GithubException,
-    IncompletableObject,
-    RateLimitExceededException,
-    TwoFactorException,
-    UnknownObjectException,
-)
-from .GithubRetry import GithubRetry
-from .InputFileContent import InputFileContent
-from .InputGitAuthor import InputGitAuthor
-from .InputGitTreeElement import InputGitTreeElement
-
-# set log level to INFO for github
-logger = logging.getLogger("github")
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler())
-
-
-def set_log_level(level: int):
-    """
-    Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
-    :param level: log level
-    """
-    logger.setLevel(level)
-
-
-def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)
-    """
-    This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
-    """
-    set_log_level(logging.DEBUG)

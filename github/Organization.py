@@ -48,6 +48,8 @@ from typing import Any
 import github.Event
 import github.GithubObject
 import github.NamedUser
+import github.OrganizationSecret
+import github.OrganizationVariable
 import github.PaginatedList
 import github.Plan
 import github.Project
@@ -632,12 +634,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
     ):
         """
-        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
         :param visibility: string
         :param selected_repositories: Optional list of :class:`github.Repository.Repository`
-        :rtype: bool
+        :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -659,10 +661,46 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if selected_repositories is not github.GithubObject.NotSet:
             put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
-        status, headers, data = self._requester.requestJson(
-            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+
+        return github.OrganizationSecret.OrganizationSecret(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": secret_name,
+                "visibility": visibility,
+                "selected_repositories_url": f"{self.url}/actions/secrets/{secret_name}/repositories",
+                "url": f"{self.url}/actions/secrets/{secret_name}",
+            },
+            completed=False,
         )
-        return status == 201
+
+    def get_secrets(self):
+        """
+        Gets all organization secrets
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.OrganizationSecret.OrganizationSecret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
+
+    def get_secret(self, secret_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.OrganizationSecret.OrganizationSecret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.OrganizationSecret.OrganizationSecret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False,
+        )
 
     def create_team(
         self,
@@ -708,14 +746,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         value: str,
         visibility: str = "all",
         selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
-    ) -> bool:
+    ) -> github.OrganizationVariable.OrganizationVariable:
         """
-        :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
+        :calls: `POST /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/actions/variables#create-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
         :param selected_repositories: list of :class:`github.Repository.Repository`
-        :rtype: bool
+        :rtype: github.OrganizationVariable.OrganizationVariable
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -734,10 +772,48 @@ class Organization(github.GithubObject.CompletableGithubObject):
         }
         if selected_repositories is not github.GithubObject.NotSet:
             post_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
+
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
+
+        return github.OrganizationVariable.OrganizationVariable(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": variable_name,
+                "visibility": visibility,
+                "value": value,
+                "selected_repositories_url": f"{self.url}/actions/variables/{variable_name}/repositories",
+                "url": self.url,
+            },
+            completed=False,
         )
-        return status == 201
+
+    def get_variables(self):
+        """
+        Gets all organization variables
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.OrganizationVariable.OrganizationVariable,
+            self._requester,
+            f"{self.url}/actions/variables",
+            None,
+            list_item="variables",
+        )
+
+    def get_variable(self, variable_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :param variable_name: string
+        :rtype: github.OrganizationVariable.OrganizationVariable
+        """
+        assert isinstance(variable_name, str), variable_name
+        return github.OrganizationVariable.OrganizationVariable(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            completed=False,
+        )
 
     def delete_hook(self, id):
         """
@@ -747,26 +823,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/hooks/{id}")
-
-    def delete_secret(self, secret_name):
-        """
-        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-an-organization-secret>`_
-        :param secret_name: string
-        :rtype: bool
-        """
-        assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
-        return status == 204
-
-    def delete_variable(self, variable_name: str) -> bool:
-        """
-        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#delete-an-organization-variable>`_
-        :param variable_name: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
-        return status == 204
 
     def edit(
         self,
@@ -846,46 +902,6 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["active"] = active
         headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/hooks/{id}", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
-
-    def update_variable(
-        self,
-        variable_name: str,
-        value: str,
-        visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = github.GithubObject.NotSet,
-    ) -> bool:
-        """
-        :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
-        :param variable_name: string
-        :param value: string
-        :param visibility: string
-        :param selected_repositories: Optional list of :class:`github.Repository.Repository`
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        assert isinstance(value, str), value
-        assert isinstance(visibility, str), visibility
-        if visibility == "selected":
-            assert isinstance(selected_repositories, list) and all(
-                isinstance(element, github.Repository.Repository) for element in selected_repositories
-            ), selected_repositories
-        else:
-            assert selected_repositories is github.GithubObject.NotSet
-
-        patch_parameters = {
-            "name": variable_name,
-            "value": value,
-            "visibility": visibility,
-        }
-        if selected_repositories is not github.GithubObject.NotSet:
-            patch_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
-
-        status, headers, data = self._requester.requestJson(
-            "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
-            input=patch_parameters,
-        )
-        return status == 204
 
     def get_events(self):
         """
