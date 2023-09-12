@@ -105,6 +105,8 @@
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
+# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -165,6 +167,7 @@ import github.Invitation
 import github.Issue
 import github.IssueEvent
 import github.Label
+import github.License
 import github.Milestone
 import github.NamedUser
 import github.Organization
@@ -615,12 +618,36 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._languages_url.value
 
     @property
+    def license(self):
+        """
+        :type: :class:`github.License.License`
+        """
+        self._completeIfNotSet(self._license)
+        return self._license.value
+
+    @property
     def master_branch(self):
         """
         :type: string
         """
         self._completeIfNotSet(self._master_branch)
         return self._master_branch.value
+
+    @property
+    def merge_commit_message(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._merge_commit_message)
+        return self._merge_commit_message.value
+
+    @property
+    def merge_commit_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._merge_commit_title)
+        return self._merge_commit_title.value
 
     @property
     def merges_url(self):
@@ -767,6 +794,22 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._source.value
 
     @property
+    def squash_merge_commit_message(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_message)
+        return self._squash_merge_commit_message.value
+
+    @property
+    def squash_merge_commit_title(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._squash_merge_commit_title)
+        return self._squash_merge_commit_title.value
+
+    @property
     def ssh_url(self):
         """
         :type: string
@@ -879,6 +922,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
+    def use_squash_pr_title_as_default(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._use_squash_pr_title_as_default)
+        return self._use_squash_pr_title_as_default.value
+
+    @property
     def visibility(self):
         """
         :type: string
@@ -901,6 +952,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
+
+    @property
+    def web_commit_signoff_required(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._web_commit_signoff_required)
+        return self._web_commit_signoff_required.value
 
     def add_to_collaborators(self, collaborator, permission=github.GithubObject.NotSet):
         """
@@ -977,18 +1036,25 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
-    def create_autolink(self, key_prefix, url_template):
+    def create_autolink(self, key_prefix, url_template, is_alphanumeric=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
         :param url_template: string
+        :param is_alphanumeric: bool
         :rtype: :class:`github.Autolink.Autolink`
         """
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
+        assert is_alphanumeric is github.GithubObject.NotSet or isinstance(is_alphanumeric, bool), is_alphanumeric
 
         post_parameters = {"key_prefix": key_prefix, "url_template": url_template}
+
+        if is_alphanumeric is not github.GithubObject.NotSet:
+            post_parameters["is_alphanumeric"] = is_alphanumeric
+
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/autolinks", input=post_parameters)
+
         return github.Autolink.Autolink(self._requester, headers, data, completed=True)
 
     def create_git_blob(self, content, encoding):
@@ -1565,7 +1631,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_repository_dispatch(self, event_type, client_payload=github.GithubObject.NotSet):
         """
-        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event>
+        :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/repos#create-a-repository-dispatch-event>
         :param event_type: string
         :param client_payload: dict
         :rtype: bool
@@ -1580,10 +1646,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def create_secret(self, secret_name, unencrypted_value):
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
-        :rtype: bool
+        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -1593,14 +1659,47 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        status, headers, data = self._requester.requestJson(
-            "PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": secret_name,
+                "url": f"{self.url}/actions/secrets/{secret_name}",
+            },
+            completed=False,
         )
-        return status == 201
+
+    def get_secrets(self):
+        """
+        Gets all repository secrets
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Secret.Secret,
+            self._requester,
+            f"{self.url}/actions/secrets",
+            None,
+            list_item="secrets",
+        )
+
+    def get_secret(self, secret_name: str):
+        """
+        :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_name: string
+        :rtype: github.Secret.Secret
+        """
+        assert isinstance(secret_name, str), secret_name
+        return github.Secret.Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            completed=False,
+        )
 
     def create_variable(self, variable_name: str, value: str) -> bool:
         """
-        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
         :param variable_name: string
         :param value: string
         :rtype: bool
@@ -1611,50 +1710,44 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "name": variable_name,
             "value": value,
         }
-        status, headers, data = self._requester.requestJson(
-            "POST", f"{self.url}/actions/variables", input=post_parameters
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
+        return github.Variable.Variable(
+            self._requester,
+            headers={},
+            attributes={
+                "name": variable_name,
+                "value": value,
+                "url": self.url,
+            },
+            completed=False,
         )
-        return status == 201
 
-    def update_variable(self, variable_name: str, value: str) -> bool:
+    def get_variables(self):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        Gets all repository variables
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Variable.Variable`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Variable.Variable,
+            self._requester,
+            f"{self.url}/actions/variables",
+            None,
+            list_item="variables",
+        )
+
+    def get_variable(self, variable_name: str):
+        """
+        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
-        :param value: string
-        :rtype: bool
+        :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
-        assert isinstance(value, str), value
-        patch_parameters = {
-            "name": variable_name,
-            "value": value,
-        }
-        status, headers, data = self._requester.requestJson(
-            "PATCH",
-            f"{self.url}/actions/variables/{variable_name}",
-            input=patch_parameters,
+        return github.Variable.Variable(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            completed=False,
         )
-        return status == 204
-
-    def delete_secret(self, secret_name):
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
-        :param secret_name: string
-        :rtype: bool
-        """
-        assert isinstance(secret_name, str), secret_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
-        return status == 204
-
-    def delete_variable(self, variable_name: str) -> bool:
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
-        :param variable_name: string
-        :rtype: bool
-        """
-        assert isinstance(variable_name, str), variable_name
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
-        return status == 204
 
     def create_source_import(
         self,
@@ -1704,19 +1797,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
         description=github.GithubObject.NotSet,
         homepage=github.GithubObject.NotSet,
         private=github.GithubObject.NotSet,
+        visibility=github.GithubObject.NotSet,
         has_issues=github.GithubObject.NotSet,
         has_projects=github.GithubObject.NotSet,
         has_wiki=github.GithubObject.NotSet,
-        has_downloads=github.GithubObject.NotSet,
+        is_template=github.GithubObject.NotSet,
         default_branch=github.GithubObject.NotSet,
-        allow_auto_merge=github.GithubObject.NotSet,
-        allow_forking=github.GithubObject.NotSet,
         allow_squash_merge=github.GithubObject.NotSet,
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
+        allow_auto_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
         allow_update_branch=github.GithubObject.NotSet,
+        use_squash_pr_title_as_default=github.GithubObject.NotSet,
+        squash_merge_commit_title=github.GithubObject.NotSet,
+        squash_merge_commit_message=github.GithubObject.NotSet,
+        merge_commit_title=github.GithubObject.NotSet,
+        merge_commit_message=github.GithubObject.NotSet,
         archived=github.GithubObject.NotSet,
+        allow_forking=github.GithubObject.NotSet,
+        web_commit_signoff_required=github.GithubObject.NotSet,
     ):
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -1724,18 +1824,26 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param description: string
         :param homepage: string
         :param private: bool
+        :param visibility: string
         :param has_issues: bool
         :param has_projects: bool
         :param has_wiki: bool
-        :param has_downloads: bool
+        :param is_template: bool
         :param default_branch: string
-        :param allow_forking: bool
         :param allow_squash_merge: bool
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
+        :param allow_auto_merge: bool
         :param delete_branch_on_merge: bool
         :param allow_update_branch: bool
+        :param use_squash_pr_title_as_default: bool
+        :param squash_merge_commit_title : string
+        :param squash_merge_commit_message : string
+        :param merge_commit_title : string
+        :param merge_commit_message : string
         :param archived: bool
+        :param allow_forking: bool
+        :param web_commit_signoff_required: bool
         :rtype: None
         """
         if name is None:
@@ -1744,13 +1852,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, str), description
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, str), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
+        assert visibility is github.GithubObject.NotSet or (
+            isinstance(visibility, str) and visibility in ["public", "private"]
+        ), visibility
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
-        assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
+        assert is_template is github.GithubObject.NotSet or isinstance(is_template, bool), is_template
         assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, str), default_branch
-        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(allow_auto_merge, bool), allow_auto_merge
-        assert allow_forking is github.GithubObject.NotSet or isinstance(allow_forking, bool), allow_forking
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(
             allow_squash_merge, bool
         ), allow_squash_merge
@@ -1760,48 +1869,86 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(
             allow_rebase_merge, bool
         ), allow_rebase_merge
+        assert allow_auto_merge is github.GithubObject.NotSet or isinstance(allow_auto_merge, bool), allow_auto_merge
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
         assert allow_update_branch is github.GithubObject.NotSet or isinstance(
             allow_update_branch, bool
         ), allow_update_branch
+        assert use_squash_pr_title_as_default is github.GithubObject.NotSet or isinstance(
+            use_squash_pr_title_as_default, bool
+        ), use_squash_pr_title_as_default
+        assert squash_merge_commit_title is github.GithubObject.NotSet or (
+            isinstance(squash_merge_commit_title, str)
+            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
+        ), squash_merge_commit_title
+        assert squash_merge_commit_message is github.GithubObject.NotSet or (
+            isinstance(squash_merge_commit_message, str)
+            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
+        ), squash_merge_commit_message
+        assert merge_commit_title is github.GithubObject.NotSet or (
+            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
+        ), merge_commit_title
+        assert merge_commit_message is github.GithubObject.NotSet or (
+            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
+        ), merge_commit_message
         assert archived is github.GithubObject.NotSet or isinstance(archived, bool), archived
+        assert allow_forking is github.GithubObject.NotSet or isinstance(allow_forking, bool), allow_forking
+        assert web_commit_signoff_required is github.GithubObject.NotSet or isinstance(
+            web_commit_signoff_required, bool
+        ), web_commit_signoff_required
+
         post_parameters = {
             "name": name,
         }
+
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if homepage is not github.GithubObject.NotSet:
             post_parameters["homepage"] = homepage
         if private is not github.GithubObject.NotSet:
             post_parameters["private"] = private
+        if visibility is not github.GithubObject.NotSet:
+            post_parameters["visibility"] = visibility
         if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
         if has_projects is not github.GithubObject.NotSet:
             post_parameters["has_projects"] = has_projects
         if has_wiki is not github.GithubObject.NotSet:
             post_parameters["has_wiki"] = has_wiki
-        if has_downloads is not github.GithubObject.NotSet:
-            post_parameters["has_downloads"] = has_downloads
+        if is_template is not github.GithubObject.NotSet:
+            post_parameters["is_template"] = is_template
         if default_branch is not github.GithubObject.NotSet:
             post_parameters["default_branch"] = default_branch
         if allow_squash_merge is not github.GithubObject.NotSet:
             post_parameters["allow_squash_merge"] = allow_squash_merge
-        if allow_auto_merge is not github.GithubObject.NotSet:
-            post_parameters["allow_auto_merge"] = allow_auto_merge
-        if allow_forking is not github.GithubObject.NotSet:
-            post_parameters["allow_forking"] = allow_forking
         if allow_merge_commit is not github.GithubObject.NotSet:
             post_parameters["allow_merge_commit"] = allow_merge_commit
         if allow_rebase_merge is not github.GithubObject.NotSet:
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
+        if allow_auto_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_auto_merge"] = allow_auto_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
         if allow_update_branch is not github.GithubObject.NotSet:
             post_parameters["allow_update_branch"] = allow_update_branch
+        if use_squash_pr_title_as_default is not github.GithubObject.NotSet:
+            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
+        if squash_merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
+        if squash_merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
+        if merge_commit_title is not github.GithubObject.NotSet:
+            post_parameters["merge_commit_title"] = merge_commit_title
+        if merge_commit_message is not github.GithubObject.NotSet:
+            post_parameters["merge_commit_message"] = merge_commit_message
         if archived is not github.GithubObject.NotSet:
             post_parameters["archived"] = archived
+        if allow_forking is not github.GithubObject.NotSet:
+            post_parameters["allow_forking"] = allow_forking
+        if web_commit_signoff_required is not github.GithubObject.NotSet:
+            post_parameters["web_commit_signoff_required"] = web_commit_signoff_required
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
@@ -3207,15 +3354,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
             list_item="workflows",
         )
 
-    def get_workflow(self, id_or_name):
+    def get_workflow(self, id_or_file_name):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
-        :param id_or_name: int or string
+        :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_name, int) or isinstance(id_or_name, str), id_or_name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_name}")
+        assert isinstance(id_or_file_name, (int, str)), id_or_file_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
@@ -3879,7 +4026,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._labels_url = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
         self._languages_url = github.GithubObject.NotSet
+        self._license = github.GithubObject.NotSet
         self._master_branch = github.GithubObject.NotSet
+        self._merge_commit_message = github.GithubObject.NotSet
+        self._merge_commit_title = github.GithubObject.NotSet
         self._merges_url = github.GithubObject.NotSet
         self._milestones_url = github.GithubObject.NotSet
         self._mirror_url = github.GithubObject.NotSet
@@ -3898,6 +4048,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._releases_url = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
+        self._squash_merge_commit_message = github.GithubObject.NotSet
+        self._squash_merge_commit_title = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
         self._stargazers_count = github.GithubObject.NotSet
         self._stargazers_url = github.GithubObject.NotSet
@@ -3912,9 +4064,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._trees_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._use_squash_pr_title_as_default = github.GithubObject.NotSet
         self._visibility = github.GithubObject.NotSet
         self._watchers = github.GithubObject.NotSet
         self._watchers_count = github.GithubObject.NotSet
+        self._web_commit_signoff_required = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
@@ -4019,10 +4173,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._language = self._makeStringAttribute(attributes["language"])
         if "languages_url" in attributes:  # pragma no branch
             self._languages_url = self._makeStringAttribute(attributes["languages_url"])
+        if "license" in attributes:  # pragma no branch
+            self._license = self._makeClassAttribute(github.License.License, attributes["license"])
         if "master_branch" in attributes:  # pragma no branch
             self._master_branch = self._makeStringAttribute(attributes["master_branch"])
         if "merges_url" in attributes:  # pragma no branch
             self._merges_url = self._makeStringAttribute(attributes["merges_url"])
+        if "merge_commit_message" in attributes:  # pragma no branch
+            self._merge_commit_message = self._makeStringAttribute(attributes["merge_commit_message"])
+        if "merge_commit_title" in attributes:  # pragma no branch
+            self._merge_commit_title = self._makeStringAttribute(attributes["merge_commit_title"])
         if "milestones_url" in attributes:  # pragma no branch
             self._milestones_url = self._makeStringAttribute(attributes["milestones_url"])
         if "mirror_url" in attributes:  # pragma no branch
@@ -4057,6 +4217,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeClassAttribute(Repository, attributes["source"])
+        if "squash_merge_commit_message" in attributes:  # pragma no branch
+            self._squash_merge_commit_message = self._makeStringAttribute(attributes["squash_merge_commit_message"])
+        if "squash_merge_commit_title" in attributes:  # pragma no branch
+            self._squash_merge_commit_title = self._makeStringAttribute(attributes["squash_merge_commit_title"])
         if "ssh_url" in attributes:  # pragma no branch
             self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
         if "stargazers_count" in attributes:  # pragma no branch
@@ -4085,9 +4249,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
+            self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch
             self._visibility = self._makeStringAttribute(attributes["visibility"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch
             self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
+        if "web_commit_signoff_required" in attributes:  # pragma no branch
+            self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
