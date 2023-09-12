@@ -193,6 +193,7 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Tag
 import github.Team
+import github.Variable
 import github.View
 import github.Workflow
 import github.WorkflowRun
@@ -1301,7 +1302,7 @@ class Repository(CompletableGithubObject):
         """
         assert all(isinstance(element, github.InputGitTreeElement) for element in tree), tree
         assert is_undefined(base_tree) or isinstance(base_tree, github.GitTree.GitTree), base_tree
-        post_parameters = {
+        post_parameters: dict[str, Any] = {
             "tree": [element._identity for element in tree],
         }
         if is_defined(base_tree):
@@ -1326,16 +1327,11 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
-        assert is_undefined(events) or all(isinstance(element, str) for element in events), events
+        assert is_optional_list(events, str), events
         assert is_undefined(active) or isinstance(active, bool), active
-        post_parameters = {
-            "name": name,
-            "config": config,
-        }
-        if is_defined(events):
-            post_parameters["events"] = events
-        if is_defined(active):
-            post_parameters["active"] = active
+        post_parameters = NotSet.remove_unset_items(
+            {"name": name, "config": config, "events": events, "active": active}
+        )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/hooks", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -1363,13 +1359,9 @@ class Repository(CompletableGithubObject):
         assert (
             is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
         ), assignee
-        assert is_undefined(assignees) or all(
-            isinstance(element, github.NamedUser.NamedUser) or isinstance(element, str) for element in assignees
-        ), assignees
-        assert is_undefined(milestone) or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert is_undefined(labels) or all(
-            isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels
-        ), labels
+        assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
+        assert is_optional(milestone, github.Milestone.Milestone), milestone
+        assert is_optional_list(labels, (github.Label.Label, str)), labels
 
         post_parameters: dict[str, Any] = {
             "title": title,
@@ -1767,12 +1759,9 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def create_variable(self, variable_name: str, value: str) -> bool:
+    def create_variable(self, variable_name: str, value: str) -> github.Variable.Variable:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
-        :param variable_name: string
-        :param value: string
-        :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -1805,7 +1794,7 @@ class Repository(CompletableGithubObject):
             list_item="variables",
         )
 
-    def get_variable(self, variable_name: str):
+    def get_variable(self, variable_name: str) -> github.Variable.Variable:
         """
         :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
@@ -2172,7 +2161,7 @@ class Repository(CompletableGithubObject):
                 github.AuthenticatedUser.AuthenticatedUser,
             ),
         ), author
-        url_parameters = dict()
+        url_parameters: dict[str, Any] = {}
         if is_defined(sha):
             url_parameters["sha"] = sha
         if is_defined(path):
@@ -2315,7 +2304,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(transient_environment) or isinstance(transient_environment, bool), transient_environment
         assert is_undefined(production_environment) or isinstance(production_environment, bool), production_environment
 
-        post_parameters = {"ref": ref}
+        post_parameters: dict[str, Any] = {"ref": ref}
         if is_defined(task):
             post_parameters["task"] = task
         if is_defined(auto_merge):
@@ -2349,7 +2338,6 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/traffic/popular/referrers")
         if isinstance(data, list):
             return [github.Referrer.Referrer(self._requester, headers, item, completed=True) for item in data]
-        return
 
     def get_top_paths(self) -> None | list[Path]:
         """
@@ -2377,7 +2365,6 @@ class Repository(CompletableGithubObject):
         if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
             data["views"] = [github.View.View(self._requester, headers, item, completed=True) for item in data["views"]]
             return data
-        return
 
     def get_clones_traffic(self, per: Opt[str] = NotSet) -> dict[str, int | list[Clones]] | None:
         """
@@ -2388,7 +2375,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(per) or (
             isinstance(per, str) and (per == "day" or per == "week")
         ), "per must be day or week, day by default"
-        url_parameters = dict()
+        url_parameters: dict[str, Any] = ()
         if is_defined(per):
             url_parameters["per"] = per
         headers, data = self._requester.requestJsonAndCheck(
@@ -3722,7 +3709,9 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
+            "DELETE",
+            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
+            # type: ignore
         )
         return status == 204
 
