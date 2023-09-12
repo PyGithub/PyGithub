@@ -1502,8 +1502,8 @@ class Repository(CompletableGithubObject):
     @overload
     def create_pull(
         self,
-        title: str,
-        body: str,
+        title: _NotSetType,
+        body: _NotSetType,
         base: str,
         head: str,
         maintainer_can_modify: Opt[bool],
