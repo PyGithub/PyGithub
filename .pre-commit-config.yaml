@@ -7,6 +7,15 @@ repos:
       - id: mixed-line-ending
         args: [ --fix=lf ]
 
+  - repo: https://github.com/myint/autoflake
+    rev: v2.2.1
+    hooks:
+      - id: autoflake
+        name: Remove unused variables and imports
+        language: python
+        args: ["--in-place", "--remove-all-unused-imports", "--remove-unused-variables", "--expand-star-imports"]
+        files: \.py$
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.1.0
     hooks:
