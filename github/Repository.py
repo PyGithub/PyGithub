@@ -1506,6 +1506,8 @@ class Repository(CompletableGithubObject):
         head: str,
         maintainer_can_modify: Opt[bool],
         issue: Issue,
+        title: Opt[str] = ...,
+        body: Opt[str] = ...,
     ) -> PullRequest:
         ...
 
