@@ -1377,13 +1377,13 @@ class Repository(CompletableGithubObject):
         if is_defined(assignees):
             post_parameters["assignees"] = [
                 element._identity if isinstance(element, github.NamedUser.NamedUser) else element
-                for element in assignees
+                for element in assignees  # type: ignore
             ]
         if is_defined(milestone):
             post_parameters["milestone"] = milestone._identity
         if is_defined(labels):
             post_parameters["labels"] = [
-                element.name if isinstance(element, github.Label.Label) else element for element in labels
+                element.name if isinstance(element, github.Label.Label) else element for element in labels  # type: ignore
             ]
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/issues", input=post_parameters)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
@@ -1561,7 +1561,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(head, str), head
         return self.__create_pull(issue=issue._identity, base=base, head=head)
 
-    def __create_pull(self, **kwds):
+    def __create_pull(self, **kwds: Any) -> github.PullRequest.PullRequest:
         post_parameters = kwds
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pulls", input=post_parameters)
@@ -1701,18 +1701,13 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(event_type, str), event_type
         assert is_undefined(client_payload) or isinstance(client_payload, dict), client_payload
-        post_parameters = {"event_type": event_type}
-        if is_defined(client_payload):
-            post_parameters["client_payload"] = client_payload
+        post_parameters = NotSet.remove_unset_items({"event_type": event_type, "client_payload": client_payload})
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
 
-    def create_secret(self, secret_name: str, unencrypted_value: str) -> bool:
+    def create_secret(self, secret_name: str, unencrypted_value: str) -> github.Secret.Secret:
         """
         :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
-        :param secret_name: string
-        :param unencrypted_value: string
-        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -1733,7 +1728,7 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def get_secrets(self):
+    def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
         """
         Gets all repository secrets
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
@@ -1780,7 +1775,7 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def get_variables(self):
+    def get_variables(self) -> PaginatedList[github.Variable.Variable]:
         """
         Gets all repository variables
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Variable.Variable`
@@ -2066,7 +2061,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(branch, str) or is_branch, branch
         assert isinstance(new_name, str), new_name
         if is_branch:
-            branch = branch.name
+            branch = branch.name  # type: ignore
         parameters = {"new_name": new_name}
         status, _, _ = self._requester.requestJson("POST", f"{self.url}/branches/{branch}/rename", input=parameters)
         return status == 201
@@ -2414,10 +2409,10 @@ class Repository(CompletableGithubObject):
         self,
         path: str,
         message: str,
-        content: str,
-        branch: str | _NotSetType = NotSet,
-        committer: InputGitAuthor | _NotSetType = NotSet,
-        author: InputGitAuthor | _NotSetType = NotSet,
+        content: str | bytes,
+        branch: Opt[str] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
         """Create a file in this repository.
 
@@ -2603,7 +2598,7 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
         """
-        return self.get_contents(path, ref=ref)
+        return self.get_contents(path, ref=ref)  # type: ignore
 
     def get_contributors(self, anon: str | _NotSetType = NotSet) -> PaginatedList[NamedUser]:
         """
@@ -2866,12 +2861,12 @@ class Repository(CompletableGithubObject):
         assert (
             is_undefined(creator) or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, str)
         ), creator
-        url_parameters = dict()
+        url_parameters: dict[str, Any] = {}
         if is_defined(milestone):
-            if isinstance(milestone, str):
-                url_parameters["milestone"] = milestone
-            else:
+            if isinstance(milestone, github.Milestone.Milestone):
                 url_parameters["milestone"] = milestone._identity
+            else:
+                url_parameters["milestone"] = milestone
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(assignee):
@@ -3706,9 +3701,7 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE",
-            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
-            # type: ignore
+            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
         )
         return status == 204
 
