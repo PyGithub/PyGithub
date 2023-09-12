@@ -1275,19 +1275,13 @@ class Repository(CompletableGithubObject):
     ) -> GitTag:
         """
         :calls: `POST /repos/{owner}/{repo}/git/tags <https://docs.github.com/en/rest/reference/git#tags>`_
-        :param tag: string
-        :param message: string
-        :param object: string
-        :param type: string
-        :param tagger: :class:`github.InputGitAuthor.InputGitAuthor`
-        :rtype: :class:`github.GitTag.GitTag`
         """
         assert isinstance(tag, str), tag
         assert isinstance(message, str), message
         assert isinstance(object, str), object
         assert isinstance(type, str), type
         assert is_undefined(tagger) or isinstance(tagger, github.InputGitAuthor), tagger
-        post_parameters = {
+        post_parameters: dict[str, Any] = {
             "tag": tag,
             "message": message,
             "object": object,
@@ -1377,7 +1371,7 @@ class Repository(CompletableGithubObject):
             isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels
         ), labels
 
-        post_parameters = {
+        post_parameters: dict[str, Any] = {
             "title": title,
         }
         if is_defined(body):
@@ -2385,7 +2379,7 @@ class Repository(CompletableGithubObject):
             return data
         return
 
-    def get_clones_traffic(self, per: str | _NotSetType = NotSet) -> dict[str, int | list[Clones]] | None:
+    def get_clones_traffic(self, per: Opt[str] = NotSet) -> dict[str, int | list[Clones]] | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/clones <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2543,7 +2537,7 @@ class Repository(CompletableGithubObject):
             content = content.encode("utf-8")
         content = b64encode(content).decode("utf-8")
 
-        put_parameters = {"message": message, "content": content, "sha": sha}
+        put_parameters: dict[str, Any] = {"message": message, "content": content, "sha": sha}
 
         if is_defined(branch):
             put_parameters["branch"] = branch
@@ -2621,12 +2615,9 @@ class Repository(CompletableGithubObject):
         Repository.get_contents() instead.
         """
     )
-    def get_dir_contents(self, path: str, ref: str | _NotSetType = NotSet) -> list[ContentFile]:
+    def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile]:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
-        :param path: string
-        :param ref: string
-        :rtype: list of :class:`github.ContentFile.ContentFile`
         """
         return self.get_contents(path, ref=ref)
 
@@ -2854,7 +2845,7 @@ class Repository(CompletableGithubObject):
         state: str | _NotSetType = NotSet,
         assignee: NamedUser | str | _NotSetType = NotSet,
         mentioned: _NotSetType | NamedUser = NotSet,
-        labels: list[str] | list[Label] | _NotSetType = NotSet,
+        labels: Opt[list[str] | list[Label]] = NotSet,
         sort: str | _NotSetType = NotSet,
         direction: str | _NotSetType = NotSet,
         since: _NotSetType | datetime = NotSet,
@@ -3733,7 +3724,9 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
+            "DELETE",
+            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
+            # type: ignore
         )
         return status == 204
 
