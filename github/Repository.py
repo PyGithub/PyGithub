@@ -2878,7 +2878,7 @@ class Repository(CompletableGithubObject):
             url_parameters["mentioned"] = mentioned._identity
         if is_defined(labels):
             url_parameters["labels"] = ",".join(
-                [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+                [label.name if isinstance(label, github.Label.Label) else label for label in labels]  # type: ignore
             )
         if is_defined(sort):
             url_parameters["sort"] = sort
