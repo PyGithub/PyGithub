@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 import warnings
+from typing import Any
 
 import deprecated
 import urllib3
+from urllib3 import Retry
 
 import github
 from github import Consts
@@ -25,25 +29,29 @@ class GithubIntegration:
     # v3: move * before first argument so all arguments must be named,
     #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     #     added here to force named parameters because new parameters have been added
+    auth: AppAuth
+    base_url: str
+    __requester: Requester
+
     def __init__(
         self,
-        integration_id=None,
-        private_key=None,
-        base_url=Consts.DEFAULT_BASE_URL,
+        integration_id: int | str | None = None,
+        private_key: str | None = None,
+        base_url: str = Consts.DEFAULT_BASE_URL,
         *,
-        timeout=Consts.DEFAULT_TIMEOUT,
-        user_agent=Consts.DEFAULT_USER_AGENT,
-        per_page=Consts.DEFAULT_PER_PAGE,
-        verify=True,
-        retry=None,
-        pool_size=None,
-        seconds_between_requests=Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
-        seconds_between_writes=Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        jwt_expiry=Consts.DEFAULT_JWT_EXPIRY,
-        jwt_issued_at=Consts.DEFAULT_JWT_ISSUED_AT,
-        jwt_algorithm=Consts.DEFAULT_JWT_ALGORITHM,
-        auth=None,
-    ):
+        timeout: int = Consts.DEFAULT_TIMEOUT,
+        user_agent: str = Consts.DEFAULT_USER_AGENT,
+        per_page: int = Consts.DEFAULT_PER_PAGE,
+        verify: bool | str = True,
+        retry: int | Retry | None = None,
+        pool_size: int | None = None,
+        seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
+        seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
+        jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
+        jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
+        jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
+        auth: AppAuth | None = None,
+    ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param private_key: string deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -93,8 +101,8 @@ class GithubIntegration:
                 category=DeprecationWarning,
             )
             auth = AppAuth(
-                integration_id,
-                private_key,
+                integration_id,  # type: ignore
+                private_key,  # type: ignore
                 jwt_expiry=jwt_expiry,
                 jwt_issued_at=jwt_issued_at,
                 jwt_algorithm=jwt_algorithm,
@@ -119,27 +127,41 @@ class GithubIntegration:
             seconds_between_writes=seconds_between_writes,
         )
 
-    def get_github_for_installation(self, installation_id, token_permissions=None):
+    def close(self) -> None:
+        """
+        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
+
+        .. code-block:: python
+
+          with github.GithubIntegration(...) as gi:
+            # do something
+        """
+        self.__requester.close()
+
+    def __enter__(self) -> GithubIntegration:
+        return self
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self.close()
+
+    def get_github_for_installation(
+        self, installation_id: int, token_permissions: dict[str, str] | None = None
+    ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
-    def _get_headers(self):
+    def _get_headers(self) -> dict[str, str]:
         """
         Get headers for the requests.
-
-        :return: dict
         """
         return {
             "Accept": Consts.mediaTypeIntegrationPreview,
         }
 
-    def _get_installed_app(self, url):
+    def _get_installed_app(self, url: str) -> Installation:
         """
         Get installation for the given URL.
-
-        :param url: str
-        :rtype: :class:`github.Installation.Installation`
         """
         headers, response = self.__requester.requestJsonAndCheck("GET", url, headers=self._get_headers())
 
@@ -153,21 +175,18 @@ class GithubIntegration:
     @deprecated.deprecated(
         "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
-    def create_jwt(self, expiration=None):
+    def create_jwt(self, expiration: int | None = None) -> str:
         """
         Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
-
-        :return string:
         """
         return self.auth.create_jwt(expiration)
 
-    def get_access_token(self, installation_id, permissions=None):
+    def get_access_token(
+        self, installation_id: int, permissions: dict[str, str] | None = None
+    ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
-        :param installation_id: int
-        :param permissions: dict
-        :return: :class:`github.InstallationAuthorization.InstallationAuthorization`
         """
         if permissions is None:
             permissions = {}
@@ -191,21 +210,17 @@ class GithubIntegration:
         )
 
     @deprecated.deprecated("Use get_repo_installation")
-    def get_installation(self, owner, repo):
+    def get_installation(self, owner: str, repo: str) -> Installation:
         """
         Deprecated by get_repo_installation
 
         :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
-        :param owner: str
-        :param repo: str
-        :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
-    def get_installations(self):
+    def get_installations(self) -> PaginatedList[Installation]:
         """
         :calls: GET /app/installations <https://docs.github.com/en/rest/reference/apps#list-installations-for-the-authenticated-app>
-        :rtype: :class:`github.PaginatedList.PaginatedList[github.Installation.Installation]`
         """
         return PaginatedList(
             contentClass=Installation,
@@ -216,43 +231,33 @@ class GithubIntegration:
             list_item="installations",
         )
 
-    def get_org_installation(self, org):
+    def get_org_installation(self, org: str) -> Installation:
         """
         :calls: `GET /orgs/{org}/installation <https://docs.github.com/en/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app>`
-        :param org: str
-        :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/orgs/{org}/installation")
 
-    def get_repo_installation(self, owner, repo):
+    def get_repo_installation(self, owner: str, repo: str) -> Installation:
         """
         :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
-        :param owner: str
-        :param repo: str
-        :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
-    def get_user_installation(self, username):
+    def get_user_installation(self, username: str) -> Installation:
         """
         :calls: `GET /users/{username}/installation <https://docs.github.com/en/rest/apps/apps#get-a-user-installation-for-the-authenticated-app>`
-        :param username: str
-        :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/users/{username}/installation")
 
-    def get_app_installation(self, installation_id):
+    def get_app_installation(self, installation_id: int) -> Installation:
         """
         :calls: `GET /app/installations/{installation_id} <https://docs.github.com/en/rest/apps/apps#get-an-installation-for-the-authenticated-app>`
-        :param installation_id: int
-        :rtype: :class:`github.Installation.Installation`
         """
         return self._get_installed_app(url=f"/app/installations/{installation_id}")
 
-    def get_app(self):
+    def get_app(self) -> GithubApp:
         """
         :calls: `GET /app <https://docs.github.com/en/rest/reference/apps#get-the-authenticated-app>`_
-        :rtype: :class:`github.GithubApp.GithubApp`
         """
 
         headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())

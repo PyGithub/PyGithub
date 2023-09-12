@@ -27,210 +27,151 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class Download(github.GithubObject.CompletableGithubObject):
+class Download(CompletableGithubObject):
     """
     This class represents Downloads. The reference can be found here https://docs.github.com/en/rest/reference/repos
     """
+
+    def _initAttributes(self) -> None:
+        self._accesskeyid: Attribute[str] = NotSet
+        self._acl: Attribute[str] = NotSet
+        self._bucket: Attribute[str] = NotSet
+        self._content_type: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._download_count: Attribute[int] = NotSet
+        self._expirationdate: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._mime_type: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._policy: Attribute[str] = NotSet
+        self._prefix: Attribute[str] = NotSet
+        self._redirect: Attribute[bool] = NotSet
+        self._s3_url: Attribute[str] = NotSet
+        self._signature: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def accesskeyid(self):
-        """
-        :type: string
-        """
+    def accesskeyid(self) -> str:
         self._completeIfNotSet(self._accesskeyid)
         return self._accesskeyid.value
 
     @property
-    def acl(self):
-        """
-        :type: string
-        """
+    def acl(self) -> str:
         self._completeIfNotSet(self._acl)
         return self._acl.value
 
     @property
-    def bucket(self):
-        """
-        :type: string
-        """
+    def bucket(self) -> str:
         self._completeIfNotSet(self._bucket)
         return self._bucket.value
 
     @property
-    def content_type(self):
-        """
-        :type: string
-        """
+    def content_type(self) -> str:
         self._completeIfNotSet(self._content_type)
         return self._content_type.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def download_count(self):
-        """
-        :type: integer
-        """
+    def download_count(self) -> int:
         self._completeIfNotSet(self._download_count)
         return self._download_count.value
 
     @property
-    def expirationdate(self):
-        """
-        :type: datetime.datetime
-        """
+    def expirationdate(self) -> datetime:
         self._completeIfNotSet(self._expirationdate)
         return self._expirationdate.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def mime_type(self):
-        """
-        :type: string
-        """
+    def mime_type(self) -> str:
         self._completeIfNotSet(self._mime_type)
         return self._mime_type.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
-    def policy(self):
-        """
-        :type: string
-        """
+    def policy(self) -> str:
         self._completeIfNotSet(self._policy)
         return self._policy.value
 
     @property
-    def prefix(self):
-        """
-        :type: string
-        """
+    def prefix(self) -> str:
         self._completeIfNotSet(self._prefix)
         return self._prefix.value
 
     @property
-    def redirect(self):
-        """
-        :type: bool
-        """
+    def redirect(self) -> bool:
         self._completeIfNotSet(self._redirect)
         return self._redirect.value
 
     @property
-    def s3_url(self):
-        """
-        :type: string
-        """
+    def s3_url(self) -> str:
         self._completeIfNotSet(self._s3_url)
         return self._s3_url.value
 
     @property
-    def signature(self):
-        """
-        :type: string
-        """
+    def signature(self) -> str:
         self._completeIfNotSet(self._signature)
         return self._signature.value
 
     @property
-    def size(self):
-        """
-        :type: integer
-        """
+    def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/downloads/{id} <https://docs.github.com/en/rest/reference/repos>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self) -> None:
-        self._accesskeyid = github.GithubObject.NotSet
-        self._acl = github.GithubObject.NotSet
-        self._bucket = github.GithubObject.NotSet
-        self._content_type = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._download_count = github.GithubObject.NotSet
-        self._expirationdate = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._mime_type = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._policy = github.GithubObject.NotSet
-        self._prefix = github.GithubObject.NotSet
-        self._redirect = github.GithubObject.NotSet
-        self._s3_url = github.GithubObject.NotSet
-        self._signature = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "accesskeyid" in attributes:  # pragma no branch
             self._accesskeyid = self._makeStringAttribute(
                 attributes["accesskeyid"]
