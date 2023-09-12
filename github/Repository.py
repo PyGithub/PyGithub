@@ -1130,8 +1130,8 @@ class Repository(CompletableGithubObject):
         message: str,
         tree: GitTree,
         parents: list[GitCommit],
-        author: InputGitAuthor | _NotSetType = NotSet,
-        committer: InputGitAuthor | _NotSetType = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
     ) -> GitCommit:
         """
         :calls: `POST /repos/{owner}/{repo}/git/commits <https://docs.github.com/en/rest/reference/git#commits>`_
@@ -1183,7 +1183,7 @@ class Repository(CompletableGithubObject):
         release_message: str,
         object: str,
         type: str,
-        tagger: InputGitAuthor | _NotSetType = NotSet,
+        tagger: Opt[InputGitAuthor] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1294,7 +1294,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/tags", input=post_parameters)
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
-    def create_git_tree(self, tree: list[InputGitTreeElement], base_tree: GitTree | _NotSetType = NotSet) -> GitTree:
+    def create_git_tree(self, tree: list[InputGitTreeElement], base_tree: Opt[GitTree] = NotSet) -> GitTree:
         """
         :calls: `POST /repos/{owner}/{repo}/git/trees <https://docs.github.com/en/rest/reference/git#trees>`_
         :param tree: list of :class:`github.InputGitTreeElement.InputGitTreeElement`
@@ -1315,7 +1315,7 @@ class Repository(CompletableGithubObject):
         self,
         name: str,
         config: dict[str, str],
-        events: _NotSetType | list[str] = NotSet,
+        events: Opt[list[str]] = NotSet,
         active: Opt[bool] = NotSet,
     ) -> Hook:
         """
@@ -1341,9 +1341,9 @@ class Repository(CompletableGithubObject):
         title: str,
         body: Opt[str] = NotSet,
         assignee: NamedUser | Opt[str] = NotSet,
-        milestone: Milestone | _NotSetType = NotSet,
-        labels: list[Label] | _NotSetType | list[str] = NotSet,
-        assignees: _NotSetType | list[str] | list[NamedUser] = NotSet,
+        milestone: Opt[Milestone] = NotSet,
+        labels: list[Label] | Opt[list[str]] = NotSet,
+        assignees: Opt[list[str]] | list[NamedUser] = NotSet,
     ) -> Issue:
         """
         :calls: `POST /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -1437,7 +1437,7 @@ class Repository(CompletableGithubObject):
         title: str,
         state: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
-        due_on: date | _NotSetType = NotSet,
+        due_on: Opt[date] = NotSet,
     ) -> Milestone:
         """
         :calls: `POST /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
@@ -1493,20 +1493,20 @@ class Repository(CompletableGithubObject):
         body: str,
         base: str,
         head: str,
-        maintainer_can_modify: Opt[bool] = _NotSetType(),
+        maintainer_can_modify: Opt[bool] = ...,
         draft: bool = False,
-        issue: _NotSetType = _NotSetType(),
+        issue: Opt[Issue] = ...,
     ) -> PullRequest:
         ...
 
     @overload
     def create_pull(
         self,
-        title: _NotSetType,
-        body: _NotSetType,
+        title: str,
+        body: str,
         base: str,
         head: str,
-        maintainer_can_modify: _NotSetType,
+        maintainer_can_modify: Opt[bool],
         issue: Issue,
     ) -> PullRequest:
         ...
@@ -1690,9 +1690,7 @@ class Repository(CompletableGithubObject):
             )
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
 
-    def create_repository_dispatch(
-        self, event_type: str, client_payload: Opt[dict[str, Any]] = NotSet
-    ) -> bool:
+    def create_repository_dispatch(self, event_type: str, client_payload: Opt[dict[str, Any]] = NotSet) -> bool:
         """
         :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/repos#create-a-repository-dispatch-event>
         :param event_type: string
@@ -2822,12 +2820,12 @@ class Repository(CompletableGithubObject):
         milestone: Milestone | Opt[str] = NotSet,
         state: Opt[str] = NotSet,
         assignee: NamedUser | Opt[str] = NotSet,
-        mentioned: _NotSetType | NamedUser = NotSet,
+        mentioned: Opt[NamedUser] = NotSet,
         labels: Opt[list[str] | list[Label]] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-        creator: NamedUser | _NotSetType = NotSet,
+        creator: Opt[NamedUser] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -3389,8 +3387,8 @@ class Repository(CompletableGithubObject):
 
     def get_workflow_runs(
         self,
-        actor: NamedUser | _NotSetType = NotSet,
-        branch: Branch | _NotSetType = NotSet,
+        actor: Opt[NamedUser] = NotSet,
+        branch: Opt[Branch] = NotSet,
         event: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         exclude_pull_requests: Opt[bool] = NotSet,
@@ -3798,14 +3796,14 @@ class Repository(CompletableGithubObject):
         self,
         name: str,
         head_sha: str,
-        details_url: _NotSetType | str = NotSet,
-        external_id: _NotSetType | str = NotSet,
-        status: _NotSetType | str = NotSet,
+        details_url: Opt[str] = NotSet,
+        external_id: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
         started_at: Opt[datetime] = NotSet,
-        conclusion: _NotSetType | str = NotSet,
+        conclusion: Opt[str] = NotSet,
         completed_at: Opt[datetime] = NotSet,
-        output: (_NotSetType | dict[str, str | list[dict[str, str | int]]]) = NotSet,
-        actions: _NotSetType | list[dict[str, str]] = NotSet,
+        output: Opt[dict[str, str | list[dict[str, str | int]]]] = NotSet,
+        actions: Opt[list[dict[str, str]]] = NotSet,
     ) -> CheckRun:
         """
         :calls: `POST /repos/{owner}/{repo}/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`_
