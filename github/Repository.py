@@ -1731,9 +1731,8 @@ class Repository(CompletableGithubObject):
     def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
         """
         Gets all repository secrets
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Secret.Secret,
             self._requester,
             f"{self.url}/actions/secrets",
@@ -1778,9 +1777,9 @@ class Repository(CompletableGithubObject):
     def get_variables(self) -> PaginatedList[github.Variable.Variable]:
         """
         Gets all repository variables
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Variable.Variable`
+        :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Variable.Variable,
             self._requester,
             f"{self.url}/actions/variables",
