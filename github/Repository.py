@@ -1530,13 +1530,13 @@ class Repository(CompletableGithubObject):
 
     def __create_pull_1(
         self,
-        title,
-        body,
-        base,
-        head,
-        maintainer_can_modify=NotSet,
-        draft=False,
-    ):
+        title: str,
+        body: str,
+        base: str,
+        head: str,
+        maintainer_can_modify: Opt[bool] = NotSet,
+        draft: bool = False,
+    ) -> github.PullRequest.PullRequest:
         assert isinstance(title, str), title
         assert isinstance(body, str), body
         assert isinstance(base, str), base
@@ -1555,7 +1555,7 @@ class Repository(CompletableGithubObject):
         else:
             return self.__create_pull(title=title, body=body, base=base, head=head, draft=draft)
 
-    def __create_pull_2(self, issue, base, head):
+    def __create_pull_2(self, issue: github.Issue.Issue, base: str, head: str) -> github.PullRequest.PullRequest:
         assert isinstance(issue, github.Issue.Issue), issue
         assert isinstance(base, str), base
         assert isinstance(head, str), head
@@ -2374,9 +2374,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(per) or (
             isinstance(per, str) and (per == "day" or per == "week")
         ), "per must be day or week, day by default"
-        url_parameters: dict[str, Any] = ()
-        if is_defined(per):
-            url_parameters["per"] = per
+        url_parameters: dict[str, Any] = NotSet.remove_unset_items({"per": per})
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
@@ -2877,10 +2875,10 @@ class Repository(CompletableGithubObject):
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(assignee):
-            if isinstance(assignee, str):
-                url_parameters["assignee"] = assignee
-            else:
+            if isinstance(assignee, github.NamedUser.NamedUser):
                 url_parameters["assignee"] = assignee._identity
+            else:
+                url_parameters["assignee"] = assignee
         if is_defined(mentioned):
             url_parameters["mentioned"] = mentioned._identity
         if is_defined(labels):
