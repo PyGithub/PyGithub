@@ -2342,16 +2342,16 @@ class Repository(CompletableGithubObject):
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
 
-    def get_top_referrers(self) -> list[Referrer]:
+    def get_top_referrers(self) -> None | list[Referrer]:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/popular/referrers <https://docs.github.com/en/rest/reference/repos#traffic>`_
-        :rtype: :class:`list` of :class:`github.Referrer.Referrer`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/traffic/popular/referrers")
         if isinstance(data, list):
             return [github.Referrer.Referrer(self._requester, headers, item, completed=True) for item in data]
+        return
 
-    def get_top_paths(self) -> list[Path]:
+    def get_top_paths(self) -> None | list[Path]:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/popular/paths <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :rtype: :class:`list` of :class:`github.Path.Path`
@@ -2590,7 +2590,7 @@ class Repository(CompletableGithubObject):
             committer, github.InputGitAuthor
         ), "committer must be a github.InputGitAuthor object"
 
-        url_parameters = {"message": message, "sha": sha}
+        url_parameters: dict[str, Any] = {"message": message, "sha": sha}
         if is_defined(branch):
             url_parameters["branch"] = branch
         if is_defined(author):
@@ -2875,9 +2875,7 @@ class Repository(CompletableGithubObject):
             is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
         ), assignee
         assert is_undefined(mentioned) or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
-        assert is_undefined(labels) or all(
-            isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels
-        ), labels
+        assert is_optional_list(labels, (github.Label.Label, str)), labels
         assert is_undefined(sort) or isinstance(sort, str), sort
         assert is_undefined(direction) or isinstance(direction, str), direction
         assert is_undefined(since) or isinstance(since, datetime), since
@@ -3724,9 +3722,7 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE",
-            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"
-            # type: ignore
+            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
         )
         return status == 204
 
