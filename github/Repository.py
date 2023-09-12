@@ -1222,7 +1222,7 @@ class Repository(CompletableGithubObject):
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
-        target_commitish: str | _NotSetType = NotSet,
+        target_commitish: Opt[str] = NotSet,
     ) -> GitRelease:
         """
         :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
@@ -1316,7 +1316,7 @@ class Repository(CompletableGithubObject):
         name: str,
         config: dict[str, str],
         events: _NotSetType | list[str] = NotSet,
-        active: bool | _NotSetType = NotSet,
+        active: Opt[bool] = NotSet,
     ) -> Hook:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks <https://docs.github.com/en/rest/reference/repos#webhooks>`_
@@ -1339,8 +1339,8 @@ class Repository(CompletableGithubObject):
     def create_issue(
         self,
         title: str,
-        body: str | _NotSetType = NotSet,
-        assignee: NamedUser | str | _NotSetType = NotSet,
+        body: Opt[str] = NotSet,
+        assignee: NamedUser | Opt[str] = NotSet,
         milestone: Milestone | _NotSetType = NotSet,
         labels: list[Label] | _NotSetType | list[str] = NotSet,
         assignees: _NotSetType | list[str] | list[NamedUser] = NotSet,
@@ -1407,7 +1407,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/keys", input=post_parameters)
         return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
-    def create_label(self, name: str, color: str, description: str | _NotSetType = NotSet) -> Label:
+    def create_label(self, name: str, color: str, description: Opt[str] = NotSet) -> Label:
         """
         :calls: `POST /repos/{owner}/{repo}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string
@@ -1435,8 +1435,8 @@ class Repository(CompletableGithubObject):
     def create_milestone(
         self,
         title: str,
-        state: str | _NotSetType = NotSet,
-        description: str | _NotSetType = NotSet,
+        state: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
         due_on: date | _NotSetType = NotSet,
     ) -> Milestone:
         """
@@ -1466,7 +1466,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/milestones", input=post_parameters)
         return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
-    def create_project(self, name: str, body: str | _NotSetType = NotSet) -> Project:
+    def create_project(self, name: str, body: Opt[str] = NotSet) -> Project:
         """
         :calls: `POST /repos/{owner}/{repo}/projects <https://docs.github.com/en/rest/reference/projects#create-a-repository-project>`_
         :param name: string
@@ -1493,7 +1493,7 @@ class Repository(CompletableGithubObject):
         body: str,
         base: str,
         head: str,
-        maintainer_can_modify: bool | _NotSetType = _NotSetType(),
+        maintainer_can_modify: Opt[bool] = _NotSetType(),
         draft: bool = False,
         issue: _NotSetType = _NotSetType(),
     ) -> PullRequest:
@@ -1825,8 +1825,8 @@ class Repository(CompletableGithubObject):
         self,
         vcs: str,
         vcs_url: str,
-        vcs_username: str | _NotSetType = NotSet,
-        vcs_password: str | _NotSetType = NotSet,
+        vcs_username: Opt[str] = NotSet,
+        vcs_password: Opt[str] = NotSet,
     ) -> SourceImport:
         """
         :calls: `PUT /repos/{owner}/{repo}/import <https://docs.github.com/en/rest/reference/migrations#start-an-import>`_
@@ -2014,7 +2014,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_archive_link(self, archive_format: str, ref: str | _NotSetType = NotSet) -> str:
+    def get_archive_link(self, archive_format: str, ref: Opt[str] = NotSet) -> str:
         """
         :calls: `GET /repos/{owner}/{repo}/{archive_format}/{ref} <https://docs.github.com/en/rest/reference/repos#contents>`_
         :param archive_format: string
@@ -2072,7 +2072,7 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Branch.Branch, self._requester, f"{self.url}/branches", None)
 
-    def get_collaborators(self, affiliation: str | _NotSetType = NotSet) -> PaginatedList[NamedUser]:
+    def get_collaborators(self, affiliation: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param affiliation: string
@@ -2127,11 +2127,11 @@ class Repository(CompletableGithubObject):
 
     def get_commits(
         self,
-        sha: str | _NotSetType = NotSet,
-        path: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
-        until: _NotSetType | datetime = NotSet,
-        author: AuthenticatedUser | NamedUser | str | _NotSetType = NotSet,
+        sha: Opt[str] = NotSet,
+        path: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
+        until: Opt[datetime] = NotSet,
+        author: Opt[AuthenticatedUser | NamedUser | str] = NotSet,
     ) -> PaginatedList[Commit]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits <https://docs.github.com/en/rest/reference/repos#commits>`_
@@ -2176,7 +2176,7 @@ class Repository(CompletableGithubObject):
                 url_parameters["author"] = author
         return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", url_parameters)
 
-    def get_contents(self, path: str, ref: str | _NotSetType = NotSet) -> list[ContentFile] | ContentFile:
+    def get_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile] | ContentFile:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
         :param path: string
@@ -2212,10 +2212,10 @@ class Repository(CompletableGithubObject):
 
     def get_deployments(
         self,
-        sha: str | _NotSetType = NotSet,
-        ref: str | _NotSetType = NotSet,
-        task: str | _NotSetType = NotSet,
-        environment: str | _NotSetType = NotSet,
+        sha: Opt[str] = NotSet,
+        ref: Opt[str] = NotSet,
+        task: Opt[str] = NotSet,
+        environment: Opt[str] = NotSet,
     ) -> PaginatedList[Deployment]:
         """
         :calls: `GET /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
@@ -2263,14 +2263,14 @@ class Repository(CompletableGithubObject):
     def create_deployment(
         self,
         ref: str,
-        task: str | _NotSetType = NotSet,
-        auto_merge: bool | _NotSetType = NotSet,
-        required_contexts: list[str] | _NotSetType = NotSet,
-        payload: dict[str, Any] | _NotSetType = NotSet,
-        environment: str | _NotSetType = NotSet,
-        description: str | _NotSetType = NotSet,
-        transient_environment: bool | _NotSetType = NotSet,
-        production_environment: bool | _NotSetType = NotSet,
+        task: Opt[str] = NotSet,
+        auto_merge: Opt[bool] = NotSet,
+        required_contexts: Opt[list[str]] = NotSet,
+        payload: Opt[dict[str, Any]] = NotSet,
+        environment: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        transient_environment: Opt[bool] = NotSet,
+        production_environment: Opt[bool] = NotSet,
     ) -> Deployment:
         """
         :calls: `POST /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
@@ -2341,7 +2341,7 @@ class Repository(CompletableGithubObject):
         if isinstance(data, list):
             return [github.Path.Path(self._requester, headers, item, completed=True) for item in data]
 
-    def get_views_traffic(self, per: str | _NotSetType = NotSet) -> None | dict[str, int | list[View]]:
+    def get_views_traffic(self, per: Opt[str] = NotSet) -> None | dict[str, int | list[View]]:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2378,7 +2378,7 @@ class Repository(CompletableGithubObject):
             ]
             return data
 
-    def get_projects(self, state: str | _NotSetType = NotSet) -> PaginatedList[Project]:
+    def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
         """
         :calls: `GET /repos/{owner}/{repo}/projects <https://docs.github.com/en/rest/reference/projects#list-repository-projects>`_
         :rtype: :class:`PaginatedList` of :class:`github.Project.Project`
@@ -2485,9 +2485,9 @@ class Repository(CompletableGithubObject):
         message: str,
         content: bytes | str,
         sha: str,
-        branch: _NotSetType | str = NotSet,
-        committer: _NotSetType | InputGitAuthor = NotSet,
-        author: _NotSetType | InputGitAuthor = NotSet,
+        branch: Opt[str] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
         """This method updates a file in a repository
 
@@ -2540,7 +2540,7 @@ class Repository(CompletableGithubObject):
         path: str,
         message: str,
         sha: str,
-        branch: str | _NotSetType = NotSet,
+        branch: Opt[str] = NotSet,
         committer: InputGitAuthor | _NotSetType = NotSet,
         author: InputGitAuthor | _NotSetType = NotSet,
     ) -> dict[str, Commit | _NotSetType]:
@@ -2599,7 +2599,7 @@ class Repository(CompletableGithubObject):
         """
         return self.get_contents(path, ref=ref)  # type: ignore
 
-    def get_contributors(self, anon: str | _NotSetType = NotSet) -> PaginatedList[NamedUser]:
+    def get_contributors(self, anon: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/contributors <https://docs.github.com/en/rest/reference/repos>`_
         :param anon: string
@@ -2649,9 +2649,9 @@ class Repository(CompletableGithubObject):
 
     def create_fork(
         self,
-        organization: Organization | str | _NotSetType = NotSet,
-        name: str | _NotSetType = NotSet,
-        default_branch_only: bool | _NotSetType = NotSet,
+        organization: Organization | Opt[str] = NotSet,
+        name: Opt[str] = NotSet,
+        default_branch_only: Opt[bool] = NotSet,
     ) -> Repository:
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
@@ -2743,7 +2743,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/tags/{sha}")
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
-    def get_git_tree(self, sha: str, recursive: bool | _NotSetType = NotSet) -> GitTree:
+    def get_git_tree(self, sha: str, recursive: Opt[bool] = NotSet) -> GitTree:
         """
         :calls: `GET /repos/{owner}/{repo}/git/trees/{sha} <https://docs.github.com/en/rest/reference/git#trees>`_
         :param sha: string
@@ -2819,14 +2819,14 @@ class Repository(CompletableGithubObject):
 
     def get_issues(
         self,
-        milestone: Milestone | str | _NotSetType = NotSet,
-        state: str | _NotSetType = NotSet,
-        assignee: NamedUser | str | _NotSetType = NotSet,
+        milestone: Milestone | Opt[str] = NotSet,
+        state: Opt[str] = NotSet,
+        assignee: NamedUser | Opt[str] = NotSet,
         mentioned: _NotSetType | NamedUser = NotSet,
         labels: Opt[list[str] | list[Label]] = NotSet,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
         creator: NamedUser | _NotSetType = NotSet,
     ) -> PaginatedList[Issue]:
         """
@@ -2894,9 +2894,9 @@ class Repository(CompletableGithubObject):
 
     def get_issues_comments(
         self,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
@@ -3017,9 +3017,9 @@ class Repository(CompletableGithubObject):
 
     def get_milestones(
         self,
-        state: str | _NotSetType = NotSet,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
+        state: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
     ) -> PaginatedList[Milestone]:
         """
         :calls: `GET /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
@@ -3077,11 +3077,11 @@ class Repository(CompletableGithubObject):
 
     def get_pulls(
         self,
-        state: str | _NotSetType = NotSet,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        base: str | _NotSetType = NotSet,
-        head: str | _NotSetType = NotSet,
+        state: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        base: Opt[str] = NotSet,
+        head: Opt[str] = NotSet,
     ) -> PaginatedList[PullRequest]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
@@ -3117,9 +3117,9 @@ class Repository(CompletableGithubObject):
 
     def get_pulls_comments(
         self,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`_
@@ -3132,9 +3132,9 @@ class Repository(CompletableGithubObject):
 
     def get_pulls_review_comments(
         self,
-        sort: str | _NotSetType = NotSet,
-        direction: str | _NotSetType = NotSet,
-        since: _NotSetType | datetime = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -3160,7 +3160,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_readme(self, ref: str | _NotSetType = NotSet) -> ContentFile:
+    def get_readme(self, ref: Opt[str] = NotSet) -> ContentFile:
         """
         :calls: `GET /repos/{owner}/{repo}/readme <https://docs.github.com/en/rest/reference/repos#contents>`_
         :param ref: string
@@ -3391,10 +3391,10 @@ class Repository(CompletableGithubObject):
         self,
         actor: NamedUser | _NotSetType = NotSet,
         branch: Branch | _NotSetType = NotSet,
-        event: str | _NotSetType = NotSet,
-        status: str | _NotSetType = NotSet,
-        exclude_pull_requests: bool | _NotSetType = NotSet,
-        head_sha: str | _NotSetType = NotSet,
+        event: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
+        exclude_pull_requests: Opt[bool] = NotSet,
+        head_sha: Opt[str] = NotSet,
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3564,7 +3564,7 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/notifications", input=put_parameters)
 
-    def merge(self, base: str, head: str, commit_message: str | _NotSetType = NotSet) -> Commit | None:
+    def merge(self, base: str, head: str, commit_message: Opt[str] = NotSet) -> Commit | None:
         """
         :calls: `POST /repos/{owner}/{repo}/merges <https://docs.github.com/en/rest/reference/repos#merging>`_
         :param base: string
@@ -3704,7 +3704,7 @@ class Repository(CompletableGithubObject):
         )
         return status == 204
 
-    def subscribe_to_hub(self, event: str, callback: str, secret: str | _NotSetType = NotSet) -> None:
+    def subscribe_to_hub(self, event: str, callback: str, secret: Opt[str] = NotSet) -> None:
         """
         :calls: `POST /hub <https://docs.github.com/en/rest/reference/repos#pubsubhubbub>`_
         :param event: string
@@ -3769,7 +3769,7 @@ class Repository(CompletableGithubObject):
         )
         return github.RepositoryPreferences.RepositoryPreferences(self._requester, headers, data, completed=True)
 
-    def _hub(self, mode: str, event: str, callback: str, secret: str | _NotSetType) -> None:
+    def _hub(self, mode: str, event: str, callback: str, secret: Opt[str]) -> None:
         assert isinstance(mode, str), mode
         assert isinstance(event, str), event
         assert isinstance(callback, str), callback
@@ -3801,9 +3801,9 @@ class Repository(CompletableGithubObject):
         details_url: _NotSetType | str = NotSet,
         external_id: _NotSetType | str = NotSet,
         status: _NotSetType | str = NotSet,
-        started_at: _NotSetType | datetime = NotSet,
+        started_at: Opt[datetime] = NotSet,
         conclusion: _NotSetType | str = NotSet,
-        completed_at: _NotSetType | datetime = NotSet,
+        completed_at: Opt[datetime] = NotSet,
         output: (_NotSetType | dict[str, str | list[dict[str, str | int]]]) = NotSet,
         actions: _NotSetType | list[dict[str, str]] = NotSet,
     ) -> CheckRun:
@@ -3867,7 +3867,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/check-runs/{check_run_id}")
         return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
-    def get_artifacts(self, name: str | _NotSetType = NotSet) -> PaginatedList[Artifact]:
+    def get_artifacts(self, name: Opt[str] = NotSet) -> PaginatedList[Artifact]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
         :param name: str
