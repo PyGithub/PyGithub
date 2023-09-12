@@ -183,6 +183,7 @@ import github.RepositoryAdvisoryCredit
 import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Secret
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -1369,10 +1370,10 @@ class Repository(CompletableGithubObject):
         if is_defined(body):
             post_parameters["body"] = body
         if is_defined(assignee):
-            if isinstance(assignee, str):
-                post_parameters["assignee"] = assignee
-            else:
+            if isinstance(assignee, github.NamedUser.NamedUser):
                 post_parameters["assignee"] = assignee._identity
+            else:
+                post_parameters["assignee"] = assignee
         if is_defined(assignees):
             post_parameters["assignees"] = [
                 element._identity if isinstance(element, github.NamedUser.NamedUser) else element
@@ -1510,7 +1511,7 @@ class Repository(CompletableGithubObject):
     ) -> PullRequest:
         ...
 
-    def create_pull(self, *args, **kwds):
+    def create_pull(self, *args: Any, **kwds: Any) -> PullRequest:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
         :param title: string
@@ -1745,11 +1746,9 @@ class Repository(CompletableGithubObject):
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str):
+    def get_secret(self, secret_name: str) -> github.Secret.Secret:
         """
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
-        :param secret_name: string
-        :rtype: github.Secret.Secret
         """
         assert isinstance(secret_name, str), secret_name
         return github.Secret.Secret(
