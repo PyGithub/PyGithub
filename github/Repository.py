@@ -1691,7 +1691,7 @@ class Repository(CompletableGithubObject):
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
 
     def create_repository_dispatch(
-        self, event_type: str, client_payload: dict[str, Any] | _NotSetType = NotSet
+        self, event_type: str, client_payload: Opt[dict[str, Any]] = NotSet
     ) -> bool:
         """
         :calls: POST /repos/{owner}/{repo}/dispatches <https://docs.github.com/en/rest/repos#create-a-repository-dispatch-event>
@@ -2541,8 +2541,8 @@ class Repository(CompletableGithubObject):
         message: str,
         sha: str,
         branch: Opt[str] = NotSet,
-        committer: InputGitAuthor | _NotSetType = NotSet,
-        author: InputGitAuthor | _NotSetType = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, Commit | _NotSetType]:
         """This method deletes a file in a repository
 
