@@ -452,29 +452,6 @@ class Organization(CompletableGithubObject):
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
-        :param name: string
-        :param description: string
-        :param homepage: string
-        :param private: bool
-        :param has_issues: bool
-        :param has_wiki: bool
-        :param has_downloads: bool
-        :param has_projects: bool
-        :param team_id: : int
-        :param auto_init: bool
-        :param license_template: string
-        :param gitignore_template: string
-        :param allow_squash_merge: bool
-        :param allow_merge_commit: bool
-        :param allow_rebase_merge: bool
-        :param delete_branch_on_merge: bool
-        :param allow_update_branch: bool
-        :param use_squash_pr_title_as_default: bool
-        :param squash_merge_commit_title : string
-        :param squash_merge_commit_message : string
-        :param merge_commit_title : string
-        :param merge_commit_message : string
-        :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
         assert is_optional(description, str), description
