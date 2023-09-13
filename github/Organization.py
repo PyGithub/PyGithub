@@ -495,20 +495,10 @@ class Organization(CompletableGithubObject):
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
         assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
-        assert squash_merge_commit_title is github.GithubObject.NotSet or (
-            isinstance(squash_merge_commit_title, str)
-            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
-        ), squash_merge_commit_title
-        assert squash_merge_commit_message is github.GithubObject.NotSet or (
-            isinstance(squash_merge_commit_message, str)
-            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
-        ), squash_merge_commit_message
-        assert merge_commit_title is github.GithubObject.NotSet or (
-            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
-        ), merge_commit_title
-        assert merge_commit_message is github.GithubObject.NotSet or (
-            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
-        ), merge_commit_message
+        assert is_undefined(squash_merge_commit_title) or squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"], squash_merge_commit_title
+        assert is_undefined(squash_merge_commit_message) or squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"], squash_merge_commit_message
+        assert is_undefined(merge_commit_title) or merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"], merge_commit_title
+        assert is_undefined(merge_commit_message) or merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"], merge_commit_message
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
