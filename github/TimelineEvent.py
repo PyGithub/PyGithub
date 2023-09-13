@@ -45,6 +45,8 @@ class TimelineEvent(NonCompletableGithubObject):
         self._commit_url: Attribute[str] = NotSet
         self._source: Attribute[github.TimelineEventSource.TimelineEventSource] = NotSet
         self._url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._submitted_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -97,6 +99,18 @@ class TimelineEvent(NonCompletableGithubObject):
         return None
 
     @property
+    def state(self) -> str | None:
+        if self.event == "review_requested" and self._submitted_at is not NotSet:
+            return self._state.value
+        return None
+
+    @property
+    def submitted_at(self) -> datetime | None:
+        if self.event == "review_requested" and self._submitted_at is not NotSet:
+            return self._submitted_at.value
+        return None
+
+    @property
     def url(self) -> str:
         return self._url.value
 
@@ -123,5 +137,12 @@ class TimelineEvent(NonCompletableGithubObject):
             self._body = self._makeStringAttribute(attributes["body"])
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeStringAttribute(attributes["author_association"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "submitted_at" in attributes:  # pragma no branch
+            assert attributes["submitted_at"] is None or isinstance(attributes["submitted_at"], str), attributes[
+                "submitted_at"
+            ]
+            self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
