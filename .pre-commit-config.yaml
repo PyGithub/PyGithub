@@ -13,13 +13,13 @@ repos:
         args: [ "--fix=lf" ]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.1.0
+    rev: v3.10.1
     hooks:
       - id: pyupgrade
         args: [ "--py37-plus" ]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.284
+    rev: v0.0.289
     hooks:
       - id: ruff
         args:
@@ -37,6 +37,6 @@ repos:
           - "--quiet-level=2"
 
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.9.1
     hooks:
       - id: black
