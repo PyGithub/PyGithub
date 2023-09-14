@@ -25,8 +25,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class NamedEnterpriseUser(CompletableGithubObject):
-    """
-    This class represents NamedEnterpriseUsers. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+    """This class represents NamedEnterpriseUsers.
+
+    The reference can be found here
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+
     """
 
     def _initAttributes(self) -> None:

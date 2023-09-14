@@ -33,9 +33,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Permissions(NonCompletableGithubObject):
-    """
-    This class represents Permissions
-    """
+    """This class represents Permissions."""
 
     def _initAttributes(self) -> None:
         self._admin: Attribute[bool] = NotSet

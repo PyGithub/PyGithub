@@ -29,8 +29,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Variable(CompletableGithubObject):
-    """
-    This class represents a GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
+    """This class represents a GitHub variable.
+
+    The reference can be found here https://docs.github.com/en/rest/actions/variables
+
     """
 
     def _initAttributes(self) -> None:

@@ -35,9 +35,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class HookDescription(NonCompletableGithubObject):
-    """
-    This class represents HookDescriptions
-    """
+    """This class represents HookDescriptions."""
 
     def _initAttributes(self) -> None:
         self._events: Attribute[list[str]] = NotSet

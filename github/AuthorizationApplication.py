@@ -34,9 +34,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class AuthorizationApplication(CompletableGithubObject):
-    """
-    This class represents AuthorizationApplications
-    """
+    """This class represents AuthorizationApplications."""
 
     def _initAttributes(self) -> None:
         self._name: Attribute[str] = NotSet

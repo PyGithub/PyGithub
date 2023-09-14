@@ -33,8 +33,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class GitignoreTemplate(NonCompletableGithubObject):
-    """
-    This class represents GitignoreTemplates. The reference can be found here https://docs.github.com/en/rest/reference/gitignore
+    """This class represents GitignoreTemplates.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/gitignore
+
     """
 
     def _initAttributes(self) -> None:

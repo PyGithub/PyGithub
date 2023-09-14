@@ -31,14 +31,15 @@ import github.NamedUser
 
 
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
-    """
-    This class represents StatsContributors. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
+    """This class represents StatsContributors.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
+
     """
 
     class Week(github.GithubObject.NonCompletableGithubObject):
-        """
-        This class represents weekly statistics of a contributor.
-        """
+        """This class represents weekly statistics of a contributor."""
 
         @property
         def w(self):

@@ -34,8 +34,10 @@ if TYPE_CHECKING:
 
 
 class Environment(CompletableGithubObject):
-    """
-    This class represents Environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    """This class represents Environment.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:

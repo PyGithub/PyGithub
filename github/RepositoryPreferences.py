@@ -32,9 +32,11 @@ if TYPE_CHECKING:
 
 
 class RepositoryPreferences(NonCompletableGithubObject):
-    """
-    This class represents repository preferences.
-    The reference can be found here https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
+    """This class represents repository preferences.
+
+    The reference can be found here
+    https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
+
     """
 
     def _initAttributes(self) -> None:

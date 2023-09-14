@@ -30,8 +30,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class DeploymentStatus(CompletableGithubObject):
-    """
-    This class represents Deployment Statuses. The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
+    """This class represents Deployment Statuses.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/repos#deployments
+
     """
 
     def _initAttributes(self) -> None:

@@ -33,8 +33,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Rate(NonCompletableGithubObject):
-    """
-    This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
+    """This class represents Rates.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
+
     """
 
     def _initAttributes(self) -> None:

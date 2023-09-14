@@ -37,9 +37,11 @@ if TYPE_CHECKING:
 
 
 class ApplicationOAuth(NonCompletableGithubObject):
-    """
-    This class is used for identifying and authorizing users for Github Apps.
-    The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
+    """This class is used for identifying and authorizing users for Github Apps.
+
+    The reference can be found at
+    https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
+
     """
 
     def _initAttributes(self) -> None:

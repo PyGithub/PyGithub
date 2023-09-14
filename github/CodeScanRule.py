@@ -27,9 +27,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class CodeScanRule(NonCompletableGithubObject):
-    """
-    This class represents Alerts from code scanning.
+    """This class represents Alerts from code scanning.
+
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:

@@ -36,9 +36,7 @@ from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitAuthor:
-    """
-    This class represents InputGitAuthors
-    """
+    """This class represents InputGitAuthors."""
 
     def __init__(self, name: str, email: str, date: Opt[str] = NotSet):
         assert isinstance(name, str), name

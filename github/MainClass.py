@@ -103,8 +103,10 @@ TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
 
 class Github:
-    """
-    This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
+    """This is the main class you instantiate to access the Github API v3.
+
+    Optional parameters allow different authentication methods.
+
     """
 
     __requester: Requester
@@ -208,13 +210,13 @@ class Github:
         )
 
     def close(self) -> None:
-        """
-        Close connections to the server. Alternatively, use the Github object as a context manager:
+        """Close connections to the server. Alternatively, use the Github object as a context manager:
 
         .. code-block:: python
 
           with github.Github(...) as gh:
             # do something
+
         """
         self.__requester.close()
 
@@ -246,9 +248,7 @@ class Github:
     # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self) -> tuple[int, int]:
-        """
-        First value is requests remaining, second value is request limit.
-        """
+        """First value is requests remaining, second value is request limit."""
         remaining, limit = self.__requester.rate_limiting
         if limit < 0:
             self.get_rate_limit()
@@ -256,18 +256,16 @@ class Github:
 
     @property
     def rate_limiting_resettime(self) -> int:
-        """
-        Unix timestamp indicating when rate limiting will reset.
-        """
+        """Unix timestamp indicating when rate limiting will reset."""
         if self.__requester.rate_limiting_resettime == 0:
             self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
 
     def get_rate_limit(self) -> RateLimit:
-        """
-        Rate limit status for different resources (core/search/graphql).
+        """Rate limit status for different resources (core/search/graphql).
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
         return RateLimit(self.__requester, headers, data["resources"], True)
@@ -757,14 +755,14 @@ class Github:
     def create_from_raw_data(
         self, klass: type[TGithubObject], raw_data: dict[str, Any], headers: dict[str, str | int] | None = None
     ) -> TGithubObject:
-        """
-        Creates an object from raw_data previously obtained by :attr:`GithubObject.raw_data`,
-        and optionally headers previously obtained by :attr:`GithubObject.raw_headers`.
+        """Creates an object from raw_data previously obtained by :attr:`GithubObject.raw_data`, and optionally headers
+        previously obtained by :attr:`GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
         :param headers: dict
         :rtype: instance of class ``klass``
+
         """
         if headers is None:
             headers = {}
@@ -772,23 +770,44 @@ class Github:
         return klass(self.__requester, headers, raw_data, completed=True)
 
     def dump(self, obj: GithubObject, file: BinaryIO, protocol: int = 0) -> None:
-        """
-        Dumps (pickles) a PyGithub object to a file-like object.
-        Some effort is made to not pickle sensitive information like the Github credentials used in the :class:`Github` instance.
-        But NO EFFORT is made to remove sensitive information from the object's attributes.
+        """Dumps (pickles) a PyGithub object to a file-like object. Some effort is made to not pickle sensitive
+        information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
+        sensitive information from the object's attributes.
 
+        :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
+         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+             stream-format>`_ :param obj: the object to pickle :param file: the file-like object to pickle to :param
+        protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+
         """
         pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
 
     def load(self, f: BinaryIO) -> Any:
-        """
-        Loads (unpickles) a PyGithub object from a file-like object.
+        """Loads (unpickles) a PyGithub object from a file-like object.
 
         :param f: the file-like object to unpickle from
         :return: the unpickled object
+
         """
         return self.create_from_raw_data(*pickle.load(f))
 

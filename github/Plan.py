@@ -33,9 +33,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Plan(NonCompletableGithubObject):
-    """
-    This class represents Plans
-    """
+    """This class represents Plans."""
 
     def _initAttributes(self) -> None:
         self._collaborators: Attribute[int] = NotSet

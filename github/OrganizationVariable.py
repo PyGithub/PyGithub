@@ -30,8 +30,10 @@ from github.Variable import Variable
 
 
 class OrganizationVariable(Variable):
-    """
-    This class represents a org level GitHub variable. The reference can be found here https://docs.github.com/en/rest/actions/variables
+    """This class represents a org level GitHub variable.
+
+    The reference can be found here https://docs.github.com/en/rest/actions/variables
+
     """
 
     def _initAttributes(self) -> None:

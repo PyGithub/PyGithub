@@ -32,8 +32,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class GitReleaseAsset(CompletableGithubObject):
-    """
-    This class represents GitReleaseAssets. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
+    """This class represents GitReleaseAssets.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
+
     """
 
     def _initAttributes(self) -> None:
@@ -114,16 +116,12 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._uploader.value
 
     def delete_asset(self) -> bool:
-        """
-        Delete asset from the release.
-        """
+        """Delete asset from the release."""
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
-        """
-        Update asset metadata.
-        """
+        """Update asset metadata."""
         assert isinstance(name, str), name
         assert isinstance(label, str), label
         post_parameters = {"name": name, "label": label}

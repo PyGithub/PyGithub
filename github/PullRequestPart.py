@@ -41,9 +41,7 @@ if TYPE_CHECKING:
 
 
 class PullRequestPart(NonCompletableGithubObject):
-    """
-    This class represents PullRequestParts
-    """
+    """This class represents PullRequestParts."""
 
     def _initAttributes(self) -> None:
         self._label: Attribute[str] = NotSet

@@ -28,9 +28,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class SelfHostedActionsRunner(NonCompletableGithubObject):
-    """
-    This class represents Self-hosted GitHub Actions Runners. The reference can be found at
+    """This class represents Self-hosted GitHub Actions Runners.
+
+    The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
+
     """
 
     def _initAttributes(self) -> None:

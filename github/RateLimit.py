@@ -37,8 +37,10 @@ if TYPE_CHECKING:
 
 
 class RateLimit(NonCompletableGithubObject):
-    """
-    This class represents RateLimits. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
+    """This class represents RateLimits.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
+
     """
 
     def _initAttributes(self) -> None:
@@ -51,29 +53,17 @@ class RateLimit(NonCompletableGithubObject):
 
     @property
     def core(self) -> Rate:
-        """
-        Rate limit for the non-search-related API
-
-        :type: class:`github.Rate.Rate`
-        """
+        """Rate limit for the non-search-related API."""
         return self._core.value
 
     @property
     def search(self) -> Rate:
-        """
-        Rate limit for the Search API.
-
-        :type: class:`github.Rate.Rate`
-        """
+        """Rate limit for the Search API."""
         return self._search.value
 
     @property
     def graphql(self) -> Rate:
-        """
-        (Experimental) Rate limit for GraphQL API, use with caution.
-
-        :type: class:`github.Rate.Rate`
-        """
+        """(Experimental) Rate limit for GraphQL API, use with caution."""
         return self._graphql.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

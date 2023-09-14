@@ -36,9 +36,10 @@ if TYPE_CHECKING:
 
 
 class RepositoryAdvisory(NonCompletableGithubObject):
-    """
-    This class represents a RepositoryAdvisory.
+    """This class represents a RepositoryAdvisory.
+
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
+
     """
 
     def _initAttributes(self) -> None:

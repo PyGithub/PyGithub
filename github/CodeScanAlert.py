@@ -34,9 +34,10 @@ from github.PaginatedList import PaginatedList
 
 
 class CodeScanAlert(NonCompletableGithubObject):
-    """
-    This class represents alerts from code scanning.
+    """This class represents alerts from code scanning.
+
     The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:
@@ -105,8 +106,10 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._state.value
 
     def get_instances(self) -> PaginatedList[github.CodeScanAlertInstance.CodeScanAlertInstance]:
-        """
-        :calls: `GET` on the URL for instances as provided by Github
+        """Get instances.
+
+        :calls: `GET` on the URL for instances as provided by Github.
+
         """
         return PaginatedList(
             github.CodeScanAlertInstance.CodeScanAlertInstance,

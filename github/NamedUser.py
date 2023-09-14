@@ -64,8 +64,10 @@ if TYPE_CHECKING:
 
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
-    """
-    This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
+    """This class represents NamedUsers.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
+
     """
 
     def _initAttributes(self) -> None:

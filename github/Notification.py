@@ -40,8 +40,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Notification(CompletableGithubObject):
-    """
-    This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
+    """This class represents Notifications.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
+
     """
 
     def _initAttributes(self) -> None:

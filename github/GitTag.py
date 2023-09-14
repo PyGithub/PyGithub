@@ -44,8 +44,10 @@ if TYPE_CHECKING:
 
 
 class GitTag(CompletableGithubObject):
-    """
-    This class represents GitTags. The reference can be found here https://docs.github.com/en/rest/reference/git#tags
+    """This class represents GitTags.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/git#tags
+
     """
 
     def _initAttributes(self) -> None:

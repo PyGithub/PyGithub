@@ -39,8 +39,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class RepositoryKey(CompletableGithubObject):
-    """
-    This class represents RepositoryKeys. The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
+    """This class represents RepositoryKeys.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
+
     """
 
     def _initAttributes(self) -> None:

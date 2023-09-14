@@ -40,8 +40,10 @@ if TYPE_CHECKING:
 
 
 class GitTree(CompletableGithubObject):
-    """
-    This class represents GitTrees. The reference can be found here https://docs.github.com/en/rest/reference/git#trees
+    """This class represents GitTrees.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/git#trees
+
     """
 
     def _initAttributes(self) -> None:

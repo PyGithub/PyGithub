@@ -33,9 +33,7 @@ from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitTreeElement:
-    """
-    This class represents InputGitTreeElements
-    """
+    """This class represents InputGitTreeElements."""
 
     def __init__(
         self,

@@ -35,8 +35,10 @@ from github.PaginatedList import PaginatedList
 
 
 class Workflow(CompletableGithubObject):
-    """
-    This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
+    """This class represents Workflows.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
+
     """
 
     def _initAttributes(self) -> None:

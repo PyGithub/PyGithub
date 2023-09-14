@@ -85,8 +85,10 @@ if TYPE_CHECKING:
 
 
 class Organization(CompletableGithubObject):
-    """
-    This class represents Organizations. The reference can be found here https://docs.github.com/en/rest/reference/orgs
+    """This class represents Organizations.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/orgs
+
     """
 
     def _initAttributes(self) -> None:
@@ -542,10 +544,8 @@ class Organization(CompletableGithubObject):
         )
 
     def get_secrets(self) -> PaginatedList[OrganizationSecret]:
-        """
-        Gets all organization secrets
-        :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
-        """
+        """Gets all organization secrets :rtype: :class:`PaginatedList` of
+        :class:`github.OrganizationSecret.OrganizationSecret`"""
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
@@ -647,10 +647,8 @@ class Organization(CompletableGithubObject):
         )
 
     def get_variables(self) -> PaginatedList[OrganizationVariable]:
-        """
-        Gets all organization variables
-        :rtype: :class:`PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
-        """
+        """Gets all organization variables :rtype: :class:`PaginatedList` of
+        :class:`github.OrganizationVariable.OrganizationVariable`"""
         return PaginatedList(
             github.OrganizationVariable.OrganizationVariable,
             self._requester,

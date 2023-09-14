@@ -43,8 +43,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Migration(CompletableGithubObject):
-    """
-    This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
+    """This class represents Migrations.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/migrations
+
     """
 
     def _initAttributes(self) -> None:

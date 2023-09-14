@@ -36,9 +36,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Comparison(CompletableGithubObject):
-    """
-    This class represents Comparisons
-    """
+    """This class represents Comparisons."""
 
     def _initAttributes(self) -> None:
         self._ahead_by: Attribute[int] = NotSet

@@ -60,8 +60,10 @@ if TYPE_CHECKING:
 
 
 class Commit(CompletableGithubObject):
-    """
-    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+    """This class represents Commits.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+
     """
 
     def _initAttributes(self) -> None:

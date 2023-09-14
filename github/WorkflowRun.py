@@ -46,8 +46,10 @@ class TimingData(NamedTuple):
 
 
 class WorkflowRun(CompletableGithubObject):
-    """
-    This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
+    """This class represents Workflow Runs.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
+
     """
 
     def _initAttributes(self) -> None:

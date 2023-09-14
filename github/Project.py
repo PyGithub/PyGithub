@@ -33,8 +33,10 @@ from github.PaginatedList import PaginatedList
 
 
 class Project(CompletableGithubObject):
-    """
-    This class represents Projects. The reference can be found here https://docs.github.com/en/rest/reference/projects
+    """This class represents Projects.
+
+    The reference can be found here https://docs.github.com/en/rest/reference/projects
+
     """
 
     def _initAttributes(self) -> None:
