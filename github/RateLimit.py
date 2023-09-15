@@ -61,7 +61,7 @@ class RateLimit(NonCompletableGithubObject):
 
         :type: class:`github.Rate.Rate`
         """
-        return self._actions_runner_registration
+        return self._actions_runner_registration.value
 
     @property
     def code_scanning_upload(self) -> Rate:
@@ -70,7 +70,7 @@ class RateLimit(NonCompletableGithubObject):
 
         :type: class:`github.Rate.Rate`
         """
-        return self._code_scanning_upload
+        return self._code_scanning_upload.value
 
     @property
     def code_search(self) -> Rate:
@@ -99,7 +99,7 @@ class RateLimit(NonCompletableGithubObject):
         :type: class:`github.Rate.Rate`
         """
 
-        return self._dependency_snapshots
+        return self._dependency_snapshots.value
 
     @property
     def integration_manifest(self) -> Rate:
@@ -109,7 +109,7 @@ class RateLimit(NonCompletableGithubObject):
         :type: class:`github.Rate.Rate`
         """
 
-        return self._integration_manifest
+        return self._integration_manifest.value
 
     @property
     def search(self) -> Rate:
