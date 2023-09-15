@@ -55,7 +55,7 @@ class RateLimit(NonCompletableGithubObject):
         return self.get__repr__({"core": self._core.value})
 
     @property
-    def actions_runner_registration(self):
+    def actions_runner_registration(self) -> Rate:
         """
         Rate limit for registering self-hosted runners in GitHub Actions
 
