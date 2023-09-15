@@ -140,9 +140,6 @@ class TimelineEvent(NonCompletableGithubObject):
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "submitted_at" in attributes:  # pragma no branch
-            assert attributes["submitted_at"] is None or isinstance(attributes["submitted_at"], str), attributes[
-                "submitted_at"
-            ]
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
