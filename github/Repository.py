@@ -1489,10 +1489,9 @@ class Repository(CompletableGithubObject):
 
     def create_pull(
         self,
-        owner: str,
-        repo: str,
         base: str,
         head: str,
+        *,
         title: Opt[str] = NotSet,
         body: Opt[str] = NotSet,
         maintainer_can_modify: Opt[bool] = NotSet,
@@ -1501,17 +1500,7 @@ class Repository(CompletableGithubObject):
     ) -> github.PullRequest.PullRequest:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/free-pro-team@latest/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request>`_
-        :param title: string
-        :param body: string
-        :param issue: :class:`github.Issue.Issue`
-        :param base: string
-        :param head: string
-        :param draft: bool
-        :param maintainer_can_modify: bool
-        :rtype: :class:`github.PullRequest.PullRequest`
         """
-        assert isinstance(owner, str), owner
-        assert isinstance(repo, str), repo
         assert isinstance(base, str), base
         assert isinstance(head, str), head
         assert is_optional(title, str), title
@@ -1522,8 +1511,6 @@ class Repository(CompletableGithubObject):
 
         post_parameters = NotSet.remove_unset_items(
             {
-                "owner": owner,
-                "repo": repo,
                 "base": base,
                 "head": head,
                 "title": title,
