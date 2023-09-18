@@ -1300,6 +1300,7 @@ class Repository(Framework.TestCase):
             body="Body of the pull request",
             base="topic/RewriteWithGeneratedCode",
             head="BeaverSoftware:master",
+            draft=False,
             maintainer_can_modify=True,
         )
         self.assertEqual(pull.id, 1436215)
