@@ -131,7 +131,7 @@ import collections
 import urllib.parse
 from base64 import b64encode
 from datetime import date, datetime, timezone
-from typing import TYPE_CHECKING, Any, Iterable, overload
+from typing import TYPE_CHECKING, Any, Iterable
 
 from deprecated import deprecated
 
@@ -1383,7 +1383,8 @@ class Repository(CompletableGithubObject):
             post_parameters["milestone"] = milestone._identity
         if is_defined(labels):
             post_parameters["labels"] = [
-                element.name if isinstance(element, github.Label.Label) else element for element in labels  # type: ignore
+                element.name if isinstance(element, github.Label.Label) else element
+                for element in labels  # type: ignore
             ]
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/issues", input=post_parameters)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
@@ -1486,34 +1487,20 @@ class Repository(CompletableGithubObject):
         )
         return github.Project.Project(self._requester, headers, data, completed=True)
 
-    @overload
     def create_pull(
         self,
-        title: str,
-        body: str,
+        owner: str,
+        repo: str,
         base: str,
         head: str,
-        maintainer_can_modify: Opt[bool] = ...,
-        draft: bool = False,
-        issue: Opt[Issue] = ...,
-    ) -> PullRequest:
-        ...
-
-    @overload
-    def create_pull(
-        self,
-        base: str,
-        head: str,
-        maintainer_can_modify: Opt[bool],
-        issue: Issue,
-        title: Opt[str] = ...,
-        body: Opt[str] = ...,
-    ) -> PullRequest:
-        ...
-
-    def create_pull(self, *args: Any, **kwds: Any) -> PullRequest:
+        title: Opt[str] = NotSet,
+        body: Opt[str] = NotSet,
+        maintainer_can_modify: Opt[bool] = NotSet,
+        draft: Opt[bool] = NotSet,
+        issue: Opt[github.Issue.Issue] = NotSet,
+    ) -> github.PullRequest.PullRequest:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/free-pro-team@latest/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request>`_
         :param title: string
         :param body: string
         :param issue: :class:`github.Issue.Issue`
@@ -1523,46 +1510,31 @@ class Repository(CompletableGithubObject):
         :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
-        if len(args) + len(kwds) >= 4:
-            return self.__create_pull_1(*args, **kwds)
-        else:
-            return self.__create_pull_2(*args, **kwds)
-
-    def __create_pull_1(
-        self,
-        title: str,
-        body: str,
-        base: str,
-        head: str,
-        maintainer_can_modify: Opt[bool] = NotSet,
-        draft: bool = False,
-    ) -> github.PullRequest.PullRequest:
-        assert isinstance(title, str), title
-        assert isinstance(body, str), body
+        assert isinstance(owner, str), owner
+        assert isinstance(repo, str), repo
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        assert is_undefined(maintainer_can_modify) or isinstance(maintainer_can_modify, bool), maintainer_can_modify
-        assert isinstance(draft, bool), draft
-        if is_defined(maintainer_can_modify):
-            return self.__create_pull(
-                title=title,
-                body=body,
-                base=base,
-                head=head,
-                maintainer_can_modify=maintainer_can_modify,
-                draft=draft,
-            )
-        else:
-            return self.__create_pull(title=title, body=body, base=base, head=head, draft=draft)
+        assert is_optional(title, str), title
+        assert is_optional(body, str), body
+        assert is_optional(maintainer_can_modify, bool), maintainer_can_modify
+        assert is_optional(draft, bool), draft
+        assert is_optional(issue, github.Issue.Issue), issue
 
-    def __create_pull_2(self, issue: github.Issue.Issue, base: str, head: str) -> github.PullRequest.PullRequest:
-        assert isinstance(issue, github.Issue.Issue), issue
-        assert isinstance(base, str), base
-        assert isinstance(head, str), head
-        return self.__create_pull(issue=issue._identity, base=base, head=head)
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "owner": owner,
+                "repo": repo,
+                "base": base,
+                "head": head,
+                "title": title,
+                "body": body,
+                "maintainer_can_modify": maintainer_can_modify,
+                "draft": draft,
+            }
+        )
 
-    def __create_pull(self, **kwds: Any) -> github.PullRequest.PullRequest:
-        post_parameters = kwds
+        if is_defined(issue):
+            post_parameters["issue"] = issue._identity
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pulls", input=post_parameters)
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
