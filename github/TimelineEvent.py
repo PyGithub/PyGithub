@@ -27,7 +27,7 @@ from typing import Any
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined
 
 
 class TimelineEvent(NonCompletableGithubObject):
@@ -88,25 +88,25 @@ class TimelineEvent(NonCompletableGithubObject):
 
     @property
     def body(self) -> str | None:
-        if self.event == "commented" and self._body is not NotSet:
+        if is_defined(self._body):
             return self._body.value
         return None
 
     @property
     def author_association(self) -> str | None:
-        if self.event == "commented" and self._author_association is not NotSet:
+        if is_defined(self._author_association):
             return self._author_association.value
         return None
 
     @property
     def state(self) -> str | None:
-        if self.event == "review_requested" and self._submitted_at is not NotSet:
+        if is_defined(self._state):
             return self._state.value
         return None
 
     @property
     def submitted_at(self) -> datetime | None:
-        if self.event == "review_requested" and self._submitted_at is not NotSet:
+        if is_defined(self._submitted_at):
             return self._submitted_at.value
         return None
 
