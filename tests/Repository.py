@@ -1296,11 +1296,12 @@ class Repository(Framework.TestCase):
 
     def testCreatePull(self):
         pull = self.repo.create_pull(
-            "Pull request created by PyGithub",
-            "Body of the pull request",
-            "topic/RewriteWithGeneratedCode",
-            "BeaverSoftware:master",
-            True,
+            title="Pull request created by PyGithub",
+            body="Body of the pull request",
+            base="topic/RewriteWithGeneratedCode",
+            head="BeaverSoftware:master",
+            draft=False,
+            maintainer_can_modify=True,
         )
         self.assertEqual(pull.id, 1436215)
 
@@ -1310,7 +1311,7 @@ class Repository(Framework.TestCase):
 
     def testCreatePullFromIssue(self):
         issue = self.repo.get_issue(32)
-        pull = self.repo.create_pull(issue, "topic/RewriteWithGeneratedCode", "BeaverSoftware:master")
+        pull = self.repo.create_pull("topic/RewriteWithGeneratedCode", "BeaverSoftware:master", issue=issue)
         self.assertEqual(pull.id, 1436310)
 
     def testGetPulls(self):
