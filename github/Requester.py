@@ -75,6 +75,7 @@ from typing import (
     ItemsView,
     List,
     Optional,
+    Set,
     Tuple,
     Type,
     TypeVar,
@@ -613,6 +614,22 @@ class Requester:
                 if data.startswith("{") or data.startswith("["):
                     raise
                 return {"data": data}
+
+    def requestJsonAndValidateStatus(
+        self,
+        verb: str,
+        url: str,
+        parameters: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, Any]] = None,
+        input: Optional[Any] = None,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+        valid_codes: Optional[Set[int]] = None,
+    ) -> Tuple[int, Dict[str, Any], str]:
+        status, responseHeaders, output = self.requestJson(verb, url, parameters, headers, input, cnx=cnx)
+        if valid_codes and status not in valid_codes:
+            data = self.__structuredFromJson(output)
+            raise self.createException(status, responseHeaders, data)
+        return status, responseHeaders, output
 
     def requestJson(
         self,

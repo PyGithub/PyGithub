@@ -724,7 +724,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
+        status, _, _ = self._requester.requestJsonAndValidateStatus("GET", f"{self.url}/merge", valid_codes={204, 404})
         return status == 204
 
     def merge(
