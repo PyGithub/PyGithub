@@ -619,14 +619,14 @@ class Requester:
         self,
         verb: str,
         url: str,
+        valid_codes: Set[int],
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-        valid_codes: Optional[Set[int]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
-        status, responseHeaders, output = self.requestJson(verb, url, parameters, headers, input, cnx=cnx)
-        if valid_codes and status not in valid_codes:
+        status, responseHeaders, output = self.requestJson(verb, url, parameters, headers, input, cnx)
+        if status not in valid_codes:
             data = self.__structuredFromJson(output)
             raise self.createException(status, responseHeaders, data)
         return status, responseHeaders, output
