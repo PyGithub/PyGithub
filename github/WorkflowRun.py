@@ -35,6 +35,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.Artifact import Artifact
     from github.GitCommit import GitCommit
+    from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
     from github.Repository import Repository
     from github.WorkflowJob import WorkflowJob
@@ -61,6 +62,7 @@ class WorkflowRun(CompletableGithubObject):
         self._run_number: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._actor: Attribute[NamedUser] = NotSet
         self._pull_requests: Attribute[list[PullRequest]] = NotSet
         self._status: Attribute[str] = NotSet
         self._conclusion: Attribute[str] = NotSet
@@ -171,6 +173,11 @@ class WorkflowRun(CompletableGithubObject):
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    @property
+    def actor(self) -> NamedUser:
+        self._completeIfNotSet(self._actor)
+        return self._actor.value
 
     @property
     def jobs_url(self) -> str:
@@ -318,6 +325,8 @@ class WorkflowRun(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "actor" in attributes:  # pragma no branch
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "jobs_url" in attributes:  # pragma no branch
             self._jobs_url = self._makeStringAttribute(attributes["jobs_url"])
         if "logs_url" in attributes:  # pragma no branch
