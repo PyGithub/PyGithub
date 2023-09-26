@@ -29,14 +29,14 @@ repos:
           - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
           - --quiet-level=2
 
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-
   - repo: https://github.com/PyCQA/docformatter
     rev: v1.7.5
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
         args: ["--in-place"]
+
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
