@@ -27,6 +27,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, NamedTuple
 
 import github.GitCommit
+import github.NamedUser
 import github.PullRequest
 import github.WorkflowJob
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
