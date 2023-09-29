@@ -4,6 +4,19 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.1.1 (September 29, 2023)
+-----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+* Require urllib 1.26.0 or greater (#2774) (001c0852)
+
+Maintenance
+^^^^^^^^^^^
+
+* Fix pypi-release workflow, allow for manual run (#2771) (035c88f1)
+
 Version 2.1.0 (September 29, 2023)
 -----------------------------------
 
