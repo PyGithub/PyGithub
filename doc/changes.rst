@@ -4,24 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 2.0.2
------------------------------------
-
-Breaking Changes
-^^^^^^^^^^^^^^^^
-
-A Netrc file (e.g. ``~/.netrc``) does not override PyGithub authentication, any more.
-If you require authentication through Netrc, then this is a breaking change.
-Use a ``github.Auth.Netrc`` instance to use Netrc credentials:
-
-.. code-block:: python
-
-    >>> auth = Auth.Netrc()
-    >>> g = Github(auth=auth)
-    >>> g.get_user().login
-    'login'
-
-Version 2.0.0 (July 04, 2023)
+Version 2.1.0 (September 29, 2023)
 -----------------------------------
 
 Important
@@ -57,6 +40,8 @@ Set this parameter to ``None`` to disable retry mechanism and restore earlier be
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 
+**Timestamps**
+
 Any timestamps returned by this library are ``datetime`` with timezone information, usually UTC.
 Before this release, timestamps used to be naive ``datetime`` instances without timezone.
 Comparing (other than ``==``) these timestamps with naive ``datetime`` instances used to work but will now break.
@@ -67,28 +52,112 @@ Add a timezone information to your ``datetime`` instances before comparison:
     if g.get_repo("PyGithub/PyGithub").created_at < datetime(2012, 2, 26, tzinfo=timezone.utc):
         ...
 
+**Netrc authentication**
+
+A Netrc file (e.g. ``~/.netrc``) does not override PyGithub authentication, anymore.
+If you require authentication through Netrc, then this is a breaking change.
+Use a ``github.Auth.Netrc`` instance to use Netrc credentials:
+
+.. code-block:: python
+
+    >>> auth = Auth.Netrc()
+    >>> g = Github(auth=auth)
+    >>> g.get_user().login
+    'login'
+
+**Repository.create_pull**
+
+Merged overloaded `create_pull` methods
+
+.. code-block:: python
+
+    def create_pull(self, issue, base, head)
+    def create_pull(self, title, body, base, head, maintainer_can_modify=NotSet, draft=False)
+
+into
+
+.. code-block:: python
+
+    def create_pull(self, base, head, *, title=NotSet, body=NotSet, maintainer_can_modify=NotSet, draft=NotSet, issue=NotSet)
+
+Please update your usage of `Repository.create_pull` accordingly.
+
 New features
 ^^^^^^^^^^^^
 
 * Throttle requests to mitigate RateLimitExceededExceptions (#2145) (99155806)
 * Retry retryable 403 (rate limit) (#2387) (0bb72ca0)
+* Close connections after use (#2724) (73236e23)
 
 Improvements
 ^^^^^^^^^^^^
 
 * Make datetime objects timezone-aware (#2565) (0177f7c5)
+* Make `Branch.edit_*` functions return objects (#2748) (8dee53a8)
+* Add `license` attribute to `Repository` (#2721) (26d353e7)
+* Add missing attributes to `Repository`  (#2742) (65cfeb1b)
+* Add `is_alphanumeric` attribute to `Autolink` and `Repository.create_autolink` (#2630) (b6a28a26)
+* Suppress `requests` fallback to netrc, provide `github.Auth.Netrc` (#2739) (ac36f6a9)
+* Pass Requester arguments to `AppInstallationAuth.__integration` (#2695) (8bf542ae)
+* Adding feature for enterprise consumed license (#2626) (a7bfdf2d)
+* Search Workflows by Name (#2711) (eadc241e)
+* Add `Secret` and `Variable` classes (#2623) (bcca758d)
+* Add Autolink API link (#2632) (aedfa0b9)
+* Add `required_linear_history` attribute to `BranchProtection` (#2643) (7a80fad9)
+* Add retry issue to `GithubException`, don't log it (#2611) (de80ff4b)
+* Add `message` property to `GithubException` (#2591) (f087cad3)
+* Add support for repo and org level actions variables (#2580) (91b3f40f)
+* Add missing arguments to `Workflow.get_runs()` (#2346) (766df993)
+* Add `github.Rate.used` field (#2531) (c4c2e527)
 
 Bug Fixes
 ^^^^^^^^^
 
 * Fix `Branch.bypass_pull_request_allowances` failing with "nil is not an object" (#2535) (c5542a6a)
+* Fix `required_conversation_resolution` assertion (#2715) (54f22267)
+* Fix assertion creating pull request review comment (#2641) (2fa568b6)
+* Safely coerce `responseHeaders` to `int` (#2697) (adbfce92)
+* Fix assertion for `subject_type` in creating pull request review comment (#2642) (4933459e)
+* Use timezone-aware reset datetime in `GithubRetry.py` (#2610) (950a6949)
+* Fix `Branch.bypass_pull_request_allowances` failing with "nil is not an object" (#2535) (c5542a6a)
 
 Maintenance
 ^^^^^^^^^^^
 
+* Epic mass-merge `.pyi` type stubs back to `.py` sources (#2636)
 * Move to main default branch (#2566) (e66c163a)
 * Force Unix EOL (#2573) (094538e1)
-* Merge `Artifact` type stub back to source (#2553)
+* Close replay test data file silently when test is failing already (#2747) (6d871d56)
+* CI: Make CI support merge queue (#2644) (a91debf1)
+* CI: Run CI on release branches (#2708) (9a88b6b1)
+* CI: remove conflict label workflow (#2669) (95d8b83c)
+* Fix pip install command in README.md (#2731) (2cc1ba2c)
+* Update `add_attribute.py` to latest conding style (#2631) (e735972e)
+* CI: Improve ruff DX (#2667) (48d2009c)
+* CI: Increase wait and retries of labels action (#2670) (ff0f31c2)
+* Replace `flake8` with `ruff` (#2617) (42c3b47c)
+* CI: update labels action name and version (#2654) (c5c83eb5)
+* CI: label PRs that have conflicts (#2622) (1d637e4b)
+* Unify requirements files location & source in setup.py (#2598) (2edc0f8f)
+* Enable mypy `disallow_untyped_defs` (#2609) (294c0cc9)
+* Enable mypy `check_untyped_defs` (#2607) (8816889a)
+* Set line length to 120 characters (#2599) (13e178a3)
+* CI: Build and check package before release (#2593) (3c880e76)
+* Use `typing_extensions` for `TypedDict` (#2592) (5fcb0c7d)
+* CI: Update action actions/setup-python (#2382) (2e5cd31e)
+* Add more methods and attributes to Repository.pyi (#2581) (72840de4)
+* CI: Make pytest color logs (#2597) (73241102)
+* precommit: move `flake8` as last (#2595) (11bb6bd7)
+* Test on Windows and macOS, don't fail fast (#2590) (5c600894)
+* Remove symlinks from test data (#2588) (8d3b9057)
+
+Version 1.59.1 (July 03, 2023)
+-----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+* Safely coerce responseHeaders to int (#2697) (adbfce92)
 
 Version 1.59.0 (June 22, 2023)
 -----------------------------------
