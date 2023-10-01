@@ -97,6 +97,10 @@ if __name__ == "__main__":
                     # to see all the available attributes and methods
                     print(dir(repo))
 
+            To close connections after use::
+
+                g.close()
+
             Reference documentation
             =======================
 
