@@ -459,3 +459,12 @@ class Organization(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testGranularOrganizationContentCreationAttributes(self):
+        self.org = self.g.get_organization("sample-test-organisation")
+        self.assertTrue(self.org.members_can_create_public_repositories)
+        self.assertTrue(self.org.members_can_create_private_repositories)
+        self.assertIs(self.org.members_can_create_internal_repositories, False)
+        self.assertTrue(self.org.members_can_create_public_pages)
+        self.assertTrue(self.org.members_can_create_private_pages)
+        self.assertEqual(self.org.members_allowed_repository_creation_type, "all")
