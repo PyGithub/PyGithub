@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -40,9 +39,20 @@
 #                                                                              #
 ################################################################################
 
+import os
 import textwrap
 
 import setuptools
+
+_PATH_ROOT = os.path.dirname(__file__)
+_PATH_REQUIRES = os.path.join(_PATH_ROOT, "requirements")
+
+
+def _load_requirements(path_dir: str = _PATH_ROOT, file_name: str = "requirements.txt") -> "list[str]":
+    with open(os.path.join(path_dir, file_name)) as fp:
+        reqs = [ln.strip() for ln in fp.readlines()]
+    return [r for r in reqs if r and not r.startswith("#")]
+
 
 if __name__ == "__main__":
     setuptools.setup(
@@ -54,7 +64,7 @@ if __name__ == "__main__":
         author_email="vincent@vincent-jacques.net",
         url="https://github.com/pygithub/pygithub",
         project_urls={
-            "Documentation": "http://pygithub.readthedocs.io/en/latest/",
+            "Documentation": "http://pygithub.readthedocs.io/en/stable/",
             "Source": "https://github.com/pygithub/pygithub",
             "Tracker": "https://github.com/pygithub/pygithub/issues",
         },
@@ -67,22 +77,34 @@ if __name__ == "__main__":
 
                 from github import Github
 
-                # using username and password
-                g = Github("user", "password")
+                # Authentication is defined via github.Auth
+                from github import Auth
 
-                # or using an access token
-                g = Github("access_token")
+                # using an access token
+                auth = Auth.Token("access_token")
+
+                # Public Web Github
+                g = Github(auth=auth)
+
+                # Github Enterprise with custom hostname
+                g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
             Then play with your Github objects::
 
                 for repo in g.get_user().get_repos():
                     print(repo.name)
                     repo.edit(has_wiki=False)
+                    # to see all the available attributes and methods
+                    print(dir(repo))
+
+            To close connections after use::
+
+                g.close()
 
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""
+            See http://pygithub.readthedocs.io/en/stable/"""
         ),
         packages=["github"],
         package_data={"github": ["py.typed", "*.pyi"]},
@@ -102,13 +124,8 @@ if __name__ == "__main__":
             "Topic :: Software Development",
         ],
         python_requires=">=3.7",
-        install_requires=[
-            "deprecated",
-            "pyjwt[crypto]>=2.4.0",
-            "pynacl>=1.4.0",
-            "requests>=2.14.0",
-        ],
+        install_requires=_load_requirements(path_dir=_PATH_ROOT, file_name="requirements.txt"),
         # can be removed, still here to avoid breaking user code
         extras_require={"integrations": []},
-        tests_require=["httpretty>=1.0.3"],
+        tests_require=_load_requirements(path_dir=_PATH_REQUIRES, file_name="test.txt"),
     )

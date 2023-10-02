@@ -28,7 +28,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -36,27 +36,23 @@ from . import Framework
 class PullRequestComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = (
-            self.g.get_user().get_repo("PyGithub").get_pull(31).get_comment(886298)
-        )
+        self.comment = self.g.get_user().get_repo("PyGithub").get_pull(31).get_comment(886298)
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
+        self.assertEqual(self.comment.commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
         self.assertEqual(
-            self.comment.commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206"
-        )
-        self.assertEqual(
-            self.comment.created_at, datetime.datetime(2012, 5, 27, 9, 40, 12)
+            self.comment.created_at,
+            datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 886298)
-        self.assertEqual(
-            self.comment.original_commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206"
-        )
+        self.assertEqual(self.comment.original_commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
         self.assertEqual(self.comment.original_position, 5)
         self.assertEqual(self.comment.path, "src/github/Issue.py")
         self.assertEqual(self.comment.position, 5)
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 27, 9, 40, 12)
+            self.comment.updated_at,
+            datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.url,

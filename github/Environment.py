@@ -19,25 +19,41 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import datetime
-from typing import List
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicy
+    from github.EnvironmentProtectionRule import EnvironmentProtectionRule
 
 
-class Environment(github.GithubObject.CompletableGithubObject):
+class Environment(CompletableGithubObject):
     """
     This class represents Environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def created_at(self) -> datetime.datetime:
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
@@ -64,12 +80,12 @@ class Environment(github.GithubObject.CompletableGithubObject):
     @property
     def protection_rules(
         self,
-    ) -> List[github.EnvironmentProtectionRule.EnvironmentProtectionRule]:
+    ) -> list[EnvironmentProtectionRule]:
         self._completeIfNotSet(self._protection_rules)
         return self._protection_rules.value
 
     @property
-    def updated_at(self) -> datetime.datetime:
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
@@ -81,22 +97,11 @@ class Environment(github.GithubObject.CompletableGithubObject):
     @property
     def deployment_branch_policy(
         self,
-    ) -> github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy:
+    ) -> EnvironmentDeploymentBranchPolicy:
         self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
 
-    def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._protection_rules = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._deployment_branch_policy = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "html_url" in attributes:  # pragma no branch

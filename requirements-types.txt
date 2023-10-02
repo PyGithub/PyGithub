@@ -1,4 +1,0 @@
-mypy
-types-deprecated
-types-jwt
-types-requests

@@ -20,8 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from urllib3.exceptions import InsecureRequestWarning
+
 import github
-from github.Auth import AppAuth
+from github import Consts
+from github.Auth import AppAuth, AppInstallationAuth
 
 from . import Framework, GithubIntegration
 
@@ -41,6 +44,41 @@ class Installation(Framework.BasicTestCase):
 
         repos = list(installation.get_repos())
         self.assertEqual(len(repos), 2)
-        self.assertListEqual(
-            [repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"]
-        )
+        self.assertListEqual([repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"])
+
+    def testGetGithubForInstallation(self):
+        # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
+        # we ignore InsecureRequestWarning from urllib3.connectionpool
+        with self.ignoreWarning(category=InsecureRequestWarning, module="urllib3.connectionpool"):
+            kwargs = dict(
+                auth=AppAuth(319953, GithubIntegration.PRIVATE_KEY),
+                # http protocol used to deviate from default base url, recording data might require https
+                base_url="http://api.github.com",
+                timeout=Consts.DEFAULT_TIMEOUT + 10,
+                user_agent="PyGithub/Python-Test",
+                per_page=Consts.DEFAULT_PER_PAGE + 10,
+                verify=False,
+                retry=3,
+                pool_size=10,
+                seconds_between_requests=100,
+                seconds_between_writes=1000,
+            )
+
+            # assert kwargs consists of ALL requester constructor arguments
+            self.assertEqual(kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys())
+
+            self.integration = github.GithubIntegration(**kwargs)
+            installations = list(self.integration.get_installations())
+            installation = installations[0]
+
+            g = installation.get_github_for_installation()
+
+            self.assertIsInstance(g._Github__requester.auth, AppInstallationAuth)
+
+            actual = g._Github__requester.kwargs
+            kwargs.update(auth=str(AppInstallationAuth))
+            actual.update(auth=str(type(actual["auth"])))
+            self.assertDictEqual(kwargs, actual)
+
+            repo = g.get_repo("PyGithub/PyGithub")
+            self.assertEqual(repo.full_name, "PyGithub/PyGithub")

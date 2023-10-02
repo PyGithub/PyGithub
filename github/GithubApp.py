@@ -19,129 +19,98 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class GithubApp(github.GithubObject.CompletableGithubObject):
+class GithubApp(CompletableGithubObject):
     """
     This class represents github apps. The reference can be found here https://docs.github.com/en/rest/reference/apps
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._events: Attribute[list[str]] = NotSet
+        self._external_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._permissions: Attribute[dict[str, str]] = NotSet
+        self._slug: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def events(self):
-        """
-        :type: list of string
-        """
+    def events(self) -> list[str]:
         self._completeIfNotSet(self._events)
         return self._events.value
 
     @property
-    def external_url(self):
-        """
-        :type: string
-        """
+    def external_url(self) -> str:
         self._completeIfNotSet(self._external_url)
         return self._external_url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def owner(self):
-        """
-        :type: :class:`Github.NamedUser.NamedUser`
-        """
+    def owner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
     @property
-    def permissions(self):
-        """
-        :type: dict
-        """
+    def permissions(self) -> dict[str, str]:
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
     @property
-    def slug(self):
-        """
-        :type: string
-        """
+    def slug(self) -> str:
         self._completeIfNotSet(self._slug)
         return self._slug.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._events = github.GithubObject.NotSet
-        self._external_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._slug = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
@@ -157,9 +126,7 @@ class GithubApp(github.GithubObject.CompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "owner" in attributes:  # pragma no branch
-            self._owner = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["owner"]
-            )
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "slug" in attributes:  # pragma no branch

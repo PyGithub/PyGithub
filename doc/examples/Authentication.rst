@@ -34,6 +34,28 @@ Users can authenticate by a token:
     >>> g.get_user().login
     'login'
 
+Netrc authentication
+--------------------
+
+Write your credentials into a ``.netrc`` file:
+
+.. code-block:: netrc
+
+    machine api.github.com
+    login token
+    password <TOKEN>
+
+You might need to create the environment variable ``NETRC`` with the path to this file.
+
+Then, use a ``github.Auth.Netrc`` instance to access these information:
+
+.. code-block:: python
+
+    >>> auth = Auth.Netrc()
+    >>> g = Github(auth=auth)
+    >>> g.get_user().login
+    'login'
+
 App authentication
 ------------------
 
@@ -51,6 +73,15 @@ when authenticated as a Github App:
     ...     installation.id
     '1234567'
 
+Get a ``github.Github`` instance authenticated as an App installation:
+
+.. code-block:: python
+
+    >>> installation = gi.get_installations()[0]
+    >>> g = installation.get_github_for_installation()
+    >>> g.get_repo("user/repo").name
+    'repo'
+
 App installation authentication
 -------------------------------
 
@@ -63,6 +94,16 @@ expiration timeout. The access token is refreshed automatically.
 
     >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
     >>> g = Github(auth=auth)
+    >>> g.get_repo("user/repo").name
+    'repo'
+
+Alternatively, the `github.Github` instance can be retrieved via `github.GithubIntegration`:
+
+.. code-block:: python
+
+    >>> auth = Auth.AppAuth(123456, private_key)
+    >>> gi = GithubIntegration(auth=auth)
+    >>> g = gi.get_github_for_installation(installation_id, token_permissions)
     >>> g.get_repo("user/repo").name
     'repo'
 

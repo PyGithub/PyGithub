@@ -27,45 +27,38 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
+from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitAuthor(github.GithubObject.NonCompletableGithubObject):
+class GitAuthor(NonCompletableGithubObject):
     """
     This class represents GitAuthors
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._email: Attribute[str] = NotSet
+        self._date: Attribute[datetime] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def date(self):
-        """
-        :type: datetime.datetime
-        """
+    def date(self) -> datetime:
         return self._date.value
 
     @property
-    def email(self):
-        """
-        :type: string
-        """
+    def email(self) -> str:
         return self._email.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
-    def _initAttributes(self):
-        self._date = github.GithubObject.NotSet
-        self._email = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "date" in attributes:  # pragma no branch
             self._date = self._makeDatetimeAttribute(attributes["date"])
         if "email" in attributes:  # pragma no branch

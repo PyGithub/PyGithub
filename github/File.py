@@ -29,111 +29,77 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class File(github.GithubObject.NonCompletableGithubObject):
+class File(NonCompletableGithubObject):
     """
     This class represents Files
     """
 
-    def __repr__(self):
-        return self.get__repr__(
-            {"sha": self._sha.value, "filename": self._filename.value}
-        )
+    def _initAttributes(self) -> None:
+        self._additions: Attribute[int] = NotSet
+        self._blob_url: Attribute[str] = NotSet
+        self._changes: Attribute[int] = NotSet
+        self._contents_url: Attribute[str] = NotSet
+        self._deletions: Attribute[int] = NotSet
+        self._filename: Attribute[str] = NotSet
+        self._patch: Attribute[str] = NotSet
+        self._previous_filename: Attribute[str] = NotSet
+        self._raw_url: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"sha": self._sha.value, "filename": self._filename.value})
 
     @property
-    def additions(self):
-        """
-        :type: integer
-        """
+    def additions(self) -> int:
         return self._additions.value
 
     @property
-    def blob_url(self):
-        """
-        :type: string
-        """
+    def blob_url(self) -> str:
         return self._blob_url.value
 
     @property
-    def changes(self):
-        """
-        :type: integer
-        """
+    def changes(self) -> int:
         return self._changes.value
 
     @property
-    def contents_url(self):
-        """
-        :type: string
-        """
+    def contents_url(self) -> str:
         return self._contents_url.value
 
     @property
-    def deletions(self):
-        """
-        :type: integer
-        """
+    def deletions(self) -> int:
         return self._deletions.value
 
     @property
-    def filename(self):
-        """
-        :type: string
-        """
+    def filename(self) -> str:
         return self._filename.value
 
     @property
-    def patch(self):
-        """
-        :type: string
-        """
+    def patch(self) -> str:
         return self._patch.value
 
     @property
-    def previous_filename(self):
-        """
-        :type: string
-        """
+    def previous_filename(self) -> str:
         return self._previous_filename.value
 
     @property
-    def raw_url(self):
-        """
-        :type: string
-        """
+    def raw_url(self) -> str:
         return self._raw_url.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         return self._status.value
 
-    def _initAttributes(self):
-        self._additions = github.GithubObject.NotSet
-        self._blob_url = github.GithubObject.NotSet
-        self._changes = github.GithubObject.NotSet
-        self._contents_url = github.GithubObject.NotSet
-        self._deletions = github.GithubObject.NotSet
-        self._filename = github.GithubObject.NotSet
-        self._patch = github.GithubObject.NotSet
-        self._previous_filename = github.GithubObject.NotSet
-        self._raw_url = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "blob_url" in attributes:  # pragma no branch
@@ -149,9 +115,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
         if "previous_filename" in attributes:  # pragma no branch
-            self._previous_filename = self._makeStringAttribute(
-                attributes["previous_filename"]
-            )
+            self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch

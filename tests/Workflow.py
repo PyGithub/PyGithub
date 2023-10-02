@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -39,7 +39,7 @@ class Workflow(Framework.TestCase):
         self.assertEqual(self.workflow.name, "check")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
-        timestamp = datetime.datetime(2020, 4, 15, 0, 48, 32)
+        timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
         self.assertEqual(self.workflow.created_at, timestamp)
         self.assertEqual(self.workflow.updated_at, timestamp)
         self.assertEqual(
@@ -66,9 +66,7 @@ class Workflow(Framework.TestCase):
         sfdye = self.g.get_user("sfdye")
         master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
         self.assertListKeyEqual(
-            self.workflow.get_runs(
-                actor=sfdye, branch=master, event="push", status="completed"
-            ),
+            self.workflow.get_runs(actor=sfdye, branch=master, event="push", status="completed"),
             lambda r: r.id,
             [100957683, 94845611, 93946842, 92714488],
         )
@@ -80,30 +78,29 @@ class Workflow(Framework.TestCase):
             [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
         )
 
+    def testGetRunsWithHeadSha(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(head_sha="3a6235b56eecc0e193c1e267b064c155c6ebc022"),
+            lambda r: r.id,
+            [3349872717],
+        )
+
     def testCreateDispatchWithBranch(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
-        branch = self.g.get_repo("wrecker/PyGithub").get_branch(
-            "workflow_dispatch_branch"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
+        branch = self.g.get_repo("wrecker/PyGithub").get_branch("workflow_dispatch_branch")
         self.assertTrue(workflow.create_dispatch(branch, dispatch_inputs))
 
     def testCreateDispatchWithTag(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
         tags = self.g.get_repo("wrecker/PyGithub").get_tags()
         tag = [t for t in tags if t.name == "workflow_dispatch_tag"].pop()
         self.assertTrue(workflow.create_dispatch(tag, dispatch_inputs))
 
     def testCreateDispatchWithString(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
         ref_str = "main"
         self.assertTrue(workflow.create_dispatch(ref_str, dispatch_inputs))
 

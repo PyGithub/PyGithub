@@ -29,52 +29,49 @@
 ################################################################################
 
 # https://docs.github.com/en/rest/reference/actions#example-encrypting-a-secret-using-python
+from __future__ import annotations
+
 from base64 import b64encode
+from typing import Any
 
 from nacl import encoding, public
 
-import github.GithubObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 def encrypt(public_key: str, secret_value: str) -> str:
     """Encrypt a Unicode string using the public key."""
-    public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-    sealed_box = public.SealedBox(public_key)
+    pk = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder)
+    sealed_box = public.SealedBox(pk)
     encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
     return b64encode(encrypted).decode("utf-8")
 
 
-class PublicKey(github.GithubObject.CompletableGithubObject):
+class PublicKey(CompletableGithubObject):
     """
     This class represents either an organization public key or a repository public key.
     The reference can be found here https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key
     or here https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._key_id: Attribute[str | int] = NotSet
+        self._key: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
 
     @property
-    def key(self):
-        """
-        :type: string
-        """
+    def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
 
     @property
-    def key_id(self):
-        """
-        :type: string or int
-        """
+    def key_id(self) -> str | int:
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
-    def _initAttributes(self):
-        self._key = github.GithubObject.NotSet
-        self._key_id = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch
@@ -83,5 +80,5 @@ class PublicKey(github.GithubObject.CompletableGithubObject):
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])
 
-    def encrypt(self, unencrypted_value):
+    def encrypt(self, unencrypted_value: str) -> str:
         return encrypt(self._key.value, unencrypted_value)

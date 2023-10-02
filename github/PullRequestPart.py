@@ -27,74 +27,62 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-import github.GithubObject
+from typing import TYPE_CHECKING, Any
+
 import github.NamedUser
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Repository import Repository
 
 
-class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
+class PullRequestPart(NonCompletableGithubObject):
     """
     This class represents PullRequestParts
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._label: Attribute[str] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._repo: Attribute[Repository] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def label(self):
-        """
-        :type: string
-        """
+    def label(self) -> str:
         return self._label.value
 
     @property
-    def ref(self):
-        """
-        :type: string
-        """
+    def ref(self) -> str:
         return self._ref.value
 
     @property
-    def repo(self):
-        """
-        :type: :class:`github.Repository.Repository`
-        """
+    def repo(self) -> Repository:
         return self._repo.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> NamedUser:
         return self._user.value
 
-    def _initAttributes(self):
-        self._label = github.GithubObject.NotSet
-        self._ref = github.GithubObject.NotSet
-        self._repo = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "repo" in attributes:  # pragma no branch
-            self._repo = self._makeClassAttribute(
-                github.Repository.Repository, attributes["repo"]
-            )
+            self._repo = self._makeClassAttribute(github.Repository.Repository, attributes["repo"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

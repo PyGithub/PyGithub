@@ -20,97 +20,70 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CheckRunAnnotation(github.GithubObject.NonCompletableGithubObject):
+class CheckRunAnnotation(NonCompletableGithubObject):
     """
     This class represents check run annotations.
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._annotation_level: Attribute[str] = NotSet
+        self._end_column: Attribute[int] = NotSet
+        self._end_line: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._raw_details: Attribute[str] = NotSet
+        self._start_column: Attribute[int] = NotSet
+        self._start_line: Attribute[int] = NotSet
+        self._title: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotation_level(self):
-        """
-        :type: string
-        """
+    def annotation_level(self) -> str:
         return self._annotation_level.value
 
     @property
-    def end_column(self):
-        """
-        :type: integer
-        """
+    def end_column(self) -> int:
         return self._end_column.value
 
     @property
-    def end_line(self):
-        """
-        :type: integer
-        """
+    def end_line(self) -> int:
         return self._end_line.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def path(self) -> str:
         return self._path.value
 
     @property
-    def raw_details(self):
-        """
-        :type: string
-        """
+    def raw_details(self) -> str:
         return self._raw_details.value
 
     @property
-    def start_column(self):
-        """
-        :type: integer
-        """
+    def start_column(self) -> int:
         return self._start_column.value
 
     @property
-    def start_line(self):
-        """
-        :type: integer
-        """
+    def start_line(self) -> int:
         return self._start_line.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def title(self) -> str:
         return self._title.value
 
-    def _initAttributes(self):
-        self._annotation_level = github.GithubObject.NotSet
-        self._end_column = github.GithubObject.NotSet
-        self._end_line = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._raw_details = github.GithubObject.NotSet
-        self._start_column = github.GithubObject.NotSet
-        self._start_line = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
-            self._annotation_level = self._makeStringAttribute(
-                attributes["annotation_level"]
-            )
+            self._annotation_level = self._makeStringAttribute(attributes["annotation_level"])
         if "end_column" in attributes:  # pragma no branch
             self._end_column = self._makeIntAttribute(attributes["end_column"])
         if "end_line" in attributes:  # pragma no branch

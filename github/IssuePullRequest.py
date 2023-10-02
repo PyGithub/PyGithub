@@ -27,41 +27,35 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
+class IssuePullRequest(NonCompletableGithubObject):
     """
     This class represents IssuePullRequests
     """
 
+    def _initAttributes(self) -> None:
+        self._diff_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._patch_url: Attribute[str] = NotSet
+
     @property
-    def diff_url(self):
-        """
-        :type: string
-        """
+    def diff_url(self) -> str:
         return self._diff_url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         return self._html_url.value
 
     @property
-    def patch_url(self):
-        """
-        :type: string
-        """
+    def patch_url(self) -> str:
         return self._patch_url.value
 
-    def _initAttributes(self):
-        self._diff_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._patch_url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch

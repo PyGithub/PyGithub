@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import github
 
@@ -35,10 +35,8 @@ class GithubApp(Framework.TestCase):
 
     def testGetPublicApp(self):
         app = self.g.get_app(slug=self.app_slug)
-        self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17))
-        self.assertEqual(
-            app.description, "Automate your workflow from idea to production"
-        )
+        self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17, tzinfo=timezone.utc))
+        self.assertEqual(app.description, "Automate your workflow from idea to production")
         self.assertListEqual(
             app.events,
             [
@@ -98,7 +96,7 @@ class GithubApp(Framework.TestCase):
             },
         )
         self.assertEqual(app.slug, "github-actions")
-        self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12))
+        self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12, tzinfo=timezone.utc))
         self.assertEqual(app.url, "/apps/github-actions")
 
     def testGetAuthenticatedApp(self):
@@ -106,12 +104,9 @@ class GithubApp(Framework.TestCase):
         g = github.Github(auth=auth)
 
         with self.assertWarns(DeprecationWarning) as warning:
-            # we ignore warnings from httpretty dependency
-            import warnings
-
-            warnings.filterwarnings("ignore", module="httpretty")
-
-            app = g.get_app()
+            # httpretty has some deprecation warnings in Python 3.12
+            with self.ignoreWarning(category=DeprecationWarning, module="httpretty"):
+                app = g.get_app()
 
             self.assertWarning(
                 warning,
@@ -119,7 +114,7 @@ class GithubApp(Framework.TestCase):
                 "please use github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
             )
 
-        self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46))
+        self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46, tzinfo=timezone.utc))
         self.assertEqual(app.description, "Sample App to test PyGithub")
         self.assertListEqual(
             app.events,
@@ -146,5 +141,5 @@ class GithubApp(Framework.TestCase):
             },
         )
         self.assertEqual(app.slug, "pygithubtest")
-        self.assertEqual(app.updated_at, datetime(2020, 8, 1, 17, 44, 31))
+        self.assertEqual(app.updated_at, datetime(2020, 8, 1, 17, 44, 31, tzinfo=timezone.utc))
         self.assertEqual(app.url, "/apps/pygithubtest")

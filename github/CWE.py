@@ -20,36 +20,31 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class CWE(github.GithubObject.CompletableGithubObject):
+class CWE(CompletableGithubObject):
     """
     This class represents a CWE.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
+    def _initAttributes(self) -> None:
+        self._cwe_id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+
     @property
     def cwe_id(self) -> str:
-        """
-        :type: string
-        """
         return self._cwe_id.value
 
     @property
     def name(self) -> str:
-        """
-        :type: string
-        """
         return self._name.value
 
-    # noinspection PyPep8Naming
-    def _initAttributes(self):
-        self._cwe_id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-
-    # noinspection PyPep8Naming
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "cwe_id" in attributes:  # pragma no branch
             self._cwe_id = self._makeStringAttribute(attributes["cwe_id"])
         if "name" in attributes:  # pragma no branch

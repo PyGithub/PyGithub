@@ -33,11 +33,7 @@ from . import Framework
 class GitBlob(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.blob = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_git_blob("53bce9fa919b4544e67275089b3ec5b44be20667")
-        )
+        self.blob = self.g.get_user().get_repo("PyGithub").get_git_blob("53bce9fa919b4544e67275089b3ec5b44be20667")
 
     def testAttributes(self):
         self.assertTrue(

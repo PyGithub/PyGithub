@@ -2,8 +2,11 @@ name: Lint
 on:
   push:
     branches:
-      - master
+      - main
+      - release-v*
   pull_request:
+  merge_group:
+
 jobs:
   mypy:
     runs-on: ubuntu-latest
@@ -15,7 +18,8 @@ jobs:
           python-version: "3.x"
       - run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-types.txt
+          pip install -r requirements.txt
+          pip install -r requirements/types.txt
       - uses: liskin/gh-problem-matcher-wrap@v2
         with:
           action: add
@@ -39,6 +43,6 @@ jobs:
         with:
           python-version: "3.8"
 
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements/docs.txt
       - run: pip install -e .
       - run: sphinx-build doc build

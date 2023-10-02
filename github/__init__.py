@@ -34,32 +34,11 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
-__all__ = [
-    "Auth",
-    "AppAuthentication",
-    "BadAttributeException",
-    "BadCredentialsException",
-    "BadUserAgentException",
-    "enable_console_debug_logging",
-    "Github",
-    "GithubException",
-    "GithubIntegration",
-    "IncompletableObject",
-    "InputFileContent",
-    "InputGitAuthor",
-    "InputGitTreeElement",
-    "RateLimitExceededException",
-    "TwoFactorException",
-    "UnknownObjectException",
-]
 
 import logging
 
-from github import Auth
-from github.AppAuthentication import AppAuthentication
-from github.GithubIntegration import GithubIntegration
-from github.MainClass import Github
-
+from . import Auth
+from .AppAuthentication import AppAuthentication
 from .GithubException import (
     BadAttributeException,
     BadCredentialsException,
@@ -70,9 +49,12 @@ from .GithubException import (
     TwoFactorException,
     UnknownObjectException,
 )
+from .GithubIntegration import GithubIntegration
+from .GithubRetry import GithubRetry
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
+from .MainClass import Github
 
 # set log level to INFO for github
 logger = logging.getLogger("github")
@@ -80,7 +62,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 
-def set_log_level(level: int):
+def set_log_level(level: int) -> None:
     """
     Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
     :param level: log level
@@ -88,8 +70,29 @@ def set_log_level(level: int):
     logger.setLevel(level)
 
 
-def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)
+def enable_console_debug_logging() -> None:  # pragma no cover (Function useful only outside test environment)
     """
     This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
     """
     set_log_level(logging.DEBUG)
+
+
+__all__ = [
+    "Auth",
+    "AppAuthentication",
+    "BadAttributeException",
+    "BadCredentialsException",
+    "BadUserAgentException",
+    "enable_console_debug_logging",
+    "Github",
+    "GithubException",
+    "GithubIntegration",
+    "GithubRetry",
+    "IncompletableObject",
+    "InputFileContent",
+    "InputGitAuthor",
+    "InputGitTreeElement",
+    "RateLimitExceededException",
+    "TwoFactorException",
+    "UnknownObjectException",
+]

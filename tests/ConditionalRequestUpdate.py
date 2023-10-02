@@ -34,9 +34,7 @@ class ConditionalRequestUpdate(Framework.TestCase):
         self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
 
     def testDidNotUpdate(self):
-        self.assertFalse(
-            self.repo.update(), msg="The repo is not changed. But update() != False"
-        )
+        self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
 
     def testDidUpdate(self):
         self.assertTrue(

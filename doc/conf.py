@@ -35,7 +35,7 @@ import sys
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath(".."))
-from importlib.metadata import version  # noqa: E402, isort:skip
+from importlib.metadata import version  # noqa: E402
 
 setupVersion = version("pygithub")
 
@@ -362,7 +362,5 @@ with open("apis.rst", "w") as apis:
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
-                apis.write(
-                    "  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n"
-                )
+                apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
