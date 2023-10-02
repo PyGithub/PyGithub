@@ -432,20 +432,62 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "PUT", f"{self.url}/public_members/{public_member._identity}"
         )
 
-    def create_fork(self, repo):
+    def create_fork(
+        self,
+        repo,
+        name=github.GithubObject.NotSet,
+        default_branch_only=github.GithubObject.NotSet,
+    ):
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         :param repo: :class:`github.Repository.Repository`
+        :param name: string
+        :param default_branch_only: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        url_parameters = {
-            "org": self.login,
+        return repo.create_fork(
+            self,
+            name=name,
+            default_branch_only=default_branch_only,
+        )
+
+    def create_repo_from_template(
+        self,
+        name,
+        repo,
+        description=github.GithubObject.NotSet,
+        private=github.GithubObject.NotSet,
+    ):
+        """self.name
+        :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
+        :param name: string
+        :param repo :class:`github.Repository.Repository`
+        :param description: string
+        :param private: bool
+        :rtype: :class:`github.Repository.Repository`
+        """
+        assert isinstance(name, str), name
+        assert isinstance(repo, github.Repository.Repository), repo
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, str
+        ), description
+        assert private is github.GithubObject.NotSet or isinstance(
+            private, bool
+        ), private
+        post_parameters = {
+            "name": name,
+            "owner": self.login,
         }
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
+        if private is not github.GithubObject.NotSet:
+            post_parameters["private"] = private
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            f"/repos/{repo.owner.login}/{repo.name}/forks",
-            parameters=url_parameters,
+            f"/repos/{repo.owner.login}/{repo.name}/generate",
+            input=post_parameters,
+            headers={"Accept": "application/vnd.github.v3+json"},
         )
         return github.Repository.Repository(
             self._requester, headers, data, completed=True
@@ -524,6 +566,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         allow_merge_commit=github.GithubObject.NotSet,
         allow_rebase_merge=github.GithubObject.NotSet,
         delete_branch_on_merge=github.GithubObject.NotSet,
+        allow_update_branch=github.GithubObject.NotSet,
     ):
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -543,6 +586,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_merge_commit: bool
         :param allow_rebase_merge: bool
         :param delete_branch_on_merge: bool
+        :param allow_update_branch: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
@@ -594,6 +638,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert delete_branch_on_merge is github.GithubObject.NotSet or isinstance(
             delete_branch_on_merge, bool
         ), delete_branch_on_merge
+        assert allow_update_branch is github.GithubObject.NotSet or isinstance(
+            allow_update_branch, bool
+        ), allow_update_branch
         post_parameters = {
             "name": name,
         }
@@ -629,6 +676,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["allow_rebase_merge"] = allow_rebase_merge
         if delete_branch_on_merge is not github.GithubObject.NotSet:
             post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
+        if allow_update_branch is not github.GithubObject.NotSet:
+            post_parameters["allow_update_branch"] = allow_update_branch
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/repos",

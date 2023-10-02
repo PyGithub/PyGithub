@@ -328,6 +328,7 @@ class Organization(Framework.TestCase):
             has_wiki=False,
             has_downloads=False,
             team_id=team.id,
+            allow_update_branch=True,
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
@@ -336,6 +337,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
         )
+        self.assertTrue(repo.allow_update_branch)
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 
@@ -357,6 +359,32 @@ class Organization(Framework.TestCase):
         )
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
+
+    def testCreateRepoFromTemplate(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        repo = self.org.create_repo_from_template(
+            "hello-world-docker-action-new", template_repo
+        )
+        self.assertEqual(
+            repo.url,
+            "https://api.github.com/repos/BeaverSoftware/hello-world-docker-action-new",
+        )
+        self.assertFalse(repo.is_template)
+
+    def testCreateRepoFromTemplateWithAllArguments(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        description = "My repo from template"
+        private = True
+        repo = self.org.create_repo_from_template(
+            "hello-world-docker-action-new",
+            template_repo,
+            description=description,
+            private=private,
+        )
+        self.assertEqual(repo.description, description)
+        self.assertTrue(repo.private)
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecret(self, encrypt):

@@ -137,6 +137,7 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         branch=github.GithubObject.NotSet,
         event=github.GithubObject.NotSet,
         status=github.GithubObject.NotSet,
+        check_suite_id=github.GithubObject.NotSet,
     ):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
@@ -158,6 +159,9 @@ class Workflow(github.GithubObject.CompletableGithubObject):
         ), branch
         assert event is github.GithubObject.NotSet or isinstance(event, str), event
         assert status is github.GithubObject.NotSet or isinstance(status, str), status
+        assert check_suite_id is github.GithubObject.NotSet or isinstance(
+            check_suite_id, int
+        ), check_suite_id
         url_parameters = dict()
         if actor is not github.GithubObject.NotSet:
             url_parameters["actor"] = (
@@ -173,6 +177,9 @@ class Workflow(github.GithubObject.CompletableGithubObject):
             url_parameters["event"] = event
         if status is not github.GithubObject.NotSet:
             url_parameters["status"] = status
+        if check_suite_id is not github.GithubObject.NotSet:
+            url_parameters["check_suite_id"] = check_suite_id
+
         return github.PaginatedList.PaginatedList(
             github.WorkflowRun.WorkflowRun,
             self._requester,

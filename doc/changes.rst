@@ -4,6 +4,85 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.58.2 (May 09, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+- Fix GithubIntegration that uses expiring jwt (#2460) (5011548c)
+
+Version 1.58.1 (March 18, 2023)
+-----------------------------------
+
+**Bug Fixes**
+
+* Add expiration argument back to GithubIntegration.create_jwt (#2439) (822fc05c)
+* Add crypto extras to pyjwt, which pulls in cryptogaphy package (#2443) (554b2b28)
+* Remove RLock from Requester (#2446) (45f3d723)
+* Move CI to Python 3.11 release and 3.12 dev (#2434) (e414c322)
+* pass requester base URL to integration (#2420) (bdceae2f)
+* RTD: install current project (def5223c)
+* Add current dir sys.path as well (9c96faa7)
+* Use use_scm_version to get current version from git tag (#2429) (3ea91a3a)
+
+Version 1.58.0 (February 19, 2023)
+-----------------------------------
+
+**Bug Fixes & Improvements**
+
+- Add unarchiving support @Tsuesun (#2391)
+- Support full GitHub app authentication @dblanchette (#1986)
+- Continue the PR #1899 @Felixoid (#2386)
+- feat: add allow\_forking to Repository @IbrahimAH (#2380)
+- Add code scanning alerts @eric-nieuwland (#2227)
+
+Version 1.57 (November 05, 2022)
+-----------------------------------
+
+**Breaking Changes**
+
+* Add support for Python 3.11, drop support for Python 3.6 (#2332) (1e2f10dc)
+
+**Bug Fixes & Improvements**
+
+* Speed up get requested reviewers and teams for pr (#2349) (6725eceb)
+* [WorkflowRun] - Add missing attributes (`run_started_at` & `run_attempt`), remove deprecated `unicode` type (#2273) (3a6235b5)
+* Add support for repository autolink references (#2016) (0fadd6be)
+* Add retry and pool_size to typing (#2151) (784a3efd)
+* Fix/types for repo topic team (#2341) (db9337a4)
+* Add class Artifact (#2313) (#2319) (437ff845)
+
+Version 1.56 (October 13, 2022)
+-----------------------------------
+
+**Important**
+
+This is the last release that will support Python 3.6.
+
+**Bug Fixes & Improvements**
+
+* Create repo from template (#2090) (b50283a7)
+* Improve signature of Repository.create_repo (#2118) (001970d4)
+* Add support for 'visibility' attribute preview for Repositories (#1872) (8d1397af)
+* Add Repository.rename_branch method (#2089) (6452ddfe)
+* Add function to delete pending reviews on a pull request (#1897) (c8a945bb)
+* Cover all code paths in search_commits (#2087) (f1faf941)
+* Correctly deal when PaginatedList's data is a dict (#2084) (93b92cd2)
+* Add two_factor_authentication in AuthenticatedUser. (#1972) (4f00cbf2)
+* Add ProjectCard.edit() to the type stub (#2080) (d417e4c4)
+* Add method to delete Workflow runs (#2078) (b1c8eec5)
+* Implement organization.cancel_invitation() (#2072) (53fb4988)
+* Feat: Add `html_url` property in Team Class. (#1983) (6570892a)
+* Add support for Python 3.10 (#2073) (aa694f8e)
+* Add github actions secrets to org (#2006) (bc5e5950)
+* Correct replay for Organization.create_project() test (#2075) (fcc12368)
+* Fix install command example (#2043) (99e00a28)
+* Fix: #1671 Convert Python Bool to API Parameter for Authenticated User Notifications (#2001) (1da600a3)
+* Do not transform requestHeaders when logging (#1965) (1265747e)
+* Add type to OrderedDict (#1954) (ed7d0fe9)
+* Add Commit.get_pulls() to pyi (#1958) (b4664705)
+* Adding headers in GithubException is a breaking change (#1931) (d1644e33)
+
 Version 1.55 (April 26, 2021)
 -----------------------------------
 **Breaking Changes**

@@ -1,22 +1,22 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 22.10.0
     hooks:
       - id: black
   - repo: https://github.com/asottile/seed-isort-config
-    rev: v1.9.4
+    rev: v2.2.0
     hooks:
       - id: seed-isort-config
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.21
+    rev: v5.10.1
     hooks:
       - id: isort
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.7.9
+  - repo: https://github.com/pycqa/flake8
+    rev: 3.9.2
     hooks:
       - id: flake8
   - repo: https://github.com/codespell-project/codespell
-    rev: v1.16.0
+    rev: v2.2.1
     hooks:
       - id: codespell
         exclude: tests/
@@ -24,8 +24,8 @@ repos:
           - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
           - --quiet-level=2
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.7.4
+    rev: v3.1.0
     hooks:
       - id: pyupgrade
         args:
-          - --py36-plus
+          - --py37-plus

@@ -39,12 +39,31 @@ import json
 import os
 import traceback
 import unittest
+import warnings
 
 import httpretty  # type: ignore
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
 import github
+
+APP_PRIVATE_KEY = """
+-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQC+5ePolLv6VcWLp2f17g6r6vHl+eoLuodOOfUl8JK+MVmvXbPa
+xDy0SS0pQhwTOMtB0VdSt++elklDCadeokhEoGDQp411o+kiOhzLxfakp/kewf4U
+HJnu4M/A2nHmxXVe2lzYnZvZHX5BM4SJo5PGdr0Ue2JtSXoAtYr6qE9maQIDAQAB
+AoGAFhOJ7sy8jG+837Clcihso+8QuHLVYTPaD+7d7dxLbBlS8NfaQ9Nr3cGUqm/N
+xV9NCjiGa7d/y4w/vrPwGh6UUsA+CvndwDgBd0S3WgIdWvAvHM8wKgNh/GBLLzhT
+Bg9BouRUzcT1MjAnkGkWqqCAgN7WrCSUMLt57TNleNWfX90CQQDjvVKTT3pOiavD
+3YcLxwkyeGd0VMvKiS4nV0XXJ97cGXs2GpOGXldstDTnF5AnB6PbukdFLHpsx4sW
+Hft3LRWnAkEA1pY15ke08wX6DZVXy7zuQ2izTrWSGySn7B41pn55dlKpttjHeutA
+3BEQKTFvMhBCphr8qST7Wf1SR9FgO0tFbwJAEhHji2yy96hUyKW7IWQZhrem/cP8
+p4Va9CQolnnDZRNgg1p4eiDiLu3dhLiJ547joXuWTBbLX/Y1Qvv+B+a74QJBAMCW
+O3WbMZlS6eK6//rIa4ZwN00SxDg8I8FUM45jwBsjgVGrKQz2ilV3sutlhIiH82kk
+m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
+eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
+-----END RSA PRIVATE KEY-----
+"""
 
 
 def readLine(file_):
@@ -178,6 +197,7 @@ class ReplayingConnection:
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
+                assert expectedInput.startswith("{"), expectedInput
                 assert json.loads(trInput) == json.loads(expectedInput)
             else:
                 assert trInput == expectedInput
@@ -264,10 +284,28 @@ class BasicTestCase(unittest.TestCase):
             )
             import GithubCredentials  # type: ignore
 
-            self.login = GithubCredentials.login
-            self.password = GithubCredentials.password
-            self.oauth_token = GithubCredentials.oauth_token
-            self.jwt = GithubCredentials.jwt
+            self.login = (
+                github.Auth.Login(GithubCredentials.login, GithubCredentials.password)
+                if GithubCredentials.login and GithubCredentials.password
+                else None
+            )
+            self.oauth_token = (
+                github.Auth.Token(GithubCredentials.oauth_token)
+                if GithubCredentials.oauth_token
+                else None
+            )
+            self.jwt = (
+                github.Auth.AppAuthToken(GithubCredentials.jwt)
+                if GithubCredentials.jwt
+                else None
+            )
+            self.app_auth = (
+                github.Auth.AppAuth(
+                    GithubCredentials.app_id, GithubCredentials.app_private_key
+                )
+                if GithubCredentials.app_id and GithubCredentials.app_private_key
+                else None
+            )
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
@@ -277,10 +315,10 @@ class BasicTestCase(unittest.TestCase):
                     self.__openFile("r"), *args, **kwds
                 ),
             )
-            self.login = "login"
-            self.password = "password"
-            self.oauth_token = "oauth_token"
-            self.jwt = "jwt"
+            self.login = github.Auth.Login("login", "password")
+            self.oauth_token = github.Auth.Token("oauth_token")
+            self.jwt = github.Auth.AppAuthToken("jwt")
+            self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
             httpretty.enable(allow_net_connect=False)
 
@@ -290,6 +328,21 @@ class BasicTestCase(unittest.TestCase):
         httpretty.reset()
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
+
+    def assertWarning(self, warning, expected):
+        self.assertWarnings(warning, expected)
+
+    def assertWarnings(self, warning, *expecteds):
+        self.assertEqual(len(warning.warnings), len(expecteds))
+        actual = [
+            (type(message), type(message.message), message.message.args)
+            for message in warning.warnings
+        ]
+        expected = [
+            (warnings.WarningMessage, DeprecationWarning, (expected,))
+            for expected in expecteds
+        ]
+        self.assertSequenceEqual(actual, expected)
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
@@ -349,15 +402,15 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(
-                self.oauth_token, retry=self.retry, pool_size=self.pool_size
+                auth=self.oauth_token, retry=self.retry, pool_size=self.pool_size
             )
         elif self.jwtAuthMode:
             self.g = github.Github(
-                jwt=self.jwt, retry=self.retry, pool_size=self.pool_size
+                auth=self.jwt, retry=self.retry, pool_size=self.pool_size
             )
         else:
             self.g = github.Github(
-                self.login, self.password, retry=self.retry, pool_size=self.pool_size
+                auth=self.login, retry=self.retry, pool_size=self.pool_size
             )
 
 

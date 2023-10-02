@@ -89,6 +89,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
+        self.assertIs(self.repo.is_template, None)
         self.assertEqual(self.repo.language, "Python")
         self.assertEqual(self.repo.master_branch, None)
         self.assertEqual(self.repo.name, "PyGithub")
@@ -133,6 +134,9 @@ class Repository(Framework.TestCase):
             has_projects=False,
             has_wiki=False,
             has_downloads=True,
+            allow_auto_merge=True,
+            allow_forking=True,
+            allow_update_branch=True,
             allow_squash_merge=True,
             allow_merge_commit=True,
             allow_rebase_merge=True,
@@ -144,10 +148,13 @@ class Repository(Framework.TestCase):
             self.repo.description, "Python library implementing the full Github API v3"
         )
         self.assertFalse(self.repo.archived)
+        self.assertTrue(self.repo.allow_update_branch)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
         self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.allow_auto_merge)
+        self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
         self.assertTrue(self.repo.allow_merge_commit)
         self.assertTrue(self.repo.allow_rebase_merge)
@@ -257,6 +264,12 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
 
+    def testCreateAutolink(self):
+        key = self.repo.create_autolink(
+            "DUMMY-", "https://github.com/PyGithub/PyGithub/issues/<num>"
+        )
+        self.assertEqual(key.id, 209614)
+
     def testCreateGitBlob(self):
         blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
         self.assertEqual(blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8")
@@ -364,6 +377,7 @@ class Repository(Framework.TestCase):
             "This release is also created by PyGithub",
             False,
             True,
+            False,
             "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
@@ -450,6 +464,123 @@ class Repository(Framework.TestCase):
     def testDeleteSecret(self):
         self.assertTrue(self.repo.delete_secret("secret_name"))
 
+    def testCodeScanAlerts(self):
+        codescan_alerts = self.repo.get_codescan_alerts()
+        self.assertListKeyEqual(
+            codescan_alerts,
+            lambda c: c.number,
+            [
+                6,
+            ],
+        )
+        codescan_alert = codescan_alerts[0]
+        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(codescan_alert.state, "open")
+        self.assertEqual(
+            codescan_alert.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6",
+        )
+        self.assertEqual(
+            codescan_alert.created_at,
+            datetime.datetime(2021, 6, 29, 12, 28, 30),
+        )
+        self.assertEqual(
+            codescan_alert.dismissed_at,
+            datetime.datetime(2021, 6, 30, 5, 5, 5),
+        )
+        self.assertEqual(codescan_alert.dismissed_reason, "Won't tell")
+        dismissed_by = codescan_alert.dismissed_by
+        self.assertEqual(dismissed_by.login, "dismisser.login")
+        instance = codescan_alert.most_recent_instance
+        self.assertEqual(
+            repr(instance),
+            "CodeScanAlertInstance("
+            'ref="refs/heads/master", '
+            'analysis_key=".github/workflows/codeql-analysis.yml:analyze"'
+            ")",
+        )
+        self.assertEqual(instance.ref, "refs/heads/master")
+        self.assertEqual(
+            instance.analysis_key, ".github/workflows/codeql-analysis.yml:analyze"
+        )
+        self.assertEqual(instance.environment, "{language:python}")
+        self.assertEqual(instance.state, "open")
+        self.assertListEqual(instance.classifications, ["stupid typo"])
+        self.assertDictEqual(instance.message, {"text": "Awful stuff might happen."})
+        self.assertEqual(instance.commit_sha, "deadbeef")
+        location = instance.location
+        self.assertEqual(
+            str(location),
+            "tests/ReplayData/Repository.testCodeScanAlerts.txt @ l10:c2-l10:c48",
+        )
+        self.assertEqual(
+            repr(location),
+            "CodeScanAlertInstanceLocation("
+            "start_line=10, start_column=2, "
+            'path="tests/ReplayData/Repository.testCodeScanAlerts.txt", '
+            "end_line=10, end_column=48"
+            ")",
+        )
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 10)
+        self.assertEqual(location.start_column, 2)
+        self.assertEqual(location.end_line, 10)
+        self.assertEqual(location.end_column, 48)
+        rule = codescan_alert.rule
+        self.assertEqual(
+            repr(rule), 'CodeScanRule(name="py/rule-name", id="py/rule-id")'
+        )
+        self.assertEqual(rule.id, "py/rule-id")
+        self.assertEqual(rule.name, "py/rule-name")
+        self.assertEqual(rule.security_severity_level, "high")
+        self.assertEqual(rule.severity, "warning")
+        self.assertEqual(rule.description, "Bad practice")
+        tool = codescan_alert.tool
+        self.assertEqual(
+            repr(tool), 'CodeScanTool(version="2.5.7", name="CodeQL", guid=None)'
+        )
+        self.assertEqual(tool.guid, None)
+        self.assertEqual(tool.name, "CodeQL")
+        self.assertEqual(tool.version, "2.5.7")
+        instances = list(codescan_alert.get_instances())
+        self.assertEqual(len(instances), 2)
+        #
+        instance = instances[0]
+        self.assertEqual(instance.ref, "instances[0].ref")
+        self.assertEqual(instance.analysis_key, "instances[0].analysis_key")
+        self.assertEqual(instance.environment, "instances[0].environment")
+        self.assertEqual(instance.state, "instances[0].state")
+        self.assertListEqual(instance.classifications, ["instances[0].classifications"])
+        self.assertDictEqual(instance.message, {"text": "instances[0].message"})
+        self.assertEqual(instance.commit_sha, "instances[0].commit_sha")
+        location = instance.location
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 10)
+        self.assertEqual(location.start_column, 2)
+        self.assertEqual(location.end_line, 10)
+        self.assertEqual(location.end_column, 48)
+        #
+        instance = instances[1]
+        self.assertEqual(instance.ref, "instances[1].ref")
+        self.assertEqual(instance.analysis_key, "instances[1].analysis_key")
+        self.assertEqual(instance.environment, "instances[1].environment")
+        self.assertEqual(instance.state, "instances[1].state")
+        self.assertListEqual(instance.classifications, ["instances[1].classifications"])
+        self.assertDictEqual(instance.message, {"text": "instances[1].message"})
+        self.assertEqual(instance.commit_sha, "instances[1].commit_sha")
+        location = instance.location
+        self.assertEqual(
+            location.path, "tests/ReplayData/Repository.testCodeScanAlerts.txt"
+        )
+        self.assertEqual(location.start_line, 20)
+        self.assertEqual(location.start_column, 17)
+        self.assertEqual(location.end_line, 20)
+        self.assertEqual(location.end_column, 42)
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
@@ -476,6 +607,9 @@ class Repository(Framework.TestCase):
 
     def testRemoveInvitation(self):
         self.repo.remove_invitation(17285388)
+
+    def testRemoveAutolink(self):
+        self.repo.remove_autolink(209611)
 
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -752,6 +886,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(
             self.repo.create_fork("prtg-dev").full_name, "prtg-dev/PyGithub"
         )
+
+    def testCreateForkOrg(self):
+        c = self.g.get_organization("prtg-dev")
+        self.assertEqual(self.repo.create_fork(c).full_name, "prtg-dev/PyGithub")
 
     def testGetGitRefs(self):
         self.assertListKeyEqual(
@@ -1163,6 +1301,16 @@ class Repository(Framework.TestCase):
     def testGetPullsWithArguments(self):
         self.assertListKeyEqual(
             self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215]
+        )
+
+    def testGetAutolinks(self):
+        self.assertListKeyEqual(
+            self.repo.get_autolinks(),
+            lambda i: i.id,
+            [
+                209614,
+                209611,
+            ],
         )
 
     def testLegacySearchIssues(self):
