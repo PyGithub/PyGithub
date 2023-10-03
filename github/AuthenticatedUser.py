@@ -540,6 +540,7 @@ class AuthenticatedUser(CompletableGithubObject):
         allow_merge_commit: Opt[bool] = NotSet,
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
+        has_discussions: Opt[bool] = NotSet,
     ) -> Repository:
         """
         :calls: `POST /user/repos <http://docs.github.com/en/rest/reference/repos>`_
@@ -552,6 +553,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(has_wiki, bool), has_wiki
         assert is_optional(has_downloads, bool), has_downloads
         assert is_optional(has_projects, bool), has_projects
+        assert is_optional(has_discussions, bool), has_discussions
         assert is_optional(auto_init, bool), auto_init
         assert is_optional(license_template, str), license_template
         assert is_optional(gitignore_template, str), gitignore_template
@@ -569,6 +571,7 @@ class AuthenticatedUser(CompletableGithubObject):
                 "has_wiki": has_wiki,
                 "has_downloads": has_downloads,
                 "has_projects": has_projects,
+                "has_discussions": has_discussions,
                 "auto_init": auto_init,
                 "license_template": license_template,
                 "gitignore_template": gitignore_template,
