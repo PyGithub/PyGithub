@@ -556,6 +556,14 @@ class Repository(CompletableGithubObject):
         return self._git_url.value
 
     @property
+    def has_discussions(self) -> bool:
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_discussions)
+        return self._has_discussions.value
+
+    @property
     def has_downloads(self) -> bool:
         """
         :type: bool
