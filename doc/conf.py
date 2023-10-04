@@ -300,7 +300,10 @@ classes = list(collect_classes(githubObjectTypes))
 while classes:
     githubObjectClasses.update(classes)
     # get all classes derived from detected classes
-    classes = list(collect_classes(set(githubObjectClasses.keys())))
+    githubObjectTypes.update({variation
+                              for object_type in [cls for cls, _ in classes]
+                              for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]})
+    classes = list(collect_classes(set(githubObjectTypes)))
 
 with open("github_objects.rst", "w") as f:
     f.write("Github objects\n")
@@ -321,6 +324,7 @@ for githubObjectClass, module in githubObjectClasses.items():
 
 methods = dict()
 githubObjectClasses.update([("MainClass", "github.MainClass")])
+githubObjectClasses.update([("GithubIntegration", "github.GithubIntegration")])
 for githubObjectClass, module in githubObjectClasses.items():
     with open("../" + module.replace(".", "/") + ".py") as f:
         method = None
