@@ -25,11 +25,14 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import datetime
 import glob
 import os
+import re
 import sys
+from typing import Iterable, Tuple
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -268,24 +271,36 @@ autodoc_default_flags = ["members"]
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
-githubClasses = [
-    fileName[10:-3]
-    for fileName in sorted(glob.glob("../github/*.py"))
-    if fileName
-    not in [
-        "../github/GithubException.py",
-        "../github/GithubObject.py",
-        "../github/InputFileContent.py",
-        "../github/InputGitAuthor.py",
-        "../github/InputGitTreeElement.py",
-        "../github/Legacy.py",
-        "../github/MainClass.py",
-        "../github/PaginatedList.py",
-        "../github/Requester.py",
-        "../github/Consts.py",
-        "../github/__init__.py",
-    ]
-]
+githubObjectTypes = {variation
+                     for object_type in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
+                     for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]}
+githubObjectClasses: dict[str, str] = {}
+
+
+def collect_classes(types: set[str]) -> Iterable[Tuple[str, str]]:
+    def get_base_classes(class_definition: str) -> Iterable[str]:
+        if "(" in class_definition and ")" in class_definition:
+            for base in class_definition[class_definition.index("(")+1:class_definition.index(")")].split(","):
+                yield base.strip()
+        else:
+            return []
+
+    for filename in sorted(glob.glob("../github/*.py")):
+        module = f"github.{filename[10:-3]}"
+        with open(filename, "rt") as r:
+            for line in r.readlines():
+                if line.startswith("class ") and any([base in types for base in get_base_classes(line)]):
+                    class_name = re.match(r"class (\w+)[:(]", line).group(1)
+                    if class_name not in types:
+                        yield class_name, f"{module}"
+
+
+# get all classes derived from GithubObject classes directly
+classes = list(collect_classes(githubObjectTypes))
+while classes:
+    githubObjectClasses.update(classes)
+    # get all classes derived from detected classes
+    classes = list(collect_classes(set(githubObjectClasses.keys())))
 
 with open("github_objects.rst", "w") as f:
     f.write("Github objects\n")
@@ -293,24 +308,29 @@ with open("github_objects.rst", "w") as f:
     f.write("\n")
     f.write(".. autoclass:: github.GithubObject.GithubObject()\n")
     f.write("\n")
+    f.write("Sub-classes\n")
+    f.write("-----------\n")
+    f.write(".. autoclass:: github.GithubObject.CompletableGithubObject()\n")
+    f.write(".. autoclass:: github.GithubObject.NonCompletableGithubObject()\n")
+    f.write("\n")
+    f.write("Implementations\n")
+    f.write("---------------\n")
+    f.write("\n")
     f.write(".. toctree::\n")
-    for githubClass in githubClasses:
-        f.write("   github_objects/" + githubClass + "\n")
+    for githubObjectClass in sorted(githubObjectClasses.keys()):
+        f.write("   github_objects/" + githubObjectClass + "\n")
 
-for githubClass in githubClasses:
-    with open("github_objects/" + githubClass + ".rst", "w") as f:
-        f.write(githubClass + "\n")
-        f.write("=" * len(githubClass) + "\n")
+for githubObjectClass, module in githubObjectClasses.items():
+    with open("github_objects/" + githubObjectClass + ".rst", "w") as f:
+        f.write(githubObjectClass + "\n")
+        f.write("=" * len(githubObjectClass) + "\n")
         f.write("\n")
-        f.write(".. autoclass:: github." + githubClass + "." + githubClass + "()\n")
+        f.write(".. autoclass:: " + module + "." + githubObjectClass + "()\n")
 
 methods = dict()
-for githubClass in githubClasses + ["MainClass"]:
-    with open("../github/" + githubClass + ".py") as f:
-        if githubClass == "MainClass":
-            githubClass = "github.MainClass.Github"
-        else:
-            githubClass = "github." + githubClass + "." + githubClass
+githubObjectClasses.update([("MainClass", "github.MainClass")])
+for githubObjectClass, module in githubObjectClasses.items():
+    with open("../" + module.replace(".", "/") + ".py") as f:
         method = None
         isProperty = False
         for line in f:
@@ -345,7 +365,7 @@ for githubClass in githubClasses + ["MainClass"]:
                         methods[url] = dict()
                     if verb not in methods[url]:
                         methods[url][verb] = set()
-                    methods[url][verb].add(":meth:`" + githubClass + "." + method + "`")
+                    methods[url][verb].add(":meth:`" + module + "." + githubObjectClass + "." + method + "`")
                 method = None
 
 methods["/markdown/raw"] = dict()
