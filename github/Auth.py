@@ -25,7 +25,7 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import Dict, Optional, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
 import jwt
 from requests import utils

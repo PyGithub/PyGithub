@@ -32,7 +32,7 @@ import glob
 import os
 import re
 import sys
-from typing import Iterable, Tuple
+from typing import Iterable
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -271,23 +271,25 @@ autodoc_default_flags = ["members"]
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
-githubObjectTypes = {variation
-                     for object_type in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
-                     for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]}
+githubObjectTypes = {
+    variation
+    for object_type in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
+    for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]
+}
 githubObjectClasses: dict[str, str] = {}
 
 
-def collect_classes(types: set[str]) -> Iterable[Tuple[str, str]]:
+def collect_classes(types: set[str]) -> Iterable[tuple[str, str]]:
     def get_base_classes(class_definition: str) -> Iterable[str]:
         if "(" in class_definition and ")" in class_definition:
-            for base in class_definition[class_definition.index("(")+1:class_definition.index(")")].split(","):
+            for base in class_definition[class_definition.index("(") + 1 : class_definition.index(")")].split(","):
                 yield base.strip()
         else:
             return []
 
     for filename in sorted(glob.glob("../github/*.py")):
         module = f"github.{filename[10:-3]}"
-        with open(filename, "rt") as r:
+        with open(filename) as r:
             for line in r.readlines():
                 if line.startswith("class ") and any([base in types for base in get_base_classes(line)]):
                     class_name = re.match(r"class (\w+)[:(]", line).group(1)
@@ -300,9 +302,13 @@ classes = list(collect_classes(githubObjectTypes))
 while classes:
     githubObjectClasses.update(classes)
     # get all classes derived from detected classes
-    githubObjectTypes.update({variation
-                              for object_type in [cls for cls, _ in classes]
-                              for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]})
+    githubObjectTypes.update(
+        {
+            variation
+            for object_type in [cls for cls, _ in classes]
+            for variation in [object_type, "GithubObject." + object_type, "github.GithubObject." + object_type]
+        }
+    )
     classes = list(collect_classes(set(githubObjectTypes)))
 
 with open("github_objects.rst", "w") as f:
