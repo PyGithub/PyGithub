@@ -244,7 +244,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     """
 
     # used to fetch live access token when calling self.token
-    __integration: Optional[GithubIntegration] = None
+    __integration: Optional["GithubIntegration"] = None
     __installation_authorization: Optional[InstallationAuthorization] = None
 
     def __init__(
