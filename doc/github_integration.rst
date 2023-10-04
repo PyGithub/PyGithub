@@ -1,4 +1,4 @@
 Main class: GithubIntegration
 =============================
 
-.. autoclass:: github.MainClass.GithubIntegration
+.. autoclass:: github.GithubIntegration.GithubIntegration
