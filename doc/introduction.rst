@@ -83,6 +83,7 @@ Projects using PyGithub
 * https://github.com/plus3it/satsuki - Automate GitHub releases and uploading binary release assets
 * `check-in <https://github.com/webknjaz/check-in>`_ — Python CLI distribution that allows user to use GitHub Checks API as a bot.
 * https://github.com/hasii2011/gittodoistclone - Convert GitHub issues to Todoist tasks
+* `OGR <https://github.com/packit/ogr>`__ is a library for one API for many git forges (e.g. GitHub, GitLab, Pagure).
  
 They talk about PyGithub
 ------------------------
