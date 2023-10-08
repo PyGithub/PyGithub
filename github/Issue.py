@@ -107,6 +107,7 @@ class Issue(CompletableGithubObject):
         self._locked: Attribute[bool] = NotSet
         self._milestone: Attribute[Milestone] = NotSet
         self._number: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._pull_request: Attribute[IssuePullRequest] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._state: Attribute[str] = NotSet
@@ -193,6 +194,10 @@ class Issue(CompletableGithubObject):
     def number(self) -> int:
         self._completeIfNotSet(self._number)
         return self._number.value
+
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id
 
     @property
     def pull_request(self) -> IssuePullRequest | None:
@@ -533,6 +538,8 @@ class Issue(CompletableGithubObject):
             self._locked = self._makeBoolAttribute(attributes["locked"])
         if "milestone" in attributes:  # pragma no branch
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "pull_request" in attributes:  # pragma no branch
