@@ -195,6 +195,7 @@ class Issue(CompletableGithubObject):
         self._completeIfNotSet(self._number)
         return self._number.value
 
+    @property
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
@@ -501,7 +502,6 @@ class Issue(CompletableGithubObject):
         return self.number
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        print(attributes)
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "assignee" in attributes:  # pragma no branch
