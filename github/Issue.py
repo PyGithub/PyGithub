@@ -501,6 +501,7 @@ class Issue(CompletableGithubObject):
         return self.number
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        print(attributes)
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "assignee" in attributes:  # pragma no branch
