@@ -197,7 +197,7 @@ class Issue(CompletableGithubObject):
 
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
-        return self._node_id
+        return self._node_id.value
 
     @property
     def pull_request(self) -> IssuePullRequest | None:
