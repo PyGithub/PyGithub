@@ -40,7 +40,7 @@ Get organization by name
     u'PyGithub'
 
 Get enterprise consumed licenses by name
-------------------------
+----------------------------------------
 
 .. code-block:: python
 
