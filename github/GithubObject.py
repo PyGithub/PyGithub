@@ -307,7 +307,7 @@ class GithubObject:
         """
         :type: datetime
         """
-        return self._makeDatetimeAttribute(self.last_modified)  # type: ignore
+        return self._makeDatetimeAttribute(self.last_modified).value  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
         """
