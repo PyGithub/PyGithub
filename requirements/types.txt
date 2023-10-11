@@ -1,4 +1,4 @@
-mypy >=1.0.0
+mypy ==1.5.1
 types-deprecated
 types-jwt
 types-python-dateutil
