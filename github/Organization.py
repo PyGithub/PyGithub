@@ -604,30 +604,32 @@ class Organization(CompletableGithubObject):
             completed=False,
         )
 
-    def get_secrets(self) -> PaginatedList[OrganizationSecret]:
+    def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
         """
         Gets all organization secrets
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
         """
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> OrganizationSecret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: 'GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
             completed=False,
         )
 

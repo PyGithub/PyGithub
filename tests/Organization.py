@@ -448,6 +448,10 @@ class Organization(Framework.TestCase):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
 
+    def testGetDependabotSecrets(self):
+        secrets = self.org.get_secrets(secret_type="dependabot")
+        self.assertEqual(len(list(secrets)), 1)
+
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
             self.org.invite_user()
