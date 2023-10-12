@@ -43,6 +43,7 @@ class BranchProtection(Framework.TestCase):
     def testAttributes(self):
         self.assertTrue(self.branch_protection.required_status_checks.strict)
         self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
+        self.assertFalse(self.branch_protection.required_conversation_resolution)
         self.assertTrue(self.branch_protection.required_linear_history)
         self.assertEqual(
             self.branch_protection.url,
