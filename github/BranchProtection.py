@@ -49,12 +49,18 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._url: Attribute[str] = NotSet
+        self._required_conversation_resolution: Attribute[bool] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
         self._required_linear_history: Attribute[bool] = github.GithubObject.NotSet
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
+
+    @property
+    def required_conversation_resolution(self) -> bool:
+        self._completeIfNotSet(self._required_conversation_resolution)
+        return self._required_conversation_resolution.value
 
     @property
     def url(self) -> str:
@@ -97,6 +103,10 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "required_conversation_resolution" in attributes:  # pragma no branch
+            self._required_conversation_resolution = self._makeBoolAttribute(
+                attributes["required_conversation_resolution"]["enabled"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch
