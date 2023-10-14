@@ -468,6 +468,14 @@ class Repository(CompletableGithubObject):
         return self._description.value
 
     @property
+    def disabled(self) -> bool:
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._disabled)
+        return self._disabled.value
+
+    @property
     def downloads_url(self) -> str:
         """
         :type: string
@@ -3964,6 +3972,7 @@ class Repository(CompletableGithubObject):
         self._delete_branch_on_merge: Attribute[bool] = NotSet
         self._deployments_url: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
+        self._disabled: Attribute[bool] = NotSet
         self._downloads_url: Attribute[str] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._fork: Attribute[bool] = NotSet
@@ -4083,6 +4092,8 @@ class Repository(CompletableGithubObject):
             self._deployments_url = self._makeStringAttribute(attributes["deployments_url"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "disabled" in attributes:  # pragma no branch
+            self._disabled = self._makeBoolAttribute(attributes["disabled"])
         if "downloads_url" in attributes:  # pragma no branch
             self._downloads_url = self._makeStringAttribute(attributes["downloads_url"])
         if "events_url" in attributes:  # pragma no branch

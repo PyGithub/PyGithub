@@ -70,6 +70,7 @@ class Repository(Framework.TestCase):
             datetime(2012, 2, 25, 12, 53, 47, tzinfo=timezone.utc),
         )
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
+        self.assertFalse(self.repo.disabled)
         self.assertFalse(self.repo.fork)
         self.assertEqual(self.repo.forks, 3)
         self.assertEqual(self.repo.full_name, "jacquev6/PyGithub")
