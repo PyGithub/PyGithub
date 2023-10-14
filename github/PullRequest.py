@@ -94,6 +94,7 @@ class PullRequest(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._active_lock_reason: Attribute[str] = NotSet
         self._additions: Attribute[int] = NotSet
         self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
@@ -114,6 +115,7 @@ class PullRequest(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._labels: Attribute[list[github.Label.Label]] = NotSet
+        self._locked: Attribute[bool] = NotSet
         self._merge_commit_sha: Attribute[str] = NotSet
         self._mergeable: Attribute[bool] = NotSet
         self._mergeable_state: Attribute[str] = NotSet
@@ -137,6 +139,11 @@ class PullRequest(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def active_lock_reason(self) -> str | None:
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
 
     @property
     def additions(self) -> int:
@@ -237,6 +244,11 @@ class PullRequest(CompletableGithubObject):
     def labels(self) -> list[github.Label.Label]:
         self._completeIfNotSet(self._labels)
         return self._labels.value
+
+    @property
+    def locked(self) -> bool:
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
 
     @property
     def merge_commit_sha(self) -> str:
@@ -796,6 +808,8 @@ class PullRequest(CompletableGithubObject):
         return status == 202
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "active_lock_reason" in attributes:  # pragma no branch
+            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
@@ -841,6 +855,8 @@ class PullRequest(CompletableGithubObject):
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
+        if "locked" in attributes:  # pragma no branch
+            self._locked = self._makeBoolAttribute(attributes["locked"])
         if "maintainer_can_modify" in attributes:  # pragma no branch
             self._maintainer_can_modify = self._makeBoolAttribute(attributes["maintainer_can_modify"])
         if "merge_commit_sha" in attributes:  # pragma no branch

@@ -82,6 +82,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
 
     def testAttributes(self):
+        self.assertEqual(self.pull.active_lock_reason, None)
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
@@ -112,6 +113,7 @@ class PullRequest(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/31",
         )
         self.assertListKeyEqual(self.pull.labels, lambda a: a.name, [])
+        self.assertFalse(self.pull.locked)
         self.assertFalse(self.pull.mergeable)
         self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
