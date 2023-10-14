@@ -94,7 +94,7 @@ class PullRequest(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._active_lock_reason: Attribute[str] = NotSet
+        self._active_lock_reason: Attribute[str | None] = NotSet
         self._additions: Attribute[int] = NotSet
         self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
