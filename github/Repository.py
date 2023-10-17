@@ -2793,13 +2793,13 @@ class Repository(CompletableGithubObject):
             or isinstance(milestone, github.Milestone.Milestone)
         ), milestone
         assert is_optional(state, str), state
-        assert is_optional(assignee, str), assignee
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
         assert is_optional(sort, str), sort
         assert is_optional(direction, str), direction
         assert is_optional(since, datetime), since
-        assert is_optional(creator, str), creator
+        assert is_optional(creator, (str, github.NamedUser.NamedUser)), creator
         url_parameters: dict[str, Any] = {}
         if is_defined(milestone):
             if isinstance(milestone, github.Milestone.Milestone):
