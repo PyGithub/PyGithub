@@ -1875,9 +1875,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(description, str), description
         assert is_optional(homepage, str), homepage
         assert is_optional(private, bool), private
-        assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private"]
-        ), visibility
+        assert visibility in ["public", "private", NotSet], visibility
         assert is_optional(has_issues, bool), has_issues
         assert is_optional(has_projects, bool), has_projects
         assert is_optional(has_wiki, bool), has_wiki
@@ -1890,20 +1888,15 @@ class Repository(CompletableGithubObject):
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
         assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
-        assert is_undefined(squash_merge_commit_title) or (
-            isinstance(squash_merge_commit_title, str)
-            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
-        ), squash_merge_commit_title
-        assert is_undefined(squash_merge_commit_message) or (
-            isinstance(squash_merge_commit_message, str)
-            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
-        ), squash_merge_commit_message
-        assert is_undefined(merge_commit_title) or (
-            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
-        ), merge_commit_title
-        assert is_undefined(merge_commit_message) or (
-            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
-        ), merge_commit_message
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
         assert is_optional(archived, bool), archived
         assert is_optional(allow_forking, bool), allow_forking
         assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
