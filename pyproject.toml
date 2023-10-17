@@ -60,12 +60,10 @@ warn_no_return = false
 [tool.black]
 # https://github.com/psf/black
 line-length = 120
-target-version = ['py37']
 
 
 [tool.ruff]
 line-length = 120
-target-version = "py37"
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
     "E",
