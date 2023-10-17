@@ -1602,7 +1602,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(summary, str), summary
         assert isinstance(description, str), description
         assert isinstance(severity_or_cvss_vector_string, str), severity_or_cvss_vector_string
-        assert isinstance(cve_id, str | type(None)), cve_id
+        assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
             github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
@@ -1610,7 +1610,7 @@ class Repository(CompletableGithubObject):
             )
         assert isinstance(cwe_ids, Iterable), cwe_ids
         assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
-        assert isinstance(credits, Iterable | type(None)), credits
+        assert isinstance(credits, (Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
