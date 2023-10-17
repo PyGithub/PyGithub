@@ -137,6 +137,7 @@ from typing import TYPE_CHECKING, Any
 from deprecated import deprecated
 
 import github.Artifact
+import github.AuthenticatedUser
 import github.Autolink
 import github.Branch
 import github.CheckRun
@@ -166,11 +167,13 @@ import github.Hook
 import github.HookDelivery
 import github.Invitation
 import github.Issue
+import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
 import github.Milestone
 import github.NamedUser
+import github.Notification
 import github.Organization
 import github.PaginatedList
 import github.Path
@@ -178,6 +181,7 @@ import github.Permissions
 import github.Project
 import github.PublicKey
 import github.PullRequest
+import github.PullRequestComment
 import github.Referrer
 import github.RepositoryAdvisory
 import github.RepositoryAdvisoryCredit
