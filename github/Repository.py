@@ -1258,7 +1258,7 @@ class Repository(CompletableGithubObject):
             post_parameters["target_commitish"] = target_commitish
         elif isinstance(target_commitish, github.Branch.Branch):
             post_parameters["target_commitish"] = target_commitish.name
-        elif isinstance(target_commitish, github.Commit.Commit | github.GitCommit.GitCommit):
+        elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
             post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/releases", input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
@@ -2113,7 +2113,7 @@ class Repository(CompletableGithubObject):
         if is_defined(author):
             if isinstance(
                 author,
-                github.NamedUser.NamedUser | github.AuthenticatedUser.AuthenticatedUser,
+                (github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
             ):
                 url_parameters["author"] = author.login
             else:
@@ -3323,7 +3323,7 @@ class Repository(CompletableGithubObject):
 
         :rtype: :class:`github.Workflow.Workflow`
         """
-        assert isinstance(id_or_file_name, int | str), id_or_file_name
+        assert isinstance(id_or_file_name, (int, str)), id_or_file_name
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
