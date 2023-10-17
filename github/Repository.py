@@ -1353,7 +1353,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(title, str), title
         assert is_optional(body, str), body
-        assert is_optional(assignee, str), assignee
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
         assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, (github.Label.Label, str)), labels
