@@ -1889,9 +1889,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(allow_auto_merge, bool), allow_auto_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
-        assert is_undefined(use_squash_pr_title_as_default) or isinstance(
-            use_squash_pr_title_as_default, bool
-        ), use_squash_pr_title_as_default
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
         assert is_undefined(squash_merge_commit_title) or (
             isinstance(squash_merge_commit_title, str)
             and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
@@ -1908,9 +1906,7 @@ class Repository(CompletableGithubObject):
         ), merge_commit_message
         assert is_optional(archived, bool), archived
         assert is_optional(allow_forking, bool), allow_forking
-        assert is_undefined(web_commit_signoff_required) or isinstance(
-            web_commit_signoff_required, bool
-        ), web_commit_signoff_required
+        assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
 
         post_parameters: dict[str, Any] = {
             "name": name,
@@ -2232,9 +2228,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(ref, str), ref
         assert is_optional(task, str), task
         assert is_optional(auto_merge, bool), auto_merge
-        assert is_undefined(required_contexts) or isinstance(
-            required_contexts, list
-        ), required_contexts  # need to do better checking here
+        assert is_optional(required_contexts, list), required_contexts  # need to do better checking here
         assert is_optional(payload, dict), payload
         assert is_optional(environment, str), environment
         assert is_optional(description, str), description
@@ -2505,12 +2499,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str), "message must be str/unicode object"
         assert isinstance(sha, str), "sha must be a str/unicode object"
         assert is_optional(branch, str), "branch must be a str/unicode object"
-        assert is_undefined(author) or isinstance(
-            author, github.InputGitAuthor
-        ), "author must be a github.InputGitAuthor object"
-        assert is_undefined(committer) or isinstance(
-            committer, github.InputGitAuthor
-        ), "committer must be a github.InputGitAuthor object"
+        assert is_optional(author, github.InputGitAuthor), "author must be a github.InputGitAuthor object"
+        assert is_optional(committer, github.InputGitAuthor), "committer must be a github.InputGitAuthor object"
 
         url_parameters: dict[str, Any] = {"message": message, "sha": sha}
         if is_defined(branch):
