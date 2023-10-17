@@ -1,3 +1,51 @@
+[build-system]
+requires = ["setuptools>=60", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PyGithub"
+authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
+description = "Use the full Github API v3"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["one", "two"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development",
+]
+dependencies = [
+    'pynacl >=1.4.0',
+    'python-dateutil',
+    'requests >=2.14.0',
+    'pyjwt[crypto] >=2.4.0',
+    'typing-extensions >=4.0.0',
+    'urllib3 >=1.26.0',
+    'Deprecated',
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "http://pygithub.readthedocs.io/en/stable/"
+Source = "https://github.com/pygithub/pygithub"
+Tracker = "https://github.com/pygithub/pygithub/issues"
+
+[project.optional-dependencies]
+integrations = []
+
+[tool.setuptools.package-data]
+github = ["py.typed", '*.pyi']
+
 [tool.mypy]
 python_version = '3.7'
 ignore_missing_imports = true
@@ -20,13 +68,11 @@ line-length = 120
 target-version = "py37"
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
-    "E", "W",  # see: https://pypi.org/project/pycodestyle
-    "F",  # see: https://pypi.org/project/pyflakes
-    "I",  # see: isort
+    "E",
+    "W", # see: https://pypi.org/project/pycodestyle
+    "F", # see: https://pypi.org/project/pyflakes
+    "I", # see: isort
 ]
-ignore = [
-    "E501",
-    "E741",
-]
+ignore = ["E501", "E741"]
 ignore-init-module-imports = true
 unfixable = ["F401"]
