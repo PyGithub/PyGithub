@@ -2097,9 +2097,9 @@ class Repository(CompletableGithubObject):
         assert is_optional(path, str), path
         assert is_optional(since, datetime), since
         assert is_optional(until, datetime), until
-        assert is_undefined(author) or isinstance(
+        assert is_optional(
             author,
-            str | github.NamedUser.NamedUser | github.AuthenticatedUser.AuthenticatedUser,
+            (str, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
         ), author
         url_parameters: dict[str, Any] = {}
         if is_defined(sha):
