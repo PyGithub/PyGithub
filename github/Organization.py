@@ -720,11 +720,6 @@ class Organization(CompletableGithubObject):
         email: Opt[str] = NotSet,
         location: Opt[str] = NotSet,
         name: Opt[str] = NotSet,
-        use_squash_pr_title_as_default: Opt[bool] = NotSet,
-        squash_merge_commit_title: Opt[str] = NotSet,
-        squash_merge_commit_message: Opt[str] = NotSet,
-        merge_commit_title: Opt[str] = NotSet,
-        merge_commit_message: Opt[str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
@@ -736,25 +731,6 @@ class Organization(CompletableGithubObject):
         assert is_optional(email, str), email
         assert is_optional(location, str), location
         assert is_optional(name, str), name
-        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
-        assert is_undefined(squash_merge_commit_title) or squash_merge_commit_title in [
-            "PR_TITLE",
-            "COMMIT_OR_PR_TITLE",
-        ], squash_merge_commit_title
-        assert is_undefined(squash_merge_commit_message) or squash_merge_commit_message in [
-            "PR_BODY",
-            "COMMIT_MESSAGES",
-            "BLANK",
-        ], squash_merge_commit_message
-        assert is_undefined(merge_commit_title) or merge_commit_title in [
-            "PR_TITLE",
-            "MERGE_MESSAGE",
-        ], merge_commit_title
-        assert is_undefined(merge_commit_message) or merge_commit_message in [
-            "PR_TITLE",
-            "PR_BODY",
-            "BLANK",
-        ], merge_commit_message
         post_parameters = NotSet.remove_unset_items(
             {
                 "billing_email": billing_email,
@@ -764,11 +740,6 @@ class Organization(CompletableGithubObject):
                 "email": email,
                 "location": location,
                 "name": name,
-                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
-                "squash_merge_commit_title": squash_merge_commit_title,
-                "squash_merge_commit_message": squash_merge_commit_message,
-                "merge_commit_title": merge_commit_title,
-                "merge_commit_message": merge_commit_message,
             }
         )
 
