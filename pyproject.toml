@@ -36,7 +36,7 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "http://pygithub.readthedocs.io/en/stable/"
+Documentation = "https://pygithub.readthedocs.io/en/stable/"
 Source = "https://github.com/pygithub/pygithub"
 Tracker = "https://github.com/pygithub/pygithub/issues"
 
