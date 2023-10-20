@@ -76,5 +76,5 @@ ignore-init-module-imports = true
 unfixable = ["F401"]
 
 [tool.pytest.ini_options]
-python_files = 'tests/*.py'
+python_files = "tests/*.py"
 addopts = "--color=yes"
