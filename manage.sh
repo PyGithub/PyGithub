@@ -14,14 +14,14 @@ function fix_headers {
 }
 
 function bump {
-    previousVersion=$( grep '^version =' setup.py | sed 's/version = \"\(.*\)\"/\1/' )
+    previousVersion=$( grep '^version =' pyproject.toml | sed 's/version = \"\(.*\)\"/\1/' )
     echo "Next version number? (previous: '$previousVersion')"
     read version
     if [ -z "$version" ]; then
         echo "empty version string"
         exit 1
     fi
-    sed -i -b "s/version = .*/version = \"$version\"/" setup.py
+    sed -i -b "s/version = .*/version = \"$version\"/" pyproject.toml
 }
 
 function readme {
