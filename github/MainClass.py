@@ -19,16 +19,51 @@
 # Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Arda Kuyumcu <kuyumcuarda@gmail.com>                          #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
 # Copyright 2018 Joshua Hoblitt <josh@hoblitt.com>                             #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 h.shi <10385628+AnYeMoWang@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
-# Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Caleb Sweeney <caleb.w.sweeney@gmail.com>                     #
+# Copyright 2019 Hamel Husain <hamelsmu@github.com>                            #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Jake Klingensmith <jklingen92@users.noreply.github.com>       #
+# Copyright 2019 Jake Wilkins <jakewilkins@github.com>                         #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
-# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tomas Tomecek <nereone@gmail.com>                             #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 chillipeper <miguel.tpy@gmail.com>                            #
+# Copyright 2019 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Jannis Gebauer <jayfk@users.noreply.github.com>               #
+# Copyright 2020 Mahesh Raju <coder@mahesh.net>                                #
+# Copyright 2020 Nikolay Edigaryev <edigaryev@gmail.com>                       #
+# Copyright 2020 Omar Brikaa <brikaaomar@gmail.com>                            #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Sachi King <nakato@nakato.io>                                 #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,6 +82,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import pickle

@@ -100,13 +100,26 @@
 # Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
-# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Andrew Collington <andy@amnuts.com>                           #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
+# Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
+# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -125,6 +138,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import collections

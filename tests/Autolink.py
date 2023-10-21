@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Marco Köpcke  <hello@parakoopa.de>                            #
+# Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +21,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from tests import Framework
 
 

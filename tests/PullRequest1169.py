@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2019 Olof-Joachim Frahm <olof@macrolet.net>                        #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

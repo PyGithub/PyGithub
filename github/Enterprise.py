@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
+# Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from typing import Any, Dict
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses

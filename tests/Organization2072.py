@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 James Simpson <james@snowterminal.com>                        #
+# Copyright 2021 James Simpson <jsimpso@users.noreply.github.com>              #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

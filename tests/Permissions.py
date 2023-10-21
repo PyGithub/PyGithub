@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2020 Karsten Wagner <39054096+karsten-wagner@users.noreply.github.c#
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

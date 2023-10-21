@@ -18,8 +18,33 @@
 # Copyright 2017 Paul Ortman <paul.ortman@gmail.com>                           #
 # Copyright 2018 Jason White <jasonaw0@gmail.com>                              #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Jiri Popelka <jpopelka@redhat.com>                            #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 cclauss <cclauss@me.com>                                      #
+# Copyright 2019 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2020 Edouard Benauw <edouard.benauw@student.ecp.fr>                #
+# Copyright 2020 Emily <github@emily.moe>                                      #
+# Copyright 2020 Michał Górny <mgorny@gentoo.org>                              #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Sébastien Besson <seb.besson@gmail.com>                       #
+# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Sam Morgan <sama4mail@gmail.com>                              #
+# Copyright 2021 Sorin Sbarnea <sorin.sbarnea@gmail.com>                       #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Hugo van Kemenade <hugovk@users.noreply.github.com>           #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

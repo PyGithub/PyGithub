@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +21,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime

@@ -1,10 +1,13 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
-# Copyright 2017 Mike Miller <github@mikeage.net>                              #
-# Copyright 2017 Simon <spam@esemi.ru>                                         #
-# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

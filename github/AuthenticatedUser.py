@@ -15,11 +15,37 @@
 # Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
+# Copyright 2018 Riccardo Pittau <elfosardo@users.noreply.github.com>          #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Jamie van Brunschot <j.brunschot@coolblue.nl>                 #
+# Copyright 2019 Jon Dufresne <jon.dufresne@gmail.com>                         #
+# Copyright 2019 Pavan Kunisetty <nagapavan@users.noreply.github.com>          #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Surya Teja <94suryateja@gmail.com>                            #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 MeggyCal <MeggyCal@users.noreply.github.com>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Yuya Nakamura <yuyan7sh@gmail.com>                            #
+# Copyright 2021 sshekdar-VMware <87147229+sshekdar-VMware@users.noreply.github.com>#
+# Copyright 2021 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,6 +64,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime, timezone

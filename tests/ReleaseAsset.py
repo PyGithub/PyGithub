@@ -1,8 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
-# Copyright 2017 Simon <spam@esemi.ru>                                         #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

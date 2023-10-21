@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -10,6 +9,8 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +32,7 @@
 
 import os
 import subprocess
+
 
 eightySharps = "#" * 80
 
@@ -102,8 +104,6 @@ class PythonHeader:
 
         if isExecutable:
             newLines.append("#!/usr/bin/env python")
-        newLines.append("# -*- coding: utf-8 -*-")
-        newLines.append("")
 
         for line in generateLicenseSection(filename):
             newLines.append(line)
@@ -173,7 +173,7 @@ def findHeadersAndFiles():
 def main():
     for header, filename in findHeadersAndFiles():
         print("Analyzing", filename)
-        with open(filename) as f:
+        with open(filename, encoding='utf-8') as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
