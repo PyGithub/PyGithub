@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -32,7 +33,6 @@
 
 import os
 import subprocess
-
 
 eightySharps = "#" * 80
 
