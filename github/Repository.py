@@ -2043,7 +2043,7 @@ class Repository(CompletableGithubObject):
         self, affiliation: Opt[str] = NotSet, permission: Opt[str] = NotSet
     ) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/collaborators/collaborators>`_
         :param affiliation: string
         :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
