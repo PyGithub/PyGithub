@@ -173,7 +173,7 @@ def findHeadersAndFiles():
 def main():
     for header, filename in findHeadersAndFiles():
         print("Analyzing", filename)
-        with open(filename, encoding='utf-8') as f:
+        with open(filename, encoding="utf-8") as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
