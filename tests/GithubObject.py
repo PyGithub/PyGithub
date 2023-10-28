@@ -23,8 +23,6 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from dateutil.tz.tz import tzoffset, tzutc
-
 from . import Framework
 
 gho = Framework.github.GithubObject
@@ -36,14 +34,6 @@ class GithubObject(unittest.TestCase):
             (None, None),
             (
                 "2021-01-23T12:34:56Z",
-                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
-            ),
-            (
-                "2021-01-23T12:34:56.000Z",
-                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
-            ),
-            (
-                "2021-01-23T12:34:56.000Z",
                 datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
             ),
             (
@@ -66,18 +56,6 @@ class GithubObject(unittest.TestCase):
                     tzinfo=timezone(timedelta(hours=-6, minutes=-30)),
                 ),
             ),
-            (
-                "2021-01-23T12:34:56.000+00:00",
-                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone.utc),
-            ),
-            (
-                "2021-01-23T12:34:56.000+01:00",
-                datetime(2021, 1, 23, 12, 34, 56, tzinfo=timezone(timedelta(hours=1))),
-            ),
-            (
-                "2021-01-23T12:34:56.000-06:00",
-                datetime(2021, 1, 23, 12, 34, 56, tzinfo=tzoffset(None, -21600)),
-            )
         ]:
             actual = gho.GithubObject._makeDatetimeAttribute(value)
             self.assertEqual(gho._ValuedAttribute, type(actual), value)

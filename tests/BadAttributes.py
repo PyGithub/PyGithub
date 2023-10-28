@@ -26,8 +26,6 @@
 
 from datetime import datetime, timezone
 
-from dateutil.parser import ParserError
-
 import github
 
 from . import Framework
@@ -56,10 +54,10 @@ class BadAttributes(Framework.TestCase):
             user.created_at
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, str)
-        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ParserError)
+        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ValueError)
         self.assertEqual(
             raisedexp.exception.transformation_exception.args,
-            ("Unknown string format: %s", "foobar"),
+            ("Invalid isoformat string: 'foobar'",),
         )
 
     def testBadTransformedAttribute(self):
