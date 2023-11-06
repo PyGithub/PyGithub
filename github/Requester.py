@@ -133,11 +133,15 @@ class HTTPSRequestsConnectionClass:
         self.protocol = "https"
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
+        self.cert = kwargs.get("cert", None)
         self.session = requests.Session()
         # having Session.auth set something other than None disables falling back to .netrc file
         # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
         # see https://github.com/PyGithub/PyGithub/pull/2703
         self.session.auth = Requester.noopAuth
+
+        if self.cert is not None:
+            self.session.cert = self.cert
 
         if retry is None:
             self.retry = requests.adapters.DEFAULT_RETRIES
@@ -365,6 +369,7 @@ class Requester:
         per_page: int,
         verify: Union[bool, str],
         retry: Optional[Union[int, Retry]],
+        cert: Optional[str],
         pool_size: Optional[int],
         seconds_between_requests: Optional[float] = None,
         seconds_between_writes: Optional[float] = None,
@@ -407,6 +412,7 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+        self.__cert = cert
 
         self.__installation_authorization = None
 
@@ -455,6 +461,7 @@ class Requester:
             user_agent=self.__userAgent,
             per_page=self.per_page,
             verify=self.__verify,
+            cert=self.__cert,
             retry=self.__retry,
             pool_size=self.__pool_size,
             seconds_between_requests=self.__seconds_between_requests,
@@ -879,6 +886,7 @@ class Requester:
                 pool_size=self.__pool_size,
                 timeout=self.__timeout,
                 verify=self.__verify,
+                cert=self.__cert,
             )
 
         return self.__connection

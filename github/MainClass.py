@@ -127,6 +127,7 @@ class Github:
         user_agent: str = Consts.DEFAULT_USER_AGENT,
         per_page: int = Consts.DEFAULT_PER_PAGE,
         verify: bool | str = True,
+        cert: str | None = None,
         retry: int | Retry | None = default_retry,
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
@@ -146,6 +147,7 @@ class Github:
         :param retry: int or urllib3.util.retry.Retry object,
                       defaults to github.Github.default_retry,
                       set to None to disable retries
+        :param cert: string or None to set user client certs
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
@@ -201,6 +203,7 @@ class Github:
             user_agent,
             per_page,
             verify,
+            cert,
             retry,
             pool_size,
             seconds_between_requests,
