@@ -19,10 +19,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import pytest
+
 from github import GithubException
 from . import Framework
-
-import pytest
 
 
 class PullRequest2816(Framework.TestCase):
