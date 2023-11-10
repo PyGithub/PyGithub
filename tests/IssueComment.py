@@ -36,31 +36,46 @@ from . import Framework
 class IssueComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
+        self.comment = self.g.get_repo("PyGithub/PyGithub").get_issue(28).get_comment(20227753)
 
     def testAttributes(self):
-        self.assertEqual(self.comment.body, "Comment created by PyGithub")
+        self.assertEqual(self.comment.body, "Comment created by PyGithub\n")
         self.assertEqual(
             self.comment.created_at,
-            datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
+            datetime(2013, 6, 29, 10, 31, 38, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.comment.id, 5808311)
+        self.assertEqual(self.comment.id, 20227753)
         self.assertEqual(
             self.comment.updated_at,
-            datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
+            datetime(2013, 6, 29, 10, 31, 38, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311",
+            "https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753",
         )
-        self.assertEqual(self.comment.user.login, "jacquev6")
+        self.assertEqual(self.comment.user.login, "stuglaser")
         self.assertEqual(
             self.comment.html_url,
-            "https://github.com/jacquev6/PyGithub/issues/28#issuecomment-5808311",
+            "https://github.com/PyGithub/PyGithub/issues/28#issuecomment-20227753",
         )
         self.assertEqual(
             repr(self.comment),
-            'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)',
+            'IssueComment(user=NamedUser(login="stuglaser"), id=20227753)',
+        )
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "+1": 1,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 1,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753/reactions",
+            },
         )
 
     def testEdit(self):
