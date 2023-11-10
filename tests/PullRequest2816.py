@@ -19,8 +19,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
+from github import GithubException
 from . import Framework
+
+import pytest
 
 
 class PullRequest2816(Framework.TestCase):
@@ -31,3 +33,20 @@ class PullRequest2816(Framework.TestCase):
 
     def testMergeWithAutomerge(self):
         self.pull.enable_automerge()
+
+    def testMergeWithAutomergeError(self):
+        with pytest.raises(GithubException) as error:
+            self.pull.enable_automerge()
+
+        assert error.value.status == 400
+        assert error.value.data == {
+            "data": {"enablePullRequestAutoMerge": None},
+            "errors": [
+                {
+                    "locations": [{"column": 81, "line": 1}],
+                    "message": "Pull request Auto merge is not allowed for this repository",
+                    "path": ["enablePullRequestAutoMerge"],
+                    "type": "UNPROCESSABLE",
+                }
+            ],
+        }
