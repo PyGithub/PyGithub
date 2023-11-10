@@ -727,18 +727,23 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
-    def _set_to_automerge(self):
-        mutation = """
-        mutation EnablePullRequestAutoMerge($pullRequestId: ID!) {
-          enablePullRequestAutoMerge(input: {pullRequestId: $pullRequestId}) {
-            clientMutationId
-          }
-        }
+    def enable_automerge(
+            self,
+            merge_method: Opt[str] = "MERGE"
+    ):
         """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
+        <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
+        """
+        assert is_optional(merge_method, str), merge_method
+        mutation = "mutation EnablePullRequestAutoMerge($input: EnablePullRequestAutoMergeInput!) { enablePullRequestAutoMerge(input: $input) { clientMutationId } }"
 
         # Define the variables
         variables = {
-            "pullRequestId": self.raw_data['node_id']
+            "input": {
+                "pullRequestId": self.raw_data['node_id'],
+                "mergeMethod": merge_method
+            }
         }
 
         post_parameters = {
@@ -761,7 +766,6 @@ class PullRequest(CompletableGithubObject):
             commit_title: Opt[str] = NotSet,
             merge_method: Opt[str] = NotSet,
             sha: Opt[str] = NotSet,
-            auto_merge: Opt[bool] = False,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
@@ -770,9 +774,6 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(commit_title, str), commit_title
         assert is_optional(merge_method, str), merge_method
         assert is_optional(sha, str), sha
-        assert is_optional(auto_merge, bool), auto_merge
-        if auto_merge:
-            self._set_to_automerge()
         post_parameters = NotSet.remove_unset_items(
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
