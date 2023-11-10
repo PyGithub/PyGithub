@@ -22,6 +22,7 @@
 import pytest
 
 from github import GithubException
+
 from . import Framework
 
 
