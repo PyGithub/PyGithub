@@ -30,9 +30,3 @@ ignore = [
 ]
 ignore-init-module-imports = true
 unfixable = ["F401"]
-
-[project]
-# version = "0.0.1"  # Remove any existing version parameter.
-dynamic = ["version"]
-
-[tool.setuptools_scm]
