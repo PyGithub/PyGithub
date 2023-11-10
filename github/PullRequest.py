@@ -351,7 +351,7 @@ class PullRequest(CompletableGithubObject):
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def create_comment(
-            self, body: str, commit: github.Commit.Commit, path: str, position: int
+        self, body: str, commit: github.Commit.Commit, path: str, position: int
     ) -> github.PullRequestComment.PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -359,18 +359,18 @@ class PullRequest(CompletableGithubObject):
         return self.create_review_comment(body, commit, path, position)
 
     def create_review_comment(
-            self,
-            body: str,
-            commit: github.Commit.Commit,
-            path: str,
-            # line replaces deprecated position argument, so we put it between path and side
-            line: Opt[int] = NotSet,
-            side: Opt[str] = NotSet,
-            start_line: Opt[int] = NotSet,
-            start_side: Opt[int] = NotSet,
-            in_reply_to: Opt[int] = NotSet,
-            subject_type: Opt[str] = NotSet,
-            as_suggestion: bool = False,
+        self,
+        body: str,
+        commit: github.Commit.Commit,
+        path: str,
+        # line replaces deprecated position argument, so we put it between path and side
+        line: Opt[int] = NotSet,
+        side: Opt[str] = NotSet,
+        start_line: Opt[int] = NotSet,
+        start_side: Opt[int] = NotSet,
+        in_reply_to: Opt[int] = NotSet,
+        subject_type: Opt[str] = NotSet,
+        as_suggestion: bool = False,
     ) -> github.PullRequestComment.PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -438,11 +438,11 @@ class PullRequest(CompletableGithubObject):
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def create_review(
-            self,
-            commit: Opt[github.Commit.Commit] = NotSet,
-            body: Opt[str] = NotSet,
-            event: Opt[str] = NotSet,
-            comments: Opt[list[ReviewComment]] = NotSet,
+        self,
+        commit: Opt[github.Commit.Commit] = NotSet,
+        body: Opt[str] = NotSet,
+        event: Opt[str] = NotSet,
+        comments: Opt[list[ReviewComment]] = NotSet,
     ) -> github.PullRequestReview.PullRequestReview:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
@@ -463,9 +463,9 @@ class PullRequest(CompletableGithubObject):
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
     def create_review_request(
-            self,
-            reviewers: Opt[list[str] | str] = NotSet,
-            team_reviewers: Opt[list[str] | str] = NotSet,
+        self,
+        reviewers: Opt[list[str] | str] = NotSet,
+        team_reviewers: Opt[list[str] | str] = NotSet,
     ) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
@@ -480,9 +480,9 @@ class PullRequest(CompletableGithubObject):
         )
 
     def delete_review_request(
-            self,
-            reviewers: Opt[list[str] | str] = NotSet,
-            team_reviewers: Opt[list[str] | str] = NotSet,
+        self,
+        reviewers: Opt[list[str] | str] = NotSet,
+        team_reviewers: Opt[list[str] | str] = NotSet,
     ) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
@@ -497,12 +497,12 @@ class PullRequest(CompletableGithubObject):
         )
 
     def edit(
-            self,
-            title: Opt[str] = NotSet,
-            body: Opt[str] = NotSet,
-            state: Opt[str] = NotSet,
-            base: Opt[str] = NotSet,
-            maintainer_can_modify: Opt[bool] = NotSet,
+        self,
+        title: Opt[str] = NotSet,
+        body: Opt[str] = NotSet,
+        state: Opt[str] = NotSet,
+        base: Opt[str] = NotSet,
+        maintainer_can_modify: Opt[bool] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
@@ -534,10 +534,10 @@ class PullRequest(CompletableGithubObject):
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
     def get_comments(
-            self,
-            sort: Opt[str] = NotSet,
-            direction: Opt[str] = NotSet,
-            since: Opt[datetime] = NotSet,
+        self,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
@@ -551,11 +551,11 @@ class PullRequest(CompletableGithubObject):
 
     # v3: remove *, added here to force named parameters because order has changed
     def get_review_comments(
-            self,
-            *,
-            sort: Opt[str] = NotSet,
-            direction: Opt[str] = NotSet,
-            since: Opt[datetime] = NotSet,
+        self,
+        *,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        since: Opt[datetime] = NotSet,
     ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
@@ -727,10 +727,7 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
-    def enable_automerge(
-            self,
-            merge_method: Opt[str] = "MERGE"
-    ):
+    def enable_automerge(self, merge_method: Opt[str] = "MERGE") -> None:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
         <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
@@ -739,33 +736,23 @@ class PullRequest(CompletableGithubObject):
         mutation = "mutation EnablePullRequestAutoMerge($input: EnablePullRequestAutoMergeInput!) { enablePullRequestAutoMerge(input: $input) { clientMutationId } }"
 
         # Define the variables
-        variables = {
-            "input": {
-                "pullRequestId": self.raw_data['node_id'],
-                "mergeMethod": merge_method
-            }
-        }
+        variables = {"input": {"pullRequestId": self.raw_data["node_id"], "mergeMethod": merge_method}}
 
-        post_parameters = {
-            "query": mutation,
-            "variables": variables
-        }
+        post_parameters = {"query": mutation, "variables": variables}
 
         # Make the request
         responseHeaders, data = self._requester.requestJsonAndCheck(
-            "POST",
-            "https://api.github.com/graphql",
-            input=post_parameters
+            "POST", "https://api.github.com/graphql", input=post_parameters
         )
-        if 'errors' in data:
+        if "errors" in data:
             raise self._requester.createException(400, responseHeaders, data)
 
     def merge(
-            self,
-            commit_message: Opt[str] = NotSet,
-            commit_title: Opt[str] = NotSet,
-            merge_method: Opt[str] = NotSet,
-            sha: Opt[str] = NotSet,
+        self,
+        commit_message: Opt[str] = NotSet,
+        commit_title: Opt[str] = NotSet,
+        merge_method: Opt[str] = NotSet,
+        sha: Opt[str] = NotSet,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
