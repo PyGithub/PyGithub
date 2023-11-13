@@ -71,6 +71,7 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
+from github.GraphQL import GraphQL
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
@@ -134,6 +135,7 @@ class PullRequest(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
         self._maintainer_can_modify: Attribute[bool] = NotSet
+        self._node_id: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -342,6 +344,11 @@ class PullRequest(CompletableGithubObject):
     def maintainer_can_modify(self) -> bool:
         self._completeIfNotSet(self._maintainer_can_modify)
         return self._maintainer_can_modify.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     def as_issue(self) -> Issue:
         """
@@ -727,25 +734,43 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
-    def enable_automerge(self, merge_method: Opt[str] = "MERGE") -> None:
+    def enable_automerge(
+        self,
+        merge_method: Opt[str] = "MERGE",
+        author_email: Opt[str] = NotSet,
+        client_mutation_id: Opt[str] = NotSet,
+        commit_body: Opt[str] = NotSet,
+        commit_headline: Opt[str] = NotSet,
+        expected_head_oid: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
         <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
         """
-        assert is_optional(merge_method, str), merge_method
-        mutation = "mutation EnablePullRequestAutoMerge($input: EnablePullRequestAutoMergeInput!) { enablePullRequestAutoMerge(input: $input) { clientMutationId } }"
-
-        # Define the variables
-        variables = {"input": {"pullRequestId": self.raw_data["node_id"], "mergeMethod": merge_method}}
-
-        post_parameters = {"query": mutation, "variables": variables}
-
-        # Make the request
-        responseHeaders, data = self._requester.requestJsonAndCheck(
-            "POST", "https://api.github.com/graphql", input=post_parameters
+        _, data = GraphQL(self._requester, self._headers).enable_pull_request_auto_merge(
+            self.node_id,
+            author_email,
+            client_mutation_id,
+            commit_body,
+            commit_headline,
+            expected_head_oid,
+            merge_method,
         )
-        if "errors" in data:
-            raise self._requester.createException(400, responseHeaders, data)
+        return data
+
+    def disable_automerge(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
+        <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
+        """
+        _, data = GraphQL(self._requester, self._headers).disable_pull_request_auto_merge(
+            self.node_id,
+            client_mutation_id,
+        )
+        return data
 
     def merge(
         self,
@@ -905,3 +930,5 @@ class PullRequest(CompletableGithubObject):
             )
         if "requested_teams" in attributes:
             self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
