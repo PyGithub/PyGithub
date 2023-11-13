@@ -62,6 +62,21 @@ class IssueComment(Framework.TestCase):
             repr(self.comment),
             'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)',
         )
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "+1": 1,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 1,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311/reactions",
+            },
+        )
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
