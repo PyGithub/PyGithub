@@ -71,7 +71,6 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
-from github.GraphQL import GraphQL
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
@@ -747,14 +746,29 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
         <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
         """
-        _, data = GraphQL(self._requester, self._headers).enable_pull_request_auto_merge(
-            self.node_id,
-            author_email,
-            client_mutation_id,
-            commit_body,
-            commit_headline,
-            expected_head_oid,
-            merge_method,
+        assert is_optional(author_email, str), author_email
+        assert is_optional(client_mutation_id, str), client_mutation_id
+        assert is_optional(commit_body, str), commit_body
+        assert is_optional(commit_headline, str), commit_headline
+        assert is_optional(expected_head_oid, str), expected_head_oid
+        assert isinstance(merge_method, str) and merge_method in ["MERGE", "REBASE", "SQUASH"], merge_method
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "authorEmail": author_email,
+            "clientMutationId": client_mutation_id,
+            "commitBody": commit_body,
+            "commitHeadline": commit_headline,
+            "expectedHeadOid": expected_head_oid,
+            "mergeMethod": merge_method,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="enable_pull_request_auto_merge",
+            variables=NotSet.remove_unset_items(variables),
+            output="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 
@@ -766,9 +780,19 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
         <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
         """
-        _, data = GraphQL(self._requester, self._headers).disable_pull_request_auto_merge(
-            self.node_id,
-            client_mutation_id,
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="disable_pull_request_auto_merge",
+            variables=NotSet.remove_unset_items(variables),
+            output="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 
