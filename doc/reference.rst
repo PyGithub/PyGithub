@@ -6,6 +6,7 @@ Reference
 
 .. toctree::
    github
+   github_integration
    apis
    utilities
    github_objects

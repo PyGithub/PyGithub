@@ -76,13 +76,13 @@ class GithubRetry(Retry):
 
     def new(self, **kw: Any) -> Self:
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
-        return super().new(**kw)
+        return super().new(**kw)  # type: ignore
 
     def increment(
         self,
         method: Optional[str] = None,
         url: Optional[str] = None,
-        response: Optional[HTTPResponse] = None,
+        response: Optional[HTTPResponse] = None,  # type: ignore[override]
         error: Optional[Exception] = None,
         _pool: Optional[ConnectionPool] = None,
         _stacktrace: Optional[TracebackType] = None,
@@ -197,7 +197,7 @@ class GithubRetry(Retry):
         return super().increment(method, url, response, error, _pool, _stacktrace)
 
     @staticmethod
-    def get_content(resp: HTTPResponse, url: str) -> bytes:
+    def get_content(resp: HTTPResponse, url: str) -> bytes:  # type: ignore[override]
         # logic taken from HTTPAdapter.build_response (requests.adapters)
         response = Response()
 

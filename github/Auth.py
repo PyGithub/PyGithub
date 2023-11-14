@@ -25,7 +25,7 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
 import jwt
 from requests import utils
@@ -34,11 +34,15 @@ from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
 from github.Requester import Requester, WithRequester
 
+if TYPE_CHECKING:
+    from github.GithubIntegration import GithubIntegration
+
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS)
 
 
+# add new implementations of github.Auth.Auth to docs/utilities.rst
 class Auth(abc.ABC):
     """This class is the base class of all authentication methods for Requester."""
 
@@ -82,7 +86,9 @@ class HTTPBasicAuth(Auth, abc.ABC):
 
 
 class Login(HTTPBasicAuth):
-    """This class is used to authenticate Requester with login and password."""
+    """
+    This class is used to authenticate with login and password.
+    """
 
     def __init__(self, login: str, password: str):
         assert isinstance(login, str)
@@ -107,7 +113,9 @@ class Login(HTTPBasicAuth):
 
 
 class Token(Auth):
-    """This class is used to authenticate Requester with a single constant token."""
+    """
+    This class is used to authenticate with a single constant token.
+    """
 
     def __init__(self, token: str):
         assert isinstance(token, str)
@@ -136,8 +144,8 @@ class JWT(Auth, ABC):
 
 
 class AppAuth(JWT):
-    """This class is used to authenticate Requester as a GitHub App.
-
+    """
+    This class is used to authenticate as a GitHub App.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
     """
@@ -217,8 +225,8 @@ class AppAuth(JWT):
 
 
 class AppAuthToken(JWT):
-    """This class is used to authenticate Requester as a GitHub App with a single constant JWT.
-
+    """
+    This class is used to authenticate as a GitHub App with a single constant JWT.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
     """
@@ -234,17 +242,14 @@ class AppAuthToken(JWT):
 
 
 class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
-    """This class is used to authenticate Requester as a GitHub App Installation.
-
+    """
+    This class is used to authenticate as a GitHub App Installation.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
 
     """
 
-    # imported here to avoid circular import, needed for typing only
-    from github.GithubIntegration import GithubIntegration
-
     # used to fetch live access token when calling self.token
-    __integration: Optional[GithubIntegration] = None
+    __integration: Optional["GithubIntegration"] = None
     __installation_authorization: Optional[InstallationAuthorization] = None
 
     def __init__(
@@ -270,6 +275,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     def withRequester(self, requester: Requester) -> "AppInstallationAuth":
         super().withRequester(requester.withAuth(self._app_auth))
 
+        # imported here to avoid circular import
         from github.GithubIntegration import GithubIntegration
 
         self.__integration = GithubIntegration(**self.requester.kwargs)
@@ -317,8 +323,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 
 
 class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
-    """This class is used to authenticate Requester as a GitHub App on behalf of a user.
-
+    """
+    This class is used to authenticate as a GitHub App on behalf of a user.
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
 
     """
@@ -446,7 +452,9 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
 
 
 class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
-    """This class is used to authenticate Requester via .netrc."""
+    """
+    This class is used to authenticate via .netrc.
+    """
 
     def __init__(self) -> None:
         super().__init__()
