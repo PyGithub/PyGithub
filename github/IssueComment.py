@@ -31,99 +31,94 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
+from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
-from . import Consts
+if TYPE_CHECKING:
+    from github.Reaction import Reaction
 
 
-class IssueComment(github.GithubObject.CompletableGithubObject):
+class IssueComment(CompletableGithubObject):
     """
     This class represents IssueComments. The reference can be found here https://docs.github.com/en/rest/reference/issues#comments
     """
+
+    def _initAttributes(self) -> None:
+        self._body: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._issue_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def issue_url(self):
-        """
-        :type: string
-        """
+    def issue_url(self) -> str:
         self._completeIfNotSet(self._issue_url)
         return self._issue_url.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
+
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, body):
+    def edit(self, body: str) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
-        :param body: string
-        :rtype: None
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -132,13 +127,12 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_reactions(self):
+    def get_reactions(self) -> PaginatedList[Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue-comment>`_
-        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Reaction.Reaction,
             self._requester,
             f"{self.url}/reactions",
@@ -146,12 +140,10 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def create_reaction(self, reaction_type):
+    def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/comments/{id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-an-issue-comment>`_
-        :param reaction_type: string
-        :rtype: :class:`github.Reaction.Reaction`
         """
         assert isinstance(reaction_type, str), reaction_type
         post_parameters = {
@@ -165,12 +157,10 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
-    def delete_reaction(self, reaction_id):
+    def delete_reaction(self, reaction_id: int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}
                 <https://docs.github.com/en/rest/reference/reactions#delete-an-issue-comment-reaction>`_
-        :param reaction_id: integer
-        :rtype: bool
         """
         assert isinstance(reaction_id, int), reaction_id
         status, _, _ = self._requester.requestJson(
@@ -180,17 +170,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def _initAttributes(self) -> None:
-        self._body = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._issue_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
@@ -207,3 +187,5 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])

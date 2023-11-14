@@ -3,7 +3,10 @@ on:
   push:
     branches:
       - main
+      - release-v*
   pull_request:
+  merge_group:
+
 jobs:
 
   mypy:
