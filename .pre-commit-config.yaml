@@ -3,7 +3,7 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -14,14 +14,14 @@ repos:
           - "--fix=lf"
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.10.1
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
         args:
           - "--py37-plus"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.289
+    rev: v0.1.5
     hooks:
       - id: ruff
         args:
@@ -30,7 +30,7 @@ repos:
           - "--exit-non-zero-on-fix"
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
       - id: codespell
         exclude: tests/
@@ -39,6 +39,6 @@ repos:
           - "--quiet-level=2"
 
   - repo: https://github.com/psf/black
-    rev: 23.9.1
+    rev: 23.11.0
     hooks:
       - id: black
