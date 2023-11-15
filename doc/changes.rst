@@ -1087,7 +1087,7 @@ Version 1.29 (October 10, 2016)
 -----------------------------------
 
 * add issue assignee param (3a8edc7)
-* Fix diffrerent case (fcf6cfb)
+* Fix different case (fcf6cfb)
 * DOC: remove easy_install suggestion; update links (45e76d9)
 * Add permission param documentation (9347345)
 * Add ability to set permission for team repo (5dddea7)
@@ -1477,7 +1477,7 @@ Pre-release versions
   * POST `/repos/:owner/:repo/git/trees?base_tree-`
 
 * Gists
-* Autorizations
+* Authorizations
 * Keys
 * Hooks
 * Events
