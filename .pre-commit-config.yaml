@@ -10,13 +10,15 @@ repos:
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: mixed-line-ending
-        args: [ "--fix=lf" ]
+        args:
+          - "--fix=lf"
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.10.1
     hooks:
       - id: pyupgrade
-        args: [ "--py37-plus" ]
+        args:
+          - "--py37-plus"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.0.289
