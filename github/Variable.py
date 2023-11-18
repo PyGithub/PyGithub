@@ -96,7 +96,7 @@ class Variable(CompletableGithubObject):
         }
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{self.name}",
+            self.url,
             input=patch_parameters,
         )
         return status == 204
@@ -106,7 +106,7 @@ class Variable(CompletableGithubObject):
         :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
         :rtype: None
         """
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/actions/variables/{self.name}")
+        self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
