@@ -34,7 +34,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from typing import Any, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union, Callable
+from typing import Any, Callable, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -239,8 +239,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
         content = [
-            self.__contentClass(self.__requester, headers, self._attributesTransformer(element),
-                                completed=False)
+            self.__contentClass(self.__requester, headers, self._attributesTransformer(element), completed=False)
             for element in data
             if element is not None
         ]
@@ -272,23 +271,35 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
-        return [self.__contentClass(self.__requester, headers, self._attributesTransformer(element), completed=False) for element in data]
+        return [
+            self.__contentClass(self.__requester, headers, self._attributesTransformer(element), completed=False)
+            for element in data
+        ]
 
     @classmethod
-    def attributes_transformer_override_from_dictionary(cls, transformer: Callable[[dict[str, Any]], dict[str, Any]], overrides: dict) -> Callable[[dict[str, Any]], dict[str, Any]]:
+    def attributes_transformer_override_from_dictionary(
+        cls, transformer: Callable[[dict[str, Any]], dict[str, Any]], overrides: dict
+    ) -> Callable[[dict[str, Any]], dict[str, Any]]:
         def attributes_transformer(attributes: dict[str, Any]) -> dict[str, Any]:
             # Recursively merge overrides with attributes, overriding attributes with overrides
             attributes = cls.merge_dicts(attributes, overrides)
             return transformer(attributes)
+
         return attributes_transformer
 
     @classmethod
-    def attributes_transformer_build_dynamic_url(cls, transformer: Callable[[dict[str, Any]], dict[str, Any]], base_url: str, attributes_key: Optional[str] = 'name') -> Callable[[dict[str, Any]], dict[str, Any]]:
+    def attributes_transformer_build_dynamic_url(
+        cls,
+        transformer: Callable[[dict[str, Any]], dict[str, Any]],
+        base_url: str,
+        attributes_key: Optional[str] = "name",
+    ) -> Callable[[dict[str, Any]], dict[str, Any]]:
         def attributes_transformer(attributes: dict[str, Any]) -> dict[str, Any]:
-            attributes['url'] = f'{base_url}/{attributes[attributes_key]}'
+            attributes["url"] = f"{base_url}/{attributes[attributes_key]}"
             return transformer(attributes)
+
         return attributes_transformer
-    
+
     @classmethod
     def merge_dicts(cls, d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
         # clone d1

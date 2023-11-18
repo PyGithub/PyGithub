@@ -1695,7 +1695,8 @@ class Repository(CompletableGithubObject):
             f"{self.url}/actions/secrets",
             None,
             attributesTransformer=PaginatedList.attributes_transformer_build_dynamic_url(
-                lambda x: x, f"{self.url}/actions/secrets"),
+                lambda x: x, f"{self.url}/actions/secrets"
+            ),
             list_item="secrets",
         )
 
@@ -1744,7 +1745,8 @@ class Repository(CompletableGithubObject):
             f"{self.url}/actions/variables",
             None,
             attributesTransformer=PaginatedList.attributes_transformer_build_dynamic_url(
-                lambda x: x, f"{self.url}/actions/variables"),
+                lambda x: x, f"{self.url}/actions/variables"
+            ),
             list_item="variables",
         )
 
