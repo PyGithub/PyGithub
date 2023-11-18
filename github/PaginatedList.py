@@ -278,9 +278,9 @@ class PaginatedList(PaginatedListBase[T]):
 
     @classmethod
     def attributes_transformer_override_from_dictionary(
-        cls, transformer: Callable[[dict[str, Any]], dict[str, Any]], overrides: dict
-    ) -> Callable[[dict[str, Any]], dict[str, Any]]:
-        def attributes_transformer(attributes: dict[str, Any]) -> dict[str, Any]:
+        cls, transformer: Callable[[Dict[str, Any]], Dict[str, Any]], overrides: dict
+    ) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+        def attributes_transformer(attributes: Dict[str, Any]) -> Dict[str, Any]:
             # Recursively merge overrides with attributes, overriding attributes with overrides
             attributes = cls.merge_dicts(attributes, overrides)
             return transformer(attributes)
@@ -290,18 +290,18 @@ class PaginatedList(PaginatedListBase[T]):
     @classmethod
     def attributes_transformer_build_dynamic_url(
         cls,
-        transformer: Callable[[dict[str, Any]], dict[str, Any]],
+        transformer: Callable[[Dict[str, Any]], Dict[str, Any]],
         base_url: str,
         attributes_key: Optional[str] = "name",
-    ) -> Callable[[dict[str, Any]], dict[str, Any]]:
-        def attributes_transformer(attributes: dict[str, Any]) -> dict[str, Any]:
+    ) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+        def attributes_transformer(attributes: Dict[str, Any]) -> Dict[str, Any]:
             attributes["url"] = f"{base_url}/{attributes[attributes_key]}"
             return transformer(attributes)
 
         return attributes_transformer
 
     @classmethod
-    def merge_dicts(cls, d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
+    def merge_dicts(cls, d1: Dict[str, Any], d2: Dict[str, Any]) -> Dict[str, Any]:
         # clone d1
         d1 = d1.copy()
         for k, v in d2.items():
