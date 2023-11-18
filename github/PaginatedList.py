@@ -292,7 +292,7 @@ class PaginatedList(PaginatedListBase[T]):
         cls,
         transformer: Callable[[Dict[str, Any]], Dict[str, Any]],
         base_url: str,
-        attributes_key: Optional[str] = "name",
+        attributes_key: str = "name",
     ) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
         def attributes_transformer(attributes: Dict[str, Any]) -> Dict[str, Any]:
             attributes["url"] = f"{base_url}/{attributes[attributes_key]}"
