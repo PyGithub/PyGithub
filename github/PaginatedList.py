@@ -140,7 +140,7 @@ class PaginatedList(PaginatedListBase[T]):
         list_item: str = "items",
         firstData: Optional[Any] = None,
         firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
-        attributesTransformer: Callable[[Any], Any] = lambda x: x,
+        attributesTransformer: Optional[Callable[[Any], Any]] = None,
     ):
         self.__requester = requester
         self.__contentClass = contentClass
@@ -160,6 +160,11 @@ class PaginatedList(PaginatedListBase[T]):
         if firstData is not None and firstHeaders is not None:
             first_page = self._getPage(firstData, firstHeaders)
         super().__init__(first_page)
+
+    def _transformAttribute(self, attribute: Any) -> Any:
+        if self._attributesTransformer is None:
+            return attribute
+        return self._attributesTransformer(attribute)
 
     @property
     def totalCount(self) -> int:
@@ -239,7 +244,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
         content = [
-            self.__contentClass(self.__requester, headers, self._attributesTransformer(element), completed=False)
+            self.__contentClass(self.__requester, headers, self._transformAttribute(element), completed=False)
             for element in data
             if element is not None
         ]
@@ -272,7 +277,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
         return [
-            self.__contentClass(self.__requester, headers, self._attributesTransformer(element), completed=False)
+            self.__contentClass(self.__requester, headers, self._transformAttribute(element), completed=False)
             for element in data
         ]
 
