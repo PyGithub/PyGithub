@@ -81,7 +81,7 @@ class Milestone(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.milestone.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Public interface", "Project management"],
         )
 
