@@ -634,5 +634,3 @@ None
 None
 304
 [('status', '304 Not Modified'), ('x-ratelimit-remaining', '4863'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', 'd65865d1-e84d-418b-8465-54b9c8034ead'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('last-modified', 'Sat, 20 Oct 2007 11:24:19 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"a4af9b5fe3ebc7d9ec2ecd4a637a4863"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 06 Sep 2013 15:06:37 GMT'), ('access-control-allow-origin', '*'), ('x-ratelimit-reset', '1378482241')]
-
-

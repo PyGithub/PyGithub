@@ -30,4 +30,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4987'), ('content-length', '336'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"ef55032f07a176e09c65b2ac524c2ecf"'), ('date', 'Thu, 10 May 2012 14:38:00 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"url":"https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub","object":{"url":"https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a","type":"commit","sha":"1292bf0e22c796e91cc3d6e24b544aece8c21f2a"},"ref":"refs/heads/BranchCreatedByPyGithub"}
-
