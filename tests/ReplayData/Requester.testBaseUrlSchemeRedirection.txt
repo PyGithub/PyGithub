@@ -7,5 +7,3 @@ None
 None
 301
 [('Content-Length', '0'), ('Location', 'https://api.github.com/repos/PyGithub/PyGithub')]
-
-
