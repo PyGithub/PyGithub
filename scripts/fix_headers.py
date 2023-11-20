@@ -67,7 +67,7 @@ def generateLicenseSection(filename):
 def listContributors(filename):
     contributors = set()
     result = subprocess.check_output(
-        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
+        ["git", "log", "--follow", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
         text=True,
     )
     for line in result.split("\n"):
