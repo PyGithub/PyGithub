@@ -1879,7 +1879,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(description, str), description
         assert is_optional(homepage, str), homepage
         assert is_optional(private, bool), private
-        assert visibility in ["public", "private", NotSet], visibility
+        assert visibility in ["public", "private", "internal", NotSet], visibility
         assert is_optional(has_issues, bool), has_issues
         assert is_optional(has_projects, bool), has_projects
         assert is_optional(has_wiki, bool), has_wiki
