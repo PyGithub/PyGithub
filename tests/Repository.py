@@ -1072,7 +1072,7 @@ class Repository(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -1371,7 +1371,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
-        self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
+        self.assertListKeyEqual(issues[0].labels, lambda lb: lb.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
     def testMarkNotificationsAsRead(self):

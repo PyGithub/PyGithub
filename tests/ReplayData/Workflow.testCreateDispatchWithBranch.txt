@@ -51,5 +51,3 @@ None
 {"ref": "workflow_dispatch_branch", "inputs": {"logLevel": "Warning", "message": "Log Message"}}
 204
 [('Date', 'Mon, 27 Jul 2020 11:24:50 GMT'), ('Server', 'GitHub.com'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4967'), ('X-RateLimit-Reset', '1595851785'), ('X-OAuth-Scopes', 'repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('X-GitHub-Request-Id', '8988:6C55:197E65:212D4C:5F1EB982')]
-
-
