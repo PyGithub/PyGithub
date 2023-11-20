@@ -545,7 +545,7 @@ class Github:
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
         assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
 
-        url_parameters = dict()
+        url_parameters: dict[str, Opt[str | bool]] = dict()
         if type is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert type in ("reviewed", "unreviewed", "malware"), type
             url_parameters["type"] = type

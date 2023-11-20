@@ -1608,7 +1608,7 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerability] | None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
         credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
