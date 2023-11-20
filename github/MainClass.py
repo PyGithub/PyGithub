@@ -125,6 +125,7 @@ if TYPE_CHECKING:
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
+    from github.GlobalAdvisory import GlobalAdvisory
     from github.Issue import Issue
     from github.License import License
     from github.NamedUser import NamedUser
@@ -479,7 +480,7 @@ class Github:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
 
-    def get_global_advisory(self, ghsa_id):
+    def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory:
         """
         :calls: `GET /advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/global-advisories>`_
         :param ghsa_id: string
@@ -491,24 +492,24 @@ class Github:
 
     def get_global_advisories(
         self,
-        type=github.GithubObject.NotSet,
-        ghsa_id=github.GithubObject.NotSet,
-        cve_id=github.GithubObject.NotSet,
-        ecosystem=github.GithubObject.NotSet,
-        severity=github.GithubObject.NotSet,
-        cwes=github.GithubObject.NotSet,
-        is_withdrawn=github.GithubObject.NotSet,
-        affects=github.GithubObject.NotSet,
-        published=github.GithubObject.NotSet,
-        updated=github.GithubObject.NotSet,
-        modified=github.GithubObject.NotSet,
-        keywords=github.GithubObject.NotSet,
-        before=github.GithubObject.NotSet,
-        after=github.GithubObject.NotSet,
-        per_page=github.GithubObject.NotSet,
-        sort=github.GithubObject.NotSet,
-        direction=github.GithubObject.NotSet,
-    ):
+        type: Opt[str] = NotSet,
+        ghsa_id: Opt[str] = NotSet,
+        cve_id: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        cwes: list[Opt[str]] | Opt[str] = NotSet,
+        is_withdrawn: Opt[bool] = NotSet,
+        affects: list[str] | Opt[str] = NotSet,
+        published: Opt[str] = NotSet,
+        updated: Opt[str] = NotSet,
+        modified: Opt[str] = NotSet,
+        keywords: Opt[str] = NotSet,
+        before: Opt[str] = NotSet,
+        after: Opt[str] = NotSet,
+        per_page: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[GlobalAdvisory]:
         """
         :calls: `GET /advisories <https://docs.github.com/en/rest/security-advisories/global-advisories>`
         :param type: Optional string

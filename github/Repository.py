@@ -1544,7 +1544,7 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
         credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
@@ -1576,7 +1576,7 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
         credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
