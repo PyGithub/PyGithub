@@ -63,4 +63,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '318'), ('server', 'nginx'), ('last-modified', 'Sat, 03 Nov 2012 08:19:40 GMT'), ('connection', 'keep-alive'), ('etag', '"1ec7d9f2ebb27db7dc002f1382d23975"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 03 Nov 2012 08:19:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"users":[],"teams":[{"name":"pygithub-owners","id":585225,"slug":"pygithub-owners","description":"","privacy":"closed","url":"https://api.github.com/teams/585225","members_url":"https://api.github.com/teams/585225/members{/member}","repositories_url":"https://api.github.com/teams/585225/repos","permission":"pull"}]}
-

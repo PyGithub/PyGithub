@@ -75,7 +75,7 @@ class PublicKey(CompletableGithubObject):
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch
-            if type(attributes["key_id"]) == str:
+            if isinstance(attributes["key_id"], str):
                 self._key_id = self._makeStringAttribute(attributes["key_id"])
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])

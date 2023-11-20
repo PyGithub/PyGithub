@@ -1882,7 +1882,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(homepage) or isinstance(homepage, str), homepage
         assert is_undefined(private) or isinstance(private, bool), private
         assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private"]
+            isinstance(visibility, str) and visibility in ["public", "private", "internal"]
         ), visibility
         assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
         assert is_undefined(has_projects) or isinstance(has_projects, bool), has_projects
