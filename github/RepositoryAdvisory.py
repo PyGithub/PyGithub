@@ -140,9 +140,9 @@ class RepositoryAdvisory(AdvisoryBase):
         credit_type: str,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a user for a vulnerability in a repository.
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         self.offer_credits([{"login": login_or_user, "type": credit_type}])
 
@@ -151,9 +151,9 @@ class RepositoryAdvisory(AdvisoryBase):
         credited: Iterable[Credit],
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Offers credit to a list of users for a vulnerability in a repository.
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param credited: iterable of dict with keys "login" and "type"
         """
         assert isinstance(credited, Iterable), credited
@@ -267,8 +267,8 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def accept_report(self) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Accepts the advisory reported from an external reporter via private vulnerability reporting.
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "draft"}
         headers, data = self._requester.requestJsonAndCheck(
@@ -280,8 +280,8 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def publish(self) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Publishes the advisory.
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "published"}
         headers, data = self._requester.requestJsonAndCheck(
@@ -293,8 +293,8 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def close(self) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         Closes the advisory.
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "closed"}
         headers, data = self._requester.requestJsonAndCheck(

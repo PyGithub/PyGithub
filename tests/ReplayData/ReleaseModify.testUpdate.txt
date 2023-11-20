@@ -95,5 +95,3 @@ None
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 06:44:06 GMT'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4865'), ('X-RateLimit-Reset', '1594712357'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'E5AC:27D8:B4856A:12BDDB4:5F0D5436')]
-
-

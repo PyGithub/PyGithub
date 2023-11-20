@@ -19,158 +19,115 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from datetime import datetime
+from typing import Any
 
 import github.GithubObject
 import github.WorkflowStep
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class WorkflowJob(github.GithubObject.CompletableGithubObject):
+class WorkflowJob(CompletableGithubObject):
     """
     This class represents Workflow Jobs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-jobs
     """
+
+    def _initAttributes(self) -> None:
+        self._check_run_url: Attribute[str] = NotSet
+        self._completed_at: Attribute[datetime] = NotSet
+        self._conclusion: Attribute[str] = NotSet
+        self._head_sha: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._run_id: Attribute[int] = NotSet
+        self._run_url: Attribute[str] = NotSet
+        self._started_at: Attribute[datetime] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._steps: Attribute[list[github.WorkflowStep.WorkflowStep]] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def check_run_url(self):
-        """
-        :type: string
-        """
+    def check_run_url(self) -> str:
         self._completeIfNotSet(self._check_run_url)
         return self._check_run_url.value
 
     @property
-    def completed_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def completed_at(self) -> datetime:
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
     @property
-    def conclusion(self):
-        """
-        :type: string
-        """
+    def conclusion(self) -> str:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
     @property
-    def head_sha(self):
-        """
-        :type: string
-        """
+    def head_sha(self) -> str:
         self._completeIfNotSet(self._head_sha)
         return self._head_sha.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: int
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def node_id(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
 
     @property
-    def run_id(self):
-        """
-        :type: integer
-        """
+    def run_id(self) -> int:
         self._completeIfNotSet(self._run_id)
         return self._run_id.value
 
     @property
-    def run_url(self):
-        """
-        :type: string
-        """
+    def run_url(self) -> str:
         self._completeIfNotSet(self._run_url)
         return self._run_url.value
 
     @property
-    def started_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def started_at(self) -> datetime:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         self._completeIfNotSet(self._status)
         return self._status.value
 
     @property
-    def steps(self):
-        """
-        :type: list of github.WorkflowStep.WorkflowStep
-        """
+    def steps(self) -> list[github.WorkflowStep.WorkflowStep]:
         self._completeIfNotSet(self._steps)
         return self._steps.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def logs_url(self):
-        """
-        :type: string
-        """
-        print(f"{self.url}/logs")
+    def logs_url(self) -> str:
         headers, _ = self._requester.requestBlobAndCheck("GET", f"{self.url}/logs")
         return headers["location"]
 
-    def _initAttributes(self) -> None:
-        self._check_run_url = github.GithubObject.NotSet
-        self._completed_at = github.GithubObject.NotSet
-        self._conclusion = github.GithubObject.NotSet
-        self._head_sha = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._run_id = github.GithubObject.NotSet
-        self._run_url = github.GithubObject.NotSet
-        self._started_at = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-        self._steps = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "check_run_url" in attributes:  # pragma no branch
             self._check_run_url = self._makeStringAttribute(attributes["check_run_url"])
         if "completed_at" in attributes:  # pragma no branch

@@ -29,6 +29,7 @@
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 # Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
+# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -90,6 +91,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.id, 3544490)
         self.assertIs(self.repo.is_template, None)
         self.assertEqual(self.repo.language, "Python")
+        self.assertEqual(self.repo.license.spdx_id, "LGPL-3.0")
         self.assertEqual(self.repo.master_branch, None)
         self.assertEqual(self.repo.name, "PyGithub")
         self.assertEqual(self.repo.open_issues, 16)
@@ -122,6 +124,13 @@ class Repository(Framework.TestCase):
         self.assertIn(self.repo.permissions.maintain, [None, False, True])
         self.assertIn(self.repo.permissions.triage, [None, False, True])
 
+        self.assertTrue(self.repo.use_squash_pr_title_as_default)
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
+        self.assertTrue(self.repo.web_commit_signoff_required)
+
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
 
@@ -134,7 +143,6 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
-            has_downloads=True,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
@@ -142,6 +150,13 @@ class Repository(Framework.TestCase):
             allow_merge_commit=True,
             allow_rebase_merge=True,
             delete_branch_on_merge=True,
+            use_squash_pr_title_as_default=True,
+            is_template=True,
+            squash_merge_commit_title="PR_TITLE",
+            squash_merge_commit_message="COMMIT_MESSAGES",
+            merge_commit_title="PR_TITLE",
+            merge_commit_message="PR_BODY",
+            web_commit_signoff_required=True,
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -151,13 +166,18 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
-        self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
         self.assertTrue(self.repo.allow_merge_commit)
         self.assertTrue(self.repo.allow_rebase_merge)
         self.assertTrue(self.repo.delete_branch_on_merge)
+        self.assertTrue(self.repo.use_squash_pr_title_as_default)
+        self.assertEqual(self.repo.squash_merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
+        self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
+        self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
+        self.assertTrue(self.repo.web_commit_signoff_required)
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
@@ -1030,7 +1050,7 @@ class Repository(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -1276,11 +1296,12 @@ class Repository(Framework.TestCase):
 
     def testCreatePull(self):
         pull = self.repo.create_pull(
-            "Pull request created by PyGithub",
-            "Body of the pull request",
-            "topic/RewriteWithGeneratedCode",
-            "BeaverSoftware:master",
-            True,
+            title="Pull request created by PyGithub",
+            body="Body of the pull request",
+            base="topic/RewriteWithGeneratedCode",
+            head="BeaverSoftware:master",
+            draft=False,
+            maintainer_can_modify=True,
         )
         self.assertEqual(pull.id, 1436215)
 
@@ -1290,7 +1311,7 @@ class Repository(Framework.TestCase):
 
     def testCreatePullFromIssue(self):
         issue = self.repo.get_issue(32)
-        pull = self.repo.create_pull(issue, "topic/RewriteWithGeneratedCode", "BeaverSoftware:master")
+        pull = self.repo.create_pull("topic/RewriteWithGeneratedCode", "BeaverSoftware:master", issue=issue)
         self.assertEqual(pull.id, 1436310)
 
     def testGetPulls(self):
@@ -1328,7 +1349,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
-        self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
+        self.assertListKeyEqual(issues[0].labels, lambda lb: lb.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
     def testMarkNotificationsAsRead(self):
