@@ -38,6 +38,7 @@ class Variable(CompletableGithubObject):
         self._value: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._variables_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -76,10 +77,20 @@ class Variable(CompletableGithubObject):
         return self._updated_at.value
 
     @property
+    def variables_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._variables_url.value
+
+    @property
     def url(self) -> str:
         """
         :type: string
         """
+        # Construct url from variables_url and name, if self._url. is not set
+        if self._url is NotSet:
+            self._url = self._makeStringAttribute(self.variables_url + "/" + self.name)
         return self._url.value
 
     def edit(self, value: str) -> bool:
@@ -117,5 +128,7 @@ class Variable(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "variables_url" in attributes:
+            self._variables_url = self._makeStringAttribute(attributes["variables_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

@@ -293,19 +293,6 @@ class PaginatedList(PaginatedListBase[T]):
         return attributes_transformer
 
     @classmethod
-    def attributes_transformer_build_dynamic_url(
-        cls,
-        transformer: Callable[[Dict[str, Any]], Dict[str, Any]],
-        base_url: str,
-        attributes_key: str = "name",
-    ) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
-        def attributes_transformer(attributes: Dict[str, Any]) -> Dict[str, Any]:
-            attributes["url"] = f"{base_url}/{attributes[attributes_key]}"
-            return transformer(attributes)
-
-        return attributes_transformer
-
-    @classmethod
     def merge_dicts(cls, d1: Dict[str, Any], d2: Dict[str, Any]) -> Dict[str, Any]:
         # clone d1
         d1 = d1.copy()
