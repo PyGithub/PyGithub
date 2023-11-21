@@ -1694,7 +1694,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/secrets",
             None,
-            attributesTransformer=PaginatedList.attributes_transformer_override_from_dictionary(
+            attributesTransformer=PaginatedList.override_attributes(
                 lambda x: x, {"secrets_url": f"{self.url}/actions/secrets"}
             ),
             list_item="secrets",
@@ -1744,7 +1744,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/variables",
             None,
-            attributesTransformer=PaginatedList.attributes_transformer_override_from_dictionary(
+            attributesTransformer=PaginatedList.override_attributes(
                 lambda x: x, {"variables_url": f"{self.url}/actions/variables"}
             ),
             list_item="variables",
