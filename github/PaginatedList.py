@@ -282,13 +282,11 @@ class PaginatedList(PaginatedListBase[T]):
         ]
 
     @classmethod
-    def override_attributes(
-        cls, transformer: Callable[[Dict[str, Any]], Dict[str, Any]], overrides: Dict[str, Any]
-    ) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+    def override_attributes(cls, overrides: Dict[str, Any]) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
         def attributes_transformer(element: Dict[str, Any]) -> Dict[str, Any]:
             # Recursively merge overrides with attributes, overriding attributes with overrides
             element = cls.merge_dicts(element, overrides)
-            return transformer(element)
+            return element
 
         return attributes_transformer
 

@@ -331,5 +331,5 @@ class PaginatedList(Framework.TestCase):
     def testOverrideAttributes(self):
         input_dict = {"a": 1, "b": 2, "c": 3}
         overrides_dict = {"c": 4, "d": 5, "e": 6}
-        transformer = PaginatedListImpl.override_attributes(lambda x: x, overrides_dict)
+        transformer = PaginatedListImpl.override_attributes(overrides_dict)
         self.assertDictEqual(transformer(input_dict), {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6})
