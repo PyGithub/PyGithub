@@ -84,13 +84,15 @@ class Environment(Framework.TestCase):
         self.assertEqual(len(reviewers), 2)
         self.assertEqual(reviewers[0].type, "User")
         self.assertIsInstance(reviewers[0].reviewer, github.NamedUser.NamedUser)
-        assert isinstance(reviewers[0].reviewer, github.NamedUser.NamedUser)  # Make type checker happy
+        # Make type checker happy
+        assert isinstance(reviewers[0].reviewer, github.NamedUser.NamedUser)
         self.assertEqual(reviewers[0].reviewer.id, 19245)
         self.assertEqual(reviewers[0].reviewer.login, "alson")
         self.assertEqual(reviewers[0].reviewer.type, "User")
         self.assertEqual(reviewers[1].type, "Team")
         self.assertIsInstance(reviewers[1].reviewer, github.Team.Team)
-        assert isinstance(reviewers[1].reviewer, github.Team.Team)  # Make type checker happy
+        # Make type checker happy
+        assert isinstance(reviewers[1].reviewer, github.Team.Team)
         self.assertEqual(reviewers[1].reviewer.id, 1)
         self.assertEqual(reviewers[1].reviewer.slug, "justice-league")
         self.assertEqual(reviewers[1].reviewer.url, "https://api.github.com/teams/1")
@@ -171,3 +173,32 @@ class Environment(Framework.TestCase):
         self.repo.delete_environment("test")
         with pytest.raises(github.UnknownObjectException):
             self.repo.get_environment("test")
+
+    def testEnvironmentVariable(self):
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        variable = environment.create_variable("variable_name", "variable-value")
+        self.assertTrue(variable.edit("variable-value123"))
+        variable.delete()
+        repo.delete_environment("test")
+
+    def testEnvironmentVariables(self):
+        # GitHub will always capitalize the variable name
+        variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        for variable in variables:
+            environment.create_variable(variable[0], variable[1])
+        environment.update()
+        environment_variables = environment.get_variables()
+        matched_environment_variables = []
+        for variable in variables:
+            for environment_variable in environment_variables:
+                # GitHub will always capitalize the variable name, may be best to uppercase test data for comparison
+                if environment_variable.name == variable[0].upper() and environment_variable.value == variable[1]:
+                    matched_environment_variables.append(environment_variable)
+                    break
+        self.assertEqual(len(matched_environment_variables), len(variables))
+        for matched_environment_variable in matched_environment_variables:
+            matched_environment_variable.delete()
+        repo.delete_environment("test")
