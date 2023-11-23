@@ -21,6 +21,7 @@
 ################################################################################
 
 from datetime import datetime, timezone
+from unittest import mock
 
 import pytest  # type: ignore
 
@@ -201,4 +202,41 @@ class Environment(Framework.TestCase):
         self.assertEqual(len(matched_environment_variables), len(variables))
         for matched_environment_variable in matched_environment_variables:
             matched_environment_variable.delete()
+        repo.delete_environment("test")
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEnvironmentSecret(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        secret = environment.create_secret("secret_name", "secret-value")
+        secret.update()
+        # GitHub will always capitalize the secret name
+        self.assertEqual(secret.name, "SECRET_NAME")
+        secret.delete()
+        repo.delete_environment("test")
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEnvironmentSecrets(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        # GitHub will always capitalize the secret name
+        secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        for secret in secrets:
+            environment.create_secret(secret[0], secret[1])
+        environment.update()
+        environment_secrets = environment.get_secrets()
+        matched_environment_secrets = []
+        for secret in secrets:
+            for environment_secret in environment_secrets:
+                # GitHub will always capitalize the secret name, may be best to uppercase test data for comparison
+                if environment_secret.name == secret[0].upper():
+                    matched_environment_secrets.append(environment_secret)
+                    break
+        self.assertEqual(len(matched_environment_secrets), len(secrets))
+        for matched_environment_secret in matched_environment_secrets:
+            matched_environment_secret.delete()
         repo.delete_environment("test")
