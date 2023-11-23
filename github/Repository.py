@@ -199,6 +199,7 @@ import github.View
 import github.Workflow
 import github.WorkflowRun
 from github import Consts
+from github.Environment import Environment
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -227,7 +228,6 @@ if TYPE_CHECKING:
     from github.ContentFile import ContentFile
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.Environment import Environment
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
