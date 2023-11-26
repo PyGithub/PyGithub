@@ -312,6 +312,13 @@ class GithubObject:
         """
         return self._headers.get(Consts.RES_LAST_MODIFIED)  # type: ignore
 
+    @property
+    def last_modified_datetime(self) -> Optional[datetime]:
+        """
+        :type: datetime
+        """
+        return self._makeDatetimeAttribute(self.last_modified).value  # type: ignore
+
     def get__repr__(self, params: Dict[str, Any]) -> str:
         """
         Converts the object to a nicely printable string.
