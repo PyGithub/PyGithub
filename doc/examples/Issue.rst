@@ -9,7 +9,7 @@ Get issue
     >>> repo = g.get_repo("PyGithub/PyGithub")
     >>> repo.get_issue(number=874)
 	Issue(title="PyGithub example usage", number=874)
-	
+
 Create comment on issue
 -----------------------
 

@@ -8,4 +8,3 @@ None
 403
 [('date', 'Fri, 17 May 2013 12:16:34 GMT'), ('content-length', '107'), ('content-type', 'application/octet-stream'), ('connection', 'keep-alive'), ('server', 'GitHub.com')]
 {"message":"Missing or invalid User Agent string. See http://developer.github.com/v3/#user-agent-required"}
-
