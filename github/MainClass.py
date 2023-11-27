@@ -84,6 +84,7 @@
 from __future__ import annotations
 
 import pickle
+import urllib.parse
 import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
@@ -321,6 +322,7 @@ class Github:
         """
 
         assert isinstance(key, str), key
+        key = urllib.parse.quote(key)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
         return github.License.License(self.__requester, headers, data, completed=True)
 
@@ -344,10 +346,11 @@ class Github:
         """
         :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        assert login is NotSet or isinstance(login, str), login
         if login is NotSet:
             return github.AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
+            assert isinstance(login, str), login
+            login = urllib.parse.quote(login)
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/users/{login}")
             return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
@@ -376,6 +379,7 @@ class Github:
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
         assert isinstance(login, str), login
+        login = urllib.parse.quote(login)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
@@ -487,6 +491,7 @@ class Github:
         :rtype: :class:`github.GlobalAdvisory.GlobalAdvisory`
         """
         assert isinstance(ghsa_id, str), ghsa_id
+        ghsa_id = urllib.parse.quote(ghsa_id)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/advisories/{ghsa_id}")
         return github.GlobalAdvisory.GlobalAdvisory(self.__requester, headers, data, completed=True)
 
@@ -847,6 +852,7 @@ class Github:
         :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
         return HookDescription(self.__requester, headers, attributes, completed=True)
 
@@ -892,6 +898,7 @@ class Github:
         :calls: `GET /gitignore/templates/{name} <https://docs.github.com/en/rest/reference/gitignore>`_
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/gitignore/templates/{name}")
         return github.GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
@@ -953,7 +960,6 @@ class Github:
         """
         :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-        assert slug is NotSet or isinstance(slug, str), slug
 
         if slug is NotSet:
             # with no slug given, calling /app returns the authenticated app,
@@ -965,5 +971,7 @@ class Github:
             )
             return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
+            assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp
+            slug = urllib.parse.quote(slug)
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
