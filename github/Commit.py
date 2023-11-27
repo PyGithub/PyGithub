@@ -45,7 +45,7 @@ import github.PaginatedList
 
 class Commit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here http://docs.github.com/en/rest/reference/git#commits
+    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
     """
 
     def __repr__(self):
@@ -139,7 +139,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         position=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <http://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         :param body: string
         :param line: integer
         :param path: string
@@ -176,7 +176,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         context=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <http://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
         :param state: string
         :param target_url: string
         :param description: string
@@ -213,7 +213,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <http://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitComment.CommitComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -225,7 +225,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_statuses(self):
         """
-        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <http://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/reference/repos#statuses>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
         return github.PaginatedList.PaginatedList(

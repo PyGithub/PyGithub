@@ -29,7 +29,7 @@ from github.AccessToken import AccessToken
 class ApplicationOAuth(github.GithubObject.NonCompletableGithubObject):
     """
     This class is used for identifying and authorizing users for Github Apps.
-    The reference can be found at https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps
+    The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
     """
 
     def __repr__(self):

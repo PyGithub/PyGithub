@@ -28,7 +28,7 @@ from . import Consts
 
 class Project(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Projects. The reference can be found here http://docs.github.com/en/rest/reference/projects
+    This class represents Projects. The reference can be found here https://docs.github.com/en/rest/reference/projects
     """
 
     def __repr__(self):
@@ -194,7 +194,7 @@ class Project(github.GithubObject.CompletableGithubObject):
 
     def get_columns(self):
         """
-        :calls: `GET /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects/columns#list-project-columns>`_
+        :calls: `GET /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#list-project-columns>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectColumn.ProjectColumn`
         """
 
@@ -208,7 +208,7 @@ class Project(github.GithubObject.CompletableGithubObject):
 
     def create_column(self, name):
         """
-        calls: `POST /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects/columns#create-a-project-column>`_
+        calls: `POST /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#create-a-project-column>`_
         :param name: string
         """
         assert isinstance(name, str), name

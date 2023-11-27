@@ -44,13 +44,11 @@ import textwrap
 
 import setuptools
 
-version = "1.55"
-
-
 if __name__ == "__main__":
     setuptools.setup(
         name="PyGithub",
-        version=version,
+        use_scm_version=True,
+        setup_requires=["setuptools_scm"],
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
@@ -96,19 +94,21 @@ if __name__ == "__main__":
             "Operating System :: OS Independent",
             "Programming Language :: Python",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
             "Topic :: Software Development",
         ],
-        python_requires=">=3.6",
+        python_requires=">=3.7",
         install_requires=[
             "deprecated",
-            "pyjwt>=2.0",
+            "pyjwt[crypto]>=2.4.0",
             "pynacl>=1.4.0",
             "requests>=2.14.0",
         ],
-        extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=1.0.3"],
+        # can be removed, still here to avoid breaking user code
+        extras_require={"integrations": []},
+        tests_require=["httpretty>=1.0.3"],
     )

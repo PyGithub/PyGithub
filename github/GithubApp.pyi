@@ -1,10 +1,8 @@
-
 from typing import Any, Dict, List
 
 from datetime import datetime
 from github.GithubObject import CompletableGithubObject
 from github.NamedUser import NamedUser
-
 
 class GithubApp(CompletableGithubObject):
     def __repr__(self) -> str: ...

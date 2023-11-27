@@ -1,15 +1,15 @@
-import datetime
-import json
 import sys
 import time  # NOQA
-import unittest
 
 import jwt
 import requests  # NOQA
 
-from github.GithubObject import GithubObject
+import github
 
-private_key = """
+from . import Framework
+
+APP_ID = 243473
+PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQC+5ePolLv6VcWLp2f17g6r6vHl+eoLuodOOfUl8JK+MVmvXbPa
 xDy0SS0pQhwTOMtB0VdSt++elklDCadeokhEoGDQp411o+kiOhzLxfakp/kewf4U
@@ -26,8 +26,7 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
-
-public_key = """
+PUBLIC_KEY = """
 -----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+5ePolLv6VcWLp2f17g6r6vHl
 +eoLuodOOfUl8JK+MVmvXbPaxDy0SS0pQhwTOMtB0VdSt++elklDCadeokhEoGDQ
@@ -37,154 +36,189 @@ e2JtSXoAtYr6qE9maQIDAQAB
 """
 
 
-class GithubIntegration(unittest.TestCase):
+class GithubIntegration(Framework.BasicTestCase):
     def setUp(self):
-        # This flag ask requester to do some checking,
-        # for debug and test purpose. But
-        # `InstallationAuthorization.InstallationAuthorization` is a
-        # `NonCompletableGithubObject`, it does not have requester.
-        # So the check is not needed.
-        # see `GithubIntegration.get_access_token`
-        self.origin_check_after_init_flag = GithubObject.CHECK_AFTER_INIT_FLAG
-        GithubObject.setCheckAfterInitFlag(False)
-
-        self.origin_time = sys.modules["time"].time
-        sys.modules["time"].time = lambda: 1550055331.7435968
-
-        class Mock:
-            def __init__(self):
-                self.args = tuple()
-                self.kwargs = dict()
-
-            @property
-            def status_code(self):
-                return 201
-
-            def json(self):
-                return json.loads(self.text)
-
-            @property
-            def text(self):
-                return (
-                    '{"token": "v1.ce63424bc55028318325caac4f4c3a5378ca0038",'
-                    '"expires_at": "2019-02-13T11:10:38Z"}'
-                )
-
-            def __call__(self, *args, **kwargs):
-                self.args = args
-                self.kwargs = kwargs
-                return self
-
-        self.origin_request_post = sys.modules["requests"].post
-        self.mock = Mock()
-        sys.modules["requests"].post = self.mock
-
-        class GetMock:
-            def __init__(self):
-                self.args = tuple()
-                self.kwargs = dict()
-                self.calls = []
-
-            @property
-            def status_code(self):
-                return 201
-
-            def json(self):
-                return json.loads(self.text)
-
-            @property
-            def text(self):
-                return (
-                    '{"id":111111,"account":{"login":"foo","id":11111111,'
-                    '"node_id":"foobar",'
-                    '"avatar_url":"https://avatars3.githubusercontent.com/u/11111111?v=4",'
-                    '"gravatar_id":"","url":"https://api.github.com/users/foo",'
-                    '"html_url":"https://github.com/foo",'
-                    '"followers_url":"https://api.github.com/users/foo/followers",'
-                    '"following_url":"https://api.github.com/users/foo/following{/other_user}",'
-                    '"gists_url":"https://api.github.com/users/foo/gists{/gist_id}",'
-                    '"starred_url":"https://api.github.com/users/foo/starred{/owner}{/repo}",'
-                    '"subscriptions_url":"https://api.github.com/users/foo/subscriptions",'
-                    '"organizations_url":"https://api.github.com/users/foo/orgs",'
-                    '"repos_url":"https://api.github.com/users/foo/repos",'
-                    '"events_url":"https://api.github.com/users/foo/events{/privacy}",'
-                    '"received_events_url":"https://api.github.com/users/foo/received_events",'
-                    '"type":"Organization","site_admin":false},"repository_selection":"all",'
-                    '"access_tokens_url":"https://api.github.com/app/installations/111111/access_tokens",'
-                    '"repositories_url":"https://api.github.com/installation/repositories",'
-                    '"html_url":"https://github.com/organizations/foo/settings/installations/111111",'
-                    '"app_id":11111,"target_id":11111111,"target_type":"Organization",'
-                    '"permissions":{"issues":"write","pull_requests":"write","statuses":"write","contents":"read",'
-                    '"metadata":"read"},"events":["pull_request","release"],"created_at":"2019-04-17T16:10:37.000Z",'
-                    '"updated_at":"2019-05-03T06:27:48.000Z","single_file_name":null}'
-                )
-
-            def __call__(self, *args, **kwargs):
-                self.calls.append((args, kwargs))
-                self.args = args
-                self.kwargs = kwargs
-                return self
-
-        self.origin_request_get = sys.modules["requests"].get
-        self.get_mock = GetMock()
-        sys.modules["requests"].get = self.get_mock
+        super().setUp()
+        self.org_installation_id = 30614487
+        self.repo_installation_id = 30614431
+        self.user_installation_id = 30614431
 
     def testCreateJWT(self):
-        from github import GithubIntegration
-
-        integration = GithubIntegration(25216, private_key)
-        token = integration.create_jwt()
+        self.origin_time = sys.modules["time"].time
+        sys.modules["time"].time = lambda: 1550055331.7435968
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        token = github_integration.create_jwt()
         payload = jwt.decode(
             token,
-            key=public_key,
+            key=PUBLIC_KEY,
             algorithms=["RS256"],
             options={"verify_exp": False},
         )
         self.assertDictEqual(
-            payload, {"iat": 1550055331, "exp": 1550055391, "iss": 25216}
+            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
         )
+        sys.modules["time"].time = self.origin_time
+
+    def testGetInstallations(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installations = github_integration.get_installations()
+
+        self.assertEqual(len(list(installations)), 2)
+        self.assertEqual(installations[0].id, self.org_installation_id)
+        self.assertEqual(installations[1].id, self.repo_installation_id)
 
     def testGetAccessToken(self):
-        from github import GithubIntegration
-
-        integration = GithubIntegration(25216, private_key)
-        auth_obj = integration.get_access_token(664281)
-        self.assertEqual(
-            self.mock.args[0],
-            "https://api.github.com/app/installations/664281/access_tokens",
-        )
-        self.assertEqual(auth_obj.token, "v1.ce63424bc55028318325caac4f4c3a5378ca0038")
-        self.assertEqual(
-            auth_obj.expires_at, datetime.datetime(2019, 2, 13, 11, 10, 38)
-        )
-        self.assertEqual(
-            repr(auth_obj), "InstallationAuthorization(expires_at=2019-02-13 11:10:38)"
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
         )
 
-    def test_get_installation(self):
-        from github import GithubIntegration
-
-        integr = GithubIntegration("11111", private_key)
-        inst = integr.get_installation("foo", "bar")
-        self.assertEqual(
-            self.get_mock.calls[0][0],
-            ("https://api.github.com/repos/foo/bar/installation",),
+        # Get repo installation access token
+        repo_installation_authorization = github_integration.get_access_token(
+            self.repo_installation_id
         )
-        self.assertEqual(inst.id, 111111)
-
-    def test_get_installation_custom_base_url(self):
-        from github import GithubIntegration
-
-        integr = GithubIntegration("11111", private_key, base_url="https://corp.com/v3")
-        inst = integr.get_installation("foo", "bar")
         self.assertEqual(
-            self.get_mock.calls[0][0],
-            ("https://corp.com/v3/repos/foo/bar/installation",),
+            repo_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
         )
-        self.assertEqual(inst.id, 111111)
+        self.assertDictEqual(
+            repo_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(
+            repo_installation_authorization.repository_selection, "selected"
+        )
 
-    def tearDown(self):
-        GithubObject.setCheckAfterInitFlag(self.origin_check_after_init_flag)
-        sys.modules["time"].time = self.origin_time
-        sys.modules["requests"].post = self.origin_request_post
-        sys.modules["requests"].get = self.origin_request_get
+        # Get org installation access token
+        org_installation_authorization = github_integration.get_access_token(
+            self.org_installation_id
+        )
+        self.assertEqual(
+            org_installation_authorization.token,
+            "ghs_V0xygF8yACXSDz5FM65QWV1BT2vtxw0cbgPw",
+        )
+        org_permissions = {
+            "administration": "write",
+            "issues": "write",
+            "metadata": "read",
+            "organization_administration": "read",
+        }
+        self.assertDictEqual(
+            org_installation_authorization.permissions, org_permissions
+        )
+        self.assertEqual(
+            org_installation_authorization.repository_selection, "selected"
+        )
+
+        # Get user installation access token
+        user_installation_authorization = github_integration.get_access_token(
+            self.user_installation_id
+        )
+        self.assertEqual(
+            user_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
+        )
+        self.assertDictEqual(
+            user_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(
+            user_installation_authorization.repository_selection, "selected"
+        )
+
+    def testGetUserInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installation = github_integration.get_user_installation(username="ammarmallik")
+
+        self.assertEqual(installation.id, self.user_installation_id)
+
+    def testGetOrgInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installation = github_integration.get_org_installation(org="GithubApp-Test-Org")
+
+        self.assertEqual(installation.id, self.org_installation_id)
+
+    def testGetRepoInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installation = github_integration.get_repo_installation(
+            owner="ammarmallik", repo="test-runner"
+        )
+
+        self.assertEqual(installation.id, self.repo_installation_id)
+
+    def testGetAppInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        installation = github_integration.get_app_installation(
+            installation_id=self.org_installation_id
+        )
+
+        self.assertEqual(installation.id, self.org_installation_id)
+
+    def testGetInstallationNotFound(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
+            github_integration.get_org_installation(org="GithubApp-Test-Org-404")
+
+        self.assertEqual(raisedexp.exception.status, 404)
+
+    def testGetInstallationWithExpiredJWT(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_org_installation(org="GithubApp-Test-Org")
+
+        self.assertEqual(raisedexp.exception.status, 401)
+
+    def testGetAccessTokenWithExpiredJWT(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.repo_installation_id)
+
+        self.assertEqual(raisedexp.exception.status, 401)
+
+    def testGetAccessTokenForNoInstallation(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
+            github_integration.get_access_token(40432121)
+
+        self.assertEqual(raisedexp.exception.status, 404)
+
+    def testGetAccessTokenWithInvalidPermissions(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(
+                self.repo_installation_id, permissions={"test-permissions": "read"}
+            )
+
+        self.assertEqual(raisedexp.exception.status, 422)
+
+    def testGetAccessTokenWithInvalidData(self):
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID, private_key=PRIVATE_KEY
+        )
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(
+                self.repo_installation_id, permissions="invalid_data"
+            )
+
+        self.assertEqual(raisedexp.exception.status, 400)

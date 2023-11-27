@@ -38,7 +38,7 @@ from . import Consts
 
 class Label(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Labels. The reference can be found here http://docs.github.com/en/rest/reference/issues#labels
+    This class represents Labels. The reference can be found here https://docs.github.com/en/rest/reference/issues#labels
     """
 
     def __repr__(self):
@@ -78,14 +78,14 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/labels/{name} <http://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `DELETE /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, name, color, description=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/labels/{name} <http://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `PATCH /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string
         :param color: string
         :param description: string

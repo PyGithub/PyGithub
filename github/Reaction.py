@@ -70,7 +70,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction>`_
+        :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_
         :rtype: None
         """
         self._requester.requestJsonAndCheck(

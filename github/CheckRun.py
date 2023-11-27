@@ -276,7 +276,6 @@ class CheckRun(github.GithubObject.CompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._node_id = github.GithubObject.NotSet
         self._output = github.GithubObject.NotSet
-        self._output = github.GithubObject.NotSet
         self._pull_requests = github.GithubObject.NotSet
         self._started_at = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet

@@ -25,7 +25,7 @@ import github.GithubObject
 
 class RequiredStatusChecks(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Required Status Checks. The reference can be found here https://docs.github.com/en/rest/reference/repos/branches#get-required-status-checks-of-protected-branch
+    This class represents Required Status Checks. The reference can be found here https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
     """
 
     def __repr__(self):

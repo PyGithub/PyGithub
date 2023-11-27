@@ -105,6 +105,15 @@ class PullRequestReview(github.GithubObject.NonCompletableGithubObject):
             input=post_parameters,
         )
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.pull_request_url}/reviews/{self.id}"
+        )
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet

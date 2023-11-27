@@ -29,7 +29,7 @@ from . import Consts
 
 class ProjectColumn(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Project Columns. The reference can be found here http://docs.github.com/en/rest/reference/projects#columns
+    This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
     """
 
     def __repr__(self):
@@ -93,7 +93,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def get_cards(self, archived_state=github.GithubObject.NotSet):
         """
-        :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects/cards#list-project-cards>`_
+        :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#list-project-cards>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
         :param archived_state: string
         """
@@ -120,7 +120,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         content_type=github.GithubObject.NotSet,
     ):
         """
-        :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects/cards#create-a-project-card>`_
+        :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#create-a-project-card>`_
         :param note: string
         :param content_id: integer
         :param content_type: string
@@ -147,7 +147,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def move(self, position):
         """
-        :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects/columns#move-a-project-column>`_
+        :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
         :param position: string
 
         :rtype: bool
@@ -164,7 +164,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects/columns#delete-a-project-column>`_
+        :calls: `DELETE /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#delete-a-project-column>`_
         :rtype: bool
         """
         status, _, _ = self._requester.requestJson(
@@ -176,7 +176,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def edit(self, name):
         """
-        :calls: `PATCH /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects/columns#update-a-project-column>`_
+        :calls: `PATCH /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#update-an-existing-project-column>`_
         :param name: string
         :rtype: None
         """

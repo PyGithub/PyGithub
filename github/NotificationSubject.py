@@ -31,7 +31,7 @@ import github.GithubObject
 
 class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Subjects of Notifications. The reference can be found here http://docs.github.com/en/rest/reference/activity/notifications#list-your-notifications
+    This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
     """
 
     def __repr__(self):

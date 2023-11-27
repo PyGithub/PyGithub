@@ -1,11 +1,12 @@
+from github.AppAuthentication import AppAuthentication as AppAuthentication
+from github.GithubIntegration import GithubIntegration as GithubIntegration
 from github.MainClass import Github as Github
-from github.MainClass import GithubIntegration as GithubIntegration
 
 from .GithubException import BadAttributeException as BadAttributeException
 from .GithubException import BadCredentialsException as BadCredentialsException
 from .GithubException import BadUserAgentException as BadUserAgentException
 from .GithubException import GithubException as GithubException
-from .GithubException import IncompletableObject as IncompleteableObject
+from .GithubException import IncompletableObject as IncompletableObject
 from .GithubException import RateLimitExceededException as RateLimitExceededException
 from .GithubException import TwoFactorException as TwoFactorException
 from .GithubException import UnknownObjectException as UnknownObjectException

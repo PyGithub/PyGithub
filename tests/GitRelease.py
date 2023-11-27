@@ -156,6 +156,12 @@ class GitRelease(Framework.TestCase):
             ),
         )
         self.assertEqual(repr(release), 'GitRelease(title="Test")')
+        self.assertEqual(len(release.assets), 1)
+        self.assertEqual(
+            repr(release.assets[0]),
+            'GitReleaseAsset(url="https://api.github.com/repos/'
+            f'{user}/{repo_name}/releases/assets/{release.raw_data["assets"][0]["id"]}")',
+        )
 
     def testGetRelease(self):
         release_by_id = self.release

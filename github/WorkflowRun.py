@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,6 +23,7 @@
 
 from collections import namedtuple
 
+import github.Artifact
 import github.GithubObject
 import github.PullRequest
 
@@ -59,6 +61,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         return self._head_sha.value
 
     @property
+    def run_attempt(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._run_attempt)
+        return self._run_attempt.value
+
+    @property
     def run_number(self):
         """
         :type: int
@@ -73,6 +83,14 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._event)
         return self._event.value
+
+    @property
+    def run_started_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._run_started_at)
+        return self._run_started_at.value
 
     @property
     def status(self):
@@ -170,6 +188,15 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._artifacts_url)
         return self._artifacts_url.value
 
+    def get_artifacts(self):
+        return github.PaginatedList.PaginatedList(
+            github.Artifact.Artifact,
+            self._requester,
+            self._artifacts_url.value,
+            None,
+            list_item="artifacts",
+        )
+
     @property
     def cancel_url(self):
         """
@@ -243,12 +270,22 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
         timingdata = namedtuple("TimingData", data.keys())
         return timingdata._make(data.values())
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson("DELETE", self.url)
+        return status == 204
+
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
         self._head_branch = github.GithubObject.NotSet
         self._head_sha = github.GithubObject.NotSet
+        self._run_attempt = github.GithubObject.NotSet
         self._run_number = github.GithubObject.NotSet
         self._event = github.GithubObject.NotSet
+        self._run_started_at = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
         self._conclusion = github.GithubObject.NotSet
         self._workflow_id = github.GithubObject.NotSet
@@ -275,10 +312,19 @@ class WorkflowRun(github.GithubObject.CompletableGithubObject):
             self._head_branch = self._makeStringAttribute(attributes["head_branch"])
         if "head_sha" in attributes:  # pragma no branch
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
+        if "run_attempt" in attributes:  # pragma no branch
+            self._run_attempt = self._makeIntAttribute(attributes["run_attempt"])
         if "run_number" in attributes:  # pragma no branch
             self._run_number = self._makeIntAttribute(attributes["run_number"])
         if "event" in attributes:  # pragma no branch
             self._event = self._makeStringAttribute(attributes["event"])
+        if "run_started_at" in attributes:  # pragma no branch
+            assert attributes["run_started_at"] is None or isinstance(
+                attributes["run_started_at"], str
+            ), attributes["run_started_at"]
+            self._run_started_at = self._makeDatetimeAttribute(
+                attributes["run_started_at"]
+            )
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "conclusion" in attributes:  # pragma no branch

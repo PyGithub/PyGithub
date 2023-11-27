@@ -114,7 +114,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
     # the API doesn't make it clear which you are dealing with.
     def get_content(self, content_type=github.GithubObject.NotSet):
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls#get-a-single-pull-request>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
         :param content_type: string, optional
         :rtype: :class:`github.PullRequest.PullRequest` or :class:`github.Issue.Issue`
         """
@@ -176,7 +176,7 @@ class ProjectCard(github.GithubObject.CompletableGithubObject):
         self, note=github.GithubObject.NotSet, archived=github.GithubObject.NotSet
     ):
         """
-        :calls: `PATCH /projects/columns/cards/{card_id} <http://docs.github.com/en/rest/reference/projects#cards>`_
+        :calls: `PATCH /projects/columns/cards/{card_id} <https://docs.github.com/en/rest/reference/projects#cards>`_
         :param note: string
         :param archived: bool
         :rtype: None

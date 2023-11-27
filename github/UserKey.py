@@ -34,7 +34,7 @@ import github.GithubObject
 
 class UserKey(github.GithubObject.CompletableGithubObject):
     """
-    This class represents UserKeys. The reference can be found here http://docs.github.com/en/rest/reference/users#keys
+    This class represents UserKeys. The reference can be found here https://docs.github.com/en/rest/reference/users#keys
     """
 
     def __repr__(self):
@@ -82,7 +82,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /user/keys/{id} <http://docs.github.com/en/rest/reference/users#keys>`_
+        :calls: `DELETE /user/keys/{id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)

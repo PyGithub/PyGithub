@@ -76,6 +76,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
         self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
+        self.assertTrue(self.user.two_factor_authentication)
 
     def testEditWithoutArguments(self):
         self.user.edit()
@@ -662,6 +663,32 @@ class AuthenticatedUser(Framework.TestCase):
     def testCreateFork(self):
         repo = self.user.create_fork(self.g.get_user("nvie").get_repo("gitflow"))
         self.assertEqual(repo.source.full_name, "nvie/gitflow")
+
+    def testCreateRepoFromTemplate(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        repo = self.user.create_repo_from_template(
+            "hello-world-docker-action-new", template_repo
+        )
+        self.assertEqual(
+            repo.url,
+            "https://api.github.com/repos/jacquev6/hello-world-docker-action-new",
+        )
+        self.assertFalse(repo.is_template)
+
+    def testCreateRepoFromTemplateWithAllArguments(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        description = "My repo from template"
+        private = True
+        repo = self.user.create_repo_from_template(
+            "hello-world-docker-action-new",
+            template_repo,
+            description=description,
+            private=private,
+        )
+        self.assertEqual(repo.description, description)
+        self.assertTrue(repo.private)
 
     def testGetNotification(self):
         notification = self.user.get_notification("8406712")

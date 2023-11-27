@@ -34,7 +34,7 @@ import github.Repository
 
 class Notification(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Notifications. The reference can be found here http://docs.github.com/en/rest/reference/activity#notifications
+    This class represents Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#notifications
     """
 
     def __repr__(self):

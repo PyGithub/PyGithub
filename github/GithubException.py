@@ -67,7 +67,7 @@ class GithubException(Exception):
         return self.__headers
 
     def __str__(self):
-        return "{status} {data}".format(status=self.status, data=json.dumps(self.data))
+        return f"{self.status} {json.dumps(self.data)}"
 
 
 class BadCredentialsException(GithubException):

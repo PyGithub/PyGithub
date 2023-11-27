@@ -135,14 +135,14 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <http://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <http://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :param body: string
         :rtype: None
         """

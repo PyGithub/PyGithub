@@ -57,10 +57,26 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
         """
         return self._on_behalf_of.value
 
+    @property
+    def permissions(self):
+        """
+        :type: dict
+        """
+        return self._permissions.value
+
+    @property
+    def repository_selection(self):
+        """
+        :type: string
+        """
+        return self._repository_selection.value
+
     def _initAttributes(self):
         self._token = github.GithubObject.NotSet
         self._expires_at = github.GithubObject.NotSet
         self._on_behalf_of = github.GithubObject.NotSet
+        self._permissions = github.GithubObject.NotSet
+        self._repository_selection = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "token" in attributes:  # pragma no branch
@@ -70,4 +86,10 @@ class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
         if "on_behalf_of" in attributes:  # pragma no branch
             self._on_behalf_of = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["on_behalf_of"]
+            )
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeDictAttribute(attributes["permissions"])
+        if "repository_selection" in attributes:  # pragma no branch
+            self._repository_selection = self._makeStringAttribute(
+                attributes["repository_selection"]
             )

@@ -1,0 +1,11 @@
+https
+GET
+api.github.com
+None
+/repos/github/vscode-codeql/actions/artifacts/378970214
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Wed, 28 Sep 2022 11:31:34 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"1ce0fc2843af81fc42d4196f2c6f764261d3f2fb3ad2e8252e12328e3d172e83"'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '44'), ('X-RateLimit-Reset', '1664368108'), ('X-RateLimit-Used', '16'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'AB42:A24F:196DD8:19DBE1:63343096')]
+{"id":378970214,"node_id":"MDg6QXJ0aWZhY3QzNzg5NzAyMTQ=","name":"vscode-codeql-extension","size_in_bytes":16528288,"url":"https://api.github.com/repos/github/vscode-codeql/actions/artifacts/378970214","archive_download_url":"https://api.github.com/repos/github/vscode-codeql/actions/artifacts/378970214/zip","expired":false,"created_at":"2022-09-28T09:47:51Z","updated_at":"2022-09-28T09:47:52Z","expires_at":"2022-12-27T09:36:05Z","workflow_run":{"id":3142419796,"repository_id":211169016,"head_repository_id":211169016,"head_branch":"koesie10/refactor-raw-results-table","head_sha":"e3e2fcc3498ab7d945a9e58f7c1458171ab0a5a7"}}
+

@@ -58,6 +58,9 @@ class Team(Framework.TestCase):
         self.assertEqual(
             repr(self.team), 'Team(name="Team created by PyGithub", id=189850)'
         )
+        self.assertEqual(
+            self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/core"
+        )
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())

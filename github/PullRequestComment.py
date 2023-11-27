@@ -41,7 +41,7 @@ from . import Consts
 
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
-    This class represents PullRequestComments. The reference can be found here http://docs.github.com/en/rest/reference/pulls#comments
+    This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments
     """
 
     def __repr__(self):
@@ -169,14 +169,14 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{number} <http://docs.github.com/en/rest/reference/pulls#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{number} <http://docs.github.com/en/rest/reference/pulls#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
         :rtype: None
         """

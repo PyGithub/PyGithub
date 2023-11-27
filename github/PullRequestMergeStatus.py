@@ -34,7 +34,7 @@ import github.GithubObject
 
 class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents PullRequestMergeStatuses. The reference can be found here http://docs.github.com/en/rest/reference/pulls#get-if-a-pull-request-has-been-merged
+    This class represents PullRequestMergeStatuses. The reference can be found here https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
     """
 
     def __repr__(self):
