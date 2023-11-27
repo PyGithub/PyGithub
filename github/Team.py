@@ -255,7 +255,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = repo
+            repo_url_param = urllib.parse.quote(repo)
         put_parameters = {
             "permission": permission,
         }
