@@ -75,6 +75,16 @@ expiration timeout. The access token is refreshed automatically.
     >>> g.get_repo("user/repo").name
     'repo'
 
+Alternatively, the `github.Github` instance can be retrieved via `github.GithubIntegration`:
+
+.. code-block:: python
+
+    >>> auth = Auth.AppAuth(123456, private_key)
+    >>> gi = GithubIntegration(auth=auth)
+    >>> g = gi.get_github_for_installation(installation_id, token_permissions)
+    >>> g.get_repo("user/repo").name
+    'repo'
+
 App user authentication
 -----------------------
 

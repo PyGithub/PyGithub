@@ -253,10 +253,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 
         from github.GithubIntegration import GithubIntegration
 
-        self.__integration = GithubIntegration(
-            auth=self._app_auth,
-            base_url=requester.base_url,
-        )
+        self.__integration = GithubIntegration(**self.requester.kwargs)
 
         return self
 

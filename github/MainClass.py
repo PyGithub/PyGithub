@@ -815,7 +815,7 @@ class Github:
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
             )
-            return GithubIntegration(auth=self.__requester.auth).get_app()
+            return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
             # with a slug given, we can lazily load the GithubApp
             return GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
