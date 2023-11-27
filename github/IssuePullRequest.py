@@ -28,6 +28,8 @@
 ################################################################################
 
 
+from typing import Any, Dict
+
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -53,7 +55,7 @@ class IssuePullRequest(NonCompletableGithubObject):
     def patch_url(self) -> str:
         return self._patch_url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch

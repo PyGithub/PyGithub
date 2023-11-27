@@ -49,7 +49,6 @@ class Auth(abc.ABC):
         The type of the auth token as used in the HTTP Authorization header, e.g. Bearer or Basic.
         :return: token type
         """
-        pass
 
     @property
     @abc.abstractmethod
@@ -58,7 +57,6 @@ class Auth(abc.ABC):
         The auth token as used in the HTTP Authorization header.
         :return: token
         """
-        pass
 
 
 class Login(Auth):
@@ -177,7 +175,7 @@ class AppAuth(JWT):
         """
         return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
-    def create_jwt(self, expiration=None) -> str:
+    def create_jwt(self, expiration: Optional[int] = None) -> str:
         """
         Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
@@ -329,10 +327,10 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         token: str,
         token_type: Optional[str] = None,
         expires_at: Optional[datetime] = None,
-        refresh_token=None,
-        refresh_expires_at=None,
+        refresh_token: Optional[str] = None,
+        refresh_expires_at: Optional[datetime] = None,
         requester: Optional[Requester] = None,
-    ):
+    ) -> None:
         assert isinstance(client_id, str)
         assert len(client_id) > 0
         assert isinstance(client_secret, str)
@@ -398,7 +396,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     def _is_expired(self) -> bool:
         return self._expires_at is not None and self._expires_at < datetime.now(timezone.utc)
 
-    def _refresh(self):
+    def _refresh(self) -> None:
         if self._refresh_token is None:
             raise RuntimeError("Cannot refresh expired token because no refresh token has been provided")
         if self._refresh_expires_at is not None and self._refresh_expires_at < datetime.now(timezone.utc):

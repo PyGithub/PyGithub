@@ -30,7 +30,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
 import github.GithubObject
@@ -56,7 +56,7 @@ class GitTag(CompletableGithubObject):
         self._tagger: Attribute[GitAuthor] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
 
     @property
@@ -89,7 +89,7 @@ class GitTag(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch

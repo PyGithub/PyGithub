@@ -31,6 +31,7 @@
 ################################################################################
 
 import urllib.parse
+from typing import Any, Dict
 
 import github.GithubObject
 import github.NamedUser
@@ -44,7 +45,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
     This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
@@ -175,7 +176,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         self._id = github.GithubObject.NotSet
         self._owner = github.GithubObject.NotSet
         self._guid = github.GithubObject.NotSet
@@ -187,7 +188,7 @@ class Migration(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "owner" in attributes:
