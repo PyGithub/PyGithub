@@ -119,6 +119,23 @@ class GithubIntegration:
             seconds_between_writes=seconds_between_writes,
         )
 
+    def close(self) -> None:
+        """
+        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
+
+        .. code-block:: python
+
+          with github.GithubIntegration(...) as gi:
+            # do something
+        """
+        self.__requester.close()
+
+    def __enter__(self) -> "GithubIntegration":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
+
     def get_github_for_installation(self, installation_id, token_permissions=None):
         # The installation has to authenticate as an installation, not an app
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
