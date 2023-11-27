@@ -878,6 +878,40 @@ class Organization(github.GithubObject.CompletableGithubObject):
             github.Hook.Hook, self._requester, f"{self.url}/hooks", None
         )
 
+    def get_hook_delivery(
+        self, hook_id: int, delivery_id: int
+    ) -> github.HookDelivery.HookDelivery:
+        """
+        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
+        )
+        return github.HookDelivery.HookDelivery(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_hook_deliveries(
+        self, hook_id: int
+    ) -> github.PaginatedList.PaginatedList[github.HookDelivery.HookDeliverySummary]:
+        """
+        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
+        :param hook_id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+        return github.PaginatedList.PaginatedList(
+            github.HookDelivery.HookDeliverySummary,
+            self._requester,
+            f"{self.url}/hooks/{hook_id}/deliveries",
+            None,
+        )
+
     def get_issues(
         self,
         filter=github.GithubObject.NotSet,

@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/hooks/257993/deliveries
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4953'), ('content-length', '295'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"07e5e1a2fafd1a5e2de62eb3afd007d5"'), ('date', 'Sun, 27 May 2012 07:02:25 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"id":12345,"guid":"abcde-12345","delivered_at":"2012-05-27T06:00:32Z","redelivery":false,"duration":0.27,"status":"OK","status_code":200,"event":"issues","action":"opened","installation_id":123,"repository_id":456,"url":"https://www.example-webhook.com"}]

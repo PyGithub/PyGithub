@@ -158,6 +158,7 @@ import github.GitReleaseAsset
 import github.GitTag
 import github.GitTree
 import github.Hook
+import github.HookDelivery
 import github.Invitation
 import github.Issue
 import github.IssueEvent
@@ -2813,6 +2814,41 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Hook.Hook, self._requester, f"{self.url}/hooks", None
+        )
+
+    def get_hook_delivery(
+        self, hook_id: int, delivery_id: int
+    ) -> github.HookDelivery.HookDelivery:
+        """
+        :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
+        :param hook_id: integer
+        :param delivery_id: integer
+        :rtype: :class:`github.HookDelivery.HookDelivery`
+        """
+        assert isinstance(hook_id, int), hook_id
+        assert isinstance(delivery_id, int), delivery_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
+        )
+        return github.HookDelivery.HookDelivery(
+            self._requester, headers, data, completed=True
+        )
+
+    def get_hook_deliveries(
+        self, hook_id: int
+    ) -> github.PaginatedList.PaginatedList[github.HookDelivery.HookDeliverySummary]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
+        :param hook_id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
+        """
+        assert isinstance(hook_id, int), hook_id
+
+        return github.PaginatedList.PaginatedList(
+            github.HookDelivery.HookDeliverySummary,
+            self._requester,
+            f"{self.url}/hooks/{hook_id}/deliveries",
+            None,
         )
 
     def get_issue(self, number):
