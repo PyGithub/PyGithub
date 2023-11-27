@@ -1,5 +1,4 @@
 import time  # NOQA
-import warnings
 
 import requests  # NOQA
 
@@ -42,16 +41,6 @@ class GithubIntegration(Framework.BasicTestCase):
         self.repo_installation_id = 30614431
         self.user_installation_id = 30614431
 
-    def assertWarning(self, warning, expected):
-        self.assertWarnings(warning, expected)
-
-    def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
-        for message, expected in zip(warning.warnings, expecteds):
-            self.assertIsInstance(message, warnings.WarningMessage)
-            self.assertIsInstance(message.message, DeprecationWarning)
-            self.assertEqual(message.message.args, (expected,))
-
     def testDeprecatedAppAuth(self):
         # Replay data copied from testGetInstallations to test authentication only
         with self.assertWarns(DeprecationWarning) as warning:
@@ -66,6 +55,16 @@ class GithubIntegration(Framework.BasicTestCase):
             "jwt_algorithm are deprecated, please use auth=github.Auth.AppAuth(...) "
             "instead",
         )
+
+    def testRequiredAppAuth(self):
+        # GithubIntegration requires AppAuth authentication.
+        for auth in [self.oauth_token, self.jwt, self.login]:
+            with self.assertRaises(AssertionError) as r:
+                github.GithubIntegration(auth=auth)
+            self.assertEqual(
+                str(r.exception),
+                f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}",
+            )
 
     def testAppAuth(self):
         # Replay data copied from testDeprecatedAppAuth to test parity
@@ -227,3 +226,11 @@ class GithubIntegration(Framework.BasicTestCase):
             )
 
         self.assertEqual(raisedexp.exception.status, 400)
+
+    def testGetApp(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        app = github_integration.get_app()
+
+        self.assertEqual(app.name, "PyGithubTest")
+        self.assertEqual(app.url, "/apps/pygithubtest")

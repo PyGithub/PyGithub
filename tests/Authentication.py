@@ -26,7 +26,6 @@
 #                                                                              #
 ################################################################################
 import datetime
-import warnings
 from unittest import mock
 
 import jwt
@@ -41,16 +40,6 @@ class Authentication(Framework.BasicTestCase):
     def testNoAuthentication(self):
         g = github.Github()
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
-
-    def assertWarning(self, warning, expected):
-        self.assertWarnings(warning, expected)
-
-    def assertWarnings(self, warning, *expecteds):
-        self.assertEqual(len(warning.warnings), len(expecteds))
-        for message, expected in zip(warning.warnings, expecteds):
-            self.assertIsInstance(message, warnings.WarningMessage)
-            self.assertIsInstance(message.message, DeprecationWarning)
-            self.assertEqual(message.message.args, (expected,))
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
@@ -124,25 +113,33 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github()
         app = g.get_oauth_application(client_id, client_secret)
         with mock.patch("github.AccessToken.datetime") as dt:
-            dt.utcnow = mock.Mock(
-                return_value=datetime.datetime(2023, 6, 7, 12, 0, 0, 123)
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc
+                )
             )
             token = app.refresh_access_token(refresh_token)
         self.assertEqual(token.token, "fresh access token")
         self.assertEqual(token.type, "bearer")
         self.assertEqual(token.scope, "")
         self.assertEqual(token.expires_in, 28800)
-        self.assertEqual(token.expires_at, datetime.datetime(2023, 6, 7, 20, 0, 0, 123))
+        self.assertEqual(
+            token.expires_at,
+            datetime.datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(token.refresh_token, "fresh refresh token")
         self.assertEqual(token.refresh_expires_in, 15811200)
         self.assertEqual(
-            token.refresh_expires_at, datetime.datetime(2023, 12, 7, 12, 0, 0, 123)
+            token.refresh_expires_at,
+            datetime.datetime(2023, 12, 7, 12, 0, 0, 123, tzinfo=datetime.timezone.utc),
         )
 
         auth = app.get_app_user_auth(token)
         with mock.patch("github.Auth.datetime") as dt:
-            dt.utcnow = mock.Mock(
-                return_value=datetime.datetime(2023, 6, 7, 20, 0, 0, 123)
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 20, 0, 0, 123, tzinfo=datetime.timezone.utc
+                )
             )
             self.assertEqual(auth._is_expired, False)
             self.assertEqual(auth.token, "fresh access token")
@@ -151,8 +148,10 @@ class Authentication(Framework.BasicTestCase):
 
         # expire auth token
         with mock.patch("github.Auth.datetime") as dt:
-            dt.utcnow = mock.Mock(
-                return_value=datetime.datetime(2023, 6, 7, 20, 0, 1, 123)
+            dt.now = mock.Mock(
+                return_value=datetime.datetime(
+                    2023, 6, 7, 20, 0, 1, 123, tzinfo=datetime.timezone.utc
+                )
             )
             self.assertEqual(auth._is_expired, True)
             self.assertEqual(auth.token, "another access token")

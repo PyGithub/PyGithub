@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import github.GithubObject
 
@@ -128,7 +128,7 @@ class AccessToken(github.GithubObject.NonCompletableGithubObject):
         self._refresh_expires_in = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        self._created = datetime.utcnow()
+        self._created = datetime.now(timezone.utc)
         if "access_token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["access_token"])
         if "token_type" in attributes:  # pragma no branch
