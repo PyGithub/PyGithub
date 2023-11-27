@@ -63,6 +63,7 @@ if TYPE_CHECKING:
     from .Requester import Requester
 
 T = typing.TypeVar("T")
+K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
 
 
@@ -216,8 +217,8 @@ class GithubObject:
 
     @staticmethod
     def __makeTransformedAttribute(
-        value: T, type: Type[T], transform: Callable[[T], Any]
-    ) -> Attribute[T]:
+        value: T, type: Type[T], transform: Callable[[T], K]
+    ) -> Attribute[K]:
         if value is None:
             return _ValuedAttribute(None)  # type: ignore
         elif isinstance(value, type):
@@ -249,7 +250,7 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
-    def _makeTimestampAttribute(value: int) -> Attribute[int]:
+    def _makeTimestampAttribute(value: int) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(
             value,
             int,
@@ -257,8 +258,8 @@ class GithubObject:
         )
 
     @staticmethod
-    def _makeDatetimeAttribute(value: Optional[Union[int, str]]) -> Attribute:
-        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)
+    def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
     def _makeClassAttribute(self, klass: Any, value: Any) -> Attribute:
         return GithubObject.__makeTransformedAttribute(
@@ -358,10 +359,10 @@ class GithubObject:
             params=", ".join(list(format_params(params))),
         )
 
-    def _initAttributes(self):
+    def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes) -> None:
         raise NotImplementedError("BUG: Not Implemented _useAttributes")
 
     def _completeIfNeeded(self):
@@ -403,7 +404,7 @@ class CompletableGithubObject(GithubObject):
 
     def __complete(self):
         if self._url.value is None:
-            raise IncompletableObject(400, "Returned object contains no URL", None)
+            raise IncompletableObject(400, message="Returned object contains no URL")
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
