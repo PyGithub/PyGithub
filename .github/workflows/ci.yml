@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # keey it sync with tox.ini [gh-actions] section
+        # keep it sync with tox.ini [gh-actions] section
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12-dev"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]

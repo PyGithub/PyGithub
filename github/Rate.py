@@ -6,6 +6,7 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2023 Nikolay Yurin <yurinnick@meta.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -63,10 +64,18 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         """
         return self._reset.value
 
+    @property
+    def used(self):
+        """
+        :type: integer
+        """
+        return self._used.value
+
     def _initAttributes(self):
         self._limit = github.GithubObject.NotSet
         self._remaining = github.GithubObject.NotSet
         self._reset = github.GithubObject.NotSet
+        self._used = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "limit" in attributes:  # pragma no branch
@@ -75,3 +84,5 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
             self._remaining = self._makeIntAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
             self._reset = self._makeTimestampAttribute(attributes["reset"])
+        if "used" in attributes:  # pragma no branch
+            self._used = self._makeIntAttribute(attributes["used"])

@@ -54,6 +54,7 @@ from typing import (
 )
 
 from dateutil import parser
+from typing_extensions import TypeGuard
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -90,6 +91,26 @@ class _NotSetType(Attribute):
 NotSet = _NotSetType()
 
 Opt = Union[T, _NotSetType]
+
+
+def is_defined(v: Union[T, _NotSetType]) -> TypeGuard[T]:
+    return not isinstance(v, _NotSetType)
+
+
+def is_undefined(v: Any) -> TypeGuard[_NotSetType]:
+    return isinstance(v, _NotSetType)
+
+
+def is_optional(v, type: Type[T]) -> TypeGuard[Opt[T]]:
+    return isinstance(v, _NotSetType) or isinstance(v, type)
+
+
+def is_optional_list(v, type: Type[T]) -> TypeGuard[Opt[List[T]]]:
+    return (
+        isinstance(v, _NotSetType)
+        or isinstance(v, list)
+        and all(isinstance(element, type) for element in v)
+    )
 
 
 class _ValuedAttribute(Attribute, Generic[T]):
