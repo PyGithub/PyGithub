@@ -58,13 +58,9 @@ class CheckRunOutput(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes) -> None:
         if "annotations_count" in attributes:  # pragma no branch
-            self._annotations_count = self._makeIntAttribute(
-                attributes["annotations_count"]
-            )
+            self._annotations_count = self._makeIntAttribute(attributes["annotations_count"])
         if "annotations_url" in attributes:  # pragma no branch
-            self._annotations_url = self._makeStringAttribute(
-                attributes["annotations_url"]
-            )
+            self._annotations_url = self._makeStringAttribute(attributes["annotations_url"])
         if "summary" in attributes:  # pragma no branch
             self._summary = self._makeStringAttribute(attributes["summary"])
         if "text" in attributes:  # pragma no branch

@@ -60,6 +60,4 @@ class Stargazer(NonCompletableGithubObject):
         if "starred_at" in attributes:
             self._starred_at = self._makeDatetimeAttribute(attributes["starred_at"])
         if "user" in attributes:
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

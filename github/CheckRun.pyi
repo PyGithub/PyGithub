@@ -23,9 +23,7 @@ class CheckRun(CompletableGithubObject):
         started_at: Union[_NotSetType, datetime] = ...,
         conclusion: Union[_NotSetType, str] = ...,
         completed_at: Union[_NotSetType, datetime] = ...,
-        output: Union[
-            _NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]
-        ] = ...,
+        output: Union[_NotSetType, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]] = ...,
         actions: Union[_NotSetType, List[Dict[str, str]]] = ...,
     ) -> None: ...
     @property

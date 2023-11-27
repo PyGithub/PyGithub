@@ -117,15 +117,11 @@ class Authentication(Framework.BasicTestCase):
         # forward the clock so token expires
         with mock.patch("github.Auth.datetime") as dt:
             # just before expiry
-            dt.now = mock.Mock(
-                return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc))
             self.assertFalse(installation_auth._is_expired)
 
             # just after expiry
-            dt.now = mock.Mock(
-                return_value=datetime(2024, 11, 25, 1, 0, 3, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2024, 11, 25, 1, 0, 3, tzinfo=timezone.utc))
             self.assertTrue(installation_auth._is_expired)
 
             # expect refreshing the token
@@ -149,9 +145,7 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github()
         app = g.get_oauth_application(client_id, client_secret)
         with mock.patch("github.AccessToken.datetime") as dt:
-            dt.now = mock.Mock(
-                return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc))
             token = app.refresh_access_token(refresh_token)
         self.assertEqual(token.token, "fresh access token")
         self.assertEqual(token.type, "bearer")
@@ -170,9 +164,7 @@ class Authentication(Framework.BasicTestCase):
 
         auth = app.get_app_user_auth(token)
         with mock.patch("github.Auth.datetime") as dt:
-            dt.now = mock.Mock(
-                return_value=datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 20, 0, 0, 123, tzinfo=timezone.utc))
             self.assertEqual(auth._is_expired, False)
             self.assertEqual(auth.token, "fresh access token")
         self.assertEqual(auth.token_type, "bearer")
@@ -180,9 +172,7 @@ class Authentication(Framework.BasicTestCase):
 
         # expire auth token
         with mock.patch("github.Auth.datetime") as dt:
-            dt.now = mock.Mock(
-                return_value=datetime(2023, 6, 7, 20, 0, 1, 123, tzinfo=timezone.utc)
-            )
+            dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 20, 0, 1, 123, tzinfo=timezone.utc))
             self.assertEqual(auth._is_expired, True)
             self.assertEqual(auth.token, "another access token")
             self.assertEqual(auth._is_expired, False)
@@ -206,14 +196,10 @@ class Authentication(Framework.BasicTestCase):
             algorithms=["RS256"],
             options={"verify_exp": False},
         )
-        self.assertDictEqual(
-            payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID}
-        )
+        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID})
 
     def testCreateJWTWithExpiration(self):
-        auth = github.Auth.AppAuth(
-            APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30
-        )
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
 
         with mock.patch("github.Auth.time") as t:
             t.time = mock.Mock(return_value=1550055331.7435968)
@@ -225,9 +211,7 @@ class Authentication(Framework.BasicTestCase):
             algorithms=["RS256"],
             options={"verify_exp": False},
         )
-        self.assertDictEqual(
-            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
-        )
+        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID})
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")

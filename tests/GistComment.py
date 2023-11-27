@@ -47,9 +47,7 @@ class GistComment(Framework.TestCase):
             self.comment.updated_at,
             datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.comment.url, "https://api.github.com/gists/2729810/comments/323629"
-        )
+        self.assertEqual(self.comment.url, "https://api.github.com/gists/2729810/comments/323629")
         self.assertEqual(self.comment.user.login, "jacquev6")
         self.assertEqual(
             repr(self.comment),
