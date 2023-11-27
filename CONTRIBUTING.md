@@ -74,7 +74,7 @@ def get_protected_branch(self):
 
 First you need to install the test dependencies:
 ```bash
-pip install -r test-requirements.txt
+pip install -r requirements/test.txt
 ```
 
 Then you can run the tests through `pytest`.
