@@ -55,6 +55,7 @@ if TYPE_CHECKING:
 T = typing.TypeVar("T")
 K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
+T_gh = typing.TypeVar("T_gh", bound="GithubObject")
 
 
 class Attribute(Protocol[T_co]):
@@ -68,7 +69,7 @@ class _NotSetType:
         return "NotSet"
 
     @property
-    def value(self):
+    def value(self) -> Any:
         return None
 
     @staticmethod
@@ -262,7 +263,7 @@ class GithubObject:
     ) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, list)
 
-    def _makeListOfClassesAttribute(self, klass: Any, value: Any) -> Union[_ValuedAttribute, _BadAttribute]:
+    def _makeListOfClassesAttribute(self, klass: Type[T_gh], value: Any) -> Attribute[List[T_gh]]:
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute(
                 [klass(self._requester, self._headers, element, completed=False) for element in value]

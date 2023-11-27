@@ -1530,7 +1530,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, typing.Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            # noinspection PyProtectedMember
             github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
                 vulnerability
             )
@@ -1539,9 +1538,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(credits, (typing.Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                # noinspection PyProtectedMember
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
-        # noinspection PyProtectedMember
         post_parameters = {
             "summary": summary,
             "description": description,
@@ -1554,7 +1551,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if cve_id is not None:
             post_parameters["cve_id"] = cve_id
         if credits is not None:
-            # noinspection PyProtectedMember
             post_parameters["credits"] = [
                 github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
