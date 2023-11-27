@@ -72,12 +72,22 @@ from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
 
+# set log level to INFO for github
+logger = logging.getLogger("github")
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
+
+
+def set_log_level(level: int):
+    """
+    Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
+    :param level: log level
+    """
+    logger.setLevel(level)
+
 
 def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)
     """
     This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
     """
-
-    logger = logging.getLogger("github")
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(logging.StreamHandler())
+    set_log_level(logging.DEBUG)

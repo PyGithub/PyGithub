@@ -61,6 +61,27 @@ class GithubIntegration(Framework.BasicTestCase):
         )
         sys.modules["time"].time = self.origin_time
 
+    def testCreateJWTWithExpiration(self):
+        self.origin_time = sys.modules["time"].time
+        sys.modules["time"].time = lambda: 1550055331.7435968
+        github_integration = github.GithubIntegration(
+            integration_id=APP_ID,
+            private_key=PRIVATE_KEY,
+            jwt_expiry=120,
+            jwt_issued_at=-30,
+        )
+        token = github_integration.create_jwt(60)
+        payload = jwt.decode(
+            token,
+            key=PUBLIC_KEY,
+            algorithms=["RS256"],
+            options={"verify_exp": False},
+        )
+        self.assertDictEqual(
+            payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID}
+        )
+        sys.modules["time"].time = self.origin_time
+
     def testGetInstallations(self):
         github_integration = github.GithubIntegration(
             integration_id=APP_ID, private_key=PRIVATE_KEY

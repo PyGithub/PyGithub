@@ -196,6 +196,7 @@ class ReplayingConnection:
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
+                assert expectedInput.startswith("{"), expectedInput
                 assert json.loads(trInput) == json.loads(expectedInput)
             else:
                 assert trInput == expectedInput

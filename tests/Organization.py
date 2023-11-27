@@ -328,6 +328,7 @@ class Organization(Framework.TestCase):
             has_wiki=False,
             has_downloads=False,
             team_id=team.id,
+            allow_update_branch=True,
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
@@ -336,6 +337,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(
             repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
         )
+        self.assertTrue(repo.allow_update_branch)
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 

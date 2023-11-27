@@ -90,17 +90,23 @@ class GithubIntegration:
             completed=True,
         )
 
-    def create_jwt(self):
+    def create_jwt(self, expiration=None):
         """
         Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
 
         :return string:
         """
+        if expiration is not None:
+            assert isinstance(expiration, int), expiration
+            assert (
+                Consts.MIN_JWT_EXPIRY <= expiration <= Consts.MAX_JWT_EXPIRY
+            ), expiration
+
         now = int(time.time())
         payload = {
             "iat": now + self.jwt_issued_at,
-            "exp": now + self.jwt_expiry,
+            "exp": now + (expiration if expiration is not None else self.jwt_expiry),
             "iss": self.integration_id,
         }
         encrypted = jwt.encode(payload, key=self.private_key, algorithm="RS256")
@@ -129,6 +135,7 @@ class GithubIntegration:
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
+            headers=self._get_headers(),
             input=body,
         )
 

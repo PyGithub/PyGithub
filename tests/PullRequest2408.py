@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Denis Blanchette <denisblanchette@gmail.com>                  #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,30 +20,19 @@
 #                                                                              #
 ################################################################################
 
+from . import Framework
 
-from typing import Dict, Optional, Union
 
+class PullRequest2408(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
 
-class AppAuthentication:
-    app_id: Union[int, str]
-    private_key: str
-    installation_id: int
-    token_permissions: Optional[Dict[str, str]]
+    def test_get_workflow_runs(self):
+        runs = self.repo.get_workflow_runs(
+            head_sha="7aab33f4294ba5141f17bed0aeb1a929f7afc155"
+        )
+        self.assertEqual(720994709, runs[0].id)
 
-    def __init__(
-        self,
-        app_id: Union[int, str],
-        private_key: str,
-        installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
-    ):
-        assert isinstance(app_id, (int, str)), app_id
-        assert isinstance(private_key, str)
-        assert isinstance(installation_id, int), installation_id
-        assert token_permissions is None or isinstance(
-            token_permissions, dict
-        ), token_permissions
-        self.app_id = app_id
-        self.private_key = private_key
-        self.installation_id = installation_id
-        self.token_permissions = token_permissions
+        runs = self.repo.get_workflow_runs(exclude_pull_requests=True)
+        self.assertEqual(3519037359, runs[0].id)

@@ -24,6 +24,7 @@ class Workflow(CompletableGithubObject):
         branch: Union[str, Branch, _NotSetType] = ...,
         event: Union[str, _NotSetType] = ...,
         status: Union[str, _NotSetType] = ...,
+        check_suite_id: Union[int, _NotSetType] = ...,
     ) -> PaginatedList[WorkflowRun]: ...
     @property
     def id(self) -> int: ...
