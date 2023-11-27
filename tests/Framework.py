@@ -283,12 +283,28 @@ class BasicTestCase(unittest.TestCase):
             )
             import GithubCredentials  # type: ignore
 
-            self.login = GithubCredentials.login
-            self.password = GithubCredentials.password
-            self.oauth_token = GithubCredentials.oauth_token
-            self.jwt = GithubCredentials.jwt
-            self.app_id = GithubCredentials.app_id
-            self.app_private_key = GithubCredentials.app_private_key
+            self.login = (
+                github.Auth.Login(GithubCredentials.login, GithubCredentials.password)
+                if GithubCredentials.login and GithubCredentials.password
+                else None
+            )
+            self.oauth_token = (
+                github.Auth.Token(GithubCredentials.oauth_token)
+                if GithubCredentials.oauth_token
+                else None
+            )
+            self.jwt = (
+                github.Auth.AppAuthToken(GithubCredentials.jwt)
+                if GithubCredentials.jwt
+                else None
+            )
+            self.app_auth = (
+                github.Auth.AppAuth(
+                    GithubCredentials.app_id, GithubCredentials.app_private_key
+                )
+                if GithubCredentials.app_id and GithubCredentials.app_private_key
+                else None
+            )
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(
@@ -298,12 +314,10 @@ class BasicTestCase(unittest.TestCase):
                     self.__openFile("r"), *args, **kwds
                 ),
             )
-            self.login = "login"
-            self.password = "password"
-            self.oauth_token = "oauth_token"
-            self.jwt = "jwt"
-            self.app_id = 123456
-            self.app_private_key = APP_PRIVATE_KEY
+            self.login = github.Auth.Login("login", "password")
+            self.oauth_token = github.Auth.Token("oauth_token")
+            self.jwt = github.Auth.AppAuthToken("jwt")
+            self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
             httpretty.enable(allow_net_connect=False)
 
@@ -372,15 +386,15 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(
-                self.oauth_token, retry=self.retry, pool_size=self.pool_size
+                auth=self.oauth_token, retry=self.retry, pool_size=self.pool_size
             )
         elif self.jwtAuthMode:
             self.g = github.Github(
-                jwt=self.jwt, retry=self.retry, pool_size=self.pool_size
+                auth=self.jwt, retry=self.retry, pool_size=self.pool_size
             )
         else:
             self.g = github.Github(
-                self.login, self.password, retry=self.retry, pool_size=self.pool_size
+                auth=self.login, retry=self.retry, pool_size=self.pool_size
             )
 
 

@@ -8,28 +8,34 @@ from . import Framework
 class Artifact(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("github/vscode-codeql")
+        self.repo = self.g.get_repo("transmission-web-control/transmission-web-control")
 
     def testGetArtifactsFromWorkflow(self):
-        artifact = self.repo.get_workflow_run(160995070).get_artifacts()[0]
+        artifact = self.repo.get_workflow_run(5138169628).get_artifacts()[0]
 
-        self.assertEqual(artifact.name, "vscode-codeql-extension")
-        self.assertTrue(artifact.expired)
-        self.assertEqual(
-            repr(artifact), 'Artifact(name="vscode-codeql-extension", id=10495898)'
-        )
+        self.assertEqual(artifact.name, "build-tar")
+        self.assertFalse(artifact.expired)
+        self.assertEqual(repr(artifact), 'Artifact(name="build-tar", id=724958104)')
+
+    def testGetArtifactsFromRepoWithName(self):
+        artifacts = self.repo.get_artifacts(name="build-tar")
+        self.assertEqual(artifacts.totalCount, 296)
+        assert all(x.name == "build-tar" for x in artifacts)
+
+        artifact = artifacts[0]
+
+        self.assertEqual(artifact.name, "build-tar")
+        self.assertEqual(repr(artifact), 'Artifact(name="build-tar", id=724959170)')
 
     def testGetSingleArtifactFromRepo(self):
-        artifact = self.repo.get_artifact(378970214)
+        artifact = self.repo.get_artifact(719509139)
 
-        self.assertEqual(artifact.name, "vscode-codeql-extension")
+        self.assertEqual(artifact.name, "build-zip")
         self.assertFalse(artifact.expired)
-        self.assertEqual(
-            repr(artifact), 'Artifact(name="vscode-codeql-extension", id=378970214)'
-        )
+        self.assertEqual(repr(artifact), 'Artifact(name="build-zip", id=719509139)')
 
     def testGetArtifactsFromRepo(self):
-        artifact_id = 378970214
+        artifact_id = 719509139
         artifacts = self.repo.get_artifacts()
         for item in artifacts:
             if item.id == artifact_id:
@@ -40,7 +46,7 @@ class Artifact(Framework.TestCase):
 
         self.assertEqual(
             repr(artifact),
-            f'Artifact(name="vscode-codeql-extension", id={artifact_id})',
+            f'Artifact(name="build-zip", id={artifact_id})',
         )
 
     def testGetNonexistentArtifact(self):

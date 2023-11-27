@@ -1,15 +1,24 @@
 from collections import OrderedDict
 from io import BufferedReader
 from logging import Logger
-from typing import Any, Callable, Dict, Iterator, Optional, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Optional,
+    Tuple,
+    Union,
+    Generic,
+    TypeVar,
+)
 
 from requests.models import Response
+from urllib3.util import Retry
 
-from github.AppAuthentication import AppAuthentication
+from github.Auth import Auth
 from github.GithubObject import GithubObject
 from github.InstallationAuthorization import InstallationAuthorization
-
-from urllib3.util import Retry
 
 class HTTPRequestsConnectionClass:
     def __init__(
@@ -50,8 +59,8 @@ class HTTPSRequestsConnectionClass:
     ) -> None: ...
 
 class Requester:
+    __auth: Optional[Auth] = ...
     __installation_authorization: Optional[InstallationAuthorization] = ...
-    __app_auth: Optional[AppAuthentication] = ...
     __logger: Logger
     def DEBUG_ON_RESPONSE(
         self, statusCode: int, responseHeader: Dict[str, str], data: str
@@ -121,10 +130,7 @@ class Requester:
     ) -> Tuple[int, Dict[str, Any], str]: ...
     def __init__(
         self,
-        login_or_token: Optional[str],
-        password: Optional[str],
-        jwt: Optional[str],
-        app_auth: Optional[AppAuthentication],
+        auth: Optional[Auth],
         base_url: str,
         timeout: int,
         user_agent: str,
@@ -133,6 +139,11 @@ class Requester:
         retry: Optional[Union[int, Retry]],
         pool_size: Optional[int],
     ) -> None: ...
+    @property
+    def base_url(self) -> str: ...
+    @property
+    def auth(self) -> Optional[Auth]: ...
+    def withAuth(self, auth: Optional[Auth]) -> Requester: ...
     def _initializeDebugFeature(self) -> None: ...
     def check_me(self, obj: GithubObject) -> None: ...
     def _must_refresh_token(self) -> bool: ...
@@ -206,6 +217,14 @@ class Requester:
     def setDebugFlag(cls, flag: bool) -> None: ...
     @classmethod
     def setOnCheckMe(cls, onCheckMe: Callable) -> None: ...
+
+T = TypeVar("T")
+
+class WithRequester(Generic[T]):
+    __requester: Optional[Requester]
+    @property
+    def requester(self) -> Requester: ...
+    def withRequester(self, requester: Requester) -> T: ...
 
 class RequestsResponse:
     def __init__(self, r: Response) -> None: ...

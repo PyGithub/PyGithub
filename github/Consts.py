@@ -148,3 +148,6 @@ MAX_JWT_EXPIRY = 600
 # https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
 # "The time the JWT was created. To protect against clock drift, we recommend you set this 60 seconds in the past."
 DEFAULT_JWT_ISSUED_AT = -60
+# https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
+# "Your JWT must be signed using the RS256 algorithm"
+DEFAULT_JWT_ALGORITHM = "RS256"

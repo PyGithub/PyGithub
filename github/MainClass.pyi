@@ -2,7 +2,9 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union, overload
 
+from github.Auth import Auth
 from github.AppAuthentication import AppAuthentication
+from github.ApplicationOAuth import ApplicationOAuth
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Commit import Commit
 from github.ContentFile import ContentFile
@@ -39,6 +41,7 @@ class Github:
         verify: bool = ...,
         retry: Optional[Union[int, Retry]] = ...,
         pool_size: Optional[int] = ...,
+        auth: Optional[Auth] = ...,
     ) -> None: ...
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool: ...
@@ -92,6 +95,9 @@ class Github:
         self, since: Union[int, _NotSetType] = ...
     ) -> PaginatedList[NamedUser]: ...
     def load(self, f: BytesIO) -> Repository: ...
+    def get_oauth_application(
+        self, client_id: str, client_secret: str
+    ) -> ApplicationOAuth: ...
     @property
     def oauth_scopes(self) -> Optional[List[str]]: ...
     @property

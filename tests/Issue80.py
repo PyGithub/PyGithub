@@ -35,7 +35,7 @@ class Issue80(
 ):  # https://github.com/jacquev6/PyGithub/issues/80
     def testIgnoreHttpsFromGithubEnterprise(self):
         g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com/some/prefix"
+            auth=self.login, base_url="http://my.enterprise.com/some/prefix"
         )  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(
@@ -47,8 +47,7 @@ class Issue80(
 
     def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
         g = github.Github(
-            self.login,
-            self.password,
+            auth=self.login,
             base_url="http://my.enterprise.com:1234/some/prefix",
         )  # http here
         org = g.get_organization("BeaverSoftware")

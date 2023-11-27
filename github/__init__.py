@@ -35,6 +35,7 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
 __all__ = [
+    "Auth",
     "AppAuthentication",
     "BadAttributeException",
     "BadCredentialsException",
@@ -54,6 +55,7 @@ __all__ = [
 
 import logging
 
+from github import Auth
 from github.AppAuthentication import AppAuthentication
 from github.GithubIntegration import GithubIntegration
 from github.MainClass import Github

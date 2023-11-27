@@ -49,6 +49,7 @@
 
 import datetime
 import pickle
+import warnings
 
 import urllib3
 
@@ -60,6 +61,7 @@ import github.License
 import github.NamedUser
 import github.PaginatedList
 import github.Topic
+from github import Auth
 
 from . import (
     AuthenticatedUser,
@@ -78,6 +80,10 @@ class Github:
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
+    # v2: remove login_or_token, password, jwt and app_auth
+    # v2: move auth to the front of arguments
+    # v2: add * before first argument so all arguments must be named,
+    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
     def __init__(
         self,
         login_or_token=None,
@@ -91,12 +97,13 @@ class Github:
         verify=True,
         retry=None,
         pool_size=None,
+        auth=None,
     ):
         """
-        :param login_or_token: string
-        :param password: string
-        :param jwt: string
-        :param app_auth: github.AppAuthentication
+        :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
+        :param password: string deprecated, use auth=github.Auth.Login(...) instead
+        :param jwt: string deprecated, use auth=github.Auth.AppAuthToken(...) instead
+        :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -104,6 +111,7 @@ class Github:
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
         :param pool_size: int
+        :param auth: authentication method
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -118,12 +126,40 @@ class Github:
             or isinstance(retry, urllib3.util.Retry)
         ), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
+        assert auth is None or isinstance(auth, Auth.Auth), auth
+
+        if password is not None:
+            warnings.warn(
+                "Arguments login_or_token and password are deprecated, please use "
+                "auth=github.Auth.Login(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.Login(login_or_token, password)
+        elif login_or_token is not None:
+            warnings.warn(
+                "Argument login_or_token is deprecated, please use "
+                "auth=github.Auth.Token(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.Token(login_or_token)
+        elif jwt is not None:
+            warnings.warn(
+                "Argument jwt is deprecated, please use "
+                "auth=github.Auth.AppAuth(...) or "
+                "auth=github.Auth.AppAuthToken(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = Auth.AppAuthToken(jwt)
+        elif app_auth is not None:
+            warnings.warn(
+                "Argument app_auth is deprecated, please use "
+                "auth=github.Auth.AppInstallationAuth(...) instead",
+                category=DeprecationWarning,
+            )
+            auth = app_auth
 
         self.__requester = Requester(
-            login_or_token,
-            password,
-            jwt,
-            app_auth,
+            auth,
             base_url,
             timeout,
             user_agent,
@@ -768,13 +804,17 @@ class Github:
         :rtype: :class:`github.GithubApp.GithubApp`
         """
         assert slug is github.GithubObject.NotSet or isinstance(slug, str), slug
+
         if slug is github.GithubObject.NotSet:
-            return GithubApp.GithubApp(
-                self.__requester, {}, {"url": "/app"}, completed=False
-            )
-        else:
-            headers, data = self.__requester.requestJsonAndCheck("GET", f"/apps/{slug}")
+            # with no slug given, calling /app returns the authenticated app,
+            # including the actual /apps/{slug}
+            headers, data = self.__requester.requestJsonAndCheck("GET", "/app")
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
+        else:
+            # with a slug given, we can lazily load the GithubApp
+            return GithubApp.GithubApp(
+                self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False
+            )
 
 
 # Retrocompatibility

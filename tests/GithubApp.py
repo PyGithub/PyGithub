@@ -101,10 +101,6 @@ class GithubApp(Framework.TestCase):
     def testGetAuthenticatedApp(self):
         # For this to work correctly in record mode, this test must be run with --auth_with_jwt
         app = self.g.get_app()
-        # At this point the GithubApp object is not complete.
-        # The url should change when the object is completed - after pulling it down
-        # from the github API
-        self.assertEqual(app.url, "/app")
         self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46))
         self.assertEqual(app.description, "Sample App to test PyGithub")
         self.assertListEqual(

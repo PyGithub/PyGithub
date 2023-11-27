@@ -10,7 +10,15 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 h.shi <10385628+AnYeMoWang@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +39,7 @@
 ################################################################################
 
 import datetime
+import typing
 from operator import itemgetter
 
 from . import Consts, GithubException
@@ -44,6 +53,10 @@ class _NotSetType:
 
 
 NotSet = _NotSetType()
+
+T = typing.TypeVar("T")
+
+OptionallySet = typing.Union[T, _NotSetType]
 
 
 class _ValuedAttribute:

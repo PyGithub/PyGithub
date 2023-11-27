@@ -50,8 +50,6 @@
 #                                                                              #
 ################################################################################
 
-import base64
-import datetime
 import json
 import logging
 import mimetypes
@@ -60,13 +58,11 @@ import re
 import time
 import urllib
 from io import IOBase
+from typing import Generic, Optional, TypeVar
 
 import requests
 
-from . import Consts, GithubException, GithubIntegration
-
-# For App authentication, time remaining before token expiration to request a new one
-ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
+from . import Consts, GithubException
 
 
 class RequestsResponse:
@@ -295,10 +291,7 @@ class Requester:
 
     def __init__(
         self,
-        login_or_token,
-        password,
-        jwt,
-        app_auth,
+        auth,
         base_url,
         timeout,
         user_agent,
@@ -309,27 +302,8 @@ class Requester:
     ):
         self._initializeDebugFeature()
 
-        self.__installation_authorization = None
-        self.__app_auth = app_auth
+        self.__auth = auth
         self.__base_url = base_url
-
-        if password is not None:
-            login = login_or_token
-            b64 = (
-                base64.b64encode((f"{login}:{password}").encode())
-                .decode("utf-8")
-                .replace("\n", "")
-            )
-            self.__authorizationHeader = f"Basic {b64}"
-        elif login_or_token is not None:
-            token = login_or_token
-            self.__authorizationHeader = f"token {token}"
-        elif jwt is not None:
-            self.__authorizationHeader = f"Bearer {jwt}"
-        elif self.__app_auth is not None:
-            self._refresh_token()
-        else:
-            self.__authorizationHeader = None
 
         o = urllib.parse.urlparse(base_url)
         self.__hostname = o.hostname
@@ -359,40 +333,36 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
 
-    def _must_refresh_token(self) -> bool:
-        """Check if it is time to refresh the API token gotten from the GitHub app installation"""
-        if not self.__installation_authorization:
-            return False
-        return (
-            self.__installation_authorization.expires_at
-            < datetime.datetime.utcnow()
-            + datetime.timedelta(seconds=ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS)
-        )
+        self.__installation_authorization = None
 
-    def _get_installation_authorization(self):
-        assert self.__app_auth is not None
-        integration = GithubIntegration.GithubIntegration(
-            self.__app_auth.app_id,
-            self.__app_auth.private_key,
+        # provide auth implementations that require a requester with this requester
+        if isinstance(self.__auth, WithRequester):
+            self.__auth.withRequester(self)
+
+    @property
+    def base_url(self):
+        return self.__base_url
+
+    @property
+    def auth(self):
+        return self.__auth
+
+    def withAuth(self, auth):
+        """
+        Create a new requester instance with identical configuration but the given authentication method.
+        :param auth: authentication method
+        :return: new Reqester implementation
+        """
+        return Requester(
+            auth=auth,
             base_url=self.__base_url,
+            timeout=self.__timeout,
+            user_agent=self.__userAgent,
+            per_page=self.per_page,
+            verify=self.__verify,
+            retry=self.__retry,
+            pool_size=self.__pool_size,
         )
-        return integration.get_access_token(
-            self.__app_auth.installation_id,
-            permissions=self.__app_auth.token_permissions,
-        )
-
-    def _refresh_token_if_needed(self) -> None:
-        """Get a new access token from the GitHub app installation if the one we have is about to expire"""
-        if not self.__installation_authorization:
-            return
-        if self._must_refresh_token():
-            self._logger.debug("Refreshing access token")
-            self._refresh_token()
-
-    def _refresh_token(self) -> None:
-        """In the context of a GitHub app, refresh the access token"""
-        self.__installation_authorization = self._get_installation_authorization()
-        self.__authorizationHeader = f"token {self.__installation_authorization.token}"
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(
@@ -452,7 +422,9 @@ class Requester:
         return cnx
 
     def __createException(self, status, headers, output):
-        if status == 401 and output.get("message") == "Bad credentials":
+        message = output.get("message", "").lower() if output is not None else ""
+
+        if status == 401 and message == "bad credentials":
             cls = GithubException.BadCredentialsException
         elif (
             status == 401
@@ -460,18 +432,16 @@ class Requester:
             and re.match(r".*required.*", headers[Consts.headerOTP])
         ):
             cls = GithubException.TwoFactorException
-        elif status == 403 and output.get("message").startswith(
-            "Missing or invalid User Agent string"
+        elif status == 403 and message.startswith(
+            "missing or invalid user agent string"
         ):
             cls = GithubException.BadUserAgentException
         elif status == 403 and (
-            output.get("message").lower().startswith("api rate limit exceeded")
-            or output.get("message")
-            .lower()
-            .endswith("please wait a few minutes before you try again.")
+            message.startswith("api rate limit exceeded")
+            or message.endswith("please wait a few minutes before you try again.")
         ):
             cls = GithubException.RateLimitExceededException
-        elif status == 404 and output.get("message") == "Not Found":
+        elif status == 404 and message == "not found":
             cls = GithubException.UnknownObjectException
         else:
             cls = GithubException.GithubException
@@ -558,7 +528,10 @@ class Requester:
         if requestHeaders is None:
             requestHeaders = dict()
 
-        self.__authenticate(url, requestHeaders, parameters)
+        if self.__auth is not None:
+            requestHeaders[
+                "Authorization"
+            ] = f"{self.__auth.token_type} {self.__auth.token}"
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -645,11 +618,6 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def __authenticate(self, url, requestHeaders, parameters):
-        self._refresh_token_if_needed()
-        if self.__authorizationHeader is not None:
-            requestHeaders["Authorization"] = self.__authorizationHeader
-
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url
         # URLs returned from the server will start with __base_url
@@ -728,3 +696,24 @@ class Requester:
                 responseHeaders,
                 output,
             )
+
+
+T = TypeVar("T")
+
+
+class WithRequester(Generic[T]):
+    """
+    Mixin class that allows to set a requester.
+    """
+
+    def __init__(self):
+        self.__requester: Optional[Requester] = None
+
+    @property
+    def requester(self) -> Requester:
+        return self.__requester
+
+    def withRequester(self, requester: Requester) -> T:
+        assert isinstance(requester, Requester), requester
+        self.__requester = requester
+        return self
