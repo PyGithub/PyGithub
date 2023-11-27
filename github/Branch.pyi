@@ -35,9 +35,9 @@ class Branch(NonCompletableGithubObject):
         required_conversation_resolution: Union[bool, _NotSetType] = ...,
         lock_branch: Union[bool, _NotSetType] = ...,
         allow_fork_syncing: Union[bool, _NotSetType] = ...,
-        user_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
-        team_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
-        app_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
+        users_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
+        teams_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
+        apps_bypass_pull_request_allowances: Union[_NotSetType, List[str]] = ...,
     ) -> None: ...
     def edit_required_pull_request_reviews(
         self,
