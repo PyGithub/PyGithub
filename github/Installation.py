@@ -60,6 +60,9 @@ class Installation(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
 
+    def get_github_for_installation(self):
+        return github.Github(**self._requester.kwargs)
+
     @property
     def id(self):
         """
