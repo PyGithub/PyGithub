@@ -100,10 +100,22 @@
 # Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
-# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Andrew Collington <andy@amnuts.com>                           #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
 # Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 # Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
 # Copyright 2023 DB Systel GmbH                                                #
@@ -135,6 +147,8 @@ from typing import TYPE_CHECKING, Any, Iterable
 
 from deprecated import deprecated
 
+import github.AdvisoryCredit
+import github.AdvisoryVulnerability
 import github.Artifact
 import github.Autolink
 import github.Branch
@@ -179,8 +193,6 @@ import github.PublicKey
 import github.PullRequest
 import github.Referrer
 import github.RepositoryAdvisory
-import github.RepositoryAdvisoryCredit
-import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
@@ -1538,9 +1550,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
@@ -1548,9 +1560,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1570,9 +1582,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
@@ -1580,9 +1592,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1602,9 +1614,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         if vulnerabilities is None:
@@ -1617,20 +1629,18 @@ class Repository(CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
-                vulnerability
-            )
+            github.AdvisoryVulnerability.AdvisoryVulnerability._validate_vulnerability(vulnerability)
         assert isinstance(cwe_ids, Iterable), cwe_ids
         assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
         assert isinstance(credits, (Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
+                github.AdvisoryCredit.AdvisoryCredit._validate_credit(credit)
         post_parameters = {
             "summary": summary,
             "description": description,
             "vulnerabilities": [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
+                github.AdvisoryVulnerability.AdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in vulnerabilities
             ],
             "cwe_ids": list(cwe_ids),
@@ -1639,7 +1649,7 @@ class Repository(CompletableGithubObject):
             post_parameters["cve_id"] = cve_id
         if credits is not None:
             post_parameters["credits"] = [
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
+                github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
         if severity_or_cvss_vector_string.startswith("CVSS:"):
             post_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
@@ -1889,7 +1899,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(homepage) or isinstance(homepage, str), homepage
         assert is_undefined(private) or isinstance(private, bool), private
         assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private"]
+            isinstance(visibility, str) and visibility in ["public", "private", "internal"]
         ), visibility
         assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
         assert is_undefined(has_projects) or isinstance(has_projects, bool), has_projects

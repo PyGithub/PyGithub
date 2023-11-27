@@ -30,4 +30,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4978'), ('content-length', '487'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"1dd282b50e691f8f162ef9355dad8771"'), ('date', 'Thu, 10 May 2012 19:03:19 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"url":"https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c","tag":"v0.6","message":"Version 0.6\n","object":{"url":"https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495","type":"commit","sha":"4303c5b90e2216d927155e9609436ccb8984c495"},"tagger":{"email":"vincent@vincent-jacques.net","date":"2012-05-10T11:14:15-07:00","name":"Vincent Jacques"},"sha":"f5f37322407b02a80de4526ad88d5f188977bc3c"}
-

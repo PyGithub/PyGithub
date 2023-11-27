@@ -4,6 +4,19 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.1.1 (September 29, 2023)
+-----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+* Require urllib 1.26.0 or greater (#2774) (001c0852)
+
+Maintenance
+^^^^^^^^^^^
+
+* Fix pypi-release workflow, allow for manual run (#2771) (035c88f1)
+
 Version 2.1.0 (September 29, 2023)
 -----------------------------------
 
@@ -717,7 +730,7 @@ Bug Fixes & Improvements
 Deprecation
 ^^^^^^^^^^^
 
-* Repository.get_file_contents() no longer works use Repository.get_contents() instead 
+* Repository.get_file_contents() no longer works use Repository.get_contents() instead
 
 Version 1.43.7 (April 16, 2019)
 -----------------------------------
@@ -1074,7 +1087,7 @@ Version 1.29 (October 10, 2016)
 -----------------------------------
 
 * add issue assignee param (3a8edc7)
-* Fix diffrerent case (fcf6cfb)
+* Fix different case (fcf6cfb)
 * DOC: remove easy_install suggestion; update links (45e76d9)
 * Add permission param documentation (9347345)
 * Add ability to set permission for team repo (5dddea7)
@@ -1464,7 +1477,7 @@ Pre-release versions
   * POST `/repos/:owner/:repo/git/trees?base_tree-`
 
 * Gists
-* Autorizations
+* Authorizations
 * Keys
 * Hooks
 * Events

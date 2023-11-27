@@ -46,7 +46,7 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -75,14 +75,14 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testIssueLabels(self):
         self.assertListKeyEqual(
             self.issue.labels,
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", self.labelName, "RequestedByUser"],
         )
 
     def testIssueGetLabels(self):
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", self.labelName, "RequestedByUser"],
         )
 
@@ -98,5 +98,5 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
             "Issue created by PyGithub to test issue #50",
             labels=[self.repo.get_label(self.labelName)],
         )
-        self.assertListKeyEqual(issue.labels, lambda l: l.name, [self.labelName])
+        self.assertListKeyEqual(issue.labels, lambda lb: lb.name, [self.labelName])
         self.assertEqual(issue.number, 52)
