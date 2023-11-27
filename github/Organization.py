@@ -20,6 +20,7 @@
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,6 +39,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
@@ -646,14 +649,16 @@ class Organization(github.GithubObject.CompletableGithubObject):
         secret_name,
         unencrypted_value,
         visibility="all",
-        selected_repositories=github.GithubObject.NotSet,
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
     ):
         """
         :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#create-or-update-an-organization-secret>`_
         :param secret_name: string
         :param unencrypted_value: string
         :param visibility: string
-        :param selected_repositories: list of :class:`github.Repository.Repository`
+        :param selected_repositories: Optional list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
@@ -732,6 +737,48 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
+    def create_variable(
+        self,
+        variable_name: str,
+        value: str,
+        visibility: str = "all",
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
+    ) -> bool:
+        """
+        :calls: `PUT /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/reference/actions/variables#create-an-organization-variable>`_
+        :param variable_name: string
+        :param value: string
+        :param visibility: string
+        :param selected_repositories: list of :class:`github.Repository.Repository`
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        assert isinstance(visibility, str), visibility
+        if visibility == "selected":
+            assert isinstance(selected_repositories, list) and all(
+                isinstance(element, github.Repository.Repository)
+                for element in selected_repositories
+            ), selected_repositories
+        else:
+            assert selected_repositories is github.GithubObject.NotSet
+
+        post_parameters = {
+            "name": variable_name,
+            "value": value,
+            "visibility": visibility,
+        }
+        if selected_repositories is not github.GithubObject.NotSet:
+            post_parameters["selected_repository_ids"] = [
+                element.id for element in selected_repositories
+            ]
+        status, headers, data = self._requester.requestJson(
+            "POST", f"{self.url}/actions/variables", input=post_parameters
+        )
+        return status == 201
+
     def delete_hook(self, id):
         """
         :calls: `DELETE /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
@@ -752,6 +799,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(secret_name, str), secret_name
         status, headers, data = self._requester.requestJson(
             "DELETE", f"{self.url}/actions/secrets/{secret_name}"
+        )
+        return status == 204
+
+    def delete_variable(self, variable_name: str) -> bool:
+        """
+        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#delete-an-organization-variable>`_
+        :param variable_name: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/actions/variables/{variable_name}"
         )
         return status == 204
 
@@ -847,6 +906,51 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "PATCH", f"{self.url}/hooks/{id}", input=post_parameters
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
+
+    def update_variable(
+        self,
+        variable_name: str,
+        value: str,
+        visibility: str = "all",
+        selected_repositories: github.GithubObject.Opt[
+            list[github.Repository.Repository]
+        ] = github.GithubObject.NotSet,
+    ) -> bool:
+        """
+        :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
+        :param variable_name: string
+        :param value: string
+        :param visibility: string
+        :param selected_repositories: Optional list of :class:`github.Repository.Repository`
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        assert isinstance(visibility, str), visibility
+        if visibility == "selected":
+            assert isinstance(selected_repositories, list) and all(
+                isinstance(element, github.Repository.Repository)
+                for element in selected_repositories
+            ), selected_repositories
+        else:
+            assert selected_repositories is github.GithubObject.NotSet
+
+        patch_parameters = {
+            "name": variable_name,
+            "value": value,
+            "visibility": visibility,
+        }
+        if selected_repositories is not github.GithubObject.NotSet:
+            patch_parameters["selected_repository_ids"] = [
+                element.id for element in selected_repositories
+            ]
+
+        status, headers, data = self._requester.requestJson(
+            "PATCH",
+            f"{self.url}/actions/variables/{variable_name}",
+            input=patch_parameters,
+        )
+        return status == 204
 
     def get_events(self):
         """
