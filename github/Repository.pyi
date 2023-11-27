@@ -54,7 +54,6 @@ from github.RepositoryAdvisory import RepositoryAdvisory
 from github.RepositoryAdvisoryCredit import RepositoryAdvisoryCredit
 from github.RepositoryAdvisoryVulnerability import (
     AdvisoryVulnerability,
-    RepositoryAdvisoryVulnerability,
 )
 from github.RepositoryKey import RepositoryKey
 from github.RepositoryPreferences import RepositoryPreferences
