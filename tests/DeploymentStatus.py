@@ -21,7 +21,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -36,7 +36,7 @@ class DeploymentStatus(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.status.id, 388454671)
-        created_at = datetime.datetime(2020, 8, 26, 14, 32, 51)
+        created_at = datetime(2020, 8, 26, 14, 32, 51, tzinfo=timezone.utc)
         self.assertEqual(self.status.created_at, created_at)
         self.assertEqual(self.status.creator.login, "jacquev6")
         self.assertEqual(

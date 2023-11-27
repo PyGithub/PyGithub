@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime
 from typing import List
 
 import github.EnvironmentDeploymentBranchPolicy
@@ -37,7 +37,7 @@ class Environment(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def created_at(self) -> datetime.datetime:
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
@@ -69,7 +69,7 @@ class Environment(github.GithubObject.CompletableGithubObject):
         return self._protection_rules.value
 
     @property
-    def updated_at(self) -> datetime.datetime:
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 

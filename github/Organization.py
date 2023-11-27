@@ -39,8 +39,8 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import urllib.parse
+from datetime import datetime
 
 import github.Event
 import github.GithubObject
@@ -105,7 +105,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     @property
     def created_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
@@ -345,7 +345,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
     @property
     def updated_at(self):
         """
-        :type: datetime.datetime
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -929,7 +929,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param labels: list of :class:`github.Label.Label`
         :param sort: string
         :param direction: string
-        :param since: datetime.datetime
+        :param since: datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
@@ -941,9 +941,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert direction is github.GithubObject.NotSet or isinstance(
             direction, str
         ), direction
-        assert since is github.GithubObject.NotSet or isinstance(
-            since, datetime.datetime
-        ), since
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
             url_parameters["filter"] = filter
