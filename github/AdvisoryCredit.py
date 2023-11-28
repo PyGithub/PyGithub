@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any, Union
@@ -38,10 +39,10 @@ class SimpleCredit(TypedDict):
     type: str
 
 
-Credit = Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+Credit = Union[SimpleCredit, "AdvisoryCredit"]
 
 
-class RepositoryAdvisoryCredit(NonCompletableGithubObject):
+class AdvisoryCredit(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -73,7 +74,7 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
 
     @staticmethod
     def _validate_credit(credit: Credit) -> None:
-        assert isinstance(credit, (dict, RepositoryAdvisoryCredit)), credit
+        assert isinstance(credit, (dict, AdvisoryCredit)), credit
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
@@ -85,7 +86,7 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
 
     @staticmethod
     def _to_github_dict(credit: Credit) -> SimpleCredit:
-        assert isinstance(credit, (dict, RepositoryAdvisoryCredit)), credit
+        assert isinstance(credit, (dict, AdvisoryCredit)), credit
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
