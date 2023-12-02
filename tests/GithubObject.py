@@ -77,15 +77,39 @@ class GithubObject(unittest.TestCase):
             (
                 "2021-01-23T12:34:56.000-06:00",
                 datetime(2021, 1, 23, 12, 34, 56, tzinfo=tzoffset(None, -21600)),
-            ),
-            (
-                "Mon, 11 Sep 2023 14:07:29 GMT",
-                datetime(2023, 9, 11, 14, 7, 29, tzinfo=tzutc()),
-            ),
+            )
         ]:
             actual = gho.GithubObject._makeDatetimeAttribute(value)
             self.assertEqual(gho._ValuedAttribute, type(actual), value)
             self.assertEqual(expected, actual.value, value)
+
+    def testMakeHttpDatetimeAttribute(self):
+        for value, expected in [
+            (None, None),
+            # https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1
+            (
+                "Mon, 11 Sep 2023 14:07:29 GMT",
+                datetime(2023, 9, 11, 14, 7, 29, tzinfo=timezone.utc),
+            ),
+            # obsolete formats:
+            (
+                "Monday, 11-Sep-23 14:07:29 GMT",
+                datetime(2023, 9, 11, 14, 7, 29, tzinfo=timezone.utc),
+            ),
+            (
+                "Mon Sep  11 14:07:29 2023",
+                datetime(2023, 9, 11, 14, 7, 29, tzinfo=timezone.utc),
+            ),
+        ]:
+            actual = gho.GithubObject._makeHttpDatetimeAttribute(value)
+            self.assertEqual(gho._ValuedAttribute, type(actual), value)
+            self.assertEqual(expected, actual.value, value)
+
+    def testMakeHttpDatetimeAttributeBadValues(self):
+        for value in ["not a timestamp", 1234]:
+            actual = gho.GithubObject._makeHttpDatetimeAttribute(value)
+            with self.assertRaises(Framework.github.BadAttributeException):
+                actual.value
 
     def testMakeDatetimeAttributeBadValues(self):
         for value in ["not a timestamp", 1234]:

@@ -43,6 +43,7 @@
 #                                                                              #
 ################################################################################
 
+import email.utils
 import typing
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -68,6 +69,19 @@ class Attribute(Protocol[T_co]):
     @property
     def value(self) -> T_co:
         raise NotImplementedError
+
+
+def _datetime_from_http_date(value: str) -> datetime:
+    """
+    Convert an HTTP date to a datetime object.
+    Raises ValueError for invalid dates.
+    """
+
+    dt = email.utils.parsedate_to_datetime(value)
+    if dt.tzinfo is None:
+        # RFC7231 states that UTC is assumed if no timezone info is present
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
 
 
 class _NotSetType:
@@ -246,6 +260,10 @@ class GithubObject:
     def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
 
+    @staticmethod
+    def _makeHttpDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+        return GithubObject.__makeTransformedAttribute(value, str, _datetime_from_http_date)  # type: ignore
+
     def _makeClassAttribute(self, klass: Type[T_gh], value: Any) -> Attribute[T_gh]:
         return GithubObject.__makeTransformedAttribute(
             value,
@@ -317,7 +335,7 @@ class GithubObject:
         """
         :type: datetime
         """
-        return self._makeDatetimeAttribute(self.last_modified).value  # type: ignore
+        return self._makeHttpDatetimeAttribute(self.last_modified).value  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
         """
