@@ -1702,6 +1702,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/secrets",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/actions/secrets"}),
             list_item="secrets",
         )
 
@@ -1734,7 +1735,7 @@ class Repository(CompletableGithubObject):
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": self.url,
+                "url": f"{self.url}/actions/variables/{variable_name}",
             },
             completed=False,
         )
@@ -1749,6 +1750,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/variables",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"variables_url": f"{self.url}/actions/variables"}),
             list_item="variables",
         )
 
