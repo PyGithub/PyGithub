@@ -535,7 +535,7 @@ class Requester:
                     <output>
                 }
             }
-        and call the self.query method
+        and call the self.graphql_query method
         """
         title = "".join([x.capitalize() for x in mutation_name.split("_")])
         mutation_name = title[:1].lower() + title[1:]
