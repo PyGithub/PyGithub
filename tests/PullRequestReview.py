@@ -67,6 +67,10 @@ class PullRequestReview(Framework.TestCase):
     def testDoesNotModifyPullRequest(self):
         self.assertEqual(self.pull.id, 111649703)
 
+    def testEdit(self):
+        self.pullreview.edit("Comment edited by PyGithub")
+        self.assertEqual(self.pullreview.body, "Comment edited by PyGithub")
+
     def testDismiss(self):
         self.pullreview.dismiss("with prejudice")
         self.assertEqual(self.pullreview.state, "DISMISSED")

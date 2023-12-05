@@ -117,6 +117,22 @@ class PullRequestReview(NonCompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
+    def edit(self, body: str) -> None:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}
+                <https://docs.github.com/en/rest/pulls/reviews#update-a-review-for-a-pull-request>`_
+        """
+        assert isinstance(body, str), body
+        post_parameters = {
+            "body": body,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            f"{self.pull_request_url}/reviews/{self.id}",
+            input=post_parameters,
+        )
+        self._useAttributes(data)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
