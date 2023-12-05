@@ -816,9 +816,9 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
-    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser) -> None:
+    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/issues/assignees?apiVersion=2022-11-28#add-assignees-to-an-issue>`_
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
