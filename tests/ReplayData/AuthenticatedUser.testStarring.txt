@@ -95,5 +95,3 @@ None
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4964'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:34:47 GMT')]
-
-

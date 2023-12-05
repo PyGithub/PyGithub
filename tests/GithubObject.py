@@ -23,7 +23,7 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from dateutil.tz.tz import tzoffset
+from dateutil.tz.tz import tzoffset, tzutc
 
 from . import Framework
 
@@ -77,6 +77,10 @@ class GithubObject(unittest.TestCase):
             (
                 "2021-01-23T12:34:56.000-06:00",
                 datetime(2021, 1, 23, 12, 34, 56, tzinfo=tzoffset(None, -21600)),
+            ),
+            (
+                "Mon, 11 Sep 2023 14:07:29 GMT",
+                datetime(2023, 9, 11, 14, 7, 29, tzinfo=tzutc()),
             ),
         ]:
             actual = gho.GithubObject._makeDatetimeAttribute(value)
