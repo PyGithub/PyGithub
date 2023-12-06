@@ -245,18 +245,14 @@ class Team(CompletableGithubObject):
         """
         :calls: `PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams#check-team-permissions-for-a-repository>`_
         """
-        assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
+        assert isinstance(repo, github.Repository.Repository), repo
         assert isinstance(permission, str), permission
-        if isinstance(repo, github.Repository.Repository):
-            repo_url_param = repo._identity
-        else:
-            repo_url_param = repo
         put_parameters = {
             "permission": permission,
         }
         status, _, _ = self._requester.requestJson(
             "PUT",
-            f"{self.organization.url}/teams/{self.slug}/repos/{repo_url_param}",
+            f"{self.organization.url}/teams/{self.slug}/repos/{repo._identity}",
             input=put_parameters,
         )
         return status == 204
