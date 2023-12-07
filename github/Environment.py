@@ -27,6 +27,10 @@ from typing import TYPE_CHECKING, Any
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
+from github.PublicKey import PublicKey
+from github.Secret import Secret
+from github.Variable import Variable
 
 if TYPE_CHECKING:
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicy
@@ -46,6 +50,7 @@ class Environment(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._environments_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
 
@@ -90,8 +95,20 @@ class Environment(CompletableGithubObject):
         return self._updated_at.value
 
     @property
+    def environments_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._environments_url.value
+
+    @property
     def url(self) -> str:
-        self._completeIfNotSet(self._url)
+        """
+        :type: string
+        """
+        # Construct url from environments_url and name, if self._url. is not set
+        if self._url is NotSet:
+            self._url = self._makeStringAttribute(self.environments_url + "/" + self.name)
         return self._url.value
 
     @property
@@ -100,6 +117,134 @@ class Environment(CompletableGithubObject):
     ) -> EnvironmentDeploymentBranchPolicy:
         self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
+
+    def get_public_key(self) -> PublicKey:
+        """
+        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
+        :rtype: :class:`PublicKey`
+        """
+        # https://stackoverflow.com/a/76474814
+        # https://docs.github.com/en/rest/secrets?apiVersion=2022-11-28#get-an-environment-public-key
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/secrets/public-key")
+        return PublicKey(self._requester, headers, data, completed=True)
+
+    def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
+        """
+        :calls: `PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
+        """
+        assert isinstance(secret_name, str), secret_name
+        assert isinstance(unencrypted_value, str), unencrypted_value
+        public_key = self.get_public_key()
+        payload = public_key.encrypt(unencrypted_value)
+        put_parameters = {
+            "key_id": public_key.key_id,
+            "encrypted_value": payload,
+        }
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/secrets/{secret_name}", input=put_parameters)
+        return Secret(
+            requester=self._requester,
+            headers={},
+            attributes={
+                "name": secret_name,
+                "url": f"{self.url}/secrets/{secret_name}",
+            },
+            completed=False,
+        )
+
+    def get_secrets(self) -> PaginatedList[Secret]:
+        """
+        Gets all repository secrets
+        """
+        return PaginatedList(
+            Secret,
+            self._requester,
+            f"{self.url}/secrets",
+            None,
+            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/secrets"}),
+            list_item="secrets",
+        )
+
+    def get_secret(self, secret_name: str) -> Secret:
+        """
+        :calls: 'GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
+        """
+        assert isinstance(secret_name, str), secret_name
+        return Secret(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/secrets/{secret_name}"},
+            completed=False,
+        )
+
+    def create_variable(self, variable_name: str, value: str) -> Variable:
+        """
+        :calls: `POST /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
+        """
+        assert isinstance(variable_name, str), variable_name
+        assert isinstance(value, str), value
+        post_parameters = {
+            "name": variable_name,
+            "value": value,
+        }
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
+        return Variable(
+            self._requester,
+            headers={},
+            attributes={
+                "name": variable_name,
+                "value": value,
+                "url": f"{self.url}/variables/{variable_name}",
+            },
+            completed=False,
+        )
+
+    def get_variables(self) -> PaginatedList[Variable]:
+        """
+        Gets all repository variables
+        :rtype: :class:`PaginatedList` of :class:`Variable`
+        """
+        return PaginatedList(
+            Variable,
+            self._requester,
+            f"{self.url}/variables",
+            None,
+            attributesTransformer=PaginatedList.override_attributes({"variables_url": f"{self.url}/variables"}),
+            list_item="variables",
+        )
+
+    def get_variable(self, variable_name: str) -> Variable:
+        """
+        :calls: 'GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :param variable_name: string
+        :rtype: Variable
+        """
+        assert isinstance(variable_name, str), variable_name
+        return Variable(
+            requester=self._requester,
+            headers={},
+            attributes={"url": f"{self.url}/variables/{variable_name}"},
+            completed=False,
+        )
+
+    def delete_secret(self, secret_name: str) -> bool:
+        """
+        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
+        :param secret_name: string
+        :rtype: bool
+        """
+        assert isinstance(secret_name, str), secret_name
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/secrets/{secret_name}")
+        return status == 204
+
+    def delete_variable(self, variable_name: str) -> bool:
+        """
+        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
+        :param variable_name: string
+        :rtype: bool
+        """
+        assert isinstance(variable_name, str), variable_name
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/variables/{variable_name}")
+        return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
@@ -119,6 +264,8 @@ class Environment(CompletableGithubObject):
             )
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "environments_url" in attributes:
+            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "deployment_branch_policy" in attributes:  # pragma no branch
