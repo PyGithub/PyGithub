@@ -2041,19 +2041,28 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Branch.Branch, self._requester, f"{self.url}/branches", None)
 
-    def get_collaborators(self, affiliation: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    def get_collaborators(
+        self, affiliation: Opt[str] = NotSet, permission: Opt[str] = NotSet
+    ) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/collaborators/collaborators>`_
         :param affiliation: string
+        :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
 
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
+        allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
         if is_defined(affiliation):
             assert isinstance(affiliation, str), affiliation
             assert affiliation in allowed_affiliations, f"Affiliation can be one of {', '.join(allowed_affiliations)}"
             url_parameters["affiliation"] = affiliation
+
+        if is_defined(permission):
+            assert isinstance(permission, str), permission
+            assert permission in allowed_permissions, f"permission can be one of {', '.join(allowed_permissions)}"
+            url_parameters["permission"] = permission
 
         return PaginatedList(
             github.NamedUser.NamedUser,
