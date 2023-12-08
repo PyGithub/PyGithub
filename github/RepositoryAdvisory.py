@@ -291,6 +291,16 @@ class RepositoryAdvisory(AdvisoryBase):
         )
         self._useAttributes(data)
 
+    def request_cve(self) -> None:
+        """
+        Requests a CVE for the advisory.
+        :calls: `POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve <https://docs.github.com/en/rest/security-advisories/repository-advisories#request-a-cve-for-a-repository-security-advisory>`_
+        """
+        self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/cve",
+        )
+
     def close(self) -> None:
         """
         Closes the advisory.
