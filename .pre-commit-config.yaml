@@ -35,7 +35,7 @@ repos:
       - id: codespell
         exclude: tests/
         args:
-          - "--ignore-words-list='bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang'"
+          - "--ignore-words-list='bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang,Manuel'"
           - "--quiet-level=2"
 
   - repo: https://github.com/psf/black
