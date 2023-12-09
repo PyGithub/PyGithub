@@ -35,6 +35,7 @@ class Secret(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._secrets_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -65,10 +66,20 @@ class Secret(CompletableGithubObject):
         return self._updated_at.value
 
     @property
+    def secrets_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._secrets_url.value
+
+    @property
     def url(self) -> str:
         """
         :type: string
         """
+        # Construct url from secrets_url and name, if self._url. is not set
+        if self._url is NotSet:
+            self._url = self._makeStringAttribute(self.secrets_url + "/" + self.name)
         return self._url.value
 
     def delete(self) -> None:
@@ -85,5 +96,7 @@ class Secret(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "secrets_url" in attributes:
+            self._secrets_url = self._makeStringAttribute(attributes["secrets_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

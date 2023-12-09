@@ -266,7 +266,8 @@ class PaginatedList(Framework.TestCase):
     def testInterruptedIterationInSlice(self):
         # No asserts, but checks that only three pages are fetched
         count = 0
-        for element in self.list[:100]:  # pragma no branch (exits only by break)
+        # pragma no branch (exits only by break)
+        for element in self.list[:100]:
             count += 1
             if count == 75:
                 break
@@ -317,3 +318,18 @@ class PaginatedList(Framework.TestCase):
 
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
+
+    def testMergeDicts(self):
+        self.assertDictEqual(
+            PaginatedListImpl.merge_dicts(
+                {"a": 1, "b": 2, "c": 3},
+                {"c": 4, "d": 5, "e": 6},
+            ),
+            {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6},
+        )
+
+    def testOverrideAttributes(self):
+        input_dict = {"a": 1, "b": 2, "c": 3}
+        overrides_dict = {"c": 4, "d": 5, "e": 6}
+        transformer = PaginatedListImpl.override_attributes(overrides_dict)
+        self.assertDictEqual(transformer(input_dict), {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6})

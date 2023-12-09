@@ -514,6 +514,36 @@ class Requester:
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
+    def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        input_ = {"query": query, "variables": {"input": variables}}
+
+        response_headers, data = self.requestJsonAndCheck("POST", "https://api.github.com/graphql", input=input_)
+        if "errors" in data:
+            raise self.createException(400, response_headers, data)
+        return response_headers, data
+
+    def graphql_named_mutation(
+        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Create a mutation in the format:
+            mutation MutationName($input: MutationNameInput!) {
+                mutationName(input: $input) {
+                    <output>
+                }
+            }
+        and call the self.graphql_query method
+        """
+        title = "".join([x.capitalize() for x in mutation_name.split("_")])
+        mutation_name = title[:1].lower() + title[1:]
+        output = output or ""
+        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+
+        return self.graphql_query(query, variables)
+
     def __check(
         self,
         status: int,
