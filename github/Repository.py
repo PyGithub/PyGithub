@@ -1917,56 +1917,35 @@ class Repository(CompletableGithubObject):
         assert is_optional(allow_forking, bool), allow_forking
         assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
 
-        post_parameters: dict[str, Any] = {
-            "name": name,
-        }
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "homepage": homepage,
+                "private": private,
+                "visibility": visibility,
+                "has_issues": has_issues,
+                "has_projects": has_projects,
+                "has_wiki": has_wiki,
+                "is_template": is_template,
+                "default_branch": default_branch,
+                "allow_squash_merge": allow_squash_merge,
+                "allow_merge_commit": allow_merge_commit,
+                "allow_rebase_merge": allow_rebase_merge,
+                "allow_auto_merge": allow_auto_merge,
+                "delete_branch_on_merge": delete_branch_on_merge,
+                "allow_update_branch": allow_update_branch,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "archived": archived,
+                "allow_forking": allow_forking,
+                "web_commit_signoff_required": web_commit_signoff_required,
+            }
+        )
 
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(homepage):
-            post_parameters["homepage"] = homepage
-        if is_defined(private):
-            post_parameters["private"] = private
-        if is_defined(visibility):
-            post_parameters["visibility"] = visibility
-        if is_defined(has_issues):
-            post_parameters["has_issues"] = has_issues
-        if is_defined(has_projects):
-            post_parameters["has_projects"] = has_projects
-        if is_defined(has_wiki):
-            post_parameters["has_wiki"] = has_wiki
-        if is_defined(is_template):
-            post_parameters["is_template"] = is_template
-        if is_defined(default_branch):
-            post_parameters["default_branch"] = default_branch
-        if is_defined(allow_squash_merge):
-            post_parameters["allow_squash_merge"] = allow_squash_merge
-        if is_defined(allow_merge_commit):
-            post_parameters["allow_merge_commit"] = allow_merge_commit
-        if is_defined(allow_rebase_merge):
-            post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if is_defined(allow_auto_merge):
-            post_parameters["allow_auto_merge"] = allow_auto_merge
-        if is_defined(delete_branch_on_merge):
-            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
-        if is_defined(allow_update_branch):
-            post_parameters["allow_update_branch"] = allow_update_branch
-        if is_defined(use_squash_pr_title_as_default):
-            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
-        if is_defined(squash_merge_commit_title):
-            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
-        if is_defined(squash_merge_commit_message):
-            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
-        if is_defined(merge_commit_title):
-            post_parameters["merge_commit_title"] = merge_commit_title
-        if is_defined(merge_commit_message):
-            post_parameters["merge_commit_message"] = merge_commit_message
-        if is_defined(archived):
-            post_parameters["archived"] = archived
-        if is_defined(allow_forking):
-            post_parameters["allow_forking"] = allow_forking
-        if is_defined(web_commit_signoff_required):
-            post_parameters["web_commit_signoff_required"] = web_commit_signoff_required
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
