@@ -12,6 +12,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Heitor Polidoro <14806300+heitorpolidoro@users.noreply.github.com>#
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -33,6 +34,10 @@
 ################################################################################
 
 from datetime import datetime, timezone
+
+import pytest
+
+from github import GithubException
 
 from . import Framework
 
@@ -330,24 +335,24 @@ class PullRequest(Framework.TestCase):
         )
 
     def testGetLabels(self):
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testAddAndRemoveLabels(self):
         wip = self.repo.get_label("wip")
         refactoring = self.repo.get_label("refactoring")
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
 
@@ -356,17 +361,17 @@ class PullRequest(Framework.TestCase):
         refactoring = "refactoring"
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
 
@@ -375,26 +380,26 @@ class PullRequest(Framework.TestCase):
         refactoring = self.repo.get_label("refactoring")
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testDeleteAndSetLabelsWithStringArguments(self):
         wip = "wip"
         refactoring = "refactoring"
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())
@@ -430,3 +435,71 @@ class PullRequest(Framework.TestCase):
     def testUpdateBranch(self):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
+
+    def testEnableAutomerge(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
+        response = self.pull.enable_automerge(
+            merge_method="SQUASH",
+            author_email="foo@example.com",
+            client_mutation_id="1234",
+            commit_body="body of the commit",
+            commit_headline="The commit headline",
+            expected_head_oid="0283d46537193f1fed7d46859f15c5304b9836f9",
+        )
+        assert response == {
+            "data": {
+                "enablePullRequestAutoMerge": {
+                    "actor": {
+                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                        "login": "heitorpolidoro",
+                        "resourcePath": "/heitorpolidoro",
+                        "url": "https://github.com/heitorpolidoro",
+                    },
+                    "clientMutationId": None,
+                }
+            }
+        }
+
+    def testEnableAutomergeDefaultValues(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
+        # The default values are:
+        # - merge_method = "MERGE"
+        self.pull.enable_automerge()
+
+    def testEnableAutomergeNotValidMergeMethod(self):
+        with pytest.raises(AssertionError):
+            self.pull.enable_automerge(merge_method="INVALID")
+
+    def testEnableAutomergeError(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
+        with pytest.raises(GithubException) as error:
+            self.pull.enable_automerge()
+
+        assert error.value.status == 400
+        assert error.value.data == {
+            "data": {"enablePullRequestAutoMerge": None},
+            "errors": [
+                {
+                    "locations": [{"column": 81, "line": 1}],
+                    "message": "Pull request Auto merge is not allowed for this repository",
+                    "path": ["enablePullRequestAutoMerge"],
+                    "type": "UNPROCESSABLE",
+                }
+            ],
+        }
+
+    def testDisableAutomerge(self):
+        response = self.pull.disable_automerge()
+        assert response == {
+            "data": {
+                "disablePullRequestAutoMerge": {
+                    "actor": {
+                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                        "login": "heitorpolidoro",
+                        "resourcePath": "/heitorpolidoro",
+                        "url": "https://github.com/heitorpolidoro",
+                    },
+                    "clientMutationId": None,
+                }
+            }
+        }

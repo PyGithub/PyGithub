@@ -6,6 +6,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,8 +27,6 @@
 ################################################################################
 
 from datetime import datetime, timezone
-
-from dateutil.parser import ParserError
 
 import github
 
@@ -57,10 +56,10 @@ class BadAttributes(Framework.TestCase):
             user.created_at
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, str)
-        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ParserError)
+        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ValueError)
         self.assertEqual(
             raisedexp.exception.transformation_exception.args,
-            ("Unknown string format: %s", "foobar"),
+            ("Invalid isoformat string: 'foobar'",),
         )
 
     def testBadTransformedAttribute(self):

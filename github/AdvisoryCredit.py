@@ -1,8 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
-# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
-# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright                                                                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,10 +39,10 @@ class SimpleCredit(TypedDict):
     type: str
 
 
-Credit = Union[SimpleCredit, "RepositoryAdvisoryCredit"]
+Credit = Union[SimpleCredit, "AdvisoryCredit"]
 
 
-class RepositoryAdvisoryCredit(NonCompletableGithubObject):
+class AdvisoryCredit(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
@@ -76,7 +74,7 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
 
     @staticmethod
     def _validate_credit(credit: Credit) -> None:
-        assert isinstance(credit, (dict, RepositoryAdvisoryCredit)), credit
+        assert isinstance(credit, (dict, AdvisoryCredit)), credit
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit
@@ -88,7 +86,7 @@ class RepositoryAdvisoryCredit(NonCompletableGithubObject):
 
     @staticmethod
     def _to_github_dict(credit: Credit) -> SimpleCredit:
-        assert isinstance(credit, (dict, RepositoryAdvisoryCredit)), credit
+        assert isinstance(credit, (dict, AdvisoryCredit)), credit
         if isinstance(credit, dict):
             assert "login" in credit, credit
             assert "type" in credit, credit

@@ -68,6 +68,7 @@ class IssueComment(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -111,6 +112,11 @@ class IssueComment(CompletableGithubObject):
     def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
+
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     def delete(self) -> None:
         """
@@ -189,3 +195,5 @@ class IssueComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])

@@ -7,6 +7,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,6 +60,21 @@ class IssueComment(Framework.TestCase):
         self.assertEqual(
             repr(self.comment),
             'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)',
+        )
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "+1": 1,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 1,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311/reactions",
+            },
         )
 
     def testEdit(self):

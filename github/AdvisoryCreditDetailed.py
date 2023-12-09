@@ -1,8 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
-# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
-# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright                                                                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,7 +28,7 @@ import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
+class AdvisoryCreditDetailed(NonCompletableGithubObject):
     """
     This class represents a credit that is assigned to a SecurityAdvisory.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories

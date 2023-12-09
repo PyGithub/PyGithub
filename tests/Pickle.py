@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,6 +25,7 @@ import pickle
 import unittest
 
 import github
+from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
 REPO_NAME = "PyGithub/PyGithub"
@@ -46,3 +48,10 @@ class Pickle(unittest.TestCase):
         self.assertIsNotNone(repo2._requester._Requester__connection_lock)
         self.assertIsNone(repo2._requester._Requester__connection)
         self.assertEqual(len(repo2._requester._Requester__custom_connections), 0)
+
+    def testPicklePaginatedList(self):
+        gh = github.Github()
+        repo = gh.get_repo(REPO_NAME, lazy=True)
+        branches = repo.get_branches()
+        branches2 = pickle.loads(pickle.dumps(branches))
+        self.assertIsInstance(branches2, PaginatedList)

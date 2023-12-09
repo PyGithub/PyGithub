@@ -457,6 +457,28 @@ class Repository(Framework.TestCase):
         secret = self.repo.create_secret("secret-name", "secret-value")
         self.assertIsNotNone(secret)
 
+    @mock.patch("github.PublicKey.encrypt")
+    def testRepoSecrets(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        # GitHub will always capitalize the secret name
+        secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for matched_repo_secret in secrets:
+            repo.create_secret(matched_repo_secret[0], matched_repo_secret[1])
+        repo.update()
+        repo_secrets = repo.get_secrets()
+        matched_repo_secrets = []
+        for matched_repo_secret in secrets:
+            for repo_secret in repo_secrets:
+                # GitHub will always capitalize the secret name, may be best to uppercase test data for comparison
+                if repo_secret.name == matched_repo_secret[0].upper():
+                    matched_repo_secrets.append(repo_secret)
+                    break
+        self.assertEqual(len(matched_repo_secrets), len(secrets))
+        for matched_repo_secret in matched_repo_secrets:
+            matched_repo_secret.delete()
+
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
         self.assertListKeyEqual(
@@ -1052,7 +1074,7 @@ class Repository(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -1351,7 +1373,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
-        self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
+        self.assertListKeyEqual(issues[0].labels, lambda lb: lb.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
     def testMarkNotificationsAsRead(self):
@@ -1854,6 +1876,25 @@ class Repository(Framework.TestCase):
         variable = self.repo.create_variable("variable_name", "variable-value")
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
+
+    def testRepoVariables(self):
+        # GitHub will always capitalize the variable name
+        variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for variable in variables:
+            repo.create_variable(variable[0], variable[1])
+        repo.update()
+        repo_variables = repo.get_variables()
+        matched_repo_variables = []
+        for variable in variables:
+            for repo_variable in repo_variables:
+                # GitHub will always capitalize the variable name, may be best to uppercase test data for comparison
+                if repo_variable.name == variable[0].upper() and repo_variable.value == variable[1]:
+                    matched_repo_variables.append(repo_variable)
+                    break
+        self.assertEqual(len(matched_repo_variables), len(variables))
+        for matched_repo_variable in matched_repo_variables:
+            matched_repo_variable.delete()
 
 
 class LazyRepository(Framework.TestCase):

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -12,6 +11,7 @@
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

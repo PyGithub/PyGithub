@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

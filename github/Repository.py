@@ -149,6 +149,8 @@ from typing import TYPE_CHECKING, Any, Iterable
 
 from deprecated import deprecated
 
+import github.AdvisoryCredit
+import github.AdvisoryVulnerability
 import github.Artifact
 import github.Autolink
 import github.Branch
@@ -193,8 +195,6 @@ import github.PublicKey
 import github.PullRequest
 import github.Referrer
 import github.RepositoryAdvisory
-import github.RepositoryAdvisoryCredit
-import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
@@ -213,6 +213,7 @@ import github.View
 import github.Workflow
 import github.WorkflowRun
 from github import Consts
+from github.Environment import Environment
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -241,7 +242,6 @@ if TYPE_CHECKING:
     from github.ContentFile import ContentFile
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.Environment import Environment
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
@@ -1546,9 +1546,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
@@ -1556,9 +1556,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1578,9 +1578,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
@@ -1588,9 +1588,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1610,9 +1610,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         if vulnerabilities is None:
@@ -1625,20 +1625,18 @@ class Repository(CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
-                vulnerability
-            )
+            github.AdvisoryVulnerability.AdvisoryVulnerability._validate_vulnerability(vulnerability)
         assert isinstance(cwe_ids, Iterable), cwe_ids
         assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
         assert isinstance(credits, (Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
+                github.AdvisoryCredit.AdvisoryCredit._validate_credit(credit)
         post_parameters = {
             "summary": summary,
             "description": description,
             "vulnerabilities": [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
+                github.AdvisoryVulnerability.AdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in vulnerabilities
             ],
             "cwe_ids": list(cwe_ids),
@@ -1647,7 +1645,7 @@ class Repository(CompletableGithubObject):
             post_parameters["cve_id"] = cve_id
         if credits is not None:
             post_parameters["credits"] = [
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
+                github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
         if severity_or_cvss_vector_string.startswith("CVSS:"):
             post_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
@@ -1708,6 +1706,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/secrets",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/actions/secrets"}),
             list_item="secrets",
         )
 
@@ -1740,7 +1739,7 @@ class Repository(CompletableGithubObject):
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": self.url,
+                "url": f"{self.url}/actions/variables/{variable_name}",
             },
             completed=False,
         )
@@ -1755,6 +1754,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/variables",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"variables_url": f"{self.url}/actions/variables"}),
             list_item="variables",
         )
 
@@ -1896,7 +1896,7 @@ class Repository(CompletableGithubObject):
         assert is_undefined(homepage) or isinstance(homepage, str), homepage
         assert is_undefined(private) or isinstance(private, bool), private
         assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private"]
+            isinstance(visibility, str) and visibility in ["public", "private", "internal"]
         ), visibility
         assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
         assert is_undefined(has_projects) or isinstance(has_projects, bool), has_projects
@@ -2043,19 +2043,28 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Branch.Branch, self._requester, f"{self.url}/branches", None)
 
-    def get_collaborators(self, affiliation: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    def get_collaborators(
+        self, affiliation: Opt[str] = NotSet, permission: Opt[str] = NotSet
+    ) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/collaborators/collaborators>`_
         :param affiliation: string
+        :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
 
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
+        allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
         if is_defined(affiliation):
             assert isinstance(affiliation, str), affiliation
             assert affiliation in allowed_affiliations, f"Affiliation can be one of {', '.join(allowed_affiliations)}"
             url_parameters["affiliation"] = affiliation
+
+        if is_defined(permission):
+            assert isinstance(permission, str), permission
+            assert permission in allowed_permissions, f"permission can be one of {', '.join(allowed_permissions)}"
+            url_parameters["permission"] = permission
 
         return PaginatedList(
             github.NamedUser.NamedUser,
@@ -3882,25 +3891,29 @@ class Repository(CompletableGithubObject):
 
     def get_environments(self) -> PaginatedList[Environment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`github.Environment.Environment`
         """
         return PaginatedList(
-            github.Environment.Environment,
+            Environment,
             self._requester,
             f"{self.url}/environments",
             None,
+            attributesTransformer=PaginatedList.override_attributes(
+                {"environments_url": f"/repositories/{self.id}/environments"}
+            ),
             list_item="environments",
         )
 
     def get_environment(self, environment_name: str) -> Environment:
         """
-        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/environments/{environment_name}")
-        return github.Environment.Environment(self._requester, headers, data, completed=True)
+        data["environments_url"] = f"/repositories/{self.id}/environments"
+        return Environment(self._requester, headers, data, completed=True)
 
     def create_environment(
         self,
@@ -3910,7 +3923,7 @@ class Repository(CompletableGithubObject):
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
-        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
         :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
@@ -3940,13 +3953,12 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/environments/{environment_name}", input=put_parameters
         )
-        return github.Environment.Environment(self._requester, headers, data, completed=True)
-
-    update_environment = create_environment
+        data["environments_url"] = f"/repositories/{self.id}/environments"
+        return Environment(self._requester, headers, data, completed=True)
 
     def delete_environment(self, environment_name: str) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :calls: `DELETE /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
         :param environment_name: string
         :rtype: None
         """

@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

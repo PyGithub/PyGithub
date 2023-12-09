@@ -132,8 +132,8 @@ class Workflow(CompletableGithubObject):
 
     def get_runs(
         self,
-        actor: Opt[github.NamedUser.NamedUser] = NotSet,
-        branch: Opt[github.Branch.Branch] = NotSet,
+        actor: Opt[github.NamedUser.NamedUser | str] = NotSet,
+        branch: Opt[github.Branch.Branch | str] = NotSet,
         event: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         created: Opt[str] = NotSet,
@@ -152,7 +152,7 @@ class Workflow(CompletableGithubObject):
         assert exclude_pull_requests is NotSet or isinstance(exclude_pull_requests, bool), exclude_pull_requests
         assert check_suite_id is NotSet or isinstance(check_suite_id, int), check_suite_id
         assert head_sha is NotSet or isinstance(head_sha, str), head_sha
-        url_parameters = dict()
+        url_parameters: dict[str, Any] = dict()
         if actor is not NotSet:
             url_parameters["actor"] = actor._identity if isinstance(actor, github.NamedUser.NamedUser) else actor
         if branch is not NotSet:

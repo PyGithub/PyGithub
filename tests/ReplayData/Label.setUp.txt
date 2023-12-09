@@ -30,4 +30,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '97'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"fe2e942523eecb156d100829a6347516"'), ('date', 'Sat, 19 May 2012 09:40:37 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/Bug","name":"Bug","color":"e10c02"}
-

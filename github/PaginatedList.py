@@ -46,7 +46,7 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -152,6 +152,7 @@ class PaginatedList(PaginatedListBase[T]):
         list_item: str = "items",
         firstData: Optional[Any] = None,
         firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
+        attributesTransformer: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
     ):
         self.__requester = requester
         self.__contentClass = contentClass
@@ -165,11 +166,17 @@ class PaginatedList(PaginatedListBase[T]):
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
         self.__totalCount: Optional[int] = None
+        self._attributesTransformer = attributesTransformer
 
         first_page = []
         if firstData is not None and firstHeaders is not None:
             first_page = self._getPage(firstData, firstHeaders)
         super().__init__(first_page)
+
+    def _transformAttributes(self, element: Dict[str, Any]) -> Dict[str, Any]:
+        if self._attributesTransformer is None:
+            return element
+        return self._attributesTransformer(element)
 
     @property
     def totalCount(self) -> int:
@@ -214,6 +221,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__firstParams,
             self.__headers,
             self.__list_item,
+            attributesTransformer=self._attributesTransformer,
         )
         r.__reverse()
         return r
@@ -244,13 +252,11 @@ class PaginatedList(PaginatedListBase[T]):
             elif "next" in links:
                 self.__nextUrl = links["next"]
         self.__nextParams = None
-
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
-
         content = [
-            self.__contentClass(self.__requester, headers, element, completed=False)
+            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
             for element in data
             if element is not None
         ]
@@ -282,5 +288,27 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
+        return [
+            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
+            for element in data
+        ]
 
-        return [self.__contentClass(self.__requester, headers, element, completed=False) for element in data]
+    @classmethod
+    def override_attributes(cls, overrides: Dict[str, Any]) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+        def attributes_transformer(element: Dict[str, Any]) -> Dict[str, Any]:
+            # Recursively merge overrides with attributes, overriding attributes with overrides
+            element = cls.merge_dicts(element, overrides)
+            return element
+
+        return attributes_transformer
+
+    @classmethod
+    def merge_dicts(cls, d1: Dict[str, Any], d2: Dict[str, Any]) -> Dict[str, Any]:
+        # clone d1
+        d1 = d1.copy()
+        for k, v in d2.items():
+            if isinstance(v, dict):
+                d1[k] = cls.merge_dicts(d1.get(k, {}), v)
+            else:
+                d1[k] = v
+        return d1
