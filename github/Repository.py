@@ -1859,31 +1859,6 @@ class Repository(CompletableGithubObject):
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
-        :param name: string
-        :param description: string
-        :param homepage: string
-        :param private: bool
-        :param visibility: string
-        :param has_issues: bool
-        :param has_projects: bool
-        :param has_wiki: bool
-        :param is_template: bool
-        :param default_branch: string
-        :param allow_squash_merge: bool
-        :param allow_merge_commit: bool
-        :param allow_rebase_merge: bool
-        :param allow_auto_merge: bool
-        :param delete_branch_on_merge: bool
-        :param allow_update_branch: bool
-        :param use_squash_pr_title_as_default: bool
-        :param squash_merge_commit_title : string
-        :param squash_merge_commit_message : string
-        :param merge_commit_title : string
-        :param merge_commit_message : string
-        :param archived: bool
-        :param allow_forking: bool
-        :param web_commit_signoff_required: bool
-        :rtype: None
         """
         if name is None:
             name = self.name
