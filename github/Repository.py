@@ -2744,9 +2744,7 @@ class Repository(CompletableGithubObject):
         :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert (
-            milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone)
-        ), milestone
+        assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
