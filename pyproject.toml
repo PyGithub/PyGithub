@@ -1,9 +1,8 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-version = "v2.1.1"
 name = "PyGithub"
 authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
 description = "Use the full Github API v3"
@@ -25,6 +24,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Topic :: Software Development",
 ]
+
+dynamic = ["version"]
+
 dependencies = [
     "pynacl>=1.4.0",
     "requests>=2.14.0",
@@ -41,6 +43,8 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 integrations = []
+
+[tool.setuptools_scm]
 
 [tool.setuptools.package-data]
 github = ["py.typed", '*.pyi']
