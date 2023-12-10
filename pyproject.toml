@@ -27,7 +27,6 @@ classifiers = [
 ]
 dependencies = [
     "pynacl>=1.4.0",
-    "python-dateutil",
     "requests>=2.14.0",
     "pyjwt[crypto]>=2.4.0",
     "typing-extensions>=4.0.0",
