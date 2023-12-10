@@ -2256,7 +2256,7 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
         """
-        assert is_undefined(per) or per in ("day", "week"), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters = dict()
         if is_defined(per):
             url_parameters["per"] = per
@@ -2273,7 +2273,7 @@ class Repository(CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clones.Clones`
         """
-        assert is_undefined(per) or per in ("day", "week"), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters: dict[str, Any] = NotSet.remove_unset_items({"per": per})
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
@@ -2745,7 +2745,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
         assert (
-            is_undefined(milestone) or milestone in ("*", "none") or isinstance(milestone, github.Milestone.Milestone)
+            milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone)
         ), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
