@@ -17,11 +17,10 @@ repos:
     rev: v3.15.0
     hooks:
       - id: pyupgrade
-        args:
-          - "--py37-plus"
+        args: ["--py37-plus"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.5
+    rev: v0.1.7
     hooks:
       - id: ruff
         args:
@@ -33,12 +32,9 @@ repos:
     rev: v2.2.6
     hooks:
       - id: codespell
-        exclude: tests/
-        args:
-          - "--ignore-words-list='bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang'"
-          - "--quiet-level=2"
+        additional_dependencies: [tomli]
 
   - repo: https://github.com/psf/black
-    rev: 23.11.0
+    rev: 23.12.0
     hooks:
       - id: black
