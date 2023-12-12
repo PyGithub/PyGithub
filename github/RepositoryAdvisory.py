@@ -3,8 +3,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
-# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -290,6 +290,16 @@ class RepositoryAdvisory(AdvisoryBase):
             input=patch_parameters,
         )
         self._useAttributes(data)
+
+    def request_cve(self) -> None:
+        """
+        Requests a CVE for the advisory.
+        :calls: `POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve <https://docs.github.com/en/rest/security-advisories/repository-advisories#request-a-cve-for-a-repository-security-advisory>`_
+        """
+        self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/cve",
+        )
 
     def close(self) -> None:
         """
