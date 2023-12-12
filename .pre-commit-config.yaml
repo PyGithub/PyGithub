@@ -33,9 +33,6 @@ repos:
     hooks:
       - id: codespell
         additional_dependencies: [tomli]
-        args:
-          - "--ignore-words-list='bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang'"
-          - "--quiet-level=2"
 
   - repo: https://github.com/psf/black
     rev: 23.12.0
