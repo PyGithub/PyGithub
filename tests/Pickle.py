@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
 #                                                                              #
 # This file is part of PyGithub.                                               #

@@ -1,5 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #

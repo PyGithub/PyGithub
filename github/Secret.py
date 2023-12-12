@@ -13,6 +13,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #

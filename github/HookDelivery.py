@@ -1,5 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #

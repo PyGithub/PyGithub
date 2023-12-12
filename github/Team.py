@@ -33,6 +33,7 @@
 # Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2021 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #

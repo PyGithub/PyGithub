@@ -20,6 +20,7 @@
 # Copyright 2021 Lars Kellogg-Stedman <lars@oddbit.com>                        #
 # Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #

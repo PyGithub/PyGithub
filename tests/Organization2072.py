@@ -16,6 +16,7 @@
 # Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2021 James Simpson <jsimpso@users.noreply.github.com>              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #

@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

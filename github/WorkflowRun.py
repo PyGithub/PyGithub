@@ -5,6 +5,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2022 Aleksei Fedotov <lexa@cfotr.com>                              #
 # Copyright 2022 Gabriele Oliaro <ict@gabrieleoliaro.it>                       #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #

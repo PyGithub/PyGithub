@@ -13,6 +13,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #

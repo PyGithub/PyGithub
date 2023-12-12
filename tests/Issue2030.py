@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2021 karthik-kadajji <60779081+karthik-kadajji@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

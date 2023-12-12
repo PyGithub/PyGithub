@@ -15,6 +15,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

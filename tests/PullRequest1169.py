@@ -14,6 +14,7 @@
 # Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
