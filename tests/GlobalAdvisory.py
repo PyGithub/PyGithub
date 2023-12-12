@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

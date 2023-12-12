@@ -18,11 +18,9 @@
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
 # Copyright 2015 Enix Yu <enix223@163.com>                                     #
 # Copyright 2015 Jay <ja.geb@me.com>                                           #
-# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2015 Jonathan Debonis <jon@ip-172-20-10-5.ec2.internal>            #
 # Copyright 2015 Kevin Lewandowski <kevinsl@gmail.com>                         #
 # Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
-# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
 # Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
@@ -39,7 +37,6 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Aaron L. Levine <allevin@sandia.gov>                          #
 # Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
@@ -101,24 +98,29 @@
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
 # Copyright 2023 Andrew Collington <andy@amnuts.com>                           #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
 # Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
+# Copyright 2023 Micael <10292135+notmicaelfilipe@users.noreply.github.com>    #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
-# Copyright 2023 crimsonknave <crimsonknave@github.com>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -137,6 +139,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import collections
@@ -1041,6 +1044,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         if is_defined(permission):
             put_parameters = {"permission": permission}
@@ -1065,6 +1070,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/collaborators/{collaborator}/permission",
@@ -1101,6 +1108,8 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
+        base = urllib.parse.quote(base)
+        head = urllib.parse.quote(head)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
@@ -1676,6 +1685,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        secret_name = urllib.parse.quote(secret_name)
         public_key = self.get_public_key()
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
@@ -1711,6 +1721,7 @@ class Repository(CompletableGithubObject):
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
+        secret_name = urllib.parse.quote(secret_name)
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
@@ -1761,6 +1772,7 @@ class Repository(CompletableGithubObject):
         :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
+        variable_name = urllib.parse.quote(variable_name)
         return github.Variable.Variable(
             requester=self._requester,
             headers={},
@@ -1775,6 +1787,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        secret_name = urllib.parse.quote(secret_name)
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
         return status == 204
 
@@ -1785,6 +1798,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
+        variable_name = urllib.parse.quote(variable_name)
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
@@ -1932,9 +1946,11 @@ class Repository(CompletableGithubObject):
         :rtype: string
         """
         assert isinstance(archive_format, str), archive_format
+        archive_format = urllib.parse.quote(archive_format)
         assert is_optional(ref, str), ref
         url = f"{self.url}/{archive_format}"
         if is_defined(ref):
+            ref = urllib.parse.quote(ref)
             url += f"/{ref}"
         headers, data = self._requester.requestJsonAndCheck("GET", url)
         return headers["location"]
@@ -1953,6 +1969,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Branch.Branch`
         """
         assert isinstance(branch, str), branch
+        branch = urllib.parse.quote(branch)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches/{branch}")
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -1967,10 +1984,12 @@ class Repository(CompletableGithubObject):
         time to fully complete server-side.
         """
         is_branch = isinstance(branch, github.Branch.Branch)
-        assert isinstance(branch, str) or is_branch, branch
         assert isinstance(new_name, str), new_name
         if is_branch:
             branch = branch.name  # type: ignore
+        else:
+            assert isinstance(branch, str), branch
+            branch = urllib.parse.quote(branch)
         parameters = {"new_name": new_name}
         status, _, _ = self._requester.requestJson("POST", f"{self.url}/branches/{branch}/rename", input=parameters)
         return status == 201
@@ -2041,6 +2060,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
@@ -2382,6 +2402,7 @@ class Repository(CompletableGithubObject):
         :param ghsa: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
+        ghsa = urllib.parse.quote(ghsa)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
 
@@ -2589,6 +2610,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitBlob.GitBlob`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/blobs/{sha}")
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -2599,6 +2621,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitCommit.GitCommit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/commits/{sha}")
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
@@ -2612,6 +2635,7 @@ class Repository(CompletableGithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}{prefix}{ref}")
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -2628,6 +2652,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         return PaginatedList(
             github.GitRef.GitRef,
             self._requester,
@@ -2642,6 +2667,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTag.GitTag`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/tags/{sha}")
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -2654,6 +2680,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         assert is_optional(recursive, bool), recursive
+        sha = urllib.parse.quote(sha)
         url_parameters = dict()
         if is_defined(recursive) and recursive:
             # GitHub API requires the recursive parameter be set to 1.
@@ -3219,6 +3246,7 @@ class Repository(CompletableGithubObject):
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
         elif isinstance(id, str):
+            id = urllib.parse.quote(id)
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/tags/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
@@ -3277,6 +3305,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_file_name, (int, str)), id_or_file_name
+        id_or_file_name = urllib.parse.quote(str(id_or_file_name))
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
@@ -3356,6 +3385,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(assignee, github.NamedUser.NamedUser):
             assignee = assignee._identity
+        else:
+            assignee = urllib.parse.quote(assignee)
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/assignees/{assignee}")
         return status == 204
@@ -3370,6 +3401,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/collaborators/{collaborator}")
         return status == 204
@@ -3564,6 +3597,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/collaborators/{collaborator}")
 
@@ -3667,6 +3702,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(event, str), event
         assert isinstance(callback, str), callback
         assert is_optional(secret, str), secret
+        event = urllib.parse.quote(event)
 
         post_parameters = collections.OrderedDict()
         post_parameters["hub.callback"] = callback
@@ -3824,6 +3860,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
+        environment_name = urllib.parse.quote(environment_name)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/environments/{environment_name}")
         data["environments_url"] = f"/repositories/{self.id}/environments"
         return Environment(self._requester, headers, data, completed=True)
@@ -3856,6 +3893,7 @@ class Repository(CompletableGithubObject):
             )
             or deployment_branch_policy is None
         )
+        environment_name = urllib.parse.quote(environment_name)
 
         put_parameters = {
             "wait_timer": wait_timer,
@@ -3876,6 +3914,7 @@ class Repository(CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(environment_name, str), environment_name
+        environment_name = urllib.parse.quote(environment_name)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
 

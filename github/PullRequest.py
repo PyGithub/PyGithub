@@ -13,14 +13,37 @@
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Ben Yohay <ben@lightricks.com>                                #
+# Copyright 2018 Brian J. Murrell <brian@interlinx.bc.ca>                      #
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
 # Copyright 2018 Martin Monperrus <monperrus@users.noreply.github.com>         #
 # Copyright 2018 Matt Babineau <9685860+babineaum@users.noreply.github.com>    #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Thibault Jamet <tjamet@users.noreply.github.com>              #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 MarcoFalke <falke.marco@gmail.com>                            #
+# Copyright 2019 Mark Browning <mark@cerebras.net>                             #
+# Copyright 2019 MurphyZhao <d2014zjt@163.com>                                 #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Pavan Kunisetty <nagapavan@users.noreply.github.com>          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 tison <wander4096@gmail.com>                                  #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Heitor Polidoro <14806300+heitorpolidoro@users.noreply.github.com>#
+# Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
+# Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,6 +62,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import urllib.parse
