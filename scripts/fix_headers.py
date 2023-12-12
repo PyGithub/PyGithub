@@ -169,12 +169,12 @@ def findHeadersAndFiles():
 def main():
     for header, filename in findHeadersAndFiles():
         print("Analyzing", filename)
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
             print(" => actually modifying", filename)
-            with open(filename, "w") as f:
+            with open(filename, "w", encoding="utf-8") as f:
                 for line in newLines:
                     f.write(line + "\n")
 
