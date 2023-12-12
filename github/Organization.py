@@ -41,6 +41,7 @@
 ################################################################################
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -527,7 +528,9 @@ class Organization(CompletableGithubObject):
         if is_defined(selected_repositories):
             put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
+        )
 
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
@@ -535,8 +538,8 @@ class Organization(CompletableGithubObject):
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/actions/secrets/{secret_name}/repositories",
-                "url": f"{self.url}/actions/secrets/{secret_name}",
+                "selected_repositories_url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}/repositories",
+                "url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}",
             },
             completed=False,
         )
@@ -564,7 +567,7 @@ class Organization(CompletableGithubObject):
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            attributes={"url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}"},
             completed=False,
         )
 
@@ -640,7 +643,7 @@ class Organization(CompletableGithubObject):
                 "name": variable_name,
                 "visibility": visibility,
                 "value": value,
-                "selected_repositories_url": f"{self.url}/actions/variables/{variable_name}/repositories",
+                "selected_repositories_url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}/repositories",
                 "url": self.url,
             },
             completed=False,
@@ -669,7 +672,7 @@ class Organization(CompletableGithubObject):
         return github.OrganizationVariable.OrganizationVariable(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            attributes={"url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}"},
             completed=False,
         )
 
@@ -922,6 +925,7 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"/repos/{self.login}/{name}",
@@ -968,6 +972,7 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
         assert isinstance(slug, str), slug
+        slug = urllib.parse.quote(slug)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
         return github.Team.Team(self._requester, headers, data, completed=True)
 

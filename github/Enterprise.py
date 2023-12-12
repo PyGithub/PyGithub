@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import urllib.parse
 from typing import Any, Dict
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
@@ -37,6 +38,7 @@ class Enterprise(NonCompletableGithubObject):
         requester: Requester,
         enterprise: str,
     ):
+        enterprise = urllib.parse.quote(enterprise)
         super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"}, True)
 
     def _initAttributes(self) -> None:

@@ -40,6 +40,7 @@
 ################################################################################
 from __future__ import annotations
 
+import urllib.parse
 from typing import TYPE_CHECKING, Any
 
 from deprecated import deprecated
@@ -193,6 +194,8 @@ class Team(CompletableGithubObject):
         assert isinstance(member, str) or isinstance(member, github.NamedUser.NamedUser), member
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
+        else:
+            member = urllib.parse.quote(member)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -210,6 +213,8 @@ class Team(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity  # type: ignore
+        else:
+            repo = urllib.parse.quote(repo)
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
@@ -250,7 +255,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = repo
+            repo_url_param = urllib.parse.quote(repo)
         put_parameters = {
             "permission": permission,
         }

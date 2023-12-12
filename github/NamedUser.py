@@ -36,6 +36,7 @@
 ################################################################################
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -514,6 +515,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(org, str) or isinstance(org, github.Organization.Organization), org
         if isinstance(org, github.Organization.Organization):
             org = org.login  # type: ignore
+        org = urllib.parse.quote(org)
         headers, data = self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{self.login}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
