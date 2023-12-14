@@ -16,10 +16,28 @@
 # Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Manu Hortet <manuhortet@gmail.com>                            #
-# Copyright 2018 Michał Górny <mgorny@gentoo.org>                            #
+# Copyright 2018 Michał Górny <mgorny@gentoo.org>                              #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Shibasis Patel <smartshibasish@gmail.com>                     #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Adrian Bridgett <58699309+tl-adrian-bridgett@users.noreply.github.com>#
+# Copyright 2020 Andy Grunwald <andygrunwald@gmail.com>                        #
+# Copyright 2020 Gilad Shefer <giladshefer@gmail.com>                          #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Tal Machani <12785464+talmachani@users.noreply.github.com>    #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,8 +56,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
+import urllib.parse
 from typing import TYPE_CHECKING, Any
 
 from deprecated import deprecated
@@ -193,6 +213,8 @@ class Team(CompletableGithubObject):
         assert isinstance(member, str) or isinstance(member, github.NamedUser.NamedUser), member
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
+        else:
+            member = urllib.parse.quote(member)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -210,6 +232,8 @@ class Team(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity  # type: ignore
+        else:
+            repo = urllib.parse.quote(repo)
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
@@ -250,7 +274,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = repo
+            repo_url_param = urllib.parse.quote(repo)
         put_parameters = {
             "permission": permission,
         }

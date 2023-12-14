@@ -8,11 +8,22 @@
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Ggicci <ggicci.t@gmail.com>                                   #
 # Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Jesse Li <jesse.li2002@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Sam Morgan <sama4mail@gmail.com>                              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

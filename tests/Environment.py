@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

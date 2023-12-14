@@ -14,6 +14,9 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
 # Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
@@ -26,10 +29,39 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Will Li <cuichen.li94@gmail.com>                              #
+# Copyright 2020 Chris de Graaf <chrisadegraaf@gmail.com>                      #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Huw Jones <huwcbjones@outlook.com>                            #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2021 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
