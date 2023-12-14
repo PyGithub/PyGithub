@@ -141,16 +141,19 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
+        parent = self.org.get_team(141496)
         self.team.edit(
             "Name edited twice by PyGithub",
             "Description edited by PyGithub",
             "admin",
             "secret",
+            parent.id,
         )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+        self.assertEqual(self.team.parent, parent)
 
     def testGetTeams(self):
         nested_teams = self.team.get_teams()

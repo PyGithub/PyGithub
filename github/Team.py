@@ -273,6 +273,7 @@ class Team(CompletableGithubObject):
         description: Opt[str] = NotSet,
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
+        parent_team_id: Opt[int] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
@@ -282,7 +283,13 @@ class Team(CompletableGithubObject):
         assert permission is NotSet or isinstance(permission, str), permission
         assert privacy is NotSet or isinstance(privacy, str), privacy
         post_parameters = NotSet.remove_unset_items(
-            {"name": name, "description": description, "permission": permission, "privacy": privacy}
+            {
+                "name": name,
+                "description": description,
+                "permission": permission,
+                "privacy": privacy,
+                "parent_team_id": parent_team_id,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)

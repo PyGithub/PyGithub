@@ -575,6 +575,7 @@ class Organization(CompletableGithubObject):
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
+        parent_team_id: Opt[int] = NotSet,
     ) -> Team:
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
@@ -583,15 +584,23 @@ class Organization(CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: integer
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
         assert is_optional_list(repo_names, github.Repository.Repository), repo_names
+        assert is_optional(parent_team_id, int), parent_team_id
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy
         assert is_optional(description, str), description
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "permission": permission, "privacy": privacy, "description": description}
+            {
+                "name": name,
+                "permission": permission,
+                "privacy": privacy,
+                "description": description,
+                "parent_team_id": parent_team_id,
+            }
         )
         if is_defined(repo_names):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
