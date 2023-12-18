@@ -69,11 +69,11 @@ Add a timezone information to your ``datetime`` instances before comparison:
 
 A Netrc file (e.g. ``~/.netrc``) does not override PyGithub authentication, anymore.
 If you require authentication through Netrc, then this is a breaking change.
-Use a ``github.Auth.Netrc`` instance to use Netrc credentials:
+Use a ``github.Auth.NetrcAuth`` instance to use Netrc credentials:
 
 .. code-block:: python
 
-    >>> auth = Auth.Netrc()
+    >>> auth = Auth.NetrcAuth()
     >>> g = Github(auth=auth)
     >>> g.get_user().login
     'login'
