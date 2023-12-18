@@ -15,6 +15,16 @@ line-length = 120
 target-version = ['py37']
 
 
+[tool.codespell]
+skip = 'tests/*'
+quiet-level = 3
+# comma separated list of words; waiting for:
+#  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
+# also adding links until they ignored by its: nature
+#  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel"
+
+
 [tool.ruff]
 line-length = 120
 target-version = "py37"
