@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Jeppe Fihl-Pearson <jeppe@tenzer.dk>                          #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

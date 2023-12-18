@@ -12,7 +12,20 @@
 # Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Adrian Bridgett <58699309+tl-adrian-bridgett@users.noreply.github.com>#
+# Copyright 2020 Andy Grunwald <andygrunwald@gmail.com>                        #
+# Copyright 2020 Gilad Shefer <giladshefer@gmail.com>                          #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Tal Machani <12785464+talmachani@users.noreply.github.com>    #
+# Copyright 2021 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
