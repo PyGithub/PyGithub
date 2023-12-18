@@ -282,6 +282,7 @@ class Team(CompletableGithubObject):
         assert description is NotSet or isinstance(description, str), description
         assert permission is NotSet or isinstance(permission, str), permission
         assert privacy is NotSet or isinstance(privacy, str), privacy
+        assert parent_team_id is NotSet or isinstance(parent_team_id, (int, type(None))), parent_team_id
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
