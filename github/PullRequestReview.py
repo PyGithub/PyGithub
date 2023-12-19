@@ -109,6 +109,7 @@ class PullRequestReview(NonCompletableGithubObject):
             f"{self.pull_request_url}/reviews/{self.id}/dismissals",
             input=post_parameters,
         )
+        self._useAttributes(data)
 
     def delete(self) -> None:
         """

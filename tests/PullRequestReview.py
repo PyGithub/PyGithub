@@ -69,8 +69,7 @@ class PullRequestReview(Framework.TestCase):
 
     def testDismiss(self):
         self.pullreview.dismiss("with prejudice")
-        pr = self.pull.get_review(28482091)
-        self.assertEqual(pr.state, "DISMISSED")
+        self.assertEqual(self.pullreview.state, "DISMISSED")
 
     def testAttributes(self):
         self.assertEqual(self.pullreview.id, 28482091)
