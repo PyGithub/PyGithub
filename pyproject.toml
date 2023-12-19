@@ -65,8 +65,8 @@ warn_no_return = false
 line-length = 120
 
 [tool.codespell]
-quiet-level = 3
 skip = 'tests/*'
+quiet-level = 3
 # comma separated list of words; waiting for:
 #  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
 # also adding links until they ignored by its: nature
