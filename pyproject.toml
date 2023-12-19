@@ -3,7 +3,7 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools>=64", "setuptools_scm>=7"]
 
 [project]
-authors = [{name = "Vincent Jacques", email = "vincent@vincent-jacques.net"}]
+authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Web Environment",
@@ -76,14 +76,14 @@ ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,
 [tool.ruff]
 line-length = 120
 # Enable Pyflakes `E` and `F` codes by default.
-ignore = ["E501", "E741"]
-ignore-init-module-imports = true
 select = [
   "E",
   "W", # see: https://pypi.org/project/pycodestyle
   "F", # see: https://pypi.org/project/pyflakes
   "I", # see: isort
 ]
+ignore = ["E501", "E741"]
+ignore-init-module-imports = true
 unfixable = ["F401"]
 
 [tool.pytest.ini_options]
