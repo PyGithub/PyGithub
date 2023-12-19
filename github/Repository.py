@@ -1036,11 +1036,13 @@ class Repository(CompletableGithubObject):
 
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
-        :param permission: string 'pull', 'push' or 'admin'
+        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string 'pull', 'push', 'admin', 'maintain', or 'triage'
+        :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert is_optional(permission, str), permission
+        assert permission in ["pull", "push", "admin", "maintain", "triage", NotSet], permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
