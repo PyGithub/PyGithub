@@ -145,14 +145,16 @@ from __future__ import annotations
 import collections
 import urllib.parse
 from base64 import b64encode
+from collections.abc import Iterable
 from datetime import date, datetime, timezone
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import TYPE_CHECKING, Any
 
 from deprecated import deprecated
 
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
 import github.Artifact
+import github.AuthenticatedUser
 import github.Autolink
 import github.Branch
 import github.CheckRun
@@ -182,11 +184,13 @@ import github.Hook
 import github.HookDelivery
 import github.Invitation
 import github.Issue
+import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
 import github.Milestone
 import github.NamedUser
+import github.Notification
 import github.Organization
 import github.PaginatedList
 import github.Path
@@ -194,6 +198,7 @@ import github.Permissions
 import github.Project
 import github.PublicKey
 import github.PullRequest
+import github.PullRequestComment
 import github.Referrer
 import github.RepositoryAdvisory
 import github.RepositoryKey
@@ -1035,7 +1040,7 @@ class Repository(CompletableGithubObject):
         :param permission: string 'pull', 'push' or 'admin'
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert is_undefined(permission) or isinstance(permission, str), permission
+        assert is_optional(permission, str), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
@@ -1120,7 +1125,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
-        assert is_undefined(is_alphanumeric) or isinstance(is_alphanumeric, bool), is_alphanumeric
+        assert is_optional(is_alphanumeric, bool), is_alphanumeric
 
         post_parameters = NotSet.remove_unset_items(
             {"key_prefix": key_prefix, "url_template": url_template, "is_alphanumeric": is_alphanumeric}
@@ -1166,8 +1171,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(tree, github.GitTree.GitTree), tree
         assert all(isinstance(element, github.GitCommit.GitCommit) for element in parents), parents
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor), author
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor), committer
+        assert is_optional(author, github.InputGitAuthor), author
+        assert is_optional(committer, github.InputGitAuthor), committer
         post_parameters: dict[str, Any] = {
             "message": message,
             "tree": tree._identity,
@@ -1262,14 +1267,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         assert isinstance(generate_release_notes, bool), generate_release_notes
-        assert is_undefined(target_commitish) or isinstance(
+        assert is_optional(
             target_commitish,
-            (
-                str,
-                github.Branch.Branch,
-                github.Commit.Commit,
-                github.GitCommit.GitCommit,
-            ),
+            (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
@@ -1303,7 +1303,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(object, str), object
         assert isinstance(type, str), type
-        assert is_undefined(tagger) or isinstance(tagger, github.InputGitAuthor), tagger
+        assert is_optional(tagger, github.InputGitAuthor), tagger
         post_parameters: dict[str, Any] = {
             "tag": tag,
             "message": message,
@@ -1323,7 +1323,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert all(isinstance(element, github.InputGitTreeElement) for element in tree), tree
-        assert is_undefined(base_tree) or isinstance(base_tree, github.GitTree.GitTree), base_tree
+        assert is_optional(base_tree, github.GitTree.GitTree), base_tree
         post_parameters: dict[str, Any] = {
             "tree": [element._identity for element in tree],
         }
@@ -1350,7 +1350,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
-        assert is_undefined(active) or isinstance(active, bool), active
+        assert is_optional(active, bool), active
         post_parameters = NotSet.remove_unset_items(
             {"name": name, "config": config, "events": events, "active": active}
         )
@@ -1377,10 +1377,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, str), title
-        assert is_undefined(body) or isinstance(body, str), body
-        assert (
-            is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
-        ), assignee
+        assert is_optional(body, str), body
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
         assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, (github.Label.Label, str)), labels
@@ -1439,7 +1437,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(color, str), color
-        assert is_undefined(description) or isinstance(description, str), description
+        assert is_optional(description, str), description
         post_parameters = {
             "name": name,
             "color": color,
@@ -1470,9 +1468,9 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, str), title
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(due_on) or isinstance(due_on, (datetime, date)), due_on
+        assert is_optional(state, str), state
+        assert is_optional(description, str), description
+        assert is_optional(due_on, (datetime, date)), due_on
         post_parameters = {
             "title": title,
         }
@@ -1496,7 +1494,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Project.Project`
         """
         assert isinstance(name, str), name
-        assert is_undefined(body) or isinstance(body, str), body
+        assert is_optional(body, str), body
         post_parameters = {
             "name": name,
         }
@@ -1676,7 +1674,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(event_type, str), event_type
-        assert is_undefined(client_payload) or isinstance(client_payload, dict), client_payload
+        assert is_optional(client_payload, dict), client_payload
         post_parameters = NotSet.remove_unset_items({"event_type": event_type, "client_payload": client_payload})
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
@@ -1821,8 +1819,8 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(vcs, str), vcs
         assert isinstance(vcs_url, str), vcs_url
-        assert is_undefined(vcs_username) or isinstance(vcs_username, str), vcs_username
-        assert is_undefined(vcs_password) or isinstance(vcs_password, str), vcs_password
+        assert is_optional(vcs_username, str), vcs_username
+        assert is_optional(vcs_password, str), vcs_password
         put_parameters = {"vcs": vcs, "vcs_url": vcs_url}
 
         if is_defined(vcs_username):
@@ -1875,125 +1873,68 @@ class Repository(CompletableGithubObject):
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
-        :param name: string
-        :param description: string
-        :param homepage: string
-        :param private: bool
-        :param visibility: string
-        :param has_issues: bool
-        :param has_projects: bool
-        :param has_wiki: bool
-        :param is_template: bool
-        :param default_branch: string
-        :param allow_squash_merge: bool
-        :param allow_merge_commit: bool
-        :param allow_rebase_merge: bool
-        :param allow_auto_merge: bool
-        :param delete_branch_on_merge: bool
-        :param allow_update_branch: bool
-        :param use_squash_pr_title_as_default: bool
-        :param squash_merge_commit_title : string
-        :param squash_merge_commit_message : string
-        :param merge_commit_title : string
-        :param merge_commit_message : string
-        :param archived: bool
-        :param allow_forking: bool
-        :param web_commit_signoff_required: bool
-        :rtype: None
         """
         if name is None:
             name = self.name
         assert isinstance(name, str), name
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(homepage) or isinstance(homepage, str), homepage
-        assert is_undefined(private) or isinstance(private, bool), private
-        assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private", "internal"]
-        ), visibility
-        assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
-        assert is_undefined(has_projects) or isinstance(has_projects, bool), has_projects
-        assert is_undefined(has_wiki) or isinstance(has_wiki, bool), has_wiki
-        assert is_undefined(is_template) or isinstance(is_template, bool), is_template
-        assert is_undefined(default_branch) or isinstance(default_branch, str), default_branch
-        assert is_undefined(allow_squash_merge) or isinstance(allow_squash_merge, bool), allow_squash_merge
-        assert is_undefined(allow_merge_commit) or isinstance(allow_merge_commit, bool), allow_merge_commit
-        assert is_undefined(allow_rebase_merge) or isinstance(allow_rebase_merge, bool), allow_rebase_merge
-        assert is_undefined(allow_auto_merge) or isinstance(allow_auto_merge, bool), allow_auto_merge
-        assert is_undefined(delete_branch_on_merge) or isinstance(delete_branch_on_merge, bool), delete_branch_on_merge
-        assert is_undefined(allow_update_branch) or isinstance(allow_update_branch, bool), allow_update_branch
-        assert is_undefined(use_squash_pr_title_as_default) or isinstance(
-            use_squash_pr_title_as_default, bool
-        ), use_squash_pr_title_as_default
-        assert is_undefined(squash_merge_commit_title) or (
-            isinstance(squash_merge_commit_title, str)
-            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
-        ), squash_merge_commit_title
-        assert is_undefined(squash_merge_commit_message) or (
-            isinstance(squash_merge_commit_message, str)
-            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
-        ), squash_merge_commit_message
-        assert is_undefined(merge_commit_title) or (
-            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
-        ), merge_commit_title
-        assert is_undefined(merge_commit_message) or (
-            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
-        ), merge_commit_message
-        assert is_undefined(archived) or isinstance(archived, bool), archived
-        assert is_undefined(allow_forking) or isinstance(allow_forking, bool), allow_forking
-        assert is_undefined(web_commit_signoff_required) or isinstance(
-            web_commit_signoff_required, bool
-        ), web_commit_signoff_required
+        assert is_optional(description, str), description
+        assert is_optional(homepage, str), homepage
+        assert is_optional(private, bool), private
+        assert visibility in ["public", "private", "internal", NotSet], visibility
+        assert is_optional(has_issues, bool), has_issues
+        assert is_optional(has_projects, bool), has_projects
+        assert is_optional(has_wiki, bool), has_wiki
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(default_branch, str), default_branch
+        assert is_optional(allow_squash_merge, bool), allow_squash_merge
+        assert is_optional(allow_merge_commit, bool), allow_merge_commit
+        assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
+        assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(archived, bool), archived
+        assert is_optional(allow_forking, bool), allow_forking
+        assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
 
-        post_parameters: dict[str, Any] = {
-            "name": name,
-        }
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "homepage": homepage,
+                "private": private,
+                "visibility": visibility,
+                "has_issues": has_issues,
+                "has_projects": has_projects,
+                "has_wiki": has_wiki,
+                "is_template": is_template,
+                "default_branch": default_branch,
+                "allow_squash_merge": allow_squash_merge,
+                "allow_merge_commit": allow_merge_commit,
+                "allow_rebase_merge": allow_rebase_merge,
+                "allow_auto_merge": allow_auto_merge,
+                "delete_branch_on_merge": delete_branch_on_merge,
+                "allow_update_branch": allow_update_branch,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "archived": archived,
+                "allow_forking": allow_forking,
+                "web_commit_signoff_required": web_commit_signoff_required,
+            }
+        )
 
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(homepage):
-            post_parameters["homepage"] = homepage
-        if is_defined(private):
-            post_parameters["private"] = private
-        if is_defined(visibility):
-            post_parameters["visibility"] = visibility
-        if is_defined(has_issues):
-            post_parameters["has_issues"] = has_issues
-        if is_defined(has_projects):
-            post_parameters["has_projects"] = has_projects
-        if is_defined(has_wiki):
-            post_parameters["has_wiki"] = has_wiki
-        if is_defined(is_template):
-            post_parameters["is_template"] = is_template
-        if is_defined(default_branch):
-            post_parameters["default_branch"] = default_branch
-        if is_defined(allow_squash_merge):
-            post_parameters["allow_squash_merge"] = allow_squash_merge
-        if is_defined(allow_merge_commit):
-            post_parameters["allow_merge_commit"] = allow_merge_commit
-        if is_defined(allow_rebase_merge):
-            post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if is_defined(allow_auto_merge):
-            post_parameters["allow_auto_merge"] = allow_auto_merge
-        if is_defined(delete_branch_on_merge):
-            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
-        if is_defined(allow_update_branch):
-            post_parameters["allow_update_branch"] = allow_update_branch
-        if is_defined(use_squash_pr_title_as_default):
-            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
-        if is_defined(squash_merge_commit_title):
-            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
-        if is_defined(squash_merge_commit_message):
-            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
-        if is_defined(merge_commit_title):
-            post_parameters["merge_commit_title"] = merge_commit_title
-        if is_defined(merge_commit_message):
-            post_parameters["merge_commit_message"] = merge_commit_message
-        if is_defined(archived):
-            post_parameters["archived"] = archived
-        if is_defined(allow_forking):
-            post_parameters["allow_forking"] = allow_forking
-        if is_defined(web_commit_signoff_required):
-            post_parameters["web_commit_signoff_required"] = web_commit_signoff_required
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
@@ -2006,7 +1947,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(archive_format, str), archive_format
         archive_format = urllib.parse.quote(archive_format)
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        assert is_optional(ref, str), ref
         url = f"{self.url}/{archive_format}"
         if is_defined(ref):
             ref = urllib.parse.quote(ref)
@@ -2140,17 +2081,13 @@ class Repository(CompletableGithubObject):
         :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`PaginatedList` of :class:`github.Commit.Commit`
         """
-        assert is_undefined(sha) or isinstance(sha, str), sha
-        assert is_undefined(path) or isinstance(path, str), path
-        assert is_undefined(since) or isinstance(since, datetime), since
-        assert is_undefined(until) or isinstance(until, datetime), until
-        assert is_undefined(author) or isinstance(
+        assert is_optional(sha, str), sha
+        assert is_optional(path, str), path
+        assert is_optional(since, datetime), since
+        assert is_optional(until, datetime), until
+        assert is_optional(
             author,
-            (
-                str,
-                github.NamedUser.NamedUser,
-                github.AuthenticatedUser.AuthenticatedUser,
-            ),
+            (str, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
         ), author
         url_parameters: dict[str, Any] = {}
         if is_defined(sha):
@@ -2164,10 +2101,7 @@ class Repository(CompletableGithubObject):
         if is_defined(author):
             if isinstance(
                 author,
-                (
-                    github.NamedUser.NamedUser,
-                    github.AuthenticatedUser.AuthenticatedUser,
-                ),
+                (github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
             ):
                 url_parameters["author"] = author.login
             else:
@@ -2182,7 +2116,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.ContentFile.ContentFile` or a list of them
         """
         assert isinstance(path, str), path
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        assert is_optional(ref, str), ref
         # Path of '/' should be the empty string.
         if path == "/":
             path = ""
@@ -2223,10 +2157,10 @@ class Repository(CompletableGithubObject):
         :param: environment: string
         :rtype: :class:`PaginatedList` of :class:`github.Deployment.Deployment`
         """
-        assert is_undefined(sha) or isinstance(sha, str), sha
-        assert is_undefined(ref) or isinstance(ref, str), ref
-        assert is_undefined(task) or isinstance(task, str), task
-        assert is_undefined(environment) or isinstance(environment, str), environment
+        assert is_optional(sha, str), sha
+        assert is_optional(ref, str), ref
+        assert is_optional(task, str), task
+        assert is_optional(environment, str), environment
         parameters = {}
         if is_defined(sha):
             parameters["sha"] = sha
@@ -2284,16 +2218,14 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(ref, str), ref
-        assert is_undefined(task) or isinstance(task, str), task
-        assert is_undefined(auto_merge) or isinstance(auto_merge, bool), auto_merge
-        assert is_undefined(required_contexts) or isinstance(
-            required_contexts, list
-        ), required_contexts  # need to do better checking here
-        assert is_undefined(payload) or isinstance(payload, dict), payload
-        assert is_undefined(environment) or isinstance(environment, str), environment
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(transient_environment) or isinstance(transient_environment, bool), transient_environment
-        assert is_undefined(production_environment) or isinstance(production_environment, bool), production_environment
+        assert is_optional(task, str), task
+        assert is_optional(auto_merge, bool), auto_merge
+        assert is_optional(required_contexts, list), required_contexts  # need to do better checking here
+        assert is_optional(payload, dict), payload
+        assert is_optional(environment, str), environment
+        assert is_optional(description, str), description
+        assert is_optional(transient_environment, bool), transient_environment
+        assert is_optional(production_environment, bool), production_environment
 
         post_parameters: dict[str, Any] = {"ref": ref}
         if is_defined(task):
@@ -2344,9 +2276,7 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
         """
-        assert is_undefined(per) or (
-            isinstance(per, str) and (per == "day" or per == "week")
-        ), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters = dict()
         if is_defined(per):
             url_parameters["per"] = per
@@ -2363,9 +2293,7 @@ class Repository(CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clones.Clones`
         """
-        assert is_undefined(per) or (
-            isinstance(per, str) and (per == "day" or per == "week")
-        ), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters: dict[str, Any] = NotSet.remove_unset_items({"per": per})
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
@@ -2427,9 +2355,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(path, str)
         assert isinstance(message, str)
         assert isinstance(content, (str, bytes))
-        assert is_undefined(branch) or isinstance(branch, str)
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor)
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor)
+        assert is_optional(branch, str)
+        assert is_optional(author, github.InputGitAuthor)
+        assert is_optional(committer, github.InputGitAuthor)
 
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
@@ -2506,9 +2434,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str)
         assert isinstance(content, (str, bytes))
         assert isinstance(sha, str)
-        assert is_undefined(branch) or isinstance(branch, str)
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor)
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor)
+        assert is_optional(branch, str)
+        assert is_optional(author, github.InputGitAuthor)
+        assert is_optional(committer, github.InputGitAuthor)
 
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
@@ -2559,13 +2487,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(path, str), "path must be str/unicode object"
         assert isinstance(message, str), "message must be str/unicode object"
         assert isinstance(sha, str), "sha must be a str/unicode object"
-        assert is_undefined(branch) or isinstance(branch, str), "branch must be a str/unicode object"
-        assert is_undefined(author) or isinstance(
-            author, github.InputGitAuthor
-        ), "author must be a github.InputGitAuthor object"
-        assert is_undefined(committer) or isinstance(
-            committer, github.InputGitAuthor
-        ), "committer must be a github.InputGitAuthor object"
+        assert is_optional(branch, str), "branch must be a str/unicode object"
+        assert is_optional(author, github.InputGitAuthor), "author must be a github.InputGitAuthor object"
+        assert is_optional(committer, github.InputGitAuthor), "committer must be a github.InputGitAuthor object"
 
         url_parameters: dict[str, Any] = {"message": message, "sha": sha}
         if is_defined(branch):
@@ -2666,8 +2590,8 @@ class Repository(CompletableGithubObject):
             post_parameters["organization"] = organization
         else:
             assert is_undefined(organization), organization
-        assert is_undefined(name) or isinstance(name, str), name
-        assert is_undefined(default_branch_only) or isinstance(default_branch_only, bool), default_branch_only
+        assert is_optional(name, str), name
+        assert is_optional(default_branch_only, bool), default_branch_only
         if is_defined(name):
             post_parameters["name"] = name
         if is_defined(default_branch_only):
@@ -2755,7 +2679,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert isinstance(sha, str), sha
-        assert is_undefined(recursive) or isinstance(recursive, bool), recursive
+        assert is_optional(recursive, bool), recursive
         sha = urllib.parse.quote(sha)
         url_parameters = dict()
         if is_defined(recursive) and recursive:
@@ -2847,24 +2771,15 @@ class Repository(CompletableGithubObject):
         :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert (
-            is_undefined(milestone)
-            or milestone == "*"
-            or milestone == "none"
-            or isinstance(milestone, github.Milestone.Milestone)
-        ), milestone
-        assert is_undefined(state) or isinstance(state, str), state
-        assert (
-            is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
-        ), assignee
-        assert is_undefined(mentioned) or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
+        assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
+        assert is_optional(state, str), state
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
-        assert (
-            is_undefined(creator) or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, str)
-        ), creator
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
+        assert is_optional(creator, (str, github.NamedUser.NamedUser)), creator
         url_parameters: dict[str, Any] = {}
         if is_defined(milestone):
             if isinstance(milestone, github.Milestone.Milestone):
@@ -2910,9 +2825,9 @@ class Repository(CompletableGithubObject):
         :param since: datetime
         :rtype: :class:`PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
         url_parameters = dict()
         if is_defined(sort):
             url_parameters["sort"] = sort
@@ -3033,9 +2948,9 @@ class Repository(CompletableGithubObject):
         :param direction: string
         :rtype: :class:`PaginatedList` of :class:`github.Milestone.Milestone`
         """
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
+        assert is_optional(state, str), state
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3097,11 +3012,11 @@ class Repository(CompletableGithubObject):
         :param head: string
         :rtype: :class:`PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(base) or isinstance(base, str), base
-        assert is_undefined(head) or isinstance(head, str), head
+        assert is_optional(state, str), state
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(base, str), base
+        assert is_optional(head, str), head
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3148,9 +3063,9 @@ class Repository(CompletableGithubObject):
         :param since: datetime
         :rtype: :class:`PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
         url_parameters = dict()
         if is_defined(sort):
             url_parameters["sort"] = sort
@@ -3171,7 +3086,7 @@ class Repository(CompletableGithubObject):
         :param ref: string
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        assert is_optional(ref, str), ref
         url_parameters = dict()
         if is_defined(ref):
             url_parameters["ref"] = ref
@@ -3585,7 +3500,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        assert is_undefined(commit_message) or isinstance(commit_message, str), commit_message
+        assert is_optional(commit_message, str), commit_message
         post_parameters = {
             "base": base,
             "head": head,
@@ -3786,7 +3701,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(mode, str), mode
         assert isinstance(event, str), event
         assert isinstance(callback, str), callback
-        assert is_undefined(secret) or isinstance(secret, str), secret
+        assert is_optional(secret, str), secret
         event = urllib.parse.quote(event)
 
         post_parameters = collections.OrderedDict()
@@ -3888,7 +3803,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Artifact.Artifact`
         """
 
-        assert is_undefined(name) or isinstance(name, str), name
+        assert is_optional(name, str), name
 
         param = {key: value for key, value in {"name": name}.items() if is_defined(value)}
 
