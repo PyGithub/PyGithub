@@ -8,11 +8,22 @@
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Andrew Smith <espadav8@gmail.com>                             #
 # Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Ggicci <ggicci.t@gmail.com>                                   #
 # Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Jesse Li <jesse.li2002@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Sam Morgan <sama4mail@gmail.com>                              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,9 +43,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
 import os
 import zipfile
+from datetime import datetime, timezone
 
 from github import GithubException
 
@@ -64,8 +75,8 @@ user = "rickrickston123"
 release_id = 28524234
 author_id = 64711998
 tag = "v1.0"
-create_date = datetime.datetime(2020, 7, 12, 7, 34, 42)
-publish_date = datetime.datetime(2020, 7, 14, 0, 58, 20)
+create_date = datetime(2020, 7, 12, 7, 34, 42, tzinfo=timezone.utc)
+publish_date = datetime(2020, 7, 14, 0, 58, 20, tzinfo=timezone.utc)
 
 
 class GitRelease(Framework.TestCase):
@@ -129,9 +140,7 @@ class GitRelease(Framework.TestCase):
         self.assertFalse(release.prerelease)
         self.assertEqual(
             release.url,
-            "https://api.github.com/repos/{}/{}/releases/{}".format(
-                user, repo_name, release_id
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/releases/{release_id}",
         )
         self.assertEqual(release.author._rawData["login"], user)
         self.assertEqual(release.author.login, user)
@@ -145,17 +154,19 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.published_at, publish_date)
         self.assertEqual(
             release.tarball_url,
-            "https://api.github.com/repos/{}/{}/tarball/{}".format(
-                user, repo_name, tag
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/tarball/{tag}",
         )
         self.assertEqual(
             release.zipball_url,
-            "https://api.github.com/repos/{}/{}/zipball/{}".format(
-                user, repo_name, tag
-            ),
+            f"https://api.github.com/repos/{user}/{repo_name}/zipball/{tag}",
         )
         self.assertEqual(repr(release), 'GitRelease(title="Test")')
+        self.assertEqual(len(release.assets), 1)
+        self.assertEqual(
+            repr(release.assets[0]),
+            'GitReleaseAsset(url="https://api.github.com/repos/'
+            f'{user}/{repo_name}/releases/assets/{release.raw_data["assets"][0]["id"]}")',
+        )
 
     def testGetRelease(self):
         release_by_id = self.release
@@ -198,17 +209,13 @@ class GitRelease(Framework.TestCase):
         release = self.new_release
         self.assertEqual(release.id, self.new_release_id)
 
-        release.upload_asset(
-            self.artifact_path, "unit test artifact", "application/zip"
-        )
+        release.upload_asset(self.artifact_path, "unit test artifact", "application/zip")
         self.tearDownNewRelease()
 
     def testUploadAssetWithName(self):
         self.setUpNewRelease()
         release = self.new_release
-        r = release.upload_asset(
-            self.artifact_path, name="foobar.zip", content_type="application/zip"
-        )
+        r = release.upload_asset(self.artifact_path, name="foobar.zip", content_type="application/zip")
         self.assertEqual(r.name, "foobar.zip")
         self.tearDownNewRelease()
 
@@ -222,9 +229,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.author._rawData["login"], user)
         self.assertEqual(
             release.html_url,
-            "https://github.com/{}/{}/releases/tag/{}".format(
-                user, repo_name, self.new_tag
-            ),
+            f"https://github.com/{user}/{repo_name}/releases/tag/{self.new_tag}",
         )
         self.tearDownNewRelease()
 

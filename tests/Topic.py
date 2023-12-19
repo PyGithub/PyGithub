@@ -1,6 +1,10 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -21,7 +25,7 @@
 ################################################################################
 
 
-from datetime import datetime
+from datetime import datetime, timezone
 from operator import attrgetter
 
 from . import Framework
@@ -47,8 +51,8 @@ class Topic(Framework.TestCase):
         )
         self.assertEqual(topic.created_by, "Guido van Rossum")
         self.assertEqual(topic.released, "February 20, 1991")
-        self.assertEqual(topic.created_at, datetime(2016, 12, 7, 0, 7, 2))
-        self.assertEqual(topic.updated_at, datetime(2019, 10, 9, 20, 33, 49))
+        self.assertEqual(topic.created_at, datetime(2016, 12, 7, 0, 7, 2, tzinfo=timezone.utc))
+        self.assertEqual(topic.updated_at, datetime(2019, 10, 9, 20, 33, 49, tzinfo=timezone.utc))
         self.assertEqual(topic.featured, True)
         self.assertEqual(topic.curated, True)
         self.assertEqual(topic.score, 7576.306)

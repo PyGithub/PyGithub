@@ -1,0 +1,21 @@
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/code-scanning/alerts
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4963'), ('content-length', '318'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"3ce61bc2417a6a4f7b47976a7969c711"'), ('date', 'Sun, 20 May 2012 12:10:52 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"number": 6, "created_at": "2021-06-29T12:28:30Z", "dismissed_at": "2021-06-30T05:05:05Z", "dismissed_by": {"url": "dismissed_by.url", "avatar_url": "dismissed_by.avatar_url", "gravatar_id": "dismissed_by.gravatar_id", "login": "dismisser.login", "id": 42}, "dismissed_reason": "Won't tell", "state": "open", "url": "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6", "html_url": "https://github.com/jacquev6/PyGithub/security/code-scanning/6", "instances_url": "https://api.github.com/repos/jacquev6/PyGithub/code-scanning/alerts/6/instances", "most_recent_instance": {"analysis_key": ".github/workflows/codeql-analysis.yml:analyze", "ref": "refs/heads/master", "state": "open", "classifications": ["stupid typo"], "commit_sha": "deadbeef", "environment": "{language:python}", "message": {"text": "Awful stuff might happen."}, "location": {"path": "tests/ReplayData/Repository.testCodeScanAlerts.txt", "start_line": 10, "start_column": 2, "end_line": 10, "end_column": 48}}, "rule": {"id": "py/rule-id", "name": "py/rule-name", "security_severity_level": "high", "severity": "warning", "description": "Bad practice"}, "tool": {"guid": null, "name": "CodeQL", "version": "2.5.7"}}]
+
+https
+GET
+api.github.com
+None
+/repos/jacquev6/PyGithub/code-scanning/alerts/6/instances
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4963'), ('content-length', '318'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"3ce61bc2417a6a4f7b47976a7969c711"'), ('date', 'Sun, 20 May 2012 12:10:52 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"analysis_key": "instances[0].analysis_key", "ref": "instances[0].ref", "state": "instances[0].state", "classifications": ["instances[0].classifications"], "commit_sha": "instances[0].commit_sha", "environment": "instances[0].environment", "message": {"text": "instances[0].message"}, "location": {"path": "tests/ReplayData/Repository.testCodeScanAlerts.txt", "start_line": 10, "start_column": 2, "end_line": 10, "end_column": 48}}, {"analysis_key": "instances[1].analysis_key", "ref": "instances[1].ref", "state": "instances[1].state", "classifications": ["instances[1].classifications"], "commit_sha": "instances[1].commit_sha", "environment": "instances[1].environment", "message": {"text": "instances[1].message"}, "location": {"path": "tests/ReplayData/Repository.testCodeScanAlerts.txt", "start_line": 20, "start_column": 17, "end_line": 20, "end_column": 42}}]

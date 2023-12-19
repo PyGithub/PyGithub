@@ -1,11 +1,22 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Nikolay Yurin <yurinnick93@gmail.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,15 +36,24 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from datetime import datetime
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Rate(github.GithubObject.NonCompletableGithubObject):
+class Rate(NonCompletableGithubObject):
     """
     This class represents Rates. The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._limit: Attribute[int] = NotSet
+        self._remaining: Attribute[int] = NotSet
+        self._reset: Attribute[datetime] = NotSet
+        self._used: Attribute[int] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "limit": self._limit.value,
@@ -43,35 +63,27 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def limit(self):
-        """
-        :type: integer
-        """
+    def limit(self) -> int:
         return self._limit.value
 
     @property
-    def remaining(self):
-        """
-        :type: integer
-        """
+    def remaining(self) -> int:
         return self._remaining.value
 
     @property
-    def reset(self):
-        """
-        :type: datetime.datetime
-        """
+    def reset(self) -> datetime:
         return self._reset.value
 
-    def _initAttributes(self):
-        self._limit = github.GithubObject.NotSet
-        self._remaining = github.GithubObject.NotSet
-        self._reset = github.GithubObject.NotSet
+    @property
+    def used(self) -> int:
+        return self._used.value
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "limit" in attributes:  # pragma no branch
             self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch
             self._remaining = self._makeIntAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
             self._reset = self._makeTimestampAttribute(attributes["reset"])
+        if "used" in attributes:  # pragma no branch
+            self._used = self._makeIntAttribute(attributes["used"])

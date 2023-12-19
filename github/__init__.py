@@ -7,7 +7,18 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 sharkykh <sharkykh@gmail.com>                                 #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Emily <github@emily.moe>                                      #
+# Copyright 2020 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,27 +45,11 @@ like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
 """
-__all__ = [
-    "BadAttributeException",
-    "BadCredentialsException",
-    "BadUserAgentException",
-    "enable_console_debug_logging",
-    "Github",
-    "GithubException",
-    "GithubIntegration",
-    "IncompletableObject",
-    "InputFileContent",
-    "InputGitAuthor",
-    "InputGitTreeElement",
-    "RateLimitExceededException",
-    "TwoFactorException",
-    "UnknownObjectException",
-]
 
 import logging
 
-from github.MainClass import Github, GithubIntegration
-
+from . import Auth
+from .AppAuthentication import AppAuthentication
 from .GithubException import (
     BadAttributeException,
     BadCredentialsException,
@@ -65,16 +60,50 @@ from .GithubException import (
     TwoFactorException,
     UnknownObjectException,
 )
+from .GithubIntegration import GithubIntegration
+from .GithubRetry import GithubRetry
 from .InputFileContent import InputFileContent
 from .InputGitAuthor import InputGitAuthor
 from .InputGitTreeElement import InputGitTreeElement
+from .MainClass import Github
+
+# set log level to INFO for github
+logger = logging.getLogger("github")
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
 
 
-def enable_console_debug_logging():  # pragma no cover (Function useful only outside test environment)
+def set_log_level(level: int) -> None:
+    """
+    Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
+    :param level: log level
+    """
+    logger.setLevel(level)
+
+
+def enable_console_debug_logging() -> None:  # pragma no cover (Function useful only outside test environment)
     """
     This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
     """
+    set_log_level(logging.DEBUG)
 
-    logger = logging.getLogger("github")
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(logging.StreamHandler())
+
+__all__ = [
+    "Auth",
+    "AppAuthentication",
+    "BadAttributeException",
+    "BadCredentialsException",
+    "BadUserAgentException",
+    "enable_console_debug_logging",
+    "Github",
+    "GithubException",
+    "GithubIntegration",
+    "GithubRetry",
+    "IncompletableObject",
+    "InputFileContent",
+    "InputGitAuthor",
+    "InputGitTreeElement",
+    "RateLimitExceededException",
+    "TwoFactorException",
+    "UnknownObjectException",
+]

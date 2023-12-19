@@ -6,6 +6,12 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -46,7 +52,7 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -75,14 +81,14 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testIssueLabels(self):
         self.assertListKeyEqual(
             self.issue.labels,
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", self.labelName, "RequestedByUser"],
         )
 
     def testIssueGetLabels(self):
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", self.labelName, "RequestedByUser"],
         )
 
@@ -98,5 +104,5 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
             "Issue created by PyGithub to test issue #50",
             labels=[self.repo.get_label(self.labelName)],
         )
-        self.assertListKeyEqual(issue.labels, lambda l: l.name, [self.labelName])
+        self.assertListKeyEqual(issue.labels, lambda lb: lb.name, [self.labelName])
         self.assertEqual(issue.number, 52)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Tomas Radej <tradej@redhat.com>                               #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -14,13 +14,37 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2017 Jannis Gebauer <jayfk@users.noreply.github.com>               #
 # Copyright 2017 Nhomar Hernandez <nhomar@vauxoo.com>                          #
 # Copyright 2017 Paul Ortman <paul.ortman@gmail.com>                           #
 # Copyright 2018 Jason White <jasonaw0@gmail.com>                              #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Jiri Popelka <jpopelka@redhat.com>                            #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 cclauss <cclauss@me.com>                                      #
+# Copyright 2019 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2020 Edouard Benauw <edouard.benauw@student.ecp.fr>                #
+# Copyright 2020 Emily <github@emily.moe>                                      #
+# Copyright 2020 Michał Górny <mgorny@gentoo.org>                              #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Sébastien Besson <seb.besson@gmail.com>                       #
+# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Sam Morgan <sama4mail@gmail.com>                              #
+# Copyright 2021 Sorin Sbarnea <sorin.sbarnea@gmail.com>                       #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Hugo van Kemenade <hugovk@users.noreply.github.com>           #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,23 +64,32 @@
 #                                                                              #
 ################################################################################
 
+import os
 import textwrap
 
 import setuptools
 
-version = "1.55"
+_PATH_ROOT = os.path.dirname(__file__)
+_PATH_REQUIRES = os.path.join(_PATH_ROOT, "requirements")
+
+
+def _load_requirements(path_dir: str = _PATH_ROOT, file_name: str = "requirements.txt") -> "list[str]":
+    with open(os.path.join(path_dir, file_name)) as fp:
+        reqs = [ln.strip() for ln in fp.readlines()]
+    return [r for r in reqs if r and not r.startswith("#")]
 
 
 if __name__ == "__main__":
     setuptools.setup(
         name="PyGithub",
-        version=version,
+        use_scm_version=True,
+        setup_requires=["setuptools_scm"],
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
         url="https://github.com/pygithub/pygithub",
         project_urls={
-            "Documentation": "http://pygithub.readthedocs.io/en/latest/",
+            "Documentation": "http://pygithub.readthedocs.io/en/stable/",
             "Source": "https://github.com/pygithub/pygithub",
             "Tracker": "https://github.com/pygithub/pygithub/issues",
         },
@@ -69,22 +102,34 @@ if __name__ == "__main__":
 
                 from github import Github
 
-                # using username and password
-                g = Github("user", "password")
+                # Authentication is defined via github.Auth
+                from github import Auth
 
-                # or using an access token
-                g = Github("access_token")
+                # using an access token
+                auth = Auth.Token("access_token")
+
+                # Public Web Github
+                g = Github(auth=auth)
+
+                # Github Enterprise with custom hostname
+                g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
             Then play with your Github objects::
 
                 for repo in g.get_user().get_repos():
                     print(repo.name)
                     repo.edit(has_wiki=False)
+                    # to see all the available attributes and methods
+                    print(dir(repo))
+
+            To close connections after use::
+
+                g.close()
 
             Reference documentation
             =======================
 
-            See http://pygithub.readthedocs.io/en/latest/"""
+            See http://pygithub.readthedocs.io/en/stable/"""
         ),
         packages=["github"],
         package_data={"github": ["py.typed", "*.pyi"]},
@@ -96,20 +141,16 @@ if __name__ == "__main__":
             "Operating System :: OS Independent",
             "Programming Language :: Python",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
             "Topic :: Software Development",
         ],
-        python_requires=">=3.6",
-        install_requires=[
-            "deprecated",
-            "pyjwt>=2.0",
-            "pynacl>=1.4.0",
-            "requests>=2.14.0",
-        ],
-        extras_require={"integrations": ["cryptography"]},
-        tests_require=["cryptography", "httpretty>=1.0.3"],
+        python_requires=">=3.7",
+        install_requires=_load_requirements(path_dir=_PATH_ROOT, file_name="requirements.txt"),
+        # can be removed, still here to avoid breaking user code
+        extras_require={"integrations": []},
+        tests_require=_load_requirements(path_dir=_PATH_REQUIRES, file_name="test.txt"),
     )

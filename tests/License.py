@@ -1,6 +1,12 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,9 +53,7 @@ class License(Framework.TestCase):
         self.assertEqual(self.license.conditions, ["include-copyright"])
         self.assertEqual(self.license.limitations, ["liability", "warranty"])
         self.assertEqual(self.license.url, "https://api.github.com/licenses/mit")
-        self.assertEqual(
-            self.license.html_url, "http://choosealicense.com/licenses/mit/"
-        )
+        self.assertEqual(self.license.html_url, "http://choosealicense.com/licenses/mit/")
         self.assertEqual(
             self.license.implementation,
             """Create a text file (typically named LICENSE or LICENSE.txt) in the root of your source code and copy the text of the license into the file. Replace [year] with the current year and [fullname] with the name (or names) of the copyright holders.""",

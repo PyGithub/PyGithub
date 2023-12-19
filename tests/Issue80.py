@@ -6,6 +6,12 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,31 +36,22 @@ import github
 from . import Framework
 
 
-class Issue80(
-    Framework.BasicTestCase
-):  # https://github.com/jacquev6/PyGithub/issues/80
+class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/issues/80
     def testIgnoreHttpsFromGithubEnterprise(self):
-        g = github.Github(
-            self.login, self.password, base_url="http://my.enterprise.com/some/prefix"
-        )  # http here
+        g = github.Github(auth=self.login, base_url="http://my.enterprise.com/some/prefix")  # http here
         org = g.get_organization("BeaverSoftware")
-        self.assertEqual(
-            org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware"
-        )  # https returned
+        self.assertEqual(org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware")  # https returned
         self.assertListKeyEqual(
             org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
         )  # But still http in second request based on org.url
 
     def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
         g = github.Github(
-            self.login,
-            self.password,
+            auth=self.login,
             base_url="http://my.enterprise.com:1234/some/prefix",
         )  # http here
         org = g.get_organization("BeaverSoftware")
-        self.assertEqual(
-            org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware"
-        )  # https returned
+        self.assertEqual(org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware")  # https returned
         self.assertListKeyEqual(
             org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
         )  # But still http in second request based on org.url

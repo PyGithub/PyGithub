@@ -9,7 +9,16 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,78 +39,60 @@
 ################################################################################
 
 import urllib.parse
+from typing import Any, Dict
 
-import github.GithubObject
+from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 
-from . import Consts
 
-
-class Label(github.GithubObject.CompletableGithubObject):
+class Label(CompletableGithubObject):
     """
     This class represents Labels. The reference can be found here https://docs.github.com/en/rest/reference/issues#labels
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._color: Attribute[str] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def color(self):
-        """
-        :type: string
-        """
+    def color(self) -> str:
         self._completeIfNotSet(self._color)
         return self._color.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, name, color, description=github.GithubObject.NotSet):
+    def edit(self, name: str, color: str, description: Opt[str] = NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
-        :param name: string
-        :param color: string
-        :param description: string
-        :rtype: None
         """
         assert isinstance(name, str), name
         assert isinstance(color, str), color
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        post_parameters = {
-            "new_name": name,
-            "color": color,
-        }
-        if description is not github.GithubObject.NotSet:
-            post_parameters["description"] = description
+        assert is_optional(description, str), description
+        post_parameters = NotSet.remove_unset_items({"new_name": name, "color": color, "description": description})
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -111,16 +102,10 @@ class Label(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     @property
-    def _identity(self):
+    def _identity(self) -> str:
         return urllib.parse.quote(self.name)
 
-    def _initAttributes(self):
-        self._color = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
         if "description" in attributes:  # pragma no branch

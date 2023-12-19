@@ -1,6 +1,18 @@
 Utilities
 =========
 
+Authentication
+--------------
+
+.. autoclass:: github.Auth.Login
+.. autoclass:: github.Auth.Token
+.. autoclass:: github.Auth.JWT
+.. autoclass:: github.Auth.AppAuth
+.. autoclass:: github.Auth.AppAuthToken
+.. autoclass:: github.Auth.AppInstallationAuth
+.. autoclass:: github.Auth.AppUserAuth
+.. autoclass:: github.Auth.NetrcAuth
+
 Logging
 -------
 

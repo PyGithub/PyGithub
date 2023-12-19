@@ -1,6 +1,6 @@
-pynacl>=1.4.0
-requests>=2.14.0
-pyjwt>=2.0
-sphinx<3
-sphinx-rtd-theme<1.1
+pynacl >=1.4.0
+requests >=2.14.0
+pyjwt[crypto] >=2.4.0
+typing-extensions >=4.0.0
+urllib3 >=1.26.0
 Deprecated

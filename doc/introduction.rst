@@ -14,12 +14,18 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 First create a Github instance::
 
     from github import Github
-    
+
+    # Authentication is defined via github.Auth
+    from github import Auth
+
     # using an access token
-    g = Github("access_token")
+    auth = Auth.Token("access_token")
+
+    # Public Web Github
+    g = Github(auth=auth)
 
     # Github Enterprise with custom hostname
-    g = Github(base_url="https://{hostname}/api/v3", login_or_token="access_token")
+    g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
 Then play with your Github objects::
 
@@ -29,6 +35,10 @@ Then play with your Github objects::
         # to see all the available attributes and methods
         print(dir(repo))
 
+To close connections after use::
+
+    g.close()
+
 Download and install
 --------------------
 
@@ -36,9 +46,6 @@ This package is in the `Python Package Index
 <http://pypi.python.org/pypi/PyGithub>`__, so ``pip install PyGithub`` should
 be enough.  You can also clone it on `Github
 <http://github.com/PyGithub/PyGithub>`__.
-
-If you wish to use GitHub Integrations, you'll want to be sure to install the
-'integrations' option: ``pip install PyGithub[integrations]``
 
 Licensing
 ---------
@@ -76,7 +83,7 @@ Projects using PyGithub
 * https://github.com/plus3it/satsuki - Automate GitHub releases and uploading binary release assets
 * `check-in <https://github.com/webknjaz/check-in>`_ — Python CLI distribution that allows user to use GitHub Checks API as a bot.
 * https://github.com/hasii2011/gittodoistclone - Convert GitHub issues to Todoist tasks
- 
+
 They talk about PyGithub
 ------------------------
 

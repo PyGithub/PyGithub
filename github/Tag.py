@@ -10,6 +10,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,59 +37,50 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import github.Commit
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Commit import Commit
 
 
-class Tag(github.GithubObject.NonCompletableGithubObject):
+class Tag(NonCompletableGithubObject):
     """
     This class represents Tags. The reference can be found here https://docs.github.com/en/rest/reference/repos#list-repository-tags
     """
 
-    def __repr__(self):
-        return self.get__repr__(
-            {"name": self._name.value, "commit": self._commit.value}
-        )
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
+
+    def _initAttributes(self) -> None:
+        self._commit: Attribute[Commit] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._tarball_url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str] = NotSet
 
     @property
-    def commit(self):
-        """
-        :type: :class:`github.Commit.Commit`
-        """
+    def commit(self) -> Commit:
         return self._commit.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def tarball_url(self):
-        """
-        :type: string
-        """
+    def tarball_url(self) -> str:
         return self._tarball_url.value
 
     @property
-    def zipball_url(self):
-        """
-        :type: string
-        """
+    def zipball_url(self) -> str:
         return self._zipball_url.value
 
-    def _initAttributes(self):
-        self._commit = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._tarball_url = github.GithubObject.NotSet
-        self._zipball_url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(
-                github.Commit.Commit, attributes["commit"]
-            )
+            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "tarball_url" in attributes:  # pragma no branch

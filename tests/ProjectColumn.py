@@ -1,7 +1,12 @@
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -16,9 +21,9 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -36,9 +41,7 @@ class ProjectColumn(Framework.TestCase):
             self.get_project_column.cards_url,
             "https://api.github.com/projects/columns/8700460/cards",
         )
-        self.assertEqual(
-            self.get_project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw"
-        )
+        self.assertEqual(self.get_project_column.node_id, "MDEzOlByb2plY3RDb2x1bW44NzAwNDYw")
         self.assertEqual(
             self.get_project_column.project_url,
             "https://api.github.com/projects/4294766",
@@ -49,11 +52,11 @@ class ProjectColumn(Framework.TestCase):
         )
         self.assertEqual(
             self.get_project_column.created_at,
-            datetime.datetime(2020, 4, 13, 20, 29, 53),
+            datetime(2020, 4, 13, 20, 29, 53, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.get_project_column.updated_at,
-            datetime.datetime(2020, 4, 14, 18, 9, 38),
+            datetime(2020, 4, 14, 18, 9, 38, tzinfo=timezone.utc),
         )
 
     def testGetAllCards(self):

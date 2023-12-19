@@ -6,13 +6,36 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Brian Choy <byceee@gmail.com>                                 #
+# Copyright 2019 Geoffroy Jabouley <gjabouley@invensense.com>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 ebrown <brownierin@users.noreply.github.com>                  #
+# Copyright 2020 Geoff Low <glow@mdsol.com>                                    #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 latacora-daniel <71085674+latacora-daniel@users.noreply.github.com>#
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Marina Peresypkina <mi9onev@gmail.com>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,7 +55,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import github
@@ -46,14 +69,15 @@ class Organization(Framework.TestCase):
         self.org = self.g.get_organization("BeaverSoftware")
 
     def testAttributes(self):
-        self.assertEqual(
-            self.org.avatar_url, "https://avatars1.githubusercontent.com/u/1?v=4"
-        )
+        self.assertEqual(self.org.avatar_url, "https://avatars1.githubusercontent.com/u/1?v=4")
         self.assertEqual(self.org.billing_email, "foo@example.com")
         self.assertEqual(self.org.blog, "http://www.example.com")
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2014, 1, 9, 16, 56, 17))
+        self.assertEqual(
+            self.org.created_at,
+            datetime(2014, 1, 9, 16, 56, 17, tzinfo=timezone.utc),
+        )
         self.assertEqual(self.org.default_repository_permission, "none")
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertEqual(self.org.disk_usage, 2)
@@ -63,14 +87,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.gravatar_id, None)
         self.assertTrue(self.org.has_organization_projects)
         self.assertTrue(self.org.has_repository_projects)
-        self.assertEqual(
-            self.org.hooks_url, "https://api.github.com/orgs/BeaverSoftware/hooks"
-        )
+        self.assertEqual(self.org.hooks_url, "https://api.github.com/orgs/BeaverSoftware/hooks")
         self.assertEqual(self.org.html_url, "https://github.com/BeaverSoftware")
         self.assertEqual(self.org.id, 1)
-        self.assertEqual(
-            self.org.issues_url, "https://api.github.com/orgs/BeaverSoftware/issues"
-        )
+        self.assertEqual(self.org.issues_url, "https://api.github.com/orgs/BeaverSoftware/issues")
         self.assertEqual(self.org.location, "Paris, France")
         self.assertEqual(self.org.login, "BeaverSoftware")
         self.assertFalse(self.org.members_can_create_repositories)
@@ -135,12 +155,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(hook.name, "mobile")
 
     def testEditHookWithAllParameters(self):
-        hook = self.org.create_hook(
-            "web", {"url": "http://foobar.com"}, ["fork"], False
-        )
-        hook = self.org.edit_hook(
-            hook.id, "mobile", {"url": "http://barfoo.com"}, ["spoon"], True
-        )
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
+        hook = self.org.edit_hook(hook.id, "mobile", {"url": "http://barfoo.com"}, ["spoon"], True)
         self.assertEqual(hook.name, "mobile")
         self.assertEqual(hook.events, ["spoon"])
         self.assertEqual(hook.active, True)
@@ -174,9 +190,7 @@ class Organization(Framework.TestCase):
         self.assertFalse(self.org.has_in_public_members(lyloa))
 
     def testGetPublicMembers(self):
-        self.assertListKeyEqual(
-            self.org.get_public_members(), lambda u: u.login, ["jacquev6"]
-        )
+        self.assertListKeyEqual(self.org.get_public_members(), lambda u: u.login, ["jacquev6"])
 
     def testGetHook(self):
         hook = self.org.get_hook(257993)
@@ -185,39 +199,74 @@ class Organization(Framework.TestCase):
     def testGetHooks(self):
         self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
 
+    def testGetHookDelivery(self):
+        delivery = self.org.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(delivery.response, github.HookDelivery.HookDeliveryResponse)
+        self.assertEqual(delivery.response.headers, {"content-type": "text/html;charset=utf-8"})
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = list(self.org.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
+
     def testGetIssues(self):
         self.assertListKeyEqual(self.org.get_issues(), lambda i: i.id, [])
 
     def testGetIssuesWithAllArguments(self):
-        requestedByUser = (
-            self.g.get_user().get_repo("PyGithub").get_label("Requested by user")
-        )
+        requestedByUser = self.g.get_user().get_repo("PyGithub").get_label("Requested by user")
         issues = self.org.get_issues(
             "assigned",
             "closed",
             [requestedByUser],
             "comments",
             "asc",
-            datetime.datetime(2012, 5, 28, 23, 0, 0),
+            datetime(2012, 5, 28, 23, 0, 0, tzinfo=timezone.utc),
         )
         self.assertListKeyEqual(issues, lambda i: i.id, [])
 
     def testGetMembers(self):
-        self.assertListKeyEqual(
-            self.org.get_members(), lambda u: u.login, ["cjuniet", "jacquev6", "Lyloa"]
-        )
+        self.assertListKeyEqual(self.org.get_members(), lambda u: u.login, ["cjuniet", "jacquev6", "Lyloa"])
 
     def testGetOutsideCollaborators(self):
-        self.assertListKeyEqual(
-            self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"]
-        )
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
 
     def testOutsideCollaborators(self):
         octocat = self.g.get_user("octocat")
         self.org.convert_to_outside_collaborator(octocat)
-        self.assertListKeyEqual(
-            self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"]
-        )
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
         self.org.remove_outside_collaborator(octocat)
         self.assertEqual(list(self.org.get_outside_collaborators()), [])
 
@@ -229,9 +278,7 @@ class Organization(Framework.TestCase):
 
     def testGetRepos(self):
         repos = self.org.get_repos()
-        self.assertListKeyEqual(
-            repos, lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
-        )
+        self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "TestPyGithub"])
         self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, False])
         self.assertListKeyEqual(repos, lambda r: r.has_wiki, [True, True])
 
@@ -288,9 +335,7 @@ class Organization(Framework.TestCase):
         )
 
     def testGetTeams(self):
-        self.assertListKeyEqual(
-            self.org.get_teams(), lambda t: t.name, ["Members", "Owners"]
-        )
+        self.assertListKeyEqual(self.org.get_teams(), lambda t: t.name, ["Members", "Owners"])
 
     def testGetTeamBySlug(self):
         team = self.org.get_team_by_slug("Members")
@@ -301,17 +346,13 @@ class Organization(Framework.TestCase):
         self.assertEqual(hook.id, 257967)
 
     def testCreateHookWithAllParameters(self):
-        hook = self.org.create_hook(
-            "web", {"url": "http://foobar.com"}, ["fork"], False
-        )
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
         self.assertTrue(hook.active)
         self.assertEqual(hook.id, 257993)
 
     def testCreateRepoWithMinimalArguments(self):
         repo = self.org.create_repo(name="TestPyGithub")
-        self.assertEqual(
-            repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
-        )
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
         self.assertTrue(repo.has_wiki)
         self.assertTrue(repo.has_pages)
 
@@ -328,53 +369,84 @@ class Organization(Framework.TestCase):
             has_wiki=False,
             has_downloads=False,
             team_id=team.id,
+            allow_update_branch=True,
             allow_squash_merge=False,
             allow_merge_commit=False,
             allow_rebase_merge=True,
             delete_branch_on_merge=False,
         )
-        self.assertEqual(
-            repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2"
-        )
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
+        self.assertTrue(repo.allow_update_branch)
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.org.create_repo(
-            name="TestPyGithub", auto_init=True, gitignore_template="Python"
-        )
-        self.assertEqual(
-            repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub"
-        )
+        repo = self.org.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
         self.assertTrue(repo.has_pages)
         self.assertTrue(repo.has_wiki)
 
     def testCreateFork(self):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")
         repo = self.org.create_fork(pygithub)
-        self.assertEqual(
-            repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub"
-        )
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub")
         self.assertFalse(repo.has_wiki)
         self.assertFalse(repo.has_pages)
+
+    def testCreateRepoFromTemplate(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        repo = self.org.create_repo_from_template("hello-world-docker-action-new", template_repo)
+        self.assertEqual(
+            repo.url,
+            "https://api.github.com/repos/BeaverSoftware/hello-world-docker-action-new",
+        )
+        self.assertFalse(repo.is_template)
+
+    def testCreateRepoFromTemplateWithAllArguments(self):
+        template_repo = self.g.get_repo("actions/hello-world-docker-action")
+
+        description = "My repo from template"
+        private = True
+        repo = self.org.create_repo_from_template(
+            "hello-world-docker-action-new",
+            template_repo,
+            description=description,
+            private=private,
+        )
+        self.assertEqual(repo.description, description)
+        self.assertTrue(repo.private)
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecret(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(self.org.create_secret("secret-name", "secret-value", "all"))
+        secret = self.org.create_secret("secret-name", "secret-value", "all")
+        self.assertIsNotNone(secret)
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateSecretSelected(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        self.assertTrue(
-            self.org.create_secret("secret-name", "secret-value", "selected", repos)
-        )
+        secret = self.org.create_secret("secret-name", "secret-value", "selected", repos)
+        self.assertIsNotNone(secret)
+        self.assertEqual(secret.visibility, "selected")
+        self.assertEqual(list(secret.selected_repositories), repos)
 
-    def testDeleteSecret(self):
-        self.assertTrue(self.org.delete_secret("secret-name"))
+    def testGetSecret(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        secret = self.org.get_secret("secret-name")
+        self.assertEqual(secret.name, "secret-name")
+        self.assertEqual(secret.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(secret.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(secret.visibility, "selected")
+        self.assertEqual(list(secret.selected_repositories), repos)
+        self.assertEqual(secret.url, "https://api.github.com/orgs/BeaverSoftware/actions/secrets/secret-name")
+
+    def testGetSecrets(self):
+        secrets = self.org.get_secrets()
+        self.assertEqual(len(list(secrets)), 1)
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
@@ -396,9 +468,7 @@ class Organization(Framework.TestCase):
 
     def testInviteUserWithRoleAndTeam(self):
         team = self.org.create_team("Team created by PyGithub")
-        self.org.invite_user(
-            email="foo@example.com", role="billing_manager", teams=[team]
-        )
+        self.org.invite_user(email="foo@example.com", role="billing_manager", teams=[team])
 
     def testInviteUserAsNonOwner(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -414,11 +484,7 @@ class Organization(Framework.TestCase):
 
     def testCreateMigration(self):
         self.org = self.g.get_organization("sample-test-organisation")
-        self.assertTrue(
-            isinstance(
-                self.org.create_migration(["sample-repo"]), github.Migration.Migration
-            )
-        )
+        self.assertTrue(isinstance(self.org.create_migration(["sample-repo"]), github.Migration.Migration))
 
     def testGetMigrations(self):
         self.org = self.g.get_organization("sample-test-organisation")
@@ -431,3 +497,27 @@ class Organization(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testCreateVariable(self):
+        variable = self.org.create_variable("variable-name", "variable-value", "all")
+        self.assertIsNotNone(variable)
+
+    def testCreateVariableSelected(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        variable = self.org.create_variable("variable-name", "variable-value", "selected", repos)
+        self.assertIsNotNone(variable)
+        self.assertEqual(list(variable.selected_repositories), repos)
+
+    def testGetVariable(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        variable = self.org.get_variable("variable-name")
+        self.assertEqual(variable.name, "variable-name")
+        self.assertEqual(variable.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(variable.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
+        self.assertEqual(variable.visibility, "selected")
+        self.assertEqual(list(variable.selected_repositories), repos)
+        self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
+
+    def testGetVariables(self):
+        variables = self.org.get_variables()
+        self.assertEqual(len(list(variables)), 1)

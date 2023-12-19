@@ -1,0 +1,9 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub
+{'User-Agent': 'PyGithub/Python'}
+None
+301
+[('Content-Length', '0'), ('Location', 'https://api.github.com:443/repos/PyGithub/PyGithub')]
