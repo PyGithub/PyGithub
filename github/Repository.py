@@ -1042,7 +1042,7 @@ class Repository(CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert is_optional(permission, str), permission
+        assert permission in ["pull", "push", "admin", "maintain", "triage", NotSet], permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
