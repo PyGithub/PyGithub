@@ -110,7 +110,7 @@ Improvements
 * Add ``license`` attribute to ``Repository`` (#2721) (26d353e7)
 * Add missing attributes to ``Repository``  (#2742) (65cfeb1b)
 * Add ``is_alphanumeric`` attribute to ``Autolink`` and ``Repository.create_autolink`` (#2630) (b6a28a26)
-* Suppress ``requests`` fallback to netrc, provide ``github.Auth.Netrc`` (#2739) (ac36f6a9)
+* Suppress ``requests`` fallback to netrc, provide ``github.Auth.NetrcAuth`` (#2739) (ac36f6a9)
 * Pass Requester arguments to ``AppInstallationAuth.__integration`` (#2695) (8bf542ae)
 * Adding feature for enterprise consumed license (#2626) (a7bfdf2d)
 * Search Workflows by Name (#2711) (eadc241e)
