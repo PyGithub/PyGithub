@@ -476,6 +476,14 @@ class Organization(CompletableGithubObject):
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
         allow_update_branch: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
+        use_squash_pr_title_as_default: Opt[bool] = NotSet,
+        squash_merge_commit_title: Opt[str] = NotSet,
+        squash_merge_commit_message: Opt[str] = NotSet,
+        merge_commit_title: Opt[str] = NotSet,
+        merge_commit_message: Opt[str] = NotSet,
+        custom_properties: Opt[dict[str, Any]] = NotSet,
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -498,6 +506,19 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(custom_properties, dict), custom_properties
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -518,6 +539,14 @@ class Organization(CompletableGithubObject):
                 "allow_rebase_merge": allow_rebase_merge,
                 "delete_branch_on_merge": delete_branch_on_merge,
                 "allow_update_branch": allow_update_branch,
+                "is_template": is_template,
+                "allow_auto_merge": allow_auto_merge,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "custom_properties": custom_properties,
             }
         )
 
