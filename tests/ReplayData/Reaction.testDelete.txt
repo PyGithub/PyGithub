@@ -18,5 +18,3 @@ None
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4970'), ('x-github-media-type', 'github.squirrel-girl-preview'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'F51E:1F46:1145B3:27C7E7:5A31E3B8'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.058497'), ('x-xss-protection', '1; mode=block'), ('date', 'Thu, 14 Dec 2017 02:36:41 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'repo, user'), ('content-type', 'application/octet-stream'), ('x-accepted-oauth-scopes', ''), ('x-ratelimit-reset', '1513221661')]
-
-

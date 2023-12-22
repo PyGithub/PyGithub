@@ -2,15 +2,26 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Steve Brown <steve@evolvedlight.co.uk>                        #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Tyler Treat <ttreat31@gmail.com>                              #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
 # Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Nikolay Edigaryev <edigaryev@gmail.com>                       #
+# Copyright 2020 Omar Brikaa <brikaaomar@gmail.com>                            #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -158,6 +169,65 @@ class Github(Framework.TestCase):
                 "3195465",
             ],
         )
+
+    def testGetGlobalAdvisories(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(ecosystem="pub"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+                "GHSA-9f2c-xxfm-32mj",
+                "GHSA-4xh4-v2pq-jvhm",
+                "GHSA-jwpw-q68h-r678",
+                "GHSA-4rgh-jx4f-qfcq",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesByGHSA(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(ghsa_id="GHSA-9324-jv53-9cc8"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesByCVE(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(cve_id="CVE-2023-38503"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-gggm-66rh-pp98",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesManyFilters(self):
+        cases = [
+            {"cwes": [200, 900], "affects": ["directus", "made_up"], "modified": ">2023-07-01"},
+            {"cwes": ["200", "900"], "affects": ["directus"], "updated": ">2023-07-01"},
+            {"cwes": "200,900", "affects": "directus", "published": ">2023-07-01"},
+        ]
+        for case in cases:
+            with self.subTest(**case):
+                advisories = self.g.get_global_advisories(
+                    type="reviewed",
+                    ecosystem="npm",
+                    severity="medium",
+                    #  cwes=case["cwes"],
+                    is_withdrawn=False,
+                    #  affects=case["affects"],
+                    #  modified=">2023-07-01",
+                    direction="desc",
+                    sort="updated",
+                    **case,
+                )
+                self.assertListKeyEqual(
+                    advisories,
+                    lambda a: a.ghsa_id,
+                    [
+                        "GHSA-gggm-66rh-pp98",
+                    ],
+                )
 
     def testGetHooks(self):
         hooks = self.g.get_hooks()

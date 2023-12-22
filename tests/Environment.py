@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -21,6 +24,7 @@
 ################################################################################
 
 from datetime import datetime, timezone
+from unittest import mock
 
 import pytest  # type: ignore
 
@@ -84,13 +88,15 @@ class Environment(Framework.TestCase):
         self.assertEqual(len(reviewers), 2)
         self.assertEqual(reviewers[0].type, "User")
         self.assertIsInstance(reviewers[0].reviewer, github.NamedUser.NamedUser)
-        assert isinstance(reviewers[0].reviewer, github.NamedUser.NamedUser)  # Make type checker happy
+        # Make type checker happy
+        assert isinstance(reviewers[0].reviewer, github.NamedUser.NamedUser)
         self.assertEqual(reviewers[0].reviewer.id, 19245)
         self.assertEqual(reviewers[0].reviewer.login, "alson")
         self.assertEqual(reviewers[0].reviewer.type, "User")
         self.assertEqual(reviewers[1].type, "Team")
         self.assertIsInstance(reviewers[1].reviewer, github.Team.Team)
-        assert isinstance(reviewers[1].reviewer, github.Team.Team)  # Make type checker happy
+        # Make type checker happy
+        assert isinstance(reviewers[1].reviewer, github.Team.Team)
         self.assertEqual(reviewers[1].reviewer.id, 1)
         self.assertEqual(reviewers[1].reviewer.slug, "justice-league")
         self.assertEqual(reviewers[1].reviewer.url, "https://api.github.com/teams/1")
@@ -171,3 +177,69 @@ class Environment(Framework.TestCase):
         self.repo.delete_environment("test")
         with pytest.raises(github.UnknownObjectException):
             self.repo.get_environment("test")
+
+    def testEnvironmentVariable(self):
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        variable = environment.create_variable("variable_name", "variable-value")
+        self.assertTrue(variable.edit("variable-value123"))
+        variable.delete()
+        repo.delete_environment("test")
+
+    def testEnvironmentVariables(self):
+        # GitHub will always capitalize the variable name
+        variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        for variable in variables:
+            environment.create_variable(variable[0], variable[1])
+        environment.update()
+        environment_variables = environment.get_variables()
+        matched_environment_variables = []
+        for variable in variables:
+            for environment_variable in environment_variables:
+                # GitHub will always capitalize the variable name, may be best to uppercase test data for comparison
+                if environment_variable.name == variable[0].upper() and environment_variable.value == variable[1]:
+                    matched_environment_variables.append(environment_variable)
+                    break
+        self.assertEqual(len(matched_environment_variables), len(variables))
+        for matched_environment_variable in matched_environment_variables:
+            matched_environment_variable.delete()
+        repo.delete_environment("test")
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEnvironmentSecret(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        secret = environment.create_secret("secret_name", "secret-value")
+        secret.update()
+        # GitHub will always capitalize the secret name
+        self.assertEqual(secret.name, "SECRET_NAME")
+        secret.delete()
+        repo.delete_environment("test")
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEnvironmentSecrets(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        # GitHub will always capitalize the secret name
+        secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        environment = repo.create_environment("test")
+        for secret in secrets:
+            environment.create_secret(secret[0], secret[1])
+        environment.update()
+        environment_secrets = environment.get_secrets()
+        matched_environment_secrets = []
+        for secret in secrets:
+            for environment_secret in environment_secrets:
+                # GitHub will always capitalize the secret name, may be best to uppercase test data for comparison
+                if environment_secret.name == secret[0].upper():
+                    matched_environment_secrets.append(environment_secret)
+                    break
+        self.assertEqual(len(matched_environment_secrets), len(secrets))
+        for matched_environment_secret in matched_environment_secrets:
+            matched_environment_secret.delete()
+        repo.delete_environment("test")

@@ -35,15 +35,15 @@ Get Pull Requests by Query
 .. code-block:: python
 
     >>> repo = g.get_repo("PyGithub/PyGithub")
-    >>> pulls = repo.get_pulls(state='open', sort='created', base='master') 
+    >>> pulls = repo.get_pulls(state='open', sort='created', base='master')
     >>> for pr in pulls:
     ...    print(pr.number)
-    ... 
+    ...
     400
     861
     875
     876
-    
+
 Add and modify Pull Request comment
 -----------------------------------
 

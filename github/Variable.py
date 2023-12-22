@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,6 +40,7 @@ class Variable(CompletableGithubObject):
         self._value: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._variables_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -76,10 +79,20 @@ class Variable(CompletableGithubObject):
         return self._updated_at.value
 
     @property
+    def variables_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._variables_url.value
+
+    @property
     def url(self) -> str:
         """
         :type: string
         """
+        # Construct url from variables_url and name, if self._url. is not set
+        if self._url is NotSet:
+            self._url = self._makeStringAttribute(self.variables_url + "/" + self.name)
         return self._url.value
 
     def edit(self, value: str) -> bool:
@@ -96,7 +109,7 @@ class Variable(CompletableGithubObject):
         }
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{self.name}",
+            self.url,
             input=patch_parameters,
         )
         return status == 204
@@ -106,7 +119,7 @@ class Variable(CompletableGithubObject):
         :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
         :rtype: None
         """
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/actions/variables/{self.name}")
+        self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:
@@ -117,5 +130,7 @@ class Variable(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "variables_url" in attributes:
+            self._variables_url = self._makeStringAttribute(attributes["variables_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
