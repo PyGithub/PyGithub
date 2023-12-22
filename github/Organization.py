@@ -518,7 +518,7 @@ class Organization(CompletableGithubObject):
         ], squash_merge_commit_message
         assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
         assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
-        assert is_optional(custom_properties, dict), use_squash_pr_title_as_default
+        assert is_optional(custom_properties, dict), custom_properties
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
