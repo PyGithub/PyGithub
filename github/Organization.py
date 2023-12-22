@@ -476,11 +476,14 @@ class Organization(CompletableGithubObject):
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
         allow_update_branch: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
         use_squash_pr_title_as_default: Opt[bool] = NotSet,
         squash_merge_commit_title: Opt[str] = NotSet,
         squash_merge_commit_message: Opt[str] = NotSet,
         merge_commit_title: Opt[str] = NotSet,
         merge_commit_message: Opt[str] = NotSet,
+        custom_properties: Opt[dict[str, Any]] = NotSet,
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
