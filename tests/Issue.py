@@ -102,6 +102,21 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
         self.assertEqual(repr(self.issue), 'Issue(title="Issue created by PyGithub", number=28)')
+        self.assertEqual(
+            self.issue.reactions,
+            {
+                "+1": 0,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 2,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+            },
+        )
 
     def testEditWithoutParameters(self):
         self.issue.edit()
