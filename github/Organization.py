@@ -508,20 +508,14 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_update_branch, bool), allow_update_branch
         assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
         assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
-        assert is_undefined(squash_merge_commit_message) or squash_merge_commit_message in [
+        assert squash_merge_commit_message in [
             "PR_BODY",
             "COMMIT_MESSAGES",
             "BLANK",
+            NotSet,
         ], squash_merge_commit_message
-        assert is_undefined(merge_commit_title) or merge_commit_title in [
-            "PR_TITLE",
-            "MERGE_MESSAGE",
-        ], merge_commit_title
-        assert is_undefined(merge_commit_message) or merge_commit_message in [
-            "PR_TITLE",
-            "PR_BODY",
-            "BLANK",
-        ], merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
