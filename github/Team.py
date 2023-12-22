@@ -94,6 +94,7 @@ class Team(CompletableGithubObject):
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
+        self._notification_setting: Attribute[str] = NotSet
         self._permission: Attribute[str] = NotSet
         self._repos_count: Attribute[int] = NotSet
         self._repositories_url: Attribute[str] = NotSet
@@ -131,6 +132,11 @@ class Team(CompletableGithubObject):
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def notification_setting(self) -> str:
+        self._completeIfNotSet(self._notification_setting)
+        return self._notification_setting.value
 
     @property
     def permission(self) -> str:
@@ -298,6 +304,7 @@ class Team(CompletableGithubObject):
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
         parent_team_id: Opt[int] = NotSet,
+        notification_setting: Opt[str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
@@ -307,6 +314,9 @@ class Team(CompletableGithubObject):
         assert permission is NotSet or isinstance(permission, str), permission
         assert privacy is NotSet or isinstance(privacy, str), privacy
         assert parent_team_id is NotSet or isinstance(parent_team_id, (int, type(None))), parent_team_id
+        assert notification_setting is NotSet or isinstance(notification_setting, str), notification_setting
+        if notification_setting is not NotSet:
+            assert notification_setting in ["notifications_enabled", "notifications_disabled"]
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -314,6 +324,7 @@ class Team(CompletableGithubObject):
                 "permission": permission,
                 "privacy": privacy,
                 "parent_team_id": parent_team_id,
+                "notification_setting": notification_setting,
             }
         )
 
@@ -434,6 +445,8 @@ class Team(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "notification_setting" in attributes:  # pragma no branch
+            self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch

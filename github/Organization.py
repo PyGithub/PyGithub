@@ -611,6 +611,7 @@ class Organization(CompletableGithubObject):
         description: Opt[str] = NotSet,
         parent_team_id: Opt[int] = NotSet,
         maintainers: Opt[list[int]] = NotSet,
+        notification_setting: Opt[str] = NotSet,
     ) -> Team:
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
@@ -621,6 +622,7 @@ class Organization(CompletableGithubObject):
         :param description: string
         :param parent_team_id: integer
         :param maintainers: list of: integer
+        :param notification_setting: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
@@ -630,6 +632,9 @@ class Organization(CompletableGithubObject):
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy
         assert is_optional(description, str), description
+        assert notification_setting is NotSet or isinstance(notification_setting, str), notification_setting
+        if notification_setting is not NotSet:
+            assert notification_setting in ["notifications_enabled", "notifications_disabled"]
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -638,6 +643,7 @@ class Organization(CompletableGithubObject):
                 "description": description,
                 "parent_team_id": parent_team_id,
                 "maintainers": maintainers,
+                "notification_setting": notification_setting,
             }
         )
         if is_defined(repo_names):

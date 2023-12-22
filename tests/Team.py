@@ -161,6 +161,7 @@ class Team(Framework.TestCase):
             "admin",
             "secret",
             parent.id,
+            "notifications_disabled",
         )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
