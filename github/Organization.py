@@ -610,6 +610,7 @@ class Organization(CompletableGithubObject):
         :param secret_type: string options actions or dependabot
         :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
         """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
