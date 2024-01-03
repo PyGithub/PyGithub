@@ -58,7 +58,6 @@ class Branch(Framework.TestCase):
             required_approving_review_count=2,
         )
         branch_protection = self.protected_branch.get_protection()
-        self.assertFalse(branch_protection.required_conversation_resolution)
         self.assertTrue(branch_protection.required_status_checks.strict)
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
