@@ -31,7 +31,6 @@ class BranchProtection(Framework.TestCase):
     def testAttributes(self):
         self.assertTrue(self.branch_protection.required_status_checks.strict)
         self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
-        self.assertFalse(self.branch_protection.required_conversation_resolution)
         self.assertTrue(self.branch_protection.required_linear_history)
         self.assertEqual(
             self.branch_protection.url,
@@ -41,3 +40,8 @@ class BranchProtection(Framework.TestCase):
             self.branch_protection.__repr__(),
             'BranchProtection(url="https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection")',
         )
+        self.assertFalse(self.branch_protection.allow_force_pushes)
+        self.assertFalse(self.branch_protection.allow_deletions)
+        self.assertFalse(self.branch_protection.required_conversation_resolution)
+        self.assertFalse(self.branch_protection.lock_branch)
+        self.assertFalse(self.branch_protection.allow_fork_syncing)
