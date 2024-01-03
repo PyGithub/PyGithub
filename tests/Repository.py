@@ -14,6 +14,9 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
 # Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
@@ -26,10 +29,39 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Will Li <cuichen.li94@gmail.com>                              #
+# Copyright 2020 Chris de Graaf <chrisadegraaf@gmail.com>                      #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Huw Jones <huwcbjones@outlook.com>                            #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2021 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -454,6 +486,28 @@ class Repository(Framework.TestCase):
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
         secret = self.repo.create_secret("secret-name", "secret-value")
         self.assertIsNotNone(secret)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testRepoSecrets(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        # GitHub will always capitalize the secret name
+        secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for matched_repo_secret in secrets:
+            repo.create_secret(matched_repo_secret[0], matched_repo_secret[1])
+        repo.update()
+        repo_secrets = repo.get_secrets()
+        matched_repo_secrets = []
+        for matched_repo_secret in secrets:
+            for repo_secret in repo_secrets:
+                # GitHub will always capitalize the secret name, may be best to uppercase test data for comparison
+                if repo_secret.name == matched_repo_secret[0].upper():
+                    matched_repo_secrets.append(repo_secret)
+                    break
+        self.assertEqual(len(matched_repo_secrets), len(secrets))
+        for matched_repo_secret in matched_repo_secrets:
+            matched_repo_secret.delete()
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
@@ -1050,7 +1104,7 @@ class Repository(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -1349,7 +1403,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
-        self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
+        self.assertListKeyEqual(issues[0].labels, lambda lb: lb.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
     def testMarkNotificationsAsRead(self):
@@ -1852,6 +1906,25 @@ class Repository(Framework.TestCase):
         variable = self.repo.create_variable("variable_name", "variable-value")
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
+
+    def testRepoVariables(self):
+        # GitHub will always capitalize the variable name
+        variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for variable in variables:
+            repo.create_variable(variable[0], variable[1])
+        repo.update()
+        repo_variables = repo.get_variables()
+        matched_repo_variables = []
+        for variable in variables:
+            for repo_variable in repo_variables:
+                # GitHub will always capitalize the variable name, may be best to uppercase test data for comparison
+                if repo_variable.name == variable[0].upper() and repo_variable.value == variable[1]:
+                    matched_repo_variables.append(repo_variable)
+                    break
+        self.assertEqual(len(matched_repo_variables), len(variables))
+        for matched_repo_variable in matched_repo_variables:
+            matched_repo_variable.delete()
 
 
 class LazyRepository(Framework.TestCase):

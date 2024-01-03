@@ -69,11 +69,11 @@ Add a timezone information to your ``datetime`` instances before comparison:
 
 A Netrc file (e.g. ``~/.netrc``) does not override PyGithub authentication, anymore.
 If you require authentication through Netrc, then this is a breaking change.
-Use a ``github.Auth.Netrc`` instance to use Netrc credentials:
+Use a ``github.Auth.NetrcAuth`` instance to use Netrc credentials:
 
 .. code-block:: python
 
-    >>> auth = Auth.Netrc()
+    >>> auth = Auth.NetrcAuth()
     >>> g = Github(auth=auth)
     >>> g.get_user().login
     'login'
@@ -110,7 +110,7 @@ Improvements
 * Add ``license`` attribute to ``Repository`` (#2721) (26d353e7)
 * Add missing attributes to ``Repository``  (#2742) (65cfeb1b)
 * Add ``is_alphanumeric`` attribute to ``Autolink`` and ``Repository.create_autolink`` (#2630) (b6a28a26)
-* Suppress ``requests`` fallback to netrc, provide ``github.Auth.Netrc`` (#2739) (ac36f6a9)
+* Suppress ``requests`` fallback to netrc, provide ``github.Auth.NetrcAuth`` (#2739) (ac36f6a9)
 * Pass Requester arguments to ``AppInstallationAuth.__integration`` (#2695) (8bf542ae)
 * Adding feature for enterprise consumed license (#2626) (a7bfdf2d)
 * Search Workflows by Name (#2711) (eadc241e)
@@ -730,7 +730,7 @@ Bug Fixes & Improvements
 Deprecation
 ^^^^^^^^^^^
 
-* Repository.get_file_contents() no longer works use Repository.get_contents() instead 
+* Repository.get_file_contents() no longer works use Repository.get_contents() instead
 
 Version 1.43.7 (April 16, 2019)
 -----------------------------------
@@ -1087,7 +1087,7 @@ Version 1.29 (October 10, 2016)
 -----------------------------------
 
 * add issue assignee param (3a8edc7)
-* Fix diffrerent case (fcf6cfb)
+* Fix different case (fcf6cfb)
 * DOC: remove easy_install suggestion; update links (45e76d9)
 * Add permission param documentation (9347345)
 * Add ability to set permission for team repo (5dddea7)
@@ -1477,7 +1477,7 @@ Pre-release versions
   * POST `/repos/:owner/:repo/git/trees?base_tree-`
 
 * Gists
-* Autorizations
+* Authorizations
 * Keys
 * Hooks
 * Events

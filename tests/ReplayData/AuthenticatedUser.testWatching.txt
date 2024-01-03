@@ -95,5 +95,3 @@ None
 None
 200
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4989'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Tue, 22 May 2012 17:15:09 GMT')]
-
-

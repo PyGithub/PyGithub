@@ -12,15 +12,45 @@
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
 # Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
-# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Brian Choy <byceee@gmail.com>                                 #
+# Copyright 2019 Geoffroy Jabouley <gjabouley@invensense.com>                  #
+# Copyright 2019 Pascal Bach <pasci.bach@gmail.com>                            #
+# Copyright 2019 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2019 Shibasis Patel <smartshibasish@gmail.com>                     #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 ebrown <brownierin@users.noreply.github.com>                  #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 latacora-daniel <71085674+latacora-daniel@users.noreply.github.com>#
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 James Simpson <jsimpso@users.noreply.github.com>              #
+# Copyright 2021 Marina Peresypkina <mi9onev@gmail.com>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,8 +69,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -444,6 +476,14 @@ class Organization(CompletableGithubObject):
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
         allow_update_branch: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
+        use_squash_pr_title_as_default: Opt[bool] = NotSet,
+        squash_merge_commit_title: Opt[str] = NotSet,
+        squash_merge_commit_message: Opt[str] = NotSet,
+        merge_commit_title: Opt[str] = NotSet,
+        merge_commit_message: Opt[str] = NotSet,
+        custom_properties: Opt[dict[str, Any]] = NotSet,
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -466,6 +506,19 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(custom_properties, dict), custom_properties
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -486,6 +539,14 @@ class Organization(CompletableGithubObject):
                 "allow_rebase_merge": allow_rebase_merge,
                 "delete_branch_on_merge": delete_branch_on_merge,
                 "allow_update_branch": allow_update_branch,
+                "is_template": is_template,
+                "allow_auto_merge": allow_auto_merge,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "custom_properties": custom_properties,
             }
         )
 
@@ -527,7 +588,9 @@ class Organization(CompletableGithubObject):
         if is_defined(selected_repositories):
             put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
+        )
 
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
@@ -535,36 +598,39 @@ class Organization(CompletableGithubObject):
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/actions/secrets/{secret_name}/repositories",
-                "url": f"{self.url}/actions/secrets/{secret_name}",
+                "selected_repositories_url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}/repositories",
+                "url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}",
             },
             completed=False,
         )
 
-    def get_secrets(self) -> PaginatedList[OrganizationSecret]:
+    def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
         """
         Gets all organization secrets
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
         """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> OrganizationSecret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: 'GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
             completed=False,
         )
 
@@ -640,7 +706,7 @@ class Organization(CompletableGithubObject):
                 "name": variable_name,
                 "visibility": visibility,
                 "value": value,
-                "selected_repositories_url": f"{self.url}/actions/variables/{variable_name}/repositories",
+                "selected_repositories_url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}/repositories",
                 "url": self.url,
             },
             completed=False,
@@ -669,7 +735,7 @@ class Organization(CompletableGithubObject):
         return github.OrganizationVariable.OrganizationVariable(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            attributes={"url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}"},
             completed=False,
         )
 
@@ -922,6 +988,7 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"/repos/{self.login}/{name}",
@@ -968,6 +1035,7 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
         assert isinstance(slug, str), slug
+        slug = urllib.parse.quote(slug)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
         return github.Team.Team(self._requester, headers, data, completed=True)
 

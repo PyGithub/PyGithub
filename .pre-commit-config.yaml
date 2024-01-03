@@ -1,35 +1,40 @@
+default_language_version:
+  python: python3
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: mixed-line-ending
-        args: [ --fix=lf ]
+        args:
+          - "--fix=lf"
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.1.0
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
-        args:
-          - --py37-plus
+        args: ["--py37-plus"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.0.278'
+    rev: v0.1.7
     hooks:
       - id: ruff
-        args: [ "--fix", "--fixable=ALL", "--exit-non-zero-on-fix" ]
+        args:
+          - "--fix"
+          - "--fixable=ALL"
+          - "--exit-non-zero-on-fix"
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.1
+    rev: v2.2.6
     hooks:
       - id: codespell
-        exclude: tests/
-        args:
-          - --ignore-words-list="bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,Chang"
-          - --quiet-level=2
+        additional_dependencies: [tomli]
 
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.12.0
     hooks:
       - id: black

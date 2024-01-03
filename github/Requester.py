@@ -17,21 +17,41 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2015 Brian Eugley <Brian.Eugley@capitalone.com>                    #
 # Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
-# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Denis K <f1nal@cgaming.org>                                   #
 # Copyright 2016 Jared K. Smith <jaredsmith@jaredsmith.net>                    #
-# Copyright 2016 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
 # Copyright 2016 Mathieu Mitchell <mmitchell@iweb.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Arda Kuyumcu <kuyumcuarda@gmail.com>                          #
 # Copyright 2018 Dylan <djstein@ncsu.edu>                                      #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Tuuu Nya <yuzesheji@qq.com>                                   #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Jesse Li <jesse.li2002@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Phillip Tran <phillip.qtr@gmail.com>                          #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -513,6 +533,36 @@ class Requester:
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+
+    def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        input_ = {"query": query, "variables": {"input": variables}}
+
+        response_headers, data = self.requestJsonAndCheck("POST", "https://api.github.com/graphql", input=input_)
+        if "errors" in data:
+            raise self.createException(400, response_headers, data)
+        return response_headers, data
+
+    def graphql_named_mutation(
+        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Create a mutation in the format:
+            mutation MutationName($input: MutationNameInput!) {
+                mutationName(input: $input) {
+                    <output>
+                }
+            }
+        and call the self.graphql_query method
+        """
+        title = "".join([x.capitalize() for x in mutation_name.split("_")])
+        mutation_name = title[:1].lower() + title[1:]
+        output = output or ""
+        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+
+        return self.graphql_query(query, variables)
 
     def __check(
         self,

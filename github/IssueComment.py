@@ -12,7 +12,16 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +40,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -60,6 +70,7 @@ class IssueComment(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -103,6 +114,11 @@ class IssueComment(CompletableGithubObject):
     def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
+
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     def delete(self) -> None:
         """
@@ -181,3 +197,5 @@ class IssueComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
