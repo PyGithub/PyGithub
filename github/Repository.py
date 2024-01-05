@@ -1245,8 +1245,8 @@ class Repository(CompletableGithubObject):
     def create_git_release(
         self,
         tag: str,
-        name: str,
-        message: str,
+        name: str = NotSet,
+        message: str = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1264,8 +1264,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert isinstance(name, str), name
-        assert isinstance(message, str), message
+        assert is_optional(name, str), name
+        assert is_optional(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         assert isinstance(generate_release_notes, bool), generate_release_notes
@@ -1275,12 +1275,14 @@ class Repository(CompletableGithubObject):
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
-            "name": name,
-            "body": message,
             "draft": draft,
             "prerelease": prerelease,
             "generate_release_notes": generate_release_notes,
         }
+        if is_defined(name):
+            post_parameters["name"] = name
+        if is_defined(message):
+            post_parameters["body"] = message
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
         elif isinstance(target_commitish, github.Branch.Branch):

@@ -405,6 +405,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
 
+    def testCreateGitReleaseGenerateReleaseNotes(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest-release-notes",
+            generate_release_notes=True
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest-release-notes")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
     def testCreateGitReleaseWithAllArguments(self):
         release = self.repo.create_git_release(
             "vX.Y.Z-by-PyGithub-acctest2",
