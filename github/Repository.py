@@ -1245,8 +1245,8 @@ class Repository(CompletableGithubObject):
     def create_git_release(
         self,
         tag: str,
-        name: str = NotSet,
-        message: str = NotSet,
+        name: Opt[str] = NotSet,
+        message: Opt[str] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
