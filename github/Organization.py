@@ -389,6 +389,7 @@ class Organization(CompletableGithubObject):
         name: str,
         repo: Repository,
         description: Opt[str] = NotSet,
+        include_all_branches: Opt[bool] = NotSet,
         private: Opt[bool] = NotSet,
     ) -> Repository:
         """self.name
@@ -397,9 +398,16 @@ class Organization(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
+        assert is_optional(include_all_branches, bool), include_all_branches
         assert is_optional(private, bool), private
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "owner": self.login, "description": description, "private": private}
+            {
+                "name": name,
+                "owner": self.login,
+                "description": description,
+                "include_all_branches": include_all_branches,
+                "private": private,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck(
