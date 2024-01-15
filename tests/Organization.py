@@ -412,6 +412,7 @@ class Organization(Framework.TestCase):
             "hello-world-docker-action-new",
             template_repo,
             description=description,
+            include_all_branches=True,
             private=private,
         )
         self.assertEqual(repo.description, description)
