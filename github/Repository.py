@@ -1704,7 +1704,7 @@ class Repository(CompletableGithubObject):
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
         secret_name = urllib.parse.quote(secret_name)
-        public_key = self.get_public_key()  # TODO
+        public_key = self.get_public_key(secret_type=secret_type)  # TODO
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
             "key_id": public_key.key_id,
