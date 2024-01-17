@@ -984,7 +984,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{self.url}/outside_collaborators/{member._identity}"
         )
 
-    def get_public_key(self, secret_type="actions") -> PublicKey:
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /orgs/{org}/{secret_type}/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
         :rtype: :class:`github.PublicKey.PublicKey`
