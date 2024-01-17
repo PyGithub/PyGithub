@@ -577,15 +577,18 @@ class Organization(CompletableGithubObject):
         self,
         secret_name: str,
         unencrypted_value: str,
+        secret_type: str = "actions",  # TODO: actions or dependabot
         visibility: str = "all",
         selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
     ) -> github.OrganizationSecret.OrganizationSecret:
         """
-        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
         assert isinstance(visibility, str), visibility
+        assert isinstance(secret_type, str), secret_type
+
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
                 isinstance(element, github.Repository.Repository) for element in selected_repositories
@@ -604,7 +607,7 @@ class Organization(CompletableGithubObject):
             put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
         self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
+            "PUT", f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
         )
 
         return github.OrganizationSecret.OrganizationSecret(
@@ -614,7 +617,7 @@ class Organization(CompletableGithubObject):
                 "name": secret_name,
                 "visibility": visibility,
                 "selected_repositories_url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}/repositories",
-                "url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}",
+                "url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}",
             },
             completed=False,
         )
