@@ -570,7 +570,7 @@ class Organization(CompletableGithubObject):
         self,
         secret_name: str,
         unencrypted_value: str,
-        secret_type: str = "actions",  # TODO: actions or dependabot
+        secret_type: str = "actions",
         visibility: str = "all",
         selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
     ) -> github.OrganizationSecret.OrganizationSecret:
@@ -579,8 +579,8 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         assert isinstance(visibility, str), visibility
-        assert isinstance(secret_type, str), secret_type
 
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
