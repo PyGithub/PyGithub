@@ -114,7 +114,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         return self._bypass_pull_request_allowances_teams.value
     
     @property
-    def bypass_pull_request_allowances_apps(self) -> list[github.GitHubApp.GitHubApp]:
+    def bypass_pull_request_allowances_apps(self) -> list[github.GithubApp.GithubApp]:
         self._completeIfNotSet(self._bypass_pull_request_allowances_apps)
         return self._bypass_pull_request_allowances_apps.value
 
@@ -152,7 +152,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
                 )
             if "apps" in attributes["bypass_pull_request_allowances"]:
                 self._bypass_pull_request_allowances_apps = self._makeListOfClassesAttribute(
-                    github.GitHubApp.GitHubApp,
+                    github.GithubApp.GithubApp,
                     attributes["bypass_pull_request_allowances"]["apps"],
                 )
             
