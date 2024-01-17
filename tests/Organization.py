@@ -437,7 +437,7 @@ class Organization(Framework.TestCase):
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.org.create_secret("secret-name", "secret-value", "selected", repos)
+        secret = self.org.create_secret("secret-name", "secret-value", "selected", "actions", repos)
         self.assertIsNotNone(secret)
         self.assertEqual(secret.visibility, "selected")
         self.assertEqual(list(secret.selected_repositories), repos)

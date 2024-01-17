@@ -570,8 +570,8 @@ class Organization(CompletableGithubObject):
         self,
         secret_name: str,
         unencrypted_value: str,
-        secret_type: str = "actions",
         visibility: str = "all",
+        secret_type: str = "actions",
         selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
     ) -> github.OrganizationSecret.OrganizationSecret:
         """
