@@ -65,7 +65,7 @@ class OrganizationSecret(Secret):
     def edit(
         self,
         value: str,
-        secret_type: str = "actions",  # TODO: actions or dependabot
+        secret_type: str = "actions",
         visibility: str = "all",
     ) -> bool:
         """
@@ -77,7 +77,7 @@ class OrganizationSecret(Secret):
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
-        assert isinstance(secret_type, str), secret_type
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
         patch_parameters: Dict[str, Any] = {
             "name": self.name,
