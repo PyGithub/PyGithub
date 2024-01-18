@@ -604,7 +604,13 @@ class Organization(CompletableGithubObject):
             "visibility": visibility,
         }
         if is_defined(selected_repositories):
-            put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            # Dependbot and Actions endpoint expects different types
+            # https://docs.github.com/en/rest/dependabot/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
+            # https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
+            if secret_type == "actions":
+                put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            if secret_type == "dependabot":
+                put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
         self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
