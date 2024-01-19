@@ -104,7 +104,6 @@ from typing import (
 import requests
 import requests.adapters
 from urllib3 import Retry
-from urllib.parse import urlunparse
 
 import github.Consts as Consts
 import github.GithubException as GithubException
@@ -396,6 +395,7 @@ class Requester:
         self.__base_url = base_url
 
         o = urllib.parse.urlparse(base_url)
+        self.__graphql_url = urllib.parse.urlunparse(o._replace(path="graphql"))
         self.__hostname = o.hostname  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
@@ -415,7 +415,6 @@ class Requester:
         self.__connection: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None
         self.__connection_lock = threading.Lock()
         self.__custom_connections: Deque[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = deque()
-        self.__graphql_url = urlunparse(o._replace(path="graphql"))
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
