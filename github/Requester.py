@@ -540,7 +540,7 @@ class Requester:
         """
         input_ = {"query": query, "variables": {"input": variables}}
 
-        response_headers, data = self.requestJsonAndCheck("POST", "https://api.github.com/graphql", input=input_)
+        response_headers, data = self.requestJsonAndCheck("POST", f"https://{self.__hostname}:{self.__port}/graphql", input=input_)
         if "errors" in data:
             raise self.createException(400, response_headers, data)
         return response_headers, data
