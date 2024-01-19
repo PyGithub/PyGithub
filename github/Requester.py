@@ -104,7 +104,7 @@ from typing import (
 import requests
 import requests.adapters
 from urllib3 import Retry
-from urllib3.parse import urlunparse
+from urllib.parse import urlunparse
 
 import github.Consts as Consts
 import github.GithubException as GithubException
