@@ -103,7 +103,7 @@ from typing import (
 
 import requests
 import requests.adapters
-from urllib3 import Retry
+from urllib3 import Retry, urlunparse
 
 import github.Consts as Consts
 import github.GithubException as GithubException
@@ -414,6 +414,7 @@ class Requester:
         self.__connection: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None
         self.__connection_lock = threading.Lock()
         self.__custom_connections: Deque[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = deque()
+        self.__graphql_url = urlunparse(o._replace(path="graphql"))
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
@@ -540,7 +541,7 @@ class Requester:
         """
         input_ = {"query": query, "variables": {"input": variables}}
 
-        response_headers, data = self.requestJsonAndCheck("POST", f"https://{self.__hostname}:{self.__port}/graphql", input=input_)
+        response_headers, data = self.requestJsonAndCheck("POST", self.__graphql_url, input=input_)
         if "errors" in data:
             raise self.createException(400, response_headers, data)
         return response_headers, data
