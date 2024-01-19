@@ -52,6 +52,8 @@
 # Copyright 2023 Phillip Tran <phillip.qtr@gmail.com>                          #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 nick <nick_shook@apple.com>                                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -395,7 +397,8 @@ class Requester:
         self.__base_url = base_url
 
         o = urllib.parse.urlparse(base_url)
-        self.__graphql_url = urllib.parse.urlunparse(o._replace(path="graphql"))
+        self.__graphql_prefix = "/graphql"
+        self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
@@ -895,8 +898,8 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, "/api/"))
-            assert o.port == self.__port
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/")), o.path
+            assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
