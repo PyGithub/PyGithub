@@ -1,70 +1,20 @@
-from typing import Any, Dict
+from __future__ import annotations
 
-from github.AdvisoryBase import AdvisoryBase
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+import github.AdvisoryVulnerabilityPackage
+import github.DependabotAlertAdvisory
+import github.DependabotAlertDependency
+import github.DependabotAlertVulnerability
+import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
-
-class Package(NonCompletableGithubObject):
-    """
-    This class represents a Package.
-    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts
-    """
-
-    def _initAttributes(self) -> None:
-        self._ecosystem: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
-
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self.name})
-
-    @property
-    def ecosystem(self) -> str:
-        return self._ecosystem.value
-
-    @property
-    def name(self) -> str:
-        return self._name.value
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "ecosystem" in attributes:
-            self._ecosystem = self._makeStringAttribute(attributes["ecosystem"])
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-
-
-class Dependency(NonCompletableGithubObject):
-    """
-    This class represents a Dependency.
-    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts
-    """
-
-    def _initAttributes(self) -> None:
-        self._package: Attribute[Package] = NotSet
-        self._manifest_path: Attribute[str] = NotSet
-        self._scope: Attribute[str] = NotSet
-
-    def __repr__(self) -> str:
-        return self.get__repr__({"package": self.package})
-
-    @property
-    def package(self) -> Package:
-        return self._package.value
-
-    @property
-    def manifest_path(self) -> str:
-        return self._manifest_path.value
-
-    @property
-    def scope(self) -> str:
-        return self._scope.value
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "package" in attributes:
-            self._package = self._makeClassAttribute(Package, attributes["package"])
-        if "manifest_path" in attributes:
-            self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
-        if "scope" in attributes:
-            self._scope = self._makeStringAttribute(attributes["scope"])
+if TYPE_CHECKING:
+    from github.DependabotAlertAdvisory import DependabotAlertAdvisory
+    from github.DependabotAlertDependency import DependabotAlertDependency
+    from github.DependabotAlertVulnerability import DependabotAlertVulnerability
+    from github.NamedUser import NamedUser
 
 
 class DependabotAlert(NonCompletableGithubObject):
@@ -76,17 +26,17 @@ class DependabotAlert(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._number: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
-        self._dependency: Attribute[Dependency] = NotSet
-        self._security_advisory: Attribute[AdvisoryBase] = NotSet
-        self._security_vulnerability: Attribute[dict] = NotSet
+        self._dependency: Attribute[DependabotAlertDependency] = NotSet
+        self._security_advisory: Attribute[DependabotAlertAdvisory] = NotSet
+        self._security_vulnerability: Attribute[DependabotAlertVulnerability] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._created_at: Attribute[str] = NotSet
-        self._updated_at: Attribute[str] = NotSet
-        self._dismissed_at: Attribute[str] = NotSet
-        self._dismissed_by: Attribute[dict] = NotSet
-        self._dismissed_reason: Attribute[str] = NotSet
-        self._dismissed_comment: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._dismissed_at: Attribute[datetime | None] = NotSet
+        self._dismissed_by: Attribute[NamedUser | None] = NotSet
+        self._dismissed_reason: Attribute[str | None] = NotSet
+        self._dismissed_comment: Attribute[str | None] = NotSet
         self._fixed_at: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -101,15 +51,15 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def dependency(self) -> Dependency:
+    def dependency(self) -> DependabotAlertDependency:
         return self._dependency.value
 
     @property
-    def security_advisory(self) -> AdvisoryBase:
+    def security_advisory(self) -> DependabotAlertAdvisory:
         return self._security_advisory.value
 
     @property
-    def security_vulnerability(self) -> dict:
+    def security_vulnerability(self) -> DependabotAlertVulnerability:
         return self._security_vulnerability.value
 
     @property
@@ -129,29 +79,57 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def dismissed_at(self) -> str:
+    def dismissed_at(self) -> str | None:
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self) -> dict:
+    def dismissed_by(self) -> NamedUser | None:
         return self._dismissed_by.value
 
     @property
-    def dismissed_reason(self) -> str:
+    def dismissed_reason(self) -> str | None:
         return self._dismissed_reason.value
 
     @property
-    def dismissed_comment(self) -> str:
+    def dismissed_comment(self) -> str | None:
         return self._dismissed_comment.value
 
     @property
-    def fixed_at(self) -> str:
+    def fixed_at(self) -> str | None:
         return self._fixed_at.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "number" in attributes:
             self._number = self._makeIntAttribute(attributes["number"])
         if "state" in attributes:
             self._state = self._makeStringAttribute(attributes["state"])
         if "dependency" in attributes:
-            self._dependency = self._makeClassAttribute(Dependency, attributes["dependency"])
+            self._dependency = self._makeClassAttribute(
+                github.DependabotAlertDependency.DependabotAlertDependency, attributes["dependency"]
+            )
+        if "security_advisory" in attributes:
+            self._security_advisory = self._makeClassAttribute(
+                github.DependabotAlertAdvisory.DependabotAlertAdvisory, attributes["security_advisory"]
+            )
+        if "security_vulnerability" in attributes:
+            self._security_vulnerability = self._makeClassAttribute(
+                github.DependabotAlertVulnerability.DependabotAlertVulnerability, attributes["security_vulnerability"]
+            )
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "dismissed_at" in attributes:
+            self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
+        if "dismissed_by" in attributes:
+            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+        if "dismissed_reason" in attributes:
+            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
+        if "dismissed_comment" in attributes:
+            self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])
+        if "fixed_at" in attributes:
+            self._fixed_at = self._makeStringAttribute(attributes["fixed_at"])
