@@ -22,13 +22,9 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timezone
 from typing import Any, Dict
 
-import pytest
-
-from github import Consts
-from github import GithubException, Github
+from github import Github
 
 from . import Framework
 
