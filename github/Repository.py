@@ -165,6 +165,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.DependabotAlert
 import github.Deployment
 import github.Download
 import github.Environment
@@ -246,6 +247,7 @@ if TYPE_CHECKING:
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
     from github.ContentFile import ContentFile
+    from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
@@ -3919,6 +3921,16 @@ class Repository(CompletableGithubObject):
         environment_name = urllib.parse.quote(environment_name)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
+
+    def get_dependabot_alert(self, number: int) -> DependabotAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#get-a-dependabot-alert>`_
+        :param number: int
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/dependabot/alerts/{number}")
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
