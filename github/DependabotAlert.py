@@ -40,7 +40,7 @@ class DependabotAlert(NonCompletableGithubObject):
         self._fixed_at: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"number": self.number})
+        return self.get__repr__({"number": self.number, "ghsa_id": self.security_advisory.ghsa_id})
 
     @property
     def number(self) -> int:
@@ -71,15 +71,15 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._html_url.value
 
     @property
-    def created_at(self) -> str:
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def updated_at(self) -> str:
+    def updated_at(self) -> datetime:
         return self._updated_at.value
 
     @property
-    def dismissed_at(self) -> str | None:
+    def dismissed_at(self) -> datetime | None:
         return self._dismissed_at.value
 
     @property

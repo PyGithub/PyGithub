@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 
 from github.AdvisoryVulnerabilityPackage import AdvisoryVulnerabilityPackage
@@ -14,9 +16,6 @@ class DependabotAlertDependency(NonCompletableGithubObject):
         self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._manifest_path: Attribute[str] = NotSet
         self._scope: Attribute[str] = NotSet
-
-    def __repr__(self) -> str:
-        return self.get__repr__(self)
 
     @property
     def package(self) -> AdvisoryVulnerabilityPackage:

@@ -2,22 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import TypedDict
-
 import github.AdvisoryBase
 import github.DependabotAlertVulnerability
 from github.GithubObject import Attribute, NotSet
 
 if TYPE_CHECKING:
     from github.DependabotAlertVulnerability import DependabotAlertVulnerability
-
-
-class SimpleAdvisoryReference(TypedDict):
-    """
-    A simple reference in a security advisory.
-    """
-
-    url: str
 
 
 class DependabotAlertAdvisory(github.AdvisoryBase.AdvisoryBase):
@@ -28,14 +18,11 @@ class DependabotAlertAdvisory(github.AdvisoryBase.AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._references: Attribute[SimpleAdvisoryReference] = NotSet
+        self._references: Attribute[list[dict]] = NotSet
         self._vulnerabilities: Attribute[list[DependabotAlertVulnerability]] = NotSet
 
     @property
-    def references(self) -> SimpleAdvisoryReference:
-        """
-        :type: :class:`github.AdvisoryVulnerability.AdvisoryVulnerability`
-        """
+    def references(self) -> list[dict]:
         return self._references.value
 
     @property
@@ -43,10 +30,8 @@ class DependabotAlertAdvisory(github.AdvisoryBase.AdvisoryBase):
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        super()._useAttributes(attributes)
         if "references" in attributes:
-            self._references = self._makeClassAttribute(
-                SimpleAdvisoryReference,
+            self._references = self._makeListOfDictsAttribute(
                 attributes["references"],
             )
         if "vulnerabilities" in attributes:
@@ -54,3 +39,4 @@ class DependabotAlertAdvisory(github.AdvisoryBase.AdvisoryBase):
                 github.DependabotAlertVulnerability.DependabotAlertVulnerability,
                 attributes["vulnerabilities"],
             )
+        super()._useAttributes(attributes)

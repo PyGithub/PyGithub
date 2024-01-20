@@ -26,7 +26,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from github.AdvisoryVulnerability import AdvisoryVulnerability
 from github.CVSS import CVSS
 from github.CWE import CWE
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -53,7 +52,6 @@ class AdvisoryBase(NonCompletableGithubObject):
         self._summary: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
         self._withdrawn_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
@@ -108,10 +106,6 @@ class AdvisoryBase(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
-        return self._vulnerabilities.value
-
-    @property
     def withdrawn_at(self) -> datetime:
         return self._withdrawn_at.value
 
@@ -146,11 +140,6 @@ class AdvisoryBase(NonCompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "vulnerabilities" in attributes:  # pragma no branch
-            self._vulnerabilities = self._makeListOfClassesAttribute(
-                AdvisoryVulnerability,
-                attributes["vulnerabilities"],
-            )
         if "withdrawn_at" in attributes:  # pragma no branch
             assert attributes["withdrawn_at"] is None or isinstance(attributes["withdrawn_at"], str), attributes[
                 "withdrawn_at"
