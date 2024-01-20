@@ -4,6 +4,69 @@ from github.AdvisoryBase import AdvisoryBase
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
+class Package(NonCompletableGithubObject):
+    """
+    This class represents a Package.
+    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts
+    """
+
+    def _initAttributes(self) -> None:
+        self._ecosystem: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self.name})
+
+    @property
+    def ecosystem(self) -> str:
+        return self._ecosystem.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "ecosystem" in attributes:
+            self._ecosystem = self._makeStringAttribute(attributes["ecosystem"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+
+
+class Dependency(NonCompletableGithubObject):
+    """
+    This class represents a Dependency.
+    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts
+    """
+
+    def _initAttributes(self) -> None:
+        self._package: Attribute[Package] = NotSet
+        self._manifest_path: Attribute[str] = NotSet
+        self._scope: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"package": self.package})
+
+    @property
+    def package(self) -> Package:
+        return self._package.value
+
+    @property
+    def manifest_path(self) -> str:
+        return self._manifest_path.value
+
+    @property
+    def scope(self) -> str:
+        return self._scope.value
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "package" in attributes:
+            self._package = self._makeClassAttribute(Package, attributes["package"])
+        if "manifest_path" in attributes:
+            self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
+        if "scope" in attributes:
+            self._scope = self._makeStringAttribute(attributes["scope"])
+
+
 class DependabotAlert(NonCompletableGithubObject):
     """
     This class represents a DependabotAlert.
@@ -13,7 +76,7 @@ class DependabotAlert(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._number: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
-        self._dependency: Attribute[dict] = NotSet
+        self._dependency: Attribute[Dependency] = NotSet
         self._security_advisory: Attribute[AdvisoryBase] = NotSet
         self._security_vulnerability: Attribute[dict] = NotSet
         self._url: Attribute[str] = NotSet
@@ -38,7 +101,7 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def dependency(self) -> dict:
+    def dependency(self) -> Dependency:
         return self._dependency.value
 
     @property
@@ -86,17 +149,9 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._fixed_at.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        self._number.value = attributes["number"]
-        self._state.value = attributes["state"]
-        self._dependency.value = attributes["dependency"]
-        self._security_advisory.value = attributes["security_advisory"]
-        self._security_vulnerability.value = attributes["security_vulnerability"]
-        self._url.value = attributes["url"]
-        self._html_url.value = attributes["html_url"]
-        self._created_at.value = attributes["created_at"]
-        self._updated_at.value = attributes["updated_at"]
-        self._dismissed_at.value = attributes["dismissed_at"]
-        self._dismissed_by.value = attributes["dismissed_by"]
-        self._dismissed_reason.value = attributes["dismissed_reason"]
-        self._dismissed_comment.value = attributes["dismissed_comment"]
-        self._fixed_at.value = attributes["fixed_at"]
+        if "number" in attributes:
+            self._number = self._makeIntAttribute(attributes["number"])
+        if "state" in attributes:
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "dependency" in attributes:
+            self._dependency = self._makeClassAttribute(Dependency, attributes["dependency"])

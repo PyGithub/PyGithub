@@ -14,4 +14,4 @@ class DependabotAlert(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.alert.number, 1)
         self.assertEqual(self.alert.state, "open")
-        self.assertEqual(self.alert.dependency["package"]["ecosystem"], "pip")
+        self.assertEqual(self.alert.dependency.package.ecosystem, "pip")
