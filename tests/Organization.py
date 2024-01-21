@@ -453,6 +453,33 @@ class Organization(Framework.TestCase):
         secrets = self.org.get_secrets(secret_type="dependabot")
         self.assertEqual(len(list(secrets)), 1)
 
+    def testGetDependabotAlerts(self):
+        alerts = self.org.get_dependabot_alerts()
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 8)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetDependabotAlertsWithAllArguments(self):
+        alerts = self.org.get_dependabot_alerts(
+            "open",
+            "medium",
+            "pip",
+            "jinja2",
+            "runtime",
+            "updated",
+            "asc",
+        )
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 1)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].state, "open")
+        self.assertEqual(alert_list[0].security_advisory.severity, "medium")
+        self.assertEqual(alert_list[0].dependency.package.ecosystem, "pip")
+        self.assertEqual(alert_list[0].dependency.package.name, "jinja2")
+        self.assertEqual(alert_list[0].dependency.scope, "runtime")
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
     def testGetSecretsFail(self):
         with self.assertRaises(AssertionError) as raisedexp:
             self.org.get_secrets(secret_type="secret")
