@@ -578,10 +578,16 @@ class Organization(CompletableGithubObject):
         secret_name: str,
         unencrypted_value: str,
         visibility: str = "all",
-        secret_type: str = "actions",
         selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
+        secret_type: str = "actions",
     ) -> github.OrganizationSecret.OrganizationSecret:
         """
+        :param secret_name: string name of the secret
+        :param unencrypted_value: string plain text value of the secret
+        :visibility: string options all or selected
+        :selected_repositories: list of repositrories that the secret will be available in
+        :param secret_type: string options actions or dependabot
+
         :calls: `PUT /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name

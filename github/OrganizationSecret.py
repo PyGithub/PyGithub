@@ -65,8 +65,8 @@ class OrganizationSecret(Secret):
     def edit(
         self,
         value: str,
-        secret_type: str = "actions",
         visibility: str = "all",
+        secret_type: str = "actions",
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
