@@ -3999,6 +3999,39 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/dependabot/alerts/{number}")
         return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
+    def update_dependabot_alert(
+        self, number: int, state: str, dismissed_reason: Opt[str] = NotSet, dismissed_comment: Opt[str] = NotSet
+    ) -> DependabotAlert:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#update-a-dependabot-alert>`_
+        :param number: int
+        :param state: string
+        :param dismissed_reason: Optional string
+        :param dismissed_comment: Optional string
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        assert isinstance(state, str), state
+        assert state in ["dismissed", "open"], "State can be one of ['dismissed', 'open']"
+        if state == "dismissed":
+            assert is_defined(dismissed_reason)
+            assert dismissed_reason in [
+                "fix_started",
+                "inaccurate",
+                "no_bandwidth",
+                "not_used",
+                "tolerable_risk",
+            ], "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+        assert is_optional(dismissed_comment, str), dismissed_comment
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            f"{self.url}/dependabot/alerts/{number}",
+            input=NotSet.remove_unset_items(
+                {"state": state, "dismissed_reason": dismissed_reason, "dismissed_comment": dismissed_comment}
+            ),
+        )
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
         self._allow_forking: Attribute[bool] = NotSet

@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+import pytest
+
 import github.DependabotAlert
 import github.PaginatedList
 
@@ -143,3 +145,19 @@ class DependabotAlert(Framework.TestCase):
             "open", "medium", "pip", "foo,jinja2", "bar/package.json,requirements/docs.txt", "runtime", "created", "asc"
         )
         self.assertEqual(len(list(alerts)), 1)
+
+    def testUpdateAlertDismissedWithoutReason(self):
+        with pytest.raises(AssertionError):
+            self.repo.update_dependabot_alert(1, "dismissed")
+
+    def testUpdateAlertOpen(self):
+        alert = self.repo.update_dependabot_alert(1, "open")
+        self.assertEqual(alert.state, "open")
+        self.assertEqual(alert.dismissed_reason, None)
+        self.assertEqual(alert.dismissed_comment, None)
+
+    def testUpdateAlertDismissed(self):
+        alert = self.repo.update_dependabot_alert(1, "dismissed", "tolerable_risk", "Example comment")
+        self.assertEqual(alert.state, "dismissed")
+        self.assertEqual(alert.dismissed_reason, "tolerable_risk")
+        self.assertEqual(alert.dismissed_comment, "Example comment")
