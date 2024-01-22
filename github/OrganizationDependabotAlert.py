@@ -1,20 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import github.DependabotAlert
-import github.Repository
-
-if TYPE_CHECKING:
-    from github.Repository import Repository
-
+from github.DependabotAlert import DependabotAlert
 from github.GithubObject import Attribute, NotSet
+from github.Repository import Repository
 
 
-class OrganizationDependabotAlert(github.DependabotAlert.DependabotAlert):
+class OrganizationDependabotAlert(DependabotAlert):
     """
-    This class represents a Dependabot alert on an organization.
-    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+    This class represents a Dependabot alert on an organization. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
     """
 
     def _initAttributes(self) -> None:
@@ -28,4 +23,4 @@ class OrganizationDependabotAlert(github.DependabotAlert.DependabotAlert):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(Repository, attributes["repository"])

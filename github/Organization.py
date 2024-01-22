@@ -1239,6 +1239,13 @@ class Organization(CompletableGithubObject):
     ) -> PaginatedList[OrganizationDependabotAlert]:
         """
         :calls: `GET /orgs/{org}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization>`_
+        :param state: Optional string
+        :param severity: Optional string
+        :param ecosystem: Optional string
+        :param package: Optional string
+        :param scope: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
         :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
         """
         url_parameters = dict()
