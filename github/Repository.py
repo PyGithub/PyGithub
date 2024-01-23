@@ -3945,43 +3945,30 @@ class Repository(CompletableGithubObject):
         :param direction: Optional string
         :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
         """
-        url_parameters = dict()
         allowed_states = ["auto_dismissed", "dismissed", "fixed", "open"]
         allowed_severities = ["low", "medium", "high", "critical"]
         allowed_ecosystems = ["composer", "go", "maven", "npm", "nuget", "pip", "pub", "rubygems", "rust"]
         allowed_scopes = ["development", "runtime"]
         allowed_sorts = ["created", "updated"]
         allowed_directions = ["asc", "desc"]
-        if is_defined(state):
-            assert isinstance(state, str), state
-            assert state in allowed_states, f"State can be one of {', '.join(allowed_states)}"
-            url_parameters["state"] = state
-        if is_defined(severity):
-            assert isinstance(severity, str), severity
-            assert severity in allowed_severities, f"Severity can be one of {', '.join(allowed_severities)}"
-            url_parameters["severity"] = severity
-        if is_defined(ecosystem):
-            assert isinstance(ecosystem, str), ecosystem
-            assert ecosystem in allowed_ecosystems, f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
-            url_parameters["ecosystem"] = ecosystem
-        if is_defined(package):
-            assert isinstance(package, str), package
-            url_parameters["package"] = package
-        if is_defined(manifest):
-            assert isinstance(manifest, str), manifest
-            url_parameters["manifest"] = manifest
-        if is_defined(scope):
-            assert isinstance(scope, str), scope
-            assert scope in allowed_scopes, f"Scope can be one of {', '.join(allowed_scopes)}"
-            url_parameters["scope"] = scope
-        if is_defined(sort):
-            assert isinstance(sort, str), sort
-            assert sort in allowed_sorts, f"Sort can be one of {', '.join(allowed_sorts)}"
-            url_parameters["sort"] = sort
-        if is_defined(direction):
-            assert isinstance(direction, str), direction
-            assert direction in allowed_directions, f"Direction can be one of {', '.join(allowed_directions)}"
-            url_parameters["direction"] = direction
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        assert ecosystem in allowed_ecosystems + [NotSet], f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
+        assert scope in allowed_scopes + [NotSet], f"Scope can be one of {', '.join(allowed_scopes)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "severity": severity,
+                "ecosystem": ecosystem,
+                "package": package,
+                "manifest": manifest,
+                "scope": scope,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
         return PaginatedList(
             github.DependabotAlert.DependabotAlert,
             self._requester,
