@@ -52,3 +52,8 @@ class BranchProtection(Framework.TestCase):
             self.branch_protection.__repr__(),
             'BranchProtection(url="https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection")',
         )
+        self.assertFalse(self.branch_protection.allow_force_pushes)
+        self.assertFalse(self.branch_protection.allow_deletions)
+        self.assertFalse(self.branch_protection.required_conversation_resolution)
+        self.assertFalse(self.branch_protection.lock_branch)
+        self.assertFalse(self.branch_protection.allow_fork_syncing)
