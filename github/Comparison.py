@@ -39,8 +39,8 @@ from typing import Any
 
 import github.Commit
 import github.File
-from github.PaginatedList import PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
 
 class Comparison(CompletableGithubObject):
