@@ -4,6 +4,29 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.2.0 ()
+-----------------------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* The ``github.Comparison.Comparison`` instance returned by ``Repository.compare`` provides a ``commits``
+  property that used to return a ``list[github.Commit.Commit]``, which has now been changed
+  to ``PaginatedList[github.Commit.Commit]``. This breaks user code that assumes a ``list``:
+
+.. code-block:: python
+
+    commits = repo.compare("v0.6", "v0.7").commits
+    no_of_commits = len(commits)
+
+This will raise a ``TypeError: object of type 'PaginatedList' has no len()``, as the returned ``PaginatedList``
+does not support the ``len()`` method. Use the ``totalCount`` property instead:
+
+.. code-block:: python
+
+    commits = repo.compare("v0.6", "v0.7").commits
+    no_of_commits = commits.totalCount
+
 Version 2.1.1 (September 29, 2023)
 -----------------------------------
 
