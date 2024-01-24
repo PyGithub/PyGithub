@@ -39,6 +39,7 @@ from typing import Any
 
 import github.Commit
 import github.File
+from github.PaginatedList import PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -51,7 +52,6 @@ class Comparison(CompletableGithubObject):
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[github.Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
-        self._commits: Attribute[list[github.Commit.Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -80,10 +80,21 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def commits(self) -> list[github.Commit.Commit]:
-        self._completeIfNotSet(self._commits)
-        return self._commits.value
+    def commits(self) -> PaginatedList[github.Commit.Commit]:
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            {},
+            None,
+            "commits",
+            "total_commits",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     @property
     def diff_url(self) -> str:

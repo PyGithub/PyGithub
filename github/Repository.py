@@ -1112,7 +1112,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(head, str), head
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
+        # only with page=1 we get the pagination headers for the commits element
+        params = {"page": 1, "per_page": self._requester.per_page}
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_autolink(

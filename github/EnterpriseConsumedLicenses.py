@@ -87,8 +87,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             url_parameters,
             None,
             "users",
-            self.raw_data,
-            self.raw_headers,
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
