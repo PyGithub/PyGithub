@@ -150,6 +150,11 @@ class Branch(Framework.TestCase):
         self.assertTrue(required_status_checks.strict)
         self.assertEqual(required_status_checks.contexts, ["foo/bar"])
 
+    def testEditRequiredStatusChecksContexts(self):
+        self.protected_branch.edit_required_status_checks(contexts=["check1", "check2"])
+        required_status_checks = self.protected_branch.get_required_status_checks()
+        self.assertEqual(required_status_checks.contexts, ["check1","check2"])
+
     def testRemoveRequiredStatusChecks(self):
         self.protected_branch.remove_required_status_checks()
         with self.assertRaises(github.GithubException) as raisedexp:
