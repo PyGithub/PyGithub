@@ -389,6 +389,7 @@ class Organization(CompletableGithubObject):
         name: str,
         repo: Repository,
         description: Opt[str] = NotSet,
+        include_all_branches: Opt[bool] = NotSet,
         private: Opt[bool] = NotSet,
     ) -> Repository:
         """self.name
@@ -397,9 +398,16 @@ class Organization(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
+        assert is_optional(include_all_branches, bool), include_all_branches
         assert is_optional(private, bool), private
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "owner": self.login, "description": description, "private": private}
+            {
+                "name": name,
+                "owner": self.login,
+                "description": description,
+                "include_all_branches": include_all_branches,
+                "private": private,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -476,6 +484,14 @@ class Organization(CompletableGithubObject):
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
         allow_update_branch: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
+        use_squash_pr_title_as_default: Opt[bool] = NotSet,
+        squash_merge_commit_title: Opt[str] = NotSet,
+        squash_merge_commit_message: Opt[str] = NotSet,
+        merge_commit_title: Opt[str] = NotSet,
+        merge_commit_message: Opt[str] = NotSet,
+        custom_properties: Opt[dict[str, Any]] = NotSet,
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -498,6 +514,19 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(custom_properties, dict), custom_properties
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -518,6 +547,14 @@ class Organization(CompletableGithubObject):
                 "allow_rebase_merge": allow_rebase_merge,
                 "delete_branch_on_merge": delete_branch_on_merge,
                 "allow_update_branch": allow_update_branch,
+                "is_template": is_template,
+                "allow_auto_merge": allow_auto_merge,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "custom_properties": custom_properties,
             }
         )
 
@@ -575,30 +612,33 @@ class Organization(CompletableGithubObject):
             completed=False,
         )
 
-    def get_secrets(self) -> PaginatedList[OrganizationSecret]:
+    def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
         """
         Gets all organization secrets
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
         """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> OrganizationSecret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: 'GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
             completed=False,
         )
 

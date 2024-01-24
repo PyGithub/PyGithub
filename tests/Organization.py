@@ -418,6 +418,7 @@ class Organization(Framework.TestCase):
             "hello-world-docker-action-new",
             template_repo,
             description=description,
+            include_all_branches=True,
             private=private,
         )
         self.assertEqual(repo.description, description)
@@ -453,6 +454,15 @@ class Organization(Framework.TestCase):
     def testGetSecrets(self):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotSecrets(self):
+        secrets = self.org.get_secrets(secret_type="dependabot")
+        self.assertEqual(len(list(secrets)), 1)
+
+    def testGetSecretsFail(self):
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.get_secrets(secret_type="secret")
+        self.assertEqual("secret_type should be actions or dependabot", str(raisedexp.exception))
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:

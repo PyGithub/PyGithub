@@ -64,18 +64,21 @@ class Branch(Framework.TestCase):
             strict=True,
             require_code_owner_reviews=True,
             required_approving_review_count=2,
+            require_last_push_approval=True,
         )
         branch_protection = self.protected_branch.get_protection()
         self.assertTrue(branch_protection.required_status_checks.strict)
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_linear_history)
+        self.assertFalse(branch_protection.allow_deletions)
         self.assertFalse(branch_protection.required_pull_request_reviews.dismiss_stale_reviews)
         self.assertTrue(branch_protection.required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(
             branch_protection.required_pull_request_reviews.required_approving_review_count,
             2,
         )
+        self.assertTrue(branch_protection.required_pull_request_reviews.require_last_push_approval)
 
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -160,7 +163,8 @@ class Branch(Framework.TestCase):
 
     def testEditRequiredPullRequestReviews(self):
         self.protected_branch.edit_required_pull_request_reviews(
-            dismiss_stale_reviews=True, required_approving_review_count=2
+            dismiss_stale_reviews=True,
+            required_approving_review_count=2,
         )
         required_pull_request_reviews = self.protected_branch.get_required_pull_request_reviews()
         self.assertTrue(required_pull_request_reviews.dismiss_stale_reviews)
@@ -197,12 +201,19 @@ class Branch(Framework.TestCase):
         self.assertFalse(required_pull_request_reviews.dismiss_stale_reviews)
         self.assertFalse(required_pull_request_reviews.require_code_owner_reviews)
         self.assertEqual(required_pull_request_reviews.required_approving_review_count, 1)
+        self.assertFalse(required_pull_request_reviews.require_last_push_approval)
 
     def testAdminEnforcement(self):
         self.protected_branch.remove_admin_enforcement()
         self.assertFalse(self.protected_branch.get_admin_enforcement())
         self.protected_branch.set_admin_enforcement()
         self.assertTrue(self.protected_branch.get_admin_enforcement())
+
+    def testAllowDeletions(self):
+        self.protected_branch.set_allow_deletions()
+        self.assertTrue(self.protected_branch.get_allow_deletions())
+        self.protected_branch.remove_allow_deletions()
+        self.assertFalse(self.protected_branch.get_allow_deletions())
 
     def testAddUserPushRestrictions(self):
         self.organization_branch.add_user_push_restrictions("sfdye")
