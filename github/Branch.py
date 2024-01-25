@@ -137,6 +137,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
+        checks: Opt[list[Union[str, Tuple[str, int]]]] = NotSet,
         enforce_admins: Opt[bool] = NotSet,
         dismissal_users: Opt[list[str]] = NotSet,
         dismissal_teams: Opt[list[str]] = NotSet,
@@ -187,14 +188,25 @@ class Branch(NonCompletableGithubObject):
         assert is_optional(allow_deletions, bool), allow_deletions
 
         post_parameters: dict[str, Any] = {}
-        if is_defined(strict) or is_defined(contexts):
+        if is_defined(strict) or is_defined(contexts) or is_defined(checks):
             if is_undefined(strict):
                 strict = False
-            if is_undefined(contexts):
-                contexts = []
+            if is_undefined(contexts) and is_undefined(checks):
+                checks = []
+            elif is_defined(checks):
+                post_parameters["checks"] = []
+                for check in checks:
+                    if isinstance(check, tuple):
+                        context, app_id = check
+                        post_parameters["checks"].append({"context": context, "app_id": app_id})
+                    else:
+                        post_parameters["checks"].append({"context": check})
+            elif is_defined(contexts):
+                post_parameters["checks"] = [{"context": context} for context in contexts]
+
             post_parameters["required_status_checks"] = {
                 "strict": strict,
-                "contexts": contexts,
+                "checks": checks,
             }
         else:
             post_parameters["required_status_checks"] = None
