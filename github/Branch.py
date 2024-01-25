@@ -50,7 +50,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, List, Union, Tuple
 
 import github.BranchProtection
 import github.Commit
@@ -334,14 +334,29 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
+        checks: List[Union[str, Tuple[str, int]]] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         assert is_optional(strict, bool), strict
         assert is_optional_list(contexts, str), contexts
+        # assert is_optional_list(checks, Union[str, Tuple[str, int]]), checks
 
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "contexts": contexts})
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict})
+
+        if is_defined(checks):
+            post_parameters["checks"] = []
+            for check in checks:
+                if isinstance(check, tuple):
+                    context, app_id = check
+                    post_parameters["checks"].append({"context": context, "app_id": app_id})
+                else:
+                    post_parameters["checks"].append({"context": check})
+
+        elif is_defined(contexts):
+            post_parameters["checks"] = [{"context": context} for context in contexts]
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.protection_url}/required_status_checks",
