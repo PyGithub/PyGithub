@@ -182,6 +182,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
         self.assertEqual(team.parent, parent_team)
+        self.assertEqual(team.notification_setting, "notifications_disabled")
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})

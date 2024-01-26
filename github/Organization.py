@@ -673,8 +673,7 @@ class Organization(CompletableGithubObject):
         assert is_optional(privacy, str), privacy
         assert is_optional(description, str), description
         assert notification_setting is NotSet or isinstance(notification_setting, str), notification_setting
-        if notification_setting is not NotSet:
-            assert notification_setting in ["notifications_enabled", "notifications_disabled"]
+        assert notification_setting in ["notifications_enabled", "notifications_disabled", NotSet], notification_setting
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "name": name,

@@ -315,8 +315,7 @@ class Team(CompletableGithubObject):
         assert privacy is NotSet or isinstance(privacy, str), privacy
         assert parent_team_id is NotSet or isinstance(parent_team_id, (int, type(None))), parent_team_id
         assert notification_setting is NotSet or isinstance(notification_setting, str), notification_setting
-        if notification_setting is not NotSet:
-            assert notification_setting in ["notifications_enabled", "notifications_disabled"]
+        assert notification_setting in ["notifications_enabled", "notifications_disabled", NotSet], notification_setting
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,

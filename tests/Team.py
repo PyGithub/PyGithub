@@ -168,6 +168,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
         self.assertEqual(self.team.parent, parent)
+        self.assertEqual(self.team.notification_setting, "notifications_disabled")
 
     def testGetTeams(self):
         nested_teams = self.team.get_teams()
