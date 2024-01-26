@@ -357,19 +357,19 @@ class Branch(NonCompletableGithubObject):
         if is_defined(checks):
             assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict})
-
         if is_defined(checks):
-            post_parameters["checks"] = []
+            checks_parameters = []
             for check in checks:
                 if isinstance(check, tuple):
                     context, app_id = check
-                    post_parameters["checks"].append({"context": context, "app_id": app_id})
+                    checks_parameters.append({"context": context, "app_id": app_id})
                 else:
-                    post_parameters["checks"].append({"context": check})
+                    checks_parameters.append({"context": check})
 
         elif is_defined(contexts):
-            post_parameters["checks"] = [{"context": context} for context in contexts]
+            checks_parameters = [{"context": context} for context in contexts]
+
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "checks": checks_parameters})
 
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
