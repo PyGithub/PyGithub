@@ -80,6 +80,7 @@ import github.Event
 import github.GithubObject
 import github.HookDelivery
 import github.NamedUser
+import github.OrganizationDependabotAlert
 import github.OrganizationSecret
 import github.OrganizationVariable
 import github.Plan
@@ -107,6 +108,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser
+    from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
     from github.Plan import Plan
@@ -1241,6 +1243,57 @@ class Organization(CompletableGithubObject):
             None,
             None,
             list_item="installations",
+        )
+
+    def get_dependabot_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        package: Opt[str] = NotSet,
+        scope: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[OrganizationDependabotAlert]:
+        """
+        :calls: `GET /orgs/{org}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization>`_
+        :param state: Optional string
+        :param severity: Optional string
+        :param ecosystem: Optional string
+        :param package: Optional string
+        :param scope: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        allowed_states = ["auto_dismissed", "dismissed", "fixed", "open"]
+        allowed_severities = ["low", "medium", "high", "critical"]
+        allowed_ecosystems = ["composer", "go", "maven", "npm", "nuget", "pip", "pub", "rubygems", "rust"]
+        allowed_scopes = ["development", "runtime"]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        assert ecosystem in allowed_ecosystems + [NotSet], f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
+        assert scope in allowed_scopes + [NotSet], f"Scope can be one of {', '.join(allowed_scopes)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "severity": severity,
+                "ecosystem": ecosystem,
+                "package": package,
+                "scope": scope,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
+        return PaginatedList(
+            github.OrganizationDependabotAlert.OrganizationDependabotAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            url_parameters,
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
