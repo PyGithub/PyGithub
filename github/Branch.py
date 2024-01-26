@@ -137,7 +137,6 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        checks: Opt[list[str | tuple[str, int]]] = NotSet,
         enforce_admins: Opt[bool] = NotSet,
         dismissal_users: Opt[list[str]] = NotSet,
         dismissal_teams: Opt[list[str]] = NotSet,
@@ -159,6 +158,7 @@ class Branch(NonCompletableGithubObject):
         block_creations: Opt[bool] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
         allow_deletions: Opt[bool] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -353,7 +353,9 @@ class Branch(NonCompletableGithubObject):
         """
         assert is_optional(strict, bool), strict
         assert is_optional_list(contexts, str), contexts
-        # assert is_optional_list(checks, Union[str, Tuple[str, int]]), checks
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict})
 
