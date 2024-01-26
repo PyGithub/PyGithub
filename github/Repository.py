@@ -1103,7 +1103,7 @@ class Repository(CompletableGithubObject):
 
     def compare(self, base: str, head: str) -> Comparison:
         """
-        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
         :rtype: :class:`github.Comparison.Comparison`
@@ -1112,8 +1112,10 @@ class Repository(CompletableGithubObject):
         assert isinstance(head, str), head
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
+        # the compare API has a per_page default of 250, which is different to Consts.DEFAULT_PER_PAGE
+        per_page = self._requester.per_page if self._requester.per_page != Consts.DEFAULT_PER_PAGE else 250
         # only with page=1 we get the pagination headers for the commits element
-        params = {"page": 1, "per_page": self._requester.per_page}
+        params = {"page": 1, "per_page": per_page}
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
