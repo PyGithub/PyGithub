@@ -50,7 +50,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, List, Union, Tuple
+from typing import TYPE_CHECKING, Any
 
 import github.BranchProtection
 import github.Commit
@@ -137,7 +137,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        checks: Opt[list[Union[str, Tuple[str, int]]]] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
         enforce_admins: Opt[bool] = NotSet,
         dismissal_users: Opt[list[str]] = NotSet,
         dismissal_teams: Opt[list[str]] = NotSet,
@@ -346,7 +346,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        checks: List[Union[str, Tuple[str, int]]] = NotSet,
+        checks: list[str | tuple[str, int]] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
