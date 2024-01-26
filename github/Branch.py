@@ -346,7 +346,7 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
-        checks: list[str | tuple[str, int]] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
