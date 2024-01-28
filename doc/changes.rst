@@ -4,8 +4,8 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 2.2.0 (Januar 28, 2024)
--------------------------------
+Version 2.2.0 (January 28, 2024)
+--------------------------------
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
