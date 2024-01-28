@@ -40,6 +40,7 @@ from typing import Any
 import github.Commit
 import github.File
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
 
 class Comparison(CompletableGithubObject):
@@ -51,7 +52,6 @@ class Comparison(CompletableGithubObject):
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[github.Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
-        self._commits: Attribute[list[github.Commit.Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -80,10 +80,21 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def commits(self) -> list[github.Commit.Commit]:
-        self._completeIfNotSet(self._commits)
-        return self._commits.value
+    def commits(self) -> PaginatedList[github.Commit.Commit]:
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            {},
+            None,
+            "commits",
+            "total_commits",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     @property
     def diff_url(self) -> str:
@@ -137,8 +148,6 @@ class Comparison(CompletableGithubObject):
             self._base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["base_commit"])
         if "behind_by" in attributes:  # pragma no branch
             self._behind_by = self._makeIntAttribute(attributes["behind_by"])
-        if "commits" in attributes:  # pragma no branch
-            self._commits = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["commits"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "files" in attributes:  # pragma no branch
