@@ -26,6 +26,7 @@
 # Copyright 2023 Thomas Devoogdt <thomas@devoogdt.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 terenho <33275803+terenho@users.noreply.github.com>           #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

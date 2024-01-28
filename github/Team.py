@@ -38,6 +38,7 @@
 # Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

@@ -36,6 +36,10 @@
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

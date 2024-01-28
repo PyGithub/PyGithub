@@ -5,6 +5,7 @@
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
