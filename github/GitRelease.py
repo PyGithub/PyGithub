@@ -68,7 +68,7 @@ from . import Consts
 
 class GitRelease(CompletableGithubObject):
     """
-    This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
+    This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/releases/releases
     """
 
     def _initAttributes(self) -> None:
@@ -185,9 +185,9 @@ class GitRelease(CompletableGithubObject):
         message: str,
         draft: bool = False,
         prerelease: bool = False,
-        make_latest: Opt[bool] = NotSet,
         tag_name: Opt[str] = NotSet,
         target_commitish: Opt[str] = NotSet,
+        make_latest: Opt[str] = NotSet,
     ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
@@ -210,7 +210,7 @@ class GitRelease(CompletableGithubObject):
             "prerelease": prerelease,
         }
         if make_latest is not NotSet:
-            assert isinstance(make_latest, bool), make_latest
+            assert make_latest in ["true", "false", "legacy"], make_latest
             post_parameters["make_latest"] = make_latest
         # Do not set target_commitish to self.target_commitish when omitted, just don't send it
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
