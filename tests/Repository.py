@@ -62,6 +62,7 @@
 # Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
