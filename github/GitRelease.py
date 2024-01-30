@@ -188,6 +188,7 @@ class GitRelease(CompletableGithubObject):
         tag_name: Opt[str] = NotSet,
         target_commitish: Opt[str] = NotSet,
         make_latest: Opt[str] = NotSet,
+        discussion_category_name: Opt[str] = NotSet,
     ) -> GitRelease:
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
@@ -200,6 +201,7 @@ class GitRelease(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert isinstance(discussion_category_name, str), discussion_category_name
         if tag_name is NotSet:
             tag_name = self.tag_name
         post_parameters = {
@@ -208,6 +210,7 @@ class GitRelease(CompletableGithubObject):
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
+            "discussion_category_name": discussion_category_name,
         }
         if make_latest is not NotSet:
             assert make_latest in ["true", "false", "legacy"], make_latest
