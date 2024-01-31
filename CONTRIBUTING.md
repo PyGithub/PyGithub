@@ -101,6 +101,8 @@ Also note that if you record your test data with `--auth_with_token` then you al
 ```python
     def setUp(self):
         self.tokenAuthMode = True
+        super().setUp()
+        ...
 ```
 
 A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.

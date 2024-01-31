@@ -73,6 +73,7 @@ class OrganizationSecret(Secret):
         :param variable_name: string
         :param value: string
         :param visibility: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(value, str), value

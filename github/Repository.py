@@ -3009,6 +3009,7 @@ class Repository(CompletableGithubObject):
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"

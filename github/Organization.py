@@ -1023,6 +1023,7 @@ class Organization(CompletableGithubObject):
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /orgs/{org}/{secret_type}/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
