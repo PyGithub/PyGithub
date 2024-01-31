@@ -987,9 +987,7 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    def create_or_update_secret(
-        self, secret_name, secret_value, visibility, selected_repository_ids=None
-    ):
+    def create_or_update_secret(self, secret_name, secret_value, visibility, selected_repository_ids=None):
         """
         Return whether the secret has been created (True) or updated (False).
 
@@ -1005,9 +1003,7 @@ class Organization(CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility != "selected":
             if selected_repository_ids:
-                raise ValueError(
-                    "selected_repository_ids can only be used with visibility `selected`"
-                )
+                raise ValueError("selected_repository_ids can only be used with visibility `selected`")
         elif selected_repository_ids is not None:
             if not isinstance(selected_repository_ids, list):
                 raise ValueError("selected_repository_ids should be a list")
@@ -1031,31 +1027,6 @@ class Organization(CompletableGithubObject):
         )
         # Status is 201 when created and 204 when updated (whether there are changes or not)
         return status == 201
-
-    def get_secret(self, secret_name):
-        """
-        :calls: `GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#get-an-organization-secrets>`_
-        :rtype: :class:`github.Secret.Secret`
-        """
-        assert isinstance(secret_name, str), secret_name
-
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/secrets/{secret_name}"
-        )
-        return github.Secret.Secret(self._requester, headers, data, completed=True)
-
-    def get_secrets(self):
-        """
-        :calls: `GET /orgs/{org}/actions/secrets <https://docs.github.com/en/rest/reference/actions#secrets>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Secret.Secret`
-        """
-        return github.PaginatedList.PaginatedList(
-            github.Secret.Secret,
-            self._requester,
-            f"{self.url}/actions/secrets",
-            None,
-            list_item="secrets",
-        )
 
     def list_secret_selected_repositories(self, secret_name):
         """
@@ -1126,12 +1097,8 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         """
         assert isinstance(runner_id, int), runner_id
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/runners/{runner_id}"
-        )
-        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(
-            self._requester, headers, data, completed=True
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/runners/{runner_id}")
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data, completed=True)
 
     def remove_self_hosted_runner(self, runner):
         """
@@ -1139,16 +1106,14 @@ class Organization(CompletableGithubObject):
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         :rtype: bool
         """
-        assert isinstance(
-            runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner
-        ) or isinstance(runner, int), runner
+        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(
+            runner, int
+        ), runner
 
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
 
-        status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/actions/runners/{runner}"
-        )
+        status, _, _ = self._requester.requestJson("DELETE", f"{self.url}/actions/runners/{runner}")
         return status == 204
 
     def get_self_hosted_runners(self):
@@ -1169,9 +1134,7 @@ class Organization(CompletableGithubObject):
         :calls: POST /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-an-organization>
         :rtype: :class:`github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken`
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/actions/runners/registration-token"
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/runners/registration-token")
         return github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken(
             self._requester, headers, data, completed=True
         )

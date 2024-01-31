@@ -536,9 +536,7 @@ class Requester:
     ) -> Tuple[Dict[str, Any], Any]:
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
-    def requestJsonAndCheckGetStatus(
-        self, verb, url, parameters=None, headers=None, input=None
-    ):
+    def requestJsonAndCheckGetStatus(self, verb, url, parameters=None, headers=None, input=None):
         status, updateHeaders, output = self.requestJson(
             verb, url, parameters, headers, input, self.__customConnection(url)
         )

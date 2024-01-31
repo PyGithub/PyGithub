@@ -245,7 +245,6 @@ class WorkflowRun(CompletableGithubObject):
         """
         return self.jobs(_filter)
 
-
     def cancel(self) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_

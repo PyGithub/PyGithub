@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 import github.GithubObject
 
-
 class SelfHostedActionsRunnerRegistrationToken(github.GithubObject.NonCompletableGithubObject):
     @property
     def token(self) -> str: ...

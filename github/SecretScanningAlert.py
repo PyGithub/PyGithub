@@ -179,13 +179,9 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "push_protection_bypassed" in attributes:  # pragma no branch
-            self._push_protection_bypassed = self._makeBoolAttribute(
-                attributes["push_protection_bypassed"]
-            )
+            self._push_protection_bypassed = self._makeBoolAttribute(attributes["push_protection_bypassed"])
         if "push_protection_bypassed_at" in attributes:  # pragma no branch
-            self._push_protection_bypassed_at = self._makeStringAttribute(
-                attributes["push_protection_bypassed_at"]
-            )
+            self._push_protection_bypassed_at = self._makeStringAttribute(attributes["push_protection_bypassed_at"])
         if "push_protection_bypassed_by" in attributes:  # pragma no branch
             self._push_protection_bypassed_by = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
@@ -193,23 +189,17 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         if "resolution" in attributes:  # pragma no branch
             self._resolution = self._makeStringAttribute(attributes["resolution"])
         if "resolution_comment" in attributes:  # pragma no branch
-            self._resolution_comment = self._makeStringAttribute(
-                attributes["resolution_comment"]
-            )
+            self._resolution_comment = self._makeStringAttribute(attributes["resolution_comment"])
         if "resolved_at" in attributes:  # pragma no branch
             self._resolved_at = self._makeStringAttribute(attributes["resolved_at"])
         if "resolved_by" in attributes:  # pragma no branch
-            self._resolved_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["resolved_by"]
-            )
+            self._resolved_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["resolved_by"])
         if "secret" in attributes:  # pragma no branch
             self._secret = self._makeStringAttribute(attributes["secret"])
         if "secret_type" in attributes:  # pragma no branch
             self._secret_type = self._makeStringAttribute(attributes["secret_type"])
         if "secret_type_display_name" in attributes:  # pragma no branch
-            self._secret_type_display_name = self._makeStringAttribute(
-                attributes["secret_type_display_name"]
-            )
+            self._secret_type_display_name = self._makeStringAttribute(attributes["secret_type_display_name"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:  # pragma no branch

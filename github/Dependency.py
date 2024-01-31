@@ -45,9 +45,7 @@ class Dependency(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "package" in attributes:  # pragma no branch
-            self._package = self._makeClassAttribute(
-                github.Package.Package, attributes["package"]
-            )
+            self._package = self._makeClassAttribute(github.Package.Package, attributes["package"])
         if "manifest_path" in attributes:  # pragma no branch
             self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
         if "scope" in attributes:  # pragma no branch

@@ -8,9 +8,7 @@ class Package(github.GithubObject.NonCompletableGithubObject):
     """
 
     def __repr__(self):
-        return self.get__repr__(
-            {"ecosystem": self._ecosystem.value, "name": self._name.value}
-        )
+        return self.get__repr__({"ecosystem": self._ecosystem.value, "name": self._name.value})
 
     @property
     def ecosystem(self):

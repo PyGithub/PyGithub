@@ -52,8 +52,7 @@ class Secret(CompletableGithubObject):
         self._updated_at: Attribute[datetime] = NotSet
         self._secrets_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._visibility: Attribute[str] = NotSet
-        
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
 
@@ -116,5 +115,3 @@ class Secret(CompletableGithubObject):
             self._secrets_url = self._makeStringAttribute(attributes["secrets_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])

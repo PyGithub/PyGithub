@@ -23,9 +23,7 @@
 import github.GithubObject
 
 
-class SelfHostedActionsRunnerRegistrationToken(
-    github.GithubObject.NonCompletableGithubObject
-):
+class SelfHostedActionsRunnerRegistrationToken(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"expires_at": self._expires_at.value})
 

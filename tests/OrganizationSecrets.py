@@ -38,9 +38,7 @@ class OrganizationSecrets(Framework.TestCase):
     @mock.patch("github.PublicKey.encrypt", return_value="MOCK_ENCRYPTED_VALUE")
     def testGetPublicKey(self, _encrypt):
         org_public_key = self.org.get_public_key()
-        self.assertEqual(
-            "aAAAaAAAA11A1Aa1aaaAAA1AAAaAAAAaAAa1/AAaA11=", org_public_key.key
-        )
+        self.assertEqual("aAAAaAAAA11A1Aa1aaaAAA1AAAaAAAAaAAa1/AAaA11=", org_public_key.key)
         self.assertEqual("123456789012345678", org_public_key.key_id)
 
     @mock.patch("github.PublicKey.encrypt", return_value="MOCK_ENCRYPTED_VALUE")
@@ -49,13 +47,9 @@ class OrganizationSecrets(Framework.TestCase):
         new_secret_value = "new secret value"
         visibility = "all"
 
-        created = self.org.create_or_update_secret(
-            new_secret_name, new_secret_value, visibility
-        )
+        created = self.org.create_or_update_secret(new_secret_name, new_secret_value, visibility)
         self.assertTrue(created)
-        created_again = self.org.create_or_update_secret(
-            new_secret_name, new_secret_value, visibility
-        )
+        created_again = self.org.create_or_update_secret(new_secret_name, new_secret_value, visibility)
         self.assertFalse(created_again)
 
         gotten_secret = self.org.get_secret(new_secret_name)
@@ -102,9 +96,7 @@ class OrganizationSecrets(Framework.TestCase):
                 selected_repository_ids=self.repo.id,
             )
 
-        self.assertRaisesRegex(
-            ValueError, "selected_repository_ids should be a list", will_raise_again
-        )
+        self.assertRaisesRegex(ValueError, "selected_repository_ids should be a list", will_raise_again)
 
         def will_raise_a_final_time():
             self.org.create_or_update_secret(
@@ -162,17 +154,11 @@ class OrganizationSecrets(Framework.TestCase):
         self.org.create_or_update_secret("exclusive_secret", "nothing", "selected")
         exclusive_secret = self.org.get_secret("exclusive_secret")
 
-        secret_selected_repositories = self.org.list_secret_selected_repositories(
-            exclusive_secret.name
-        )
+        secret_selected_repositories = self.org.list_secret_selected_repositories(exclusive_secret.name)
         self.assertEqual(0, secret_selected_repositories.totalCount)
 
-        self.org.set_secret_selected_repositories(
-            exclusive_secret.name, [self.repo.id, self.repo2.id]
-        )
-        secret_selected_repositories_again = self.org.list_secret_selected_repositories(
-            exclusive_secret.name
-        )
+        self.org.set_secret_selected_repositories(exclusive_secret.name, [self.repo.id, self.repo2.id])
+        secret_selected_repositories_again = self.org.list_secret_selected_repositories(exclusive_secret.name)
         self.assertEqual(2, secret_selected_repositories.totalCount)
         self.assertListKeyEqual(
             secret_selected_repositories_again,
@@ -181,16 +167,12 @@ class OrganizationSecrets(Framework.TestCase):
         )
 
         self.org.remove_secret_selected_repository(exclusive_secret.name, self.repo.id)
-        secret_selected_repositories3 = self.org.list_secret_selected_repositories(
-            exclusive_secret.name
-        )
+        secret_selected_repositories3 = self.org.list_secret_selected_repositories(exclusive_secret.name)
         self.assertEqual(1, secret_selected_repositories3.totalCount)
         self.assertEqual(self.repo2.id, secret_selected_repositories3[0].id)
 
         self.org.remove_secret_selected_repository(exclusive_secret.name, self.repo2.id)
         self.org.add_secret_selected_repository(exclusive_secret.name, self.repo.id)
-        secret_selected_repositories4 = self.org.list_secret_selected_repositories(
-            exclusive_secret.name
-        )
+        secret_selected_repositories4 = self.org.list_secret_selected_repositories(exclusive_secret.name)
         self.assertEqual(1, secret_selected_repositories4.totalCount)
         self.assertEqual(self.repo.id, secret_selected_repositories4[0].id)

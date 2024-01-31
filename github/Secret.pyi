@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 import github.GithubObject
 
-
 class Secret(github.GithubObject.NonCompletableGithubObject):
     def __repr__(self) -> str: ...
     @property

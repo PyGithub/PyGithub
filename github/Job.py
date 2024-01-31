@@ -81,18 +81,18 @@ class JobStep(github.GithubObject.NonCompletableGithubObject):
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         if "completed_at" in attributes:  # pragma no branch
-            assert attributes["completed_at"] is None or isinstance(
-                attributes["completed_at"], str
-            ), attributes["completed_at"]
+            assert attributes["completed_at"] is None or isinstance(attributes["completed_at"], str), attributes[
+                "completed_at"
+            ]
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
             self._conclusion = self._makeStringAttribute(attributes["conclusion"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "started_at" in attributes:  # pragma no branch
-            assert attributes["started_at"] is None or isinstance(
-                attributes["started_at"], str
-            ), attributes["started_at"]
+            assert attributes["started_at"] is None or isinstance(attributes["started_at"], str), attributes[
+                "started_at"
+            ]
             self._started_at = self._makeDatetimeAttribute(attributes["started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
@@ -208,9 +208,9 @@ class Job(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         if "completed_at" in attributes:  # pragma no branch
-            assert attributes["completed_at"] is None or isinstance(
-                attributes["completed_at"], str
-            ), attributes["completed_at"]
+            assert attributes["completed_at"] is None or isinstance(attributes["completed_at"], str), attributes[
+                "completed_at"
+            ]
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
             self._conclusion = self._makeStringAttribute(attributes["conclusion"])
@@ -227,9 +227,9 @@ class Job(github.GithubObject.CompletableGithubObject):
         if "run_url" in attributes:  # pragma no branch
             self._run_url = self._makeStringAttribute(attributes["run_url"])
         if "started_at" in attributes:  # pragma no branch
-            assert attributes["started_at"] is None or isinstance(
-                attributes["started_at"], str
-            ), attributes["started_at"]
+            assert attributes["started_at"] is None or isinstance(attributes["started_at"], str), attributes[
+                "started_at"
+            ]
             self._started_at = self._makeDatetimeAttribute(attributes["started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])

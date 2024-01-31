@@ -158,9 +158,7 @@ class Repository(Framework.TestCase):
         # Allow None or any boolean value for backwards compatibility
         self.assertIn(self.repo.permissions.maintain, [None, False, True])
         self.assertIn(self.repo.permissions.triage, [None, False, True])
-        self.assertIn(
-            "enabled", self.repo.security_and_analysis.advanced_security.status
-        )
+        self.assertIn("enabled", self.repo.security_and_analysis.advanced_security.status)
         self.assertIn("enabled", self.repo.security_and_analysis.secret_scanning.status)
         self.assertIn(
             "disabled",

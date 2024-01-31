@@ -210,9 +210,9 @@ import github.Referrer
 import github.RepositoryAdvisory
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Secret
 import github.SecretScanningAlert
 import github.SecurityAndAnalysis
-import github.Secret
 import github.SelfHostedActionsRunner
 import github.SelfHostedActionsRunnerRegistrationToken
 import github.SourceImport
@@ -1734,7 +1734,6 @@ class Repository(CompletableGithubObject):
         """
         return self.get_secrets()  # backward compatibility for coveo fork who used a different name for this fn
 
-
     def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
         """
         Gets all repository secrets
@@ -3153,9 +3152,7 @@ class Repository(CompletableGithubObject):
         :calls: POST /repos/{owner}/{repo}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-a-repository>
         :rtype: string
         """
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/actions/runners/registration-token"
-        )
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/runners/registration-token")
         return github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken(
             self._requester, headers, data, completed=True
         )
@@ -3361,9 +3358,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Job.Job`
         """
         assert isinstance(job_id, int) or isinstance(job_id, str), job_id
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/jobs/{job_id}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/jobs/{job_id}")
         return github.Job.Job(self._requester, headers, data, completed=True)
 
     def get_workflow_runs(
@@ -3919,18 +3914,6 @@ class Repository(CompletableGithubObject):
             parameters,
         )
 
-    def get_dependabot_alerts(self):
-        """
-        :calls: `GET https://api.github.com/repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
-        """
-        return github.PaginatedList.PaginatedList(
-            github.DependabotAlert.DependabotAlert,
-            self._requester,
-            f"{self.url}/dependabot/alerts",
-            None,
-        )
-
     def get_environments(self) -> PaginatedList[Environment]:
         """
         :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
@@ -3946,7 +3929,7 @@ class Repository(CompletableGithubObject):
             ),
             list_item="environments",
         )
-        
+
     def get_secret_scanning_alerts(self):
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning#list-secret-scanning-alerts-for-a-repository>
