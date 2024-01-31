@@ -201,7 +201,6 @@ class GitRelease(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(discussion_category_name, str), discussion_category_name
         if tag_name is NotSet:
             tag_name = self.tag_name
         post_parameters = {
@@ -210,11 +209,13 @@ class GitRelease(CompletableGithubObject):
             "body": message,
             "draft": draft,
             "prerelease": prerelease,
-            "discussion_category_name": discussion_category_name,
         }
         if make_latest is not NotSet:
             assert make_latest in ["true", "false", "legacy"], make_latest
             post_parameters["make_latest"] = make_latest
+        if discussion_category_name is not NotSet:
+            assert isinstance(discussion_category_name, str), discussion_category_name
+            post_parameters["discussion_category_name"] = discussion_category_name
         # Do not set target_commitish to self.target_commitish when omitted, just don't send it
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not NotSet:
