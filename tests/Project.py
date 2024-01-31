@@ -1,9 +1,18 @@
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2019 Benoit Latinier <benoit@latinier.fr>                          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Jody McIntyre <scjody@modernduck.com>                         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -18,7 +27,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import github
 
@@ -56,22 +65,14 @@ class Project(Framework.TestCase):
     def testProjectAttributes(self):
         pid = 1682941
         proj = self.g.get_project(pid)
-        self.assertEqual(
-            proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub"
-        )
+        self.assertEqual(proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub")
         self.assertEqual(proj.url, "https://api.github.com/projects/1682941")
-        self.assertEqual(
-            proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1"
-        )
-        self.assertEqual(
-            proj.columns_url, "https://api.github.com/projects/1682941/columns"
-        )
+        self.assertEqual(proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1")
+        self.assertEqual(proj.columns_url, "https://api.github.com/projects/1682941/columns")
         self.assertEqual(proj.id, pid)
         self.assertEqual(proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
         self.assertEqual(proj.name, "TestProject")
-        self.assertEqual(
-            proj.body, "To be used for testing project access API for PyGithub."
-        )
+        self.assertEqual(proj.body, "To be used for testing project access API for PyGithub.")
         self.assertEqual(proj.number, 1)
         self.assertEqual(proj.state, "open")
         self.assertEqual(proj.creator, self.repo.owner)
@@ -87,9 +88,7 @@ class Project(Framework.TestCase):
         self.assertEqual(col.name, "To Do")
         self.assertEqual(col.url, "https://api.github.com/projects/columns/3138830")
         self.assertEqual(col.project_url, "https://api.github.com/projects/1682941")
-        self.assertEqual(
-            col.cards_url, "https://api.github.com/projects/columns/3138830/cards"
-        )
+        self.assertEqual(col.cards_url, "https://api.github.com/projects/columns/3138830/cards")
         self.assertEqual(col.created_at.year, 2018)
         self.assertTrue(col.updated_at >= col.created_at)
         self.assertEqual(repr(col), 'ProjectColumn(name="To Do")')
@@ -99,15 +98,9 @@ class Project(Framework.TestCase):
         proj = self.g.get_project(1682941)
         col = proj.get_columns()[1]
         card = col.get_cards()[0]
-        self.assertEqual(
-            card.url, "https://api.github.com/projects/columns/cards/11780055"
-        )
-        self.assertEqual(
-            card.column_url, "https://api.github.com/projects/columns/3138831"
-        )
-        self.assertEqual(
-            card.content_url, "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1"
-        )
+        self.assertEqual(card.url, "https://api.github.com/projects/columns/cards/11780055")
+        self.assertEqual(card.column_url, "https://api.github.com/projects/columns/3138831")
+        self.assertEqual(card.content_url, "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1")
         self.assertEqual(card.id, 11780055)
         self.assertEqual(card.node_id, "MDExOlByb2plY3RDYXJkMTE3ODAwNTU=")
         self.assertEqual(card.note, None)  # No notes for cards with content.
@@ -125,9 +118,7 @@ class Project(Framework.TestCase):
         pull_card = cards[0]
         pull = pull_card.get_content("PullRequest")
         self.assertIsInstance(pull, github.PullRequest.PullRequest)
-        self.assertEqual(
-            pull.title, "Work in progress on support for GitHub projects API."
-        )
+        self.assertEqual(pull.title, "Work in progress on support for GitHub projects API.")
         self.assertRaises(ValueError, pull_card.get_content, "foo")
 
         issue_card = cards[1]
@@ -166,18 +157,14 @@ class Project(Framework.TestCase):
         self.assertEqual(cards, expectedCards)
 
     def testCreateColumn(self):
-        project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
-        )
+        project = self.repo.create_project("Project created by PyGithub", "Project Body")
         column = project.create_column(
             "Project Column created by PyGithub",
         )
         self.assertEqual(column.id, 3999333)
 
     def testCreateCardWithNote(self):
-        project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
-        )
+        project = self.repo.create_project("Project created by PyGithub", "Project Body")
         column = project.create_column(
             "Project Column created by PyGithub",
         )
@@ -185,9 +172,7 @@ class Project(Framework.TestCase):
         self.assertEqual(card1.id, 16039019)
 
     def testCreateCardFromIssue(self):
-        project = self.repo.create_project(
-            "Project created by PyGithub", "Project Body"
-        )
+        project = self.repo.create_project("Project created by PyGithub", "Project Body")
         column = project.create_column(
             "Project Column created by PyGithub",
         )

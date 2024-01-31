@@ -7,6 +7,12 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,16 +38,10 @@ from . import Framework
 class GitRef(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.ref = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_git_ref("heads/BranchCreatedByPyGithub")
-        )
+        self.ref = self.g.get_user().get_repo("PyGithub").get_git_ref("heads/BranchCreatedByPyGithub")
 
     def testAttributes(self):
-        self.assertEqual(
-            self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a"
-        )
+        self.assertEqual(self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.ref.object.type, "commit")
         self.assertEqual(
             self.ref.object.url,
@@ -53,9 +53,7 @@ class GitRef(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
         )
 
-        self.assertEqual(
-            repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")'
-        )
+        self.assertEqual(repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")')
         self.assertEqual(
             repr(self.ref.object),
             'GitObject(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',

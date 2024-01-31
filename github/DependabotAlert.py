@@ -1,188 +1,157 @@
-import github.Commit
-import github.Dependency
-import github.GithubObject
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+import github.AdvisoryVulnerabilityPackage
+import github.DependabotAlertAdvisory
+import github.DependabotAlertDependency
+import github.DependabotAlertVulnerability
 import github.NamedUser
-import github.SecurityVulnerability
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.DependabotAlertAdvisory import DependabotAlertAdvisory
+    from github.DependabotAlertDependency import DependabotAlertDependency
+    from github.DependabotAlertVulnerability import DependabotAlertVulnerability
+    from github.NamedUser import NamedUser
 
 
-class DependabotAlert(github.GithubObject.NonCompletableGithubObject):
+class DependabotAlert(NonCompletableGithubObject):
     """
-    This class represents DependabotAlert. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository
+    This class represents a DependabotAlert.
+    The reference can be found here https://docs.github.com/en/rest/dependabot/alerts
     """
 
-    def __repr__(self):
-        return self.get__repr__(
-            {
-                "auto_dismissed_at": self._auto_dismissed_at.value,
-                "created_at": self._created_at.value,
-                "dependency": self._dependency.value,
-                "dismissed_at": self._dismissed_at.value,
-                "dismissed_by": self._dismissed_at.value,
-                "dismissed_comment": self._dismissed_comment.value,
-                "dismissed_reason": self._dismissed_reason.value,
-                "fixed_at": self._fixed_at.value,
-                "html_url": self._html_url.value,
-                "number": self._number.value,
-                "security_vulnerability": self._security_vulnerability.value,
-                "state": self._state.value,
-                "updated_at": self._updated_at.value,
-                "url": self._url.value,
-            }
-        )
+    def _initAttributes(self) -> None:
+        self._number: Attribute[int] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._dependency: Attribute[DependabotAlertDependency] = NotSet
+        self._security_advisory: Attribute[DependabotAlertAdvisory] = NotSet
+        self._security_vulnerability: Attribute[DependabotAlertVulnerability] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._dismissed_at: Attribute[datetime | None] = NotSet
+        self._dismissed_by: Attribute[NamedUser | None] = NotSet
+        self._dismissed_reason: Attribute[str | None] = NotSet
+        self._dismissed_comment: Attribute[str | None] = NotSet
+        self._fixed_at: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self.number, "ghsa_id": self.security_advisory.ghsa_id})
 
     @property
-    def auto_dismissed_at(self):
-        """
-        :type: string
-        """
-        return self._auto_dismissed_at.value
-
-    @property
-    def created_at(self):
-        """
-        :type: string
-        """
-        return self._created_at.value
-
-    @property
-    def dependency(self):
-        """
-        :type: :class:`github.Dependency.Dependency`
-        """
-        return self._dependency.value
-
-    @property
-    def dismissed_at(self):
-        """
-        :type: string
-        """
-        return self._dismissed_at.value
-
-    @property
-    def dismissed_by(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
-        return self._dismissed_by.value
-
-    @property
-    def dismissed_comment(self):
-        """
-        :type: string
-        """
-        return self._dismissed_comment.value
-
-    @property
-    def dismissed_reason(self):
-        """
-        :type: string
-        """
-        return self._dismissed_reason.value
-
-    @property
-    def fixed_at(self):
-        """
-        :type: string
-        """
-        return self._fixed_at.value
-
-    @property
-    def html_url(self):
-        """
-        :type: string
-        """
-        return self._html_url.value
-
-    @property
-    def number(self):
-        """
-        :type: integer
-        """
+    def number(self) -> int:
         return self._number.value
 
     @property
-    def security_vulnerability(self):
-        """
-        :type: :class:`github.SecurityVulnerability.SecurityVulnerability`
-        """
-        return self._security_vulnerability.value
-
-    @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def updated_at(self):
-        """
-        :type: string
-        """
+    def dependency(self) -> DependabotAlertDependency:
+        return self._dependency.value
+
+    @property
+    def security_advisory(self) -> DependabotAlertAdvisory:
+        return self._security_advisory.value
+
+    @property
+    def security_vulnerability(self) -> DependabotAlertVulnerability:
+        return self._security_vulnerability.value
+
+    @property
+    def url(self) -> str:
+        return self._url.value
+
+    @property
+    def html_url(self) -> str:
+        return self._html_url.value
+
+    @property
+    def created_at(self) -> datetime:
+        return self._created_at.value
+
+    @property
+    def updated_at(self) -> datetime:
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
-        return self._url.value
+    def dismissed_at(self) -> datetime | None:
+        return self._dismissed_at.value
 
-    def _initAttributes(self):
-        self._auto_dismissed_at = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._dependency = github.GithubObject.NotSet
-        self._dismissed_at = github.GithubObject.NotSet
-        self._dismissed_comment = github.GithubObject.NotSet
-        self._dismissed_reason = github.GithubObject.NotSet
-        self._dismissed_by = github.GithubObject.NotSet
-        self._fixed_at = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._number = github.GithubObject.NotSet
-        self._security_vulnerability = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    @property
+    def dismissed_by(self) -> NamedUser | None:
+        return self._dismissed_by.value
 
-    def _useAttributes(self, attributes):
-        if "auto_dismissed_at" in attributes:  # pragma no branch
-            self._auto_dismissed_at = self._makeStringAttribute(
-                attributes["auto_dismissed_at"]
-            )
-        if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeStringAttribute(attributes["created_at"])
-        if "dependency" in attributes:  # pragma no branch
-            self._dependency = self._makeClassAttribute(
-                github.Dependency.Dependency, attributes["dependency"]
-            )
-        if "dismissed_at" in attributes:  # pragma no branch
-            self._dismissed_at = self._makeStringAttribute(attributes["dismissed_at"])
-        if "dismissed_by" in attributes:  # pragma no branch
-            self._dismissed_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["dismissed_by"]
-            )
-        if "dismissed_comment" in attributes:  # pragma no branch
-            self._dismissed_comment = self._makeStringAttribute(
-                attributes["dismissed_comment"]
-            )
-        if "dismissed_reason" in attributes:  # pragma no branch
-            self._dismissed_reason = self._makeStringAttribute(
-                attributes["dismissed_reason"]
-            )
-        if "fixed_at" in attributes:  # pragma no branch
-            self._fixed_at = self._makeStringAttribute(attributes["fixed_at"])
-        if "html_url" in attributes:  # pragma no branch
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
-        if "number" in attributes:  # pragma no branch
+    @property
+    def dismissed_reason(self) -> str | None:
+        return self._dismissed_reason.value
+
+    @property
+    def dismissed_comment(self) -> str | None:
+        return self._dismissed_comment.value
+
+    @property
+    def fixed_at(self) -> str | None:
+        return self._fixed_at.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "number" in attributes:
             self._number = self._makeIntAttribute(attributes["number"])
-        if "security_vulnerability" in attributes:  # pragma no branch
-            self._security_vulnerability = self._makeClassAttribute(
-                github.SecurityVulnerability.SecurityVulnerability,
-                attributes["security_vulnerability"],
-            )
-        if "state" in attributes:  # pragma no branch
+        if "state" in attributes:
             self._state = self._makeStringAttribute(attributes["state"])
-        if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeStringAttribute(attributes["updated_at"])
-        if "url" in attributes:  # pragma no branch
+        if "dependency" in attributes:
+            self._dependency = self._makeClassAttribute(
+                github.DependabotAlertDependency.DependabotAlertDependency, attributes["dependency"]
+            )
+        if "security_advisory" in attributes:
+            self._security_advisory = self._makeClassAttribute(
+                github.DependabotAlertAdvisory.DependabotAlertAdvisory, attributes["security_advisory"]
+            )
+        if "security_vulnerability" in attributes:
+            self._security_vulnerability = self._makeClassAttribute(
+                github.DependabotAlertVulnerability.DependabotAlertVulnerability, attributes["security_vulnerability"]
+            )
+        if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "dismissed_at" in attributes:
+            self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
+        if "dismissed_by" in attributes:
+            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+        if "dismissed_reason" in attributes:
+            self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
+        if "dismissed_comment" in attributes:
+            self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])
+        if "fixed_at" in attributes:
+            self._fixed_at = self._makeStringAttribute(attributes["fixed_at"])

@@ -1,15 +1,38 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jakub Wilk <jwilk@jwilk.net>                                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Aaron L. Levine <allevin@sandia.gov>                          #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 h.shi <10385628+AnYeMoWang@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Will Li <cuichen.li94@gmail.com>                              #
+# Copyright 2020 Adrian Bridgett <58699309+tl-adrian-bridgett@users.noreply.github.com>#
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Colby Gallup <colbygallup@gmail.com>                          #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -92,9 +115,7 @@ mediaTypeOrganizationInvitationPreview = "application/vnd.github.dazzler-preview
 mediaTypeTeamDiscussionsPreview = "application/vnd.github.echo-preview+json"
 
 # https://developer.github.com/changes/2018-03-16-protected-branches-required-approving-reviews/
-mediaTypeRequireMultipleApprovingReviews = (
-    "application/vnd.github.luke-cage-preview+json"
-)
+mediaTypeRequireMultipleApprovingReviews = "application/vnd.github.luke-cage-preview+json"
 
 # https://developer.github.com/changes/2018-05-24-user-migration-api/
 mediaTypeMigrationPreview = "application/vnd.github.wyandotte-preview+json"
@@ -134,6 +155,7 @@ repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_STATUS_URL = "https://status.github.com"
+DEFAULT_USER_AGENT = "PyGithub/Python"
 # As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
 # Thus, the timeout should be slightly > 10s to account for network/front-end
 # latency.
@@ -148,3 +170,10 @@ MAX_JWT_EXPIRY = 600
 # https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-json-web-token-jwt
 # "The time the JWT was created. To protect against clock drift, we recommend you set this 60 seconds in the past."
 DEFAULT_JWT_ISSUED_AT = -60
+# https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
+# "Your JWT must be signed using the RS256 algorithm"
+DEFAULT_JWT_ALGORITHM = "RS256"
+
+# https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
+DEFAULT_SECONDS_BETWEEN_WRITES = 1.0

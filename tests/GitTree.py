@@ -8,6 +8,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,20 +39,14 @@ from . import Framework
 class GitTree(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.tree = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_git_tree("f492784d8ca837779650d1fb406a1a3587a764ad")
-        )
+        self.tree = self.g.get_user().get_repo("PyGithub").get_git_tree("f492784d8ca837779650d1fb406a1a3587a764ad")
 
     def testAttributes(self):
         self.assertEqual(self.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad")
         self.assertEqual(len(self.tree.tree), 11)
         self.assertEqual(self.tree.tree[0].mode, "100644")
         self.assertEqual(self.tree.tree[0].path, ".gitignore")
-        self.assertEqual(
-            self.tree.tree[0].sha, "8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd"
-        )
+        self.assertEqual(self.tree.tree[0].sha, "8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd")
         self.assertEqual(self.tree.tree[0].size, 53)
         self.assertEqual(self.tree.tree[0].type, "blob")
         self.assertEqual(
@@ -55,9 +55,7 @@ class GitTree(Framework.TestCase):
         )
         self.assertEqual(self.tree.tree[6].mode, "040000")
         self.assertEqual(self.tree.tree[6].path, "ReplayDataForIntegrationTest")
-        self.assertEqual(
-            self.tree.tree[6].sha, "60b4602b2c2070246c5df078fb7a5150b45815eb"
-        )
+        self.assertEqual(self.tree.tree[6].sha, "60b4602b2c2070246c5df078fb7a5150b45815eb")
         self.assertEqual(self.tree.tree[6].size, None)
         self.assertEqual(self.tree.tree[6].type, "tree")
         self.assertEqual(

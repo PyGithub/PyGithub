@@ -9,6 +9,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,7 +34,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -37,23 +43,20 @@ class CommitStatus(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.statuses = list(
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_commit("1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
-            .get_statuses()
+            self.g.get_user().get_repo("PyGithub").get_commit("1292bf0e22c796e91cc3d6e24b544aece8c21f2a").get_statuses()
         )
 
     def testAttributes(self):
         self.assertEqual(
-            self.statuses[0].created_at, datetime.datetime(2012, 9, 8, 11, 30, 56)
+            self.statuses[0].created_at,
+            datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(
-            self.statuses[0].updated_at, datetime.datetime(2012, 9, 8, 11, 30, 56)
+            self.statuses[0].updated_at,
+            datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(self.statuses[0].creator.login, "jacquev6")
-        self.assertEqual(
-            self.statuses[0].description, "Status successfuly created by PyGithub"
-        )
+        self.assertEqual(self.statuses[0].description, "Status successfuly created by PyGithub")
         self.assertEqual(self.statuses[1].description, None)
         self.assertEqual(self.statuses[0].id, 277040)
         self.assertEqual(self.statuses[0].state, "success")

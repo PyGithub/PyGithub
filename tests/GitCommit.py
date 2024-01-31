@@ -8,6 +8,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,7 +33,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -35,35 +41,27 @@ from . import Framework
 class GitCommit(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.commit = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_git_commit("4303c5b90e2216d927155e9609436ccb8984c495")
-        )
+        self.commit = self.g.get_user().get_repo("PyGithub").get_git_commit("4303c5b90e2216d927155e9609436ccb8984c495")
 
     def testAttributes(self):
         self.assertEqual(self.commit.author.name, "Vincent Jacques")
         self.assertEqual(self.commit.author.email, "vincent@vincent-jacques.net")
         self.assertEqual(
-            self.commit.author.date, datetime.datetime(2012, 4, 17, 17, 55, 16)
+            self.commit.author.date,
+            datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
         self.assertEqual(self.commit.committer.name, "Vincent Jacques")
         self.assertEqual(self.commit.committer.email, "vincent@vincent-jacques.net")
         self.assertEqual(
-            self.commit.committer.date, datetime.datetime(2012, 4, 17, 17, 55, 16)
+            self.commit.committer.date,
+            datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
         self.assertEqual(self.commit.message, "Merge branch 'develop'\n")
         self.assertEqual(len(self.commit.parents), 2)
-        self.assertEqual(
-            self.commit.parents[0].sha, "936f4a97f1a86392637ec002bbf89ff036a5062d"
-        )
-        self.assertEqual(
-            self.commit.parents[1].sha, "2a7e80e6421c5d4d201d60619068dea6bae612cb"
-        )
+        self.assertEqual(self.commit.parents[0].sha, "936f4a97f1a86392637ec002bbf89ff036a5062d")
+        self.assertEqual(self.commit.parents[1].sha, "2a7e80e6421c5d4d201d60619068dea6bae612cb")
         self.assertEqual(self.commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
-        self.assertEqual(
-            self.commit.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad"
-        )
+        self.assertEqual(self.commit.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad")
         self.assertEqual(
             self.commit.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495",

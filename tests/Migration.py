@@ -1,31 +1,13 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2015 Christopher Wilcox <git@crwilcox.com>                         #
-# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
-# Copyright 2015 Enix Yu <enix223@163.com>                                     #
-# Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
-# Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
-# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
-# Copyright 2016 Enix Yu <enix223@163.com>                                     #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
-# Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
-# Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
-# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
-# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
-# Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
-# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
-# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2018 Victor Granic <vmg@boreal321.com>                             #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,7 +27,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timedelta, timezone
 
 import github
 
@@ -67,14 +49,14 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(len(self.migration.repositories), 1)
         self.assertEqual(self.migration.repositories[0].name, "sample-repo")
+        self.assertEqual(self.migration.url, "https://api.github.com/user/migrations/25320")
         self.assertEqual(
-            self.migration.url, "https://api.github.com/user/migrations/25320"
+            self.migration.created_at,
+            datetime(2018, 9, 14, 1, 35, 35, tzinfo=timezone(timedelta(seconds=19800))),
         )
         self.assertEqual(
-            self.migration.created_at, datetime.datetime(2018, 9, 13, 20, 5, 35)
-        )
-        self.assertEqual(
-            self.migration.updated_at, datetime.datetime(2018, 9, 13, 20, 5, 46)
+            self.migration.updated_at,
+            datetime(2018, 9, 14, 1, 35, 46, tzinfo=timezone(timedelta(seconds=19800))),
         )
         self.assertEqual(
             repr(self.migration),
@@ -82,9 +64,7 @@ class Migration(Framework.TestCase):
         )
 
     def testGetArchiveUrlWhenNotExported(self):
-        self.assertRaises(
-            github.UnknownObjectException, lambda: self.migration.get_archive_url()
-        )
+        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
 
     def testGetStatus(self):
         self.assertEqual(self.migration.get_status(), "exported")
@@ -99,9 +79,7 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.delete(), None)
 
     def testGetArchiveUrlWhenDeleted(self):
-        self.assertRaises(
-            github.UnknownObjectException, lambda: self.migration.get_archive_url()
-        )
+        self.assertRaises(github.UnknownObjectException, lambda: self.migration.get_archive_url())
 
     def testUnlockRepo(self):
         self.assertEqual(self.migration.unlock_repo("sample-repo"), None)

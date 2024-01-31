@@ -1,11 +1,17 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -60,9 +66,11 @@ def generateLicenseSection(filename):
 
 def listContributors(filename):
     contributors = set()
-    for line in subprocess.check_output(
-        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]
-    ).split("\n"):
+    result = subprocess.check_output(
+        ["git", "log", "--follow", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
+        text=True,
+    )
+    for line in result.split("\n"):
         year = line[0:4]
         name = line[11:]
         contributors.add((year, name))
@@ -91,13 +99,11 @@ def extractBodyLines(lines):
 
 class PythonHeader:
     def fix(self, filename, lines):
-        isExecutable = lines[0].startswith("#!")
+        isExecutable = len(lines) > 0 and lines[0].startswith("#!")
         newLines = []
 
         if isExecutable:
             newLines.append("#!/usr/bin/env python")
-        newLines.append("# -*- coding: utf-8 -*-")
-        newLines.append("")
 
         for line in generateLicenseSection(filename):
             newLines.append(line)
@@ -106,11 +112,7 @@ class PythonHeader:
 
         if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
-            if (
-                "import " not in bodyLines[0]
-                and bodyLines[0] != '"""'
-                and not bodyLines[0].startswith("##########")
-            ):
+            if "import " not in bodyLines[0] and bodyLines[0] != '"""' and not bodyLines[0].startswith("##########"):
                 newLines.append("")
         newLines += bodyLines
 
@@ -126,7 +128,7 @@ class StandardHeader:
 
         bodyLines = extractBodyLines(lines)
 
-        if len(bodyLines) and bodyLines[0] != "" > 0:
+        if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
         newLines += bodyLines
 
@@ -135,18 +137,20 @@ class StandardHeader:
 
 def findHeadersAndFiles():
     for root, dirs, files in os.walk(".", topdown=True):
-        if ".git" in dirs:
-            dirs.remove(".git")
-        if "developer.github.com" in dirs:
-            dirs.remove("developer.github.com")
-        if "build" in dirs:
-            dirs.remove("build")
+        for dir in list(dirs):
+            if dir.startswith("."):
+                dirs.remove(dir)
+        for excluded in ["developer.github.com", "build", "venv", "PyGithub.egg-info", "requirements"]:
+            if excluded in dirs:
+                dirs.remove(excluded)
 
         for filename in files:
             fullname = os.path.join(root, filename)
-            if filename.endswith(".py"):
+            if filename == "GithubCredentials.py":
+                pass
+            elif filename.endswith(".py"):
                 yield (PythonHeader(), fullname)
-            elif filename in ["COPYING", "COPYING.LESSER"]:
+            elif filename in ["COPYING", "COPYING.LESSER", "MAINTAINERS"]:
                 pass
             elif filename.endswith(".rst") or filename.endswith(".md"):
                 pass
@@ -154,21 +158,23 @@ def findHeadersAndFiles():
                 yield (StandardHeader(), fullname)
             elif "ReplayData" in fullname:
                 pass
+            elif fullname.endswith(".pyi"):
+                pass
             elif fullname.endswith(".pyc"):
                 pass
             else:
-                print("Don't know what to do with", filename)
+                print(f"Don't know what to do with {filename} in {root}")
 
 
 def main():
     for header, filename in findHeadersAndFiles():
         print("Analyzing", filename)
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
             print(" => actually modifying", filename)
-            with open(filename, "w") as f:
+            with open(filename, "w", encoding="utf-8") as f:
                 for line in newLines:
                     f.write(line + "\n")
 

@@ -3,7 +3,14 @@
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,8 +62,6 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
 
     def testGetDirContentsWithRef(self):
         self.assertEqual(
-            len(
-                self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")
-            ),
+            len(self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")),
             15,
         )
