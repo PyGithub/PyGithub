@@ -3376,7 +3376,6 @@ class Repository(CompletableGithubObject):
             url_parameters["created"] = created
         if is_defined(check_suite_id):
             url_parameters["check_suite_id"] = check_suite_id
-            
 
         return PaginatedList(
             github.WorkflowRun.WorkflowRun,
