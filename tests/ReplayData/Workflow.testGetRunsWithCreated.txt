@@ -2,7 +2,7 @@ https
 GET
 api.github.com
 None
-/repos/PyGithub/PyGithub/actions/workflows/1903133/runs?created=2022-12-24
+/repos/PyGithub/PyGithub/actions/workflows/1026390/runs?created=2022-12-24
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
