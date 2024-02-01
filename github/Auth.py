@@ -86,9 +86,7 @@ class HTTPBasicAuth(Auth, abc.ABC):
 
 
 class Login(HTTPBasicAuth):
-    """
-    This class is used to authenticate with login and password.
-    """
+    """This class is used to authenticate with login and password."""
 
     def __init__(self, login: str, password: str):
         assert isinstance(login, str)
@@ -113,9 +111,7 @@ class Login(HTTPBasicAuth):
 
 
 class Token(Auth):
-    """
-    This class is used to authenticate with a single constant token.
-    """
+    """This class is used to authenticate with a single constant token."""
 
     def __init__(self, token: str):
         assert isinstance(token, str)
@@ -144,8 +140,8 @@ class JWT(Auth, ABC):
 
 
 class AppAuth(JWT):
-    """
-    This class is used to authenticate as a GitHub App.
+    """This class is used to authenticate as a GitHub App.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
     """
@@ -225,8 +221,8 @@ class AppAuth(JWT):
 
 
 class AppAuthToken(JWT):
-    """
-    This class is used to authenticate as a GitHub App with a single constant JWT.
+    """This class is used to authenticate as a GitHub App with a single constant JWT.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
     """
@@ -242,8 +238,8 @@ class AppAuthToken(JWT):
 
 
 class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
-    """
-    This class is used to authenticate as a GitHub App Installation.
+    """This class is used to authenticate as a GitHub App Installation.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
 
     """
@@ -323,8 +319,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 
 
 class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
-    """
-    This class is used to authenticate as a GitHub App on behalf of a user.
+    """This class is used to authenticate as a GitHub App on behalf of a user.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
 
     """
@@ -452,9 +448,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
 
 
 class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
-    """
-    This class is used to authenticate via .netrc.
-    """
+    """This class is used to authenticate via .netrc."""
 
     def __init__(self) -> None:
         super().__init__()

@@ -199,10 +199,11 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         login_or_user: str | github.NamedUser.NamedUser,
         credit_type: str,
     ) -> None:
-        """
-        Offers credit to a user for a vulnerability in a repository.
+        """Offers credit to a user for a vulnerability in a repository.
+
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+
         """
         self.offer_credits([{"login": login_or_user, "type": credit_type}])
 
@@ -210,11 +211,12 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self,
         credited: Iterable[Credit],
     ) -> None:
-        """
-        Offers credit to a list of users for a vulnerability in a repository.
+        """Offers credit to a list of users for a vulnerability in a repository.
+
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param credited: iterable of dict with keys "login" and "type"
+
         """
         assert isinstance(credited, Iterable), credited
         for credit in credited:
@@ -328,9 +330,10 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         return self
 
     def accept_report(self) -> None:
-        """
-        Accepts the advisory reported from an external reporter via private vulnerability reporting.
+        """Accepts the advisory reported from an external reporter via private vulnerability reporting.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+
         """
         patch_parameters = {"state": "draft"}
         headers, data = self._requester.requestJsonAndCheck(
@@ -341,9 +344,10 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._useAttributes(data)
 
     def publish(self) -> None:
-        """
-        Publishes the advisory.
+        """Publishes the advisory.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+
         """
         patch_parameters = {"state": "published"}
         headers, data = self._requester.requestJsonAndCheck(
@@ -354,9 +358,10 @@ class RepositoryAdvisory(NonCompletableGithubObject):
         self._useAttributes(data)
 
     def close(self) -> None:
-        """
-        Closes the advisory.
+        """Closes the advisory.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+
         """
         patch_parameters = {"state": "closed"}
         headers, data = self._requester.requestJsonAndCheck(
