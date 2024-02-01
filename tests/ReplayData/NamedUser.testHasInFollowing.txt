@@ -18,5 +18,3 @@ None
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4995'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('access-control-allow-credentials', 'true'), ('date', 'Wed, 21 Aug 2013 17:20:48 GMT'), ('access-control-allow-origin', '*'), ('x-ratelimit-reset', '1377108637')]
-
-

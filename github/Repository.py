@@ -18,11 +18,9 @@
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
 # Copyright 2015 Enix Yu <enix223@163.com>                                     #
 # Copyright 2015 Jay <ja.geb@me.com>                                           #
-# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2015 Jonathan Debonis <jon@ip-172-20-10-5.ec2.internal>            #
 # Copyright 2015 Kevin Lewandowski <kevinsl@gmail.com>                         #
 # Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
-# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
 # Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
 # Copyright 2016 Dustin Spicuzza <dustin@virtualroadside.com>                  #
 # Copyright 2016 Enix Yu <enix223@163.com>                                     #
@@ -39,7 +37,6 @@
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2017 Jason White <jasonwhite@users.noreply.github.com>             #
 # Copyright 2017 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
-# Copyright 2017 Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>                 #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Aaron L. Levine <allevin@sandia.gov>                          #
 # Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
@@ -100,13 +97,33 @@
 # Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
-# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Andrew Collington <andy@amnuts.com>                           #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
+# Copyright 2023 Micael <10292135+notmicaelfilipe@users.noreply.github.com>    #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
+# Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2023 Philipp A <flying-sheep@web.de>                               #
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
+# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -125,17 +142,22 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import collections
 import urllib.parse
 from base64 import b64encode
+from collections.abc import Iterable
 from datetime import date, datetime, timezone
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import TYPE_CHECKING, Any
 
 from deprecated import deprecated
 
+import github.AdvisoryCredit
+import github.AdvisoryVulnerability
 import github.Artifact
+import github.AuthenticatedUser
 import github.Autolink
 import github.Branch
 import github.CheckRun
@@ -146,6 +168,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.DependabotAlert
 import github.Deployment
 import github.Download
 import github.Environment
@@ -165,11 +188,13 @@ import github.Hook
 import github.HookDelivery
 import github.Invitation
 import github.Issue
+import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
 import github.Milestone
 import github.NamedUser
+import github.Notification
 import github.Organization
 import github.PaginatedList
 import github.Path
@@ -177,10 +202,9 @@ import github.Permissions
 import github.Project
 import github.PublicKey
 import github.PullRequest
+import github.PullRequestComment
 import github.Referrer
 import github.RepositoryAdvisory
-import github.RepositoryAdvisoryCredit
-import github.RepositoryAdvisoryVulnerability
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
@@ -199,6 +223,7 @@ import github.View
 import github.Workflow
 import github.WorkflowRun
 from github import Consts
+from github.Environment import Environment
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -225,9 +250,9 @@ if TYPE_CHECKING:
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
     from github.ContentFile import ContentFile
+    from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.Environment import Environment
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
@@ -1016,14 +1041,18 @@ class Repository(CompletableGithubObject):
 
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
-        :param permission: string 'pull', 'push' or 'admin'
+        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string 'pull', 'push', 'admin', 'maintain', or 'triage'
+        :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert is_undefined(permission) or isinstance(permission, str), permission
+        assert permission in ["pull", "push", "admin", "maintain", "triage", NotSet], permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         if is_defined(permission):
             put_parameters = {"permission": permission}
@@ -1048,6 +1077,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/collaborators/{collaborator}/permission",
@@ -1077,14 +1108,20 @@ class Repository(CompletableGithubObject):
 
     def compare(self, base: str, head: str) -> Comparison:
         """
-        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
         :rtype: :class:`github.Comparison.Comparison`
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
+        base = urllib.parse.quote(base)
+        head = urllib.parse.quote(head)
+        # the compare API has a per_page default of 250, which is different to Consts.DEFAULT_PER_PAGE
+        per_page = self._requester.per_page if self._requester.per_page != Consts.DEFAULT_PER_PAGE else 250
+        # only with page=1 we get the pagination headers for the commits element
+        params = {"page": 1, "per_page": per_page}
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_autolink(
@@ -1099,7 +1136,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
-        assert is_undefined(is_alphanumeric) or isinstance(is_alphanumeric, bool), is_alphanumeric
+        assert is_optional(is_alphanumeric, bool), is_alphanumeric
 
         post_parameters = NotSet.remove_unset_items(
             {"key_prefix": key_prefix, "url_template": url_template, "is_alphanumeric": is_alphanumeric}
@@ -1145,8 +1182,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(tree, github.GitTree.GitTree), tree
         assert all(isinstance(element, github.GitCommit.GitCommit) for element in parents), parents
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor), author
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor), committer
+        assert is_optional(author, github.InputGitAuthor), author
+        assert is_optional(committer, github.InputGitAuthor), committer
         post_parameters: dict[str, Any] = {
             "message": message,
             "tree": tree._identity,
@@ -1241,14 +1278,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         assert isinstance(generate_release_notes, bool), generate_release_notes
-        assert is_undefined(target_commitish) or isinstance(
+        assert is_optional(
             target_commitish,
-            (
-                str,
-                github.Branch.Branch,
-                github.Commit.Commit,
-                github.GitCommit.GitCommit,
-            ),
+            (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
@@ -1282,7 +1314,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str), message
         assert isinstance(object, str), object
         assert isinstance(type, str), type
-        assert is_undefined(tagger) or isinstance(tagger, github.InputGitAuthor), tagger
+        assert is_optional(tagger, github.InputGitAuthor), tagger
         post_parameters: dict[str, Any] = {
             "tag": tag,
             "message": message,
@@ -1302,7 +1334,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert all(isinstance(element, github.InputGitTreeElement) for element in tree), tree
-        assert is_undefined(base_tree) or isinstance(base_tree, github.GitTree.GitTree), base_tree
+        assert is_optional(base_tree, github.GitTree.GitTree), base_tree
         post_parameters: dict[str, Any] = {
             "tree": [element._identity for element in tree],
         }
@@ -1329,7 +1361,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
         assert is_optional_list(events, str), events
-        assert is_undefined(active) or isinstance(active, bool), active
+        assert is_optional(active, bool), active
         post_parameters = NotSet.remove_unset_items(
             {"name": name, "config": config, "events": events, "active": active}
         )
@@ -1356,10 +1388,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, str), title
-        assert is_undefined(body) or isinstance(body, str), body
-        assert (
-            is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
-        ), assignee
+        assert is_optional(body, str), body
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
         assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, (github.Label.Label, str)), labels
@@ -1418,7 +1448,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert isinstance(color, str), color
-        assert is_undefined(description) or isinstance(description, str), description
+        assert is_optional(description, str), description
         post_parameters = {
             "name": name,
             "color": color,
@@ -1449,9 +1479,9 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, str), title
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(due_on) or isinstance(due_on, (datetime, date)), due_on
+        assert is_optional(state, str), state
+        assert is_optional(description, str), description
+        assert is_optional(due_on, (datetime, date)), due_on
         post_parameters = {
             "title": title,
         }
@@ -1475,7 +1505,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Project.Project`
         """
         assert isinstance(name, str), name
-        assert is_undefined(body) or isinstance(body, str), body
+        assert is_optional(body, str), body
         post_parameters = {
             "name": name,
         }
@@ -1532,9 +1562,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
@@ -1542,9 +1572,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1564,9 +1594,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None = None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None = None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
@@ -1574,9 +1604,9 @@ class Repository(CompletableGithubObject):
         :param description: string
         :param severity_or_cvss_vector_string: string
         :param cve_id: string
-        :param vulnerabilities: iterable of :class:`github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability`
+        :param vulnerabilities: iterable of :class:`github.AdvisoryVulnerability.AdvisoryVulnerabilityInput`
         :param cwe_ids: iterable of string
-        :param credits: iterable of :class:`github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit`
+        :param credits: iterable of :class:`github.AdvisoryCredit.AdvisoryCredit`
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
         return self.__create_repository_advisory(
@@ -1596,9 +1626,9 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.RepositoryAdvisoryVulnerability.AdvisoryVulnerability] | None,
+        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
-        credits: Iterable[github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit] | None,
+        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
     ) -> github.RepositoryAdvisory.RepositoryAdvisory:
         if vulnerabilities is None:
@@ -1611,20 +1641,18 @@ class Repository(CompletableGithubObject):
         assert isinstance(cve_id, (str, type(None))), cve_id
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
-            github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._validate_vulnerability(
-                vulnerability
-            )
+            github.AdvisoryVulnerability.AdvisoryVulnerability._validate_vulnerability(vulnerability)
         assert isinstance(cwe_ids, Iterable), cwe_ids
         assert all(isinstance(element, str) for element in cwe_ids), cwe_ids
         assert isinstance(credits, (Iterable, type(None))), credits
         if credits is not None:
             for credit in credits:
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._validate_credit(credit)
+                github.AdvisoryCredit.AdvisoryCredit._validate_credit(credit)
         post_parameters = {
             "summary": summary,
             "description": description,
             "vulnerabilities": [
-                github.RepositoryAdvisoryVulnerability.RepositoryAdvisoryVulnerability._to_github_dict(vulnerability)
+                github.AdvisoryVulnerability.AdvisoryVulnerability._to_github_dict(vulnerability)
                 for vulnerability in vulnerabilities
             ],
             "cwe_ids": list(cwe_ids),
@@ -1633,7 +1661,7 @@ class Repository(CompletableGithubObject):
             post_parameters["cve_id"] = cve_id
         if credits is not None:
             post_parameters["credits"] = [
-                github.RepositoryAdvisoryCredit.RepositoryAdvisoryCredit._to_github_dict(credit) for credit in credits
+                github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits
             ]
         if severity_or_cvss_vector_string.startswith("CVSS:"):
             post_parameters["cvss_vector_string"] = severity_or_cvss_vector_string
@@ -1657,7 +1685,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(event_type, str), event_type
-        assert is_undefined(client_payload) or isinstance(client_payload, dict), client_payload
+        assert is_optional(client_payload, dict), client_payload
         post_parameters = NotSet.remove_unset_items({"event_type": event_type, "client_payload": client_payload})
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
@@ -1668,6 +1696,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        secret_name = urllib.parse.quote(secret_name)
         public_key = self.get_public_key()
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
@@ -1694,6 +1723,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/secrets",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/actions/secrets"}),
             list_item="secrets",
         )
 
@@ -1702,6 +1732,7 @@ class Repository(CompletableGithubObject):
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
+        secret_name = urllib.parse.quote(secret_name)
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
@@ -1726,7 +1757,7 @@ class Repository(CompletableGithubObject):
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": self.url,
+                "url": f"{self.url}/actions/variables/{variable_name}",
             },
             completed=False,
         )
@@ -1741,6 +1772,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/actions/variables",
             None,
+            attributesTransformer=PaginatedList.override_attributes({"variables_url": f"{self.url}/actions/variables"}),
             list_item="variables",
         )
 
@@ -1751,6 +1783,7 @@ class Repository(CompletableGithubObject):
         :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
+        variable_name = urllib.parse.quote(variable_name)
         return github.Variable.Variable(
             requester=self._requester,
             headers={},
@@ -1765,6 +1798,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        secret_name = urllib.parse.quote(secret_name)
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
         return status == 204
 
@@ -1775,6 +1809,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
+        variable_name = urllib.parse.quote(variable_name)
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
@@ -1795,8 +1830,8 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(vcs, str), vcs
         assert isinstance(vcs_url, str), vcs_url
-        assert is_undefined(vcs_username) or isinstance(vcs_username, str), vcs_username
-        assert is_undefined(vcs_password) or isinstance(vcs_password, str), vcs_password
+        assert is_optional(vcs_username, str), vcs_username
+        assert is_optional(vcs_password, str), vcs_password
         put_parameters = {"vcs": vcs, "vcs_url": vcs_url}
 
         if is_defined(vcs_username):
@@ -1849,125 +1884,68 @@ class Repository(CompletableGithubObject):
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
-        :param name: string
-        :param description: string
-        :param homepage: string
-        :param private: bool
-        :param visibility: string
-        :param has_issues: bool
-        :param has_projects: bool
-        :param has_wiki: bool
-        :param is_template: bool
-        :param default_branch: string
-        :param allow_squash_merge: bool
-        :param allow_merge_commit: bool
-        :param allow_rebase_merge: bool
-        :param allow_auto_merge: bool
-        :param delete_branch_on_merge: bool
-        :param allow_update_branch: bool
-        :param use_squash_pr_title_as_default: bool
-        :param squash_merge_commit_title : string
-        :param squash_merge_commit_message : string
-        :param merge_commit_title : string
-        :param merge_commit_message : string
-        :param archived: bool
-        :param allow_forking: bool
-        :param web_commit_signoff_required: bool
-        :rtype: None
         """
         if name is None:
             name = self.name
         assert isinstance(name, str), name
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(homepage) or isinstance(homepage, str), homepage
-        assert is_undefined(private) or isinstance(private, bool), private
-        assert is_undefined(visibility) or (
-            isinstance(visibility, str) and visibility in ["public", "private"]
-        ), visibility
-        assert is_undefined(has_issues) or isinstance(has_issues, bool), has_issues
-        assert is_undefined(has_projects) or isinstance(has_projects, bool), has_projects
-        assert is_undefined(has_wiki) or isinstance(has_wiki, bool), has_wiki
-        assert is_undefined(is_template) or isinstance(is_template, bool), is_template
-        assert is_undefined(default_branch) or isinstance(default_branch, str), default_branch
-        assert is_undefined(allow_squash_merge) or isinstance(allow_squash_merge, bool), allow_squash_merge
-        assert is_undefined(allow_merge_commit) or isinstance(allow_merge_commit, bool), allow_merge_commit
-        assert is_undefined(allow_rebase_merge) or isinstance(allow_rebase_merge, bool), allow_rebase_merge
-        assert is_undefined(allow_auto_merge) or isinstance(allow_auto_merge, bool), allow_auto_merge
-        assert is_undefined(delete_branch_on_merge) or isinstance(delete_branch_on_merge, bool), delete_branch_on_merge
-        assert is_undefined(allow_update_branch) or isinstance(allow_update_branch, bool), allow_update_branch
-        assert is_undefined(use_squash_pr_title_as_default) or isinstance(
-            use_squash_pr_title_as_default, bool
-        ), use_squash_pr_title_as_default
-        assert is_undefined(squash_merge_commit_title) or (
-            isinstance(squash_merge_commit_title, str)
-            and squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE"]
-        ), squash_merge_commit_title
-        assert is_undefined(squash_merge_commit_message) or (
-            isinstance(squash_merge_commit_message, str)
-            and squash_merge_commit_message in ["PR_BODY", "COMMIT_MESSAGES", "BLANK"]
-        ), squash_merge_commit_message
-        assert is_undefined(merge_commit_title) or (
-            isinstance(merge_commit_title, str) and merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE"]
-        ), merge_commit_title
-        assert is_undefined(merge_commit_message) or (
-            isinstance(merge_commit_message, str) and merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK"]
-        ), merge_commit_message
-        assert is_undefined(archived) or isinstance(archived, bool), archived
-        assert is_undefined(allow_forking) or isinstance(allow_forking, bool), allow_forking
-        assert is_undefined(web_commit_signoff_required) or isinstance(
-            web_commit_signoff_required, bool
-        ), web_commit_signoff_required
+        assert is_optional(description, str), description
+        assert is_optional(homepage, str), homepage
+        assert is_optional(private, bool), private
+        assert visibility in ["public", "private", "internal", NotSet], visibility
+        assert is_optional(has_issues, bool), has_issues
+        assert is_optional(has_projects, bool), has_projects
+        assert is_optional(has_wiki, bool), has_wiki
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(default_branch, str), default_branch
+        assert is_optional(allow_squash_merge, bool), allow_squash_merge
+        assert is_optional(allow_merge_commit, bool), allow_merge_commit
+        assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
+        assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(archived, bool), archived
+        assert is_optional(allow_forking, bool), allow_forking
+        assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
 
-        post_parameters: dict[str, Any] = {
-            "name": name,
-        }
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "homepage": homepage,
+                "private": private,
+                "visibility": visibility,
+                "has_issues": has_issues,
+                "has_projects": has_projects,
+                "has_wiki": has_wiki,
+                "is_template": is_template,
+                "default_branch": default_branch,
+                "allow_squash_merge": allow_squash_merge,
+                "allow_merge_commit": allow_merge_commit,
+                "allow_rebase_merge": allow_rebase_merge,
+                "allow_auto_merge": allow_auto_merge,
+                "delete_branch_on_merge": delete_branch_on_merge,
+                "allow_update_branch": allow_update_branch,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "archived": archived,
+                "allow_forking": allow_forking,
+                "web_commit_signoff_required": web_commit_signoff_required,
+            }
+        )
 
-        if is_defined(description):
-            post_parameters["description"] = description
-        if is_defined(homepage):
-            post_parameters["homepage"] = homepage
-        if is_defined(private):
-            post_parameters["private"] = private
-        if is_defined(visibility):
-            post_parameters["visibility"] = visibility
-        if is_defined(has_issues):
-            post_parameters["has_issues"] = has_issues
-        if is_defined(has_projects):
-            post_parameters["has_projects"] = has_projects
-        if is_defined(has_wiki):
-            post_parameters["has_wiki"] = has_wiki
-        if is_defined(is_template):
-            post_parameters["is_template"] = is_template
-        if is_defined(default_branch):
-            post_parameters["default_branch"] = default_branch
-        if is_defined(allow_squash_merge):
-            post_parameters["allow_squash_merge"] = allow_squash_merge
-        if is_defined(allow_merge_commit):
-            post_parameters["allow_merge_commit"] = allow_merge_commit
-        if is_defined(allow_rebase_merge):
-            post_parameters["allow_rebase_merge"] = allow_rebase_merge
-        if is_defined(allow_auto_merge):
-            post_parameters["allow_auto_merge"] = allow_auto_merge
-        if is_defined(delete_branch_on_merge):
-            post_parameters["delete_branch_on_merge"] = delete_branch_on_merge
-        if is_defined(allow_update_branch):
-            post_parameters["allow_update_branch"] = allow_update_branch
-        if is_defined(use_squash_pr_title_as_default):
-            post_parameters["use_squash_pr_title_as_default"] = use_squash_pr_title_as_default
-        if is_defined(squash_merge_commit_title):
-            post_parameters["squash_merge_commit_title"] = squash_merge_commit_title
-        if is_defined(squash_merge_commit_message):
-            post_parameters["squash_merge_commit_message"] = squash_merge_commit_message
-        if is_defined(merge_commit_title):
-            post_parameters["merge_commit_title"] = merge_commit_title
-        if is_defined(merge_commit_message):
-            post_parameters["merge_commit_message"] = merge_commit_message
-        if is_defined(archived):
-            post_parameters["archived"] = archived
-        if is_defined(allow_forking):
-            post_parameters["allow_forking"] = allow_forking
-        if is_defined(web_commit_signoff_required):
-            post_parameters["web_commit_signoff_required"] = web_commit_signoff_required
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
@@ -1979,9 +1957,11 @@ class Repository(CompletableGithubObject):
         :rtype: string
         """
         assert isinstance(archive_format, str), archive_format
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        archive_format = urllib.parse.quote(archive_format)
+        assert is_optional(ref, str), ref
         url = f"{self.url}/{archive_format}"
         if is_defined(ref):
+            ref = urllib.parse.quote(ref)
             url += f"/{ref}"
         headers, data = self._requester.requestJsonAndCheck("GET", url)
         return headers["location"]
@@ -2000,6 +1980,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Branch.Branch`
         """
         assert isinstance(branch, str), branch
+        branch = urllib.parse.quote(branch)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches/{branch}")
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -2014,10 +1995,12 @@ class Repository(CompletableGithubObject):
         time to fully complete server-side.
         """
         is_branch = isinstance(branch, github.Branch.Branch)
-        assert isinstance(branch, str) or is_branch, branch
         assert isinstance(new_name, str), new_name
         if is_branch:
             branch = branch.name  # type: ignore
+        else:
+            assert isinstance(branch, str), branch
+            branch = urllib.parse.quote(branch)
         parameters = {"new_name": new_name}
         status, _, _ = self._requester.requestJson("POST", f"{self.url}/branches/{branch}/rename", input=parameters)
         return status == 201
@@ -2029,19 +2012,28 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Branch.Branch, self._requester, f"{self.url}/branches", None)
 
-    def get_collaborators(self, affiliation: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    def get_collaborators(
+        self, affiliation: Opt[str] = NotSet, permission: Opt[str] = NotSet
+    ) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/collaborators/collaborators>`_
         :param affiliation: string
+        :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
 
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
+        allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
         if is_defined(affiliation):
             assert isinstance(affiliation, str), affiliation
             assert affiliation in allowed_affiliations, f"Affiliation can be one of {', '.join(allowed_affiliations)}"
             url_parameters["affiliation"] = affiliation
+
+        if is_defined(permission):
+            assert isinstance(permission, str), permission
+            assert permission in allowed_permissions, f"permission can be one of {', '.join(allowed_permissions)}"
+            url_parameters["permission"] = permission
 
         return PaginatedList(
             github.NamedUser.NamedUser,
@@ -2079,6 +2071,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
@@ -2099,17 +2092,13 @@ class Repository(CompletableGithubObject):
         :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`PaginatedList` of :class:`github.Commit.Commit`
         """
-        assert is_undefined(sha) or isinstance(sha, str), sha
-        assert is_undefined(path) or isinstance(path, str), path
-        assert is_undefined(since) or isinstance(since, datetime), since
-        assert is_undefined(until) or isinstance(until, datetime), until
-        assert is_undefined(author) or isinstance(
+        assert is_optional(sha, str), sha
+        assert is_optional(path, str), path
+        assert is_optional(since, datetime), since
+        assert is_optional(until, datetime), until
+        assert is_optional(
             author,
-            (
-                str,
-                github.NamedUser.NamedUser,
-                github.AuthenticatedUser.AuthenticatedUser,
-            ),
+            (str, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
         ), author
         url_parameters: dict[str, Any] = {}
         if is_defined(sha):
@@ -2123,10 +2112,7 @@ class Repository(CompletableGithubObject):
         if is_defined(author):
             if isinstance(
                 author,
-                (
-                    github.NamedUser.NamedUser,
-                    github.AuthenticatedUser.AuthenticatedUser,
-                ),
+                (github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser),
             ):
                 url_parameters["author"] = author.login
             else:
@@ -2141,7 +2127,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.ContentFile.ContentFile` or a list of them
         """
         assert isinstance(path, str), path
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        assert is_optional(ref, str), ref
         # Path of '/' should be the empty string.
         if path == "/":
             path = ""
@@ -2182,10 +2168,10 @@ class Repository(CompletableGithubObject):
         :param: environment: string
         :rtype: :class:`PaginatedList` of :class:`github.Deployment.Deployment`
         """
-        assert is_undefined(sha) or isinstance(sha, str), sha
-        assert is_undefined(ref) or isinstance(ref, str), ref
-        assert is_undefined(task) or isinstance(task, str), task
-        assert is_undefined(environment) or isinstance(environment, str), environment
+        assert is_optional(sha, str), sha
+        assert is_optional(ref, str), ref
+        assert is_optional(task, str), task
+        assert is_optional(environment, str), environment
         parameters = {}
         if is_defined(sha):
             parameters["sha"] = sha
@@ -2243,16 +2229,14 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(ref, str), ref
-        assert is_undefined(task) or isinstance(task, str), task
-        assert is_undefined(auto_merge) or isinstance(auto_merge, bool), auto_merge
-        assert is_undefined(required_contexts) or isinstance(
-            required_contexts, list
-        ), required_contexts  # need to do better checking here
-        assert is_undefined(payload) or isinstance(payload, dict), payload
-        assert is_undefined(environment) or isinstance(environment, str), environment
-        assert is_undefined(description) or isinstance(description, str), description
-        assert is_undefined(transient_environment) or isinstance(transient_environment, bool), transient_environment
-        assert is_undefined(production_environment) or isinstance(production_environment, bool), production_environment
+        assert is_optional(task, str), task
+        assert is_optional(auto_merge, bool), auto_merge
+        assert is_optional(required_contexts, list), required_contexts  # need to do better checking here
+        assert is_optional(payload, dict), payload
+        assert is_optional(environment, str), environment
+        assert is_optional(description, str), description
+        assert is_optional(transient_environment, bool), transient_environment
+        assert is_optional(production_environment, bool), production_environment
 
         post_parameters: dict[str, Any] = {"ref": ref}
         if is_defined(task):
@@ -2303,9 +2287,7 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
         """
-        assert is_undefined(per) or (
-            isinstance(per, str) and (per == "day" or per == "week")
-        ), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters = dict()
         if is_defined(per):
             url_parameters["per"] = per
@@ -2322,9 +2304,7 @@ class Repository(CompletableGithubObject):
         :param per: string, must be one of day or week, day by default
         :rtype: None or list of :class:`github.Clones.Clones`
         """
-        assert is_undefined(per) or (
-            isinstance(per, str) and (per == "day" or per == "week")
-        ), "per must be day or week, day by default"
+        assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters: dict[str, Any] = NotSet.remove_unset_items({"per": per})
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
@@ -2386,9 +2366,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(path, str)
         assert isinstance(message, str)
         assert isinstance(content, (str, bytes))
-        assert is_undefined(branch) or isinstance(branch, str)
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor)
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor)
+        assert is_optional(branch, str)
+        assert is_optional(author, github.InputGitAuthor)
+        assert is_optional(committer, github.InputGitAuthor)
 
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
@@ -2433,6 +2413,7 @@ class Repository(CompletableGithubObject):
         :param ghsa: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
+        ghsa = urllib.parse.quote(ghsa)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
 
@@ -2464,9 +2445,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(message, str)
         assert isinstance(content, (str, bytes))
         assert isinstance(sha, str)
-        assert is_undefined(branch) or isinstance(branch, str)
-        assert is_undefined(author) or isinstance(author, github.InputGitAuthor)
-        assert is_undefined(committer) or isinstance(committer, github.InputGitAuthor)
+        assert is_optional(branch, str)
+        assert is_optional(author, github.InputGitAuthor)
+        assert is_optional(committer, github.InputGitAuthor)
 
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
@@ -2517,13 +2498,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(path, str), "path must be str/unicode object"
         assert isinstance(message, str), "message must be str/unicode object"
         assert isinstance(sha, str), "sha must be a str/unicode object"
-        assert is_undefined(branch) or isinstance(branch, str), "branch must be a str/unicode object"
-        assert is_undefined(author) or isinstance(
-            author, github.InputGitAuthor
-        ), "author must be a github.InputGitAuthor object"
-        assert is_undefined(committer) or isinstance(
-            committer, github.InputGitAuthor
-        ), "committer must be a github.InputGitAuthor object"
+        assert is_optional(branch, str), "branch must be a str/unicode object"
+        assert is_optional(author, github.InputGitAuthor), "author must be a github.InputGitAuthor object"
+        assert is_optional(committer, github.InputGitAuthor), "committer must be a github.InputGitAuthor object"
 
         url_parameters: dict[str, Any] = {"message": message, "sha": sha}
         if is_defined(branch):
@@ -2624,8 +2601,8 @@ class Repository(CompletableGithubObject):
             post_parameters["organization"] = organization
         else:
             assert is_undefined(organization), organization
-        assert is_undefined(name) or isinstance(name, str), name
-        assert is_undefined(default_branch_only) or isinstance(default_branch_only, bool), default_branch_only
+        assert is_optional(name, str), name
+        assert is_optional(default_branch_only, bool), default_branch_only
         if is_defined(name):
             post_parameters["name"] = name
         if is_defined(default_branch_only):
@@ -2644,6 +2621,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitBlob.GitBlob`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/blobs/{sha}")
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -2654,6 +2632,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitCommit.GitCommit`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/commits/{sha}")
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
@@ -2667,6 +2646,7 @@ class Repository(CompletableGithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}{prefix}{ref}")
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -2683,6 +2663,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
+        ref = urllib.parse.quote(ref)
         return PaginatedList(
             github.GitRef.GitRef,
             self._requester,
@@ -2697,6 +2678,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTag.GitTag`
         """
         assert isinstance(sha, str), sha
+        sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/tags/{sha}")
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -2708,7 +2690,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert isinstance(sha, str), sha
-        assert is_undefined(recursive) or isinstance(recursive, bool), recursive
+        assert is_optional(recursive, bool), recursive
+        sha = urllib.parse.quote(sha)
         url_parameters = dict()
         if is_defined(recursive) and recursive:
             # GitHub API requires the recursive parameter be set to 1.
@@ -2799,24 +2782,15 @@ class Repository(CompletableGithubObject):
         :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert (
-            is_undefined(milestone)
-            or milestone == "*"
-            or milestone == "none"
-            or isinstance(milestone, github.Milestone.Milestone)
-        ), milestone
-        assert is_undefined(state) or isinstance(state, str), state
-        assert (
-            is_undefined(assignee) or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, str)
-        ), assignee
-        assert is_undefined(mentioned) or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
+        assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
+        assert is_optional(state, str), state
+        assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
-        assert (
-            is_undefined(creator) or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, str)
-        ), creator
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
+        assert is_optional(creator, (str, github.NamedUser.NamedUser)), creator
         url_parameters: dict[str, Any] = {}
         if is_defined(milestone):
             if isinstance(milestone, github.Milestone.Milestone):
@@ -2862,9 +2836,9 @@ class Repository(CompletableGithubObject):
         :param since: datetime
         :rtype: :class:`PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
         url_parameters = dict()
         if is_defined(sort):
             url_parameters["sort"] = sort
@@ -2985,9 +2959,9 @@ class Repository(CompletableGithubObject):
         :param direction: string
         :rtype: :class:`PaginatedList` of :class:`github.Milestone.Milestone`
         """
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
+        assert is_optional(state, str), state
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3049,11 +3023,11 @@ class Repository(CompletableGithubObject):
         :param head: string
         :rtype: :class:`PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
-        assert is_undefined(state) or isinstance(state, str), state
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(base) or isinstance(base, str), base
-        assert is_undefined(head) or isinstance(head, str), head
+        assert is_optional(state, str), state
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(base, str), base
+        assert is_optional(head, str), head
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3100,9 +3074,9 @@ class Repository(CompletableGithubObject):
         :param since: datetime
         :rtype: :class:`PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert is_undefined(sort) or isinstance(sort, str), sort
-        assert is_undefined(direction) or isinstance(direction, str), direction
-        assert is_undefined(since) or isinstance(since, datetime), since
+        assert is_optional(sort, str), sort
+        assert is_optional(direction, str), direction
+        assert is_optional(since, datetime), since
         url_parameters = dict()
         if is_defined(sort):
             url_parameters["sort"] = sort
@@ -3123,7 +3097,7 @@ class Repository(CompletableGithubObject):
         :param ref: string
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-        assert is_undefined(ref) or isinstance(ref, str), ref
+        assert is_optional(ref, str), ref
         url_parameters = dict()
         if is_defined(ref):
             url_parameters["ref"] = ref
@@ -3283,6 +3257,7 @@ class Repository(CompletableGithubObject):
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
         elif isinstance(id, str):
+            id = urllib.parse.quote(id)
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/tags/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
@@ -3341,6 +3316,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_file_name, (int, str)), id_or_file_name
+        id_or_file_name = urllib.parse.quote(str(id_or_file_name))
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
@@ -3420,6 +3396,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(assignee, github.NamedUser.NamedUser):
             assignee = assignee._identity
+        else:
+            assignee = urllib.parse.quote(assignee)
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/assignees/{assignee}")
         return status == 204
@@ -3434,6 +3412,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/collaborators/{collaborator}")
         return status == 204
@@ -3531,7 +3511,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        assert is_undefined(commit_message) or isinstance(commit_message, str), commit_message
+        assert is_optional(commit_message, str), commit_message
         post_parameters = {
             "base": base,
             "head": head,
@@ -3628,6 +3608,8 @@ class Repository(CompletableGithubObject):
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/collaborators/{collaborator}")
 
@@ -3730,7 +3712,8 @@ class Repository(CompletableGithubObject):
         assert isinstance(mode, str), mode
         assert isinstance(event, str), event
         assert isinstance(callback, str), callback
-        assert is_undefined(secret) or isinstance(secret, str), secret
+        assert is_optional(secret, str), secret
+        event = urllib.parse.quote(event)
 
         post_parameters = collections.OrderedDict()
         post_parameters["hub.callback"] = callback
@@ -3831,7 +3814,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Artifact.Artifact`
         """
 
-        assert is_undefined(name) or isinstance(name, str), name
+        assert is_optional(name, str), name
 
         param = {key: value for key, value in {"name": name}.items() if is_defined(value)}
 
@@ -3868,25 +3851,30 @@ class Repository(CompletableGithubObject):
 
     def get_environments(self) -> PaginatedList[Environment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`github.Environment.Environment`
         """
         return PaginatedList(
-            github.Environment.Environment,
+            Environment,
             self._requester,
             f"{self.url}/environments",
             None,
+            attributesTransformer=PaginatedList.override_attributes(
+                {"environments_url": f"/repositories/{self.id}/environments"}
+            ),
             list_item="environments",
         )
 
     def get_environment(self, environment_name: str) -> Environment:
         """
-        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
+        environment_name = urllib.parse.quote(environment_name)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/environments/{environment_name}")
-        return github.Environment.Environment(self._requester, headers, data, completed=True)
+        data["environments_url"] = f"/repositories/{self.id}/environments"
+        return Environment(self._requester, headers, data, completed=True)
 
     def create_environment(
         self,
@@ -3896,7 +3884,7 @@ class Repository(CompletableGithubObject):
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
-        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
         :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
@@ -3916,6 +3904,7 @@ class Repository(CompletableGithubObject):
             )
             or deployment_branch_policy is None
         )
+        environment_name = urllib.parse.quote(environment_name)
 
         put_parameters = {
             "wait_timer": wait_timer,
@@ -3926,19 +3915,116 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/environments/{environment_name}", input=put_parameters
         )
-        return github.Environment.Environment(self._requester, headers, data, completed=True)
-
-    update_environment = create_environment
+        data["environments_url"] = f"/repositories/{self.id}/environments"
+        return Environment(self._requester, headers, data, completed=True)
 
     def delete_environment(self, environment_name: str) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :calls: `DELETE /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
         :param environment_name: string
         :rtype: None
         """
         assert isinstance(environment_name, str), environment_name
+        environment_name = urllib.parse.quote(environment_name)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
+
+    def get_dependabot_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        package: Opt[str] = NotSet,
+        manifest: Opt[str] = NotSet,
+        scope: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[DependabotAlert]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>`_
+        :param state: Optional string
+        :param severity: Optional string
+        :param ecosystem: Optional string
+        :param package: Optional string
+        :param manifest: Optional string
+        :param scope: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        allowed_states = ["auto_dismissed", "dismissed", "fixed", "open"]
+        allowed_severities = ["low", "medium", "high", "critical"]
+        allowed_ecosystems = ["composer", "go", "maven", "npm", "nuget", "pip", "pub", "rubygems", "rust"]
+        allowed_scopes = ["development", "runtime"]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        assert ecosystem in allowed_ecosystems + [NotSet], f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
+        assert scope in allowed_scopes + [NotSet], f"Scope can be one of {', '.join(allowed_scopes)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "severity": severity,
+                "ecosystem": ecosystem,
+                "package": package,
+                "manifest": manifest,
+                "scope": scope,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
+        return PaginatedList(
+            github.DependabotAlert.DependabotAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            url_parameters,
+        )
+
+    def get_dependabot_alert(self, number: int) -> DependabotAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#get-a-dependabot-alert>`_
+        :param number: int
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/dependabot/alerts/{number}")
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+
+    def update_dependabot_alert(
+        self, number: int, state: str, dismissed_reason: Opt[str] = NotSet, dismissed_comment: Opt[str] = NotSet
+    ) -> DependabotAlert:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#update-a-dependabot-alert>`_
+        :param number: int
+        :param state: string
+        :param dismissed_reason: Optional string
+        :param dismissed_comment: Optional string
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        assert isinstance(state, str), state
+        assert state in ["dismissed", "open"], "State can be one of ['dismissed', 'open']"
+        if state == "dismissed":
+            assert is_defined(dismissed_reason)
+            assert dismissed_reason in [
+                "fix_started",
+                "inaccurate",
+                "no_bandwidth",
+                "not_used",
+                "tolerable_risk",
+            ], "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+        assert is_optional(dismissed_comment, str), dismissed_comment
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            f"{self.url}/dependabot/alerts/{number}",
+            input=NotSet.remove_unset_items(
+                {"state": state, "dismissed_reason": dismissed_reason, "dismissed_comment": dismissed_comment}
+            ),
+        )
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
