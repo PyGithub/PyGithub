@@ -95,8 +95,6 @@ class Repository(Framework.TestCase):
         super().setUp()
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
-        self.org = self.g.get_organization("coveo")
-        self.secrets_repo = self.org.get_repo("github-api-playground")
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
@@ -158,11 +156,11 @@ class Repository(Framework.TestCase):
         # Allow None or any boolean value for backwards compatibility
         self.assertIn(self.repo.permissions.maintain, [None, False, True])
         self.assertIn(self.repo.permissions.triage, [None, False, True])
-        self.assertIn("enabled", self.secrets_repo.security_and_analysis.advanced_security.status)
-        self.assertIn("enabled", self.secrets_repo.security_and_analysis.secret_scanning.status)
+        self.assertIn("enabled", self.repo.security_and_analysis.advanced_security.status)
+        self.assertIn("enabled", self.repo.security_and_analysis.secret_scanning.status)
         self.assertIn(
             "disabled",
-            self.secrets_repo.security_and_analysis.secret_scanning_push_protection.status,
+            self.repo.security_and_analysis.secret_scanning_push_protection.status,
         )
 
         self.assertTrue(self.repo.use_squash_pr_title_as_default)
