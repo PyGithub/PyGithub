@@ -50,6 +50,7 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
+
     """
 
     @property

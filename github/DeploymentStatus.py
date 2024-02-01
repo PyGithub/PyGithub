@@ -53,6 +53,7 @@ class DeploymentStatus(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#deployments
+
     """
 
     def _initAttributes(self) -> None:

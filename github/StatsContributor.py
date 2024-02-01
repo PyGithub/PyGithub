@@ -47,6 +47,7 @@ class StatsContributor(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
+
     """
 
     class Week(NonCompletableGithubObject):

@@ -47,6 +47,7 @@ class StatsParticipation(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
+
     """
 
     def _initAttributes(self) -> None:

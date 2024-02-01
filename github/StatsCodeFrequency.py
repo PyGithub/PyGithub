@@ -46,6 +46,7 @@ class StatsCodeFrequency(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
+
     """
 
     def _initAttributes(self) -> None:

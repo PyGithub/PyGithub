@@ -33,11 +33,11 @@ if TYPE_CHECKING:
 
 
 class DependabotAlertAdvisory(github.AdvisoryBase.AdvisoryBase):
-    """This class represents a package flagged by a Dependabot alert that is
-    vulnerable to a parent SecurityAdvisory.
+    """This class represents a package flagged by a Dependabot alert that is vulnerable to a parent SecurityAdvisory.
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
+
     """
 
     def _initAttributes(self) -> None:

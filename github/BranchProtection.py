@@ -52,6 +52,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-branch-protection
+
     """
 
     def __repr__(self) -> str:

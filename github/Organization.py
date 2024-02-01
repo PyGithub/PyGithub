@@ -128,6 +128,7 @@ class Organization(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/orgs
+
     """
 
     def _initAttributes(self) -> None:
@@ -622,9 +623,11 @@ class Organization(CompletableGithubObject):
         )
 
     def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
-        """Gets all organization secrets :param secret_type: string options
-        actions or dependabot :rtype: :class:`PaginatedList` of
-        :class:`github.OrganizationSecret.OrganizationSecret`"""
+        """Gets all organization secrets :param secret_type: string options actions or dependabot :rtype:
+
+        :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+
+        """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,

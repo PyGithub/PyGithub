@@ -133,8 +133,7 @@ class GlobalAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.withdrawn_at, None)
 
     def testNewlyReleased(self):
-        """Test an advisory that was freshly released and does not have values
-        for all fields."""
+        """Test an advisory that was freshly released and does not have values for all fields."""
         self.advisory = self.g.get_global_advisory("GHSA-cx3j-qqxj-9597")
         self.assertListKeyEqual(
             self.advisory.credits,

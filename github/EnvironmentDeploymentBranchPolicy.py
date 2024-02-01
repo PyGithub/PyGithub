@@ -33,6 +33,7 @@ class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:
@@ -58,8 +59,7 @@ class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
 
 
 class EnvironmentDeploymentBranchPolicyParams:
-    """This class presents the deployment branch policy parameters as can be
-    configured for an Environment."""
+    """This class presents the deployment branch policy parameters as can be configured for an Environment."""
 
     def __init__(self, protected_branches: bool = False, custom_branch_policies: bool = False):
         assert isinstance(protected_branches, bool)

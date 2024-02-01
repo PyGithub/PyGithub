@@ -40,12 +40,11 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 
 class GithubException(Exception):
-    """Error handling in PyGithub is done with exceptions. This class is the
-    base of all exceptions raised by PyGithub (but
-    :class:`github.GithubException.BadAttributeException`).
+    """Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub
+    (but :class:`github.GithubException.BadAttributeException`).
 
-    Some other types of exceptions might be raised by underlying
-    libraries, for example for network-related issues.
+    Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
+
     """
 
     def __init__(
@@ -97,28 +96,25 @@ class GithubException(Exception):
 
 
 class BadCredentialsException(GithubException):
-    """Exception raised in case of bad credentials (when Github API replies
-    with a 401 or 403 HTML status)"""
+    """Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)"""
 
 
 class UnknownObjectException(GithubException):
-    """Exception raised when a non-existing object is requested (when Github
-    API replies with a 404 HTML status)"""
+    """Exception raised when a non-existing object is requested (when Github API replies with a 404 HTML status)"""
 
 
 class BadUserAgentException(GithubException):
-    """Exception raised when request is sent with a bad user agent header (when
-    Github API replies with a 403 bad user agent HTML status)"""
+    """Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user
+    agent HTML status)"""
 
 
 class RateLimitExceededException(GithubException):
-    """Exception raised when the rate limit is exceeded (when Github API
-    replies with a 403 rate limit exceeded HTML status)"""
+    """Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML
+    status)"""
 
 
 class BadAttributeException(Exception):
-    """Exception raised when Github returns an attribute with the wrong
-    type."""
+    """Exception raised when Github returns an attribute with the wrong type."""
 
     def __init__(
         self,
@@ -159,10 +155,9 @@ class BadAttributeException(Exception):
 
 
 class TwoFactorException(GithubException):
-    """Exception raised when Github requires a onetime password for two-factor
-    authentication."""
+    """Exception raised when Github requires a onetime password for two-factor authentication."""
 
 
 class IncompletableObject(GithubException):
-    """Exception raised when we can not request an object from Github because
-    the data returned did not include a URL."""
+    """Exception raised when we can not request an object from Github because the data returned did not include a
+    URL."""

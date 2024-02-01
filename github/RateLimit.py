@@ -51,6 +51,7 @@ class RateLimit(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/rate-limit
+
     """
 
     def _initAttributes(self) -> None:

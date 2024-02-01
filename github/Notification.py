@@ -56,6 +56,7 @@ class Notification(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#notifications
+
     """
 
     def _initAttributes(self) -> None:

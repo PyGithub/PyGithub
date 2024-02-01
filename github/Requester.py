@@ -343,8 +343,7 @@ class Requester:
             self._frameCount = len(self._frameBuffer) - 1
 
     def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str) -> None:
-        """Update current frame with response Current frame index will be
-        attached to responseHeader."""
+        """Update current frame with response Current frame index will be attached to responseHeader."""
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             self._frameBuffer[self._frameCount][1:4] = [
                 statusCode,
@@ -478,9 +477,8 @@ class Requester:
 
     @property
     def kwargs(self) -> Dict[str, Any]:
-        """Returns arguments required to recreate this Requester with
-        Requester.__init__, as well as with MainClass.__init__ and
-        GithubIntegration.__init__."""
+        """Returns arguments required to recreate this Requester with Requester.__init__, as well as with
+        MainClass.__init__ and GithubIntegration.__init__."""
         return dict(
             auth=self.__auth,
             base_url=self.__base_url,
@@ -511,11 +509,11 @@ class Requester:
         return self.__auth
 
     def withAuth(self, auth: Optional["Auth"]) -> "Requester":
-        """Create a new requester instance with identical configuration but the
-        given authentication method.
+        """Create a new requester instance with identical configuration but the given authentication method.
 
         :param auth: authentication method
         :return: new Requester implementation
+
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)

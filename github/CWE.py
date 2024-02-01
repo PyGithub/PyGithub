@@ -47,6 +47,7 @@ class CWE(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
+
     """
 
     def _initAttributes(self) -> None:

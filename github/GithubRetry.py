@@ -56,6 +56,7 @@ class GithubRetry(Retry):
 
     By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
     This can be configured via the `allowed_methods` argument.
+
     """
 
     __logger: Optional[Logger] = None

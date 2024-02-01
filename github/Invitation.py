@@ -56,6 +56,7 @@ class Invitation(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#invitations
+
     """
 
     def _initAttributes(self) -> None:

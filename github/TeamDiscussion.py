@@ -55,6 +55,7 @@ class TeamDiscussion(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/teams#discussions
+
     """
 
     def _initAttributes(self) -> None:

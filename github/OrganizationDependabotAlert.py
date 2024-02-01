@@ -34,6 +34,7 @@ class OrganizationDependabotAlert(DependabotAlert):
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+
     """
 
     def _initAttributes(self) -> None:

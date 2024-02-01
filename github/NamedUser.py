@@ -85,6 +85,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/users#get-a-user
+
     """
 
     def _initAttributes(self) -> None:

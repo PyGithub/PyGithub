@@ -47,16 +47,15 @@ TOKEN_REFRESH_THRESHOLD_TIMEDELTA = timedelta(seconds=ACCESS_TOKEN_REFRESH_THRES
 
 # add new implementations of github.Auth.Auth to docs/utilities.rst
 class Auth(abc.ABC):
-    """This class is the base class of all authentication methods for
-    Requester."""
+    """This class is the base class of all authentication methods for Requester."""
 
     @property
     @abc.abstractmethod
     def token_type(self) -> str:
-        """The type of the auth token as used in the HTTP Authorization header,
-        e.g. Bearer or Basic.
+        """The type of the auth token as used in the HTTP Authorization header, e.g. Bearer or Basic.
 
         :return: token type
+
         """
 
     @property
@@ -65,6 +64,7 @@ class Auth(abc.ABC):
         """The auth token as used in the HTTP Authorization header.
 
         :return: token
+
         """
 
 
@@ -131,10 +131,10 @@ class Token(Auth):
 
 
 class JWT(Auth, ABC):
-    """This class is the base class to authenticate with a JSON Web Token
-    (JWT).
+    """This class is the base class to authenticate with a JSON Web Token (JWT).
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
+
     """
 
     @property
@@ -146,6 +146,7 @@ class AppAuth(JWT):
     """This class is used to authenticate as a GitHub App.
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
+
     """
 
     def __init__(
@@ -188,13 +189,13 @@ class AppAuth(JWT):
         token_permissions: Optional[Dict[str, str]] = None,
         requester: Optional[Requester] = None,
     ) -> "AppInstallationAuth":
-        """Creates a github.Auth.AppInstallationAuth instance for an
-        installation.
+        """Creates a github.Auth.AppInstallationAuth instance for an installation.
 
         :param installation_id: installation id
         :param token_permissions: optional permissions
         :param requester: optional requester with app authentication
         :return:
+
         """
         return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
@@ -223,10 +224,10 @@ class AppAuth(JWT):
 
 
 class AppAuthToken(JWT):
-    """This class is used to authenticate as a GitHub App with a single
-    constant JWT.
+    """This class is used to authenticate as a GitHub App with a single constant JWT.
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
+
     """
 
     def __init__(self, token: str):
@@ -243,6 +244,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     """This class is used to authenticate as a GitHub App Installation.
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
+
     """
 
     # used to fetch live access token when calling self.token
@@ -323,6 +325,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     """This class is used to authenticate as a GitHub App on behalf of a user.
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
+
     """
 
     _client_id: str
