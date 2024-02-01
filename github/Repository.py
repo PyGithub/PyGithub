@@ -291,6 +291,7 @@ if TYPE_CHECKING:
     from github.Referrer import Referrer
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
     from github.Stargazer import Stargazer
@@ -4177,7 +4178,7 @@ class Repository(CompletableGithubObject):
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
-        self._security_and_analysis: Attribute[str] = NotSet
+        self._security_and_analysis: Attribute[SecurityAndAnalysis] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
         self._squash_merge_commit_message: Attribute[str] = NotSet
@@ -4347,8 +4348,7 @@ class Repository(CompletableGithubObject):
             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
         if "security_and_analysis" in attributes:  # pragma no branch
             self._security_and_analysis = self._makeClassAttribute(
-                github.SecurityAndAnalysis.SecurityAndAnalysis,
-                attributes["security_and_analysis"],
+                github.SecurityAndAnalysis.SecurityAndAnalysis, attributes["security_and_analysis"]
             )
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
