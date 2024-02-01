@@ -22,7 +22,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
@@ -111,6 +111,22 @@ class OrganizationSecret(Secret):
             return False
         self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
+
+    def set_repos(self, selected_repository_ids: List[int]) -> None:
+        """
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}/repositories <https://docs.github.com/en/rest/reference/actions#set-selected-repositories-for-an-organization-secret>`_
+        :param selected_repository_ids: list of int
+        """
+
+        assert isinstance(selected_repository_ids, list) and all(
+            isinstance(repo_id, int) for repo_id in selected_repository_ids
+        ), selected_repository_ids
+
+        _headers, _data = self._requester.requestJsonAndCheck(
+            "PUT",
+            f"{self.url}/repositories",
+            input={"selected_repository_ids": selected_repository_ids},
+        )
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "name" in attributes:

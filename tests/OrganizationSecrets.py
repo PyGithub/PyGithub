@@ -30,7 +30,7 @@ class OrganizationSecrets(Framework.TestCase):
         self.org = self.g.get_organization("coveooss")
         with mock.patch("github.PublicKey.encrypt") as encrypt:
             encrypt.return_value = "MOCK_ENCRYPTED_VALUE"
-            self.org.create_or_update_secret("test_secret", "does not matter", "all")
+            self.org.create_secret("test_secret", "does not matter", "all")
         self.secret = self.org.get_secret("test_secret")
         self.repo = self.org.get_repo("github-app-playground")
         self.repo2 = self.org.get_repo("github-app-playground2")
@@ -47,90 +47,69 @@ class OrganizationSecrets(Framework.TestCase):
         new_secret_value = "new secret value"
         visibility = "all"
 
-        created = self.org.create_or_update_secret(new_secret_name, new_secret_value, visibility)
-        self.assertTrue(created)
-        created_again = self.org.create_or_update_secret(new_secret_name, new_secret_value, visibility)
-        self.assertFalse(created_again)
-
-        gotten_secret = self.org.get_secret(new_secret_name)
+        gotten_secret = self.org.create_secret(new_secret_name, new_secret_value, visibility)
         self.assertEqual(new_secret_name, gotten_secret.name)
         self.assertEqual(visibility, gotten_secret.visibility)
 
-        self.org.delete_secret(gotten_secret.name)
+        gotten_secret.delete()
 
-        def will_raise():
+        def no_repos_if_visibility_private():
             # Cannot have selected_repository_ids with visibility "private"
-            self.org.create_or_update_secret(
+            self.org.create_secret(
                 "not_important",
                 "not important either",
                 visibility="private",
-                selected_repository_ids=[self.repo.id, self.repo2.id],
+                selected_repositories=[self.repo, self.repo2],
             )
 
-        self.assertRaisesRegex(
-            ValueError,
-            "selected_repository_ids can only be used with visibility `selected`",
-            will_raise,
-        )
+        self.assertRaises(AssertionError, no_repos_if_visibility_private)
 
-        def will_also_raise():
+        def no_repos_if_visibility_all():
             # Cannot have selected_repository_ids with visibility "all"
-            self.org.create_or_update_secret(
+            self.org.create_secret(
                 "not_important",
                 "not important either",
                 visibility="all",
-                selected_repository_ids=[self.repo.id, self.repo2.id],
+                selected_repositories=[self.repo, self.repo2],
             )
 
-        self.assertRaisesRegex(
-            ValueError,
-            "selected_repository_ids can only be used with visibility `selected`",
-            will_also_raise,
-        )
+        self.assertRaises(AssertionError, no_repos_if_visibility_all)
 
-        def will_raise_again():
-            self.org.create_or_update_secret(
+        def repos_must_be_a_list():
+            self.org.create_secret(
                 "not_important",
                 "not important either",
                 visibility="selected",
-                selected_repository_ids=self.repo.id,
+                selected_repositories=self.repo,
             )
 
-        self.assertRaisesRegex(ValueError, "selected_repository_ids should be a list", will_raise_again)
+        self.assertRaises(AssertionError, repos_must_be_a_list)
 
-        def will_raise_a_final_time():
-            self.org.create_or_update_secret(
+        def bad_repo_type():
+            self.org.create_secret(
                 "not_important",
                 "not important either",
                 visibility="selected",
-                selected_repository_ids=["not", "integers"],
+                selected_repositories=["not", "integers"],
             )
 
-        self.assertRaisesRegex(
-            ValueError,
-            "selected_repository_ids elements should all be int",
-            will_raise_a_final_time,
-        )
+        self.assertRaises(AssertionError, bad_repo_type)
 
-        created_the_third = self.org.create_or_update_secret(
+        self.org.create_secret(
             "not_important",
             "not important either",
             visibility="selected",
-            selected_repository_ids=[self.repo.id, self.repo2.id],
+            selected_repositories=[self.repo, self.repo2],
         )
 
-        self.assertTrue(created_the_third)
-
-        created4 = self.org.create_or_update_secret(
+        secret = self.org.create_secret(
             "not_important",
             "not important either",
             visibility="selected",
-            selected_repository_ids=[self.repo.id],
+            selected_repositories=[self.repo],
         )
 
-        self.assertFalse(created4)
-
-        self.org.delete_secret("not_important")
+        secret.delete()
 
     def testGetSecret(self):
         secret = self.org.get_secret(self.secret.name)
@@ -151,28 +130,26 @@ class OrganizationSecrets(Framework.TestCase):
 
     @mock.patch("github.PublicKey.encrypt", return_value="MOCK_ENCRYPTED_VALUE")
     def testSecretSelectedRepositories(self, _encrypt):
-        self.org.create_or_update_secret("exclusive_secret", "nothing", "selected")
-        exclusive_secret = self.org.get_secret("exclusive_secret")
+        exclusive_secret = self.org.create_secret("exclusive_secret", "nothing", "selected", [])
 
-        secret_selected_repositories = self.org.list_secret_selected_repositories(exclusive_secret.name)
-        self.assertEqual(0, secret_selected_repositories.totalCount)
+        self.assertEqual(0, exclusive_secret.selected_repositories.totalCount)
 
-        self.org.set_secret_selected_repositories(exclusive_secret.name, [self.repo.id, self.repo2.id])
-        secret_selected_repositories_again = self.org.list_secret_selected_repositories(exclusive_secret.name)
+        exclusive_secret.set_repos([self.repo.id, self.repo2.id])
+        secret_selected_repositories = exclusive_secret.selected_repositories
         self.assertEqual(2, secret_selected_repositories.totalCount)
         self.assertListKeyEqual(
-            secret_selected_repositories_again,
+            secret_selected_repositories,
             lambda s: s.id,
             [self.repo.id, self.repo2.id],
         )
 
-        self.org.remove_secret_selected_repository(exclusive_secret.name, self.repo.id)
-        secret_selected_repositories3 = self.org.list_secret_selected_repositories(exclusive_secret.name)
-        self.assertEqual(1, secret_selected_repositories3.totalCount)
-        self.assertEqual(self.repo2.id, secret_selected_repositories3[0].id)
+        exclusive_secret.remove_repo(self.repo)
+        secret_selected_repositories = exclusive_secret.selected_repositories
+        self.assertEqual(1, secret_selected_repositories.totalCount)
+        self.assertEqual(self.repo2.id, secret_selected_repositories[0].id)
 
-        self.org.remove_secret_selected_repository(exclusive_secret.name, self.repo2.id)
-        self.org.add_secret_selected_repository(exclusive_secret.name, self.repo.id)
-        secret_selected_repositories4 = self.org.list_secret_selected_repositories(exclusive_secret.name)
-        self.assertEqual(1, secret_selected_repositories4.totalCount)
-        self.assertEqual(self.repo.id, secret_selected_repositories4[0].id)
+        exclusive_secret.remove_repo(self.repo2)
+        exclusive_secret.add_repo(self.repo)
+        secret_selected_repositories = exclusive_secret.selected_repositories
+        self.assertEqual(1, secret_selected_repositories.totalCount)
+        self.assertEqual(self.repo.id, secret_selected_repositories[0].id)
