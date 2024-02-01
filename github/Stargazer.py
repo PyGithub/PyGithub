@@ -53,8 +53,8 @@ if TYPE_CHECKING:
 class Stargazer(NonCompletableGithubObject):
     """This class represents Stargazers.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/activity#starring
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/activity#starring
     """
 
     def _initAttributes(self) -> None:

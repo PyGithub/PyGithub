@@ -31,7 +31,6 @@ class NamedEnterpriseUser(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
-
     """
 
     def _initAttributes(self) -> None:

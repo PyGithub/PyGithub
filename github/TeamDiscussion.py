@@ -53,8 +53,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 class TeamDiscussion(CompletableGithubObject):
     """This class represents TeamDiscussions.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/teams#discussions
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/teams#discussions
     """
 
     def _initAttributes(self) -> None:

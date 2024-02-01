@@ -43,9 +43,10 @@ if TYPE_CHECKING:
 
 
 class RepositoryAdvisory(AdvisoryBase):
-    """
-    This class represents a RepositoryAdvisory.
-    The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
+    """This class represents a RepositoryAdvisory.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/security-advisories/repository-advisories
     """
 
     def _initAttributes(self) -> None:
@@ -146,8 +147,8 @@ class RepositoryAdvisory(AdvisoryBase):
         login_or_user: str | github.NamedUser.NamedUser,
         credit_type: str,
     ) -> None:
-        """
-        Offers credit to a user for a vulnerability in a repository.
+        """Offers credit to a user for a vulnerability in a repository.
+
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
@@ -157,8 +158,9 @@ class RepositoryAdvisory(AdvisoryBase):
         self,
         credited: Iterable[Credit],
     ) -> None:
-        """
-        Offers credit to a list of users for a vulnerability in a repository.
+        """Offers credit to a list of users for a vulnerability in a
+        repository.
+
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param credited: iterable of dict with keys "login" and "type"
@@ -273,8 +275,9 @@ class RepositoryAdvisory(AdvisoryBase):
         return self
 
     def accept_report(self) -> None:
-        """
-        Accepts the advisory reported from an external reporter via private vulnerability reporting.
+        """Accepts the advisory reported from an external reporter via private
+        vulnerability reporting.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "draft"}
@@ -286,8 +289,8 @@ class RepositoryAdvisory(AdvisoryBase):
         self._useAttributes(data)
 
     def publish(self) -> None:
-        """
-        Publishes the advisory.
+        """Publishes the advisory.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "published"}
@@ -299,8 +302,8 @@ class RepositoryAdvisory(AdvisoryBase):
         self._useAttributes(data)
 
     def request_cve(self) -> None:
-        """
-        Requests a CVE for the advisory.
+        """Requests a CVE for the advisory.
+
         :calls: `POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/cve <https://docs.github.com/en/rest/security-advisories/repository-advisories#request-a-cve-for-a-repository-security-advisory>`_
         """
         self._requester.requestJsonAndCheck(
@@ -309,8 +312,8 @@ class RepositoryAdvisory(AdvisoryBase):
         )
 
     def close(self) -> None:
-        """
-        Closes the advisory.
+        """Closes the advisory.
+
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         patch_parameters = {"state": "closed"}

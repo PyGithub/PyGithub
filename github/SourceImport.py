@@ -40,8 +40,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 class SourceImport(CompletableGithubObject):
     """This class represents SourceImports.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/migrations#source-imports
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/migrations#source-imports
     """
 
     def _initAttributes(self) -> None:

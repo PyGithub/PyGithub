@@ -48,8 +48,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 class GitCommit(CompletableGithubObject):
     """This class represents GitCommits.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/git#commits
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/git#commits
     """
 
     def _initAttributes(self) -> None:

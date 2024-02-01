@@ -53,7 +53,6 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
-
     """
 
     def _initAttributes(self) -> None:

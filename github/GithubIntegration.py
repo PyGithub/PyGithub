@@ -155,13 +155,13 @@ class GithubIntegration:
         )
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
+        """Close connections to the server. Alternatively, use the
+        GithubIntegration object as a context manager:
 
         .. code-block:: python
 
           with github.GithubIntegration(...) as gi:
             # do something
-
         """
         self.__requester.close()
 
@@ -238,7 +238,6 @@ class GithubIntegration:
 
         :calls: `GET /repos/{owner}/{repo}/installation
         <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
-
         """
         owner = urllib.parse.quote(owner)
         repo = urllib.parse.quote(repo)

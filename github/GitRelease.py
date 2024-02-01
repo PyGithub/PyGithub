@@ -69,8 +69,8 @@ from . import Consts
 class GitRelease(CompletableGithubObject):
     """This class represents GitReleases.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#releases
     """
 
     def _initAttributes(self) -> None:
@@ -259,7 +259,6 @@ class GitRelease(CompletableGithubObject):
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
-
         """
         assert isinstance(name, str), name
         assert isinstance(file_size, int), file_size

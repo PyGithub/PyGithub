@@ -48,8 +48,8 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     """This class represents a reviewer for an EnvironmentProtectionRule.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/deployments#environments
     """
 
     def _initAttributes(self) -> None:
@@ -79,7 +79,8 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
 
 
 class ReviewerParams:
-    """This class presents reviewers as can be configured for an Environment."""
+    """This class presents reviewers as can be configured for an
+    Environment."""
 
     def __init__(self, type_: str, id_: int):
         assert isinstance(type_, str) and type_ in ("User", "Team")

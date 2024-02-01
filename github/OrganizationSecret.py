@@ -33,8 +33,8 @@ from github.Secret import Secret
 class OrganizationSecret(Secret):
     """This class represents a org level GitHub secret.
 
-    The reference can be found here https://docs.github.com/en/rest/actions/secrets
-
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/secrets
     """
 
     def _initAttributes(self) -> None:

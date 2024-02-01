@@ -57,8 +57,8 @@ if TYPE_CHECKING:
 class CommitComment(CompletableGithubObject):
     """This class represents CommitComments.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#comments
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#comments
     """
 
     def _initAttributes(self) -> None:

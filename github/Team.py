@@ -87,8 +87,8 @@ if TYPE_CHECKING:
 class Team(CompletableGithubObject):
     """This class represents Teams.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/teams
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/teams
     """
 
     def _initAttributes(self) -> None:

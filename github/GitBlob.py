@@ -42,8 +42,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 class GitBlob(CompletableGithubObject):
     """This class represents GitBlobs.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/git#blobs
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/git#blobs
     """
 
     def _initAttributes(self) -> None:

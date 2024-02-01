@@ -47,7 +47,6 @@ class NotificationSubject(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
-
     """
 
     def _initAttributes(self) -> None:

@@ -51,8 +51,8 @@ if TYPE_CHECKING:
 class Tag(NonCompletableGithubObject):
     """This class represents Tags.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#list-repository-tags
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#list-repository-tags
     """
 
     def __repr__(self) -> str:

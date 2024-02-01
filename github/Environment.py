@@ -58,8 +58,8 @@ if TYPE_CHECKING:
 class Environment(CompletableGithubObject):
     """This class represents Environment.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/deployments#environments
     """
 
     def _initAttributes(self) -> None:
@@ -172,9 +172,7 @@ class Environment(CompletableGithubObject):
         )
 
     def get_secrets(self) -> PaginatedList[Secret]:
-        """
-        Gets all repository secrets
-        """
+        """Gets all repository secrets."""
         return PaginatedList(
             Secret,
             self._requester,
@@ -219,10 +217,8 @@ class Environment(CompletableGithubObject):
         )
 
     def get_variables(self) -> PaginatedList[Variable]:
-        """
-        Gets all repository variables
-        :rtype: :class:`PaginatedList` of :class:`Variable`
-        """
+        """Gets all repository variables :rtype: :class:`PaginatedList` of
+        :class:`Variable`"""
         return PaginatedList(
             Variable,
             self._requester,

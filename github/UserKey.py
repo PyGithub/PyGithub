@@ -45,8 +45,8 @@ from github.GithubObject import Attribute
 class UserKey(github.GithubObject.CompletableGithubObject):
     """This class represents UserKeys.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/users#keys
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/users#keys
     """
 
     def _initAttributes(self) -> None:

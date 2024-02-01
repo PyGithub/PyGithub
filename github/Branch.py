@@ -79,8 +79,8 @@ if TYPE_CHECKING:
 class Branch(NonCompletableGithubObject):
     """This class represents Branches.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#branches
     """
 
     def __repr__(self) -> str:

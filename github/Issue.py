@@ -101,8 +101,8 @@ if TYPE_CHECKING:
 class Issue(CompletableGithubObject):
     """This class represents Issues.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/issues
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/issues
     """
 
     def _initAttributes(self) -> None:

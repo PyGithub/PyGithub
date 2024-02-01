@@ -49,8 +49,8 @@ if TYPE_CHECKING:
 class RateLimit(NonCompletableGithubObject):
     """This class represents RateLimits.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/rate-limit
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/rate-limit
     """
 
     def _initAttributes(self) -> None:

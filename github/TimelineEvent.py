@@ -53,8 +53,8 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class TimelineEvent(NonCompletableGithubObject):
     """This class represents IssueTimelineEvents.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/issues#timeline
     """
 
     def _initAttributes(self) -> None:

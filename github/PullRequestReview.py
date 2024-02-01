@@ -53,8 +53,8 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class PullRequestReview(NonCompletableGithubObject):
     """This class represents PullRequestReviews.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/pulls#reviews
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls#reviews
     """
 
     def _initAttributes(self) -> None:

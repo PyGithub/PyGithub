@@ -73,8 +73,8 @@ class Attribute(Protocol[T_co]):
 
 
 def _datetime_from_http_date(value: str) -> datetime:
-    """
-    Convert an HTTP date to a datetime object.
+    """Convert an HTTP date to a datetime object.
+
     Raises ValueError for invalid dates.
     """
 
@@ -86,8 +86,8 @@ def _datetime_from_http_date(value: str) -> datetime:
 
 
 def _datetime_from_github_isoformat(value: str) -> datetime:
-    """
-    Convert an GitHub API timestamps to a datetime object.
+    """Convert an GitHub API timestamps to a datetime object.
+
     Raises ValueError for invalid timestamps.
     """
 
@@ -418,8 +418,8 @@ class CompletableGithubObject(GithubObject):
         self.__completed = True
 
     def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
-        """Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
-        changed."""
+        """Check and update the object with conditional request :rtype: Boolean
+        value indicating whether the object is changed."""
         conditionalRequestHeader = dict()
         if self.etag is not None:
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag

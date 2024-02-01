@@ -56,12 +56,13 @@ def encrypt(public_key: str, secret_value: str) -> str:
 
 
 class PublicKey(CompletableGithubObject):
-    """This class represents either an organization public key or a repository public key.
+    """This class represents either an organization public key or a repository
+    public key.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key or
-    here
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key
+    or    here
     https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
-
     """
 
     def _initAttributes(self) -> None:

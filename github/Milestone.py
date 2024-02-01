@@ -53,8 +53,8 @@ from github.PaginatedList import PaginatedList
 class Milestone(CompletableGithubObject):
     """This class represents Milestones.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/issues#milestones
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/issues#milestones
     """
 
     def _initAttributes(self) -> None:

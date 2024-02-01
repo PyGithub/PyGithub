@@ -63,8 +63,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 class ProjectCard(CompletableGithubObject):
     """This class represents Project Cards.
 
-    The reference can be found here https://docs.github.com/en/rest/reference/projects#cards
-
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/projects#cards
     """
 
     def _initAttributes(self) -> None:
