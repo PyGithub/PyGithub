@@ -3147,7 +3147,9 @@ class Repository(CompletableGithubObject):
             list_item="runners",
         )
 
-    def get_self_hosted_action_runner_registration_token(self):
+    def get_self_hosted_action_runner_registration_token(
+        self,
+    ) -> github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken:
         """
         :calls: POST /repos/{owner}/{repo}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-a-repository>
         :rtype: string
@@ -3942,94 +3944,6 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def _initAttributes(self):
-        self._allow_forking = github.GithubObject.NotSet
-        self._allow_merge_commit = github.GithubObject.NotSet
-        self._allow_rebase_merge = github.GithubObject.NotSet
-        self._allow_squash_merge = github.GithubObject.NotSet
-        self._archived = github.GithubObject.NotSet
-        self._archive_url = github.GithubObject.NotSet
-        self._assignees_url = github.GithubObject.NotSet
-        self._blobs_url = github.GithubObject.NotSet
-        self._branches_url = github.GithubObject.NotSet
-        self._clone_url = github.GithubObject.NotSet
-        self._collaborators_url = github.GithubObject.NotSet
-        self._comments_url = github.GithubObject.NotSet
-        self._commits_url = github.GithubObject.NotSet
-        self._compare_url = github.GithubObject.NotSet
-        self._contents_url = github.GithubObject.NotSet
-        self._contributors_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._default_branch = github.GithubObject.NotSet
-        self._delete_branch_on_merge = github.GithubObject.NotSet
-        self._deployments_url = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._downloads_url = github.GithubObject.NotSet
-        self._events_url = github.GithubObject.NotSet
-        self._fork = github.GithubObject.NotSet
-        self._forks = github.GithubObject.NotSet
-        self._forks_count = github.GithubObject.NotSet
-        self._forks_url = github.GithubObject.NotSet
-        self._full_name = github.GithubObject.NotSet
-        self._git_commits_url = github.GithubObject.NotSet
-        self._git_refs_url = github.GithubObject.NotSet
-        self._git_tags_url = github.GithubObject.NotSet
-        self._git_url = github.GithubObject.NotSet
-        self._has_downloads = github.GithubObject.NotSet
-        self._has_issues = github.GithubObject.NotSet
-        self._has_pages = github.GithubObject.NotSet
-        self._has_projects = github.GithubObject.NotSet
-        self._has_wiki = github.GithubObject.NotSet
-        self._homepage = github.GithubObject.NotSet
-        self._hooks_url = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._is_template = github.GithubObject.NotSet
-        self._issue_comment_url = github.GithubObject.NotSet
-        self._issue_events_url = github.GithubObject.NotSet
-        self._issues_url = github.GithubObject.NotSet
-        self._keys_url = github.GithubObject.NotSet
-        self._labels_url = github.GithubObject.NotSet
-        self._language = github.GithubObject.NotSet
-        self._languages_url = github.GithubObject.NotSet
-        self._master_branch = github.GithubObject.NotSet
-        self._merges_url = github.GithubObject.NotSet
-        self._milestones_url = github.GithubObject.NotSet
-        self._mirror_url = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._network_count = github.GithubObject.NotSet
-        self._notifications_url = github.GithubObject.NotSet
-        self._open_issues = github.GithubObject.NotSet
-        self._open_issues_count = github.GithubObject.NotSet
-        self._organization = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
-        self._parent = github.GithubObject.NotSet
-        self._permissions = github.GithubObject.NotSet
-        self._private = github.GithubObject.NotSet
-        self._pulls_url = github.GithubObject.NotSet
-        self._pushed_at = github.GithubObject.NotSet
-        self._releases_url = github.GithubObject.NotSet
-        self._security_and_analysis = github.GithubObject.NotSet
-        self._size = github.GithubObject.NotSet
-        self._source = github.GithubObject.NotSet
-        self._ssh_url = github.GithubObject.NotSet
-        self._stargazers_count = github.GithubObject.NotSet
-        self._stargazers_url = github.GithubObject.NotSet
-        self._statuses_url = github.GithubObject.NotSet
-        self._subscribers_url = github.GithubObject.NotSet
-        self._subscribers_count = github.GithubObject.NotSet
-        self._subscription_url = github.GithubObject.NotSet
-        self._svn_url = github.GithubObject.NotSet
-        self._tags_url = github.GithubObject.NotSet
-        self._teams_url = github.GithubObject.NotSet
-        self._topics = github.GithubObject.NotSet
-        self._trees_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._visibility = github.GithubObject.NotSet
-        self._watchers = github.GithubObject.NotSet
-        self._watchers_count = github.GithubObject.NotSet
-
     def get_environment(self, environment_name: str) -> Environment:
         """
         :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
@@ -4263,6 +4177,7 @@ class Repository(CompletableGithubObject):
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
+        self._security_and_analysis: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
         self._squash_merge_commit_message: Attribute[str] = NotSet
