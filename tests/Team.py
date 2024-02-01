@@ -12,7 +12,21 @@
 # Copyright 2018 James D'Amato <james.j.damato@gmail.com>                      #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Adrian Bridgett <58699309+tl-adrian-bridgett@users.noreply.github.com>#
+# Copyright 2020 Andy Grunwald <andygrunwald@gmail.com>                        #
+# Copyright 2020 Gilad Shefer <giladshefer@gmail.com>                          #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Tal Machani <12785464+talmachani@users.noreply.github.com>    #
+# Copyright 2021 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -141,16 +155,21 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.name, "Name edited by PyGithub")
 
     def testEditWithAllArguments(self):
+        parent = self.org.get_team(141496)
         self.team.edit(
             "Name edited twice by PyGithub",
             "Description edited by PyGithub",
             "admin",
             "secret",
+            parent.id,
+            "notifications_disabled",
         )
         self.assertEqual(self.team.name, "Name edited twice by PyGithub")
         self.assertEqual(self.team.description, "Description edited by PyGithub")
         self.assertEqual(self.team.permission, "admin")
         self.assertEqual(self.team.privacy, "secret")
+        self.assertEqual(self.team.parent, parent)
+        self.assertEqual(self.team.notification_setting, "notifications_disabled")
 
     def testGetTeams(self):
         nested_teams = self.team.get_teams()

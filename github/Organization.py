@@ -12,15 +12,50 @@
 # Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
 # Copyright 2016 Michael Pereira <pereira.m@gmail.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
-# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Brian Choy <byceee@gmail.com>                                 #
+# Copyright 2019 Geoffroy Jabouley <gjabouley@invensense.com>                  #
+# Copyright 2019 Pascal Bach <pasci.bach@gmail.com>                            #
+# Copyright 2019 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2019 Shibasis Patel <smartshibasish@gmail.com>                     #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 ebrown <brownierin@users.noreply.github.com>                  #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 latacora-daniel <71085674+latacora-daniel@users.noreply.github.com>#
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 James Simpson <jsimpso@users.noreply.github.com>              #
+# Copyright 2021 Marina Peresypkina <mi9onev@gmail.com>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Oliver Mannion <125105+tekumara@users.noreply.github.com>     #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,8 +74,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -48,6 +85,7 @@ import github.Event
 import github.GithubObject
 import github.HookDelivery
 import github.NamedUser
+import github.OrganizationDependabotAlert
 import github.OrganizationSecret
 import github.OrganizationVariable
 import github.Plan
@@ -75,6 +113,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser
+    from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
     from github.Plan import Plan
@@ -85,10 +124,8 @@ if TYPE_CHECKING:
 
 
 class Organization(CompletableGithubObject):
-    """This class represents Organizations.
-
-    The reference can be found here https://docs.github.com/en/rest/reference/orgs
-
+    """
+    This class represents Organizations. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
     def _initAttributes(self) -> None:
@@ -359,6 +396,7 @@ class Organization(CompletableGithubObject):
         name: str,
         repo: Repository,
         description: Opt[str] = NotSet,
+        include_all_branches: Opt[bool] = NotSet,
         private: Opt[bool] = NotSet,
     ) -> Repository:
         """self.name
@@ -367,9 +405,16 @@ class Organization(CompletableGithubObject):
         assert isinstance(name, str), name
         assert isinstance(repo, github.Repository.Repository), repo
         assert is_optional(description, str), description
+        assert is_optional(include_all_branches, bool), include_all_branches
         assert is_optional(private, bool), private
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "owner": self.login, "description": description, "private": private}
+            {
+                "name": name,
+                "owner": self.login,
+                "description": description,
+                "include_all_branches": include_all_branches,
+                "private": private,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -446,6 +491,14 @@ class Organization(CompletableGithubObject):
         allow_rebase_merge: Opt[bool] = NotSet,
         delete_branch_on_merge: Opt[bool] = NotSet,
         allow_update_branch: Opt[bool] = NotSet,
+        is_template: Opt[bool] = NotSet,
+        allow_auto_merge: Opt[bool] = NotSet,
+        use_squash_pr_title_as_default: Opt[bool] = NotSet,
+        squash_merge_commit_title: Opt[str] = NotSet,
+        squash_merge_commit_message: Opt[str] = NotSet,
+        merge_commit_title: Opt[str] = NotSet,
+        merge_commit_message: Opt[str] = NotSet,
+        custom_properties: Opt[dict[str, Any]] = NotSet,
     ) -> github.Repository.Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
@@ -468,6 +521,19 @@ class Organization(CompletableGithubObject):
         assert is_optional(allow_rebase_merge, bool), allow_rebase_merge
         assert is_optional(delete_branch_on_merge, bool), delete_branch_on_merge
         assert is_optional(allow_update_branch, bool), allow_update_branch
+        assert is_optional(is_template, bool), is_template
+        assert is_optional(allow_auto_merge, bool), allow_auto_merge
+        assert is_optional(use_squash_pr_title_as_default, bool), use_squash_pr_title_as_default
+        assert squash_merge_commit_title in ["PR_TITLE", "COMMIT_OR_PR_TITLE", NotSet], squash_merge_commit_title
+        assert squash_merge_commit_message in [
+            "PR_BODY",
+            "COMMIT_MESSAGES",
+            "BLANK",
+            NotSet,
+        ], squash_merge_commit_message
+        assert merge_commit_title in ["PR_TITLE", "MERGE_MESSAGE", NotSet], merge_commit_title
+        assert merge_commit_message in ["PR_TITLE", "PR_BODY", "BLANK", NotSet], merge_commit_message
+        assert is_optional(custom_properties, dict), custom_properties
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -488,6 +554,14 @@ class Organization(CompletableGithubObject):
                 "allow_rebase_merge": allow_rebase_merge,
                 "delete_branch_on_merge": delete_branch_on_merge,
                 "allow_update_branch": allow_update_branch,
+                "is_template": is_template,
+                "allow_auto_merge": allow_auto_merge,
+                "use_squash_pr_title_as_default": use_squash_pr_title_as_default,
+                "squash_merge_commit_title": squash_merge_commit_title,
+                "squash_merge_commit_message": squash_merge_commit_message,
+                "merge_commit_title": merge_commit_title,
+                "merge_commit_message": merge_commit_message,
+                "custom_properties": custom_properties,
             }
         )
 
@@ -529,7 +603,9 @@ class Organization(CompletableGithubObject):
         if is_defined(selected_repositories):
             put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
+        )
 
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
@@ -537,34 +613,39 @@ class Organization(CompletableGithubObject):
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/actions/secrets/{secret_name}/repositories",
-                "url": f"{self.url}/actions/secrets/{secret_name}",
+                "selected_repositories_url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}/repositories",
+                "url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}",
             },
             completed=False,
         )
 
-    def get_secrets(self) -> PaginatedList[OrganizationSecret]:
-        """Gets all organization secrets :rtype: :class:`PaginatedList` of
-        :class:`github.OrganizationSecret.OrganizationSecret`"""
+    def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
+        """
+        Gets all organization secrets
+        :param secret_type: string options actions or dependabot
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
             github.OrganizationSecret.OrganizationSecret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> OrganizationSecret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: 'GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: 'GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
             completed=False,
         )
 
@@ -575,6 +656,9 @@ class Organization(CompletableGithubObject):
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
+        parent_team_id: Opt[int] = NotSet,
+        maintainers: Opt[list[int]] = NotSet,
+        notification_setting: Opt[str] = NotSet,
     ) -> Team:
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
@@ -583,15 +667,29 @@ class Organization(CompletableGithubObject):
         :param permission: string
         :param privacy: string
         :param description: string
+        :param parent_team_id: integer
+        :param maintainers: list of: integer
+        :param notification_setting: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, str), name
         assert is_optional_list(repo_names, github.Repository.Repository), repo_names
+        assert is_optional_list(maintainers, int), maintainers
+        assert is_optional(parent_team_id, int), parent_team_id
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy
         assert is_optional(description, str), description
+        assert notification_setting in ["notifications_enabled", "notifications_disabled", NotSet], notification_setting
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "permission": permission, "privacy": privacy, "description": description}
+            {
+                "name": name,
+                "permission": permission,
+                "privacy": privacy,
+                "description": description,
+                "parent_team_id": parent_team_id,
+                "maintainers": maintainers,
+                "notification_setting": notification_setting,
+            }
         )
         if is_defined(repo_names):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
@@ -640,15 +738,17 @@ class Organization(CompletableGithubObject):
                 "name": variable_name,
                 "visibility": visibility,
                 "value": value,
-                "selected_repositories_url": f"{self.url}/actions/variables/{variable_name}/repositories",
+                "selected_repositories_url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}/repositories",
                 "url": self.url,
             },
             completed=False,
         )
 
     def get_variables(self) -> PaginatedList[OrganizationVariable]:
-        """Gets all organization variables :rtype: :class:`PaginatedList` of
-        :class:`github.OrganizationVariable.OrganizationVariable`"""
+        """
+        Gets all organization variables
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
+        """
         return PaginatedList(
             github.OrganizationVariable.OrganizationVariable,
             self._requester,
@@ -667,7 +767,7 @@ class Organization(CompletableGithubObject):
         return github.OrganizationVariable.OrganizationVariable(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
+            attributes={"url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}"},
             completed=False,
         )
 
@@ -920,6 +1020,7 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"/repos/{self.login}/{name}",
@@ -966,6 +1067,7 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
         assert isinstance(slug, str), slug
+        slug = urllib.parse.quote(slug)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -1145,6 +1247,57 @@ class Organization(CompletableGithubObject):
             None,
             None,
             list_item="installations",
+        )
+
+    def get_dependabot_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        package: Opt[str] = NotSet,
+        scope: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[OrganizationDependabotAlert]:
+        """
+        :calls: `GET /orgs/{org}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization>`_
+        :param state: Optional string
+        :param severity: Optional string
+        :param ecosystem: Optional string
+        :param package: Optional string
+        :param scope: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        allowed_states = ["auto_dismissed", "dismissed", "fixed", "open"]
+        allowed_severities = ["low", "medium", "high", "critical"]
+        allowed_ecosystems = ["composer", "go", "maven", "npm", "nuget", "pip", "pub", "rubygems", "rust"]
+        allowed_scopes = ["development", "runtime"]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        assert ecosystem in allowed_ecosystems + [NotSet], f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
+        assert scope in allowed_scopes + [NotSet], f"Scope can be one of {', '.join(allowed_scopes)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "severity": severity,
+                "ecosystem": ecosystem,
+                "package": package,
+                "scope": scope,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
+        return PaginatedList(
+            github.OrganizationDependabotAlert.OrganizationDependabotAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            url_parameters,
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

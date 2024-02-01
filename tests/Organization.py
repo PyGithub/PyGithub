@@ -6,14 +6,40 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2019 Brian Choy <byceee@gmail.com>                                 #
+# Copyright 2019 Geoffroy Jabouley <gjabouley@invensense.com>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 ebrown <brownierin@users.noreply.github.com>                  #
+# Copyright 2020 Geoff Low <glow@mdsol.com>                                    #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 latacora-daniel <71085674+latacora-daniel@users.noreply.github.com>#
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Marina Peresypkina <mi9onev@gmail.com>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -145,15 +171,22 @@ class Organization(Framework.TestCase):
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
+        parent_team = self.org.get_team(141496)
+        maintainer = self.g.get_user("jacquev6")
         team = self.org.create_team(
             "Team also created by PyGithub",
             [repo],
             "push",
             "secret",
             "Description also created by PyGithub",
+            parent_team.id,
+            [maintainer.id],
+            "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
+        self.assertEqual(team.parent, parent_team)
+        self.assertEqual(team.notification_setting, "notifications_disabled")
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
@@ -390,6 +423,7 @@ class Organization(Framework.TestCase):
             "hello-world-docker-action-new",
             template_repo,
             description=description,
+            include_all_branches=True,
             private=private,
         )
         self.assertEqual(repo.description, description)
@@ -425,6 +459,42 @@ class Organization(Framework.TestCase):
     def testGetSecrets(self):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotSecrets(self):
+        secrets = self.org.get_secrets(secret_type="dependabot")
+        self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotAlerts(self):
+        alerts = self.org.get_dependabot_alerts()
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 8)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetDependabotAlertsWithAllArguments(self):
+        alerts = self.org.get_dependabot_alerts(
+            "open",
+            "medium",
+            "pip",
+            "jinja2",
+            "runtime",
+            "updated",
+            "asc",
+        )
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 1)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].state, "open")
+        self.assertEqual(alert_list[0].security_advisory.severity, "medium")
+        self.assertEqual(alert_list[0].dependency.package.ecosystem, "pip")
+        self.assertEqual(alert_list[0].dependency.package.name, "jinja2")
+        self.assertEqual(alert_list[0].dependency.scope, "runtime")
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetSecretsFail(self):
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.get_secrets(secret_type="secret")
+        self.assertEqual("secret_type should be actions or dependabot", str(raisedexp.exception))
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:

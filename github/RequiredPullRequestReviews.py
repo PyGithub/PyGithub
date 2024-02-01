@@ -1,6 +1,25 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,6 +66,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         self._required_approving_review_count: Attribute[int] = NotSet
         self._users: Attribute[list[NamedUser]] = NotSet
         self._teams: Attribute[list[Team]] = NotSet
+        self._require_last_push_approval: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -54,6 +74,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
                 "url": self._url.value,
                 "dismiss_stale_reviews": self._dismiss_stale_reviews.value,
                 "require_code_owner_reviews": self._require_code_owner_reviews.value,
+                "require_last_push_approval": self._require_last_push_approval.value,
             }
         )
 
@@ -71,6 +92,11 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     def required_approving_review_count(self) -> int:
         self._completeIfNotSet(self._required_approving_review_count)
         return self._required_approving_review_count.value
+
+    @property
+    def require_last_push_approval(self) -> bool:
+        self._completeIfNotSet(self._require_last_push_approval)
+        return self._require_last_push_approval.value
 
     @property
     def url(self) -> str:
@@ -106,5 +132,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
             self._required_approving_review_count = self._makeIntAttribute(
                 attributes["required_approving_review_count"]
             )
+        if "require_last_push_approval" in attributes:  # pragma no branch
+            self._require_last_push_approval = self._makeBoolAttribute(attributes["require_last_push_approval"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

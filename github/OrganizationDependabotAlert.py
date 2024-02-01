@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,51 +19,30 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
 
-import github.NamedUser
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.DependabotAlert import DependabotAlert
+from github.GithubObject import Attribute, NotSet
+from github.Repository import Repository
 
 
-class RepositoryAdvisoryCreditDetailed(NonCompletableGithubObject):
-    """This class represents a credit that is assigned to a SecurityAdvisory.
-
-    The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
-
+class OrganizationDependabotAlert(DependabotAlert):
+    """
+    This class represents a Dependabot alert on an organization. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
     """
 
-    @property
-    def state(self) -> str:
-        """
-        :type: string
-        """
-        return self._state.value
-
-    @property
-    def type(self) -> str:
-        """
-        :type: string
-        """
-        return self._type.value
-
-    @property
-    def user(self) -> github.NamedUser.NamedUser:
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
-        return self._user.value
-
     def _initAttributes(self) -> None:
-        self._state: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        super()._initAttributes()
+        self._repository: Attribute[Repository] = NotSet
+
+    @property
+    def repository(self) -> Repository:
+        return self._repository.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
-        if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        super()._useAttributes(attributes)
+        if "repository" in attributes:
+            self._repository = self._makeClassAttribute(Repository, attributes["repository"])

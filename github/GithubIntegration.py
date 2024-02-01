@@ -1,5 +1,34 @@
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+
 from __future__ import annotations
 
+import urllib.parse
 import warnings
 from typing import Any
 
@@ -211,6 +240,8 @@ class GithubIntegration:
         <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
 
         """
+        owner = urllib.parse.quote(owner)
+        repo = urllib.parse.quote(repo)
         return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
     def get_installations(self) -> PaginatedList[Installation]:
@@ -230,18 +261,22 @@ class GithubIntegration:
         """
         :calls: `GET /orgs/{org}/installation <https://docs.github.com/en/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app>`
         """
+        org = urllib.parse.quote(org)
         return self._get_installed_app(url=f"/orgs/{org}/installation")
 
     def get_repo_installation(self, owner: str, repo: str) -> Installation:
         """
         :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
         """
+        owner = urllib.parse.quote(owner)
+        repo = urllib.parse.quote(repo)
         return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
     def get_user_installation(self, username: str) -> Installation:
         """
         :calls: `GET /users/{username}/installation <https://docs.github.com/en/rest/apps/apps#get-a-user-installation-for-the-authenticated-app>`
         """
+        username = urllib.parse.quote(username)
         return self._get_installed_app(url=f"/users/{username}/installation")
 
     def get_app_installation(self, installation_id: int) -> Installation:

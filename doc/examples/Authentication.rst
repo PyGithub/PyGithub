@@ -47,11 +47,11 @@ Write your credentials into a ``.netrc`` file:
 
 You might need to create the environment variable ``NETRC`` with the path to this file.
 
-Then, use a ``github.Auth.Netrc`` instance to access these information:
+Then, use a ``github.Auth.NetrcAuth`` instance to access these information:
 
 .. code-block:: python
 
-    >>> auth = Auth.Netrc()
+    >>> auth = Auth.NetrcAuth()
     >>> g = Github(auth=auth)
     >>> g.get_user().login
     'login'

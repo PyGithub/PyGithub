@@ -9,9 +9,24 @@
 # Copyright 2015 Kyle Hornberg <khornberg@users.noreply.github.com>            #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Juan Manuel "Kang" Pérez <kangcoding@gmail.com>               #
+# Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
+# Copyright 2023 Paul Luna <paulluna0215@gmail.com>                            #
+# Copyright 2023 Thomas Devoogdt <thomas@devoogdt.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 terenho <33275803+terenho@users.noreply.github.com>           #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,6 +45,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -136,6 +152,8 @@ class Branch(NonCompletableGithubObject):
         teams_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         apps_bypass_pull_request_allowances: Opt[list[str]] = NotSet,
         block_creations: Opt[bool] = NotSet,
+        require_last_push_approval: Opt[bool] = NotSet,
+        allow_deletions: Opt[bool] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -161,6 +179,8 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(users_bypass_pull_request_allowances, str), users_bypass_pull_request_allowances
         assert is_optional_list(teams_bypass_pull_request_allowances, str), teams_bypass_pull_request_allowances
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
+        assert is_optional(require_last_push_approval, bool), require_last_push_approval
+        assert is_optional(allow_deletions, bool), allow_deletions
 
         post_parameters: dict[str, Any] = {}
         if is_defined(strict) or is_defined(contexts):
@@ -190,6 +210,7 @@ class Branch(NonCompletableGithubObject):
             or is_defined(users_bypass_pull_request_allowances)
             or is_defined(teams_bypass_pull_request_allowances)
             or is_defined(apps_bypass_pull_request_allowances)
+            or is_defined(require_last_push_approval)
         ):
             post_parameters["required_pull_request_reviews"] = {}
             if is_defined(dismiss_stale_reviews):
@@ -202,6 +223,10 @@ class Branch(NonCompletableGithubObject):
                 post_parameters["required_pull_request_reviews"][
                     "required_approving_review_count"
                 ] = required_approving_review_count
+            if is_defined(require_last_push_approval):
+                post_parameters["required_pull_request_reviews"][
+                    "require_last_push_approval"
+                ] = require_last_push_approval
 
             dismissal_restrictions = {}
             if is_defined(dismissal_users):
@@ -270,6 +295,10 @@ class Branch(NonCompletableGithubObject):
             post_parameters["block_creations"] = block_creations
         else:
             post_parameters["block_creations"] = None
+        if is_defined(allow_deletions):
+            post_parameters["allow_deletions"] = allow_deletions
+        else:
+            post_parameters["allow_deletions"] = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -347,6 +376,7 @@ class Branch(NonCompletableGithubObject):
         dismiss_stale_reviews: Opt[bool] = NotSet,
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
+        require_last_push_approval: Opt[bool] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
@@ -356,12 +386,14 @@ class Branch(NonCompletableGithubObject):
         assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
         assert is_optional(required_approving_review_count, int), required_approving_review_count
+        assert is_optional(require_last_push_approval, bool), require_last_push_approval
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
                 "dismiss_stale_reviews": dismiss_stale_reviews,
                 "require_code_owner_reviews": require_code_owner_reviews,
                 "required_approving_review_count": required_approving_review_count,
+                "require_last_push_approval": require_last_push_approval,
             }
         )
 
@@ -533,3 +565,22 @@ class Branch(NonCompletableGithubObject):
             f"{self.protection_url}/required_signatures",
             headers={"Accept": Consts.signaturesProtectedBranchesPreview},
         )
+
+    def get_allow_deletions(self) -> bool:
+        """
+        :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.protection_url}/allow_deletions")
+        return data["enabled"]
+
+    def set_allow_deletions(self) -> None:
+        """
+        :calls: `POST /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.protection_url}/allow_deletions")
+
+    def remove_allow_deletions(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/allow_deletions")
