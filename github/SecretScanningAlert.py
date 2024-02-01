@@ -1,14 +1,15 @@
-import github.Commit
-import github.GithubObject
-import github.NamedUser
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.NamedUser import NamedUser
 
 
-class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
+class SecretScanningAlert(NonCompletableGithubObject):
     """
     This class represents SecretScanningAlert. The reference can be found here https://docs.github.com/en/rest/secret-scanning#list-secret-scanning-alerts-for-a-repository
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "created_at": self._created_at.value,
@@ -32,144 +33,93 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def created_at(self):
-        """
-        :type: string
-        """
+    def created_at(self) -> str:
         return self._created_at.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         return self._html_url.value
 
     @property
-    def locations_url(self):
-        """
-        :type: string
-        """
+    def locations_url(self) -> str:
         return self._locations_url.value
 
     @property
-    def number(self):
-        """
-        :type: integer
-        """
+    def number(self) -> int:
         return self._number.value
 
     @property
-    def push_protection_bypassed(self):
-        """
-        :type: bool
-        """
+    def push_protection_bypassed(self) -> bool:
         return self._push_protection_bypassed.value
 
     @property
-    def push_protection_bypassed_at(self):
-        """
-        :type: string
-        """
+    def push_protection_bypassed_at(self) -> str:
         return self._push_protection_bypassed_at.value
 
     @property
-    def push_protection_bypassed_by(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def push_protection_bypassed_by(self) -> NamedUser:
         return self._push_protection_bypassed_by.value
 
     @property
-    def resolution(self):
-        """
-        :type: string
-        """
+    def resolution(self) -> str:
         return self._resolution.value
 
     @property
-    def resolution_comment(self):
-        """
-        :type: string
-        """
+    def resolution_comment(self) -> str:
         return self._resolution_comment.value
 
     @property
-    def resolved_at(self):
-        """
-        :type: string
-        """
+    def resolved_at(self) -> str:
         return self._resolved_at.value
 
     @property
-    def resolved_by(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def resolved_by(self) -> NamedUser:
         return self._resolved_by.value
 
     @property
-    def secret(self):
-        """
-        :type: string
-        """
+    def secret(self) -> str:
         return self._secret.value
 
     @property
-    def secret_type(self):
-        """
-        :type: string
-        """
+    def secret_type(self) -> str:
         return self._secret_type.value
 
     @property
-    def secret_type_display_name(self):
-        """
-        :type: string
-        """
+    def secret_type_display_name(self) -> str:
         return self._secret_type_display_name.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def updated_at(self):
-        """
-        :type: string
-        """
+    def updated_at(self) -> str:
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._locations_url = github.GithubObject.NotSet
-        self._number = github.GithubObject.NotSet
-        self._push_protection_bypassed = github.GithubObject.NotSet
-        self._push_protection_bypassed_at = github.GithubObject.NotSet
-        self._push_protection_bypassed_by = github.GithubObject.NotSet
-        self._resolution = github.GithubObject.NotSet
-        self._resolution_comment = github.GithubObject.NotSet
-        self._resolved_at = github.GithubObject.NotSet
-        self._resolved_by = github.GithubObject.NotSet
-        self._secret = github.GithubObject.NotSet
-        self._secret_type = github.GithubObject.NotSet
-        self._secret_type_display_name = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._locations_url: Attribute[str] = NotSet
+        self._number: Attribute[int] = NotSet
+        self._push_protection_bypassed: Attribute[bool] = NotSet
+        self._push_protection_bypassed_at: Attribute[str] = NotSet
+        self._push_protection_bypassed_by: Attribute[NamedUser] = NotSet
+        self._resolution: Attribute[str] = NotSet
+        self._resolution_comment: Attribute[str] = NotSet
+        self._resolved_at: Attribute[str] = NotSet
+        self._resolved_by: Attribute[NamedUser] = NotSet
+        self._secret: Attribute[str] = NotSet
+        self._secret_type: Attribute[str] = NotSet
+        self._secret_type_display_name: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._updated_at: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeStringAttribute(attributes["created_at"])
         if "html_url" in attributes:  # pragma no branch
@@ -184,7 +134,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
             self._push_protection_bypassed_at = self._makeStringAttribute(attributes["push_protection_bypassed_at"])
         if "push_protection_bypassed_by" in attributes:  # pragma no branch
             self._push_protection_bypassed_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
+                NamedUser, attributes["push_protection_bypassed_by"]
             )
         if "resolution" in attributes:  # pragma no branch
             self._resolution = self._makeStringAttribute(attributes["resolution"])
@@ -193,7 +143,7 @@ class SecretScanningAlert(github.GithubObject.NonCompletableGithubObject):
         if "resolved_at" in attributes:  # pragma no branch
             self._resolved_at = self._makeStringAttribute(attributes["resolved_at"])
         if "resolved_by" in attributes:  # pragma no branch
-            self._resolved_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["resolved_by"])
+            self._resolved_by = self._makeClassAttribute(NamedUser, attributes["resolved_by"])
         if "secret" in attributes:  # pragma no branch
             self._secret = self._makeStringAttribute(attributes["secret"])
         if "secret_type" in attributes:  # pragma no branch

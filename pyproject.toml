@@ -50,7 +50,7 @@ integrations = []
 github = ["py.typed", '*.pyi']
 
 [tool.mypy]
-python_version = '3.7'
+python_version = '3.8'
 ignore_missing_imports = true
 namespace_packages = true
 

@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class Package(NonCompletableGithubObject):
@@ -25,9 +25,9 @@ class Package(NonCompletableGithubObject):
         """
         return self._name.value
 
-    def _initAttributes(self) -> str:
-        self._ecosystem = NotSet
-        self._name = NotSet
+    def _initAttributes(self) -> None:
+        self._ecosystem: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "ecosystem" in attributes:  # pragma no branch

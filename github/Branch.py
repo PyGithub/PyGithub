@@ -72,6 +72,8 @@ from github.GithubObject import (
 
 if TYPE_CHECKING:
     from github.BranchProtection import BranchProtection
+    from github.CheckRun import CheckRun
+    from github.CheckSuite import CheckSuite
     from github.Commit import Commit
     from github.NamedUser import NamedUser
     from github.PaginatedList import PaginatedList
@@ -105,10 +107,7 @@ class Branch(NonCompletableGithubObject):
         return self._protection_url.value
 
     @property
-    def commit_branch_url(self):
-        """
-        :type: string
-        """
+    def commit_branch_url(self) -> str:
         # github doesn't return the commit/{branch} api :shrug:
         return self.commit.url.replace(self.commit.sha, self.name)
 
@@ -597,10 +596,10 @@ class Branch(NonCompletableGithubObject):
 
     def get_check_runs(
         self,
-        check_name=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        filter=github.GithubObject.NotSet,
-    ):
+        check_name: Opt[str] = github.GithubObject.NotSet,
+        status: Opt[str] = github.GithubObject.NotSet,
+        filter: Opt[str] = github.GithubObject.NotSet,
+    ) -> PaginatedList[CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
         :param check_name: string
@@ -626,19 +625,19 @@ class Branch(NonCompletableGithubObject):
             list_item="check_runs",
         )
 
-    def get_check_suites(self, app_id=github.GithubObject.NotSet, check_name=github.GithubObject.NotSet):
+    def get_check_suites(self, app_id: Opt[int] = NotSet, check_name: Opt[str] = NotSet) -> PaginatedList[CheckSuite]:
         """
         :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
         :param app_id: int
         :param check_name: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckSuite.CheckSuite`
         """
-        assert app_id is github.GithubObject.NotSet or isinstance(app_id, int), app_id
-        assert check_name is github.GithubObject.NotSet or isinstance(check_name, str), check_name
-        parameters = dict()
-        if app_id is not github.GithubObject.NotSet:
+        assert app_id is NotSet or isinstance(app_id, int), app_id
+        assert check_name is NotSet or isinstance(check_name, str), check_name
+        parameters: dict[str, Any] = dict()
+        if app_id is not NotSet:
             parameters["app_id"] = app_id
-        if check_name is not github.GithubObject.NotSet:
+        if check_name is not NotSet:
             parameters["check_name"] = check_name
         return github.PaginatedList.PaginatedList(
             github.CheckSuite.CheckSuite,

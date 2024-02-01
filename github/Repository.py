@@ -252,6 +252,7 @@ if TYPE_CHECKING:
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
     from github.CodeScanAlert import CodeScanAlert
+    from github.CodeScanningAnalysis import CodeScanningAnalysis
     from github.Commit import Commit
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
@@ -276,6 +277,7 @@ if TYPE_CHECKING:
     from github.Issue import Issue
     from github.IssueComment import IssueComment
     from github.IssueEvent import IssueEvent
+    from github.Job import Job
     from github.Label import Label
     from github.License import License
     from github.Milestone import Milestone
@@ -291,6 +293,7 @@ if TYPE_CHECKING:
     from github.Referrer import Referrer
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.SecretScanningAlert import SecretScanningAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
@@ -878,7 +881,7 @@ class Repository(CompletableGithubObject):
         return self._releases_url.value
 
     @property
-    def security_and_analysis(self):
+    def security_and_analysis(self) -> SecurityAndAnalysis:
         """
         :type: :class:``
         """
@@ -3353,7 +3356,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
-    def get_workflow_job(self, job_id):
+    def get_workflow_job(self, job_id: int | str) -> Job:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/jobs/{job_id} <https://docs.github.com/en/rest/reference/actions#workflow-jobs>`_
         :param job_id: int or string
@@ -3881,7 +3884,7 @@ class Repository(CompletableGithubObject):
 
         return github.Artifact.Artifact(self._requester, headers, data, completed=True)
 
-    def get_codescan_alerts(self, ref=github.GithubObject.NotSet) -> PaginatedList[CodeScanAlert]:
+    def get_codescan_alerts(self, ref: Opt[str] = NotSet) -> PaginatedList[CodeScanAlert]:
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
@@ -3898,7 +3901,7 @@ class Repository(CompletableGithubObject):
             parameters,
         )
 
-    def get_code_scanning_analyses(self, ref=github.GithubObject.NotSet):
+    def get_code_scanning_analyses(self, ref: Opt[str] = NotSet) -> PaginatedList[CodeScanningAnalysis]:
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/analyses <https://docs.github.com/en/rest/code-scanning#list-code-scanning-analyses-for-a-repository>`_
         :param: ref: string
@@ -3933,12 +3936,12 @@ class Repository(CompletableGithubObject):
             list_item="environments",
         )
 
-    def get_secret_scanning_alerts(self):
+    def get_secret_scanning_alerts(self) -> PaginatedList[SecretScanningAlert]:
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning#list-secret-scanning-alerts-for-a-repository>
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SecretScanningAlert.SecretScanningAlert`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.SecretScanningAlert.SecretScanningAlert,
             self._requester,
             f"{self.url}/secret-scanning/alerts",

@@ -1,4 +1,6 @@
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class SecretScanningPushProtection(NonCompletableGithubObject):
@@ -14,8 +16,8 @@ class SecretScanningPushProtection(NonCompletableGithubObject):
         return self._status.value
 
     def _initAttributes(self) -> None:
-        self._status = NotSet
+        self._status: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])

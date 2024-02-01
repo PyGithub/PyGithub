@@ -124,6 +124,8 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.PublicKey import PublicKey
     from github.Repository import Repository
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
+    from github.SelfHostedActionsRunnerRegistrationToken import SelfHostedActionsRunnerRegistrationToken
     from github.Team import Team
 
 
@@ -987,7 +989,7 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_self_hosted_runner(self, runner_id):
+    def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
         """
         :calls: `GET /orgs/{org}/actions/runners/{id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-an-organization>`_
         :param runner_id: int
@@ -997,7 +999,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/runners/{runner_id}")
         return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data, completed=True)
 
-    def remove_self_hosted_runner(self, runner):
+    def remove_self_hosted_runner(self, runner: int | github.SelfHostedActionsRunner.SelfHostedActionsRunner) -> bool:
         """
         :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-an-organization>`_
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
@@ -1013,7 +1015,7 @@ class Organization(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("DELETE", f"{self.url}/actions/runners/{runner}")
         return status == 204
 
-    def get_self_hosted_runners(self):
+    def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
         """
         :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-an-organization>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
@@ -1026,7 +1028,7 @@ class Organization(CompletableGithubObject):
             list_item="runners",
         )
 
-    def get_self_hosted_action_runner_registration_token(self):
+    def get_self_hosted_action_runner_registration_token(self) -> SelfHostedActionsRunnerRegistrationToken:
         """
         :calls: POST /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/reference/actions#create-a-registration-token-for-an-organization>
         :rtype: :class:`github.SelfHostedActionsRunnerRegistrationToken.SelfHostedActionsRunnerRegistrationToken`

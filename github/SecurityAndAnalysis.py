@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from github.AdvancedSecurity import AdvancedSecurity
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from github.SecretScanning import SecretScanning
@@ -35,7 +37,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         self._secret_scanning: Attribute[SecretScanning] = NotSet
         self._secret_scanning_push_protection: Attribute[SecretScanningPushProtection] = NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "advanced_security" in attributes:  # pragma no branch
             self._advanced_security = self._makeClassAttribute(AdvancedSecurity, attributes["advanced_security"])
         if "secret_scanning" in attributes:  # pragma no branch

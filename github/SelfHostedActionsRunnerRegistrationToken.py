@@ -19,33 +19,29 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from datetime import datetime
+from typing import Any, Dict
 
-import github.GithubObject
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class SelfHostedActionsRunnerRegistrationToken(github.GithubObject.NonCompletableGithubObject):
-    def __repr__(self):
+class SelfHostedActionsRunnerRegistrationToken(NonCompletableGithubObject):
+    def __repr__(self) -> str:
         return self.get__repr__({"expires_at": self._expires_at.value})
 
     @property
-    def token(self):
-        """
-        :type: string
-        """
+    def token(self) -> str:
         return self._token.value
 
     @property
-    def expires_at(self):
-        """
-        :type: datetime
-        """
+    def expires_at(self) -> datetime:
         return self._expires_at.value
 
-    def _initAttributes(self):
-        self._token = github.GithubObject.NotSet
-        self._expires_at = github.GithubObject.NotSet
+    def _initAttributes(self) -> None:
+        self._token: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
 
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "token" in attributes:
             self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:

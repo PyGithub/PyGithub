@@ -1,4 +1,6 @@
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class FirstPatchedVersion(NonCompletableGithubObject):
@@ -21,8 +23,8 @@ class FirstPatchedVersion(NonCompletableGithubObject):
         return self._identifier.value
 
     def _initAttributes(self) -> None:
-        self._identifier = NotSet
+        self._identifier: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes) -> None:
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "identifier" in attributes:  # pragma no branch
             self._identifier = self._makeStringAttribute(attributes["identifier"])
