@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
+import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-from github.NamedUser import NamedUser
 
 
 class SecretScanningAlert(NonCompletableGithubObject):
@@ -57,7 +57,7 @@ class SecretScanningAlert(NonCompletableGithubObject):
         return self._push_protection_bypassed_at.value
 
     @property
-    def push_protection_bypassed_by(self) -> NamedUser:
+    def push_protection_bypassed_by(self) -> github.NamedUser.NamedUser:
         return self._push_protection_bypassed_by.value
 
     @property
@@ -73,7 +73,7 @@ class SecretScanningAlert(NonCompletableGithubObject):
         return self._resolved_at.value
 
     @property
-    def resolved_by(self) -> NamedUser:
+    def resolved_by(self) -> github.NamedUser.NamedUser:
         return self._resolved_by.value
 
     @property
@@ -107,11 +107,11 @@ class SecretScanningAlert(NonCompletableGithubObject):
         self._number: Attribute[int] = NotSet
         self._push_protection_bypassed: Attribute[bool] = NotSet
         self._push_protection_bypassed_at: Attribute[str] = NotSet
-        self._push_protection_bypassed_by: Attribute[NamedUser] = NotSet
+        self._push_protection_bypassed_by: Attribute[github.NamedUser.NamedUser] = NotSet
         self._resolution: Attribute[str] = NotSet
         self._resolution_comment: Attribute[str] = NotSet
         self._resolved_at: Attribute[str] = NotSet
-        self._resolved_by: Attribute[NamedUser] = NotSet
+        self._resolved_by: Attribute[github.NamedUser.NamedUser] = NotSet
         self._secret: Attribute[str] = NotSet
         self._secret_type: Attribute[str] = NotSet
         self._secret_type_display_name: Attribute[str] = NotSet
@@ -134,7 +134,7 @@ class SecretScanningAlert(NonCompletableGithubObject):
             self._push_protection_bypassed_at = self._makeStringAttribute(attributes["push_protection_bypassed_at"])
         if "push_protection_bypassed_by" in attributes:  # pragma no branch
             self._push_protection_bypassed_by = self._makeClassAttribute(
-                NamedUser, attributes["push_protection_bypassed_by"]
+                github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
             )
         if "resolution" in attributes:  # pragma no branch
             self._resolution = self._makeStringAttribute(attributes["resolution"])
@@ -143,7 +143,7 @@ class SecretScanningAlert(NonCompletableGithubObject):
         if "resolved_at" in attributes:  # pragma no branch
             self._resolved_at = self._makeStringAttribute(attributes["resolved_at"])
         if "resolved_by" in attributes:  # pragma no branch
-            self._resolved_by = self._makeClassAttribute(NamedUser, attributes["resolved_by"])
+            self._resolved_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["resolved_by"])
         if "secret" in attributes:  # pragma no branch
             self._secret = self._makeStringAttribute(attributes["secret"])
         if "secret_type" in attributes:  # pragma no branch
