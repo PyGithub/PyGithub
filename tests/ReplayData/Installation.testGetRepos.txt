@@ -4,7 +4,7 @@ api.github.com
 None
 /app/installations/36541767/access_tokens
 {'Accept': 'application/vnd.github.machine-man-preview+json', 'Authorization': 'Bearer jwt_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
-{"permissions": {}}
+{"permissions": {}, "repositories": [], "repository_ids": []}
 201
 [('Server', 'GitHub.com'), ('Date', 'Thu, 08 Jun 2023 07:39:25 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '231'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"783fdaa90e16f1fd718449dd5b21c99024d0821e33012e2610a8446495847795"'), ('X-GitHub-Media-Type', 'github.v3; param=machine-man-preview; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'D590:F2E4:13B6DDD:13FE18A:648185AC')]
 {"token":"private_token_removed","expires_at":"2023-06-08T08:39:25Z","permissions":{"metadata":"read"},"repository_selection":"selected"}
