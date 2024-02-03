@@ -174,10 +174,16 @@ class GithubIntegration:
         self.close()
 
     def get_github_for_installation(
-        self, installation_id: int, token_permissions: dict[str, str] | None = None
+        self,
+        installation_id: int,
+        token_permissions: dict[str, str] | None = None,
+        token_repositories: list[str] | None = None,
+        token_repository_ids: list[int] | None = None,
     ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
+        auth = self.auth.get_installation_auth(
+            installation_id, token_permissions, self.__requester, token_repositories, token_repository_ids
+        )
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self) -> dict[str, str]:
