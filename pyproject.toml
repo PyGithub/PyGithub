@@ -70,6 +70,8 @@ recursive = true
 wrap-summaries = 119
 wrap-descriptions = 120
 blank = true
+pre-summary-newline = true
+make-summary-multi-line = true
 
 [tool.codespell]
 skip = 'tests/*'
