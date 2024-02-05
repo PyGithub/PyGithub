@@ -11,9 +11,7 @@ class CodeScanAnalysis(Framework.TestCase):
 
         self.assertIn("refs/heads/main", analysis.ref)
         self.assertIn("d99612c3e1f2970085cfbaeadf8f010ef69bad83", analysis.commit_sha)
-        self.assertIn(
-            ".github/workflows/codeql-analysis.yml:analyze", analysis.analysis_key
-        )
+        self.assertIn(".github/workflows/codeql-analysis.yml:analyze", analysis.analysis_key)
         self.assertIn('{"language":"python"}', analysis.environment)
         self.assertIn("", analysis.error)
         self.assertIn(

@@ -8,6 +8,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,11 +39,7 @@ from . import Framework
 class GitBlob(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.blob = (
-            self.g.get_user()
-            .get_repo("PyGithub")
-            .get_git_blob("53bce9fa919b4544e67275089b3ec5b44be20667")
-        )
+        self.blob = self.g.get_user().get_repo("PyGithub").get_git_blob("53bce9fa919b4544e67275089b3ec5b44be20667")
 
     def testAttributes(self):
         self.assertTrue(

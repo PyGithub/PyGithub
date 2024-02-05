@@ -9,6 +9,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,78 +36,65 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import github.GithubObject
 import github.GitObject
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+
+if TYPE_CHECKING:
+    from github.GitObject import GitObject
 
 
-class GitRef(github.GithubObject.CompletableGithubObject):
+class GitRef(CompletableGithubObject):
     """
     This class represents GitRefs. The reference can be found here https://docs.github.com/en/rest/reference/git#references
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._object: Attribute[GitObject] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"ref": self._ref.value})
 
     @property
-    def object(self):
-        """
-        :type: :class:`github.GitObject.GitObject`
-        """
+    def object(self) -> GitObject:
         self._completeIfNotSet(self._object)
         return self._object.value
 
     @property
-    def ref(self):
-        """
-        :type: string
-        """
+    def ref(self) -> str:
         self._completeIfNotSet(self._ref)
         return self._ref.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, sha, force=github.GithubObject.NotSet):
+    def edit(self, sha: str, force: Opt[bool] = NotSet) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
-        :param sha: string
-        :param force: bool
-        :rtype: None
         """
         assert isinstance(sha, str), sha
-        assert force is github.GithubObject.NotSet or isinstance(force, bool), force
-        post_parameters = {
-            "sha": sha,
-        }
-        if force is not github.GithubObject.NotSet:
-            post_parameters["force"] = force
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        assert is_optional(force, bool), force
+        post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def _initAttributes(self):
-        self._object = github.GithubObject.NotSet
-        self._ref = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(
-                github.GitObject.GitObject, attributes["object"]
-            )
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch

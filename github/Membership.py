@@ -1,24 +1,25 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 poulp <mathieu.nerv@gmail.com>                                #
-# Copyright 2014 Tomas Radej <tradej@redhat.com>                               #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 E. Dunham <github@edunham.net>                                #
+# Copyright 2015 Matt Babineau <mbabineau@dataxu.com>                          #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Martijn Koster <mak-github@greenhills.co.uk>                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
-# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Pavan Kunisetty <nagapavan@users.noreply.github.com>          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,74 +39,66 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+import github.NamedUser
+import github.Organization
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
-class Membership(github.GithubObject.CompletableGithubObject):
+class Membership(CompletableGithubObject):
     """
     This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._role: Attribute[str] = NotSet
+        self._organization_url: Attribute[str] = NotSet
+        self._organization: Attribute[Organization] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def role(self):
-        """
-        :type: string
-        """
+    def role(self) -> str:
         self._completeIfNotSet(self._role)
         return self._role.value
 
     @property
-    def organization_url(self):
-        """
-        :type: string
-        """
+    def organization_url(self) -> str:
         self._completeIfNotSet(self._organization_url)
         return self._organization_url.value
 
     @property
-    def organization(self):
-        """
-        :type: :class:`github.Organization.Organization`
-        """
+    def organization(self) -> Organization:
         self._completeIfNotSet(self._organization)
         return self._organization.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def _initAttributes(self):
-        self._url = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._role = github.GithubObject.NotSet
-        self._organization_url = github.GithubObject.NotSet
-        self._organization = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "state" in attributes:  # pragma no branch
@@ -113,14 +106,8 @@ class Membership(github.GithubObject.CompletableGithubObject):
         if "role" in attributes:  # pragma no branch
             self._role = self._makeStringAttribute(attributes["role"])
         if "organization_url" in attributes:  # pragma no branch
-            self._organization_url = self._makeStringAttribute(
-                attributes["organization_url"]
-            )
+            self._organization_url = self._makeStringAttribute(attributes["organization_url"])
         if "organization" in attributes:  # pragma no branch
-            self._organization = self._makeClassAttribute(
-                github.Organization.Organization, attributes["organization"]
-            )
+            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

@@ -8,7 +8,13 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,7 +34,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -40,11 +46,10 @@ class CommitComment(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
+        self.assertEqual(self.comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d")
         self.assertEqual(
-            self.comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d"
-        )
-        self.assertEqual(
-            self.comment.created_at, datetime.datetime(2012, 5, 22, 18, 40, 18)
+            self.comment.created_at,
+            datetime(2012, 5, 22, 18, 40, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.html_url,
@@ -55,7 +60,8 @@ class CommitComment(Framework.TestCase):
         self.assertEqual(self.comment.path, None)
         self.assertEqual(self.comment.position, None)
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 22, 18, 40, 18)
+            self.comment.updated_at,
+            datetime(2012, 5, 22, 18, 40, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.comment.url,

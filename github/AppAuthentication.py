@@ -1,6 +1,19 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Denis Blanchette <denisblanchette@gmail.com>                  #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -21,21 +34,24 @@
 ################################################################################
 
 
-class AppAuthentication:
+from typing import Dict, Optional, Union
+
+import deprecated
+
+from github.Auth import AppAuth, AppInstallationAuth
+
+
+@deprecated.deprecated("Use github.Auth.AppInstallationAuth instead")
+class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,
-        app_id,
-        private_key,
-        installation_id,
-        token_permissions=None,
+        app_id: Union[int, str],
+        private_key: str,
+        installation_id: int,
+        token_permissions: Optional[Dict[str, str]] = None,
     ):
-        assert isinstance(app_id, (int, str)), app_id
-        assert isinstance(private_key, str)
-        assert isinstance(installation_id, int), installation_id
-        assert token_permissions is None or isinstance(
-            token_permissions, dict
-        ), token_permissions
-        self.app_id = app_id
-        self.private_key = private_key
-        self.installation_id = installation_id
-        self.token_permissions = token_permissions
+        super().__init__(
+            app_auth=AppAuth(app_id, private_key),
+            installation_id=installation_id,
+            token_permissions=token_permissions,
+        )

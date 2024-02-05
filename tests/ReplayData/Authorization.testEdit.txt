@@ -52,4 +52,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '382'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"5881b7d6eaa13e3b8539ca6ffc334be1"'), ('date', 'Tue, 22 May 2012 18:24:11 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"note_url":"http://vincent-jacques.net/PyGithub","url":"https://api.github.com/authorizations/372259","app":{"url":"http://vincent-jacques.net/PyGithub","name":"Note created by PyGithub (API)"},"scopes":["user"],"note":"Note created by PyGithub","token":"82459c4500086f8f0cc67d2936c17d1e27ad1c33","created_at":"2012-05-22T18:03:17Z","updated_at":"2012-05-22T18:24:11Z","id":372259}
-

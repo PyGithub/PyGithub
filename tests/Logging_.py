@@ -8,6 +8,13 @@
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -86,9 +93,7 @@ class Logging(Framework.BasicTestCase):
         self.assertEqual(self.logger.output, output)
 
     def testLoggingWithBasicAuthentication(self):
-        self.assertEqual(
-            github.Github(self.login, self.password).get_user().name, "Vincent Jacques"
-        )
+        self.assertEqual(github.Github(auth=self.login).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "Basic (login and password removed)",
@@ -115,9 +120,7 @@ class Logging(Framework.BasicTestCase):
         self.assertLogging("GET", url, requestHeaders, responseHeaders, output)
 
     def testLoggingWithOAuthAuthentication(self):
-        self.assertEqual(
-            github.Github(self.oauth_token).get_user().name, "Vincent Jacques"
-        )
+        self.assertEqual(github.Github(auth=self.oauth_token).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "token (oauth token removed)",
@@ -172,9 +175,7 @@ class Logging(Framework.BasicTestCase):
     def testLoggingWithBaseUrl(self):
         # ReplayData forged, not recorded
         self.assertEqual(
-            github.Github(base_url="http://my.enterprise.com/my/prefix")
-            .get_user("jacquev6")
-            .name,
+            github.Github(base_url="http://my.enterprise.com/my/prefix").get_user("jacquev6").name,
             "Vincent Jacques",
         )
         url = "http://my.enterprise.com/my/prefix/users/jacquev6"

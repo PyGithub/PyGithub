@@ -9,6 +9,11 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,44 +33,37 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookResponse(github.GithubObject.NonCompletableGithubObject):
+class HookResponse(NonCompletableGithubObject):
     """
     This class represents HookResponses
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._code: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._status: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"status": self._status.value})
 
     @property
-    def code(self):
-        """
-        :type: integer
-        """
+    def code(self) -> int:
         return self._code.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def status(self):
-        """
-        :type: string
-        """
+    def status(self) -> str:
         return self._status.value
 
-    def _initAttributes(self):
-        self._code = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._status = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "code" in attributes:  # pragma no branch
             self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch

@@ -1,6 +1,30 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2018 bbi-yggy <yossarian@blackbirdinteractive.com>                 #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Matt Babineau <mbabineau@dataxu.com>                          #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Martijn Koster <mak-github@greenhills.co.uk>                  #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Benoit Latinier <benoit@latinier.fr>                          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Vincent <github@fleeto.us>                                    #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Dhruv Bhanushali <dhruv_b@live.com>                           #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,92 +44,81 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
+
 import github.GithubObject
 import github.Project
 import github.ProjectCard
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.PaginatedList import PaginatedList
 
 from . import Consts
 
 
-class ProjectColumn(github.GithubObject.CompletableGithubObject):
+class ProjectColumn(CompletableGithubObject):
     """
     This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._cards_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._project_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def cards_url(self):
-        """
-        :type: string
-        """
+    def cards_url(self) -> str:
         return self._cards_url.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def name(self):
-        """
-        :type: string
-        """
+    def name(self) -> str:
         return self._name.value
 
     @property
-    def node_id(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
         return self._node_id.value
 
     @property
-    def project_url(self):
-        """
-        :type: string
-        """
+    def project_url(self) -> str:
         return self._project_url.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
-    def get_cards(self, archived_state=github.GithubObject.NotSet):
+    def get_cards(self, archived_state: Opt[str] = NotSet) -> PaginatedList[github.ProjectCard.ProjectCard]:
         """
         :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#list-project-cards>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ProjectCard.ProjectCard`
-        :param archived_state: string
         """
-        assert archived_state is github.GithubObject.NotSet or isinstance(
-            archived_state, str
-        ), archived_state
+        assert archived_state is NotSet or isinstance(archived_state, str), archived_state
 
         url_parameters = dict()
-        if archived_state is not github.GithubObject.NotSet:
+        if archived_state is not NotSet:
             url_parameters["archived_state"] = archived_state
 
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.ProjectCard.ProjectCard,
             self._requester,
             f"{self.url}/cards",
@@ -115,24 +128,19 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
     def create_card(
         self,
-        note=github.GithubObject.NotSet,
-        content_id=github.GithubObject.NotSet,
-        content_type=github.GithubObject.NotSet,
-    ):
+        note: Opt[str] = NotSet,
+        content_id: Opt[int] = NotSet,
+        content_type: Opt[str] = NotSet,
+    ) -> github.ProjectCard.ProjectCard:
         """
         :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#create-a-project-card>`_
-        :param note: string
-        :param content_id: integer
-        :param content_type: string
-
-        :rtype: :class:`github.ProjectCard.ProjectCard`:
         """
         if isinstance(note, str):
-            assert content_id is github.GithubObject.NotSet, content_id
-            assert content_type is github.GithubObject.NotSet, content_type
-            post_parameters = {"note": note}
+            assert content_id is NotSet, content_id
+            assert content_type is NotSet, content_type
+            post_parameters: dict[str, Any] = {"note": note}
         else:
-            assert note is github.GithubObject.NotSet, note
+            assert note is NotSet, note
             assert isinstance(content_id, int), content_id
             assert isinstance(content_type, str), content_type
             post_parameters = {"content_id": content_id, "content_type": content_type}
@@ -141,16 +149,11 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(
-            self._requester, headers, data, completed=True
-        )
+        return github.ProjectCard.ProjectCard(self._requester, headers, data, completed=True)
 
-    def move(self, position):
+    def move(self, position: str) -> bool:
         """
         :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
-        :param position: string
-
-        :rtype: bool
         """
         assert isinstance(position, str), position
         post_parameters = {"position": position}
@@ -162,10 +165,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         )
         return status == 201
 
-    def delete(self):
+    def delete(self) -> bool:
         """
         :calls: `DELETE /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#delete-a-project-column>`_
-        :rtype: bool
         """
         status, _, _ = self._requester.requestJson(
             "DELETE",
@@ -174,11 +176,9 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def edit(self, name):
+    def edit(self, name: str) -> None:
         """
         :calls: `PATCH /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#update-an-existing-project-column>`_
-        :param name: string
-        :rtype: None
         """
         assert isinstance(name, str), name
         patch_parameters = {"name": name}
@@ -192,17 +192,7 @@ class ProjectColumn(github.GithubObject.CompletableGithubObject):
 
         self._useAttributes(data)
 
-    def _initAttributes(self):
-        self._cards_url = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._node_id = github.GithubObject.NotSet
-        self._project_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "cards_url" in attributes:  # pragma no branch
             self._cards_url = self._makeStringAttribute(attributes["cards_url"])
         if "created_at" in attributes:  # pragma no branch

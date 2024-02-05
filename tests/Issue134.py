@@ -1,10 +1,19 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,17 +38,15 @@ import github
 from . import Framework
 
 
-class Issue134(
-    Framework.BasicTestCase
-):  # https://github.com/jacquev6/PyGithub/pull/134
+class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/pull/134
     def testGetAuthorizationsFailsWhenAutenticatedThroughOAuth(self):
-        g = github.Github(self.oauth_token)
+        g = github.Github(auth=self.oauth_token)
         with self.assertRaises(github.GithubException) as raisedexp:
             list(g.get_user().get_authorizations())
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
-        g = github.Github(self.login, self.password)
+        g = github.Github(auth=self.login)
         self.assertListKeyEqual(
             g.get_user().get_authorizations(),
             lambda a: a.note,
@@ -47,7 +54,7 @@ class Issue134(
         )
 
     def testGetOAuthScopesFromHeader(self):
-        g = github.Github(self.oauth_token)
+        g = github.Github(auth=self.oauth_token)
         self.assertEqual(g.oauth_scopes, None)
         g.get_user().name
         self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])

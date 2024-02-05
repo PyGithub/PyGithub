@@ -3,6 +3,11 @@
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,7 +27,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -47,10 +52,12 @@ class ReleaseAsset(Framework.TestCase):
         self.assertEqual(self.asset.size, 3783)
         self.assertEqual(self.asset.download_count, 2)
         self.assertEqual(
-            self.asset.created_at, datetime.datetime(2017, 2, 1, 22, 40, 58)
+            self.asset.created_at,
+            datetime(2017, 2, 1, 22, 40, 58, tzinfo=timezone.utc),
         )
         self.assertEqual(
-            self.asset.updated_at, datetime.datetime(2017, 2, 1, 22, 44, 58)
+            self.asset.updated_at,
+            datetime(2017, 2, 1, 22, 44, 58, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.asset.browser_download_url,

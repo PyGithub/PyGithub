@@ -1,6 +1,21 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,59 +35,83 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from datetime import datetime
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class Secret(github.GithubObject.NonCompletableGithubObject):
-    def __repr__(self):
-        return self.get__repr__({"": self._name.value})
+class Secret(CompletableGithubObject):
+    """
+    This class represents a GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
+    """
+
+    def _initAttributes(self) -> None:
+        self._name: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._secrets_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self.name})
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
-        return self._created_at.value
-
-    @property
-    def name(self):
+    def name(self) -> str:
         """
         :type: string
         """
+        self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
-    def updated_at(self):
+    def created_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def updated_at(self) -> datetime:
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def visibility(self):
+    def secrets_url(self) -> str:
         """
         :type: string
         """
-        return self._visibility.value
+        return self._secrets_url.value
 
-    def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._name = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._visibility = github.GithubObject.NotSet
+    @property
+    def url(self) -> str:
+        """
+        :type: string
+        """
+        # Construct url from secrets_url and name, if self._url. is not set
+        if self._url is NotSet:
+            self._url = self._makeStringAttribute(self.secrets_url + "/" + self.name)
+        return self._url.value
 
-    def _useAttributes(self, attributes):
-        if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(
-                attributes["created_at"], str
-            ), attributes["created_at"]
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "name" in attributes:  # pragma no branch
+    def delete(self) -> None:
+        """
+        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("DELETE", self.url)
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
-        if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(
-                attributes["updated_at"], str
-            ), attributes["updated_at"]
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:  # pragma no branch
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "secrets_url" in attributes:
+            self._secrets_url = self._makeStringAttribute(attributes["secrets_url"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])

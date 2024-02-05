@@ -19,7 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -33,8 +33,8 @@ class SelfHostedActionsRunnerRegistrationToken(Framework.TestCase):
     def testAttributes(self):
         token = self.repo.get_self_hosted_action_runner_registration_token()
         self.assertEqual("INSERTABEAUTIFULTOKENHERE", token.token)
-        # 2021-07-05T17:07:52.961-04:00. The returned datetime is naïve, but represents a time in UTC.
+        # the expiration date will be tz-aware with -04:00, which compares to UTC 4 hours later.
         self.assertEqual(
-            datetime(2021, 7, 5, 21, 7, 52, tzinfo=None),
-            token.expires_at,
+            datetime(2021, 7, 5, 17 + 4, 7, 52, 961000, tzinfo=timezone.utc),
+            token.expires_at,  # 2021-07-05T17:07:52.961-04:00
         )

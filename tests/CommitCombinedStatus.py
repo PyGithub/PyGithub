@@ -1,10 +1,21 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 John Eskew <jeskew@edx.org>                                   #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,7 +35,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -46,24 +57,20 @@ class CommitCombinedStatus(Framework.TestCase):
         )
         self.assertEqual(self.combined_status.statuses[1].id, 390603044)
         self.assertEqual(self.combined_status.statuses[2].state, "success")
-        self.assertEqual(
-            self.combined_status.statuses[3].description, "Build finished."
-        )
+        self.assertEqual(self.combined_status.statuses[3].description, "Build finished.")
         self.assertEqual(
             self.combined_status.statuses[4].target_url,
             "https://build.testeng.edx.org/job/edx-platform-python-unittests-pr/10504/",
         )
         self.assertEqual(
             self.combined_status.statuses[4].created_at,
-            datetime.datetime(2015, 12, 14, 13, 24, 18),
+            datetime(2015, 12, 14, 13, 24, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(
             self.combined_status.statuses[3].updated_at,
-            datetime.datetime(2015, 12, 14, 13, 23, 35),
+            datetime(2015, 12, 14, 13, 23, 35, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659"
-        )
+        self.assertEqual(self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659")
         self.assertEqual(self.combined_status.total_count, 6)
         self.assertEqual(self.combined_status.repository.id, 10391073)
         self.assertEqual(self.combined_status.repository.full_name, "edx/edx-platform")

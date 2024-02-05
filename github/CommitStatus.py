@@ -11,6 +11,13 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,16 +37,33 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
+
 import github.GithubObject
 import github.NamedUser
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitStatus(github.GithubObject.NonCompletableGithubObject):
+class CommitStatus(NonCompletableGithubObject):
     """
     This class represents CommitStatuses.The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
+        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._context: Attribute[str] = NotSet
+        self._target_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "id": self._id.value,
@@ -49,86 +73,46 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def creator(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def creator(self) -> github.NamedUser.NamedUser:
         return self._creator.value
 
     @property
-    def description(self):
-        """
-        :type: string
-        """
+    def description(self) -> str:
         return self._description.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         return self._id.value
 
     @property
-    def state(self):
-        """
-        :type: string
-        """
+    def state(self) -> str:
         return self._state.value
 
     @property
-    def context(self):
-        """
-        :type: string
-        """
+    def context(self) -> str:
         return self._context.value
 
     @property
-    def target_url(self):
-        """
-        :type: string
-        """
+    def target_url(self) -> str:
         return self._target_url.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def updated_at(self) -> datetime:
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
-        self._created_at = github.GithubObject.NotSet
-        self._creator = github.GithubObject.NotSet
-        self._description = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._state = github.GithubObject.NotSet
-        self._context = github.GithubObject.NotSet
-        self._target_url = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["creator"]
-            )
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch

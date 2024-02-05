@@ -1,8 +1,7 @@
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 import github.GithubObject
-
 
 class JobStep(github.GithubObject.CompletableGithubObject):
     @property
@@ -19,7 +18,6 @@ class JobStep(github.GithubObject.CompletableGithubObject):
     def status(self) -> str: ...
     def _initAttributes(self) -> None: ...
     def _useAttributes(self, attributes: Dict[str, Any]) -> None: ...
-
 
 class Job(github.GithubObject.CompletableGithubObject):
     @property

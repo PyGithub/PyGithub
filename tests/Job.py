@@ -19,7 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -40,8 +40,8 @@ class Job(Framework.TestCase):
         self.assertEqual("ba2ad8220081ac147afaa5e53e895a9db0ceefda", job.head_sha)
         self.assertEqual("completed", job.status)
         self.assertEqual("success", job.conclusion)
-        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20), job.started_at)
-        self.assertEqual(datetime(2021, 7, 5, 19, 26, 28), job.completed_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20, tzinfo=timezone.utc), job.started_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 26, 28, tzinfo=timezone.utc), job.completed_at)
         self.assertEqual("stew ci", job.name)
         self.assertEqual(10, len(job.steps))
 
@@ -50,5 +50,5 @@ class Job(Framework.TestCase):
         self.assertEqual("completed", step.status)
         self.assertEqual("success", step.conclusion)
         self.assertEqual(1, step.number)
-        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20), step.started_at)
-        self.assertEqual(datetime(2021, 7, 5, 19, 25, 21), step.completed_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 20, tzinfo=timezone.utc), step.started_at)
+        self.assertEqual(datetime(2021, 7, 5, 19, 25, 21, tzinfo=timezone.utc), step.completed_at)
