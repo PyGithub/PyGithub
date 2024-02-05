@@ -60,7 +60,6 @@ class Environment(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
-
     """
 
     def _initAttributes(self) -> None:
@@ -218,7 +217,8 @@ class Environment(CompletableGithubObject):
         )
 
     def get_variables(self) -> PaginatedList[Variable]:
-        """Gets all repository variables :rtype: :class:`PaginatedList` of :class:`Variable`"""
+        """Gets all repository variables :rtype: :class:`PaginatedList` of
+        :class:`Variable`"""
         return PaginatedList(
             Variable,
             self._requester,

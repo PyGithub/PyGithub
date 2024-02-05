@@ -48,7 +48,6 @@ class CodeScanRule(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
-
     """
 
     def _initAttributes(self) -> None:

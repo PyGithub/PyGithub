@@ -46,7 +46,6 @@ class Clones(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-repository-clones
-
     """
 
     def _initAttributes(self) -> None:

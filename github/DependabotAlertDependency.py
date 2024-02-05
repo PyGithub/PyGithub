@@ -33,7 +33,6 @@ class DependabotAlertDependency(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
-
     """
 
     def _initAttributes(self) -> None:

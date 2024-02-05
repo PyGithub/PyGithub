@@ -46,7 +46,6 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
 
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
-
     """
 
     def _initAttributes(self) -> None:

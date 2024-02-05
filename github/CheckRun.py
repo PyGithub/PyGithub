@@ -59,7 +59,6 @@ class CheckRun(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/checks#check-runs
-
     """
 
     def _initAttributes(self) -> None:

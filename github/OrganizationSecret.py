@@ -35,7 +35,6 @@ class OrganizationSecret(Secret):
 
     The reference can be found here
     https://docs.github.com/en/rest/actions/secrets
-
     """
 
     def _initAttributes(self) -> None:

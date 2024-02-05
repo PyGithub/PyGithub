@@ -61,7 +61,6 @@ class IssueComment(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#comments
-
     """
 
     def _initAttributes(self) -> None:

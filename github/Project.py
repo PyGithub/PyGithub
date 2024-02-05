@@ -60,7 +60,6 @@ class Project(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects
-
     """
 
     def _initAttributes(self) -> None:

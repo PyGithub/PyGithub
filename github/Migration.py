@@ -60,7 +60,6 @@ class Migration(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/migrations
-
     """
 
     def _initAttributes(self) -> None:

@@ -47,7 +47,6 @@ class UserKey(github.GithubObject.CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/users#keys
-
     """
 
     def _initAttributes(self) -> None:

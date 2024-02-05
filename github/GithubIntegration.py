@@ -238,7 +238,6 @@ class GithubIntegration:
 
         :calls: `GET /repos/{owner}/{repo}/installation
         <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
-
         """
         owner = urllib.parse.quote(owner)
         repo = urllib.parse.quote(repo)

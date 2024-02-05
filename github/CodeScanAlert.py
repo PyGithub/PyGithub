@@ -42,7 +42,6 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
-
     """
 
     def _initAttributes(self) -> None:
@@ -114,7 +113,6 @@ class CodeScanAlert(NonCompletableGithubObject):
         """Get instances.
 
         :calls: `GET` on the URL for instances as provided by Github.
-
         """
         return PaginatedList(
             github.CodeScanAlertInstance.CodeScanAlertInstance,

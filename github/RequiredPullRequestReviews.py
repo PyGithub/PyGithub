@@ -57,7 +57,6 @@ class RequiredPullRequestReviews(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
-
     """
 
     def _initAttributes(self) -> None:

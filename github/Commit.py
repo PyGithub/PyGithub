@@ -75,7 +75,6 @@ class Commit(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#commits
-
     """
 
     def _initAttributes(self) -> None:

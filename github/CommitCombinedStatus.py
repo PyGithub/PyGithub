@@ -50,7 +50,6 @@ class CommitCombinedStatus(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#statuses
-
     """
 
     def _initAttributes(self) -> None:
