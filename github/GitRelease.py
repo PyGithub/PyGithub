@@ -60,7 +60,7 @@ from typing import Any, BinaryIO
 
 import github.GitReleaseAsset
 import github.NamedUser
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 from . import Consts
@@ -193,14 +193,15 @@ class GitRelease(CompletableGithubObject):
         """
         :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#update-a-release>`_
         """
-        assert tag_name is NotSet or isinstance(tag_name, str), "tag_name must be a str/unicode object"
-        assert target_commitish is NotSet or isinstance(
-            target_commitish, str
-        ), "target_commitish must be a str/unicode object"
         assert isinstance(name, str), name
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert is_optional(tag_name, str), "tag_name must be a str/unicode object"
+        assert is_optional(target_commitish, str), "target_commitish must be a str/unicode object"
+        assert make_latest in ["true", "false", "legacy", NotSet], make_latest
+        assert is_optional(discussion_category_name, str), discussion_category_name
+        # default tag_name with instance attribute if not given to the method
         if tag_name is NotSet:
             tag_name = self.tag_name
         post_parameters = {
@@ -210,16 +211,14 @@ class GitRelease(CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
-        if make_latest is not NotSet:
-            assert make_latest in ["true", "false", "legacy"], make_latest
-            post_parameters["make_latest"] = make_latest
-        if discussion_category_name is not NotSet:
-            assert isinstance(discussion_category_name, str), discussion_category_name
-            post_parameters["discussion_category_name"] = discussion_category_name
         # Do not set target_commitish to self.target_commitish when omitted, just don't send it
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not NotSet:
             post_parameters["target_commitish"] = target_commitish
+        if make_latest is not NotSet:
+            post_parameters["make_latest"] = make_latest
+        if discussion_category_name is not NotSet:
+            post_parameters["discussion_category_name"] = discussion_category_name
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
