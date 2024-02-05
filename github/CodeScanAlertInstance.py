@@ -35,10 +35,12 @@ if TYPE_CHECKING:
 
 
 class CodeScanAlertInstance(NonCompletableGithubObject):
-    """This class represents code scanning alert instances.
+    """
+    This class represents code scanning alert instances.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:

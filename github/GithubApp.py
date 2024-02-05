@@ -50,10 +50,12 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class GithubApp(CompletableGithubObject):
-    """This class represents github apps.
+    """
+    This class represents github apps.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/apps
+
     """
 
     def _initAttributes(self) -> None:

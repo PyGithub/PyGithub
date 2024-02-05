@@ -73,9 +73,11 @@ class Attribute(Protocol[T_co]):
 
 
 def _datetime_from_http_date(value: str) -> datetime:
-    """Convert an HTTP date to a datetime object.
+    """
+    Convert an HTTP date to a datetime object.
 
     Raises ValueError for invalid dates.
+
     """
 
     dt = email.utils.parsedate_to_datetime(value)
@@ -86,9 +88,11 @@ def _datetime_from_http_date(value: str) -> datetime:
 
 
 def _datetime_from_github_isoformat(value: str) -> datetime:
-    """Convert an GitHub API timestamps to a datetime object.
+    """
+    Convert an GitHub API timestamps to a datetime object.
 
     Raises ValueError for invalid timestamps.
+
     """
 
     # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
@@ -156,7 +160,9 @@ class _BadAttribute(Attribute):
 # v3: add * to edit function of all GithubObject implementations,
 #     this allows to rename attributes and maintain the order of attributes
 class GithubObject:
-    """Base class for all classes representing objects returned by the API."""
+    """
+    Base class for all classes representing objects returned by the API.
+    """
 
     """
     A global debug flag to enable header validation by requester for all objects
@@ -351,7 +357,9 @@ class GithubObject:
         return self._makeHttpDatetimeAttribute(self.last_modified).value  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
-        """Converts the object to a nicely printable string."""
+        """
+        Converts the object to a nicely printable string.
+        """
 
         def format_params(params: Dict[str, Any]) -> typing.Generator[str, None, None]:
             items = list(params.items())
@@ -418,8 +426,10 @@ class CompletableGithubObject(GithubObject):
         self.__completed = True
 
     def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
-        """Check and update the object with conditional request :rtype: Boolean
-        value indicating whether the object is changed."""
+        """
+        Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
+        changed.
+        """
         conditionalRequestHeader = dict()
         if self.etag is not None:
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag

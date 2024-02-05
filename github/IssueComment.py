@@ -57,10 +57,12 @@ if TYPE_CHECKING:
 
 
 class IssueComment(CompletableGithubObject):
-    """This class represents IssueComments.
+    """
+    This class represents IssueComments.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#comments
+
     """
 
     def _initAttributes(self) -> None:

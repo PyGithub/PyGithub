@@ -49,10 +49,12 @@ if TYPE_CHECKING:
 
 
 class EnvironmentProtectionRule(NonCompletableGithubObject):
-    """This class represents a protection rule for an environment.
+    """
+    This class represents a protection rule for an environment.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:

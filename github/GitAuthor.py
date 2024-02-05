@@ -40,7 +40,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class GitAuthor(NonCompletableGithubObject):
-    """This class represents GitAuthors."""
+    """
+    This class represents GitAuthors.
+    """
 
     def _initAttributes(self) -> None:
         self._name: Attribute[str] = NotSet

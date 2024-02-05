@@ -50,7 +50,9 @@ if TYPE_CHECKING:
 
 
 class InstallationAuthorization(NonCompletableGithubObject):
-    """This class represents InstallationAuthorizations."""
+    """
+    This class represents InstallationAuthorizations.
+    """
 
     def _initAttributes(self) -> None:
         self._token: Attribute[str] = NotSet

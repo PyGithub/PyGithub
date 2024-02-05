@@ -31,7 +31,9 @@ from github.GithubObject import Attribute, NotSet
 
 
 class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
-    """This class represents a Summary of HookDeliveries."""
+    """
+    This class represents a Summary of HookDeliveries.
+    """
 
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
@@ -126,7 +128,9 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
 
 
 class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
-    """This class represents a HookDeliveryRequest."""
+    """
+    This class represents a HookDeliveryRequest.
+    """
 
     def _initAttributes(self) -> None:
         self._request_headers: Attribute[Dict] = NotSet
@@ -151,7 +155,9 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 
 
 class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
-    """This class represents a HookDeliveryResponse."""
+    """
+    This class represents a HookDeliveryResponse.
+    """
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
@@ -176,7 +182,9 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 
 
 class HookDelivery(HookDeliverySummary):
-    """This class represents a HookDelivery."""
+    """
+    This class represents a HookDelivery.
+    """
 
     def _initAttributes(self) -> None:
         super()._initAttributes()

@@ -39,7 +39,10 @@ repos:
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
-        args: ["--in-place", "--pre-summary-newline", "--make-summary-multi-line"]
+        args:
+          - "--in-place"
+          - "--pre-summary-newline"
+          - "--make-summary-multi-line"
 
   - repo: https://github.com/psf/black
     rev: 23.12.0

@@ -40,10 +40,12 @@ if TYPE_CHECKING:
 
 
 class DependabotAlert(NonCompletableGithubObject):
-    """This class represents a DependabotAlert.
+    """
+    This class represents a DependabotAlert.
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
+
     """
 
     def _initAttributes(self) -> None:

@@ -39,7 +39,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class GitTreeElement(NonCompletableGithubObject):
-    """This class represents GitTreeElements."""
+    """
+    This class represents GitTreeElements.
+    """
 
     def _initAttributes(self) -> None:
         self._mode: Attribute[str] = NotSet

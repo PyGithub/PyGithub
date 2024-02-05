@@ -48,10 +48,12 @@ if TYPE_CHECKING:
 
 
 class CheckSuite(CompletableGithubObject):
-    """This class represents check suites.
+    """
+    This class represents check suites.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/checks#check-suites
+
     """
 
     def _initAttributes(self) -> None:

@@ -48,7 +48,9 @@ from github.Requester import Requester
 
 
 class GithubIntegration:
-    """Main class to obtain tokens for a GitHub integration."""
+    """
+    Main class to obtain tokens for a GitHub integration.
+    """
 
     # keep non-deprecated arguments in-sync with Requester
     # v3: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
@@ -179,13 +181,17 @@ class GithubIntegration:
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self) -> dict[str, str]:
-        """Get headers for the requests."""
+        """
+        Get headers for the requests.
+        """
         return {
             "Accept": Consts.mediaTypeIntegrationPreview,
         }
 
     def _get_installed_app(self, url: str) -> Installation:
-        """Get installation for the given URL."""
+        """
+        Get installation for the given URL.
+        """
         headers, response = self.__requester.requestJsonAndCheck("GET", url, headers=self._get_headers())
 
         return Installation(
@@ -234,10 +240,12 @@ class GithubIntegration:
 
     @deprecated.deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
-        """Deprecated by get_repo_installation.
+        """
+        Deprecated by get_repo_installation.
 
         :calls: `GET /repos/{owner}/{repo}/installation
         <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
+
         """
         owner = urllib.parse.quote(owner)
         repo = urllib.parse.quote(repo)

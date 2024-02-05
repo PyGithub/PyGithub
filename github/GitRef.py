@@ -49,10 +49,12 @@ if TYPE_CHECKING:
 
 
 class GitRef(CompletableGithubObject):
-    """This class represents GitRefs.
+    """
+    This class represents GitRefs.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#references
+
     """
 
     def _initAttributes(self) -> None:

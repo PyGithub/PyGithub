@@ -42,10 +42,12 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class PullRequestMergeStatus(NonCompletableGithubObject):
-    """This class represents PullRequestMergeStatuses.
+    """
+    This class represents PullRequestMergeStatuses.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
+
     """
 
     def _initAttributes(self) -> None:

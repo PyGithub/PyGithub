@@ -53,7 +53,9 @@ if TYPE_CHECKING:
 
 
 class Artifact(NonCompletableGithubObject):
-    """This class represents an Artifact of Github Run."""
+    """
+    This class represents an Artifact of Github Run.
+    """
 
     def _initAttributes(self) -> None:
         self._archive_download_url: Attribute[str] = NotSet

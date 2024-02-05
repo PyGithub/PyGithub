@@ -35,7 +35,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class SimpleCredit(TypedDict):
-    """A simple credit for a security advisory."""
+    """
+    A simple credit for a security advisory.
+    """
 
     login: str | github.NamedUser.NamedUser
     type: str
@@ -45,10 +47,12 @@ Credit = Union[SimpleCredit, "AdvisoryCredit"]
 
 
 class AdvisoryCredit(NonCompletableGithubObject):
-    """This class represents a credit that is assigned to a SecurityAdvisory.
+    """
+    This class represents a credit that is assigned to a SecurityAdvisory.
 
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
+
     """
 
     @property

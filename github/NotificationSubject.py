@@ -43,10 +43,12 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class NotificationSubject(NonCompletableGithubObject):
-    """This class represents Subjects of Notifications.
+    """
+    This class represents Subjects of Notifications.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
+
     """
 
     def _initAttributes(self) -> None:

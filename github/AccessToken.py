@@ -46,7 +46,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class AccessToken(NonCompletableGithubObject):
-    """This class represents access tokens."""
+    """
+    This class represents access tokens.
+    """
 
     _created: datetime
 

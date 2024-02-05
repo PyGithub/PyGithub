@@ -49,10 +49,12 @@ if TYPE_CHECKING:
 
 
 class Authorization(github.GithubObject.CompletableGithubObject):
-    """This class represents Authorizations.
+    """
+    This class represents Authorizations.
 
     The reference can be found here
     https://docs.github.com/en/enterprise-server@3.0/rest/reference/oauth-authorizations
+
     """
 
     def _initAttributes(self) -> None:

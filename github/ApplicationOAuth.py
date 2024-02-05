@@ -42,11 +42,12 @@ if TYPE_CHECKING:
 
 
 class ApplicationOAuth(NonCompletableGithubObject):
-    """This class is used for identifying and authorizing users for Github
-    Apps.
+    """
+    This class is used for identifying and authorizing users for Github Apps.
 
     The reference can be found at
     https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
+
     """
 
     def _initAttributes(self) -> None:
@@ -87,8 +88,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
         state: str | None = None,
         login: str | None = None,
     ) -> str:
-        """Return the URL you need to redirect a user to in order to authorize
-        your App."""
+        """
+        Return the URL you need to redirect a user to in order to authorize your App.
+        """
         parameters = {"client_id": self.client_id}
         if redirect_uri is not None:
             assert isinstance(redirect_uri, str), redirect_uri

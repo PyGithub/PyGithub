@@ -34,9 +34,11 @@ from github.GithubObject import Attribute, NotSet
 
 
 class GlobalAdvisory(AdvisoryBase):
-    """This class represents a GlobalAdvisory.
+    """
+    This class represents a GlobalAdvisory.
 
     https://docs.github.com/en/rest/security-advisories/global-advisories
+
     """
 
     def _initAttributes(self) -> None:

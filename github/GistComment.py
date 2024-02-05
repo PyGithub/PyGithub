@@ -47,10 +47,12 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class GistComment(CompletableGithubObject):
-    """This class represents GistComments.
+    """
+    This class represents GistComments.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists#comments
+
     """
 
     def _initAttributes(self) -> None:

@@ -43,10 +43,12 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Download(CompletableGithubObject):
-    """This class represents Downloads.
+    """
+    This class represents Downloads.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos
+
     """
 
     def _initAttributes(self) -> None:

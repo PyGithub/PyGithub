@@ -29,10 +29,12 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class DependabotAlertDependency(NonCompletableGithubObject):
-    """This class represents a DependabotAlertDependency.
+    """
+    This class represents a DependabotAlertDependency.
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
+
     """
 
     def _initAttributes(self) -> None:

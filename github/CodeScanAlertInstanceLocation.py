@@ -30,10 +30,12 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class CodeScanAlertInstanceLocation(NonCompletableGithubObject):
-    """This class represents code scanning alert instance locations.
+    """
+    This class represents code scanning alert instance locations.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:

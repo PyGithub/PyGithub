@@ -40,7 +40,9 @@ from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputFileContent:
-    """This class represents InputFileContents."""
+    """
+    This class represents InputFileContents.
+    """
 
     def __init__(self, content: str, new_name: Opt[str] = NotSet):
         assert isinstance(content, str), content

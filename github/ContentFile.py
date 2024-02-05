@@ -54,10 +54,12 @@ if TYPE_CHECKING:
 
 
 class ContentFile(CompletableGithubObject):
-    """This class represents ContentFiles.
+    """
+    This class represents ContentFiles.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#contents
+
     """
 
     def _initAttributes(self) -> None:

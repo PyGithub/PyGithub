@@ -61,10 +61,12 @@ if TYPE_CHECKING:
 
 
 class Gist(CompletableGithubObject):
-    """This class represents Gists.
+    """
+    This class represents Gists.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists
+
     """
 
     def _initAttributes(self) -> None:

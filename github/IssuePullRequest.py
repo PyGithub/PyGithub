@@ -39,7 +39,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class IssuePullRequest(NonCompletableGithubObject):
-    """This class represents IssuePullRequests."""
+    """
+    This class represents IssuePullRequests.
+    """
 
     def _initAttributes(self) -> None:
         self._diff_url: Attribute[str] = NotSet

@@ -42,10 +42,12 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class Secret(CompletableGithubObject):
-    """This class represents a GitHub secret.
+    """
+    This class represents a GitHub secret.
 
     The reference can be found here
     https://docs.github.com/en/rest/actions/secrets
+
     """
 
     def _initAttributes(self) -> None:

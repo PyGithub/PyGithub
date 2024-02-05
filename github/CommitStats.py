@@ -38,7 +38,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class CommitStats(NonCompletableGithubObject):
-    """This class represents CommitStats."""
+    """
+    This class represents CommitStats.
+    """
 
     def _initAttributes(self) -> None:
         self._total: Attribute[int] = NotSet

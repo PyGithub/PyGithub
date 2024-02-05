@@ -46,7 +46,8 @@ DEFAULT_SECONDARY_RATE_WAIT: int = 60
 
 
 class GithubRetry(Retry):
-    """A Github-specific implementation of `urllib3.Retry`
+    """
+    A Github-specific implementation of `urllib3.Retry`
 
     This retries 403 responses if they are retry-able. Github requests are retry-able when
     the response provides a `"Retry-After"` header, or the content indicates a rate limit error.
@@ -56,6 +57,7 @@ class GithubRetry(Retry):
 
     By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
     This can be configured via the `allowed_methods` argument.
+
     """
 
     __logger: Optional[Logger] = None

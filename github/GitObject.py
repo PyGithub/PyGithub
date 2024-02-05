@@ -39,7 +39,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class GitObject(NonCompletableGithubObject):
-    """This class represents GitObjects."""
+    """
+    This class represents GitObjects.
+    """
 
     def _initAttributes(self) -> None:
         self._sha: Attribute[str] = NotSet

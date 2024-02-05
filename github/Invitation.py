@@ -52,10 +52,12 @@ if TYPE_CHECKING:
 
 
 class Invitation(CompletableGithubObject):
-    """This class represents repository invitations.
+    """
+    This class represents repository invitations.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#invitations
+
     """
 
     def _initAttributes(self) -> None:

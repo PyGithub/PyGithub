@@ -48,10 +48,12 @@ if TYPE_CHECKING:
 
 
 class BranchProtection(github.GithubObject.CompletableGithubObject):
-    """This class represents Branch Protection.
+    """
+    This class represents Branch Protection.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-branch-protection
+
     """
 
     def __repr__(self) -> str:
