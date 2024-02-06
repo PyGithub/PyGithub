@@ -2074,6 +2074,16 @@ class Repository(CompletableGithubObject):
         sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
         return github.Commit.Commit(self._requester, headers, data, completed=True)
+        
+    def get_commit_pulls(self, sha: str) -> Commit:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://developer.github.com/v3/repos/commits/#list-pull-requests-associated-with-a-commit>`_
+        :param sha: string
+        :rtype: :class:`github.PullRequest.PullRequest`
+        """
+        assert isinstance(sha, str), sha
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}/pulls")
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
     def get_commits(
         self,
