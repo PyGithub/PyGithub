@@ -2074,7 +2074,7 @@ class Repository(CompletableGithubObject):
         sha = urllib.parse.quote(sha)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
         return github.Commit.Commit(self._requester, headers, data, completed=True)
-        
+
     def get_commit_pulls(self, sha: str) -> PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://developer.github.com/v3/repos/commits/#list-pull-requests-associated-with-a-commit>`_
