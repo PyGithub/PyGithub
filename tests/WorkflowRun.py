@@ -80,6 +80,10 @@ class WorkflowRun(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/logs",
         )
         self.assertEqual(
+            self.workflow_run.run_attempt_logs_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/attempt/1/logs",
+        )
+        self.assertEqual(
             self.workflow_run.check_suite_url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-suites/10279069747",
         )
@@ -145,3 +149,13 @@ class WorkflowRun(Framework.TestCase):
             lambda j: j.id,
             [10545727758, 10545727888, 10545728039, 10545728190, 10545728356],
         )
+
+    def test_logs_download_link_for_this_attempt(self):
+        download_link = self.workflow_run.get_logs_download_link_for_this_attempt()
+        self.assertIsInstance(download_link, str)
+        self.assertTrue(download_link, "download link was empty")
+
+    def test_logs_download_link_for_latest_attempt(self):
+        download_link = self.workflow_run.get_logs_download_link_for_latest_attempt()
+        self.assertIsInstance(download_link, str)
+        self.assertTrue(download_link, "download link was empty")
