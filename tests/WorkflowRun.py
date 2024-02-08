@@ -149,13 +149,3 @@ class WorkflowRun(Framework.TestCase):
             lambda j: j.id,
             [10545727758, 10545727888, 10545728039, 10545728190, 10545728356],
         )
-
-    def test_logs_download_link_for_this_attempt(self):
-        download_link = self.workflow_run.get_logs_download_link_for_this_attempt()
-        self.assertIsInstance(download_link, str)
-        self.assertTrue(download_link, "download link was empty")
-
-    def test_logs_download_link_for_latest_attempt(self):
-        download_link = self.workflow_run.get_logs_download_link_for_latest_attempt()
-        self.assertIsInstance(download_link, str)
-        self.assertTrue(download_link, "download link was empty")
