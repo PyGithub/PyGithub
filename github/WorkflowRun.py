@@ -191,6 +191,10 @@ class WorkflowRun(CompletableGithubObject):
         return self._logs_url.value
 
     @property
+    def run_attempt_logs_url(self) -> str:
+        return self.logs_url[:-4] + f"attempts/{self.run_attempt}/logs"
+
+    @property
     def check_suite_url(self) -> str:
         self._completeIfNotSet(self._check_suite_url)
         return self._check_suite_url.value
@@ -289,6 +293,38 @@ class WorkflowRun(CompletableGithubObject):
             url_parameters,
             list_item="jobs",
         )
+
+    def get_logs_download_link_for_this_attempt(self) -> str:
+        """
+        :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt}/logs <https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#download-workflow-run-attempt-logs>`_
+        """
+        return self._get_logs_download_link(self.run_attempt_logs_url)
+
+    def get_logs_download_link_for_latest_attempt(self) -> str:
+        """
+        :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/logs <https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#download-workflow-run-logs>`_
+        """
+        return self._get_logs_download_link(self.logs_url)
+
+    def _get_logs_download_link(self, url: str) -> str:
+        """
+        A download link will be returned. Here's one way of extracting its content in-memory:
+
+            from io import BytesIO
+            from zipfile import ZipFile
+
+            download_link = workflow_run.get_logs_for_this_run_attempt_download_link()
+            response = requests.get(download_link, allow_redirects=True)
+            assert response.headers['content-type'] == 'application/zip'
+            zip_file = ZipFile(BytesIO(response.content))
+            return {
+                PurePosixPath(zip_info.filename): zip_file.read(zip_info.filename).decode()
+                for zip_info in zip_file.filelist
+            }
+        """
+        headers, _ = self._requester.requestJsonAndCheck("GET", url)
+        assert "location" in headers
+        return headers["location"]
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch

@@ -80,6 +80,10 @@ class WorkflowRun(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/logs",
         )
         self.assertEqual(
+            self.workflow_run.run_attempt_logs_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/attempts/1/logs",
+        )
+        self.assertEqual(
             self.workflow_run.check_suite_url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-suites/10279069747",
         )
