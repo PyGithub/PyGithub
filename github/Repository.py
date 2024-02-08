@@ -1698,6 +1698,7 @@ class Repository(CompletableGithubObject):
     ) -> github.Secret.Secret:
         """
         :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -1729,6 +1730,7 @@ class Repository(CompletableGithubObject):
     ) -> PaginatedList[github.Secret.Secret]:
         """
         Gets all repository secrets
+        :param secret_type: string options actions or dependabot
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
@@ -1746,6 +1748,7 @@ class Repository(CompletableGithubObject):
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
