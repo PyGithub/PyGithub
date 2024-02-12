@@ -2075,15 +2075,17 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def get_commit_pulls(self, sha: str) -> PullRequest:
+    def get_commit_pulls(self, sha: str) -> List[github.PullRequest.PullRequest]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://developer.github.com/v3/repos/commits/#list-pull-requests-associated-with-a-commit>`_
-        :param sha: string
-        :rtype: :class:`github.PullRequest.PullRequest`
+        Fetch pull requests associated with a commit SHA.
+
+        :param sha: The commit SHA.
+        :return: A list of PullRequest objects.
         """
         assert isinstance(sha, str), sha
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}/pulls")
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}/pulls",
+                                                            headers={"Accept": "application/vnd.github.v3+json"})
+        return [github.PullRequest.PullRequest(self._requester, headers, item, completed=True) for item in data]
 
     def get_commits(
         self,
