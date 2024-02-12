@@ -2086,7 +2086,7 @@ class Repository(CompletableGithubObject):
             github.PullRequest.PullRequest,
             self._requester,
             f"{self.url}/commits/{sha}/pulls",
-            {"Accept": "application/vnd.github.v3+json"}
+            {"Accept": "application/vnd.github.v3+json"},
         )
 
     def get_commits(
