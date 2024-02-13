@@ -1221,10 +1221,10 @@ class Repository(CompletableGithubObject):
         :meth:`Repository.create_git_release`.
         :param tag: string
         :param tag_message: string
-        :param release_name: string
-        :param release_message: string
         :param object: string
         :param type: string
+        :param release_name: string
+        :param release_message: string
         :param tagger: :class:github.InputGitAuthor.InputGitAuthor
         :param draft: bool
         :param prerelease: bool
@@ -1264,8 +1264,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert is_optional(name, str), name
-        assert is_optional(message, str), message
+        assert generate_release_notes and is_optional(name, str) or isinstance(name, str), name
+        assert generate_release_notes and is_optional(message, str) or isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         assert isinstance(generate_release_notes, bool), generate_release_notes
