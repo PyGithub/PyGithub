@@ -29,6 +29,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -152,6 +153,7 @@ class PaginatedList(PaginatedListBase[T]):
         firstParams: Any,
         headers: Optional[Dict[str, str]] = None,
         list_item: str = "items",
+        total_count_item: str = "total_count",
         firstData: Optional[Any] = None,
         firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
         attributesTransformer: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
@@ -164,6 +166,7 @@ class PaginatedList(PaginatedListBase[T]):
         self.__nextParams = firstParams or {}
         self.__headers = headers
         self.__list_item = list_item
+        self.__total_count_item = total_count_item
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
@@ -255,7 +258,7 @@ class PaginatedList(PaginatedListBase[T]):
                 self.__nextUrl = links["next"]
         self.__nextParams = None
         if self.__list_item in data:
-            self.__totalCount = data.get("total_count")
+            self.__totalCount = data.get(self.__total_count_item)
             data = data[self.__list_item]
         content = [
             self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)

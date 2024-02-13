@@ -21,6 +21,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
+# Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -102,6 +103,21 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
         self.assertEqual(repr(self.issue), 'Issue(title="Issue created by PyGithub", number=28)')
+        self.assertEqual(
+            self.issue.reactions,
+            {
+                "+1": 0,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 2,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+            },
+        )
 
     def testEditWithoutParameters(self):
         self.issue.edit()

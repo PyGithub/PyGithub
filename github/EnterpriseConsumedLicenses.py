@@ -16,6 +16,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -87,8 +88,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             url_parameters,
             None,
             "users",
-            self.raw_data,
-            self.raw_headers,
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:

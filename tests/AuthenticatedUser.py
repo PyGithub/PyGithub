@@ -28,6 +28,7 @@
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -693,6 +694,7 @@ class AuthenticatedUser(Framework.TestCase):
             "hello-world-docker-action-new",
             template_repo,
             description=description,
+            include_all_branches=True,
             private=private,
         )
         self.assertEqual(repo.description, description)

@@ -35,6 +35,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -128,6 +129,7 @@ class Issue(CompletableGithubObject):
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
+        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -262,6 +264,11 @@ class Issue(CompletableGithubObject):
     def active_lock_reason(self) -> str | None:
         self._completeIfNotSet(self._active_lock_reason)
         return self._active_lock_reason.value
+
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     def as_pull_request(self) -> PullRequest:
         """
@@ -566,3 +573,5 @@ class Issue(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])

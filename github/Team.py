@@ -38,6 +38,7 @@
 # Copyright 2023 Kevin Grandjean <Muscaw@users.noreply.github.com>             #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -94,6 +95,7 @@ class Team(CompletableGithubObject):
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
+        self._notification_setting: Attribute[str] = NotSet
         self._permission: Attribute[str] = NotSet
         self._repos_count: Attribute[int] = NotSet
         self._repositories_url: Attribute[str] = NotSet
@@ -131,6 +133,11 @@ class Team(CompletableGithubObject):
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def notification_setting(self) -> str:
+        self._completeIfNotSet(self._notification_setting)
+        return self._notification_setting.value
 
     @property
     def permission(self) -> str:
@@ -297,6 +304,8 @@ class Team(CompletableGithubObject):
         description: Opt[str] = NotSet,
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
+        parent_team_id: Opt[int] = NotSet,
+        notification_setting: Opt[str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
@@ -305,8 +314,17 @@ class Team(CompletableGithubObject):
         assert description is NotSet or isinstance(description, str), description
         assert permission is NotSet or isinstance(permission, str), permission
         assert privacy is NotSet or isinstance(privacy, str), privacy
+        assert parent_team_id is NotSet or isinstance(parent_team_id, (int, type(None))), parent_team_id
+        assert notification_setting in ["notifications_enabled", "notifications_disabled", NotSet], notification_setting
         post_parameters = NotSet.remove_unset_items(
-            {"name": name, "description": description, "permission": permission, "privacy": privacy}
+            {
+                "name": name,
+                "description": description,
+                "permission": permission,
+                "privacy": privacy,
+                "parent_team_id": parent_team_id,
+                "notification_setting": notification_setting,
+            }
         )
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
@@ -426,6 +444,8 @@ class Team(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "notification_setting" in attributes:  # pragma no branch
+            self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch

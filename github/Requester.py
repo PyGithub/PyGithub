@@ -52,6 +52,7 @@
 # Copyright 2023 Phillip Tran <phillip.qtr@gmail.com>                          #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -395,6 +396,8 @@ class Requester:
         self.__base_url = base_url
 
         o = urllib.parse.urlparse(base_url)
+        self.__graphql_prefix = self.get_graphql_prefix(o.path)
+        self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
@@ -450,6 +453,22 @@ class Requester:
         self.__connection = None
         self.__custom_connections = deque()
 
+    @staticmethod
+    # replace with str.removesuffix once support for Python 3.7 is dropped
+    def remove_suffix(string: str, suffix: str) -> str:
+        if string.endswith(suffix):
+            return string[: -len(suffix)]
+        return string
+
+    @staticmethod
+    def get_graphql_prefix(path: Optional[str]) -> str:
+        if path is None or path in ["", "/"]:
+            path = ""
+        if path.endswith(("/v3", "/v3/")):
+            path = Requester.remove_suffix(path, "/")
+            path = Requester.remove_suffix(path, "/v3")
+        return path + "/graphql"
+
     def close(self) -> None:
         """
         Close the connection to the server.
@@ -484,6 +503,10 @@ class Requester:
     @property
     def base_url(self) -> str:
         return self.__base_url
+
+    @property
+    def graphql_url(self) -> str:
+        return self.__graphql_url
 
     @property
     def hostname(self) -> str:
@@ -540,7 +563,7 @@ class Requester:
         """
         input_ = {"query": query, "variables": {"input": variables}}
 
-        response_headers, data = self.requestJsonAndCheck("POST", "https://api.github.com/graphql", input=input_)
+        response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:
             raise self.createException(400, response_headers, data)
         return response_headers, data
@@ -894,8 +917,8 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, "/api/"))
-            assert o.port == self.__port
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/")), o.path
+            assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
