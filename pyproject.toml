@@ -3,7 +3,10 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools>=64", "setuptools_scm>=7"]
 
 [project]
-authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
+authors = [
+  { name = "Vincent Jacques", email = "vincent@vincent-jacques.net" },
+  { name = "Heitor Polidoro", email = "heitor.polidoro@gmail.com" }
+]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Web Environment",
@@ -21,11 +24,11 @@ classifiers = [
 ]
 description = "Use the full Github API v3"
 keywords = ["github"]
-name = "PyGithub"
+name = "Polidoro-PyGithub"
 readme = "README.md"
 requires-python = ">=3.7"
 
-dynamic = ["version"]
+version = "2.2.0"
 
 dependencies = [
   "pynacl==1.5.0",
@@ -38,8 +41,7 @@ dependencies = [
 
 [project.urls]
 Documentation = "https://pygithub.readthedocs.io/en/stable/"
-Source = "https://github.com/pygithub/pygithub"
-Tracker = "https://github.com/pygithub/pygithub/issues"
+Source = "https://github.com/heitorpolidoro/polidoro-pygithub"
 
 [project.optional-dependencies]
 integrations = []
