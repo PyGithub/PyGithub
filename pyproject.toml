@@ -31,12 +31,12 @@ requires-python = ">=3.7"
 version = "2.2.0"
 
 dependencies = [
-  "pynacl==1.5.0",
-  "requests==2.31.0",
-  "pyjwt[crypto]==2.4.0",
-  "typing-extensions==4.9.0",
-  "urllib3==2.1.0",
-  "Deprecated==1.2.14",
+  "pynacl>=1.4.0",
+  "requests>=2.14.0",
+  "pyjwt[crypto]>=2.4.0",
+  "typing-extensions>=4.0.0",
+  "urllib3>=1.26.0",
+  "Deprecated",
 ]
 
 [project.urls]
