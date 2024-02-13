@@ -8,6 +8,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,12 +57,42 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._url: Attribute[str] = NotSet
+        self._allow_deletions: Attribute[bool] = NotSet
+        self._allow_force_pushes: Attribute[bool] = NotSet
+        self._allow_fork_syncing: Attribute[bool] = NotSet
+        self._lock_branch: Attribute[bool] = NotSet
+        self._required_conversation_resolution: Attribute[bool] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
         self._required_linear_history: Attribute[bool] = github.GithubObject.NotSet
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
+
+    @property
+    def allow_deletions(self) -> bool:
+        self._completeIfNotSet(self._allow_deletions)
+        return self._allow_deletions.value
+
+    @property
+    def allow_force_pushes(self) -> bool:
+        self._completeIfNotSet(self._allow_force_pushes)
+        return self._allow_force_pushes.value
+
+    @property
+    def allow_fork_syncing(self) -> bool:
+        self._completeIfNotSet(self._allow_fork_syncing)
+        return self._allow_fork_syncing.value
+
+    @property
+    def lock_branch(self) -> bool:
+        self._completeIfNotSet(self._lock_branch)
+        return self._lock_branch.value
+
+    @property
+    def required_conversation_resolution(self) -> bool:
+        self._completeIfNotSet(self._required_conversation_resolution)
+        return self._required_conversation_resolution.value
 
     @property
     def url(self) -> str:
@@ -104,6 +135,18 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "allow_deletions" in attributes:  # pragma no branch
+            self._allow_deletions = self._makeBoolAttribute(attributes["allow_deletions"]["enabled"])
+        if "allow_force_pushes" in attributes:  # pragma no branch
+            self._allow_force_pushes = self._makeBoolAttribute(attributes["allow_force_pushes"]["enabled"])
+        if "allow_fork_syncing" in attributes:  # pragma no branch
+            self._allow_fork_syncing = self._makeBoolAttribute(attributes["allow_fork_syncing"]["enabled"])
+        if "lock_branch" in attributes:  # pragma no branch
+            self._lock_branch = self._makeBoolAttribute(attributes["lock_branch"]["enabled"])
+        if "required_conversation_resolution" in attributes:  # pragma no branch
+            self._required_conversation_resolution = self._makeBoolAttribute(
+                attributes["required_conversation_resolution"]["enabled"]
+            )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "required_status_checks" in attributes:  # pragma no branch

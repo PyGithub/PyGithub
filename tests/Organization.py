@@ -36,6 +36,10 @@
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -167,15 +171,22 @@ class Organization(Framework.TestCase):
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
+        parent_team = self.org.get_team(141496)
+        maintainer = self.g.get_user("jacquev6")
         team = self.org.create_team(
             "Team also created by PyGithub",
             [repo],
             "push",
             "secret",
             "Description also created by PyGithub",
+            parent_team.id,
+            [maintainer.id],
+            "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
+        self.assertEqual(team.parent, parent_team)
+        self.assertEqual(team.notification_setting, "notifications_disabled")
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
@@ -452,6 +463,33 @@ class Organization(Framework.TestCase):
     def testGetDependabotSecrets(self):
         secrets = self.org.get_secrets(secret_type="dependabot")
         self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotAlerts(self):
+        alerts = self.org.get_dependabot_alerts()
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 8)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetDependabotAlertsWithAllArguments(self):
+        alerts = self.org.get_dependabot_alerts(
+            "open",
+            "medium",
+            "pip",
+            "jinja2",
+            "runtime",
+            "updated",
+            "asc",
+        )
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 1)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].state, "open")
+        self.assertEqual(alert_list[0].security_advisory.severity, "medium")
+        self.assertEqual(alert_list[0].dependency.package.ecosystem, "pip")
+        self.assertEqual(alert_list[0].dependency.package.name, "jinja2")
+        self.assertEqual(alert_list[0].dependency.scope, "runtime")
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
 
     def testGetSecretsFail(self):
         with self.assertRaises(AssertionError) as raisedexp:

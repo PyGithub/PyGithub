@@ -115,12 +115,15 @@
 # Copyright 2023 Micael <10292135+notmicaelfilipe@users.noreply.github.com>    #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2023 Philipp A <flying-sheep@web.de>                               #
 # Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
 # Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -165,6 +168,7 @@ import github.Commit
 import github.CommitComment
 import github.Comparison
 import github.ContentFile
+import github.DependabotAlert
 import github.Deployment
 import github.Download
 import github.Environment
@@ -246,6 +250,7 @@ if TYPE_CHECKING:
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
     from github.ContentFile import ContentFile
+    from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
@@ -1103,7 +1108,7 @@ class Repository(CompletableGithubObject):
 
     def compare(self, base: str, head: str) -> Comparison:
         """
-        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
         :rtype: :class:`github.Comparison.Comparison`
@@ -1112,7 +1117,11 @@ class Repository(CompletableGithubObject):
         assert isinstance(head, str), head
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
+        # the compare API has a per_page default of 250, which is different to Consts.DEFAULT_PER_PAGE
+        per_page = self._requester.per_page if self._requester.per_page != Consts.DEFAULT_PER_PAGE else 250
+        # only with page=1 we get the pagination headers for the commits element
+        params = {"page": 1, "per_page": per_page}
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_autolink(
@@ -3921,6 +3930,103 @@ class Repository(CompletableGithubObject):
         environment_name = urllib.parse.quote(environment_name)
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
+
+    def get_dependabot_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        package: Opt[str] = NotSet,
+        manifest: Opt[str] = NotSet,
+        scope: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[DependabotAlert]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>`_
+        :param state: Optional string
+        :param severity: Optional string
+        :param ecosystem: Optional string
+        :param package: Optional string
+        :param manifest: Optional string
+        :param scope: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :rtype: :class:`PaginatedList` of :class:`github.DependabotAlert.DependabotAlert`
+        """
+        allowed_states = ["auto_dismissed", "dismissed", "fixed", "open"]
+        allowed_severities = ["low", "medium", "high", "critical"]
+        allowed_ecosystems = ["composer", "go", "maven", "npm", "nuget", "pip", "pub", "rubygems", "rust"]
+        allowed_scopes = ["development", "runtime"]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        assert ecosystem in allowed_ecosystems + [NotSet], f"Ecosystem can be one of {', '.join(allowed_ecosystems)}"
+        assert scope in allowed_scopes + [NotSet], f"Scope can be one of {', '.join(allowed_scopes)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "severity": severity,
+                "ecosystem": ecosystem,
+                "package": package,
+                "manifest": manifest,
+                "scope": scope,
+                "sort": sort,
+                "direction": direction,
+            }
+        )
+        return PaginatedList(
+            github.DependabotAlert.DependabotAlert,
+            self._requester,
+            f"{self.url}/dependabot/alerts",
+            url_parameters,
+        )
+
+    def get_dependabot_alert(self, number: int) -> DependabotAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#get-a-dependabot-alert>`_
+        :param number: int
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/dependabot/alerts/{number}")
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+
+    def update_dependabot_alert(
+        self, number: int, state: str, dismissed_reason: Opt[str] = NotSet, dismissed_comment: Opt[str] = NotSet
+    ) -> DependabotAlert:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#update-a-dependabot-alert>`_
+        :param number: int
+        :param state: string
+        :param dismissed_reason: Optional string
+        :param dismissed_comment: Optional string
+        :rtype: :class:`github.DependabotAlert.DependabotAlert`
+        """
+        assert isinstance(number, int), number
+        assert isinstance(state, str), state
+        assert state in ["dismissed", "open"], "State can be one of ['dismissed', 'open']"
+        if state == "dismissed":
+            assert is_defined(dismissed_reason)
+            assert dismissed_reason in [
+                "fix_started",
+                "inaccurate",
+                "no_bandwidth",
+                "not_used",
+                "tolerable_risk",
+            ], "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+        assert is_optional(dismissed_comment, str), dismissed_comment
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            f"{self.url}/dependabot/alerts/{number}",
+            input=NotSet.remove_unset_items(
+                {"state": state, "dismissed_reason": dismissed_reason, "dismissed_comment": dismissed_comment}
+            ),
+        )
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet

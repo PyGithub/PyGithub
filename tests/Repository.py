@@ -62,6 +62,7 @@
 # Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -707,6 +708,40 @@ class Repository(Framework.TestCase):
                 "cb0313157bf904f2d364377d35d9397b269547a5",
                 "0cec0d25e606c023a62a4fc7cdc815309ebf6d16",
                 "ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7",
+            ],
+        )
+
+    def testCompareCommitPagination(self):
+        gh = github.Github(
+            auth=self.oauth_token,
+            per_page=4,
+            retry=self.retry,
+            pool_size=self.pool_size,
+            seconds_between_requests=self.seconds_between_requests,
+            seconds_between_writes=self.seconds_between_writes,
+        )
+        repo = gh.get_repo("PyGithub/PyGithub")
+        comparison = repo.compare("v1.54", "v1.54.1")
+        self.assertEqual(comparison.status, "ahead")
+        self.assertEqual(comparison.ahead_by, 10)
+        self.assertEqual(comparison.behind_by, 0)
+        self.assertEqual(comparison.total_commits, 10)
+        self.assertEqual(len(comparison.files), 228)
+        self.assertEqual(comparison.commits.totalCount, 10)
+        self.assertListKeyEqual(
+            comparison.commits,
+            lambda c: c.sha,
+            [
+                "fab682a5ccfc275c31ec37f1f541254c7bd780f3",
+                "9ee3afb1716c559a0b3b44e097c05f4b14ae2ab8",
+                "a806b5233f6423e0f8dacc4d04b6d81a72689bed",
+                "63e4fae997a9a5dc8c2b56907c87c565537bb28f",
+                "82c349ce3e1c556531110753831b3133334c19b7",
+                "2432cffd3b2f1a8e0b6b96d69b3dd4ded148a9f7",
+                "e113e37de1ec687c68337d777f3629251b35ab28",
+                "f299699ccd75910593d5ddf7cc6212f70c5c28b1",
+                "31a1c007808a4205bdae691385d2627c561e69ed",
+                "34d097ce473601624722b90fc5d0396011dd3acb",
             ],
         )
 

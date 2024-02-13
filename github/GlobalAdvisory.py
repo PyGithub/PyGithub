@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,6 +29,7 @@ from typing import Any
 
 from github.AdvisoryBase import AdvisoryBase
 from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
+from github.AdvisoryVulnerability import AdvisoryVulnerability
 from github.GithubObject import Attribute, NotSet
 
 
@@ -45,6 +47,7 @@ class GlobalAdvisory(AdvisoryBase):
         self._repository_advisory_url: Attribute[str] = NotSet
         self._source_code_location: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
+        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
@@ -79,6 +82,10 @@ class GlobalAdvisory(AdvisoryBase):
     def type(self) -> str:
         return self._type.value
 
+    @property
+    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
+        return self._vulnerabilities.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "credits" in attributes:  # pragma no branch
             self._credits = self._makeListOfClassesAttribute(
@@ -103,4 +110,9 @@ class GlobalAdvisory(AdvisoryBase):
             self._source_code_location = self._makeStringAttribute(attributes["source_code_location"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+        if "vulnerabilities" in attributes:
+            self._vulnerabilities = self._makeListOfClassesAttribute(
+                AdvisoryVulnerability,
+                attributes["vulnerabilities"],
+            )
         super()._useAttributes(attributes)

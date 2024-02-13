@@ -4,6 +4,81 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.2.0 (January 28, 2024)
+--------------------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* The ``github.Comparison.Comparison`` instance returned by ``Repository.compare`` provides a ``commits``
+  property that used to return a ``list[github.Commit.Commit]``, which has now been changed
+  to ``PaginatedList[github.Commit.Commit]``. This breaks user code that assumes a ``list``:
+
+.. code-block:: python
+
+    commits = repo.compare("v0.6", "v0.7").commits
+    no_of_commits = len(commits)
+
+This will raise a ``TypeError: object of type 'PaginatedList' has no len()``, as the returned ``PaginatedList``
+does not support the ``len()`` method. Use the ``totalCount`` property instead:
+
+.. code-block:: python
+
+    commits = repo.compare("v0.6", "v0.7").commits
+    no_of_commits = commits.totalCount
+
+
+New features
+^^^^^^^^^^^^
+
+* Add support to call GraphQL API
+
+Improvements
+^^^^^^^^^^^^
+
+* Add parent_team_id, maintainers and notification_setting for creating and updating teams. (#2863) (49d07d16)
+* Add support for issue reactions summary (#2866) (cc4c5269)
+* Support for DependabotAlert APIs (#2879) (14af7051)
+* Derive GraphQL URL from base_url (#2880) (d0caa3c3)
+* Make ``Repository.compare().commits`` return paginated list (#2882) (2d284d1e)
+* Add missing branch protection fields (#2873) (e47c153b)
+* Add ``include_all_branches`` to ``create_repo_from_template`` of ``AuthenticatedUser`` and ``Organization`` (#2871) (34c4642e)
+* Add and update organisation dependabot secrets (#2316) (603896f4)
+* Add missing params to ``Organization.create_repo`` (#2700) (9c61a2a4)
+* Update allowed values for ``Repository`` collaborator permissions (#1996) (b5b66da8)
+* Support editing PullRequestReview (#2851) (b1c4c561)
+* Update attributes after calling ``PullRequestReview.dismiss`` (#2854) (6f3d714c)
+* Add ``request_cve`` on ``RepositoryAdvisories`` (#2855) (41b617b7)
+* Filter collaborators of a repository by permissions (#2792) (702c127a)
+* Set pull request to auto merge via GraphQL API (#2816) (232df79a)
+* Support Environment Variables and Secrets (#2848) (7df97398)
+* Update workflow.get_runs & pullrequest.add_to_assignees function signature (#2799) (26eedbb0)
+* Add ``GithubObject.last_modified_datetime`` to have ``last_modified`` as a ``datetime`` (#2772) (e7ce8189)
+* Add support for global advisories and unify some shared logic with repository advisories (#2702) (c8b4fcbe)
+* Add internal as valid Repository visibility value (#2806) (d4a5a40f)
+* Add support for issue comments reactions summary (#2813) (67397491)
+
+Bug Fixes
+^^^^^^^^^
+
+* Add a bunch of missing urllib.parse.quote calls (#1976) (13194be2)
+* Fix Variable and Secret URL (#2835) (aa763431)
+
+Maintenance
+^^^^^^^^^^^
+
+* Update the class name for NetrcAuth in the examples (#2860) (2f44b2e8)
+* Move build to PEP517 (#2800) (c589bf9e)
+* Use new type assert functions in ``Repository`` (#2798) (2783e671)
+* PyTest: Move config to pyproject.toml (#2859) (61fb728b)
+* codespell: ignore-words-list (#2858) (dcf6d8a1)
+* Improve fix-headers.py script (#2728) (a48c37fa)
+* Remove dependency on python-dateutil (#2804) (ab131a2f)
+* CI: update precommit & apply (#2600) (d92cfba2)
+* Fix parameter order according to Version 2.1.0 (#2786) (dc37d5c1)
+* Add missing GitHub classes to docs (#2783) (9af9b6e5)
+* Fix mypy error with urllib3>=2.0.0a1 by ignoring (#2779) (64b1cdea)
+
 Version 2.1.1 (September 29, 2023)
 -----------------------------------
 

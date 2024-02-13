@@ -5,6 +5,7 @@
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,14 +30,15 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Iterable
 
+import github.AdvisoryVulnerability
 import github.NamedUser
 from github.AdvisoryBase import AdvisoryBase
 from github.AdvisoryCredit import AdvisoryCredit, Credit
 from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
-from github.AdvisoryVulnerability import AdvisoryVulnerabilityInput
 from github.GithubObject import Attribute, NotSet, Opt
 
 if TYPE_CHECKING:
+    from github.AdvisoryVulnerability import AdvisoryVulnerability, AdvisoryVulnerabilityInput
     from github.NamedUser import NamedUser
 
 
@@ -54,6 +56,7 @@ class RepositoryAdvisory(AdvisoryBase):
         self._credits_detailed: Attribute[list[AdvisoryCreditDetailed]] = NotSet
         self._cwe_ids: Attribute[list[str]] = NotSet
         self._state: Attribute[str] = NotSet
+        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
         super()._initAttributes()
 
     @property
@@ -87,6 +90,10 @@ class RepositoryAdvisory(AdvisoryBase):
     @property
     def state(self) -> str:
         return self._state.value
+
+    @property
+    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
+        return self._vulnerabilities.value
 
     def add_vulnerability(
         self,
@@ -339,4 +346,9 @@ class RepositoryAdvisory(AdvisoryBase):
             self._cwe_ids = self._makeListOfStringsAttribute(attributes["cwe_ids"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "vulnerabilities" in attributes:
+            self._vulnerabilities = self._makeListOfClassesAttribute(
+                github.AdvisoryVulnerability.AdvisoryVulnerability,
+                attributes["vulnerabilities"],
+            )
         super()._useAttributes(attributes)
