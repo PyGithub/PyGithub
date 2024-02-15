@@ -3379,6 +3379,14 @@ class Repository(CompletableGithubObject):
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
+        :param actor: :class:`github.NamedUser.NamedUser` or string
+        :param branch: :class:`github.Branch.Branch` or string
+        :param event: string
+        :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
+        :param exclude_pull_requests: bool
+        :param head_sha: string
+
+        :rtype: :class:`PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
         assert is_optional(actor, (github.NamedUser.NamedUser, str)), actor
         assert is_optional(branch, (github.Branch.Branch, str)), branch
