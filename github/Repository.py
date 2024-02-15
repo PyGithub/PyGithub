@@ -3375,6 +3375,7 @@ class Repository(CompletableGithubObject):
         status: Opt[str] = NotSet,
         exclude_pull_requests: Opt[bool] = NotSet,
         head_sha: Opt[str] = NotSet,
+        created: Opt[str] = NotSet,
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3393,6 +3394,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(status, str), status
         assert is_optional(exclude_pull_requests, bool), exclude_pull_requests
         assert is_optional(head_sha, str), head_sha
+        assert is_optional(created, str), created
 
         url_parameters: dict[str, Any] = {}
         if is_defined(actor):
@@ -3413,6 +3415,8 @@ class Repository(CompletableGithubObject):
             url_parameters["exclude_pull_requests"] = 1
         if is_defined(head_sha):
             url_parameters["head_sha"] = head_sha
+        if is_defined(created):
+            url_parameters["created"] = created
 
         return PaginatedList(
             github.WorkflowRun.WorkflowRun,
