@@ -115,6 +115,91 @@ class ReviewComment(TypedDict):
 class PullRequest(CompletableGithubObject):
     """
     This class represents PullRequests. The reference can be found here https://docs.github.com/en/rest/reference/pulls
+
+    Properties
+    ----------
+    additions : int
+        Number of lines added.
+    assignee : github.NamedUser.NamedUser
+        Primary assignee.
+    assignees : list[NamedUser]
+        List of all assignees.
+    base : github.PullRequestPart.PullRequestPart
+        Base branch details.
+    body : str
+        Description of the pull request.
+    changed_files : int
+        Number of files changed.
+    closed_at : datetime | None
+        When the pull request was closed.
+    comments : int
+        Number of comments.
+    comments_url : str
+        URL for comments on the pull request.
+    commits : int
+        Number of commits in the pull request.
+    commits_url : str
+        URL for the commits in the pull request.
+    created_at : datetime
+        Creation timestamp.
+    deletions : int
+        Number of lines deleted.
+    diff_url : str
+        URL for the diff of the pull request.
+    draft : bool
+        If the pull request is a draft.
+    head : github.PullRequestPart.PullRequestPart
+        Head branch details.
+    html_url : str
+        Web URL for the pull request.
+    id : int
+        Unique identifier.
+    issue_url : str
+        URL for the issue associated with the pull request.
+    labels : list[github.Label.Label]
+        Labels attached to the pull request.
+    merge_commit_sha : str
+        SHA of the merge commit.
+    mergeable : bool
+        If the pull request can be merged.
+    mergeable_state : str
+        Mergeability state.
+    merged : bool
+        If the pull request has been merged.
+    merged_at : datetime | None
+        When the pull request was merged.
+    merged_by : github.NamedUser.NamedUser
+        User who merged the pull request.
+    milestone : github.Milestone.Milestone
+        Milestone associated with the pull request.
+    number : int
+        Pull request number.
+    patch_url : str
+        URL for the patch of the pull request.
+    rebaseable : bool
+        If the pull request can be rebased.
+    requested_reviewers : list[NamedUser]
+        Reviewers requested for the pull request.
+    review_comment_url : str
+        URL for the review comments on the pull request.
+    review_comments : int
+        Number of review comments.
+    review_comments_url : str
+        URL for the review comments.
+    state : str
+        Current state of the pull request (open, closed).
+    title : str
+        Title of the pull request.
+    updated_at : datetime | None
+        Last update timestamp.
+    url : str
+        API URL for the pull request.
+    user : github.NamedUser.NamedUser
+        User who created the pull request.
+    maintainer_can_modify : bool
+        If maintainers can modify the pull request.
+    node_id : str
+        Node ID for the pull request.
     """
 
     def _initAttributes(self) -> None:

@@ -47,8 +47,17 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class AdvisoryCreditDetailed(NonCompletableGithubObject):
     """
-    This class represents a credit that is assigned to a SecurityAdvisory.
+    Attributes credits for Security Advisory contributions.
     The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
+
+    Properties
+    ----------
+    state : str
+        The status of the credit (e.g., acknowledged).
+    type : str
+        The nature of the contribution (e.g., reporter, fixer).
+    user : :class:`github.NamedUser.NamedUser`
+        The GitHub user credited for the contribution.
     """
 
     @property

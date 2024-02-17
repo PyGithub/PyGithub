@@ -47,7 +47,26 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class AccessToken(NonCompletableGithubObject):
     """
-    This class represents access tokens.
+    Encapsulates access token details for API authentication.
+
+    Properties
+    ----------
+    token : str
+        Access token for API requests.
+    type : str
+        Type of token, usually 'bearer'.
+    scope : str
+        Permissions scopes of the token.
+    expires_in : int
+        Token validity in seconds, 0 if it never expires.
+    refresh_token : str
+        Token to obtain a new access token upon expiry.
+    refresh_expires_in : int
+        Validity of the refresh token in seconds.
+
+    Note
+    ----
+    Property availability varies by OAuth flow and permissions.
     """
 
     _created: datetime

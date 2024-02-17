@@ -50,6 +50,25 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class Event(NonCompletableGithubObject):
     """
     This class represents Events. The reference can be found here https://docs.github.com/en/rest/reference/activity#events
+
+    Properties
+    ----------
+    actor : NamedUser
+        The user who triggered the event.
+    created_at : datetime
+        Timestamp of when the event occurred.
+    id : str
+        Unique identifier for the event.
+    org : Organization
+        The organization associated with the event.
+    payload : dict
+        Detailed data about the event.
+    public : bool
+        Indicates if the event is public.
+    repo : Repository
+        Repository associated with the event.
+    type : str
+        The type of event.
     """
 
     def _initAttributes(self) -> None:

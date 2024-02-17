@@ -83,6 +83,99 @@ if TYPE_CHECKING:
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents NamedUsers. The reference can be found here https://docs.github.com/en/rest/reference/users#get-a-user
+
+    Properties
+    ----------
+    avatar_url : str
+        URL of the user's avatar image.
+    bio : Optional[str]
+        User's biography.
+    blog : Optional[str]
+        User's blog URL.
+    collaborators : int
+        Number of collaborators.
+    company : Optional[str]
+        User's company.
+    contributions : int
+        Number of contributions.
+    created_at : datetime
+        Account creation date.
+    disk_usage : int
+        Disk space used by the user.
+    email : Optional[str]
+        User's email address.
+    events_url : str
+        URL for user's events.
+    followers : int
+        Number of followers.
+    followers_url : str
+        URL for user's followers.
+    following : int
+        Number of users being followed.
+    following_url : str
+        URL for who the user is following.
+    gists_url : str
+        URL for user's gists.
+    gravatar_id : Optional[str]
+        Gravatar ID.
+    hireable : Optional[bool]
+        If the user is available for hire.
+    html_url : str
+        Web URL for the user's profile.
+    id : int
+        User's unique identifier.
+    invitation_teams_url : str
+        URL for user's team invitations.
+    inviter : NamedUser
+        User who invited.
+    location : Optional[str]
+        User's location.
+    login : str
+        User's login username.
+    name : Optional[str]
+        User's full name.
+    node_id : str
+        Node identifier for the user.
+    organizations_url : str
+        URL for user's organizations.
+    owned_private_repos : int
+        Number of private repositories owned.
+    permissions : Permissions
+        User's permissions.
+    plan : Plan
+        User's subscription plan.
+    private_gists : int
+        Number of private gists.
+    public_gists : int
+        Number of public gists.
+    public_repos : int
+        Number of public repositories.
+    received_events_url : str
+        URL for user's received events.
+    repos_url : str
+        URL for user's repositories.
+    role : str
+        User's role within GitHub.
+    site_admin : bool
+        If the user is a GitHub site administrator.
+    starred_url : str
+        URL for the repositories the user has starred.
+    subscriptions_url : str
+        URL for the user's subscriptions.
+    suspended_at : datetime
+        Date when the user was suspended, if applicable.
+    team_count : int
+        Number of teams the user is part of.
+    total_private_repos : int
+        Total number of private repositories.
+    twitter_username : str
+        User's Twitter username.
+    type : str
+        Type of user (User or Organization).
+    updated_at : datetime
+        Last profile update date.
+    url : str
+        API URL for the user's profile.
     """
 
     def _initAttributes(self) -> None:
@@ -134,16 +227,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
-
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-
-    @property
-    def twitter_username(self) -> str | None:
-        self._completeIfNotSet(self._twitter_username)
-        return self._twitter_username.value
 
     def __hash__(self) -> int:
         return hash((self.id, self.login))
@@ -272,6 +355,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def organizations_url(self) -> str:
         self._completeIfNotSet(self._organizations_url)
         return self._organizations_url.value
@@ -355,6 +443,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def type(self) -> str:
         self._completeIfNotSet(self._type)
         return self._type.value
+
+    @property
+    def twitter_username(self) -> str | None:
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
 
     @property
     def updated_at(self) -> datetime:

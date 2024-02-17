@@ -101,6 +101,61 @@ if TYPE_CHECKING:
 class Issue(CompletableGithubObject):
     """
     This class represents Issues. The reference can be found here https://docs.github.com/en/rest/reference/issues
+
+    Properties
+    ----------
+    assignee : NamedUser
+        Primary individual assigned to the issue.
+    assignees : list[NamedUser]
+        All individuals assigned to the issue.
+    body : str
+        Text content of the issue.
+    closed_at : datetime
+        When the issue was closed.
+    closed_by : NamedUser
+        User who closed the issue.
+    comments : int
+        Number of comments on the issue.
+    comments_url : str
+        URL for the issue's comments.
+    created_at : datetime
+        Issue creation timestamp.
+    events_url : str
+        URL for the issue's events.
+    html_url : str
+        Web URL for the issue.
+    id : int
+        Unique identifier for the issue.
+    labels : list[Label]
+        Labels attached to the issue.
+    labels_url : str
+        URL for the issue's labels.
+    locked : bool
+        If the issue is locked against comments.
+    milestone : Milestone
+        Milestone the issue is associated with.
+    number : int
+        Issue number within the repository.
+    pull_request : IssuePullRequest
+        If the issue is a pull request, details of the PR.
+    repository_url : str
+        URL of the repository the issue belongs to.
+    state : str
+        Current state of the issue (open, closed).
+    state_reason : str
+        Reason for the issue's current state.
+    title : str
+        Title of the issue.
+    updated_at : datetime
+        Last update timestamp for the issue.
+    url : str
+        API URL for the issue.
+    user : NamedUser
+        User who created the issue.
+    active_lock_reason : str
+        Reason why the issue was locked.
+    reactions : Reaction
+        Reactions to the issue.
     """
 
     def _initAttributes(self) -> None:
