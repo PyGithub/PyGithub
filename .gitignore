@@ -54,3 +54,4 @@
 venv
 .tox/
 .mypy_cache/
+*.swp
