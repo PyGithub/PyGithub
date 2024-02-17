@@ -402,12 +402,12 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
-                "assignee": assignee._identity
-                if isinstance(assignee, github.NamedUser.NamedUser)
-                else (assignee or ""),
-                "milestone": milestone._identity
-                if isinstance(milestone, github.Milestone.Milestone)
-                else (milestone or ""),
+                "assignee": (
+                    assignee._identity if isinstance(assignee, github.NamedUser.NamedUser) else (assignee or "")
+                ),
+                "milestone": (
+                    milestone._identity if isinstance(milestone, github.Milestone.Milestone) else (milestone or "")
+                ),
             }
         )
 

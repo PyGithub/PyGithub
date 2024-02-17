@@ -81,7 +81,6 @@ class AdvisoryBase(NonCompletableGithubObject):
         When the advisory was withdrawn, if ever.
     """
 
-
     def _initAttributes(self) -> None:
         self._cve_id: Attribute[str] = NotSet
         self._cvss: Attribute[CVSS] = NotSet

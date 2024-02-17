@@ -982,9 +982,9 @@ class Requester:
                 elif requestHeaders["Authorization"].startswith("Bearer"):
                     headersForRequest["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    headersForRequest[
-                        "Authorization"
-                    ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+                    headersForRequest["Authorization"] = (
+                        "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+                    )
             self._logger.debug(
                 "%s %s://%s%s %s %s ==> %i %s %s",
                 verb,

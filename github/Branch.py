@@ -92,7 +92,6 @@ class Branch(NonCompletableGithubObject):
         URL to the branch's protection rules.
     """
 
-
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 

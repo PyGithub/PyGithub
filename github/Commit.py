@@ -98,7 +98,6 @@ class Commit(CompletableGithubObject):
         API URL for the commit.
     """
 
-
     def _initAttributes(self) -> None:
         self._author: Attribute[NamedUser] = NotSet
         self._comments_url: Attribute[str] = NotSet
