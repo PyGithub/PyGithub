@@ -253,7 +253,9 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentDeploymentBranchPolicy import (
+        EnvironmentDeploymentBranchPolicyParams,
+    )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
@@ -1043,11 +1045,11 @@ class Repository(CompletableGithubObject):
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
-        :param permission: string 'pull', 'push', 'admin', 'maintain', or 'triage'
+        :param permission: string 'pull', 'push', 'admin', 'maintain', 'triage', or a custom repository role name, if the owning organization has defined any
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert permission in ["pull", "push", "admin", "maintain", "triage", NotSet], permission
+        assert is_optional(permission, str), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
