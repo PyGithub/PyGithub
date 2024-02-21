@@ -1273,11 +1273,11 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert generate_release_notes and is_optional(name, str) or isinstance(name, str), name
-        assert generate_release_notes and is_optional(message, str) or isinstance(message, str), message
+        assert isinstance(generate_release_notes, bool), generate_release_notes
+        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
+        assert isinstance(message, str) or generate_release_notes and is_optional(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert is_optional(
             target_commitish,
             (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
