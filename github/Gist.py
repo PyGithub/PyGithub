@@ -63,6 +63,47 @@ if TYPE_CHECKING:
 class Gist(CompletableGithubObject):
     """
     This class represents Gists. The reference can be found here https://docs.github.com/en/rest/reference/gists
+
+    Properties
+    ----------
+    comments : int
+        Count of comments on the gist.
+    comments_url : str
+        URL for gist comments.
+    commits_url : str
+        URL for gist commits.
+    created_at : datetime
+        Gist creation timestamp.
+    description : str
+        Description of the gist.
+    files : dict
+        Files included in the gist, keyed by filename.
+    fork_of : Gist
+        The original gist if this is a fork.
+    forks : list
+        List of forks of this gist.
+    forks_url : str
+        URL for gist forks.
+    git_pull_url : str
+        URL to pull the gist via git.
+    git_push_url : str
+        URL to push to the gist via git.
+    history : list
+        Revision history of the gist.
+    html_url : str
+        Web URL for the gist.
+    id : str
+        Unique identifier for the gist.
+    owner : NamedUser
+        The gist's owner.
+    public : bool
+        Visibility of the gist (public or private).
+    updated_at : datetime
+        Last update timestamp for the gist.
+    url : str
+        API URL for the gist.
+    user : NamedUser
+        Deprecated. Use `owner` instead.
     """
 
     def _initAttributes(self) -> None:

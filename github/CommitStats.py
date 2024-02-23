@@ -40,6 +40,15 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CommitStats(NonCompletableGithubObject):
     """
     This class represents CommitStats.
+
+    Properties
+    ----------
+    additions: int
+        Number of additions
+    deletions: int
+        Number of deletions
+    total: int
+        Total number of additions and deletions
     """
 
     def _initAttributes(self) -> None:

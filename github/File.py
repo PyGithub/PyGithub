@@ -44,6 +44,31 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class File(NonCompletableGithubObject):
     """
     This class represents Files
+
+    Properties
+    ----------
+    additions : int
+        Number of lines added.
+    blob_url : str
+        URL to the blob in the GitHub UI.
+    changes : int
+        Total number of changes (additions + deletions).
+    contents_url : str
+        API URL to retrieve the file contents.
+    deletions : int
+        Number of lines deleted.
+    filename : str
+        The full path to the file.
+    patch : str
+        The diff of changes made.
+    previous_filename : str
+        Original path of the file before being moved or renamed.
+    raw_url : str
+        URL to retrieve the raw contents of the file.
+    sha : str
+        SHA of the file blob.
+    status : str
+        The status of the file (e.g., added, modified, deleted).
     """
 
     def _initAttributes(self) -> None:

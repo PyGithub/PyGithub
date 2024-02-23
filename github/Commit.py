@@ -73,6 +73,29 @@ if TYPE_CHECKING:
 class Commit(CompletableGithubObject):
     """
     This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+
+    Properties
+    ----------
+    author : NamedUser
+        The user who authored the commit.
+    comments_url : str
+        URL for commit comments.
+    commit : GitCommit
+        Detailed commit data including message and tree.
+    committer : NamedUser
+        The user who committed the code.
+    files : list[File]
+        Files modified in the commit.
+    html_url : str
+        Web URL for the commit.
+    parents : list[Commit]
+        Parent commits.
+    sha : str
+        Commit's SHA hash.
+    stats : CommitStats
+        Commit addition, deletion, and total changes stats.
+    url : str
+        API URL for the commit.
     """
 
     def _initAttributes(self) -> None:

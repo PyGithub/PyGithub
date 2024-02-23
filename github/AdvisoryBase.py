@@ -38,6 +38,47 @@ class AdvisoryBase(NonCompletableGithubObject):
     https://docs.github.com/en/rest/security-advisories/global-advisories
     https://docs.github.com/en/rest/security-advisories/repository-advisories
     https://docs.github.com/en/rest/dependabot/alerts
+
+    Properties
+    ----------
+    cve_id : str
+        CVE identifier for the advisory.
+
+    cvss : CVSS
+        CVSS score reflecting the vulnerability's severity.
+
+    cwes : list[CWE]
+        List of CWE entries describing the vulnerability type.
+
+    description : str
+        Detailed advisory description, including impact and fixes.
+
+    ghsa_id : str
+        GitHub's unique GHSA identifier for the advisory.
+
+    html_url : str
+        URL to the advisory's GitHub page.
+
+    identifiers : list[dict]
+        Identifiers for the advisory, including CVE and GHSA IDs.
+
+    published_at : datetime
+        When the advisory was first published.
+
+    severity : str
+        Severity level of the advisory (low, moderate, high, critical).
+
+    summary : str
+        Quick summary of the advisory.
+
+    updated_at : datetime
+        When the advisory was last updated.
+
+    url : str
+        API URL for the advisory details.
+
+    withdrawn_at : datetime
+        When the advisory was withdrawn, if ever.
     """
 
     def _initAttributes(self) -> None:

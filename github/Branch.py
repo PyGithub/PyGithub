@@ -79,6 +79,17 @@ if TYPE_CHECKING:
 class Branch(NonCompletableGithubObject):
     """
     This class represents Branches. The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
+
+    Properties
+    ----------
+    commit : :class:`github.Commit.Commit`
+        The latest commit on the branch.
+    name : str
+        The branch's name.
+    protected : bool
+        Indicates if the branch is protected.
+    protection_url : str
+        URL to the branch's protection rules.
     """
 
     def __repr__(self) -> str:
