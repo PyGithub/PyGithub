@@ -114,7 +114,7 @@ tox -epy310
 ## Build documentation locally
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements/docs.txt
 sphinx-build doc build
 ```
 
