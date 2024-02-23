@@ -253,9 +253,7 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import (
-        EnvironmentDeploymentBranchPolicyParams,
-    )
+    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
