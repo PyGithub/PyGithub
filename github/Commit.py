@@ -72,7 +72,9 @@ if TYPE_CHECKING:
 
 class Commit(CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+    This class represents Commits. The reference can be found here: https://docs.github.com/en/rest/reference/git#commits
+    Commit refers to the Github commit object once it has been transferred from the local git repository to the remote Github server
+    The Commit object extends the GitCommit object with Github additions (e.g. comments, commit status, pull request etc.)
     """
 
     def _initAttributes(self) -> None:
@@ -148,7 +150,7 @@ class Commit(CompletableGithubObject):
         position: Opt[int] = NotSet,
     ) -> CommitComment:
         """
-        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/commits/comments?apiVersion=2022-11-28#create-a-commit-comment>`_
         """
         assert isinstance(body, str), body
         assert is_optional(line, int), line
@@ -167,7 +169,7 @@ class Commit(CompletableGithubObject):
         context: Opt[str] = NotSet,
     ) -> CommitStatus:
         """
-        :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28#create-a-commit-status>`_
         """
         assert isinstance(state, str), state
         assert is_optional(target_url, str), target_url
@@ -191,7 +193,7 @@ class Commit(CompletableGithubObject):
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/commits/comments?apiVersion=2022-11-28#get-a-commit-comment>`_
         """
         return PaginatedList(
             github.CommitComment.CommitComment,
@@ -202,7 +204,7 @@ class Commit(CompletableGithubObject):
 
     def get_statuses(self) -> PaginatedList[CommitStatus]:
         """
-        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28#list-commit-statuses-for-a-reference>`_
         """
         return PaginatedList(
             github.CommitStatus.CommitStatus,
@@ -213,14 +215,14 @@ class Commit(CompletableGithubObject):
 
     def get_combined_status(self) -> CommitCombinedStatus:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28#get-the-combined-status-for-a-specific-reference>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
         return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#list-pull-requests-associated-with-a-commit>`_
         """
         return PaginatedList(
             github.PullRequest.PullRequest,
@@ -237,7 +239,7 @@ class Commit(CompletableGithubObject):
         filter: Opt[str] = NotSet,
     ) -> PaginatedList[CheckRun]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#list-check-runs-for-a-git-reference>`_
         """
         assert is_optional(check_name, str), check_name
         assert is_optional(status, str), status
@@ -255,7 +257,7 @@ class Commit(CompletableGithubObject):
 
     def get_check_suites(self, app_id: Opt[int] = NotSet, check_name: Opt[str] = NotSet) -> PaginatedList[CheckSuite]:
         """
-        :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
+        :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/checks/suites?apiVersion=2022-11-28#list-check-suites-for-a-git-reference>`_
         """
         assert is_optional(app_id, int), app_id
         assert is_optional(check_name, str), check_name
