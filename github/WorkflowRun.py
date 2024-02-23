@@ -192,7 +192,7 @@ class WorkflowRun(CompletableGithubObject):
 
     @property
     def run_attempt_logs_url(self) -> str:
-        return self.logs_url[:-4] + f"attempts/{self.run_attempt}/logs"
+        return self.url + f"/attempts/{self.run_attempt}/logs"
 
     @property
     def check_suite_url(self) -> str:
