@@ -177,13 +177,10 @@ class GithubIntegration:
         self,
         installation_id: int,
         token_permissions: dict[str, str] | None = None,
-        token_repositories: list[str] | None = None,
-        token_repository_ids: list[int] | None = None,
+        token_repositories: list[str | int] | None = None,
     ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(
-            installation_id, token_permissions, self.__requester, token_repositories, token_repository_ids
-        )
+        auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester, token_repositories)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self) -> dict[str, str]:
@@ -221,12 +218,12 @@ class GithubIntegration:
         self,
         installation_id: int,
         permissions: dict[str, str] | None = None,
-        repositories: list[str] | None = None,
-        repository_ids: list[int] | None = None,
+        repositories: list[str | int] | None = None,
     ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
         """
+        body: dict[str, Any] = {}
 
         if permissions is None:
             permissions = {}
@@ -234,13 +231,25 @@ class GithubIntegration:
         if repositories is not None and not isinstance(repositories, list):
             raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
 
-        if repository_ids is not None and not isinstance(repository_ids, list):
-            raise GithubException(status=400, data={"message": "Invalid repository_ids"}, headers=None)
-
         if not isinstance(permissions, dict):
             raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
-        body = {"permissions": permissions, "repositories": repositories, "repository_ids": repository_ids}
+        body["permissions"] = permissions
+        if repositories:
+            repository_names = []
+            repository_ids = []
+            for r in repositories:
+                print(r, type(r))
+                if isinstance(r, str):
+                    repository_names.append(r)
+                elif isinstance(r, int):
+                    repository_ids.append(r)
+
+            if repository_names:
+                body["repositories"] = repository_names
+            if repository_ids:
+                body["repository_ids"] = repository_ids
+
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
