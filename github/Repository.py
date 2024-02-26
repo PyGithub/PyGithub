@@ -1212,14 +1212,15 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/refs", input=post_parameters)
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    # TODO: v3: reorder arguments and add default value `NotSet` where `Opt[str]`
     def create_git_tag_and_release(
         self,
         tag: str,
         tag_message: str,
+        release_name: Opt[str],
+        release_message: Opt[str],
         object: str,
         type: str,
-        release_name: Opt[str] = NotSet,
-        release_message: Opt[str] = NotSet,
         tagger: Opt[InputGitAuthor] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
@@ -1274,8 +1275,8 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(tag, str), tag
         assert isinstance(generate_release_notes, bool), generate_release_notes
-        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
-        assert isinstance(message, str) or generate_release_notes and is_optional(message, str), message
+        assert isinstance(name, str) or generate_release_notes and (name is None or is_optional(name, str)), name
+        assert isinstance(message, str) or generate_release_notes and (message is None or is_optional(message, str)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         assert is_optional(

@@ -107,7 +107,12 @@ class GitRelease(Framework.TestCase):
         repo = self.repo
         commit_sha = repo.get_commits()[0].sha  # Just need any commit
         self.new_release = repo.create_git_tag_and_release(
-            self.new_tag, "tag message", commit_sha, "commit", "release title", "release message"
+            self.new_tag,
+            "tag message",
+            "release title",
+            "release message",
+            commit_sha,
+            "commit",
         )
         self.new_release_id = self.new_release.id
 
