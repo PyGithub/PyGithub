@@ -1231,10 +1231,10 @@ class Repository(CompletableGithubObject):
         :meth:`Repository.create_git_release`.
         :param tag: string
         :param tag_message: string
-        :param object: string
-        :param type: string
         :param release_name: string
         :param release_message: string
+        :param object: string
+        :param type: string
         :param tagger: :class:github.InputGitAuthor.InputGitAuthor
         :param draft: bool
         :param prerelease: bool
