@@ -47,7 +47,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     """
-    This class represents a reviewer for an EnvironmentProtectionRule. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    This class represents a reviewer for an EnvironmentProtectionRule.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:

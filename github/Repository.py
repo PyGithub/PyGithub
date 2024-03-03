@@ -302,7 +302,11 @@ if TYPE_CHECKING:
 
 class Repository(CompletableGithubObject):
     """
-    This class represents Repositories. The reference can be found here https://docs.github.com/en/rest/reference/repos
+    This class represents Repositories.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos
+
     """
 
     def __repr__(self) -> str:
@@ -1226,8 +1230,8 @@ class Repository(CompletableGithubObject):
         generate_release_notes: bool = False,
     ) -> GitRelease:
         """
-        Convenience function that calls :meth:`Repository.create_git_tag` and
-        :meth:`Repository.create_git_release`.
+        Convenience function that calls :meth:`Repository.create_git_tag` and :meth:`Repository.create_git_release`.
+
         :param tag: string
         :param tag_message: string
         :param release_name: string
@@ -1239,6 +1243,7 @@ class Repository(CompletableGithubObject):
         :param prerelease: bool
         :param generate_release_notes: bool
         :rtype: :class:`github.GitRelease.GitRelease`
+
         """
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(
@@ -1716,7 +1721,7 @@ class Repository(CompletableGithubObject):
 
     def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
         """
-        Gets all repository secrets
+        Gets all repository secrets.
         """
         return PaginatedList(
             github.Secret.Secret,
@@ -1764,8 +1769,7 @@ class Repository(CompletableGithubObject):
 
     def get_variables(self) -> PaginatedList[github.Variable.Variable]:
         """
-        Gets all repository variables
-        :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
+        Gets all repository variables :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
         """
         return PaginatedList(
             github.Variable.Variable,
@@ -2350,18 +2354,23 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
-        """Create a file in this repository.
+        """
+        Create a file in this repository.
 
-        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents>`_
+        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
+        update-file-contents>`_
         :param path: string, (required), path of the file in the repository
         :param message: string, (required), commit message
         :param content: string, (required), the actual data in the file
-        :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the
+            repository
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`ContentFile <github.ContentFile.ContentFile>`:, 'commit': :class:`Commit
+            <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str)
         assert isinstance(message, str)
@@ -2427,19 +2436,23 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
-        """This method updates a file in a repository
+        """
+        This method updates a file in a repository.
 
-        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents>`_
+        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
+        update-file-contents>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param content: string, Required. The updated file content, either base64 encoded, or ready to be encoded.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`ContentFile <github.ContentFile.ContentFile>`:, 'commit': :class:`Commit
+            <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str)
         assert isinstance(message, str)
@@ -2482,18 +2495,21 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, Commit | _NotSetType]:
-        """This method deletes a file in a repository
+        """
+        This method deletes a file in a repository.
 
-        :calls: `DELETE /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#delete-a-file>`_
+        :calls: `DELETE /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#delete-a-
+        file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`null <NotSet>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`null <NotSet>`:, 'commit': :class:`Commit <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str), "path must be str/unicode object"
         assert isinstance(message, str), "message must be str/unicode object"
