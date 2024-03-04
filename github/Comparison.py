@@ -46,7 +46,7 @@ from github.PaginatedList import PaginatedList
 
 class Comparison(CompletableGithubObject):
     """
-    This class represents Comparisons
+    This class represents Comparisons.
     """
 
     def _initAttributes(self) -> None:

@@ -45,7 +45,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CVSS(NonCompletableGithubObject):
     """
     This class represents a CVSS.
-    The reference can be found here <https://docs.github.com/en/rest/security-advisories/global-advisories>
+
+    The reference can be found here
+    <https://docs.github.com/en/rest/security-advisories/global-advisories>
+
     """
 
     def _initAttributes(self) -> None:

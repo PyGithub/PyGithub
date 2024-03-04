@@ -41,7 +41,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class CheckRunOutput(NonCompletableGithubObject):
-    """This class represents the output of check run."""
+    """
+    This class represents the output of check run.
+    """
 
     def _initAttributes(self) -> None:
         self._annotations_count: Attribute[int] = NotSet

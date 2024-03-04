@@ -53,7 +53,11 @@ if TYPE_CHECKING:
 
 class Reaction(CompletableGithubObject):
     """
-    This class represents Reactions. The reference can be found here https://docs.github.com/en/rest/reference/reactions
+    This class represents Reactions.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/reactions
+
     """
 
     def _initAttributes(self) -> None:

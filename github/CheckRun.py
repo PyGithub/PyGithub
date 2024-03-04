@@ -57,7 +57,10 @@ if TYPE_CHECKING:
 class CheckRun(CompletableGithubObject):
     """
     This class represents check runs.
-    The reference can be found here https://docs.github.com/en/rest/reference/checks#check-runs
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/checks#check-runs
+
     """
 
     def _initAttributes(self) -> None:
