@@ -239,18 +239,13 @@ class GithubIntegration:
 
         body["permissions"] = permissions
         if repositories:
-            repository_names = []
-            repository_ids = []
-            for r in repositories:
-                if isinstance(r, str):
-                    repository_names.append(r)
-                elif isinstance(r, int):
-                    repository_ids.append(r)
+            repo_names = [r for r in repositories if isinstance(r, str)]
+            repo_ids = [r for r in repositories if isinstance(r, int)]
 
-            if repository_names:
-                body["repositories"] = repository_names
-            if repository_ids:
-                body["repository_ids"] = repository_ids
+            if repo_names:
+                body["repositories"] = repo_names
+            if repo_ids:
+                body["repository_ids"] = repo_ids
 
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
