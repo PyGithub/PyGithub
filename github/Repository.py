@@ -1275,9 +1275,9 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(tag, str), tag
         assert isinstance(generate_release_notes, bool), generate_release_notes
-        assert isinstance(name, str) or generate_release_notes and (name is None or is_optional(name, str)), name
+        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
         assert (
-            isinstance(message, str) or generate_release_notes and (message is None or is_optional(message, str))
+            isinstance(message, str) or generate_release_notes and is_optional(message, str)
         ), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
