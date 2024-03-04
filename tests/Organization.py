@@ -588,10 +588,9 @@ class Organization(Framework.TestCase):
 
     def testOrgGetSecretAssertion(self):
         org = self.g.get_organization("demoorg")
-        try:
+        with self.assertRaises(AssertionError) as exc:
             org.get_secret(secret_name="splat", secret_type="supersecret")
-        except AssertionError:
-            assert True
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateDependabotSecretSelected(self, encrypt):

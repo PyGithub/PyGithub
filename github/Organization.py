@@ -658,6 +658,7 @@ class Organization(CompletableGithubObject):
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
