@@ -44,7 +44,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class Clones(NonCompletableGithubObject):
     """
     This class represents a popular Path for a GitHub repository.
-    The reference can be found here https://docs.github.com/en/rest/reference/repos#get-repository-clones
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#get-repository-clones
+
     """
 
     def _initAttributes(self) -> None:
