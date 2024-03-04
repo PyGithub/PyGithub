@@ -157,13 +157,14 @@ class GithubIntegration:
         )
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the
-        GithubIntegration object as a context manager:
+        """
+        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
 
         .. code-block:: python
 
           with github.GithubIntegration(...) as gi:
             # do something
+
         """
         self.__requester.close()
 
@@ -180,7 +181,9 @@ class GithubIntegration:
         token_repositories: list[str | int] | None = None,
     ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester, token_repositories)
+        auth = self.auth.get_installation_auth(
+            installation_id, token_permissions, token_repositories, requester=self.__requester
+        )
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     def _get_headers(self) -> dict[str, str]:
@@ -239,7 +242,6 @@ class GithubIntegration:
             repository_names = []
             repository_ids = []
             for r in repositories:
-                print(r, type(r))
                 if isinstance(r, str):
                     repository_names.append(r)
                 elif isinstance(r, int):

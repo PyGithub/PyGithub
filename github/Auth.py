@@ -201,20 +201,21 @@ class AppAuth(JWT):
         self,
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = None,
-        requester: Optional[Requester] = None,
         token_repositories: Optional[List[Union[str, int]]] = None,
+        *,
+        requester: Optional[Requester] = None,
     ) -> "AppInstallationAuth":
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
 
         :param installation_id: installation id
         :param token_permissions: optional permissions
-        :param requester: optional requester with app authentication
         :param token_repositories: optional repositories or repository ids
+        :param requester: optional requester with app authentication
         :return:
 
         """
-        return AppInstallationAuth(self, installation_id, token_permissions, requester, token_repositories)
+        return AppInstallationAuth(self, installation_id, token_permissions, token_repositories, requester=requester)
 
     def create_jwt(self, expiration: Optional[int] = None) -> str:
         """
@@ -275,8 +276,9 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         app_auth: AppAuth,
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = None,
-        requester: Optional[Requester] = None,
         token_repositories: Optional[List[Union[str, int]]] = None,
+        *,
+        requester: Optional[Requester] = None,
     ):
         super().__init__()
 
