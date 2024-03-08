@@ -286,6 +286,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         assert isinstance(installation_id, int), installation_id
         assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
         assert token_repositories is None or isinstance(token_repositories, list), token_repositories
+        assert requester is None or isinstance(requester, Requester), requester
 
         self._app_auth = app_auth
         self._installation_id = installation_id
@@ -296,6 +297,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             self.withRequester(requester)
 
     def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(self._app_auth))
 
         # imported here to avoid circular import
@@ -383,26 +385,14 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     ) -> None:
         super().__init__()
 
-        assert isinstance(client_id, str)
-        assert len(client_id) > 0
-        assert isinstance(client_secret, str)
-        assert len(client_secret) > 0
-        assert isinstance(token, str)
-        assert len(token) > 0
-        if token_type is not None:
-            assert isinstance(token_type, str)
-            assert len(token_type) > 0
-        assert isinstance(token, str)
-        if token_type is not None:
-            assert isinstance(token_type, str)
-            assert len(token_type) > 0
-        if expires_at is not None:
-            assert isinstance(expires_at, datetime)
-        if refresh_token is not None:
-            assert isinstance(refresh_token, str)
-            assert len(refresh_token) > 0
-        if refresh_expires_at is not None:
-            assert isinstance(refresh_expires_at, datetime)
+        assert isinstance(client_id, str) and len(client_id) > 0
+        assert isinstance(client_secret, str) and len(client_secret) > 0
+        assert isinstance(token, str) and len(token) > 0
+        assert token_type is None or isinstance(token_type, str) and len(token_type) > 0, token_type
+        assert expires_at is None or isinstance(expires_at, datetime), expires_at
+        assert refresh_token is None or isinstance(refresh_token, str) and len(refresh_token) > 0
+        assert refresh_expires_at is None or isinstance(refresh_expires_at, datetime), refresh_expires_at
+        assert requester is None or isinstance(requester, Requester), requester
 
         self._client_id = client_id
         self._client_secret = client_secret
@@ -426,6 +416,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         return self._token
 
     def withRequester(self, requester: Requester) -> "AppUserAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(None))
 
         # imported here to avoid circular import
@@ -504,6 +495,7 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
         return self._password
 
     def withRequester(self, requester: Requester) -> "NetrcAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester)
 
         auth = utils.get_netrc_auth(requester.base_url, raise_errors=True)
