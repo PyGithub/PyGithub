@@ -226,17 +226,16 @@ class GithubIntegration:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
         """
-        body: dict[str, Any] = {}
-
         if permissions is None:
             permissions = {}
 
-        if repositories is not None and not isinstance(repositories, list):
+        if repositories is not None and not (isinstance(repositories, list) and all(isinstance(r, (str, int)) for r in repositories)):
             raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
 
         if not isinstance(permissions, dict):
             raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
+        body: dict[str, Any] = {"permissions": permissions}
         body["permissions"] = permissions
         if repositories:
             repo_names = [r for r in repositories if isinstance(r, str)]
