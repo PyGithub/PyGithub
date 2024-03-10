@@ -229,7 +229,9 @@ class GithubIntegration:
         if permissions is None:
             permissions = {}
 
-        if repositories is not None and not (isinstance(repositories, list) and all(isinstance(r, (str, int)) for r in repositories)):
+        if repositories is not None and not (
+            isinstance(repositories, list) and all(isinstance(r, (str, int)) for r in repositories)
+        ):
             raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
 
         if not isinstance(permissions, dict):

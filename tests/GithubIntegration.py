@@ -278,7 +278,7 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedRepositoriesExp.exception.status, 400)
 
         with self.assertRaises(github.GithubException) as raisedRepositoriesExp:
-            github_integration.get_access_token(self.repo_installation_id, repositories=[False])
+            github_integration.get_access_token(self.repo_installation_id, repositories=[object()])
         self.assertEqual(raisedRepositoriesExp.exception.status, 400)
 
     def testGetAccessTokenWithInvalidRepositories(self):
