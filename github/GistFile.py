@@ -40,7 +40,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class GistFile(NonCompletableGithubObject):
     """
-    This class represents GistFiles
+    This class represents GistFiles.
     """
 
     def _initAttributes(self) -> None:

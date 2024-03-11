@@ -31,7 +31,11 @@ from github.Repository import Repository
 
 class OrganizationDependabotAlert(DependabotAlert):
     """
-    This class represents a Dependabot alert on an organization. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+    This class represents a Dependabot alert on an organization.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+
     """
 
     def _initAttributes(self) -> None:

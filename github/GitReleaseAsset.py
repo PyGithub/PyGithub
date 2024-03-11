@@ -48,7 +48,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class GitReleaseAsset(CompletableGithubObject):
     """
-    This class represents GitReleaseAssets. The reference can be found here https://docs.github.com/en/rest/reference/repos#releases
+    This class represents GitReleaseAssets.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#releases
+
     """
 
     def _initAttributes(self) -> None:
