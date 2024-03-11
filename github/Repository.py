@@ -2082,10 +2082,8 @@ class Repository(CompletableGithubObject):
     def get_commit_pulls(self, sha: str) -> PaginatedList[PullRequest]:
         """
         Fetch pull requests associated with a commit SHA.
-        
         :param sha: The commit SHA.
         :return: A PaginatedList of PullRequest objects.
-        
         """
         assert isinstance(sha, str), sha
         return PaginatedList(
