@@ -1972,10 +1972,9 @@ class Repository(Framework.TestCase):
 
     def testRepoGetSecretAssertion(self):
         repo = self.g.get_repo("demoorg/demo-repo-1")
-        try:
+        with self.assertRaises(AssertionError) as exc:
             repo.get_secret(secret_name="splat", secret_type="supersecret")
-        except AssertionError:
-            assert True
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
 
 
 class LazyRepository(Framework.TestCase):

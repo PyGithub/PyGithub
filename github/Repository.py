@@ -1812,13 +1812,15 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def delete_secret(self, secret_name: str) -> bool:
+    def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         secret_name = urllib.parse.quote(secret_name)
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
         return status == 204
