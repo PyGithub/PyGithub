@@ -1825,7 +1825,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         secret_name = urllib.parse.quote(secret_name)
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/{secret_type}/secrets/{secret_name}")
         return status == 204
 
     def delete_variable(self, variable_name: str) -> bool:
