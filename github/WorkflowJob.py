@@ -57,6 +57,10 @@ class WorkflowJob(CompletableGithubObject):
         self._status: Attribute[str] = NotSet
         self._steps: Attribute[list[github.WorkflowStep.WorkflowStep]] = NotSet
         self._url: Attribute[str] = NotSet
+        self._runner_id: Attribute[int] = NotSet
+        self._runner_name: Attribute[str] = NotSet
+        self._runner_group_id: Attribute[int] = NotSet
+        self._runner_group_name: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -125,7 +129,26 @@ class WorkflowJob(CompletableGithubObject):
     def steps(self) -> list[github.WorkflowStep.WorkflowStep]:
         self._completeIfNotSet(self._steps)
         return self._steps.value
+    @property
+    def runner_id(self) -> int:
+        self._completeIfNotSet(self._runner_id)
+        return self._runner_id.value
 
+    @property
+    def runner_name(self) -> str:
+        self._completeIfNotSet(self._runner_name)
+        return self._runner_name.value
+
+    @property
+    def runner_group_id(self) -> int:
+        self._completeIfNotSet(self._runner_group_id)
+        return self._runner_group_id.value
+
+    @property
+    def runner_group_name(self) -> str:
+        self._completeIfNotSet(self._runner_group_name)
+        return self._runner_group_name.value
+        
     @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
@@ -160,6 +183,14 @@ class WorkflowJob(CompletableGithubObject):
             self._started_at = self._makeDatetimeAttribute(attributes["started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+        if "runner_id" in attributes:  # pragma no branch
+            self._runner_id = self._makeIntAttribute(attributes["runner_id"])
+        if "runner_name" in attributes:  # pragma no branch
+            self._runner_name = self._makeStringAttribute(attributes["runner_name"])
+        if "runner_group_id" in attributes:  # pragma no branch
+            self._runner_group_id = self._makeIntAttribute(attributes["runner_group_id"])
+        if "runner_group_name" in attributes:  # pragma no branch
+            self._runner_group_name = self._makeStringAttribute(attributes["runner_group_name"])
         if "steps" in attributes:  # pragma no branch
             self._steps = self._makeListOfClassesAttribute(github.WorkflowStep.WorkflowStep, attributes["steps"])
         if "url" in attributes:  # pragma no branch
