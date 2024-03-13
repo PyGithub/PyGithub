@@ -61,6 +61,8 @@ class WorkflowJob(CompletableGithubObject):
         self._runner_name: Attribute[str] = NotSet
         self._runner_group_id: Attribute[int] = NotSet
         self._runner_group_name: Attribute[str] = NotSet
+        self._runautourl: Attribute[str] = NotSet
+
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -119,7 +121,10 @@ class WorkflowJob(CompletableGithubObject):
     def started_at(self) -> datetime:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
-
+    @property
+    def autourl(self) -> str:
+        self._completeIfNotSet(self._autourl)
+        return self._autourl.value
     @property
     def status(self) -> str:
         self._completeIfNotSet(self._status)
