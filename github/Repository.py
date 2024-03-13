@@ -1734,8 +1734,7 @@ class Repository(CompletableGithubObject):
         secret_type: str = "actions",
     ) -> PaginatedList[github.Secret.Secret]:
         """
-        Gets all repository secrets
-        :param secret_type: string options actions or dependabot
+        Gets all repository secrets :param secret_type: string options actions or dependabot.
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
