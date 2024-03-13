@@ -67,7 +67,11 @@ INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
 class Installation(NonCompletableGithubObject):
     """
-    This class represents Installations. The reference can be found here https://docs.github.com/en/rest/reference/apps#installations
+    This class represents Installations.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/apps#installations
+
     """
 
     def __init__(

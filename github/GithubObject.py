@@ -75,7 +75,9 @@ class Attribute(Protocol[T_co]):
 def _datetime_from_http_date(value: str) -> datetime:
     """
     Convert an HTTP date to a datetime object.
+
     Raises ValueError for invalid dates.
+
     """
 
     dt = email.utils.parsedate_to_datetime(value)
@@ -88,7 +90,9 @@ def _datetime_from_http_date(value: str) -> datetime:
 def _datetime_from_github_isoformat(value: str) -> datetime:
     """
     Convert an GitHub API timestamps to a datetime object.
+
     Raises ValueError for invalid timestamps.
+
     """
 
     # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
@@ -423,8 +427,8 @@ class CompletableGithubObject(GithubObject):
 
     def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
         """
-        Check and update the object with conditional request
-        :rtype: Boolean value indicating whether the object is changed
+        Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
+        changed.
         """
         conditionalRequestHeader = dict()
         if self.etag is not None:

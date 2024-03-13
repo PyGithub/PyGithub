@@ -67,6 +67,15 @@ warn_no_return = false
 # https://github.com/psf/black
 line-length = 120
 
+[tool.docformatter]
+recursive = true
+# some docstring start with r"""
+wrap-summaries = 119
+wrap-descriptions = 120
+blank = true
+pre-summary-newline = true
+make-summary-multi-line = true
+
 [tool.codespell]
 skip = 'tests/*'
 quiet-level = 3

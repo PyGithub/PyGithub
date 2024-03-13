@@ -60,7 +60,11 @@ from . import Consts
 
 class ProjectColumn(CompletableGithubObject):
     """
-    This class represents Project Columns. The reference can be found here https://docs.github.com/en/rest/reference/projects#columns
+    This class represents Project Columns.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/projects#columns
+
     """
 
     def _initAttributes(self) -> None:

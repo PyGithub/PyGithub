@@ -43,7 +43,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class File(NonCompletableGithubObject):
     """
-    This class represents Files
+    This class represents Files.
     """
 
     def _initAttributes(self) -> None:

@@ -114,7 +114,11 @@ class ReviewComment(TypedDict):
 
 class PullRequest(CompletableGithubObject):
     """
-    This class represents PullRequests. The reference can be found here https://docs.github.com/en/rest/reference/pulls
+    This class represents PullRequests.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls
+
     """
 
     def _initAttributes(self) -> None:

@@ -56,7 +56,9 @@ class Auth(abc.ABC):
     def token_type(self) -> str:
         """
         The type of the auth token as used in the HTTP Authorization header, e.g. Bearer or Basic.
+
         :return: token type
+
         """
 
     @property
@@ -64,7 +66,9 @@ class Auth(abc.ABC):
     def token(self) -> str:
         """
         The auth token as used in the HTTP Authorization header.
+
         :return: token
+
         """
 
 
@@ -72,12 +76,16 @@ class HTTPBasicAuth(Auth, abc.ABC):
     @property
     @abc.abstractmethod
     def username(self) -> str:
-        """The username."""
+        """
+        The username.
+        """
 
     @property
     @abc.abstractmethod
     def password(self) -> str:
-        """The password"""
+        """
+        The password.
+        """
 
     @property
     def token_type(self) -> str:
@@ -137,7 +145,9 @@ class Token(Auth):
 class JWT(Auth, ABC):
     """
     This class is the base class to authenticate with a JSON Web Token (JWT).
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app
+
     """
 
     @property
@@ -148,7 +158,9 @@ class JWT(Auth, ABC):
 class AppAuth(JWT):
     """
     This class is used to authenticate as a GitHub App.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
+
     """
 
     def __init__(
@@ -193,10 +205,12 @@ class AppAuth(JWT):
     ) -> "AppInstallationAuth":
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
+
         :param installation_id: installation id
         :param token_permissions: optional permissions
         :param requester: optional requester with app authentication
         :return:
+
         """
         return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
@@ -227,7 +241,9 @@ class AppAuth(JWT):
 class AppAuthToken(JWT):
     """
     This class is used to authenticate as a GitHub App with a single constant JWT.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
+
     """
 
     def __init__(self, token: str):
@@ -243,7 +259,9 @@ class AppAuthToken(JWT):
 class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     """
     This class is used to authenticate as a GitHub App Installation.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation
+
     """
 
     # used to fetch live access token when calling self.token
@@ -262,6 +280,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         assert isinstance(app_auth, AppAuth), app_auth
         assert isinstance(installation_id, int), installation_id
         assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
+        assert requester is None or isinstance(requester, Requester), requester
 
         self._app_auth = app_auth
         self._installation_id = installation_id
@@ -271,6 +290,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             self.withRequester(requester)
 
     def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(self._app_auth))
 
         # imported here to avoid circular import
@@ -323,7 +343,9 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
 class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     """
     This class is used to authenticate as a GitHub App on behalf of a user.
+
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-with-a-github-app-on-behalf-of-a-user
+
     """
 
     _client_id: str
@@ -353,26 +375,14 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     ) -> None:
         super().__init__()
 
-        assert isinstance(client_id, str)
-        assert len(client_id) > 0
-        assert isinstance(client_secret, str)
-        assert len(client_secret) > 0
-        assert isinstance(token, str)
-        assert len(token) > 0
-        if token_type is not None:
-            assert isinstance(token_type, str)
-            assert len(token_type) > 0
-        assert isinstance(token, str)
-        if token_type is not None:
-            assert isinstance(token_type, str)
-            assert len(token_type) > 0
-        if expires_at is not None:
-            assert isinstance(expires_at, datetime)
-        if refresh_token is not None:
-            assert isinstance(refresh_token, str)
-            assert len(refresh_token) > 0
-        if refresh_expires_at is not None:
-            assert isinstance(refresh_expires_at, datetime)
+        assert isinstance(client_id, str) and len(client_id) > 0
+        assert isinstance(client_secret, str) and len(client_secret) > 0
+        assert isinstance(token, str) and len(token) > 0
+        assert token_type is None or isinstance(token_type, str) and len(token_type) > 0, token_type
+        assert expires_at is None or isinstance(expires_at, datetime), expires_at
+        assert refresh_token is None or isinstance(refresh_token, str) and len(refresh_token) > 0
+        assert refresh_expires_at is None or isinstance(refresh_expires_at, datetime), refresh_expires_at
+        assert requester is None or isinstance(requester, Requester), requester
 
         self._client_id = client_id
         self._client_secret = client_secret
@@ -396,6 +406,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         return self._token
 
     def withRequester(self, requester: Requester) -> "AppUserAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(None))
 
         # imported here to avoid circular import
@@ -474,6 +485,7 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
         return self._password
 
     def withRequester(self, requester: Requester) -> "NetrcAuth":
+        assert isinstance(requester, Requester), requester
         super().withRequester(requester)
 
         auth = utils.get_netrc_auth(requester.base_url, raise_errors=True)

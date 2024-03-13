@@ -54,7 +54,11 @@ if TYPE_CHECKING:
 
 class Membership(CompletableGithubObject):
     """
-    This class represents Membership of an organization. The reference can be found here https://docs.github.com/en/rest/reference/orgs
+    This class represents Membership of an organization.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/orgs
+
     """
 
     def _initAttributes(self) -> None:

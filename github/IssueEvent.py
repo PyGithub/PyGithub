@@ -52,7 +52,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class IssueEvent(CompletableGithubObject):
     """
-    This class represents IssueEvents. The reference can be found here https://docs.github.com/en/rest/reference/issues#events
+    This class represents IssueEvents.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/issues#events
+
     """
 
     def _initAttributes(self) -> None:

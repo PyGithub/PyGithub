@@ -57,7 +57,11 @@ from github.PaginatedList import PaginatedList
 
 class PullRequestComment(CompletableGithubObject):
     """
-    This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments
+    This class represents PullRequestComments.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls#review-comments
+
     """
 
     def _initAttributes(self) -> None:

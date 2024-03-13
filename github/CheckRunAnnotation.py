@@ -32,7 +32,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CheckRunAnnotation(NonCompletableGithubObject):
     """
     This class represents check run annotations.
+
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
+
     """
 
     def _initAttributes(self) -> None:

@@ -626,6 +626,10 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
 
+    def testAddToCollaboratorsCustomRole(self):
+        lyloa = self.g.get_user("Lyloa")
+        self.repo.add_to_collaborators(lyloa, "custom_role")
+
     def testGetPendingInvitations(self):
         lyloa = self.g.get_user("Lyloa")
         self.repo.add_to_collaborators(lyloa)

@@ -44,7 +44,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class StatsCodeFrequency(NonCompletableGithubObject):
     """
     This class represents statistics of StatsCodeFrequencies.
-    The reference can be found here https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
+
+    The reference can be found here
+    https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
+
     """
 
     def _initAttributes(self) -> None:
