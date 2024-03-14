@@ -45,13 +45,24 @@ That's it!
 ## Adding missing attributes for a GithubObject
 
 ```bash
-$ python scripts/add_attribute.py [class_name] [attribute_name] [attribute_type]
+$ python scripts/add_attribute.py <class_name> <attribute_name> [list] [class] <type>
 
-# For example, if you want to add a `url` attribute of string type to the Commit class
-# Note: adding multiple attributes you have to run the script multiple times
-
+# If you want to add a `url` attribute of string type to the Commit class
 $ python scripts/add_attribute.py Commit url string
+
+# If you want to add a `author` class attribute of class type NamedUser to the Commit class
+$ python scripts/add_attribute.py Commit author class NamedUser
+
+# If you want to add a `ids` list attribute of type int to the Commit class
+$ python scripts/add_attribute.py Commit ids list int
+
+# If you want to add a `parent` list attribute of class type Commit to the Commit class
+$ python scripts/add_attribute.py Commit parents list class Commit
+
+# Note: adding multiple attributes you have to run the script multiple times
 ```
+
+After adding attributes, please consider running `tox -e lint`.
 
 ## Deprecation warning
 
