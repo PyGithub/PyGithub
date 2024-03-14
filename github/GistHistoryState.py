@@ -48,7 +48,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class GistHistoryState(CompletableGithubObject):
     """
-    This class represents GistHistoryStates
+    This class represents GistHistoryStates.
     """
 
     def _initAttributes(self) -> None:

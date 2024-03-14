@@ -30,7 +30,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     """
-    This class represents a deployment branch policy for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    This class represents a deployment branch policy for an environment.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:

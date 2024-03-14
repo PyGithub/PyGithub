@@ -48,7 +48,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class License(CompletableGithubObject):
     """
-    This class represents Licenses. The reference can be found here https://docs.github.com/en/rest/reference/licenses
+    This class represents Licenses.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/licenses
+
     """
 
     def _initAttributes(self) -> None:

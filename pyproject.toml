@@ -46,6 +46,9 @@ integrations = []
 
 [tool.setuptools_scm]
 
+[tool.setuptools]
+packages = ["github"]
+
 [tool.setuptools.package-data]
 github = ["py.typed", '*.pyi']
 
@@ -63,6 +66,15 @@ warn_no_return = false
 [tool.black]
 # https://github.com/psf/black
 line-length = 120
+
+[tool.docformatter]
+recursive = true
+# some docstring start with r"""
+wrap-summaries = 119
+wrap-descriptions = 120
+blank = true
+pre-summary-newline = true
+make-summary-multi-line = true
 
 [tool.codespell]
 skip = 'tests/*'
