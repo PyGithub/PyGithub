@@ -9,6 +9,8 @@ All authentication methods require this import:
 .. code-block:: python
 
     >>> from github import Auth
+    >>> from github import Github
+
 
 Login authentication
 --------------------
