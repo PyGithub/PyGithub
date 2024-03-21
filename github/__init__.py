@@ -38,7 +38,6 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 """
 The primary class you will instantiate is :class:`github.MainClass.Github`. From its ``get_``, ``create_`` methods, you
 will obtain instances of all Github objects like :class:`github.NamedUser.NamedUser` or

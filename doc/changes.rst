@@ -31,7 +31,7 @@ Maintenance
 
 * Fix imports in authentication docs (#2923) (e3d36535)
 * CI: add docformatter to precommit (#2614) (96ad19ae)
-* Add .swp fils to gitignore (#2903) (af529abe)
+* Add .swp files to gitignore (#2903) (af529abe)
 * Fix instructions building docs in CONTRIBUTING.md (#2900) (cd8e528d)
 * Explicitly name the modules built in pyproject.toml (#2894) (4d461734)
 
