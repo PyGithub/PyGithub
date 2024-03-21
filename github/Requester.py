@@ -507,8 +507,18 @@ class Requester:
         return self.__graphql_url
 
     @property
+    def scheme(self) -> str:
+        return self.__scheme
+
+    @property
     def hostname(self) -> str:
         return self.__hostname
+
+    @property
+    def hostname_and_port(self) -> str:
+        if self.__port is None:
+            return self.hostname
+        return f"{self.hostname}:{self.__port}"
 
     @property
     def auth(self) -> Optional["Auth"]:
@@ -917,7 +927,7 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/")), o.path
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
