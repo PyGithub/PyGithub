@@ -1216,12 +1216,13 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/refs", input=post_parameters)
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    # TODO: v3: reorder arguments and add default value `NotSet` where `Opt[str]`
     def create_git_tag_and_release(
         self,
         tag: str,
         tag_message: str,
-        release_name: str,
-        release_message: str,
+        release_name: Opt[str],
+        release_message: Opt[str],
         object: str,
         type: str,
         tagger: Opt[InputGitAuthor] = NotSet,
@@ -1259,8 +1260,8 @@ class Repository(CompletableGithubObject):
     def create_git_release(
         self,
         tag: str,
-        name: str,
-        message: str,
+        name: Opt[str] = NotSet,
+        message: Opt[str] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1278,23 +1279,25 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert isinstance(name, str), name
-        assert isinstance(message, str), message
+        assert isinstance(generate_release_notes, bool), generate_release_notes
+        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
+        assert isinstance(message, str) or generate_release_notes and is_optional(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert is_optional(
             target_commitish,
             (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
-            "name": name,
-            "body": message,
             "draft": draft,
             "prerelease": prerelease,
             "generate_release_notes": generate_release_notes,
         }
+        if is_defined(name):
+            post_parameters["name"] = name
+        if is_defined(message):
+            post_parameters["body"] = message
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
         elif isinstance(target_commitish, github.Branch.Branch):
@@ -1695,53 +1698,73 @@ class Repository(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
 
-    def create_secret(self, secret_name: str, unencrypted_value: str) -> github.Secret.Secret:
+    def create_secret(
+        self,
+        secret_name: str,
+        unencrypted_value: str,
+        secret_type: str = "actions",
+    ) -> github.Secret.Secret:
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         secret_name = urllib.parse.quote(secret_name)
-        public_key = self.get_public_key()
+        public_key = self.get_public_key(secret_type=secret_type)
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/{secret_type}/secrets/{secret_name}", input=put_parameters
+        )
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
             attributes={
                 "name": secret_name,
-                "url": f"{self.url}/actions/secrets/{secret_name}",
+                "url": f"{self.url}/{secret_type}/secrets/{secret_name}",
             },
             completed=False,
         )
 
-    def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
+    def get_secrets(
+        self,
+        secret_type: str = "actions",
+    ) -> PaginatedList[github.Secret.Secret]:
         """
-        Gets all repository secrets.
+        Gets all repository secrets :param secret_type: string options actions or dependabot.
         """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         return PaginatedList(
             github.Secret.Secret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
-            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/actions/secrets"}),
+            attributesTransformer=PaginatedList.override_attributes(
+                {"secrets_url": f"{self.url}/{secret_type}/secrets"}
+            ),
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> github.Secret.Secret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         secret_name = urllib.parse.quote(secret_name)
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{secret_name}"},
             completed=False,
         )
 
@@ -1795,15 +1818,17 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def delete_secret(self, secret_name: str) -> bool:
+    def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         secret_name = urllib.parse.quote(secret_name)
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/{secret_type}/secrets/{secret_name}")
         return status == 204
 
     def delete_variable(self, variable_name: str) -> bool:
@@ -3004,12 +3029,15 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_public_key(self) -> PublicKey:
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets/public-key")
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def get_pull(self, number: int) -> PullRequest:
@@ -3344,6 +3372,8 @@ class Repository(CompletableGithubObject):
         status: Opt[str] = NotSet,
         exclude_pull_requests: Opt[bool] = NotSet,
         head_sha: Opt[str] = NotSet,
+        created: Opt[str] = NotSet,
+        check_suite_id: Opt[int] = NotSet,
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3353,6 +3383,8 @@ class Repository(CompletableGithubObject):
         :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
         :param exclude_pull_requests: bool
         :param head_sha: string
+        :param created: string Created filter, see https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates
+        :param check_suite_id: int
 
         :rtype: :class:`PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
@@ -3362,6 +3394,8 @@ class Repository(CompletableGithubObject):
         assert is_optional(status, str), status
         assert is_optional(exclude_pull_requests, bool), exclude_pull_requests
         assert is_optional(head_sha, str), head_sha
+        assert is_optional(created, str), created
+        assert is_optional(check_suite_id, int), check_suite_id
 
         url_parameters: dict[str, Any] = {}
         if is_defined(actor):
@@ -3382,6 +3416,10 @@ class Repository(CompletableGithubObject):
             url_parameters["exclude_pull_requests"] = 1
         if is_defined(head_sha):
             url_parameters["head_sha"] = head_sha
+        if is_defined(created):
+            url_parameters["created"] = created
+        if is_defined(check_suite_id):
+            url_parameters["check_suite_id"] = check_suite_id
 
         return PaginatedList(
             github.WorkflowRun.WorkflowRun,
