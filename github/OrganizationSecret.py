@@ -70,16 +70,19 @@ class OrganizationSecret(Secret):
         self,
         value: str,
         visibility: str = "all",
+        secret_type: str = "actions",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
         patch_parameters: Dict[str, Any] = {
             "name": self.name,
@@ -89,7 +92,7 @@ class OrganizationSecret(Secret):
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/secrets/{self.name}",
+            f"{self.url}/{secret_type}/secrets/{self.name}",
             input=patch_parameters,
         )
         return status == 204
