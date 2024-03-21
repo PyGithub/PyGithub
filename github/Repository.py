@@ -1216,12 +1216,13 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/refs", input=post_parameters)
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    # TODO: v3: reorder arguments and add default value `NotSet` where `Opt[str]`
     def create_git_tag_and_release(
         self,
         tag: str,
         tag_message: str,
-        release_name: str,
-        release_message: str,
+        release_name: Opt[str],
+        release_message: Opt[str],
         object: str,
         type: str,
         tagger: Opt[InputGitAuthor] = NotSet,
@@ -1259,8 +1260,8 @@ class Repository(CompletableGithubObject):
     def create_git_release(
         self,
         tag: str,
-        name: str,
-        message: str,
+        name: Opt[str] = NotSet,
+        message: Opt[str] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1278,23 +1279,25 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert isinstance(name, str), name
-        assert isinstance(message, str), message
+        assert isinstance(generate_release_notes, bool), generate_release_notes
+        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
+        assert isinstance(message, str) or generate_release_notes and is_optional(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert is_optional(
             target_commitish,
             (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
-            "name": name,
-            "body": message,
             "draft": draft,
             "prerelease": prerelease,
             "generate_release_notes": generate_release_notes,
         }
+        if is_defined(name):
+            post_parameters["name"] = name
+        if is_defined(message):
+            post_parameters["body"] = message
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
         elif isinstance(target_commitish, github.Branch.Branch):
