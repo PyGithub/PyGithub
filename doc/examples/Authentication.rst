@@ -10,7 +10,7 @@ All authentication methods require this import:
 
     >>> from github import Auth
     >>> from github import Github
-
+    >>> from github import GithubIntegration
 
 Login authentication
 --------------------
