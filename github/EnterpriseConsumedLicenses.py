@@ -45,7 +45,11 @@ from github.PaginatedList import PaginatedList
 
 class EnterpriseConsumedLicenses(CompletableGithubObject):
     """
-    This class represents license consumed by enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+    This class represents license consumed by enterprises.
+
+    The reference can be found here
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+
     """
 
     def _initAttributes(self) -> None:

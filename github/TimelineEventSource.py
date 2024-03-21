@@ -48,7 +48,11 @@ if TYPE_CHECKING:
 
 class TimelineEventSource(NonCompletableGithubObject):
     """
-    This class represents IssueTimelineEventSource. The reference can be found here https://docs.github.com/en/rest/reference/issues#timeline
+    This class represents IssueTimelineEventSource.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/issues#timeline
+
     """
 
     def _initAttributes(self) -> None:

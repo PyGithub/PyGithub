@@ -54,5 +54,7 @@
 venv
 .tox/
 .mypy_cache/
+*.swp
 /release.sh
 /Polidoro_PyGithub.egg-info/
+

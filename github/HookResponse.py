@@ -40,7 +40,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class HookResponse(NonCompletableGithubObject):
     """
-    This class represents HookResponses
+    This class represents HookResponses.
     """
 
     def _initAttributes(self) -> None:
