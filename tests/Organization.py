@@ -624,7 +624,6 @@ class Organization(Framework.TestCase):
             selected_repositories=repos,
         )
 
-        try:
+        with self.assertRaises(AssertionError) as exc:
             secret.edit(value="newvalue", secret_type="supersecret")
-        except AssertionError:
-            assert True
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
