@@ -406,6 +406,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
 
+    def testCreateGitReleaseGenerateReleaseNotes(self):
+        release = self.repo.create_git_release("vX.Y.Z-by-PyGithub-acctest-release-notes", generate_release_notes=True)
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest-release-notes")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
     def testCreateGitReleaseWithAllArguments(self):
         release = self.repo.create_git_release(
             "vX.Y.Z-by-PyGithub-acctest2",
@@ -480,13 +486,6 @@ class Repository(Framework.TestCase):
         self.assertTrue(with_payload)
         without_payload = self.repo.create_repository_dispatch("type")
         self.assertTrue(without_payload)
-
-    @mock.patch("github.PublicKey.encrypt")
-    def testCreateSecret(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
-        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.repo.create_secret("secret-name", "secret-value")
-        self.assertIsNotNone(secret)
 
     @mock.patch("github.PublicKey.encrypt")
     def testRepoSecrets(self, encrypt):
@@ -1229,6 +1228,13 @@ class Repository(Framework.TestCase):
             [110932306, 110932159, 110932072, 110286191, 110278769],
         )
 
+    def testGetWorkflowRunsCreated(self):
+        self.assertListKeyEqual(
+            self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(created="2022-12-24"),
+            lambda r: r.id,
+            [3770390952],
+        )
+
     def testGetSourceImport(self):
         import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
         source_import = import_repo.get_source_import()
@@ -1964,6 +1970,28 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(matched_repo_variables), len(variables))
         for matched_repo_variable in matched_repo_variables:
             matched_repo_variable.delete()
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoActionsSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "actions")
+        self.assertIsNotNone(secret)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoDependabotSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "dependabot")
+        self.assertIsNotNone(secret)
+
+    def testRepoGetSecretAssertion(self):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        with self.assertRaises(AssertionError) as exc:
+            repo.get_secret(secret_name="splat", secret_type="supersecret")
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
 
 
 class LazyRepository(Framework.TestCase):
