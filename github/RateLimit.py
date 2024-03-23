@@ -59,9 +59,42 @@ class RateLimit(NonCompletableGithubObject):
         self._core: Attribute[Rate] = NotSet
         self._search: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
+        self._code_search: Attribute[Rate] = NotSet
+        self._integration_manifest: Attribute[Rate] = NotSet
+        self._dependency_snapshots: Attribute[Rate] = NotSet
+        self._code_scanning_upload: Attribute[Rate] = NotSet
+        self._actions_runner_registration: Attribute[Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
+
+    @property
+    def actions_runner_registration(self) -> Rate:
+        """
+        Rate limit for registering self-hosted runners in GitHub Actions
+
+        :type: class:`github.Rate.Rate`
+        """
+        return self._actions_runner_registration.value
+
+    @property
+    def code_scanning_upload(self) -> Rate:
+        """
+        Rate limit for uploading SARIF results to code scanning
+
+        :type: class:`github.Rate.Rate`
+        """
+        return self._code_scanning_upload.value
+
+    @property
+    def code_search(self) -> Rate:
+        """
+        Rate limit for code-searchig API
+
+        :type: class:`github.Rate.Rate`
+        """
+
+        return self._code_search.value
 
     @property
     def core(self) -> Rate:
@@ -69,6 +102,26 @@ class RateLimit(NonCompletableGithubObject):
         Rate limit for the non-search-related API.
         """
         return self._core.value
+
+    @property
+    def dependency_snapshots(self) -> Rate:
+        """
+        Rate limt for submitting snapshots to the dependency graph
+
+        :type: class:`github.Rate.Rate`
+        """
+
+        return self._dependency_snapshots.value
+
+    @property
+    def integration_manifest(self) -> Rate:
+        """
+        Rate limit for status for the POST /app-manifests/{code}/conversions operation
+
+        :type: class:`github.Rate.Rate`
+        """
+
+        return self._integration_manifest.value
 
     @property
     def search(self) -> Rate:
@@ -91,3 +144,15 @@ class RateLimit(NonCompletableGithubObject):
             self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
         if "graphql" in attributes:  # pragma no branch
             self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
+        if "code_search" in attributes:  # pragma no branch
+            self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
+        if "integration_manifeset" in attributes:
+            self._integration_manifest = self._makeClassAttribute(github.Rate.Rate, attributes["integration_manifest"])
+        if "dependency_snapshots" in attributes:
+            self._dependency_snapshots = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_snapshots"])
+        if "code_scanning_upload" in attributes:
+            self._code_scanning_upload = self._makeClassAttribute(github.Rate.Rate, attributes["code_scanning_upload"])
+        if "actions_runner_registration" in attributes:
+            self._actions_runner_registration = self._makeClassAttribute(
+                github.Rate.Rate, attributes["actions_runner_registration"]
+            )
