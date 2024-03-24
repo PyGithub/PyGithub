@@ -4,6 +4,37 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.3.0 (March 21, 2024)
+------------------------------
+
+New features
+^^^^^^^^^^^^
+
+* Support OAuth for enterprise (#2780) (e4106e00)
+* Support creation of Dependabot Organization and Repository Secrets (#2874) (0784f835)
+
+Improvements
+^^^^^^^^^^^^
+
+* Create release with optional name and message when generate_release_notes is true (#2868) (d65fc30d)
+* Add missing attributes to WorkflowJob (#2921) (9e092458)
+* Add `created` and `check_suite_id` filter for Repository WorkflowRuns (#2891) (c788985c)
+* Assert requester argument type in Auth (#2912) (0b8435fc)
+
+Bug Fixes
+^^^^^^^^^
+
+* Revert having allowed values for add_to_collaborators (#2905) (b542438e)
+
+Maintenance
+^^^^^^^^^^^
+
+* Fix imports in authentication docs (#2923) (e3d36535)
+* CI: add docformatter to precommit (#2614) (96ad19ae)
+* Add .swp files to gitignore (#2903) (af529abe)
+* Fix instructions building docs in CONTRIBUTING.md (#2900) (cd8e528d)
+* Explicitly name the modules built in pyproject.toml (#2894) (4d461734)
+
 Version 2.2.0 (January 28, 2024)
 --------------------------------
 
