@@ -893,7 +893,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
+        return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """

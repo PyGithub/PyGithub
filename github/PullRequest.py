@@ -494,7 +494,7 @@ class PullRequest(CompletableGithubObject):
         else:
             post_parameters["comments"] = []
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def create_review_request(
         self,
@@ -679,7 +679,7 @@ class PullRequest(CompletableGithubObject):
             "GET",
             f"{self.url}/reviews/{id}",
         )
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def get_reviews(self) -> PaginatedList[github.PullRequestReview.PullRequestReview]:
         """
@@ -842,7 +842,7 @@ class PullRequest(CompletableGithubObject):
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
-        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
+        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data)
 
     def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
         """

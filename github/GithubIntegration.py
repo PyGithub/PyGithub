@@ -80,6 +80,8 @@ class GithubIntegration:
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
         auth: AppAuth | None = None,
+        # v3: set lazy = True as the default
+        lazy: bool = False,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -97,6 +99,8 @@ class GithubIntegration:
         :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_algorithm: string deprecated, use auth=github.Auth.AppAuth(...) instead
         :param auth: authentication method
+        :param lazy: completable objects created from this instance are lazy,
+                     as well as completable objects created from those, and so on
         """
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
@@ -114,6 +118,7 @@ class GithubIntegration:
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
+        assert isinstance(lazy, bool), lazy
 
         self.base_url = base_url
 
@@ -154,7 +159,21 @@ class GithubIntegration:
             pool_size=pool_size,
             seconds_between_requests=seconds_between_requests,
             seconds_between_writes=seconds_between_writes,
+            lazy=lazy,
         )
+
+    def withLazy(self, lazy: bool) -> GithubIntegration:
+        """
+        Create a GithubIntegration instance with identical configuration but the given lazy setting.
+
+        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
+            from those, and so on
+        :return: new Github instance
+
+        """
+        kwargs = self.__requester.kwargs
+        kwargs.update(lazy=lazy)
+        return GithubIntegration(**kwargs)
 
     def close(self) -> None:
         """Close connections to the server. Alternatively, use the
@@ -198,7 +217,6 @@ class GithubIntegration:
             requester=self.__requester,
             headers=headers,
             attributes=response,
-            completed=True,
         )
 
     @deprecated.deprecated(
@@ -235,7 +253,6 @@ class GithubIntegration:
             requester=self.__requester,
             headers=headers,
             attributes=response,
-            completed=True,
         )
 
     @deprecated.deprecated("Use get_repo_installation")

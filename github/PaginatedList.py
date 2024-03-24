@@ -261,7 +261,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__totalCount = data.get(self.__total_count_item)
             data = data[self.__list_item]
         content = [
-            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
+            self.__contentClass(self.__requester, headers, self._transformAttributes(element))
             for element in data
             if element is not None
         ]
@@ -293,10 +293,7 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
-        return [
-            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
-            for element in data
-        ]
+        return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 
     @classmethod
     def override_attributes(cls, overrides: Dict[str, Any]) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
