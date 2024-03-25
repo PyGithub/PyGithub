@@ -86,6 +86,7 @@ class WorkflowRun(CompletableGithubObject):
         self._check_suite_url: Attribute[str] = NotSet
         self._cancel_url: Attribute[str] = NotSet
         self._rerun_url: Attribute[str] = NotSet
+        self._rerun_failed_jobs_url: Attribute[str] = NotSet
         self._artifacts_url: Attribute[str] = NotSet
         self._workflow_url: Attribute[str] = NotSet
         self._head_commit: Attribute[GitCommit] = NotSet
@@ -225,6 +226,11 @@ class WorkflowRun(CompletableGithubObject):
         return self._rerun_url.value
 
     @property
+    def rerun_failed_jobs_url(self) -> str:
+        self._completeIfNotSet(self._rerun_failed_jobs_url)
+        return self._rerun_failed_jobs_url.value
+
+    @property
     def workflow_url(self) -> str:
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
@@ -256,6 +262,13 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
+        return status == 201
+
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", self.rerun_failed_jobs_url)
         return status == 201
 
     def timing(self) -> TimingData:
@@ -343,6 +356,8 @@ class WorkflowRun(CompletableGithubObject):
             self._cancel_url = self._makeStringAttribute(attributes["cancel_url"])
         if "rerun_url" in attributes:  # pragma no branch
             self._rerun_url = self._makeStringAttribute(attributes["rerun_url"])
+        if "rerun_failed_jobs_url" in attributes:  # pragma no branch
+            self._rerun_failed_jobs_url = self._makeStringAttribute(attributes["rerun_failed_jobs_url"])
         if "workflow_url" in attributes:  # pragma no branch
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
