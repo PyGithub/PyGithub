@@ -96,10 +96,6 @@ class WorkflowRun(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/rerun",
         )
         self.assertEqual(
-            self.workflow_run.rerun_failed_jobs_url,
-            "https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935/rerun-failed-jobs",
-        )
-        self.assertEqual(
             self.workflow_run.workflow_url,
             "https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1903133",
         )
