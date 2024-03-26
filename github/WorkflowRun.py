@@ -70,6 +70,7 @@ class WorkflowRun(CompletableGithubObject):
         self._path: Attribute[str] = NotSet
         self._head_branch: Attribute[str] = NotSet
         self._head_sha: Attribute[str] = NotSet
+        self._rerun_failed_jobs_url: Attribute[str] = NotSet
         self._run_attempt: Attribute[int] = NotSet
         self._run_number: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -86,7 +87,6 @@ class WorkflowRun(CompletableGithubObject):
         self._check_suite_url: Attribute[str] = NotSet
         self._cancel_url: Attribute[str] = NotSet
         self._rerun_url: Attribute[str] = NotSet
-        self._rerun_failed_jobs_url: Attribute[str] = NotSet
         self._artifacts_url: Attribute[str] = NotSet
         self._workflow_url: Attribute[str] = NotSet
         self._head_commit: Attribute[GitCommit] = NotSet
@@ -125,6 +125,11 @@ class WorkflowRun(CompletableGithubObject):
     def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
+
+    @property
+    def rerun_failed_jobs_url(self) -> str:
+        self._completeIfNotSet(self._rerun_failed_jobs_url)
+        return self._rerun_failed_jobs_url.value
 
     @property
     def run_attempt(self) -> int:
@@ -226,11 +231,6 @@ class WorkflowRun(CompletableGithubObject):
         return self._rerun_url.value
 
     @property
-    def rerun_failed_jobs_url(self) -> str:
-        self._completeIfNotSet(self._rerun_failed_jobs_url)
-        return self._rerun_failed_jobs_url.value
-
-    @property
     def workflow_url(self) -> str:
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
@@ -315,6 +315,8 @@ class WorkflowRun(CompletableGithubObject):
             self._display_title = self._makeStringAttribute(attributes["display_title"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
+        if "rerun_failed_jobs_url" in attributes:  # pragma no branch
+            self._rerun_failed_jobs_url = self._makeStringAttribute(attributes["rerun_failed_jobs_url"])
         if "run_attempt" in attributes:  # pragma no branch
             self._run_attempt = self._makeIntAttribute(attributes["run_attempt"])
         if "run_number" in attributes:  # pragma no branch
@@ -356,8 +358,6 @@ class WorkflowRun(CompletableGithubObject):
             self._cancel_url = self._makeStringAttribute(attributes["cancel_url"])
         if "rerun_url" in attributes:  # pragma no branch
             self._rerun_url = self._makeStringAttribute(attributes["rerun_url"])
-        if "rerun_failed_jobs_url" in attributes:  # pragma no branch
-            self._rerun_failed_jobs_url = self._makeStringAttribute(attributes["rerun_failed_jobs_url"])
         if "workflow_url" in attributes:  # pragma no branch
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
         if "head_commit" in attributes:  # pragma no branch
