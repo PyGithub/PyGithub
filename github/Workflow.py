@@ -124,7 +124,7 @@ class Workflow(CompletableGithubObject):
         return self._badge_url.value
 
     def create_dispatch(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+        self, ref: github.Branch.Branch | github.Tag.Tag | str, inputs: Opt[dict] = NotSet
     ) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
@@ -132,7 +132,6 @@ class Workflow(CompletableGithubObject):
         assert (
             isinstance(ref, github.Branch.Branch)
             or isinstance(ref, github.Tag.Tag)
-            or isinstance(ref, github.Commit.Commit)
             or isinstance(ref, str)
         ), ref
         assert inputs is NotSet or isinstance(inputs, dict), inputs
