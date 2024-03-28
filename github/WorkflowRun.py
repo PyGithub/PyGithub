@@ -70,6 +70,7 @@ class WorkflowRun(CompletableGithubObject):
         self._path: Attribute[str] = NotSet
         self._head_branch: Attribute[str] = NotSet
         self._head_sha: Attribute[str] = NotSet
+        self._rerun_failed_jobs_url: Attribute[str] = NotSet
         self._run_attempt: Attribute[int] = NotSet
         self._run_number: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -124,6 +125,11 @@ class WorkflowRun(CompletableGithubObject):
     def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
+
+    @property
+    def rerun_failed_jobs_url(self) -> str:
+        self._completeIfNotSet(self._rerun_failed_jobs_url)
+        return self._rerun_failed_jobs_url.value
 
     @property
     def run_attempt(self) -> int:
@@ -258,6 +264,13 @@ class WorkflowRun(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
         return status == 201
 
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", self.rerun_failed_jobs_url)
+        return status == 201
+
     def timing(self) -> TimingData:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
@@ -302,6 +315,8 @@ class WorkflowRun(CompletableGithubObject):
             self._display_title = self._makeStringAttribute(attributes["display_title"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
+        if "rerun_failed_jobs_url" in attributes:  # pragma no branch
+            self._rerun_failed_jobs_url = self._makeStringAttribute(attributes["rerun_failed_jobs_url"])
         if "run_attempt" in attributes:  # pragma no branch
             self._run_attempt = self._makeIntAttribute(attributes["run_attempt"])
         if "run_number" in attributes:  # pragma no branch
