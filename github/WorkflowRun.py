@@ -10,6 +10,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,7 +56,11 @@ class TimingData(NamedTuple):
 
 class WorkflowRun(CompletableGithubObject):
     """
-    This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
+    This class represents Workflow Runs.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/actions#workflow-runs
+
     """
 
     def _initAttributes(self) -> None:

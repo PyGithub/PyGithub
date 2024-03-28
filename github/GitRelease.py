@@ -33,6 +33,7 @@
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,7 +69,10 @@ from . import Consts
 
 class GitRelease(CompletableGithubObject):
     """
-    This class represents GitReleases. The reference can be found here https://docs.github.com/en/rest/releases/releases
+    This class represents GitReleases.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#releases
     """
 
     def _initAttributes(self) -> None:
@@ -257,11 +261,15 @@ class GitRelease(CompletableGithubObject):
         content_type: Opt[str] = NotSet,
         label: str = "",
     ) -> github.GitReleaseAsset.GitReleaseAsset:
-        """Uploads an asset. Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
+        """
+        Uploads an asset.
+
+        Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
         Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
         :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
+
         """
         assert isinstance(name, str), name
         assert isinstance(file_size, int), file_size
