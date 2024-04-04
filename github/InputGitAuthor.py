@@ -52,10 +52,10 @@ class InputGitAuthor:
         assert isinstance(email, str), email
         assert is_optional(date, (str, datetime)), date
 
-        if isinstance(date, str):
-            formatted_date = date
-        else:
+        if isinstance(date, datetime):
             formatted_date = date.isoformat(timespec="seconds")
+        else:
+            formatted_date = date
 
         self.__name: str = name
         self.__email: str = email
