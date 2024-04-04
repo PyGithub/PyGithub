@@ -47,13 +47,13 @@ class InputGitAuthor:
     This class represents InputGitAuthors.
     """
 
-    def __init__(self, name: str, email: str, date: Opt[Union[str, datetime]] = NotSet):
+    def __init__(self, name: str, email: str, date: Opt[str | datetime] = NotSet):
         assert isinstance(name, str), name
         assert isinstance(email, str), email
         assert is_optional(date, (str, datetime)), date
 
         if isinstance(date, datetime):
-            formatted_date = date.isoformat(timespec="seconds")
+            formatted_date: Opt[str] = date.isoformat(timespec="seconds")
         else:
             formatted_date = date
 
