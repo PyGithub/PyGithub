@@ -37,7 +37,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Union
+from typing import Any
 
 from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
