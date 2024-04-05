@@ -2388,7 +2388,7 @@ class Repository(CompletableGithubObject):
         Create a file in this repository.
 
         :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
-        update-file-contents>`_
+            update-file-contents>`_
         :param path: string, (required), path of the file in the repository
         :param message: string, (required), commit message
         :param content: string, (required), the actual data in the file
@@ -2470,7 +2470,7 @@ class Repository(CompletableGithubObject):
         This method updates a file in a repository.
 
         :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
-        update-file-contents>`_
+            update-file-contents>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param content: string, Required. The updated file content, either base64 encoded, or ready to be encoded.
