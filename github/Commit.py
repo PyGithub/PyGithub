@@ -116,9 +116,18 @@ class Commit(CompletableGithubObject):
         return self._committer.value
 
     @property
-    def files(self) -> list[File]:
-        self._completeIfNotSet(self._files)
-        return self._files.value
+    def files(self) -> PaginatedList[File]:
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            {},
+            None,
+            "files",
+            "",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     @property
     def html_url(self) -> str:

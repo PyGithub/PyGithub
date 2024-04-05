@@ -97,15 +97,6 @@ class BadAttributes(Framework.TestCase):
             owner.avatar_url
         self.assertEqual(raisedexp.exception.actual_value, 42)
 
-    def testBadTransformedAttributeInList(self):
-        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
-
-        with self.assertRaises(github.BadAttributeException) as raisedexp:
-            commit.files
-        self.assertEqual(raisedexp.exception.actual_value, [42])
-        self.assertEqual(raisedexp.exception.expected_type, [dict])
-        self.assertEqual(raisedexp.exception.transformation_exception, None)
-
     def testBadTransformedAttributeInDict(self):
         gist = self.g.get_gist("6437766")
 

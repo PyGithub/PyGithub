@@ -50,7 +50,7 @@ class Commit(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(self.commit.committer.login, "jacquev6")
-        self.assertEqual(len(self.commit.files), 1)
+        self.assertEqual(self.commit.files.totalCount, 1)
         self.assertEqual(self.commit.files[0].additions, 0)
         self.assertEqual(
             self.commit.files[0].blob_url,
