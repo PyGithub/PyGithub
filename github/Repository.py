@@ -152,6 +152,7 @@ from __future__ import annotations
 
 import collections
 import urllib.parse
+import sys
 from base64 import b64encode
 from collections.abc import Iterable
 from datetime import date, datetime, timezone
@@ -242,7 +243,7 @@ from github.GithubObject import (
 )
 from github.PaginatedList import PaginatedList
 
-if TYPE_CHECKING:
+if TYPE_CHECKING or 'sphinx' in sys.modules:
     from github.Artifact import Artifact
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Autolink import Autolink
