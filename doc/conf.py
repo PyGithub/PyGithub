@@ -39,7 +39,9 @@ import glob
 import os
 import re
 import sys
-from typing import Iterable
+import typing
+# make annotations visible to Sphinx
+typing.TYPE_CHECKING = True
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -286,8 +288,8 @@ githubObjectTypes = {
 githubObjectClasses: dict[str, str] = {}
 
 
-def collect_classes(types: set[str]) -> Iterable[tuple[str, str]]:
-    def get_base_classes(class_definition: str) -> Iterable[str]:
+def collect_classes(types: set[str]) -> typing.Iterable[tuple[str, str]]:
+    def get_base_classes(class_definition: str) -> typing.Iterable[str]:
         if "(" in class_definition and ")" in class_definition:
             for base in class_definition[class_definition.index("(") + 1 : class_definition.index(")")].split(","):
                 yield base.strip()
