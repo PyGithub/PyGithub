@@ -4085,7 +4085,7 @@ class Repository(CompletableGithubObject):
         )
         return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
-    def edit_ownersip(self, new_owner: str, new_name: str = NotSet, team_ids: list[int] = NotSet) -> bool:
+    def edit_ownersip(self, new_owner: str, new_name: Opt[str] = NotSet, team_ids: Opt[list[int]] = NotSet) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/transfer <https://docs.github.com/en/rest/repos/repos#transfer-a-repository>`_
         :param new_owner: string
