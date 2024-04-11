@@ -4096,7 +4096,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(new_owner, str), new_owner
         assert is_optional(new_name, str), new_name
         assert is_optional(team_ids, list), team_ids
-        status, _, _ = self._requester.requestJsonAndCheck(
+        status, _, _ = self._requester.requestJson(
             "POST",
             f"{self.url}/transfer",
             input=NotSet.remove_unset_items({"new_owner": new_owner, "new_name": new_name, "team_ids": team_ids}),
