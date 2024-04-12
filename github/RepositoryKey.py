@@ -58,9 +58,11 @@ class RepositoryKey(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._added_by: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._last_used: Attribute[datetime] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verified: Attribute[bool] = NotSet
@@ -68,6 +70,11 @@ class RepositoryKey(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
+
+    @property
+    def added_by(self) -> str:
+        self._completeIfNotSet(self._added_by)
+        return self._added_by.value
 
     @property
     def created_at(self) -> datetime:
@@ -83,6 +90,11 @@ class RepositoryKey(CompletableGithubObject):
     def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
+
+    @property
+    def last_used(self) -> datetime:
+        self._completeIfNotSet(self._last_used)
+        return self._last_used.value
 
     @property
     def title(self) -> str:
@@ -111,12 +123,17 @@ class RepositoryKey(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "added_by" in attributes:  # pragma no branch
+            self._added_by = self._makeStringAttribute(attributes["added_by"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
+        if "last_used" in attributes:  # pragma no branch
+            assert attributes["last_used"] is None or isinstance(attributes["last_used"], str), attributes["last_used"]
+            self._last_used = self._makeDatetimeAttribute(attributes["last_used"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
