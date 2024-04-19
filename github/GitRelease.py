@@ -61,7 +61,7 @@ from typing import Any, BinaryIO
 
 import github.GitReleaseAsset
 import github.NamedUser
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 from . import Consts
@@ -180,7 +180,7 @@ class GitRelease(CompletableGithubObject):
 
     def delete_release(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#delete-a-release>`_
+        :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#delete-a-release>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -192,18 +192,21 @@ class GitRelease(CompletableGithubObject):
         prerelease: bool = False,
         tag_name: Opt[str] = NotSet,
         target_commitish: Opt[str] = NotSet,
+        make_latest: Opt[str] = NotSet,
+        discussion_category_name: Opt[str] = NotSet,
     ) -> GitRelease:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#update-a-release>`_
+        :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#update-a-release>`_
         """
-        assert tag_name is NotSet or isinstance(tag_name, str), "tag_name must be a str/unicode object"
-        assert target_commitish is NotSet or isinstance(
-            target_commitish, str
-        ), "target_commitish must be a str/unicode object"
         assert isinstance(name, str), name
         assert isinstance(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert is_optional(tag_name, str), "tag_name must be a str/unicode object"
+        assert is_optional(target_commitish, str), "target_commitish must be a str/unicode object"
+        assert make_latest in ["true", "false", "legacy", NotSet], make_latest
+        assert is_optional(discussion_category_name, str), discussion_category_name
+        # default tag_name with instance attribute if not given to the method
         if tag_name is NotSet:
             tag_name = self.tag_name
         post_parameters = {
@@ -217,6 +220,10 @@ class GitRelease(CompletableGithubObject):
         # altogether in that case, in order to match the Github API behaviour. Only send it when set.
         if target_commitish is not NotSet:
             post_parameters["target_commitish"] = target_commitish
+        if make_latest is not NotSet:
+            post_parameters["make_latest"] = make_latest
+        if discussion_category_name is not NotSet:
+            post_parameters["discussion_category_name"] = discussion_category_name
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
@@ -224,7 +231,7 @@ class GitRelease(CompletableGithubObject):
         self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
     ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
+        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`_
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
@@ -284,7 +291,7 @@ class GitRelease(CompletableGithubObject):
 
     def get_assets(self) -> PaginatedList[github.GitReleaseAsset.GitReleaseAsset]:
         """
-        :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#list-release-assets>`_
+        :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#get-a-release-asset>`_
         """
         return github.PaginatedList.PaginatedList(
             github.GitReleaseAsset.GitReleaseAsset,
