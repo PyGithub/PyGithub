@@ -73,6 +73,7 @@ class GitRelease(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#releases
+
     """
 
     def _initAttributes(self) -> None:
