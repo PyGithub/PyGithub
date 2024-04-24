@@ -19,6 +19,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Austin Lucas Lake <53884490+austinlucaslake@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -444,6 +445,13 @@ class NamedUser(Framework.TestCase):
             [3557894, 3791954, 3937333, 4051357, 4051492],
         )
 
+    def testGetGPGKeys(self):
+        self.assertListKeyEqual(
+            self.user.get_gpg_keys(),
+            lambda k: k.id,
+            [3557894, 3791954, 3937333, 4051357, 4051492],
+        )
+ 
     def testUserEquality(self):
         u1 = self.g.get_user("nvie")
         u2 = self.g.get_user("nvie")
