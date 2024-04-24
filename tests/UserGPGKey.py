@@ -37,7 +37,7 @@ class UserGPGKey(Framework.TestCase):
         self.assertEqual(self.gpg_key.name, "GPG key added through PyGithub")
         self.assertEqual(
             repr(self.gpg_key),
-            'UserGPGKey(title="GPG key added through PyGithub", id=2626650)',
+            'UserGPGKey(name="GPG key added through PyGithub", id=2626650)',
         )
 
     def testDelete(self):
