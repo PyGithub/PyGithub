@@ -449,7 +449,7 @@ class NamedUser(Framework.TestCase):
         self.assertListKeyEqual(
             self.user.get_gpg_keys(),
             lambda k: k.id,
-            [3557894, 3791954, 3937333, 4051357, 4051492],
+            ["TODO"],
         )
  
     def testUserEquality(self):

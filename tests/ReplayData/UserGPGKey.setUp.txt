@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/user/gpg_keys
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4983'), ('content-length', '505'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7261ec55c886d6bf42e48d5bf9544586"'), ('date', 'Sat, 26 May 2012 19:53:21 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"id":"TODO","name":"TODO","primary_key_id":"TODO","key_id":"TODO","public_key":"TODO","can_sign":true,"can_certify":true,"revoked":false,"raw_key":"TODO"}

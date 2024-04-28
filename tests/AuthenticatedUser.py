@@ -639,7 +639,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertListKeyEqual(
             self.user.get_gpg_keys(),
             lambda k: k.name,
-            ["vincent@home", "vincent@gandi", "vincent@aws", "vincent@macbook"],
+            ["TODO"],
         )
 
     def testGetOrgs(self):

@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/users/TODO/gpg_keys
+{'Authorization': 'Bearer TODO', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4998'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '2021'), ('server', 'GitHub.com'), ('last-modified', 'Sun, 03 Feb 2013 11:54:54 GMT'), ('connection', 'keep-alive'), ('etag', '"d80dfcef46052de82fcfd18ddc6d0b9f"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Sun, 03 Feb 2013 16:17:13 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"name":"TODO","key_id":"TODO"}]

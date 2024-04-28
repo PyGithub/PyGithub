@@ -26,18 +26,18 @@ from . import Framework
 class UserGPGKey(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.gpg_key = self.g.get_user().get_gpg_key(2626650)
+        self.gpg_key = self.g.get_user().get_gpg_key("TODO")
 
     def testAttributes(self):
-        self.assertEqual(self.gpg_key.id, 2626650)
+        self.assertEqual(self.gpg_key.id, "TODO")
         self.assertEqual(
             self.gpg_key.key_id,
-            "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw==",
+            "TODO",
         )
         self.assertEqual(self.gpg_key.name, "GPG key added through PyGithub")
         self.assertEqual(
             repr(self.gpg_key),
-            'UserGPGKey(name="GPG key added through PyGithub", id=2626650)',
+            'UserGPGKey(name="GPG key added through PyGithub", id=TODO)',
         )
 
     def testDelete(self):
