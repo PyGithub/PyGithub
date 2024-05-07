@@ -53,6 +53,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -344,8 +345,7 @@ class Requester:
 
     def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str) -> None:
         """
-        Update current frame with response
-        Current frame index will be attached to responseHeader
+        Update current frame with response Current frame index will be attached to responseHeader.
         """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             self._frameBuffer[self._frameCount][1:4] = [
@@ -483,9 +483,8 @@ class Requester:
     @property
     def kwargs(self) -> Dict[str, Any]:
         """
-        Returns arguments required to recreate this Requester with Requester.__init__, as well as
-        with MainClass.__init__ and GithubIntegration.__init__.
-        :return:
+        Returns arguments required to recreate this Requester with Requester.__init__, as well as with
+        MainClass.__init__ and GithubIntegration.__init__.
         """
         return dict(
             auth=self.__auth,
@@ -509,8 +508,18 @@ class Requester:
         return self.__graphql_url
 
     @property
+    def scheme(self) -> str:
+        return self.__scheme
+
+    @property
     def hostname(self) -> str:
         return self.__hostname
+
+    @property
+    def hostname_and_port(self) -> str:
+        if self.__port is None:
+            return self.hostname
+        return f"{self.hostname}:{self.__port}"
 
     @property
     def auth(self) -> Optional["Auth"]:
@@ -519,8 +528,10 @@ class Requester:
     def withAuth(self, auth: Optional["Auth"]) -> "Requester":
         """
         Create a new requester instance with identical configuration but the given authentication method.
+
         :param auth: authentication method
         :return: new Requester implementation
+
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)
@@ -917,7 +928,7 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/")), o.path
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":

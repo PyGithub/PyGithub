@@ -7,6 +7,7 @@
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -157,8 +158,8 @@ class GithubIntegration:
         )
 
     def close(self) -> None:
-        """
-        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
+        """Close connections to the server. Alternatively, use the
+        GithubIntegration object as a context manager:
 
         .. code-block:: python
 
@@ -241,9 +242,11 @@ class GithubIntegration:
     @deprecated.deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
         """
-        Deprecated by get_repo_installation
+        Deprecated by get_repo_installation.
 
-        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
+        :calls: `GET /repos/{owner}/{repo}/installation
+        <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
+
         """
         owner = urllib.parse.quote(owner)
         repo = urllib.parse.quote(repo)

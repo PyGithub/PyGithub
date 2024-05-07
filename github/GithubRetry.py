@@ -4,6 +4,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Patryk Szulczyk <therealsoulcheck@gmail.com>                  #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ class GithubRetry(Retry):
 
     By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
     This can be configured via the `allowed_methods` argument.
+
     """
 
     __logger: Optional[Logger] = None

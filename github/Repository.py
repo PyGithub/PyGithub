@@ -123,8 +123,13 @@
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -312,7 +317,11 @@ if TYPE_CHECKING:
 
 class Repository(CompletableGithubObject):
     """
-    This class represents Repositories. The reference can be found here https://docs.github.com/en/rest/reference/repos
+    This class represents Repositories.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos
+
     """
 
     def __repr__(self) -> str:
@@ -1061,11 +1070,11 @@ class Repository(CompletableGithubObject):
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
-        :param permission: string 'pull', 'push', 'admin', 'maintain', or 'triage'
+        :param permission: string 'pull', 'push', 'admin', 'maintain', 'triage', or a custom repository role name, if the owning organization has defined any
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
-        assert permission in ["pull", "push", "admin", "maintain", "triage", NotSet], permission
+        assert is_optional(permission, str), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
@@ -1230,12 +1239,13 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/refs", input=post_parameters)
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    # TODO: v3: reorder arguments and add default value `NotSet` where `Opt[str]`
     def create_git_tag_and_release(
         self,
         tag: str,
         tag_message: str,
-        release_name: str,
-        release_message: str,
+        release_name: Opt[str],
+        release_message: Opt[str],
         object: str,
         type: str,
         tagger: Opt[InputGitAuthor] = NotSet,
@@ -1244,8 +1254,8 @@ class Repository(CompletableGithubObject):
         generate_release_notes: bool = False,
     ) -> GitRelease:
         """
-        Convenience function that calls :meth:`Repository.create_git_tag` and
-        :meth:`Repository.create_git_release`.
+        Convenience function that calls :meth:`Repository.create_git_tag` and :meth:`Repository.create_git_release`.
+
         :param tag: string
         :param tag_message: string
         :param release_name: string
@@ -1257,6 +1267,7 @@ class Repository(CompletableGithubObject):
         :param prerelease: bool
         :param generate_release_notes: bool
         :rtype: :class:`github.GitRelease.GitRelease`
+
         """
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(
@@ -1272,8 +1283,8 @@ class Repository(CompletableGithubObject):
     def create_git_release(
         self,
         tag: str,
-        name: str,
-        message: str,
+        name: Opt[str] = NotSet,
+        message: Opt[str] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1291,23 +1302,25 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
-        assert isinstance(name, str), name
-        assert isinstance(message, str), message
+        assert isinstance(generate_release_notes, bool), generate_release_notes
+        assert isinstance(name, str) or generate_release_notes and is_optional(name, str), name
+        assert isinstance(message, str) or generate_release_notes and is_optional(message, str), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
-        assert isinstance(generate_release_notes, bool), generate_release_notes
         assert is_optional(
             target_commitish,
             (str, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit),
         ), target_commitish
         post_parameters = {
             "tag_name": tag,
-            "name": name,
-            "body": message,
             "draft": draft,
             "prerelease": prerelease,
             "generate_release_notes": generate_release_notes,
         }
+        if is_defined(name):
+            post_parameters["name"] = name
+        if is_defined(message):
+            post_parameters["body"] = message
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
         elif isinstance(target_commitish, github.Branch.Branch):
@@ -1708,59 +1721,73 @@ class Repository(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
         return status == 204
 
-    def create_secret(self, secret_name: str, unencrypted_value: str) -> github.Secret.Secret:
+    def create_secret(
+        self,
+        secret_name: str,
+        unencrypted_value: str,
+        secret_type: str = "actions",
+    ) -> github.Secret.Secret:
         """
-        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         secret_name = urllib.parse.quote(secret_name)
-        public_key = self.get_public_key()
+        public_key = self.get_public_key(secret_type=secret_type)
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/actions/secrets/{secret_name}", input=put_parameters)
+        self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/{secret_type}/secrets/{secret_name}", input=put_parameters
+        )
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
             attributes={
                 "name": secret_name,
-                "url": f"{self.url}/actions/secrets/{secret_name}",
+                "url": f"{self.url}/{secret_type}/secrets/{secret_name}",
             },
             completed=False,
         )
 
-    def list_repository_secrets(self) -> PaginatedList[github.Secret.Secret]:
+    def get_secrets(
+        self,
+        secret_type: str = "actions",
+    ) -> PaginatedList[github.Secret.Secret]:
         """
-        Legacy: use get_secrets() instead!
+        Gets all repository secrets :param secret_type: string options actions or dependabot.
         """
-        return self.get_secrets()  # backward compatibility for coveo fork who used a different name for this fn
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-    def get_secrets(self) -> PaginatedList[github.Secret.Secret]:
-        """
-        Gets all repository secrets
-        """
         return PaginatedList(
             github.Secret.Secret,
             self._requester,
-            f"{self.url}/actions/secrets",
+            f"{self.url}/{secret_type}/secrets",
             None,
-            attributesTransformer=PaginatedList.override_attributes({"secrets_url": f"{self.url}/actions/secrets"}),
+            attributesTransformer=PaginatedList.override_attributes(
+                {"secrets_url": f"{self.url}/{secret_type}/secrets"}
+            ),
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str) -> github.Secret.Secret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
         :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         secret_name = urllib.parse.quote(secret_name)
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
-            attributes={"url": f"{self.url}/actions/secrets/{secret_name}"},
+            attributes={"url": f"{self.url}/{secret_type}/secrets/{secret_name}"},
             completed=False,
         )
 
@@ -1788,8 +1815,7 @@ class Repository(CompletableGithubObject):
 
     def get_variables(self) -> PaginatedList[github.Variable.Variable]:
         """
-        Gets all repository variables
-        :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
+        Gets all repository variables :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
         """
         return PaginatedList(
             github.Variable.Variable,
@@ -1815,15 +1841,17 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def delete_secret(self, secret_name: str) -> bool:
+    def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
         :param secret_name: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         secret_name = urllib.parse.quote(secret_name)
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/secrets/{secret_name}")
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/{secret_type}/secrets/{secret_name}")
         return status == 204
 
     def delete_variable(self, variable_name: str) -> bool:
@@ -2374,18 +2402,23 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
-        """Create a file in this repository.
+        """
+        Create a file in this repository.
 
-        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents>`_
+        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
+        update-file-contents>`_
         :param path: string, (required), path of the file in the repository
         :param message: string, (required), commit message
         :param content: string, (required), the actual data in the file
-        :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the
+            repository
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`ContentFile <github.ContentFile.ContentFile>`:, 'commit': :class:`Commit
+            <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str)
         assert isinstance(message, str)
@@ -2451,19 +2484,23 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile | Commit]:
-        """This method updates a file in a repository
+        """
+        This method updates a file in a repository.
 
-        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents>`_
+        :calls: `PUT /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#create-or-
+        update-file-contents>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param content: string, Required. The updated file content, either base64 encoded, or ready to be encoded.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`ContentFile <github.ContentFile.ContentFile>`:, 'commit': :class:`Commit
+            <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str)
         assert isinstance(message, str)
@@ -2506,18 +2543,21 @@ class Repository(CompletableGithubObject):
         committer: Opt[InputGitAuthor] = NotSet,
         author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, Commit | _NotSetType]:
-        """This method deletes a file in a repository
+        """
+        This method deletes a file in a repository.
 
-        :calls: `DELETE /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#delete-a-file>`_
+        :calls: `DELETE /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#delete-a-
+        file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
-        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
-        :rtype: {
-            'content': :class:`null <NotSet>`:,
-            'commit': :class:`Commit <github.Commit.Commit>`}
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information
+            will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
+            passed, you must specify both a name and email.
+        :rtype: { 'content': :class:`null <NotSet>`:, 'commit': :class:`Commit <github.Commit.Commit>`}
+
         """
         assert isinstance(path, str), "path must be str/unicode object"
         assert isinstance(message, str), "message must be str/unicode object"
@@ -3012,12 +3052,15 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_public_key(self) -> PublicKey:
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets/public-key")
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def get_pull(self, number: int) -> PullRequest:
@@ -3376,6 +3419,7 @@ class Repository(CompletableGithubObject):
         exclude_pull_requests: Opt[bool] = NotSet,
         head_sha: Opt[str] = NotSet,
         created: Opt[str] = NotSet,
+        check_suite_id: Opt[int] = NotSet,
     ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
@@ -3385,6 +3429,8 @@ class Repository(CompletableGithubObject):
         :param status: string `queued`, `in_progress`, `completed`, `success`, `failure`, `neutral`, `cancelled`, `skipped`, `timed_out`, or `action_required`
         :param exclude_pull_requests: bool
         :param head_sha: string
+        :param created: string Created filter, see https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates
+        :param check_suite_id: int
 
         :rtype: :class:`PaginatedList` of :class:`github.WorkflowRun.WorkflowRun`
         """
@@ -3395,6 +3441,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(exclude_pull_requests, bool), exclude_pull_requests
         assert is_optional(head_sha, str), head_sha
         assert is_optional(created, str), created
+        assert is_optional(check_suite_id, int), check_suite_id
 
         url_parameters: dict[str, Any] = {}
         if is_defined(actor):
@@ -3417,6 +3464,8 @@ class Repository(CompletableGithubObject):
             url_parameters["head_sha"] = head_sha
         if is_defined(created):
             url_parameters["created"] = created
+        if is_defined(check_suite_id):
+            url_parameters["check_suite_id"] = check_suite_id
 
         return PaginatedList(
             github.WorkflowRun.WorkflowRun,

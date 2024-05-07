@@ -15,6 +15,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -44,7 +45,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class StatsCodeFrequency(NonCompletableGithubObject):
     """
     This class represents statistics of StatsCodeFrequencies.
-    The reference can be found here https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
+
+    The reference can be found here
+    https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
+
     """
 
     def _initAttributes(self) -> None:

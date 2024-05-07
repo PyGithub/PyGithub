@@ -6,6 +6,8 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.AccessToken
 import github.Auth
+from github.Consts import DEFAULT_BASE_URL, DEFAULT_OAUTH_URL
 from github.GithubException import BadCredentialsException, GithubException
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from github.Requester import Requester
@@ -44,7 +47,10 @@ if TYPE_CHECKING:
 class ApplicationOAuth(NonCompletableGithubObject):
     """
     This class is used for identifying and authorizing users for Github Apps.
-    The reference can be found at https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
+
+    The reference can be found at
+    https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps
+
     """
 
     def _initAttributes(self) -> None:
@@ -79,13 +85,25 @@ class ApplicationOAuth(NonCompletableGithubObject):
         if "client_secret" in attributes:  # pragma no branch
             self._client_secret = self._makeStringAttribute(attributes["client_secret"])
 
+    def get_oauth_url(self, path: str) -> str:
+        if not path.startswith("/"):
+            path = f"/{path}"
+
+        if self._requester.base_url == DEFAULT_BASE_URL:
+            base_url = DEFAULT_OAUTH_URL
+        else:
+            base_url = f"{self._requester.scheme}://{self._requester.hostname_and_port}/login/oauth"
+        return f"{base_url}{path}"
+
     def get_login_url(
         self,
         redirect_uri: str | None = None,
         state: str | None = None,
         login: str | None = None,
     ) -> str:
-        """Return the URL you need to redirect a user to in order to authorize your App."""
+        """
+        Return the URL you need to redirect a user to in order to authorize your App.
+        """
         parameters = {"client_id": self.client_id}
         if redirect_uri is not None:
             assert isinstance(redirect_uri, str), redirect_uri
@@ -99,8 +117,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
         query = urllib.parse.urlencode(parameters)
 
-        base_url = "https://github.com/login/oauth/authorize"
-        return f"{base_url}?{query}"
+        return self.get_oauth_url(f"/authorize?{query}")
 
     def get_access_token(self, code: str, state: str | None = None) -> AccessToken:
         """
@@ -119,7 +136,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
         headers, data = self._checkError(
             *self._requester.requestJsonAndCheck(
                 "POST",
-                "https://github.com/login/oauth/access_token",
+                self.get_oauth_url("/access_token"),
                 headers={"Accept": "application/json"},
                 input=post_parameters,
             )
@@ -160,7 +177,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
         headers, data = self._checkError(
             *self._requester.requestJsonAndCheck(
                 "POST",
-                "https://github.com/login/oauth/access_token",
+                self.get_oauth_url("/access_token"),
                 headers={"Accept": "application/json"},
                 input=post_parameters,
             )

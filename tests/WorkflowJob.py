@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
+# Copyright 2024 Xavi Vega <xabi1309@gmail.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -79,3 +80,13 @@ class WorkflowJob(Framework.TestCase):
             self.job.logs_url(),
             "https://pipelines.actions.githubusercontent.com/serviceHosts/d560a817-28d4-4544-a539-eb35c2a56899/_apis/pipelines/1/runs/5/signedlogcontent/5?urlExpires=2023-03-15T17%3A02%3A58.1305046Z&urlSigningMethod=HMACV1&urlSignature=abcdefghijklmn",
         )
+        self.assertEqual(self.job.runner_id, 2)
+        self.assertEqual(self.job.runner_name, "GitHub Actions 2")
+        self.assertEqual(self.job.runner_group_id, 2)
+        self.assertEqual(self.job.runner_group_name, "GitHub Actions")
+        created_at = datetime(2023, 2, 17, 16, 3, 38, tzinfo=timezone.utc)
+        self.assertEqual(self.job.created_at, created_at)
+        self.assertEqual(self.job.head_branch, "tz-aware-2")
+        self.assertEqual(self.job.labels, ["ubuntu-latest"])
+        self.assertEqual(self.job.run_attempt, 1)
+        self.assertEqual(self.job.workflow_name, "CI")

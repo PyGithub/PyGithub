@@ -33,6 +33,7 @@
 # Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -154,6 +155,7 @@ deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json
 repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
+DEFAULT_OAUTH_URL = "https://github.com/login/oauth"
 DEFAULT_STATUS_URL = "https://status.github.com"
 DEFAULT_USER_AGENT = "PyGithub/Python"
 # As of 2018-05-17, Github imposes a 10s limit for completion of API requests.
