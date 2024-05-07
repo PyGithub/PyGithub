@@ -47,6 +47,7 @@ from typing import Any
 
 import github.Branch
 import github.Commit
+import github.GithubException as GithubException
 import github.GithubObject
 import github.NamedUser
 import github.Tag
@@ -123,12 +124,9 @@ class Workflow(CompletableGithubObject):
         self._completeIfNotSet(self._badge_url)
         return self._badge_url.value
 
-    def create_dispatch(
+    def _create_dispatch(
         self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
-    ) -> bool:
-        """
-        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
-        """
+    ) -> None:
         assert (
             isinstance(ref, github.Branch.Branch)
             or isinstance(ref, github.Tag.Tag)
@@ -144,10 +142,33 @@ class Workflow(CompletableGithubObject):
             ref = ref.name
         if inputs is NotSet:
             inputs = {}
-        status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
-        )
-        return status == 204
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
+
+    def create_dispatch_throw(
+        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+    ) -> Any:
+        """
+        Call Create Dispatch, throw an exception on error.
+
+        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+
+        """
+        return self._create_dispatch(ref, inputs)
+
+    def create_dispatch(
+        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+    ) -> bool:
+        """
+        Call Create Dispatch, return False without details on error.
+
+        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+
+        """
+        try:
+            self._create_dispatch(ref, inputs)
+        except GithubException.GithubException:
+            return False
+        return True
 
     def get_runs(
         self,
