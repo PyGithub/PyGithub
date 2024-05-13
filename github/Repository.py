@@ -4095,14 +4095,14 @@ class Repository(CompletableGithubObject):
         _, data = self._requester.requestJsonAndCheck("GET", url)
         return {p["property_name"]: p["value"] for p in data}
 
-    def update_custom_properties(self, properties: dict[str, None | str | list]):
+    def update_custom_properties(self, properties: dict[str, None | str | list]) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository>`_
         :rtype: None
         """
         assert all(isinstance(v, (type(None), str, list)) for v in properties.values()), properties
         url = f"{self.url}/properties/values"
-        post_parameters: dict[str, str] = {
+        post_parameters: dict[str, list] = {
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=post_parameters)
