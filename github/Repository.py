@@ -4097,7 +4097,7 @@ class Repository(CompletableGithubObject):
 
     def update_custom_properties(self, properties: dict[str, None | str | list]):
         """
-        :calls: `GET /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository>`_
+        :calls: `PATCH /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository>`_
         :rtype: None
         """
         assert all(isinstance(v, (type(None), str, list)) for v in properties.values()), properties
