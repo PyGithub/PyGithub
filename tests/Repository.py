@@ -67,6 +67,7 @@
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1996,6 +1997,14 @@ class Repository(Framework.TestCase):
         with self.assertRaises(AssertionError) as exc:
             repo.get_secret(secret_name="splat", secret_type="supersecret")
         self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    def testGetCustomProperties(self):
+        custom_properties = self.repo.get_custom_properties()
+        self.assertDictEqual(custom_properties, {"foo": "bar"})
+
+    def testUpdateCustomProperties(self):
+        custom_properties = {"foo": "bar"}
+        self.repo.update_custom_properties(custom_properties)
 
 
 class LazyRepository(Framework.TestCase):
