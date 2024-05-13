@@ -129,6 +129,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -4084,6 +4085,27 @@ class Repository(CompletableGithubObject):
             ),
         )
         return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+
+    def get_custom_properties(self) -> dict[str, None | str | list]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository>`_
+        :rtype: dict[str, None | str | list]
+        """
+        url = f"{self.url}/properties/values"
+        _, data = self._requester.requestJsonAndCheck("GET", url)
+        return {p["property_name"]: p["value"] for p in data}
+
+    def update_custom_properties(self, properties: dict[str, None | str | list]):
+        """
+        :calls: `GET /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository>`_
+        :rtype: None
+        """
+        assert all(isinstance(v, (type(None), str, list)) for v in properties.values()), properties
+        url = f"{self.url}/properties/values"
+        post_parameters: dict[str, str] = {
+            "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
+        }
+        self._requester.requestJsonAndCheck("PATCH", url, input=post_parameters)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
