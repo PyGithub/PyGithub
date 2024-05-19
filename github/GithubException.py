@@ -106,6 +106,57 @@ class GithubException(Exception):
 class BadCredentialsException(GithubException):
     """
     Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
+
+    ### Possible Causes
+
+    This exception is raised possibly because of:
+    1. Insufficient scope of token
+    2. An expired token. In an application with **cache** mechanism, the cached PyGithub-like objects might
+    contain an expired token unexpectedly. ATTENTION: The PyGithub-like objects can not update the token
+    automatically.
+
+    ### One way to find the cause
+    
+    One way to find the root cause is as follows.
+    The steps are abstracted from https://github.com/PyGithub/PyGithub/issues/1753#issuecomment-1039533679
+    
+    1. In the source code directory of PyGithub package downloaded by
+    pip(often `lib/python3.x/site-packages/` in virtual env or `~/.local/lib/python3.x/site-packages/`), 
+    edit `github/Requester.py`.
+    
+    replace in `def __log`:
+    
+    ```python
+        elif requestHeaders["Authorization"].startswith("token"):
+        headersForRequest["Authorization"] = "token (oauth token removed)"
+    ```
+    
+    with
+    
+    ```python
+        elif requestHeaders["Authorization"].startswith("token"):
+            import hashlib
+            token = requestHeaders["Authorization"][5:]
+            token = hashlib.md5(token.encode('utf-8')).hexdigest()
+            headersForRequest["Authorization"] = f"token ({token})"
+    ```
+
+    2. Insert `github.enable_console_debug_logging()` at the entry of your program. You would see the token
+    used when you run your program. The output format as follows. **CHECK whether the output token is expected**. 
+    
+    ```
+    GET https://api.github.com/repos/totycro/stacs/branches/main {'Authorization': 'token (xxxx) 'User-Agent': ...
+    ```
+
+    ### Ways to fix
+
+    If you find the token is unexpected, you can choose to
+    1) Get the PyGithub objects again. (easier and recommended)
+    2) Renew the token in PyGithub objects by replacing the token with the newer one.
+        For `Issue` and `Repository` got through github token,
+        use `o._requester.auth._token = <new token str>` to renew objects.
+
+    See https://github.com/PyGithub/PyGithub/issues/1753 for more details.
     """
 
 
