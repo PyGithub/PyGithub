@@ -56,7 +56,7 @@ class WorkflowJob(Framework.TestCase):
         self.assertEqual(self.job.started_at, started_at)
         completed_at = datetime(2023, 2, 17, 16, 4, 52, tzinfo=timezone.utc)
         self.assertEqual(self.job.completed_at, completed_at)
-        self.assertEqual(self.job.name, "test (Python 3.7)")
+        self.assertEqual(self.job.name, "test (Python 3.8)")
         self.assertEqual(
             self.job.check_run_url,
             "https://api.github.com/repos/PyGithub/PyGithub/check-runs/11421878319",
