@@ -136,6 +136,7 @@ class Organization(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._archived_at: Attribute[datetime] = NotSet
         self._default_repository_permission: Attribute[str] = NotSet
         self._has_organization_projects: Attribute[bool] = NotSet
         self._has_repository_projects: Attribute[bool] = NotSet
@@ -176,6 +177,11 @@ class Organization(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
+
+    @property
+    def archived_at(self) -> datetime:
+        self._completeIfNotSet(self._archived_at)
+        return self._archived_at.value
 
     @property
     def avatar_url(self) -> str:
@@ -1327,6 +1333,11 @@ class Organization(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "archived_at" in attributes:  # pragma no branch
+            assert attributes["archived_at"] is None or isinstance(attributes["archived_at"], str), attributes[
+                "archived_at"
+            ]
+            self._archived_at = self._makeDatetimeAttribute(attributes["archived_at"])
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "billing_email" in attributes:  # pragma no branch
