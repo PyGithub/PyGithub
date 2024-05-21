@@ -85,7 +85,6 @@ class Commit(CompletableGithubObject):
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
         self._committer: Attribute[NamedUser] = NotSet
-        self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._sha: Attribute[str] = NotSet
@@ -298,8 +297,6 @@ class Commit(CompletableGithubObject):
             self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
             self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
-        if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch
