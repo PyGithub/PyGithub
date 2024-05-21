@@ -159,10 +159,11 @@ class BadCredentialsException(GithubException):
     ### Ways to fix
 
     If you find the token is unexpected, you can choose to
-    1) Get the PyGithub objects again. (easier and recommended)
+    1) Recreate the Github instance with a new token: `g = Github(auth=Auth.Token("access_token"))`
+        and fetch the PyGithub objects again. (recommended)
     2) Renew the token in PyGithub objects by replacing the token with the newer one.
         For `Issue` and `Repository` got through github token,
-        use `o._requester.auth._token = <new token str>` to renew objects.
+        use `o._requester.auth._token = <new token str>` to renew objects.  (not recommended)
 
     See https://github.com/PyGithub/PyGithub/issues/1753 for more details.
     """
