@@ -147,12 +147,14 @@ class BadCredentialsException(GithubException):
             headersForRequest["Authorization"] = f"token ({token})"
     ```
 
-    2. Insert `github.enable_console_debug_logging()` at the entry of your program. You would see the token
-    used when you run your program. The output format as follows. **CHECK whether the output token is expected**. 
+    2. Insert `github.enable_console_debug_logging()` at the start of your program. You will see the token
+    used for each call of the GitHub REST API. The output format as follows: 
     
     ```
-    GET https://api.github.com/repos/totycro/stacs/branches/main {'Authorization': 'token (xxxx) 'User-Agent': ...
+    GET https://api.github.com/repos/totycro/stacs/branches/main {'Authorization': 'token (xxxx)', 'User-Agent': ...
     ```
+
+    **CHECK whether the output token is expected**.
 
     ### Ways to fix
 
