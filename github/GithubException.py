@@ -114,6 +114,7 @@ class BadCredentialsException(GithubException):
     2. An expired token. In an application with **cache** mechanism, the cached PyGithub-like objects might
     contain an expired token unexpectedly. ATTENTION: The PyGithub-like objects can not update the token
     automatically.
+3. A leaked token. Committing a token into your repo and pushing to github automatically invalidates the token.
 
     ### One way to find the cause
     
