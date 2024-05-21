@@ -125,7 +125,7 @@ class Commit(CompletableGithubObject):
             {},
             None,
             "files",
-            "",
+            "total_files",
             self.raw_data,
             self.raw_headers,
         )
