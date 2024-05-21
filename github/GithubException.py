@@ -124,11 +124,13 @@ class BadCredentialsException(GithubException):
     Usually, the token is obfuscated for security reasons. Here we deliberately write the plain token to the logs,
     so that we can compare it with the expected token.
     
-    1. In the source code directory of PyGithub package downloaded by
-    pip(often `lib/python3.x/site-packages/` in virtual env or `~/.local/lib/python3.x/site-packages/`), 
-    edit `github/Requester.py`.
+    1. Identify the location of the github source code installed via pip or virtual env:
     
-    replace in `def __log`:
+    ```bash
+    python -c "from github import Requester; print(Requester.__file__)"
+    ```
+
+    2. Edit this `github/Requester.py` file and replace in `def __log`:
     
     ```python
         elif requestHeaders["Authorization"].startswith("token"):
