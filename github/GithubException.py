@@ -116,10 +116,13 @@ class BadCredentialsException(GithubException):
     automatically.
 3. A leaked token. Committing a token into your repo and pushing to github automatically invalidates the token.
 
-    ### One way to find the cause
-    
-    One way to find the root cause is as follows.
-    The steps are abstracted from https://github.com/PyGithub/PyGithub/issues/1753#issuecomment-1039533679
+    ### Expose the token in the logs
+
+    Attention: This is for debugging purposes only, as this leaks the token into log files, which is a security risk.
+
+    The best way to investigate the root cause is to show the actual token used to authenticate in the logs.
+    Usually, the token is obfuscated for security reasons. Here we deliberately write the plain token to the logs,
+    so that we can compare it with the expected token.
     
     1. In the source code directory of PyGithub package downloaded by
     pip(often `lib/python3.x/site-packages/` in virtual env or `~/.local/lib/python3.x/site-packages/`), 
