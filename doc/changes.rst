@@ -4,6 +4,28 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.4.0 (???)
+-------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* The ``github.Commit.Commit`` class provides a ``files`` property that used to return a ``list[github.File.File]``,
+  which has now been changed to ``PaginatedList[github.File.File]``. This breaks user code that assumes a ``list``:
+
+.. code-block:: python
+
+    files = repo.get_commit("7266e812ed2976ea36a4303edecfe5d75522343f").files
+    no_of_files = len(files)
+
+This will raise a ``TypeError: object of type 'PaginatedList' has no len()``, as the returned ``PaginatedList``
+does not support the ``len()`` method. Use the ``totalCount`` property instead:
+
+.. code-block:: python
+
+    files = repo.get_commit("7266e812ed2976ea36a4303edecfe5d75522343f").files
+    no_of_files = files.totalCount
+
 Version 2.3.0 (March 21, 2024)
 ------------------------------
 
