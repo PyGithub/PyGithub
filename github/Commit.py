@@ -114,6 +114,8 @@ class Commit(CompletableGithubObject):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
     def files(self) -> PaginatedList[File]:
         return PaginatedList(
