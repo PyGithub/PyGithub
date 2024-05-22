@@ -177,7 +177,7 @@ class AuthenticatedUser(CompletableGithubObject):
         self._two_factor_authentication: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"login": self.login})
+        return self.get__repr__({"login": self._login.value or "<UNKNOWN>"})
 
     @property
     def avatar_url(self) -> str:
