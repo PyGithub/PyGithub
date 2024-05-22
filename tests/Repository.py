@@ -168,6 +168,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.custom_properties, {"foo": "bar"})
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")

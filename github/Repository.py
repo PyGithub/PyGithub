@@ -471,6 +471,14 @@ class Repository(CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def custom_properties(self) -> dict[str, None | str | list]:
+        """
+        :type: dict[str, None | str | list]
+        """
+        self._completeIfNotSet(self._custom_properties)
+        return self._custom_properties.value
+
+    @property
     def default_branch(self) -> str:
         """
         :type: string
@@ -4093,7 +4101,9 @@ class Repository(CompletableGithubObject):
         """
         url = f"{self.url}/properties/values"
         _, data = self._requester.requestJsonAndCheck("GET", url)
-        return {p["property_name"]: p["value"] for p in data}
+        custom_properties = {p["property_name"]: p["value"] for p in data}
+        self._custom_properties = self._makeDictAttribute(custom_properties)
+        return custom_properties
 
     def update_custom_properties(self, properties: dict[str, None | str | list]) -> None:
         """
@@ -4127,6 +4137,7 @@ class Repository(CompletableGithubObject):
         self._contents_url: Attribute[str] = NotSet
         self._contributors_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._custom_properties: Attribute[dict[str, None | str | list]] = NotSet  # type: ignore
         self._default_branch: Attribute[str] = NotSet
         self._delete_branch_on_merge: Attribute[bool] = NotSet
         self._deployments_url: Attribute[str] = NotSet
@@ -4242,6 +4253,8 @@ class Repository(CompletableGithubObject):
             self._contributors_url = self._makeStringAttribute(attributes["contributors_url"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "custom_properties" in attributes:  # pragma no branch
+            self._custom_properties = self._makeDictAttribute(attributes["custom_properties"])
         if "default_branch" in attributes:  # pragma no branch
             self._default_branch = self._makeStringAttribute(attributes["default_branch"])
         if "delete_branch_on_merge" in attributes:  # pragma no branch
