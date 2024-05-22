@@ -4112,10 +4112,10 @@ class Repository(CompletableGithubObject):
         """
         assert all(isinstance(v, (type(None), str, list)) for v in properties.values()), properties
         url = f"{self.url}/properties/values"
-        post_parameters: dict[str, list] = {
+        patch_parameters: dict[str, list] = {
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
-        self._requester.requestJsonAndCheck("PATCH", url, input=post_parameters)
+        self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
