@@ -88,6 +88,7 @@ import github.Event
 import github.GithubObject
 import github.HookDelivery
 import github.NamedUser
+import github.OrganizationCustomProperty
 import github.OrganizationDependabotAlert
 import github.OrganizationSecret
 import github.OrganizationVariable
@@ -116,6 +117,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser
+    from github.OrganizationCustomProperty import OrganizationCustomProperty
     from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
@@ -1324,6 +1326,35 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/dependabot/alerts",
             url_parameters,
+        )
+
+    def get_all_custom_properties(self) -> PaginatedList[OrganizationCustomProperty]:
+        """
+        :calls: `GET /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        return PaginatedList(
+            github.OrganizationCustomProperty.OrganizationCustomProperty,
+            self._requester,
+            f"{self.url}/properties/schema",
+            None,
+        )
+
+    def get_custom_property(self, property_name: str) -> OrganizationCustomProperty:
+        """
+        :calls: `GET /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#get-a-custom-property-for-an-organization>`_
+        :param property_name: string
+        :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(property_name, str), property_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/properties/schema/{urllib.parse.quote(property_name)}"
+        )
+        return github.OrganizationCustomProperty.OrganizationCustomProperty(
+            requester=self._requester,
+            headers=headers,
+            attributes=data,
+            completed=False,
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
