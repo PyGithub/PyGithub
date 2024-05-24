@@ -86,7 +86,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._property_name = self._makeStringAttribute(attributes["property_name"])
-        self._value_type = self._makeStringAttribute(attributes["value_type"])
+        self._value_type = self._makeStringAttribute(attributes["value_type"])  # type: ignore
         if "required" in attributes:
             self._required = self._makeBoolAttribute(attributes["required"])
         if "default_value" in attributes:
@@ -96,4 +96,4 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         if "allowed_values" in attributes:
             self._allowed_values = self._makeListOfStringsAttribute(attributes["allowed_values"])
         if "values_editable_by" in attributes:
-            self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])
+            self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])  # type: ignore
