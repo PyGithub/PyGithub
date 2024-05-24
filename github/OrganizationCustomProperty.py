@@ -28,12 +28,12 @@ from typing import Any
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CustomPropertyValueType(Enum):
+class CustomPropertyValueType(str, Enum):
     STRING = "string"
     SINGLE_SELECT = "single_select"
 
 
-class CustomPropertyEditableBy(Enum):
+class CustomPropertyEditableBy(str, Enum):
     ORG_ACTORS = "org_actors"
     ORG_AND_REPO_ACTORS = "org_and_repo_actors"
 
