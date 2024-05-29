@@ -41,3 +41,6 @@ class Notification(Framework.TestCase):
 
     def testMarkAsRead(self):
         self.notification.mark_as_read()
+
+    def testMarkAsDone(self):
+        self.notification.mark_as_done()
