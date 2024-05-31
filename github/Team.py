@@ -41,6 +41,7 @@
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Jonas Maurus <jdelic@users.noreply.github.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -200,7 +201,7 @@ class Team(CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
 
-    def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
+    def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> Membership:
         """
         :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -218,6 +219,7 @@ class Team(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/memberships/{member._identity}", input=put_parameters
         )
+        return github.Membership.Membership(self._requester, headers, data, completed=True)
 
     def get_team_membership(self, member: str | NamedUser) -> Membership:
         """
@@ -298,11 +300,15 @@ class Team(CompletableGithubObject):
         )
         return status == 204
 
-    def delete(self) -> None:
+    def delete(self) -> bool:
         """
         :calls: `DELETE /teams/{id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
+        status, headers, data = self._requester.requestJson(
+            "DELETE",
+            self.url,
+        )
+        return status == 204
 
     def edit(
         self,
@@ -411,12 +417,13 @@ class Team(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/repos/{repo._identity}")
         return status == 204
 
-    def remove_membership(self, member: NamedUser) -> None:
+    def remove_membership(self, member: NamedUser) -> bool:
         """
         :calls: `DELETE /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#remove-team-membership-for-a-user>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/memberships/{member._identity}")
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/memberships/{member._identity}")
+        return status == 204
 
     def remove_from_members(self, member: NamedUser) -> None:
         """
