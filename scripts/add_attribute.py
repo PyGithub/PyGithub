@@ -18,6 +18,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -72,6 +73,12 @@ types = {
         "str",
         'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
         "datetime",
+    ),
+    "dict": (
+        "dict[" + attributeClassType + "]",
+        None,
+        'self._makeDictAttribute(attributes["' + attributeName + '"])',
+        "dict[" + attributeClassType + "]",
     ),
     "class": (
         ":class:`" + attributeClassType + "`",
