@@ -37,6 +37,8 @@
 
 from datetime import datetime, timezone
 
+from github import GithubException
+
 from . import Framework
 
 
@@ -129,3 +131,10 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchForNonTriggerEnabled(self):
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
         self.assertFalse(workflow.create_dispatch("main"))
+
+    def testCreateDispatchException(self):
+        workflow = self.g.get_repo("test-org/test-repo").get_workflow("workflow-with-params.yaml")
+        with self.assertRaises(GithubException) as raisedexp:
+            workflow.create_dispatch_throw("main")
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(raisedexp.exception.data["message"], "Required input 'mandatory-parameter' not provided")
