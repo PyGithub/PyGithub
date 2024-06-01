@@ -97,3 +97,42 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
             self._allowed_values = self._makeListOfStringsAttribute(attributes["allowed_values"])
         if "values_editable_by" in attributes:
             self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])  # type: ignore
+
+
+class RepositoryCustomPropertyValues(NonCompletableGithubObject):
+    """
+    This class represents CustomPropertyValues for a Repository.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories
+
+    """
+
+    @property
+    def respository_id(self) -> int:
+        return self._repository_id.value
+
+    @property
+    def repository_name(self) -> str:
+        return self._repository_name.value
+
+    @property
+    def repository_full_name(self) -> str:
+        return self._repository_full_name.value
+
+    @property
+    def properties(self) -> dict[str, str]:
+        return self._properties.value
+
+    def _initAttributes(self) -> None:
+        self._repository_id: Attribute[str] = NotSet
+        self._repository_name: Attribute[str] = NotSet
+        self._repository_full_name: Attribute[str] = NotSet
+        self._properties: Attribute[dict[str, str]] = NotSet
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        self._repository_id = self._makeIntAttribute(attributes["repository_id"])
+        self._repository_name = self._makeStringAttribute(attributes["repository_name"])
+        self._repository_full_name = self._makeStringAttribute(attributes["repository_full_name"])
+        properties = {p["property_name"]: p["value"] for p in attributes["properties"]}
+        self._properties = self._makeDictAttribute(properties)
