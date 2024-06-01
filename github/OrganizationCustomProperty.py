@@ -22,25 +22,14 @@
 
 from __future__ import annotations
 
-from enum import Enum
 from typing import Any
 
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-
-class CustomPropertyValueType(str, Enum):
-    STRING = "string"
-    SINGLE_SELECT = "single_select"
-
-
-class CustomPropertyEditableBy(str, Enum):
-    ORG_ACTORS = "org_actors"
-    ORG_AND_REPO_ACTORS = "org_and_repo_actors"
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 
 
 class OrganizationCustomProperty(NonCompletableGithubObject):
     """
-    This class represents a CustomProperty.
+    This class represents a CustomProperty for an Organization.
 
     The reference can be found here
     https://docs.github.com/en/rest/orgs/custom-properties
@@ -52,27 +41,27 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._property_name.value
 
     @property
-    def value_type(self) -> CustomPropertyValueType:
+    def value_type(self) -> str:
         return self._value_type.value
 
     @property
-    def required(self) -> bool:
+    def required(self) -> Opt[bool | None]:
         return self._required.value
 
     @property
-    def default_value(self) -> str | list[str] | None:
+    def default_value(self) -> Opt[str | list[str] | None]:
         return self._default_value.value
 
     @property
-    def description(self) -> str | None:
+    def description(self) -> Opt[str | None]:
         return self._description.value
 
     @property
-    def allowed_values(self) -> list[str] | None:
+    def allowed_values(self) -> Opt[list[str] | None]:
         return self._allowed_values.value
 
     @property
-    def values_editable_by(self) -> CustomPropertyEditableBy | None:
+    def values_editable_by(self) -> Opt[str | None]:
         return self._values_editable_by.value
 
     def _initAttributes(self) -> None:
@@ -86,7 +75,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._property_name = self._makeStringAttribute(attributes["property_name"])
-        self._value_type = self._makeStringAttribute(attributes["value_type"])  # type: ignore
+        self._value_type = self._makeStringAttribute(attributes["value_type"])
         if "required" in attributes:
             self._required = self._makeBoolAttribute(attributes["required"])
         if "default_value" in attributes:
@@ -96,7 +85,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         if "allowed_values" in attributes:
             self._allowed_values = self._makeListOfStringsAttribute(attributes["allowed_values"])
         if "values_editable_by" in attributes:
-            self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])  # type: ignore
+            self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])
 
 
 class RepositoryCustomPropertyValues(NonCompletableGithubObject):
