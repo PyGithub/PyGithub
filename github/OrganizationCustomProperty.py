@@ -47,15 +47,6 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
 
     """
 
-    def _initAttributes(self) -> None:
-        self._property_name: Attribute[str] = NotSet
-        self._value_type: Attribute[CustomPropertyValueType] = NotSet
-        self._required: Attribute[bool] = NotSet
-        self._default_value: Attribute[str | list[str]] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._allowed_values: Attribute[list[str]] = NotSet
-        self._values_editable_by: Attribute[CustomPropertyEditableBy] = NotSet
-
     @property
     def property_name(self) -> str:
         return self._property_name.value
@@ -83,6 +74,15 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
     @property
     def values_editable_by(self) -> CustomPropertyEditableBy | None:
         return self._values_editable_by.value
+
+    def _initAttributes(self) -> None:
+        self._property_name: Attribute[str] = NotSet
+        self._value_type: Attribute[str] = NotSet
+        self._required: Attribute[bool] = NotSet
+        self._default_value: Attribute[str | list[str]] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._allowed_values: Attribute[list[str]] = NotSet
+        self._values_editable_by: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._property_name = self._makeStringAttribute(attributes["property_name"])
