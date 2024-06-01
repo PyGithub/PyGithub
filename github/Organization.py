@@ -59,6 +59,7 @@
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
