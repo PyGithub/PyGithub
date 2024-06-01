@@ -1328,16 +1328,16 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_all_custom_properties(self) -> PaginatedList[OrganizationCustomProperty]:
+    def get_custom_properties(self) -> PaginatedList[OrganizationCustomProperty]:
         """
         :calls: `GET /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
         """
         return PaginatedList(
-            github.OrganizationCustomProperty.OrganizationCustomProperty,
-            self._requester,
-            f"{self.url}/properties/schema",
-            None,
+            contentClass=github.OrganizationCustomProperty.OrganizationCustomProperty,
+            requester=self._requester,
+            firstUrl=f"{self.url}/properties/schema",
+            firstParams=None,
         )
 
     def get_custom_property(self, property_name: str) -> OrganizationCustomProperty:
