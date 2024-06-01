@@ -24,7 +24,49 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, is_optional
+
+
+class CustomProperty:
+    """
+    This class represents a CustomProperty for an Organization. Use this class to create a new post parameter object.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization
+
+    """
+
+    def __init__(
+        self,
+        property_name: str,
+        value_type: str,
+        required: Opt[bool] = NotSet,
+        default_value: Opt[None | str | list[str]] = NotSet,
+        description: Opt[str | None] = NotSet,
+        allowed_values: Opt[list[str] | None] = NotSet,
+        values_editable_by: Opt[str | None] = NotSet,
+    ):
+        assert isinstance(property_name, str), property_name
+        assert isinstance(value_type, str), value_type
+        assert value_type in ["string", "single_select"], value_type
+        assert is_optional(required, bool), required
+        assert is_optional(default_value, (type(None), str, list[str])), default_value
+        assert is_optional(description, (str, type(None))), description
+        assert is_optional(allowed_values, (list, type(None))), allowed_values
+        assert is_optional(values_editable_by, (str, type(None))), values_editable_by
+        if values_editable_by is not NotSet:
+            assert values_editable_by in ["org_actors", "org_and_repo_actors"], values_editable_by
+
+        self.property_name = property_name
+        self.value_type = value_type
+        self.required = required
+        self.default_value = default_value
+        self.description = description
+        self.allowed_values = allowed_values
+        self.values_editable_by = values_editable_by
+
+    def to_dict(self):
+        return NotSet.remove_unset_items(self.__dict__)
 
 
 class OrganizationCustomProperty(NonCompletableGithubObject):
