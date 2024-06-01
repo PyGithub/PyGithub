@@ -117,7 +117,11 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser
-    from github.OrganizationCustomProperty import OrganizationCustomProperty
+    from github.OrganizationCustomProperty import (
+        CustomProperty,
+        OrganizationCustomProperty,
+        RepositoryCustomPropertyValues,
+    )
     from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
@@ -1356,6 +1360,90 @@ class Organization(CompletableGithubObject):
             attributes=data,
             completed=False,
         )
+
+    def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
+        """
+        Create or update custom properties for an organization
+        :calls: `PATCH /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization>`_
+        :param properties: list of :class:`github.OrganizationCustomProperty.CustomProperty`
+        :rtype: list of :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(properties, list), properties
+        assert all(isinstance(p, github.OrganizationCustomProperty.CustomProperty) for p in properties), properties
+        patch_parameters = {"properties": [p.to_dict() for p in properties]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/properties/schema", input=patch_parameters
+        )
+        return [
+            github.OrganizationCustomProperty.OrganizationCustomProperty(
+                requester=self._requester, headers=headers, attributes=property, completed=True
+            )
+            for property in data
+        ]
+
+    def create_custom_property(self, property: CustomProperty) -> OrganizationCustomProperty:
+        """
+        Create or update a custom property for an organization
+        :calls: `PUT /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization>`_
+        :param property: :class:`github.OrganizationCustomProperty.CustomProperty`
+        :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(property, github.OrganizationCustomProperty.CustomProperty), property
+        assert property.values_editable_by is NotSet
+
+        property_name = property.property_name
+        property.property_name = NotSet
+
+        post_parameters = property.to_dict()
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
+        )
+        return github.OrganizationCustomProperty.OrganizationCustomProperty(
+            requester=self._requester, headers=headers, attributes=data, completed=True
+        )
+
+    def remove_custom_property(self, property_name: str) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization>`_
+        :param property_name: string
+        :rtype: None
+        """
+        assert isinstance(property_name, str), property_name
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/properties/schema/{property_name}")
+
+    def list_custom_property_values(
+        self, repository_query: Opt[str] = NotSet
+    ) -> PaginatedList[RepositoryCustomPropertyValues]:
+        """
+        :calls: `GET /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of dict
+        """
+        return PaginatedList(
+            contentClass=github.OrganizationCustomProperty.RepositoryCustomPropertyValues,
+            requester=self._requester,
+            firstUrl=f"{self.url}/properties/values",
+            firstParams=NotSet.remove_unset_items({"repository_query": repository_query}),
+        )
+
+    def create_custom_property_values(
+        self, repository_names: list[str], properties: dict[str, (str, list, None)]
+    ) -> None:
+        """
+        Create or update custom property values for organization repositories
+        :calls: `PATCH /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
+        :param repository_names: list of strings
+        :param properties: dict of strings, lists, or None
+        :rtype: None
+        """
+        assert isinstance(repository_names, list), repository_names
+        assert all(isinstance(repo, str) for repo in repository_names), repository_names
+        assert isinstance(properties, dict), properties
+        assert all(isinstance(value, (str, list, type(None))) for value in properties.values()), properties
+        patch_parameters = {
+            "repository_names": repository_names,
+            "properties": [{"property_name": k, "value": v} for k, v in properties.items()],
+        }
+        self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
