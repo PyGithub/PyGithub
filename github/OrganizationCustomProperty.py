@@ -50,7 +50,7 @@ class CustomProperty:
         assert isinstance(value_type, str), value_type
         assert value_type in ["string", "single_select"], value_type
         assert is_optional(required, bool), required
-        assert is_optional(default_value, (type(None), str, list[str])), default_value
+        assert is_optional(default_value, (type(None), str, list)), default_value
         assert is_optional(description, (str, type(None))), description
         assert is_optional(allowed_values, (list, type(None))), allowed_values
         assert is_optional(values_editable_by, (str, type(None))), values_editable_by
@@ -65,7 +65,7 @@ class CustomProperty:
         self.allowed_values = allowed_values
         self.values_editable_by = values_editable_by
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, Any]:
         return NotSet.remove_unset_items(self.__dict__)
 
 
@@ -156,7 +156,7 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
         return self._properties.value
 
     def _initAttributes(self) -> None:
-        self._repository_id: Attribute[str] = NotSet
+        self._repository_id: Attribute[int] = NotSet
         self._repository_name: Attribute[str] = NotSet
         self._repository_full_name: Attribute[str] = NotSet
         self._properties: Attribute[dict[str, str]] = NotSet

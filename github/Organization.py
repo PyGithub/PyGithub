@@ -1391,10 +1391,8 @@ class Organization(CompletableGithubObject):
         assert isinstance(property, github.OrganizationCustomProperty.CustomProperty), property
         assert property.values_editable_by is NotSet
 
-        property_name = property.property_name
-        property.property_name = NotSet
-
         post_parameters = property.to_dict()
+        property_name = post_parameters.pop("property_name")
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
         )
@@ -1426,13 +1424,13 @@ class Organization(CompletableGithubObject):
         )
 
     def create_custom_property_values(
-        self, repository_names: list[str], properties: dict[str, (str, list, None)]
+        self, repository_names: list[str], properties: dict[str, str | list | None]
     ) -> None:
         """
         Create or update custom property values for organization repositories
         :calls: `PATCH /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
         :param repository_names: list of strings
-        :param properties: dict of strings, lists, or None
+        :param properties: dict of string to string, list or None
         :rtype: None
         """
         assert isinstance(repository_names, list), repository_names
