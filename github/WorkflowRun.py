@@ -258,6 +258,13 @@ class WorkflowRun(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
         return status == 201
 
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", f"{self.url}/rerun-failed-jobs")
+        return status == 201
+
     def timing(self) -> TimingData:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
