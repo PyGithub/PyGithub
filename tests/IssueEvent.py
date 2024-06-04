@@ -43,7 +43,7 @@ from . import Framework
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        repo = self.g.get_repo("PyGithub/PyGithub")
 
         # From Issue #30
         self.event_subscribed = repo.get_issues_event(16347479)

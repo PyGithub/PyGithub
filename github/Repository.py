@@ -1163,7 +1163,7 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/autolinks", input=post_parameters)
 
-        return github.Autolink.Autolink(self._requester, headers, data, completed=True)
+        return github.Autolink.Autolink(self._requester, headers, data)
 
     def create_git_blob(self, content: str, encoding: str) -> GitBlob:
         """
@@ -1698,7 +1698,7 @@ class Repository(CompletableGithubObject):
             headers, data = self._requester.requestJsonAndCheck(
                 "POST", f"{self.url}/security-advisories", input=post_parameters
             )
-        return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
+        return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
 
     def create_repository_dispatch(self, event_type: str, client_payload: Opt[dict[str, Any]] = NotSet) -> bool:
         """
@@ -2026,7 +2026,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(branch, str), branch
         branch = urllib.parse.quote(branch)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches/{branch}")
-        return github.Branch.Branch(self._requester, headers, data, completed=True)
+        return github.Branch.Branch(self._requester, headers, data)
 
     def rename_branch(self, branch: str | Branch, new_name: str) -> bool:
         """
@@ -2315,7 +2315,7 @@ class Repository(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/traffic/popular/referrers")
         if isinstance(data, list):
-            return [github.Referrer.Referrer(self._requester, headers, item, completed=True) for item in data]
+            return [github.Referrer.Referrer(self._requester, headers, item) for item in data]
 
     def get_top_paths(self) -> None | list[Path]:
         """
@@ -2324,7 +2324,7 @@ class Repository(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/traffic/popular/paths")
         if isinstance(data, list):
-            return [github.Path.Path(self._requester, headers, item, completed=True) for item in data]
+            return [github.Path.Path(self._requester, headers, item) for item in data]
 
     def get_views_traffic(self, per: Opt[str] = NotSet) -> None | dict[str, int | list[View]]:
         """
@@ -2339,7 +2339,7 @@ class Repository(CompletableGithubObject):
             "GET", f"{self.url}/traffic/views", parameters=url_parameters
         )
         if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
-            data["views"] = [github.View.View(self._requester, headers, item, completed=True) for item in data["views"]]
+            data["views"] = [github.View.View(self._requester, headers, item) for item in data["views"]]
             return data
 
     def get_clones_traffic(self, per: Opt[str] = NotSet) -> dict[str, int | list[Clones]] | None:
@@ -2354,9 +2354,7 @@ class Repository(CompletableGithubObject):
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
         if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
-            data["clones"] = [
-                github.Clones.Clones(self._requester, headers, item, completed=True) for item in data["clones"]
-            ]
+            data["clones"] = [github.Clones.Clones(self._requester, headers, item) for item in data["clones"]]
             return data
 
     def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
@@ -2462,9 +2460,10 @@ class Repository(CompletableGithubObject):
         :param ghsa: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
+        assert isinstance(ghsa, str), ghsa
         ghsa = urllib.parse.quote(ghsa)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
-        return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data, completed=True)
+        return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
 
     def update_file(
         self,
@@ -2786,7 +2785,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
+        return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
@@ -3171,7 +3170,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(runner_id, int), runner_id
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/runners/{runner_id}")
-        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data, completed=True)
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
 
     def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
         """
@@ -3231,8 +3230,7 @@ class Repository(CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsContributor.StatsContributor(self._requester, headers, attributes, completed=True)
-                for attributes in data
+                github.StatsContributor.StatsContributor(self._requester, headers, attributes) for attributes in data
             ]
 
     def get_stats_commit_activity(self) -> list[StatsCommitActivity] | None:
@@ -3245,7 +3243,7 @@ class Repository(CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes, completed=True)
+                github.StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes)
                 for attributes in data
             ]
 
@@ -3259,7 +3257,7 @@ class Repository(CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes, completed=True)
+                github.StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes)
                 for attributes in data
             ]
 
@@ -3272,7 +3270,7 @@ class Repository(CompletableGithubObject):
         if not data:
             return None
         else:
-            return github.StatsParticipation.StatsParticipation(self._requester, headers, data, completed=True)
+            return github.StatsParticipation.StatsParticipation(self._requester, headers, data)
 
     def get_stats_punch_card(self) -> StatsPunchCard | None:
         """
@@ -3283,7 +3281,7 @@ class Repository(CompletableGithubObject):
         if not data:
             return None
         else:
-            return github.StatsPunchCard.StatsPunchCard(self._requester, headers, data, completed=True)
+            return github.StatsPunchCard.StatsPunchCard(self._requester, headers, data)
 
     def get_subscribers(self) -> PaginatedList[NamedUser]:
         """
@@ -3312,6 +3310,7 @@ class Repository(CompletableGithubObject):
         :param id: int (release id), str (tag name)
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """
+        assert isinstance(id, (int, str)), id
         if isinstance(id, int):
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
@@ -3371,7 +3370,6 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
         :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
-
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_file_name, (int, str)), id_or_file_name
@@ -3448,7 +3446,6 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :param id_: int
-
         :rtype: :class:`github.WorkflowRun.WorkflowRun`
         """
         assert isinstance(id_, int)
@@ -3759,7 +3756,7 @@ class Repository(CompletableGithubObject):
             f"{self.url}/check-suites/{check_suite_id}",
             headers=requestHeaders,
         )
-        return github.CheckSuite.CheckSuite(self._requester, headers, data, completed=True)
+        return github.CheckSuite.CheckSuite(self._requester, headers, data)
 
     def update_check_suites_preferences(
         self, auto_trigger_checks: list[dict[str, bool | int]]
@@ -3775,7 +3772,7 @@ class Repository(CompletableGithubObject):
             f"{self.url}/check-suites/preferences",
             input={"auto_trigger_checks": auto_trigger_checks},
         )
-        return github.RepositoryPreferences.RepositoryPreferences(self._requester, headers, data, completed=True)
+        return github.RepositoryPreferences.RepositoryPreferences(self._requester, headers, data)
 
     def _hub(self, mode: str, event: str, callback: str, secret: Opt[str]) -> None:
         assert isinstance(mode, str), mode
@@ -3799,7 +3796,6 @@ class Repository(CompletableGithubObject):
 
     def get_release_asset(self, id: int) -> GitReleaseAsset:
         assert isinstance(id, (int)), id
-
         resp_headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/assets/{id}")
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
@@ -3903,8 +3899,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(artifact_id, int), artifact_id
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/artifacts/{artifact_id}")
-
-        return github.Artifact.Artifact(self._requester, headers, data, completed=True)
+        return github.Artifact.Artifact(self._requester, headers, data)
 
     def get_codescan_alerts(self) -> PaginatedList[CodeScanAlert]:
         """
@@ -4060,7 +4055,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/dependabot/alerts/{number}")
-        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data)
 
     def update_dependabot_alert(
         self, number: int, state: str, dismissed_reason: Opt[str] = NotSet, dismissed_comment: Opt[str] = NotSet
@@ -4093,7 +4088,7 @@ class Repository(CompletableGithubObject):
                 {"state": state, "dismissed_reason": dismissed_reason, "dismissed_comment": dismissed_comment}
             ),
         )
-        return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
+        return github.DependabotAlert.DependabotAlert(self._requester, headers, data)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
