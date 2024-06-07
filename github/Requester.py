@@ -795,7 +795,7 @@ class Requester:
             requestHeaders = {}
 
         if self.__auth is not None:
-            requestHeaders["Authorization"] = f"{self.__auth.token_type} {self.__auth.token}"
+            self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -985,17 +985,8 @@ class Requester:
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
-            if "Authorization" in requestHeaders:
-                if requestHeaders["Authorization"].startswith("Basic"):
-                    headersForRequest["Authorization"] = "Basic (login and password removed)"
-                elif requestHeaders["Authorization"].startswith("token"):
-                    headersForRequest["Authorization"] = "token (oauth token removed)"
-                elif requestHeaders["Authorization"].startswith("Bearer"):
-                    headersForRequest["Authorization"] = "Bearer (jwt removed)"
-                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    headersForRequest[
-                        "Authorization"
-                    ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+            if self.__auth:
+                self.__auth.mask_authentication(headersForRequest)
             self._logger.debug(
                 "%s %s://%s%s %s %s ==> %i %s %s",
                 verb,
