@@ -84,6 +84,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from deprecated import deprecated
+
 import github.Event
 import github.GithubObject
 import github.HookDelivery
@@ -1086,9 +1088,16 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
+    @deprecated(
+        reason="""
+        Organization.get_team() is deprecated, use Organization.get_team_by_slug() instead.
+        """
+    )
     def get_team(self, id: int) -> Team:
         """
-        :calls: `GET /teams/{id} <https://docs.github.com/en/rest/reference/teams>`_
+        This API call is deprecated. Use `get_team_by_slug` instead.
+
+        :calls: `GET /teams/{id} <https://docs.github.com/en/rest/teams/teams#get-a-team-legacy>`_
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/teams/{id}")
