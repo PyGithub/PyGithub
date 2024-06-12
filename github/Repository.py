@@ -592,6 +592,14 @@ class Repository(CompletableGithubObject):
         return self._git_url.value
 
     @property
+    def has_discussions(self) -> bool:
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_discussions)
+        return self._has_discussions.value
+
+    @property
     def has_downloads(self) -> bool:
         """
         :type: bool
@@ -4130,6 +4138,7 @@ class Repository(CompletableGithubObject):
         self._git_refs_url: Attribute[str] = NotSet
         self._git_tags_url: Attribute[str] = NotSet
         self._git_url: Attribute[str] = NotSet
+        self._has_discussions: Attribute[bool] = NotSet
         self._has_downloads: Attribute[bool] = NotSet
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
@@ -4261,6 +4270,8 @@ class Repository(CompletableGithubObject):
             self._git_tags_url = self._makeStringAttribute(attributes["git_tags_url"])
         if "git_url" in attributes:  # pragma no branch
             self._git_url = self._makeStringAttribute(attributes["git_url"])
+        if "has_discussions" in attributes:  # pragma no branch
+            self._has_discussions = self._makeBoolAttribute(attributes["has_discussions"])
         if "has_downloads" in attributes:  # pragma no branch
             self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
         if "has_issues" in attributes:  # pragma no branch
