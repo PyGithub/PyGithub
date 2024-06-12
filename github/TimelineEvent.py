@@ -48,7 +48,7 @@ from typing import Any
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined
 
 
 class TimelineEvent(NonCompletableGithubObject):
@@ -70,6 +70,8 @@ class TimelineEvent(NonCompletableGithubObject):
         self._commit_url: Attribute[str] = NotSet
         self._source: Attribute[github.TimelineEventSource.TimelineEventSource] = NotSet
         self._url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._submitted_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -111,14 +113,26 @@ class TimelineEvent(NonCompletableGithubObject):
 
     @property
     def body(self) -> str | None:
-        if self.event == "commented" and self._body is not NotSet:
+        if is_defined(self._body):
             return self._body.value
         return None
 
     @property
     def author_association(self) -> str | None:
-        if self.event == "commented" and self._author_association is not NotSet:
+        if is_defined(self._author_association):
             return self._author_association.value
+        return None
+
+    @property
+    def state(self) -> str | None:
+        if is_defined(self._state):
+            return self._state.value
+        return None
+
+    @property
+    def submitted_at(self) -> datetime | None:
+        if is_defined(self._submitted_at):
+            return self._submitted_at.value
         return None
 
     @property
@@ -148,5 +162,9 @@ class TimelineEvent(NonCompletableGithubObject):
             self._body = self._makeStringAttribute(attributes["body"])
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeStringAttribute(attributes["author_association"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "submitted_at" in attributes:  # pragma no branch
+            self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
