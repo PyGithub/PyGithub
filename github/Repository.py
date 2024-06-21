@@ -129,6 +129,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -622,6 +623,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_projects)
         return self._has_projects.value
+
+    @property
+    def has_properties(self) -> bool:
+        self._completeIfNotSet(self._has_properties)
+        return self._has_properties.value
 
     @property
     def has_wiki(self) -> bool:
@@ -4134,6 +4140,7 @@ class Repository(CompletableGithubObject):
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
+        self._has_properties: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -4269,6 +4276,8 @@ class Repository(CompletableGithubObject):
             self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
+        if "has_properties" in attributes:  # pragma no branch
+            self._has_properties = self._makeBoolAttribute(attributes["has_properties"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
