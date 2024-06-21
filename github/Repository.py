@@ -129,7 +129,6 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
-# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -599,14 +598,6 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_downloads)
         return self._has_downloads.value
-
-    @property
-    def has_discussions(self) -> bool:
-        """
-        :type: bool
-        """
-        self._completeIfNotSet(self._has_issues)
-        return self._has_discussions.value
 
     @property
     def has_issues(self) -> bool:
@@ -1915,7 +1906,6 @@ class Repository(CompletableGithubObject):
         homepage: Opt[str] = NotSet,
         private: Opt[bool] = NotSet,
         visibility: Opt[str] = NotSet,
-        has_discussions: Opt[bool] = NotSet,
         has_issues: Opt[bool] = NotSet,
         has_projects: Opt[bool] = NotSet,
         has_wiki: Opt[bool] = NotSet,
@@ -1946,7 +1936,6 @@ class Repository(CompletableGithubObject):
         assert is_optional(homepage, str), homepage
         assert is_optional(private, bool), private
         assert visibility in ["public", "private", "internal", NotSet], visibility
-        assert is_optional(has_discussions, bool), has_discussions
         assert is_optional(has_issues, bool), has_issues
         assert is_optional(has_projects, bool), has_projects
         assert is_optional(has_wiki, bool), has_wiki
@@ -1979,7 +1968,6 @@ class Repository(CompletableGithubObject):
                 "homepage": homepage,
                 "private": private,
                 "visibility": visibility,
-                "has_discussions": has_discussions,
                 "has_issues": has_issues,
                 "has_projects": has_projects,
                 "has_wiki": has_wiki,
@@ -4275,8 +4263,6 @@ class Repository(CompletableGithubObject):
             self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "has_downloads" in attributes:  # pragma no branch
             self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
-        if "has_discussions" in attributes:  # pragma no branch
-            self._has_issues = self._makeBoolAttribute(attributes["has_discussions"])
         if "has_issues" in attributes:  # pragma no branch
             self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
         if "has_pages" in attributes:  # pragma no branch
