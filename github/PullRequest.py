@@ -779,8 +779,8 @@ class PullRequest(CompletableGithubObject):
         if not force:
             remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
             if remaining_pulls.totalCount > 0:
-                raise AttributeError(
-                    "PRs referencing this branch remain. Not deleting the branch"
+                raise RuntimeError(
+                    "This branch is referenced by open pull requests, set force=True to delete this branch."
                 )
         return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
 
@@ -792,7 +792,6 @@ class PullRequest(CompletableGithubObject):
         commit_body: Opt[str] = NotSet,
         commit_headline: Opt[str] = NotSet,
         expected_head_oid: Opt[str] = NotSet,
-        deletebranch=False,
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
@@ -854,6 +853,7 @@ class PullRequest(CompletableGithubObject):
         commit_title: Opt[str] = NotSet,
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
+        delete_branch=False,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
