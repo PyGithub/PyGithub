@@ -84,7 +84,7 @@ class GithubRetry(Retry):
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)  # type: ignore
 
-    def increment(
+    def increment(  # type: ignore[override]
         self,
         method: Optional[str] = None,
         url: Optional[str] = None,

@@ -48,7 +48,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from github import GithubException
+import github
 
 from . import Framework
 
@@ -67,6 +67,9 @@ class PullRequest(Framework.TestCase):
 
         flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
         self.pullMaintainerCanModify = flo_repo.get_pull(2)
+
+        self.delete_restore_repo = self.g.get_repo("austinsasko/PyGithub")
+        self.delete_restore_pull = self.delete_restore_repo.get_pull(21)
 
     def testAttributesIssue256(self):
         self.assertEqual(
@@ -447,6 +450,64 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
 
+    def testDeleteOnMerge(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertFalse(self.delete_restore_pull.is_merged())
+        status = self.delete_restore_pull.merge(delete_branch=True)
+        self.assertTrue(status.merged)
+        self.assertTrue(self.delete_restore_pull.is_merged())
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testRestoreBranch(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+        self.assertTrue(self.delete_restore_pull.restore_branch())
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+
+    def testDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.delete_restore_pull.delete_branch(force=False)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testForceDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
     def testEnableAutomerge(self):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
         response = self.pull.enable_automerge(
@@ -483,7 +544,7 @@ class PullRequest(Framework.TestCase):
 
     def testEnableAutomergeError(self):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
-        with pytest.raises(GithubException) as error:
+        with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
 
         assert error.value.status == 400
