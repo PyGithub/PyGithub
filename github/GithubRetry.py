@@ -84,7 +84,7 @@ class GithubRetry(Retry):
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)  # type: ignore
 
-    def increment(
+    def increment(  # type: ignore[override]
         self,
         method: Optional[str] = None,
         url: Optional[str] = None,
@@ -92,7 +92,7 @@ class GithubRetry(Retry):
         error: Optional[Exception] = None,
         _pool: Optional[ConnectionPool] = None,
         _stacktrace: Optional[TracebackType] = None,
-    ) -> Retry:  # type: ignore[override]
+    ) -> Retry:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
             # or the body message does imply a rate limit error
