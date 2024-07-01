@@ -48,8 +48,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from github import GithubException
-
+import github
 from . import Framework
 
 
@@ -455,7 +454,7 @@ class PullRequest(Framework.TestCase):
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         )
         self.assertFalse(self.delete_restore_pull.is_merged())
-        status = self.delete_restore_pull.merge(deletebranch=True)
+        status = self.delete_restore_pull.merge(delete_branch=True)
         self.assertTrue(status.merged)
         self.assertTrue(self.delete_restore_pull.is_merged())
         with self.assertRaises(github.GithubException) as raisedexp:
@@ -552,7 +551,7 @@ class PullRequest(Framework.TestCase):
 
     def testEnableAutomergeError(self):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
-        with pytest.raises(GithubException) as error:
+        with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
 
         assert error.value.status == 400
