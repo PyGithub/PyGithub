@@ -866,7 +866,7 @@ class PullRequest(CompletableGithubObject):
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
-        if deletebranch:
+        if delete_branch:
             self.delete_branch()
 
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
