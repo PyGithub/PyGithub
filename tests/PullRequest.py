@@ -49,6 +49,7 @@ from datetime import datetime, timezone
 import pytest
 
 import github
+
 from . import Framework
 
 
@@ -450,9 +451,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch())
 
     def testDeleteOnMerge(self):
-        self.assertTrue(
-            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
-        )
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertFalse(self.delete_restore_pull.is_merged())
         status = self.delete_restore_pull.merge(delete_branch=True)
         self.assertTrue(status.merged)
@@ -479,14 +478,10 @@ class PullRequest(Framework.TestCase):
             },
         )
         self.assertTrue(self.delete_restore_pull.restore_branch())
-        self.assertTrue(
-            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
-        )
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
 
     def testDeleteBranch(self):
-        self.assertTrue(
-            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
-        )
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.delete_restore_pull.delete_branch(force=False)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
@@ -500,9 +495,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testForceDeleteBranch(self):
-        self.assertTrue(
-            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
-        )
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)

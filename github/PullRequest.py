@@ -764,17 +764,13 @@ class PullRequest(CompletableGithubObject):
 
     def restore_branch(self):
         """
-        Convenience function that calls :meth:`Repository.create_git_ref`
-        :rtype: :class:`github.GitRef.GitRef`
+        Convenience function that calls :meth:`Repository.create_git_ref` :rtype: :class:`github.GitRef.GitRef`
         """
-        return self.head.repo.create_git_ref(
-            f"refs/heads/{self.head.ref}", sha=self.head.sha
-        )
+        return self.head.repo.create_git_ref(f"refs/heads/{self.head.ref}", sha=self.head.sha)
 
     def delete_branch(self, force=False):
         """
-        Convenience function that calls :meth:`GitRef.delete`
-        :rtype: bool
+        Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
         """
         if not force:
             remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
