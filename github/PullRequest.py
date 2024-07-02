@@ -849,7 +849,7 @@ class PullRequest(CompletableGithubObject):
         commit_title: Opt[str] = NotSet,
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
-        delete_branch=False,
+        delete_branch: bool = False,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
