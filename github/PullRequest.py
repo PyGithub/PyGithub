@@ -100,6 +100,7 @@ from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.GitRef import GitRef
     from github.NamedUser import NamedUser
 
 
