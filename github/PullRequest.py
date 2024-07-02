@@ -762,13 +762,13 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
-    def restore_branch(self):
+    def restore_branch(self) -> GitRef:
         """
         Convenience function that calls :meth:`Repository.create_git_ref` :rtype: :class:`github.GitRef.GitRef`
         """
         return self.head.repo.create_git_ref(f"refs/heads/{self.head.ref}", sha=self.head.sha)
 
-    def delete_branch(self, force=False):
+    def delete_branch(self, force=False) -> GitRef:
         """
         Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
         """
