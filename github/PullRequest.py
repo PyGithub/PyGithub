@@ -769,7 +769,7 @@ class PullRequest(CompletableGithubObject):
         """
         return self.head.repo.create_git_ref(f"refs/heads/{self.head.ref}", sha=self.head.sha)
 
-    def delete_branch(self, force: bool=False) -> None:
+    def delete_branch(self, force: bool = False) -> None:
         """
         Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
         """
