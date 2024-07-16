@@ -71,6 +71,7 @@ class IssueComment(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -99,6 +100,11 @@ class IssueComment(CompletableGithubObject):
     def issue_url(self) -> str:
         self._completeIfNotSet(self._issue_url)
         return self._issue_url.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def updated_at(self) -> datetime:
@@ -185,6 +191,38 @@ class IssueComment(CompletableGithubObject):
         )
         return status == 204
 
+    def minimize(self, reason: str = "OUTDATED") -> bool:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to minimize comment
+        <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>
+        """
+        assert isinstance(reason, str), reason
+        variables = {
+            "subjectId": self.node_id,
+            "classifier": reason,
+        }
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="minimize_comment",
+            variables=NotSet.remove_unset_items(variables),
+            output="minimizedComment { isMinimized }",
+        )
+        return data["data"]["minimizeComment"]["minimizedComment"]["isMinimized"] == True
+
+    def unminimize(self) -> bool:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to unminimize comment
+        <https://docs.github.com/en/graphql/reference/mutations#unminimizecomment>
+        """
+        variables = {
+            "subjectId": self.node_id,
+        }
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="unminimize_comment",
+            variables=NotSet.remove_unset_items(variables),
+            output="unminimizedComment { isMinimized }",
+        )
+        return data["data"]["unminimizeComment"]["unminimizedComment"]["isMinimized"] == False
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
@@ -194,6 +232,8 @@ class IssueComment(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_url" in attributes:  # pragma no branch
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
