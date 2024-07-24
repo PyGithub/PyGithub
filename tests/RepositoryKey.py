@@ -10,6 +10,12 @@
 # Copyright 2018 Laurent Raufaste <analogue@glop.org>                          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,7 +35,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -39,7 +45,9 @@ class RepositoryKey(Framework.TestCase):
         super().setUp()
         # When recording test, be sure to create a deploy key for yourself on
         # Github and update it here.
-        self.key = self.g.get_user("lra").get_repo("mackup").get_key(21870881)
+        repo = self.g.get_user("lra").get_repo("mackup")
+        self.key = repo.get_key(21870881)
+        self.yet_unused_key = repo.get_key(98051552)
 
     def testAttributes(self):
         self.assertEqual(self.key.id, 21870881)
@@ -48,15 +56,27 @@ class RepositoryKey(Framework.TestCase):
             "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB",
         )
         self.assertEqual(self.key.title, "PyGithub Test Key")
+        self.assertEqual(self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881")
         self.assertEqual(
-            self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881"
+            self.key.created_at,
+            datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.key.created_at, datetime.datetime(2017, 2, 22, 8, 16, 23))
         self.assertTrue(self.key.verified)
         self.assertTrue(self.key.read_only)
+        self.assertEqual(repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)')
+        self.assertEqual(self.key.added_by, "key-admin-user")
         self.assertEqual(
-            repr(self.key), 'RepositoryKey(title="PyGithub Test Key", id=21870881)'
+            self.key.last_used,
+            datetime(2024, 4, 13, 10, 0, 21, tzinfo=timezone.utc),
         )
+
+    def testYetUnusedKey(self):
+        self.assertEqual(self.yet_unused_key.id, 98051552)
+        self.assertEqual(
+            self.yet_unused_key.key,
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOXEPB9eqJ2DwZepFxrPwCDczIReVeWOOt3NMs8KOn3h",
+        )
+        self.assertEqual(self.yet_unused_key.last_used, None)
 
     def testDelete(self):
         self.key.delete()

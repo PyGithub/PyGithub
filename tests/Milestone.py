@@ -6,7 +6,14 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Michell Stuttgart <michellstut@gmail.com>                     #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,7 +33,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import date, datetime, timezone
 
 from . import Framework
 
@@ -39,10 +46,14 @@ class Milestone(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(
-            self.milestone.created_at, datetime.datetime(2012, 3, 8, 12, 22, 10)
+            self.milestone.created_at,
+            datetime(2012, 3, 8, 12, 22, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(self.milestone.description, "")
-        self.assertEqual(self.milestone.due_on, datetime.datetime(2012, 3, 13, 7, 0, 0))
+        self.assertEqual(
+            self.milestone.due_on,
+            datetime(2012, 3, 13, 7, 0, 0, tzinfo=timezone.utc),
+        )
         self.assertEqual(self.milestone.id, 93546)
         self.assertEqual(self.milestone.number, 1)
         self.assertEqual(self.milestone.open_issues, 0)
@@ -53,9 +64,7 @@ class Milestone(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/milestones/1",
         )
         self.assertEqual(self.milestone.creator.login, "jacquev6")
-        self.assertEqual(
-            repr(self.milestone), 'Milestone(title="Version 0.4", number=1)'
-        )
+        self.assertEqual(repr(self.milestone), 'Milestone(title="Version 0.4", number=1)')
 
     def testEditWithMinimalParameters(self):
         self.milestone.edit("Title edited by PyGithub")
@@ -66,17 +75,20 @@ class Milestone(Framework.TestCase):
             "Title edited twice by PyGithub",
             "closed",
             "Description edited by PyGithub",
-            due_on=datetime.date(2012, 6, 16),
+            due_on=date(2012, 6, 16),
         )
         self.assertEqual(self.milestone.title, "Title edited twice by PyGithub")
         self.assertEqual(self.milestone.state, "closed")
         self.assertEqual(self.milestone.description, "Description edited by PyGithub")
-        self.assertEqual(self.milestone.due_on, datetime.datetime(2012, 6, 16, 7, 0, 0))
+        self.assertEqual(
+            self.milestone.due_on,
+            datetime(2012, 6, 16, 7, 0, 0, tzinfo=timezone.utc),
+        )
 
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.milestone.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Public interface", "Project management"],
         )
 

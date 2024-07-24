@@ -7,6 +7,11 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,7 +31,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -42,7 +47,8 @@ class Download(Framework.TestCase):
         self.assertEqual(self.download.bucket, None)
         self.assertEqual(self.download.content_type, "text/plain")
         self.assertEqual(
-            self.download.created_at, datetime.datetime(2012, 5, 22, 18, 58, 32)
+            self.download.created_at,
+            datetime(2012, 5, 22, 18, 58, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(self.download.description, None)
         self.assertEqual(self.download.download_count, 0)

@@ -8,6 +8,11 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,41 +32,34 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitStats(github.GithubObject.NonCompletableGithubObject):
+class CommitStats(NonCompletableGithubObject):
     """
-    This class represents CommitStatses.
+    This class represents CommitStats.
     """
+
+    def _initAttributes(self) -> None:
+        self._total: Attribute[int] = NotSet
+        self._deletions: Attribute[int] = NotSet
+        self._additions: Attribute[int] = NotSet
 
     @property
-    def additions(self):
-        """
-        :type: integer
-        """
+    def additions(self) -> int:
         return self._additions.value
 
     @property
-    def deletions(self):
-        """
-        :type: integer
-        """
+    def deletions(self) -> int:
         return self._deletions.value
 
     @property
-    def total(self):
-        """
-        :type: integer
-        """
+    def total(self) -> int:
         return self._total.value
 
-    def _initAttributes(self):
-        self._additions = github.GithubObject.NotSet
-        self._deletions = github.GithubObject.NotSet
-        self._total = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "deletions" in attributes:  # pragma no branch

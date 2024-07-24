@@ -9,6 +9,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,44 +34,37 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class GitObject(github.GithubObject.NonCompletableGithubObject):
+class GitObject(NonCompletableGithubObject):
     """
-    This class represents GitObjects
+    This class represents GitObjects.
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._sha: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
     @property
-    def type(self):
-        """
-        :type: string
-        """
+    def type(self) -> str:
         return self._type.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         return self._url.value
 
-    def _initAttributes(self):
-        self._sha = github.GithubObject.NotSet
-        self._type = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "type" in attributes:  # pragma no branch

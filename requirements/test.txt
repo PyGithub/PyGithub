@@ -1,0 +1,5 @@
+httpretty >=1.0.3
+pytest >=5.3
+pytest-cov >=2.8
+pytest-github-actions-annotate-failures <1.0.0
+pytest-subtests >=0.11.0

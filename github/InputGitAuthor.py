@@ -9,6 +9,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,40 +34,36 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import Any
+
+from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitAuthor:
     """
-    This class represents InputGitAuthors
+    This class represents InputGitAuthors.
     """
 
-    def __init__(self, name, email, date=github.GithubObject.NotSet):
-        """
-        :param name: string
-        :param email: string
-        :param date: string
-        """
-
+    def __init__(self, name: str, email: str, date: Opt[str] = NotSet):
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert date is github.GithubObject.NotSet or isinstance(
-            date, str
-        ), date  # @todo Datetime?
+        assert is_optional(date, str), date  # @todo Datetime?
 
-        self.__name = name
-        self.__email = email
-        self.__date = date
+        self.__name: str = name
+        self.__email: str = email
+        self.__date: Opt[str] = date
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'InputGitAuthor(name="{self.__name}")'
 
     @property
-    def _identity(self):
-        identity = {
+    def _identity(self) -> dict[str, str]:
+        identity: dict[str, Any] = {
             "name": self.__name,
             "email": self.__email,
         }
-        if self.__date is not github.GithubObject.NotSet:
+        if is_defined(self.__date):
             identity["date"] = self.__date
         return identity

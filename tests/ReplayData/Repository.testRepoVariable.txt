@@ -1,0 +1,31 @@
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/actions/variables
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"name": "variable_name", "value": "variable-value"}
+201
+[('Server', 'GitHub.com'), ('Date', 'Wed, 28 Jun 2023 19:19:32 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"ab9b40dea6722e415dd424b31be226eac6da76ca693e83c73fed865610a4937e"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, admin:ssh_signing_key, audit_log, codespace, delete:packages, delete_repo, gist, notifications, project, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', ''), ('github-authentication-token-expiration', '2023-07-05 17:42:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4899'), ('X-RateLimit-Reset', '1687981543'), ('X-RateLimit-Used', '101'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '608F:387C:CEA47:1A4258:649C87C3')]
+{}
+
+https
+PATCH
+api.github.com
+None
+/repos/jacquev6/PyGithub/actions/variables/variable_name
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"name": "variable_name", "value": "variable-value123"}
+204
+[('Server', 'GitHub.com'), ('Date', 'Wed, 28 Jun 2023 19:19:33 GMT'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, admin:ssh_signing_key, audit_log, codespace, delete:packages, delete_repo, gist, notifications, project, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', ''), ('github-authentication-token-expiration', '2023-07-05 17:42:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4898'), ('X-RateLimit-Reset', '1687981543'), ('X-RateLimit-Used', '102'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', '6BD2:49D7:E5FA9:1D2240:649C87C5')]
+
+
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/actions/variables/variable_name
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Server', 'GitHub.com'), ('Date', 'Wed, 28 Jun 2023 19:19:35 GMT'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, admin:ssh_signing_key, audit_log, codespace, delete:packages, delete_repo, gist, notifications, project, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', ''), ('github-authentication-token-expiration', '2023-07-05 17:42:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4897'), ('X-RateLimit-Reset', '1687981543'), ('X-RateLimit-Used', '103'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', '10FC:400A:BB162:17BE3C:649C87C6')]

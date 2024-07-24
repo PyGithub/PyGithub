@@ -9,7 +9,16 @@
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Tuuu Nya <yuzesheji@qq.com>                                   #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,7 +68,8 @@ class Exceptions(Framework.TestCase):
     def testNonJsonDataReturnedByGithub(self):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
         with self.assertRaises(github.GithubException) as raisedexp:
-            self.g.get_user("jacquev6")
+            # 503 would be retried, disable retries
+            self.get_github(retry=None, pool_size=self.pool_size).get_user("jacquev6")
         self.assertEqual(raisedexp.exception.status, 503)
         self.assertEqual(
             raisedexp.exception.data,
@@ -84,7 +94,7 @@ class Exceptions(Framework.TestCase):
 
     def testBadAuthentication(self):
         with self.assertRaises(github.GithubException) as raisedexp:
-            github.Github("BadUser", "BadPassword").get_user().login
+            github.Github(auth=github.Auth.Login("BadUser", "BadPassword")).get_user().login
         self.assertEqual(raisedexp.exception.status, 401)
         self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
         self.assertEqual(str(raisedexp.exception), '401 {"message": "Bad credentials"}')
@@ -102,30 +112,27 @@ class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
         self.assertRaises(
             github.BadCredentialsException,
-            lambda: github.Github("BadUser", "BadPassword").get_user().login,
+            lambda: github.Github(auth=github.Auth.Login("BadUser", "BadPassword")).get_user().login,
         )
 
     def test2FARequired(self):
         self.assertRaises(
             github.TwoFactorException,
-            lambda: github.Github("2fauser", "password").get_user().login,
+            lambda: github.Github(auth=github.Auth.Login("2fauser", "password")).get_user().login,
         )
 
     def testUnknownObject(self):
-        self.assertRaises(
-            github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx")
-        )
+        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
 
     def testBadUserAgent(self):
         self.assertRaises(
             github.BadUserAgentException,
-            lambda: github.Github(self.login, self.password, user_agent="")
-            .get_user()
-            .name,
+            lambda: github.Github(auth=self.login, user_agent="").get_user().name,
         )
 
     def testRateLimitExceeded(self):
-        g = github.Github()
+        # rate limit errors would be retried if retry is not set None
+        g = github.Github(retry=None)
 
         def exceed():
             for i in range(100):

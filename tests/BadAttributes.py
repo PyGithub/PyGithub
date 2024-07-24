@@ -4,7 +4,15 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,7 +32,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
@@ -35,7 +43,10 @@ from . import Framework
 class BadAttributes(Framework.TestCase):
     def testBadSimpleAttribute(self):
         user = self.g.get_user("klmitch")
-        self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9))
+        self.assertEqual(
+            user.created_at,
+            datetime(2011, 3, 23, 15, 42, 9, tzinfo=timezone.utc),
+        )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             user.name
@@ -51,12 +62,10 @@ class BadAttributes(Framework.TestCase):
             user.created_at
         self.assertEqual(raisedexp.exception.actual_value, "foobar")
         self.assertEqual(raisedexp.exception.expected_type, str)
-        self.assertEqual(
-            raisedexp.exception.transformation_exception.__class__, ValueError
-        )
+        self.assertEqual(raisedexp.exception.transformation_exception.__class__, ValueError)
         self.assertEqual(
             raisedexp.exception.transformation_exception.args,
-            ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",),
+            ("Invalid isoformat string: 'foobar'",),
         )
 
     def testBadTransformedAttribute(self):
@@ -89,12 +98,10 @@ class BadAttributes(Framework.TestCase):
         self.assertEqual(raisedexp.exception.actual_value, 42)
 
     def testBadTransformedAttributeInList(self):
-        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit(
-            "38d9082a898d0822b5ccdfd78f3a536e2efa6c26"
-        )
+        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
-            commit.files
+            commit.parents
         self.assertEqual(raisedexp.exception.actual_value, [42])
         self.assertEqual(raisedexp.exception.expected_type, [dict])
         self.assertEqual(raisedexp.exception.transformation_exception, None)

@@ -7,6 +7,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,54 +32,46 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from typing import Any
+
+from github.GithubObject import NotSet, Opt, is_defined, is_optional
 
 
 class InputGitTreeElement:
     """
-    This class represents InputGitTreeElements
+    This class represents InputGitTreeElements.
     """
 
     def __init__(
         self,
-        path,
-        mode,
-        type,
-        content=github.GithubObject.NotSet,
-        sha=github.GithubObject.NotSet,
+        path: str,
+        mode: str,
+        type: str,
+        content: Opt[str] = NotSet,
+        sha: Opt[str | None] = NotSet,
     ):
-        """
-        :param path: string
-        :param mode: string
-        :param type: string
-        :param content: string
-        :param sha: string or None
-        """
-
         assert isinstance(path, str), path
         assert isinstance(mode, str), mode
         assert isinstance(type, str), type
-        assert content is github.GithubObject.NotSet or isinstance(
-            content, str
-        ), content
-        assert (
-            sha is github.GithubObject.NotSet or sha is None or isinstance(sha, str)
-        ), sha
+        assert is_optional(content, str), content
+        assert sha is None or is_optional(sha, str), sha
         self.__path = path
         self.__mode = mode
         self.__type = type
         self.__content = content
-        self.__sha = sha
+        self.__sha: Opt[str] | None = sha
 
     @property
-    def _identity(self):
-        identity = {
+    def _identity(self) -> dict[str, Any]:
+        identity: dict[str, Any] = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,
         }
-        if self.__sha is not github.GithubObject.NotSet:
+        if is_defined(self.__sha):
             identity["sha"] = self.__sha
-        if self.__content is not github.GithubObject.NotSet:
+        if is_defined(self.__content):
             identity["content"] = self.__content
         return identity

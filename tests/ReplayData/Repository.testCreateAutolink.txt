@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/repos/jacquev6/PyGithub/autolinks
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"key_prefix": "DUMMY-", "url_template": "https://github.com/PyGithub/PyGithub/issues/<num>"}
+201
+[('Server', 'GitHub.com'), ('Date', 'Tue, 02 Nov 2021 12:57:55 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '102'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"f90a1a598b996d3d1967b96c218459edde984e62d452623ff4aba2530a256b85"'), ('X-OAuth-Scopes', 'admin:repo_hook, repo'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2021-11-09 12:40:40 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4947'), ('X-RateLimit-Reset', '1635859633'), ('X-RateLimit-Used', '53'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'C6E6:34FE:190079B:197523C:618135D3')]
+{"id":209614,"key_prefix":"DUMMY-","url_template":"https://github.com/PyGithub/PyGithub/issues/<num>","is_alphanumeric":true}

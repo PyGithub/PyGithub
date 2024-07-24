@@ -6,6 +6,11 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,7 +30,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -41,4 +46,7 @@ class Issue54(Framework.TestCase):
             commit.message,
             "Test commit created around Fri, 13 Jul 2012 18:43:21 GMT, that is vendredi 13 juillet 2012 20:43:21 GMT+2\n",
         )
-        self.assertEqual(commit.author.date, datetime.datetime(2012, 7, 13, 18, 47, 10))
+        self.assertEqual(
+            commit.author.date,
+            datetime(2012, 7, 13, 18, 47, 10, tzinfo=timezone.utc),
+        )
