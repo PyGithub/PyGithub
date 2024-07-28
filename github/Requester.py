@@ -454,7 +454,7 @@ class Requester:
         self.__custom_connections = deque()
 
     @staticmethod
-    # replace with str.removesuffix once support for Python 3.7 is dropped
+    # replace with str.removesuffix once support for Python 3.8 is dropped
     def remove_suffix(string: str, suffix: str) -> str:
         if string.endswith(suffix):
             return string[: -len(suffix)]
