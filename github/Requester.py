@@ -454,19 +454,12 @@ class Requester:
         self.__custom_connections = deque()
 
     @staticmethod
-    # replace with str.removesuffix once support for Python 3.7 is dropped
-    def remove_suffix(string: str, suffix: str) -> str:
-        if string.endswith(suffix):
-            return string[: -len(suffix)]
-        return string
-
-    @staticmethod
     def get_graphql_prefix(path: Optional[str]) -> str:
         if path is None or path in ["", "/"]:
             path = ""
         if path.endswith(("/v3", "/v3/")):
-            path = Requester.remove_suffix(path, "/")
-            path = Requester.remove_suffix(path, "/v3")
+            path = path.removesuffix("/")
+            path = path.removesuffix("/v3")
         return path + "/graphql"
 
     def close(self) -> None:
