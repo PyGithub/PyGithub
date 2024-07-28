@@ -815,7 +815,7 @@ class PullRequest(CompletableGithubObject):
         # Make the request
         _, data = self._requester.graphql_named_mutation(
             mutation_name="enable_pull_request_auto_merge",
-            variables=NotSet.remove_unset_items(variables),
+            variables={"input": NotSet.remove_unset_items(variables)},
             output="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
@@ -839,7 +839,7 @@ class PullRequest(CompletableGithubObject):
         # Make the request
         _, data = self._requester.graphql_named_mutation(
             mutation_name="disable_pull_request_auto_merge",
-            variables=NotSet.remove_unset_items(variables),
+            variables={"input": NotSet.remove_unset_items(variables)},
             output="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data

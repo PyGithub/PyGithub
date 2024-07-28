@@ -572,7 +572,7 @@ class Requester:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
         """
-        input_ = {"query": query, "variables": {"input": variables}}
+        input_ = {"query": query, "variables": variables}
 
         response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:
