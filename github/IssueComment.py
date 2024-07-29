@@ -203,7 +203,7 @@ class IssueComment(CompletableGithubObject):
         }
         _, data = self._requester.graphql_named_mutation(
             mutation_name="minimize_comment",
-            variables=NotSet.remove_unset_items(variables),
+            variables={"input": NotSet.remove_unset_items(variables)},
             output="minimizedComment { isMinimized }",
         )
         return data["data"]["minimizeComment"]["minimizedComment"]["isMinimized"] == True
@@ -218,7 +218,7 @@ class IssueComment(CompletableGithubObject):
         }
         _, data = self._requester.graphql_named_mutation(
             mutation_name="unminimize_comment",
-            variables=NotSet.remove_unset_items(variables),
+            variables={"input": NotSet.remove_unset_items(variables)},
             output="unminimizedComment { isMinimized }",
         )
         return data["data"]["unminimizeComment"]["unminimizedComment"]["isMinimized"] == False
