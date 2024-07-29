@@ -37,7 +37,7 @@
 import github
 
 from . import Framework
-from .Issue2971 import CustomAuth
+from .Authentication import CustomAuth
 
 
 class Logging(Framework.BasicTestCase):
