@@ -46,6 +46,7 @@ class IssueComment(Framework.TestCase):
         self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
+        self.assertEqual(self.comment.node_id, "IC_kwDOGpsAJ86Gecc_")
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
             self.comment.created_at,
