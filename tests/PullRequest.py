@@ -256,6 +256,7 @@ class PullRequest(Framework.TestCase):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
+        self.assertListKeyEqual(comments, lambda c: c.pull_request_review_id, [131593233, None])
 
     def testReviewRequests(self):
         self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
