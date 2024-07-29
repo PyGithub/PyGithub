@@ -67,6 +67,7 @@
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -113,6 +114,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.full_name, "jacquev6/PyGithub")
         self.assertEqual(self.repo.git_url, "git://github.com/jacquev6/PyGithub.git")
         self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.has_discussions)
         self.assertTrue(self.repo.has_issues)
         self.assertEqual(
             self.repo.deployments_url,
@@ -179,6 +181,7 @@ class Repository(Framework.TestCase):
             "Description edited by PyGithub",
             "http://vincent-jacques.net/PyGithub",
             private=True,
+            has_discussions=True,
             has_issues=True,
             has_projects=False,
             has_wiki=False,
@@ -202,6 +205,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
         self.assertFalse(self.repo.archived)
         self.assertTrue(self.repo.allow_update_branch)
+        self.assertTrue(self.repo.has_discussions)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
