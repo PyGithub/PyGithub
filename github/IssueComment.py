@@ -206,7 +206,7 @@ class IssueComment(CompletableGithubObject):
             variables={"input": NotSet.remove_unset_items(variables)},
             output="minimizedComment { isMinimized }",
         )
-        return data["data"]["minimizeComment"]["minimizedComment"]["isMinimized"] == True
+        return data["data"]["minimizeComment"]["minimizedComment"]["isMinimized"] is True
 
     def unminimize(self) -> bool:
         """
@@ -221,7 +221,7 @@ class IssueComment(CompletableGithubObject):
             variables={"input": NotSet.remove_unset_items(variables)},
             output="unminimizedComment { isMinimized }",
         )
-        return data["data"]["unminimizeComment"]["unminimizedComment"]["isMinimized"] == False
+        return data["data"]["unminimizeComment"]["unminimizedComment"]["isMinimized"] is False
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch
