@@ -454,7 +454,7 @@ class Requester:
         self.__custom_connections = deque()
 
     @staticmethod
-    # replace with str.removesuffix once support for Python 3.7 is dropped
+    # replace with str.removesuffix once support for Python 3.8 is dropped
     def remove_suffix(string: str, suffix: str) -> str:
         if string.endswith(suffix):
             return string[: -len(suffix)]
@@ -572,7 +572,7 @@ class Requester:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
         """
-        input_ = {"query": query, "variables": {"input": variables}}
+        input_ = {"query": query, "variables": variables}
 
         response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:

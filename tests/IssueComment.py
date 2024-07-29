@@ -46,6 +46,7 @@ class IssueComment(Framework.TestCase):
         self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
+        self.assertEqual(self.comment.node_id, "IC_kwDOGpsAJ86Gecc_")
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
             self.comment.created_at,
@@ -93,8 +94,11 @@ class IssueComment(Framework.TestCase):
             datetime(2012, 5, 20, 11, 53, 59, tzinfo=timezone.utc),
         )
 
-    def testDelete(self):
-        self.comment.delete()
+    def testMinimize(self):
+        self.assertTrue(self.comment.minimize())
+
+    def testUnminimize(self):
+        self.assertTrue(self.comment.unminimize())
 
     def testGetReactions(self):
         reactions = self.comment.get_reactions()
@@ -108,3 +112,7 @@ class IssueComment(Framework.TestCase):
 
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85743754))
+
+    # this should be the last test as this deletes the comment used above.
+    def testDelete(self):
+        self.comment.delete()
