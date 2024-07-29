@@ -93,8 +93,11 @@ class IssueComment(Framework.TestCase):
             datetime(2012, 5, 20, 11, 53, 59, tzinfo=timezone.utc),
         )
 
-    def testDelete(self):
-        self.comment.delete()
+    def testMinimize(self):
+        self.assertTrue(self.comment.minimize())
+
+    def testUnminimize(self):
+        self.assertTrue(self.comment.unminimize())
 
     def testGetReactions(self):
         reactions = self.comment.get_reactions()
@@ -109,8 +112,6 @@ class IssueComment(Framework.TestCase):
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85743754))
 
-    def testMinimize(self):
-        self.assertTrue(self.comment.minimize())
-
-    def testUnminimize(self):
-        self.assertTrue(self.comment.unminimize())
+    # this should be the last test as this deletes the comment used above.
+    def testDelete(self):
+        self.comment.delete()
