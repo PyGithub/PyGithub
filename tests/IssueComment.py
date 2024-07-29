@@ -108,3 +108,9 @@ class IssueComment(Framework.TestCase):
 
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85743754))
+
+    def testMinimize(self):
+        self.assertTrue(self.comment.minimize())
+
+    def testUnminimize(self):
+        self.assertTrue(self.comment.unminimize())
