@@ -217,7 +217,7 @@ class Logging(Framework.BasicTestCase):
         )
         self.assertEqual(requestHeaders["Authorization"], "thisisnotatoken")
 
-    def testIssue2971MaskingOfCustomHeader(self):
+    def testMaskingOfCustomAuthHeader(self):
         requestHeaders = {"Custom key": "secret"}
         responseHeaders = {"status": "200 OK"}
         github.Github(auth=CustomAuth())._Github__requester._Requester__log(
