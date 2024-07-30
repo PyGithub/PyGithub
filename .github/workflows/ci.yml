@@ -46,11 +46,17 @@ jobs:
     # this aggregates success state of all jobs listed in `needs`
     # this is the only required check to pass CI
     name: "Test success"
+    if: always()
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - name: "Noop"
+      - name: "Success"
+        if: needs.test.result == 'success'
         run: true
+        shell: bash
+      - name: "Failure"
+        if: needs.test.result != 'success'
+        run: false
         shell: bash
 
   draft:
