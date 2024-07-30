@@ -128,8 +128,8 @@ class WorkflowRun(Framework.TestCase):
         self.assertFalse(wr.rerun())
 
     def test_rerun_failed_jobs(self):
-        wr = self.repo.get_workflow_run(9352357011)
-        self.assertFalse(wr.rerun_failed_jobs())
+        wr = self.repo.get_workflow_run(3881497935)
+        self.assertTrue(wr.rerun_failed_jobs())
 
     def test_rerun_with_successful_run(self):
         wr = self.repo.get_workflow_run(3881497935)
