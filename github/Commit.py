@@ -85,7 +85,6 @@ class Commit(CompletableGithubObject):
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
         self._committer: Attribute[NamedUser] = NotSet
-        self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._sha: Attribute[str] = NotSet
@@ -115,10 +114,21 @@ class Commit(CompletableGithubObject):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def files(self) -> list[File]:
-        self._completeIfNotSet(self._files)
-        return self._files.value
+    def files(self) -> PaginatedList[File]:
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            {},
+            None,
+            "files",
+            "total_files",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     @property
     def html_url(self) -> str:
@@ -289,8 +299,6 @@ class Commit(CompletableGithubObject):
             self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
             self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
-        if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch

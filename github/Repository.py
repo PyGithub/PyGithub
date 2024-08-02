@@ -129,6 +129,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -213,6 +214,7 @@ import github.RepositoryAdvisory
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
+import github.SecurityAndAnalysis
 import github.SelfHostedActionsRunner
 import github.SourceImport
 import github.Stargazer
@@ -290,6 +292,7 @@ if TYPE_CHECKING:
     from github.Referrer import Referrer
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
     from github.Stargazer import Stargazer
@@ -468,6 +471,14 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def custom_properties(self) -> dict[str, None | str | list]:
+        """
+        :type: dict[str, None | str | list]
+        """
+        self._completeIfNotSet(self._custom_properties)
+        return self._custom_properties.value
 
     @property
     def default_branch(self) -> str:
@@ -878,6 +889,14 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._releases_url)
         return self._releases_url.value
+
+    @property
+    def security_and_analysis(self) -> SecurityAndAnalysis:
+        """
+        :type: :class:`github.SecurityAndAnalysis.SecurityAndAnalysis`
+        """
+        self._completeIfNotSet(self._security_and_analysis)
+        return self._security_and_analysis.value
 
     @property
     def size(self) -> int:
@@ -4085,6 +4104,29 @@ class Repository(CompletableGithubObject):
         )
         return github.DependabotAlert.DependabotAlert(self._requester, headers, data, completed=True)
 
+    def get_custom_properties(self) -> dict[str, None | str | list]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#get-all-custom-property-values-for-a-repository>`_
+        :rtype: dict[str, None | str | list]
+        """
+        url = f"{self.url}/properties/values"
+        _, data = self._requester.requestJsonAndCheck("GET", url)
+        custom_properties = {p["property_name"]: p["value"] for p in data}
+        self._custom_properties = self._makeDictAttribute(custom_properties)
+        return custom_properties
+
+    def update_custom_properties(self, properties: dict[str, None | str | list]) -> None:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/properties/values <https://docs.github.com/en/rest/repos/custom-properties#create-or-update-custom-property-values-for-a-repository>`_
+        :rtype: None
+        """
+        assert all(isinstance(v, (type(None), str, list)) for v in properties.values()), properties
+        url = f"{self.url}/properties/values"
+        patch_parameters: dict[str, list] = {
+            "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
+        }
+        self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
+
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
         self._allow_forking: Attribute[bool] = NotSet
@@ -4105,6 +4147,7 @@ class Repository(CompletableGithubObject):
         self._contents_url: Attribute[str] = NotSet
         self._contributors_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._custom_properties: Attribute[dict[str, None | str | list]] = NotSet  # type: ignore
         self._default_branch: Attribute[str] = NotSet
         self._delete_branch_on_merge: Attribute[bool] = NotSet
         self._deployments_url: Attribute[str] = NotSet
@@ -4157,6 +4200,7 @@ class Repository(CompletableGithubObject):
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
+        self._security_and_analysis: Attribute[SecurityAndAnalysis] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
         self._squash_merge_commit_message: Attribute[str] = NotSet
@@ -4220,6 +4264,8 @@ class Repository(CompletableGithubObject):
             self._contributors_url = self._makeStringAttribute(attributes["contributors_url"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "custom_properties" in attributes:  # pragma no branch
+            self._custom_properties = self._makeDictAttribute(attributes["custom_properties"])
         if "default_branch" in attributes:  # pragma no branch
             self._default_branch = self._makeStringAttribute(attributes["default_branch"])
         if "delete_branch_on_merge" in attributes:  # pragma no branch
@@ -4324,6 +4370,10 @@ class Repository(CompletableGithubObject):
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
         if "releases_url" in attributes:  # pragma no branch
             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
+        if "security_and_analysis" in attributes:  # pragma no branch
+            self._security_and_analysis = self._makeClassAttribute(
+                github.SecurityAndAnalysis.SecurityAndAnalysis, attributes["security_and_analysis"]
+            )
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch

@@ -129,6 +129,15 @@ class Notification(CompletableGithubObject):
             self.url,
         )
 
+    def mark_as_done(self) -> None:
+        """
+        :calls: `DELETE /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url,
+        )
+
     def get_pull_request(self) -> github.PullRequest.PullRequest:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)

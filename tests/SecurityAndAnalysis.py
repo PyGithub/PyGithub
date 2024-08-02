@@ -1,20 +1,19 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Nic Dahlquist <nic@snapchat.com>                              #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
-# Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
-# Copyright 2018 Vinay Hegde <hegde.vi@husky.neu.edu>                          #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2023 Sol Redfern <59831933+Tsuesun@users.noreply.github.com>       #
-# Copyright 2024 Aiden Grossman <agrossman154@yahoo.com>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,27 +33,24 @@
 #                                                                              #
 ################################################################################
 
-.DS_Store
+from . import Framework
 
-*.pyc
-.eggs/
-.python-version
 
-/GithubCredentials.py
-/scripts/TwitterCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/coverage.xml
-/.idea
-/developer.github.com/
-/gh-pages/
-/doc/doctrees/
-.vscode*
-.venv
-venv
-.tox/
-.mypy_cache/
-*.swp
+class SecurityAndAnalysis(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_repo("transmission-web-control/transmission-web-control")
+
+    def testRepoSecurityAndAnalysisAttributes(self):
+        self.assertEqual(self.repo.security_and_analysis.advanced_security.status, "disabled")
+        self.assertEqual(self.repo.security_and_analysis.secret_scanning.status, "disabled")
+        self.assertEqual(self.repo.security_and_analysis.secret_scanning_push_protection.status, "disabled")
+
+    def testRepoSecurityAndAnalysisRepresentation(self):
+        self.assertEqual(
+            repr(self.repo.security_and_analysis),
+            "SecurityAndAnalysis("
+            'secret_scanning_push_protection="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
+            'advanced_security="SecurityAndAnalysisFeature(status="disabled")")',
+        )
