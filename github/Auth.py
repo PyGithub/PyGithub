@@ -30,7 +30,7 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 import jwt
 from requests import utils
@@ -227,6 +227,8 @@ class AppAuth(JWT):
         self,
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = None,
+        token_repositories: Optional[List[Union[str, int]]] = None,
+        *,
         requester: Optional[Requester] = None,
     ) -> "AppInstallationAuth":
         """
@@ -234,11 +236,12 @@ class AppAuth(JWT):
 
         :param installation_id: installation id
         :param token_permissions: optional permissions
+        :param token_repositories: optional repositories or repository ids
         :param requester: optional requester with app authentication
         :return:
 
         """
-        return AppInstallationAuth(self, installation_id, token_permissions, requester)
+        return AppInstallationAuth(self, installation_id, token_permissions, token_repositories, requester=requester)
 
     def create_jwt(self, expiration: Optional[int] = None) -> str:
         """
@@ -299,6 +302,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         app_auth: AppAuth,
         installation_id: int,
         token_permissions: Optional[Dict[str, str]] = None,
+        token_repositories: Optional[List[Union[str, int]]] = None,
+        *,
         requester: Optional[Requester] = None,
     ):
         super().__init__()
@@ -306,11 +311,13 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         assert isinstance(app_auth, AppAuth), app_auth
         assert isinstance(installation_id, int), installation_id
         assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
+        assert token_repositories is None or isinstance(token_repositories, list), token_repositories
         assert requester is None or isinstance(requester, Requester), requester
 
         self._app_auth = app_auth
         self._installation_id = installation_id
         self._token_permissions = token_permissions
+        self._token_repositories = token_repositories
 
         if requester is not None:
             self.withRequester(requester)
@@ -343,6 +350,10 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         return self._token_permissions
 
     @property
+    def token_repositories(self) -> Optional[List[Union[str, int]]]:
+        return self._token_repositories
+
+    @property
     def token_type(self) -> str:
         return "token"
 
@@ -361,8 +372,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     def _get_installation_authorization(self) -> InstallationAuthorization:
         assert self.__integration is not None, "Method withRequester(Requester) must be called first"
         return self.__integration.get_access_token(
-            self._installation_id,
-            permissions=self._token_permissions,
+            self._installation_id, permissions=self._token_permissions, repositories=self._token_repositories
         )
 
     @property
