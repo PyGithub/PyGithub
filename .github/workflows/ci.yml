@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # keep it sync with tox.ini [gh-actions] section
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12-dev"]
+        # keep in sync with tox.ini [gh-actions] section
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
@@ -46,11 +46,17 @@ jobs:
     # this aggregates success state of all jobs listed in `needs`
     # this is the only required check to pass CI
     name: "Test success"
+    if: always()
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - name: "Noop"
+      - name: "Success"
+        if: needs.test.result == 'success'
         run: true
+        shell: bash
+      - name: "Failure"
+        if: needs.test.result != 'success'
+        run: false
         shell: bash
 
   draft:

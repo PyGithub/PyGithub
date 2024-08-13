@@ -41,10 +41,12 @@ import os
 from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
 from unittest import mock
+from unittest.mock import Mock
 
 import jwt
 
 import github
+from github.Auth import Auth
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -329,3 +331,32 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=github.Auth.Token("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"))
         with self.assertRaises(github.GithubException):
             g.get_user().name
+
+    def testAddingCustomHeaders(self):
+        requester = github.Github(auth=CustomAuth())._Github__requester
+
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input):
+            self.modifiedHeaders = requestHeaders
+            return Mock(), {}, Mock()
+
+        requester._Requester__requestRaw = requestRaw
+        requestHeaders = {"Custom key": "secret"}
+        requester._Requester__requestEncode(None, "GET", "http://github.com", None, requestHeaders, None, Mock())
+
+        self.assertEqual("Custom token", self.modifiedHeaders["Custom key"])
+
+
+class CustomAuth(Auth):
+    @property
+    def token_type(self) -> str:
+        return "custom auth"
+
+    @property
+    def token(self) -> str:
+        return "Custom token"
+
+    def authentication(self, headers):
+        headers["Custom key"] = self.token
+
+    def mask_authentication(self, headers):
+        headers["Custom key"] = "Masked custom header"

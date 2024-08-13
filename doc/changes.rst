@@ -26,6 +26,8 @@ does not support the ``len()`` method. Use the ``totalCount`` property instead:
     files = repo.get_commit("7266e812ed2976ea36a4303edecfe5d75522343f").files
     no_of_files = files.totalCount
 
+* Removed support for Python 3.7.
+
 Version 2.3.0 (March 21, 2024)
 ------------------------------
 
