@@ -644,7 +644,7 @@ class Repository(CompletableGithubObject):
     @property
     def has_discussions(self) -> bool:
         """
-        :type bool
+        :type: bool
         """
         self._completeIfNotSet(self._has_discussions)
         return self._has_discussions.value
@@ -4319,7 +4319,7 @@ class Repository(CompletableGithubObject):
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
-        if "has_discussions" in attributes: # pragma no branch
+        if "has_discussions" in attributes:  # pragma no branch
             self._has_discussions = self._makeBoolAttribute(attributes["has_discussions"])
         if "homepage" in attributes:  # pragma no branch
             self._homepage = self._makeStringAttribute(attributes["homepage"])
