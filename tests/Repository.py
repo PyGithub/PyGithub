@@ -125,7 +125,7 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
         )
         self.assertFalse(self.repo.has_wiki)
-        self.assertTrue(self.repo.has_discussions)
+        self.assertFalse(self.repo.has_discussions)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
@@ -184,7 +184,7 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
-            has_discussions=True,
+            has_discussions=False,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
