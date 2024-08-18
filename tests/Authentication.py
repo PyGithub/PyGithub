@@ -5,8 +5,19 @@
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Arda Kuyumcu <kuyumcuarda@gmail.com>                          #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,10 +41,12 @@ import os
 from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
 from unittest import mock
+from unittest.mock import Mock
 
 import jwt
 
 import github
+from github.Auth import Auth
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -318,3 +331,32 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=github.Auth.Token("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"))
         with self.assertRaises(github.GithubException):
             g.get_user().name
+
+    def testAddingCustomHeaders(self):
+        requester = github.Github(auth=CustomAuth())._Github__requester
+
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input):
+            self.modifiedHeaders = requestHeaders
+            return Mock(), {}, Mock()
+
+        requester._Requester__requestRaw = requestRaw
+        requestHeaders = {"Custom key": "secret"}
+        requester._Requester__requestEncode(None, "GET", "http://github.com", None, requestHeaders, None, Mock())
+
+        self.assertEqual("Custom token", self.modifiedHeaders["Custom key"])
+
+
+class CustomAuth(Auth):
+    @property
+    def token_type(self) -> str:
+        return "custom auth"
+
+    @property
+    def token(self) -> str:
+        return "Custom token"
+
+    def authentication(self, headers):
+        headers["Custom key"] = self.token
+
+    def mask_authentication(self, headers):
+        headers["Custom key"] = "Masked custom header"

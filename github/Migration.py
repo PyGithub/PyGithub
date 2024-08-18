@@ -3,14 +3,26 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2014 Andy Casey <acasey@mso.anu.edu.au>                            #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 John Eskew <jeskew@edx.org>                                   #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,8 +41,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import Any
 
@@ -44,7 +58,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class Migration(CompletableGithubObject):
     """
-    This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
+    This class represents Migrations.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/migrations
+
     """
 
     def _initAttributes(self) -> None:
@@ -145,6 +163,7 @@ class Migration(CompletableGithubObject):
         :calls: `DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock <https://docs.github.com/en/rest/reference/migrations>`_
         """
         assert isinstance(repo_name, str), repo_name
+        repo_name = urllib.parse.quote(repo_name)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/repos/{repo_name}/lock",

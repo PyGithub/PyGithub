@@ -8,6 +8,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,6 +34,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -33,18 +42,18 @@ from typing import Any
 import github.Commit
 import github.File
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
 
 class Comparison(CompletableGithubObject):
     """
-    This class represents Comparisons
+    This class represents Comparisons.
     """
 
     def _initAttributes(self) -> None:
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[github.Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
-        self._commits: Attribute[list[github.Commit.Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -73,10 +82,21 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def commits(self) -> list[github.Commit.Commit]:
-        self._completeIfNotSet(self._commits)
-        return self._commits.value
+    def commits(self) -> PaginatedList[github.Commit.Commit]:
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            {},
+            None,
+            "commits",
+            "total_commits",
+            self.raw_data,
+            self.raw_headers,
+        )
 
     @property
     def diff_url(self) -> str:
@@ -130,8 +150,6 @@ class Comparison(CompletableGithubObject):
             self._base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["base_commit"])
         if "behind_by" in attributes:  # pragma no branch
             self._behind_by = self._makeIntAttribute(attributes["behind_by"])
-        if "commits" in attributes:  # pragma no branch
-            self._commits = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["commits"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "files" in attributes:  # pragma no branch

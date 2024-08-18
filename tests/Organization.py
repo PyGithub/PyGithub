@@ -6,14 +6,43 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                     #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
 # Copyright 2018 Anton Nguyen <afnguyen85@gmail.com>                           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
 # Copyright 2018 Jasper van Wanrooy <jasper@vanwanrooy.net>                    #
 # Copyright 2018 Raihaan <31362124+res0nance@users.noreply.github.com>         #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Tim Boring <tboring@hearst.com>                               #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2019 Brian Choy <byceee@gmail.com>                                 #
+# Copyright 2019 Geoffroy Jabouley <gjabouley@invensense.com>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 ebrown <brownierin@users.noreply.github.com>                  #
+# Copyright 2020 Geoff Low <glow@mdsol.com>                                    #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 latacora-daniel <71085674+latacora-daniel@users.noreply.github.com>#
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Marina Peresypkina <mi9onev@gmail.com>                        #
+# Copyright 2021 Tanner <51724788+lightningboltemoji@users.noreply.github.com> #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
+# Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,6 +66,7 @@ from datetime import datetime, timezone
 from unittest import mock
 
 import github
+from github.OrganizationCustomProperty import CustomProperty
 
 from . import Framework
 
@@ -145,15 +175,22 @@ class Organization(Framework.TestCase):
 
     def testCreateTeamWithAllArguments(self):
         repo = self.org.get_repo("FatherBeaver")
+        parent_team = self.org.get_team(141496)
+        maintainer = self.g.get_user("jacquev6")
         team = self.org.create_team(
             "Team also created by PyGithub",
             [repo],
             "push",
             "secret",
             "Description also created by PyGithub",
+            parent_team.id,
+            [maintainer.id],
+            "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
+        self.assertEqual(team.parent, parent_team)
+        self.assertEqual(team.notification_setting, "notifications_disabled")
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
@@ -390,24 +427,25 @@ class Organization(Framework.TestCase):
             "hello-world-docker-action-new",
             template_repo,
             description=description,
+            include_all_branches=True,
             private=private,
         )
         self.assertEqual(repo.description, description)
         self.assertTrue(repo.private)
 
     @mock.patch("github.PublicKey.encrypt")
-    def testCreateSecret(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
-        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.org.create_secret("secret-name", "secret-value", "all")
-        self.assertIsNotNone(secret)
-
-    @mock.patch("github.PublicKey.encrypt")
     def testCreateSecretSelected(self, encrypt):
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.org.create_secret("secret-name", "secret-value", "selected", repos)
+        secret = self.org.create_secret(
+            secret_name="secret-name",
+            unencrypted_value="secret-value",
+            visibility="selected",
+            secret_type="actions",
+            selected_repositories=repos,
+        )
+
         self.assertIsNotNone(secret)
         self.assertEqual(secret.visibility, "selected")
         self.assertEqual(list(secret.selected_repositories), repos)
@@ -425,6 +463,42 @@ class Organization(Framework.TestCase):
     def testGetSecrets(self):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotSecrets(self):
+        secrets = self.org.get_secrets(secret_type="dependabot")
+        self.assertEqual(len(list(secrets)), 1)
+
+    def testGetDependabotAlerts(self):
+        alerts = self.org.get_dependabot_alerts()
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 8)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetDependabotAlertsWithAllArguments(self):
+        alerts = self.org.get_dependabot_alerts(
+            "open",
+            "medium",
+            "pip",
+            "jinja2",
+            "runtime",
+            "updated",
+            "asc",
+        )
+        alert_list = list(alerts)
+        self.assertEqual(len(list(alerts)), 1)
+        self.assertEqual(alert_list[0].number, 1)
+        self.assertEqual(alert_list[0].state, "open")
+        self.assertEqual(alert_list[0].security_advisory.severity, "medium")
+        self.assertEqual(alert_list[0].dependency.package.ecosystem, "pip")
+        self.assertEqual(alert_list[0].dependency.package.name, "jinja2")
+        self.assertEqual(alert_list[0].dependency.scope, "runtime")
+        self.assertEqual(alert_list[0].repository.full_name, "BeaverSoftware/PyGithub")
+
+    def testGetSecretsFail(self):
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.org.get_secrets(secret_type="secret")
+        self.assertEqual("secret_type should be actions or dependabot", str(raisedexp.exception))
 
     def testInviteUserWithNeither(self):
         with self.assertRaises(AssertionError) as raisedexp:
@@ -499,3 +573,134 @@ class Organization(Framework.TestCase):
     def testGetVariables(self):
         variables = self.org.get_variables()
         self.assertEqual(len(list(variables)), 1)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateActionsSecret(self, encrypt):
+        org = self.g.get_organization("demoorg")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = org.create_secret("secret_name", "secret-value", visibility="all")
+        self.assertIsNotNone(secret)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateDependabotSecret(self, encrypt):
+        org = self.g.get_organization("demoorg")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = org.create_secret("secret_name", "secret-value", secret_type="dependabot", visibility="all")
+        self.assertIsNotNone(secret)
+
+    def testOrgGetSecretAssertion(self):
+        org = self.g.get_organization("demoorg")
+        with self.assertRaises(AssertionError) as exc:
+            org.get_secret(secret_name="splat", secret_type="supersecret")
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateDependabotSecretSelected(self, encrypt):
+        org = self.g.get_organization("demoorg")
+        repos = [org.get_repo("demo-repo-1"), org.get_repo("demo-repo-2")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = org.create_secret(
+            secret_name="SECRET_DEP_NAME",
+            unencrypted_value="secret-value",
+            visibility="selected",
+            secret_type="dependabot",
+            selected_repositories=repos,
+        )
+
+        self.assertIsNotNone(secret)
+        self.assertEqual(secret.visibility, "selected")
+        self.assertEqual(list(secret.selected_repositories), repos)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testOrgSecretEdit(self, encrypt):
+        org = self.g.get_organization("demoorg")
+        repos = [org.get_repo("demo-repo-1"), org.get_repo("demo-repo-2")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = org.create_secret(
+            secret_name="secret_act_name",
+            unencrypted_value="secret-value",
+            visibility="selected",
+            secret_type="actions",
+            selected_repositories=repos,
+        )
+
+        with self.assertRaises(AssertionError) as exc:
+            secret.edit(value="newvalue", secret_type="supersecret")
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    def testCreateCustomProperties(self):
+        properties = [
+            CustomProperty(
+                property_name="property_1",
+                value_type="string",
+                required=False,
+                description="description",
+                values_editable_by="org_actors",
+            ),
+            CustomProperty(
+                property_name="property_2",
+                value_type="single_select",
+                required=True,
+                default_value="bar",
+                description="Lorem ipsum",
+                allowed_values=["foo", "bar"],
+                values_editable_by="org_and_repo_actors",
+            ),
+        ]
+        properties = self.org.create_custom_properties(properties)
+        properties_map = {p.property_name: p for p in properties}
+        property_1 = properties_map["property_1"]
+        self.assertEqual(property_1.value_type, "string")
+        property_2 = properties_map["property_2"]
+        self.assertEqual(property_2.description, "Lorem ipsum")
+
+    def testCreateCustomProperty(self):
+        custom_property = CustomProperty(
+            property_name="property_1",
+            value_type="string",
+            required=True,
+            default_value="foo",
+            description="description",
+        )
+        created_property = self.org.create_custom_property(custom_property)
+        self.assertEqual(created_property.property_name, "property_1")
+        self.assertEqual(created_property.value_type, "string")
+        self.assertEqual(created_property.required, True)
+        self.assertEqual(created_property.default_value, "foo")
+        self.assertEqual(created_property.description, "description")
+        self.assertEqual(created_property.values_editable_by, "org_actors")
+
+    def testGetCustomProperties(self):
+        properties = self.org.get_custom_properties()
+        properties_map = {p.property_name: p for p in properties}
+        self.assertIn("property_1", properties_map)
+        self.assertIn("property_2", properties_map)
+
+    def testGetCustomProperty(self):
+        custom_property = self.org.get_custom_property("property_1")
+        self.assertEqual(custom_property.property_name, "property_1")
+        self.assertEqual(custom_property.value_type, "string")
+        self.assertEqual(custom_property.required, True)
+        self.assertEqual(custom_property.default_value, "foo")
+        self.assertEqual(custom_property.description, "description")
+        self.assertEqual(custom_property.values_editable_by, "org_actors")
+
+    def testCreateCustomPropertyValues(self):
+        self.org.create_custom_property_values(["TestPyGithub"], {"property_1": "bar"})
+        self.testListCustomPropertyValues()
+
+    def testListCustomPropertyValues(self):
+        repos = list(self.org.list_custom_property_values("repo:BeaverSoftware/TestPyGithub"))
+        repos_map = {r.repository_name: r for r in repos}
+        self.assertIn("TestPyGithub", repos_map)
+        self.assertIn("property_1", repos_map["TestPyGithub"].properties)
+        self.assertEqual(repos_map["TestPyGithub"].properties["property_1"], "bar")
+
+    def testRemoveCustomProperty(self):
+        self.org.remove_custom_property("property_1")
+        with self.assertRaises(github.UnknownObjectException):
+            self.org.get_custom_property("property_1")

@@ -1,6 +1,10 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -36,7 +41,10 @@ from github.PaginatedList import PaginatedList
 class CodeScanAlert(NonCompletableGithubObject):
     """
     This class represents alerts from code scanning.
-    The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:
@@ -106,7 +114,10 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     def get_instances(self) -> PaginatedList[github.CodeScanAlertInstance.CodeScanAlertInstance]:
         """
-        :calls: `GET` on the URL for instances as provided by Github
+        Get instances.
+
+        :calls: `GET` on the URL for instances as provided by Github.
+
         """
         return PaginatedList(
             github.CodeScanAlertInstance.CodeScanAlertInstance,

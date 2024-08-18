@@ -1,6 +1,10 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Patryk Szulczyk <therealsoulcheck@gmail.com>                  #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 import json
 import logging
 from datetime import datetime, timezone
@@ -53,6 +58,7 @@ class GithubRetry(Retry):
 
     By default, all methods defined in `Retry.DEFAULT_ALLOWED_METHODS` are retried, plus GET and POST.
     This can be configured via the `allowed_methods` argument.
+
     """
 
     __logger: Optional[Logger] = None
@@ -78,7 +84,7 @@ class GithubRetry(Retry):
         kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
         return super().new(**kw)  # type: ignore
 
-    def increment(
+    def increment(  # type: ignore[override]
         self,
         method: Optional[str] = None,
         url: Optional[str] = None,

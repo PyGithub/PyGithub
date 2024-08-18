@@ -61,7 +61,7 @@ Code review is done via GitHub Pull Requests.
 
 For more information read [CONTRIBUTING.md].
 
-[CONTRIBUTING.md]: /CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/PyGithub/PyGithub/blob/main/CONTRIBUTING.md
 
 ### Maintainership
 

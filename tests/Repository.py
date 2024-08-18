@@ -14,6 +14,9 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
+# Copyright 2018 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
 # Copyright 2018 Hayden Fuss <wifu1234@gmail.com>                              #
 # Copyright 2018 Iraquitan Cordeiro Filho <iraquitanfilho@gmail.com>           #
 # Copyright 2018 Jacopo Notarstefano <jacopo.notarstefano@gmail.com>           #
@@ -26,10 +29,45 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 Will Yardley <wyardley@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 Will Li <cuichen.li94@gmail.com>                              #
+# Copyright 2020 Chris de Graaf <chrisadegraaf@gmail.com>                      #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Glenn McDonald <testworksau@users.noreply.github.com>         #
+# Copyright 2020 Huw Jones <huwcbjones@outlook.com>                            #
 # Copyright 2020 Pascal Hofmann <mail@pascalhofmann.de>                        #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
-# Copyright 2023 Armen Martirosyan <armartirosyan@users.noreply.github.com>    #
-# Copyright 2023 DB Systel GmbH                                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 ton-katsu <sakamoto.yoshihisa@gmail.com>                      #
+# Copyright 2021 Chris Keating <christopherkeating@gmail.com>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2021 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2022 Ibrahim Hussaini <ibrahimhussainialias@outlook.com>           #
+# Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
+# Copyright 2022 Marco Köpcke <hello@parakoopa.de>                             #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Armen Martirosyan <armartirosyan@gmail.com>                   #
+# Copyright 2023 BradChengIRESS <49461141+BradChengIRESS@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Felipe Peter <mr-peipei@web.de>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
+# Copyright 2023 Max Mehl <6170081+mxmehl@users.noreply.github.com>            #
+# Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -130,6 +168,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.custom_properties, {"foo": "bar"})
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -373,6 +412,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
 
+    def testCreateGitReleaseGenerateReleaseNotes(self):
+        release = self.repo.create_git_release("vX.Y.Z-by-PyGithub-acctest-release-notes", generate_release_notes=True)
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest-release-notes")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
     def testCreateGitReleaseWithAllArguments(self):
         release = self.repo.create_git_release(
             "vX.Y.Z-by-PyGithub-acctest2",
@@ -449,11 +494,26 @@ class Repository(Framework.TestCase):
         self.assertTrue(without_payload)
 
     @mock.patch("github.PublicKey.encrypt")
-    def testCreateSecret(self, encrypt):
+    def testRepoSecrets(self, encrypt):
         # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.repo.create_secret("secret-name", "secret-value")
-        self.assertIsNotNone(secret)
+        # GitHub will always capitalize the secret name
+        secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for matched_repo_secret in secrets:
+            repo.create_secret(matched_repo_secret[0], matched_repo_secret[1])
+        repo.update()
+        repo_secrets = repo.get_secrets()
+        matched_repo_secrets = []
+        for matched_repo_secret in secrets:
+            for repo_secret in repo_secrets:
+                # GitHub will always capitalize the secret name, may be best to uppercase test data for comparison
+                if repo_secret.name == matched_repo_secret[0].upper():
+                    matched_repo_secrets.append(repo_secret)
+                    break
+        self.assertEqual(len(matched_repo_secrets), len(secrets))
+        for matched_repo_secret in matched_repo_secrets:
+            matched_repo_secret.delete()
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
@@ -578,6 +638,10 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
 
+    def testAddToCollaboratorsCustomRole(self):
+        lyloa = self.g.get_user("Lyloa")
+        self.repo.add_to_collaborators(lyloa, "custom_role")
+
     def testGetPendingInvitations(self):
         lyloa = self.g.get_user("Lyloa")
         self.repo.add_to_collaborators(lyloa)
@@ -647,6 +711,40 @@ class Repository(Framework.TestCase):
                 "cb0313157bf904f2d364377d35d9397b269547a5",
                 "0cec0d25e606c023a62a4fc7cdc815309ebf6d16",
                 "ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7",
+            ],
+        )
+
+    def testCompareCommitPagination(self):
+        gh = github.Github(
+            auth=self.oauth_token,
+            per_page=4,
+            retry=self.retry,
+            pool_size=self.pool_size,
+            seconds_between_requests=self.seconds_between_requests,
+            seconds_between_writes=self.seconds_between_writes,
+        )
+        repo = gh.get_repo("PyGithub/PyGithub")
+        comparison = repo.compare("v1.54", "v1.54.1")
+        self.assertEqual(comparison.status, "ahead")
+        self.assertEqual(comparison.ahead_by, 10)
+        self.assertEqual(comparison.behind_by, 0)
+        self.assertEqual(comparison.total_commits, 10)
+        self.assertEqual(len(comparison.files), 228)
+        self.assertEqual(comparison.commits.totalCount, 10)
+        self.assertListKeyEqual(
+            comparison.commits,
+            lambda c: c.sha,
+            [
+                "fab682a5ccfc275c31ec37f1f541254c7bd780f3",
+                "9ee3afb1716c559a0b3b44e097c05f4b14ae2ab8",
+                "a806b5233f6423e0f8dacc4d04b6d81a72689bed",
+                "63e4fae997a9a5dc8c2b56907c87c565537bb28f",
+                "82c349ce3e1c556531110753831b3133334c19b7",
+                "2432cffd3b2f1a8e0b6b96d69b3dd4ded148a9f7",
+                "e113e37de1ec687c68337d777f3629251b35ab28",
+                "f299699ccd75910593d5ddf7cc6212f70c5c28b1",
+                "31a1c007808a4205bdae691385d2627c561e69ed",
+                "34d097ce473601624722b90fc5d0396011dd3acb",
             ],
         )
 
@@ -1050,7 +1148,7 @@ class Repository(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.repo.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             [
                 "Refactoring",
                 "Public interface",
@@ -1134,6 +1232,13 @@ class Repository(Framework.TestCase):
             self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(),
             lambda r: r.id,
             [110932306, 110932159, 110932072, 110286191, 110278769],
+        )
+
+    def testGetWorkflowRunsCreated(self):
+        self.assertListKeyEqual(
+            self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(created="2022-12-24"),
+            lambda r: r.id,
+            [3770390952],
         )
 
     def testGetSourceImport(self):
@@ -1349,7 +1454,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
-        self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])
+        self.assertListKeyEqual(issues[0].labels, lambda lb: lb.name, ["Functionalities", "RequestedByUser"])
         self.assertEqual(issues[0].state, "open")
 
     def testMarkNotificationsAsRead(self):
@@ -1852,6 +1957,55 @@ class Repository(Framework.TestCase):
         variable = self.repo.create_variable("variable_name", "variable-value")
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
+
+    def testRepoVariables(self):
+        # GitHub will always capitalize the variable name
+        variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
+        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        for variable in variables:
+            repo.create_variable(variable[0], variable[1])
+        repo.update()
+        repo_variables = repo.get_variables()
+        matched_repo_variables = []
+        for variable in variables:
+            for repo_variable in repo_variables:
+                # GitHub will always capitalize the variable name, may be best to uppercase test data for comparison
+                if repo_variable.name == variable[0].upper() and repo_variable.value == variable[1]:
+                    matched_repo_variables.append(repo_variable)
+                    break
+        self.assertEqual(len(matched_repo_variables), len(variables))
+        for matched_repo_variable in matched_repo_variables:
+            matched_repo_variable.delete()
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoActionsSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "actions")
+        self.assertIsNotNone(secret)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoDependabotSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "dependabot")
+        self.assertIsNotNone(secret)
+
+    def testRepoGetSecretAssertion(self):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        with self.assertRaises(AssertionError) as exc:
+            repo.get_secret(secret_name="splat", secret_type="supersecret")
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    def testGetCustomProperties(self):
+        custom_properties = self.repo.get_custom_properties()
+        self.assertDictEqual(custom_properties, {"foo": "bar"})
+
+    def testUpdateCustomProperties(self):
+        custom_properties = {"foo": "bar"}
+        self.repo.update_custom_properties(custom_properties)
 
 
 class LazyRepository(Framework.TestCase):

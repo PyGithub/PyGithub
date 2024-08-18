@@ -8,7 +8,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,6 +46,7 @@ class IssueComment(Framework.TestCase):
         self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
+        self.assertEqual(self.comment.node_id, "IC_kwDOGpsAJ86Gecc_")
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
             self.comment.created_at,
@@ -62,6 +70,21 @@ class IssueComment(Framework.TestCase):
             repr(self.comment),
             'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)',
         )
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "+1": 1,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 1,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311/reactions",
+            },
+        )
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
@@ -71,8 +94,11 @@ class IssueComment(Framework.TestCase):
             datetime(2012, 5, 20, 11, 53, 59, tzinfo=timezone.utc),
         )
 
-    def testDelete(self):
-        self.comment.delete()
+    def testMinimize(self):
+        self.assertTrue(self.comment.minimize())
+
+    def testUnminimize(self):
+        self.assertTrue(self.comment.unminimize())
 
     def testGetReactions(self):
         reactions = self.comment.get_reactions()
@@ -86,3 +112,7 @@ class IssueComment(Framework.TestCase):
 
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85743754))
+
+    # this should be the last test as this deletes the comment used above.
+    def testDelete(self):
+        self.comment.delete()

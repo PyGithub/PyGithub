@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,39 +21,34 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.DependabotAlert import DependabotAlert
+from github.GithubObject import Attribute, NotSet
+from github.Repository import Repository
 
 
-class RepositoryAdvisoryVulnerabilityPackage(NonCompletableGithubObject):
+class OrganizationDependabotAlert(DependabotAlert):
     """
-    This class represents an identifier for a package that is vulnerable tao  parent SecurityAdvisory.
-    The reference can be found here https://docs.github.com/en/rest/security-advisories/repository-advisories
+    This class represents a Dependabot alert on an organization.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+
     """
 
     def _initAttributes(self) -> None:
-        self._ecosystem: Attribute[str] = NotSet
-        self._name: Attribute[str | None] = NotSet
+        super()._initAttributes()
+        self._repository: Attribute[Repository] = NotSet
 
     @property
-    def ecosystem(self) -> str:
-        """
-        :type: string
-        """
-        return self._ecosystem.value
-
-    @property
-    def name(self) -> str | None:
-        """
-        :type: string or None
-        """
-        return self._name.value
+    def repository(self) -> Repository:
+        return self._repository.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "ecosystem" in attributes:  # pragma no branch
-            self._ecosystem = self._makeStringAttribute(attributes["ecosystem"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
+        super()._useAttributes(attributes)
+        if "repository" in attributes:
+            self._repository = self._makeClassAttribute(Repository, attributes["repository"])

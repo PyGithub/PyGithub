@@ -8,6 +8,13 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Danilo Martins <mawkee@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -43,7 +50,8 @@ class Commit(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(self.commit.committer.login, "jacquev6")
-        self.assertEqual(len(self.commit.files), 1)
+        self.assertEqual(len(list(self.commit.files)), 1)
+        self.assertEqual(self.commit.files.totalCount, 1)
         self.assertEqual(self.commit.files[0].additions, 0)
         self.assertEqual(
             self.commit.files[0].blob_url,

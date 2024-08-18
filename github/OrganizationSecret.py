@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Mauricio Martinez <mauricio.martinez@premise.com>             #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,7 +34,11 @@ from github.Secret import Secret
 
 class OrganizationSecret(Secret):
     """
-    This class represents a org level GitHub secret. The reference can be found here https://docs.github.com/en/rest/actions/secrets
+    This class represents a org level GitHub secret.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/secrets
+
     """
 
     def _initAttributes(self) -> None:
@@ -65,16 +72,19 @@ class OrganizationSecret(Secret):
         self,
         value: str,
         visibility: str = "all",
+        secret_type: str = "actions",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
+        :param secret_type: string options actions or dependabot
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
         patch_parameters: Dict[str, Any] = {
             "name": self.name,
@@ -84,7 +94,7 @@ class OrganizationSecret(Secret):
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/secrets/{self.name}",
+            f"{self.url}/{secret_type}/secrets/{self.name}",
             input=patch_parameters,
         )
         return status == 204

@@ -11,8 +11,18 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Filipe Laíns <filipe.lains@gmail.com>                         #
 # Copyright 2019 Nick Campbell <nicholas.j.campbell@gmail.com>                 #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -69,7 +79,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.id, 4653757)
         self.assertListKeyEqual(
             self.issue.labels,
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
         self.assertEqual(
@@ -94,6 +104,21 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.user.login, "jacquev6")
         self.assertEqual(self.issue.repository.name, "PyGithub")
         self.assertEqual(repr(self.issue), 'Issue(title="Issue created by PyGithub", number=28)')
+        self.assertEqual(
+            self.issue.reactions,
+            {
+                "+1": 0,
+                "-1": 0,
+                "confused": 0,
+                "eyes": 0,
+                "heart": 0,
+                "hooray": 2,
+                "laugh": 0,
+                "rocket": 0,
+                "total_count": 2,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+            },
+        )
 
     def testEditWithoutParameters(self):
         self.issue.edit()
@@ -115,7 +140,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.state, "open")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
-        self.assertListKeyEqual(self.issue.labels, lambda l: l.name, ["Bug"])
+        self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["Bug"])
 
     def testEditResetMilestone(self):
         self.assertEqual(self.issue.milestone.title, "Version 0.4")
@@ -163,7 +188,7 @@ class Issue(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
 
@@ -185,21 +210,21 @@ class Issue(Framework.TestCase):
         question = self.repo.get_label("Question")
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
         self.issue.remove_from_labels(bug)
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Project management", "Question"],
         )
         self.issue.remove_from_labels(question)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management"])
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Project management"])
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
 
@@ -208,21 +233,21 @@ class Issue(Framework.TestCase):
         question = "Question"
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
         self.issue.remove_from_labels(bug)
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Project management", "Question"],
         )
         self.issue.remove_from_labels(question)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management"])
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Project management"])
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
 
@@ -231,26 +256,26 @@ class Issue(Framework.TestCase):
         question = self.repo.get_label("Question")
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
         self.issue.delete_labels()
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"])
 
     def testDeleteAndSetLabelsWithStringArguments(self):
         bug = "Bug"
         question = "Question"
         self.assertListKeyEqual(
             self.issue.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["Bug", "Project management", "Question"],
         )
         self.issue.delete_labels()
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
+        self.assertListKeyEqual(self.issue.get_labels(), lambda lb: lb.name, ["Bug", "Question"])
 
     def testGetReactions(self):
         reactions = self.issue.get_reactions()

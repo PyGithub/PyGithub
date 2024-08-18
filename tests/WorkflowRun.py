@@ -1,6 +1,12 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Yannick Jadoul <yannick.jadoul@belgacom.net>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -120,6 +126,10 @@ class WorkflowRun(Framework.TestCase):
     def test_rerun(self):
         wr = self.repo.get_workflow_run(3910280793)
         self.assertFalse(wr.rerun())
+
+    def test_rerun_failed_jobs(self):
+        wr = self.repo.get_workflow_run(3881497935)
+        self.assertTrue(wr.rerun_failed_jobs())
 
     def test_rerun_with_successful_run(self):
         wr = self.repo.get_workflow_run(3881497935)

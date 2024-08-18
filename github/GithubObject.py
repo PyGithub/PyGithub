@@ -18,7 +18,15 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2023 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,12 +46,13 @@
 #                                                                              #
 ################################################################################
 
+import email.utils
 import typing
 from datetime import datetime, timezone
+from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
-from dateutil import parser
 from typing_extensions import Protocol, TypeGuard
 
 from . import Consts
@@ -62,6 +71,37 @@ class Attribute(Protocol[T_co]):
     @property
     def value(self) -> T_co:
         raise NotImplementedError
+
+
+def _datetime_from_http_date(value: str) -> datetime:
+    """
+    Convert an HTTP date to a datetime object.
+
+    Raises ValueError for invalid dates.
+
+    """
+
+    dt = email.utils.parsedate_to_datetime(value)
+    if dt.tzinfo is None:
+        # RFC7231 states that UTC is assumed if no timezone info is present
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def _datetime_from_github_isoformat(value: str) -> datetime:
+    """
+    Convert an GitHub API timestamps to a datetime object.
+
+    Raises ValueError for invalid timestamps.
+
+    """
+
+    # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
+    # with some minor adjustments for Python < 3.11 which doesn't support "Z"
+    # https://docs.github.com/en/rest/overview/resources-in-the-rest-api#schema
+    if value.endswith("Z"):
+        value = value[:-1] + "+00:00"
+    return datetime.fromisoformat(value)
 
 
 class _NotSetType:
@@ -213,6 +253,10 @@ class GithubObject:
         return GithubObject.__makeSimpleAttribute(value, int)
 
     @staticmethod
+    def _makeDecimalAttribute(value: Optional[Decimal]) -> Attribute[Decimal]:
+        return GithubObject.__makeSimpleAttribute(value, Decimal)
+
+    @staticmethod
     def _makeFloatAttribute(value: Optional[float]) -> Attribute[float]:
         return GithubObject.__makeSimpleAttribute(value, float)
 
@@ -234,7 +278,11 @@ class GithubObject:
 
     @staticmethod
     def _makeDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
-        return GithubObject.__makeTransformedAttribute(value, str, parser.parse)  # type: ignore
+        return GithubObject.__makeTransformedAttribute(value, str, _datetime_from_github_isoformat)  # type: ignore
+
+    @staticmethod
+    def _makeHttpDatetimeAttribute(value: Optional[str]) -> Attribute[datetime]:
+        return GithubObject.__makeTransformedAttribute(value, str, _datetime_from_http_date)  # type: ignore
 
     def _makeClassAttribute(self, klass: Type[T_gh], value: Any) -> Attribute[T_gh]:
         return GithubObject.__makeTransformedAttribute(
@@ -301,6 +349,13 @@ class GithubObject:
         :type: str
         """
         return self._headers.get(Consts.RES_LAST_MODIFIED)  # type: ignore
+
+    @property
+    def last_modified_datetime(self) -> Optional[datetime]:
+        """
+        :type: datetime
+        """
+        return self._makeHttpDatetimeAttribute(self.last_modified).value  # type: ignore
 
     def get__repr__(self, params: Dict[str, Any]) -> str:
         """
@@ -373,8 +428,8 @@ class CompletableGithubObject(GithubObject):
 
     def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
         """
-        Check and update the object with conditional request
-        :rtype: Boolean value indicating whether the object is changed
+        Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
+        changed.
         """
         conditionalRequestHeader = dict()
         if self.etag is not None:

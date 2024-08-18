@@ -1,7 +1,16 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2022 Aleksei Fedotov <aleksei@fedotov.email>                       #
+# Copyright 2020 Yannick Jadoul <yannick.jadoul@belgacom.net>                  #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Aleksei Fedotov <lexa@cfotr.com>                              #
+# Copyright 2022 Gabriele Oliaro <ict@gabrieleoliaro.it>                       #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,7 +56,11 @@ class TimingData(NamedTuple):
 
 class WorkflowRun(CompletableGithubObject):
     """
-    This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
+    This class represents Workflow Runs.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/actions#workflow-runs
+
     """
 
     def _initAttributes(self) -> None:
@@ -243,6 +256,13 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
+        return status == 201
+
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", f"{self.url}/rerun-failed-jobs")
         return status == 201
 
     def timing(self) -> TimingData:
