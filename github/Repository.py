@@ -231,6 +231,7 @@ import github.Workflow
 import github.WorkflowRun
 from github import Consts
 from github.Environment import Environment
+from github.GeneratedReleaseNotes import GeneratedReleaseNotes
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -1330,6 +1331,46 @@ class Repository(CompletableGithubObject):
             post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/releases", input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
+    def generate_release_notes(
+        self,
+        tag_name: str,
+        previous_tag_name: Opt[str] = NotSet,
+        target_commitish: Opt[str] = NotSet,
+        configuration_file_path: Opt[str] = NotSet,
+    ) -> GeneratedReleaseNotes:
+        """
+        :calls: `POST /repos/{owner}/{repo}/releases/generate-notes <https://docs.github.com/en/rest/releases/releases#generate-release-notes-content-for-a-release>`
+        :param tag_name: The tag name for the release. This can be an existing tag or a new one.
+        :param previous_tag_name: The name of the previous tag to use as the starting point for the release notes. Use to manually specify the range for the set of changes considered as part this release.
+        :param target_commitish: Specifies the commitish value that will be the target for the release's tag. Required if the supplied tag_name does not reference an existing tag. Ignored if the tag_name already exists.
+        :param configuration_file_path: Specifies a path to a file in the repository containing configuration settings used for generating the release notes. If unspecified, the configuration file located in the repository at '.github/release.yml' or '.github/release.yaml' will be used. If that is not present, the default configuration will be used.
+        :rytpe: :class:`GeneratedReleaseNotes`
+        """
+        assert isinstance(tag_name, str), tag_name
+        assert isinstance(previous_tag_name, str) or is_optional(previous_tag_name, str), previous_tag_name
+        assert isinstance(target_commitish, str) or is_optional(target_commitish, str), target_commitish
+        assert isinstance(configuration_file_path, str) or is_optional(
+            configuration_file_path, str
+        ), configuration_file_path
+
+        post_parameters = {
+            "tag_name": tag_name,
+        }
+        if is_defined(previous_tag_name):
+            post_parameters["previous_tag_name"] = str(previous_tag_name)
+
+        if is_defined(target_commitish):
+            post_parameters["target_commitish"] = str(target_commitish)
+
+        if is_defined(configuration_file_path):
+            post_parameters["configuration_file_path"] = str(configuration_file_path)
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/releases/generate-notes", input=post_parameters
+        )
+
+        return GeneratedReleaseNotes(self._requester, headers, data, completed=True)
 
     def create_git_tag(
         self,

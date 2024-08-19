@@ -436,6 +436,34 @@ class Repository(Framework.TestCase):
         tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
         self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
 
+    def testGenerateReleaseNotes(self):
+        notes = self.repo.generate_release_notes("vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(notes.name, None)
+        self.assertEqual(
+            notes.body, "**Full Changelog**: https://github.com/jacquev6/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
+        )
+        self.assertEqual(
+            repr(notes),
+            'GeneratedReleaseNotes(name=None, body="**Full Changelog**: https://github.com/jacquev6/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
+        )
+
+    def testGenerateReleaseNotesWithAllArguments(self):
+        self.repo.create_git_release(
+            tag="vX.Y.Z-by-PyGithub-acctest-previous",
+            name="vX.Y.Z: PyGithub acctest",
+            message="This release is created by PyGithub",
+        )
+        notes = self.repo.generate_release_notes(
+            tag_name="vX.Y.Z-by-PyGithub-acctest",
+            previous_tag_name="vX.Y.Z-by-PyGithub-acctest-previous",
+            target_commitish="main",
+            configuration_file_path=".github/test_release_notes.yml",
+        )
+        self.assertEqual(notes.name, None)
+        self.assertIn(
+            "Release notes generated using configuration in .github/test_release_notes.yml at main", notes.body
+        )
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag(
             "TaggedByPyGithub",
