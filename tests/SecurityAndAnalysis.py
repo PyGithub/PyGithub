@@ -41,6 +41,7 @@ class SecurityAndAnalysis(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.repo = self.g.get_repo("transmission-web-control/transmission-web-control")
+        self.maxDiff = None
 
     def testRepoSecurityAndAnalysisAttributes(self):
         self.assertEqual(self.repo.security_and_analysis.advanced_security.status, "disabled")
@@ -54,10 +55,10 @@ class SecurityAndAnalysis(Framework.TestCase):
         self.assertEqual(
             repr(self.repo.security_and_analysis),
             "SecurityAndAnalysis("
-            'advanced_security="SecurityAndAnalysisFeature(status="disabled")", '
-            'dependabot_security_updates="SecurityAndAnalysisFeature(status="disabled")", '
-            'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
-            'secret_scanning_non_provider_patterns="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning_validity_checks="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning_push_protection="SecurityAndAnalysisFeature(status="disabled")", '
-            'secret_scanning_validity_checks="SecurityAndAnalysisFeature(status="disabled")")',
+            'secret_scanning_non_provider_patterns="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
+            'dependabot_security_updates="SecurityAndAnalysisFeature(status="disabled")", '
+            'advanced_security="SecurityAndAnalysisFeature(status="disabled")")',
         )
