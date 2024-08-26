@@ -44,7 +44,10 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

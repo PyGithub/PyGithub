@@ -25,6 +25,8 @@
 # Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
