@@ -49,6 +49,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Chris Wells <iroh@apache.org>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -567,6 +568,7 @@ class AuthenticatedUser(CompletableGithubObject):
         has_wiki: Opt[bool] = NotSet,
         has_downloads: Opt[bool] = NotSet,
         has_projects: Opt[bool] = NotSet,
+        has_discussions: Opt[bool] = NotSet,
         auto_init: Opt[bool] = NotSet,
         license_template: Opt[str] = NotSet,
         gitignore_template: Opt[str] = NotSet,
@@ -586,6 +588,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(has_wiki, bool), has_wiki
         assert is_optional(has_downloads, bool), has_downloads
         assert is_optional(has_projects, bool), has_projects
+        assert is_optional(has_discussions, bool), has_discussions
         assert is_optional(auto_init, bool), auto_init
         assert is_optional(license_template, str), license_template
         assert is_optional(gitignore_template, str), gitignore_template
@@ -603,6 +606,7 @@ class AuthenticatedUser(CompletableGithubObject):
                 "has_wiki": has_wiki,
                 "has_downloads": has_downloads,
                 "has_projects": has_projects,
+                "has_discussions": has_discussions,
                 "auto_init": auto_init,
                 "license_template": license_template,
                 "gitignore_template": gitignore_template,

@@ -30,6 +30,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Chris Wells <iroh@apache.org>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -365,6 +366,7 @@ class AuthenticatedUser(Framework.TestCase):
             has_issues=False,
             has_projects=False,
             has_wiki=False,
+            has_discussions=False,
             has_downloads=False,
             allow_squash_merge=False,
             allow_merge_commit=False,
