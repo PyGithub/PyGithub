@@ -17,6 +17,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Caleb McCombs <squatched@users.noreply.github.com>            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -49,42 +50,70 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._advanced_security: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
+        self._dependabot_security_updates: Attribute[
+            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
+        ] = NotSet
         self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_non_provider_patterns: Attribute[
+            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
+        ] = NotSet
         self._secret_scanning_push_protection: Attribute[
+            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
+        ] = NotSet
+        self._secret_scanning_validity_checks: Attribute[
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__(
-            {
-                "advanced_security": repr(self._advanced_security.value),
-                "secret_scanning": repr(self._secret_scanning.value),
-                "secret_scanning_push_protection": repr(self._secret_scanning_push_protection.value),
-            }
-        )
+        repr_attributes = {
+            "advanced_security": repr(self._advanced_security.value),
+            "dependabot_security_updates": repr(self._dependabot_security_updates.value),
+            "secret_scanning": repr(self._secret_scanning.value),
+            "secret_scanning_non_provider_patterns": repr(self._secret_scanning_non_provider_patterns.value),
+            "secret_scanning_push_protection": repr(self._secret_scanning_push_protection.value),
+            "secret_scanning_validity_checks": repr(self._secret_scanning_validity_checks.value),
+        }
+
+        return self.get__repr__(repr_attributes)
 
     @property
     def advanced_security(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._advanced_security.value
 
     @property
+    def dependabot_security_updates(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+        return self._dependabot_security_updates.value
+
+    @property
     def secret_scanning(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._secret_scanning.value
+
+    @property
+    def secret_scanning_non_provider_patterns(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+        return self._secret_scanning_non_provider_patterns.value
 
     @property
     def secret_scanning_push_protection(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._secret_scanning_push_protection.value
 
+    @property
+    def secret_scanning_validity_checks(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+        return self._secret_scanning_validity_checks.value
+
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "advanced_security" in attributes:  # pragma no branch
-            self._advanced_security = self._makeClassAttribute(
-                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
-            )
-        if "secret_scanning" in attributes:  # pragma no branch
-            self._secret_scanning = self._makeClassAttribute(
-                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
-            )
-        if "secret_scanning_push_protection" in attributes:  # pragma no branch
-            self._secret_scanning_push_protection = self._makeClassAttribute(
-                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
-            )
+        def make_attribute(attribute_name: str) -> None:
+            if attribute_name in attributes:
+                setattr(
+                    self,
+                    f"_{attribute_name}",
+                    self._makeClassAttribute(
+                        github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes[attribute_name]
+                    ),
+                )
+
+        make_attribute("advanced_security")
+        make_attribute("dependabot_security_updates")
+        make_attribute("secret_scanning")
+        make_attribute("secret_scanning_non_provider_patterns")
+        make_attribute("secret_scanning_push_protection")
+        make_attribute("secret_scanning_validity_checks")
