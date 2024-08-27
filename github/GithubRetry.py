@@ -44,6 +44,8 @@ from github.GithubException import GithubException
 from github.Requester import Requester
 
 DEFAULT_SECONDARY_RATE_WAIT: int = 60
+DEFAULT_STATUS_FORCELIST = list(range(500, 600))
+DEFAULT_ALLOWED_METHODS = Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
 
 
 class GithubRetry(Retry):
@@ -67,12 +69,6 @@ class GithubRetry(Retry):
     # references the class, not the module (due to re-exporting in github/__init__.py)
     __datetime = datetime
 
-    #: Default values to be used for ``status_forcelist``
-    DEFAULT_STATUS_FORCELIST = list(range(500, 600))
-
-    #: Default methods to be used for ``allowed_methods``
-    DEFAULT_ALLOWED_METHODS = Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
-
     def __init__(self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs: Any) -> None:
         """
         :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
@@ -82,8 +78,8 @@ class GithubRetry(Retry):
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
-        kwargs["status_forcelist"] = kwargs.get("status_forcelist", self.DEFAULT_STATUS_FORCELIST) + [403]
-        kwargs["allowed_methods"] = kwargs.get("allowed_methods", self.DEFAULT_ALLOWED_METHODS)
+        kwargs["status_forcelist"] = kwargs.get("status_forcelist", DEFAULT_STATUS_FORCELIST) + [403]
+        kwargs["allowed_methods"] = kwargs.get("allowed_methods", DEFAULT_ALLOWED_METHODS)
         super().__init__(**kwargs)
 
     def new(self, **kw: Any) -> Self:
