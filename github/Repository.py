@@ -123,13 +123,16 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Caleb McCombs <caleb@mccombalot.net>                          #
+# Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
-# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -639,6 +642,14 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_wiki)
         return self._has_wiki.value
+
+    @property
+    def has_discussions(self) -> bool:
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_discussions)
+        return self._has_discussions.value
 
     @property
     def homepage(self) -> str:
@@ -1918,6 +1929,7 @@ class Repository(CompletableGithubObject):
         has_issues: Opt[bool] = NotSet,
         has_projects: Opt[bool] = NotSet,
         has_wiki: Opt[bool] = NotSet,
+        has_discussions: Opt[bool] = NotSet,
         is_template: Opt[bool] = NotSet,
         default_branch: Opt[str] = NotSet,
         allow_squash_merge: Opt[bool] = NotSet,
@@ -1948,6 +1960,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(has_issues, bool), has_issues
         assert is_optional(has_projects, bool), has_projects
         assert is_optional(has_wiki, bool), has_wiki
+        assert is_optional(has_discussions, bool), has_discussions
         assert is_optional(is_template, bool), is_template
         assert is_optional(default_branch, str), default_branch
         assert is_optional(allow_squash_merge, bool), allow_squash_merge
@@ -1980,6 +1993,7 @@ class Repository(CompletableGithubObject):
                 "has_issues": has_issues,
                 "has_projects": has_projects,
                 "has_wiki": has_wiki,
+                "has_discussions": has_discussions,
                 "is_template": is_template,
                 "default_branch": default_branch,
                 "allow_squash_merge": allow_squash_merge,
@@ -4168,6 +4182,7 @@ class Repository(CompletableGithubObject):
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
+        self._has_discussions: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -4306,6 +4321,8 @@ class Repository(CompletableGithubObject):
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
+        if "has_discussions" in attributes:  # pragma no branch
+            self._has_discussions = self._makeBoolAttribute(attributes["has_discussions"])
         if "homepage" in attributes:  # pragma no branch
             self._homepage = self._makeStringAttribute(attributes["homepage"])
         if "hooks_url" in attributes:  # pragma no branch

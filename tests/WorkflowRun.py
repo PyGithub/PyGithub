@@ -7,6 +7,7 @@
 # Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
+# Copyright 2024 Chris Gavin <chris@chrisgavin.me>                             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
