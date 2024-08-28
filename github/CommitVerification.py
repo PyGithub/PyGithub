@@ -43,7 +43,7 @@ class CommitVerification(CompletableGithubObject):
         self._payload: Attribute[str] = NotSet
 
     @property
-    def verified(self) -> str:
+    def verified(self) -> bool:
         return self._verified.value
 
     @property
