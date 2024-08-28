@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import (Attribute, CompletableGithubObject, NotSet)
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
 class CommitVerification(CompletableGithubObject):
@@ -44,22 +44,18 @@ class CommitVerification(CompletableGithubObject):
 
     @property
     def verified(self) -> str:
-        self._completeIfNotSet(self.verified)
         return self._verified.value
 
     @property
     def reason(self) -> str:
-        self._completeIfNotSet(self._reason)
         return self._reason.value
 
     @property
     def signature(self) -> str:
-        self._completeIfNotSet(self._signature)
         return self._signature.value
 
     @property
     def payload(self) -> str:
-        self._completeIfNotSet(self._payload)
         return self._payload.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
