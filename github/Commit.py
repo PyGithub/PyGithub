@@ -54,11 +54,11 @@ import github.CommitCombinedStatus
 import github.CommitComment
 import github.CommitStats
 import github.CommitStatus
+import github.CommitVerification
 import github.File
 import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
-import github.CommitVerification
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
@@ -69,11 +69,11 @@ if TYPE_CHECKING:
     from github.CommitComment import CommitComment
     from github.CommitStats import CommitStats
     from github.CommitStatus import CommitStatus
+    from github.CommitVerification import CommitVerification
     from github.File import File
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
-    from github.CommitVerification import CommitVerification
 
 
 class Commit(CompletableGithubObject):
@@ -321,4 +321,6 @@ class Commit(CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "verification" in attributes:  # pragma no branch
-            self._verification = self._makeClassAttribute(github.CommitVerification.CommitVerification, attributes["verification"])
+            self._verification = self._makeClassAttribute(
+                github.CommitVerification.CommitVerification, attributes["verification"]
+            )
