@@ -58,6 +58,7 @@ class RequiredPullRequestReviews(Framework.TestCase):
         )
         self.assertIs(self.required_pull_request_reviews.dismissal_users, None)
         self.assertIs(self.required_pull_request_reviews.dismissal_teams, None)
+        self.assertIs(self.required_pull_request_reviews.dismissal_apps, None)
         self.assertEqual(
             self.required_pull_request_reviews.__repr__(),
             'RequiredPullRequestReviews(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews", require_last_push_approval=None, require_code_owner_reviews=True, dismiss_stale_reviews=True)',
@@ -78,4 +79,9 @@ class RequiredPullRequestReviews(Framework.TestCase):
             required_pull_request_reviews.dismissal_teams,
             lambda t: t.slug,
             ["pygithub-owners"],
+        )
+        self.assertListKeyEqual(
+            required_pull_request_reviews.dismissal_apps,
+            lambda a: a.slug,
+            ["pygithub-app"],
         )
