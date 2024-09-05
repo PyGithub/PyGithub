@@ -383,3 +383,24 @@ class PaginatedList(Framework.TestCase):
         overrides_dict = {"c": 4, "d": 5, "e": 6}
         transformer = PaginatedListImpl.override_attributes(overrides_dict)
         self.assertDictEqual(transformer(input_dict), {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6})
+
+    def testGraphQlPagination(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions()
+        self.assertFalse(discussions.is_rest)
+        self.assertTrue(discussions.is_graphql)
+        rev = discussions.reversed
+
+        discussions_list = list(repo.get_discussions())
+        self.assertEqual(discussions.totalCount, 64)
+        self.assertEqual(len(discussions_list), 64)
+        self.assertEqual(discussions_list[0].number, 3033)
+        self.assertEqual(discussions_list[-1].number, 1780)
+
+        reversed_list = list(rev)
+        self.assertEqual(rev.totalCount, 64)
+        self.assertEqual(len(reversed_list), 64)
+        self.assertListEqual([d.number for d in reversed_list], [d.number for d in reversed(discussions_list)])
+
+        # accessing totalCount before iterating the PaginatedList triggers another request
+        self.assertEqual(repo.get_discussions().totalCount, 64)

@@ -214,6 +214,7 @@ import github.PullRequest
 import github.PullRequestComment
 import github.Referrer
 import github.RepositoryAdvisory
+import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
@@ -293,6 +294,7 @@ if TYPE_CHECKING:
     from github.PullRequest import PullRequest
     from github.PullRequestComment import PullRequestComment
     from github.Referrer import Referrer
+    from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
     from github.SecurityAndAnalysis import SecurityAndAnalysis
@@ -2331,6 +2333,77 @@ class Repository(CompletableGithubObject):
         )
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
+
+    def get_discussions(self, category_id: str | None = None) -> PaginatedList[RepositoryDiscussion]:
+        query = """
+            query Q($repo: String!, $owner: String!, $category_id: ID, $first: Int, $last: Int, $before: String, $after: String) {
+              repository(name: $repo, owner: $owner) {
+                discussions(categoryId: $category_id, first: $first, last: $last, before: $before, after: $after) {
+                  totalCount
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  nodes {
+                    url
+                    number
+                    author {
+                      login
+                      avatarUrl
+                      url
+                    }
+                    title
+                    createdAt
+                    comments(first: 10) {
+                      totalCount
+                      pageInfo {
+                        startCursor
+                        endCursor
+                        hasNextPage
+                        hasPreviousPage
+                      }
+                      nodes {
+                        createdAt
+                        author {
+                          login
+                          avatarUrl
+                          url
+                        }
+                        isAnswer
+                        replies(first: 10) {
+                          totalCount
+                          pageInfo {
+                            startCursor
+                            endCursor
+                            hasNextPage
+                            hasPreviousPage
+                          }
+                          nodes {
+                            createdAt
+                            author {
+                              login
+                              avatarUrl
+                              url
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            """
+        variables = {"repo": self.name, "owner": self.owner.login, "category_id": category_id}
+        return PaginatedList(
+            github.RepositoryDiscussion.RepositoryDiscussion,
+            self._requester,
+            graphql_query=query,
+            graphql_variables=variables,
+            list_item=["repository", "discussions"],
+        )
 
     def get_top_referrers(self) -> None | list[Referrer]:
         """
