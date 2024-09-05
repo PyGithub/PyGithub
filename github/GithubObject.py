@@ -48,6 +48,7 @@
 ################################################################################
 
 import email.utils
+import re
 import typing
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -137,6 +138,23 @@ def is_optional(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
 
 def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
+
+
+camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
+
+
+def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Converts attributes from GraphQL schema to REST API schema.
+
+    The GraphQL API uses lower camel case (e.g. createdAt), whereas REST API uses snake case (created_at). Initializing
+    REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
+
+    """
+    return {
+        camel_to_snake_case_regexp.sub("_", k).lower(): as_rest_api_attributes(v) if isinstance(v, dict) else v
+        for k, v in graphql_attributes.items()
+    }
 
 
 class _ValuedAttribute(Attribute[T]):
