@@ -26,7 +26,7 @@ from typing import Any
 
 import github
 from github.DiscussionBase import DiscussionBase
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NotSet, as_rest_api_attributes
 from github.PaginatedList import PaginatedList
 from github.RepositoryDiscussionComment import RepositoryDiscussionComment
 
@@ -66,8 +66,9 @@ class RepositoryDiscussion(DiscussionBase):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        super()._useAttributes(attributes)
-        if "body_text" in attributes:  # pragma no branch
-            self._body_text = self._makeStringAttribute(attributes["body_text"])
+        # super class is a REST API GithubObject, attributes are coming from GraphQL
+        super()._useAttributes(as_rest_api_attributes(attributes))
+        if "bodyText" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["bodyText"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])

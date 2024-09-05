@@ -1577,6 +1577,13 @@ class Repository(Framework.TestCase):
         self.assertEqual(discussions[0].number, 3033)
         self.assertEqual(discussions[-1].number, 1780)
 
+        self.assertEqual(discussions[0].author.login, "kostrykin")
+        self.assertEqual(
+            discussions[0].author.avatar_url,
+            "https://avatars.githubusercontent.com/u/6557139?u=9706d2b70049d79a090a052779c34d18064c7f69&v=4",
+        )
+        self.assertEqual(discussions[0].author.url, "https://github.com/kostrykin")
+
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = b"Hello world"

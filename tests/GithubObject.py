@@ -32,6 +32,13 @@ gho = Framework.github.GithubObject
 
 
 class GithubObject(unittest.TestCase):
+    def test(self):
+        _ = gho.as_rest_api_attributes
+        self.assertDictEqual(_({}), {})
+        self.assertDictEqual(_({"id": "ID"}), {"id": "ID"})
+        self.assertDictEqual(_({"someId": "someId"}), {"some_id": "someId"})
+        self.assertDictEqual(_({"someObj": {"someId": "someId"}}), {"some_obj": {"some_id": "someId"}})
+
     def testMakeDatetimeAttribute(self):
         for value, expected in [
             (None, None),
