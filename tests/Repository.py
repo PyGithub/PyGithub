@@ -1526,7 +1526,53 @@ class Repository(Framework.TestCase):
 
     def testGetDiscussions(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
-        discussions = list(repo.get_discussions())
+        discussion_schema = """{
+            url
+            number
+            author {
+              login
+              avatarUrl
+              url
+            }
+            title
+            createdAt
+            comments(first: 10) {
+              totalCount
+              pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+              }
+              nodes {
+                createdAt
+                author {
+                  login
+                  avatarUrl
+                  url
+                }
+                isAnswer
+                replies(first: 10) {
+                  totalCount
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  nodes {
+                    createdAt
+                    author {
+                      login
+                      avatarUrl
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }"""
+        discussions = list(repo.get_discussions(discussion_schema))
         self.assertEqual(len(discussions), 64)
         self.assertEqual(discussions[0].number, 3033)
         self.assertEqual(discussions[-1].number, 1780)

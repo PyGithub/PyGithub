@@ -391,7 +391,7 @@ class PaginatedList(Framework.TestCase):
         self.assertTrue(discussions.is_graphql)
         rev = discussions.reversed
 
-        discussions_list = list(repo.get_discussions())
+        discussions_list = list(discussions)
         self.assertEqual(discussions.totalCount, 64)
         self.assertEqual(len(discussions_list), 64)
         self.assertEqual(discussions_list[0].number, 3033)

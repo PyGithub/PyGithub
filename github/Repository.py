@@ -2334,8 +2334,13 @@ class Repository(CompletableGithubObject):
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
 
-    def get_discussions(self, category_id: str | None = None) -> PaginatedList[RepositoryDiscussion]:
-        query = """
+    def get_discussions(
+        self, discussion_graphql_schema: str | None = None, category_id: str | None = None
+    ) -> PaginatedList[RepositoryDiscussion]:
+        if discussion_graphql_schema is None:
+            discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
+        query = (
+            """
             query Q($repo: String!, $owner: String!, $category_id: ID, $first: Int, $last: Int, $before: String, $after: String) {
               repository(name: $repo, owner: $owner) {
                 discussions(categoryId: $category_id, first: $first, last: $last, before: $before, after: $after) {
@@ -2346,56 +2351,14 @@ class Repository(CompletableGithubObject):
                     hasNextPage
                     hasPreviousPage
                   }
-                  nodes {
-                    url
-                    number
-                    author {
-                      login
-                      avatarUrl
-                      url
-                    }
-                    title
-                    createdAt
-                    comments(first: 10) {
-                      totalCount
-                      pageInfo {
-                        startCursor
-                        endCursor
-                        hasNextPage
-                        hasPreviousPage
-                      }
-                      nodes {
-                        createdAt
-                        author {
-                          login
-                          avatarUrl
-                          url
-                        }
-                        isAnswer
-                        replies(first: 10) {
-                          totalCount
-                          pageInfo {
-                            startCursor
-                            endCursor
-                            hasNextPage
-                            hasPreviousPage
-                          }
-                          nodes {
-                            createdAt
-                            author {
-                              login
-                              avatarUrl
-                              url
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  nodes """
+            + discussion_graphql_schema
+            + """
                 }
               }
             }
             """
+        )
         variables = {"repo": self.name, "owner": self.owner.login, "category_id": category_id}
         return PaginatedList(
             github.RepositoryDiscussion.RepositoryDiscussion,
