@@ -1524,6 +1524,13 @@ class Repository(Framework.TestCase):
         deployments = self.repo.get_deployments()
         self.assertListKeyEqual(deployments, lambda d: d.id, [263877258, 262350588])
 
+    def testGetDiscussions(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = list(repo.get_discussions())
+        self.assertEqual(len(discussions), 64)
+        self.assertEqual(discussions[0].number, 3033)
+        self.assertEqual(discussions[-1].number, 1780)
+
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = b"Hello world"
