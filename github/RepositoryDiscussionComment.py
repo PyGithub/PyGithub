@@ -22,10 +22,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Reaction
 from github.DiscussionCommentBase import DiscussionCommentBase
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, is_defined
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.Reaction import Reaction
 
 
 class RepositoryDiscussionComment(DiscussionCommentBase):
@@ -40,7 +45,10 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet
+        self._database_id: Attribute[int] = NotSet
         self._id: Attribute[str] = NotSet
+        self._reactions_page = None
+        self._replies_page = None
 
     @property
     def body_text(self) -> str:
@@ -48,13 +56,53 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
         return self._body_text.value
 
     @property
+    def database_id(self) -> int:
+        self._completeIfNotSet(self._database_id)
+        return self._database_id.value
+
+    @property
     def id(self) -> str:
         self._completeIfNotSet(self._id)
         return self._id.value
 
+    @property
+    def node_id(self) -> str:
+        if is_defined(self._node_id):
+            return super(RepositoryDiscussionComment, self).node_id
+        return self.id
+
+    def get_reactions(self) -> PaginatedList[Reaction]:
+        if self._reactions_page is None:
+            raise RuntimeError("Fetching reactions not implemented")
+        return PaginatedList(
+            github.Reaction.Reaction,
+            self._requester,
+            firstData=self._reactions_page,
+            firstHeaders={}
+        )
+
+    def get_replies(self) -> PaginatedList["RepositoryDiscussionComment"]:
+        if self._replies_page is None:
+            raise RuntimeError("Fetching replies not implemented")
+        return PaginatedList(
+            RepositoryDiscussionComment,
+            self._requester,
+            firstData=self._replies_page,
+            firstHeaders={}
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        super()._useAttributes(attributes)
-        if "body_text" in attributes:  # pragma no branch
-            self._body_text = self._makeStringAttribute(attributes["body_text"])
+        # super class is a REST API GithubObject, attributes are coming from GraphQL
+        super()._useAttributes(as_rest_api_attributes(attributes))
+        if "bodyText" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["bodyText"])
+        if "databaseId" in attributes:  # pragma no branch
+            self._database_id = self._makeIntAttribute(attributes["databaseId"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        if "reactions" in attributes:  # pragma no branch
+            # reactions are REST API objects
+            self._reactions_page = as_rest_api_attributes(attributes["reactions"]["nodes"])
+        if "replies" in attributes:  # pragma no branch
+            # replies are GraphQL API objects
+            self._replies_page = attributes["replies"]["nodes"]
