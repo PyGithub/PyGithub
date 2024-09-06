@@ -143,7 +143,7 @@ def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
-def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+def as_rest_api_attributes(graphql_attributes: Union[Dict[str, Any], List[Any]]) -> Union[Dict[str, Any], List[Any]]:
     """
     Converts attributes from GraphQL schema to REST API schema.
 
@@ -151,10 +151,17 @@ def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]
     REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
 
     """
-    return {
-        camel_to_snake_case_regexp.sub("_", k).lower(): as_rest_api_attributes(v) if isinstance(v, dict) else v
-        for k, v in graphql_attributes.items()
-    }
+    if isinstance(graphql_attributes, dict):
+        return {
+            camel_to_snake_case_regexp.sub("_", k).lower(): as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
+            for k, v in graphql_attributes.items()
+        }
+    if isinstance(graphql_attributes, list):
+        return [
+            as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
+            for v in graphql_attributes
+        ]
+    raise ValueError(f"Unsupported attributes type: {type(graphql_attributes)}")
 
 
 class _ValuedAttribute(Attribute[T]):

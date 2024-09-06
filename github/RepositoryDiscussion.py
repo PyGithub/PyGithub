@@ -22,7 +22,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List
 
 import github
 from github.DiscussionBase import DiscussionBase
@@ -45,6 +45,7 @@ class RepositoryDiscussion(DiscussionBase):
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet
+        self._comments: Attribute[List[RepositoryDiscussionComment]] = NotSet
         self._id: Attribute[str] = NotSet
 
     @property
@@ -61,8 +62,8 @@ class RepositoryDiscussion(DiscussionBase):
         return PaginatedList(
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
             self._requester,
-            f"{self.url}/pulls",
-            {},
+            firstData=self._comments_page,
+            firstHeaders={}
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -70,5 +71,7 @@ class RepositoryDiscussion(DiscussionBase):
         super()._useAttributes(as_rest_api_attributes(attributes))
         if "bodyText" in attributes:  # pragma no branch
             self._body_text = self._makeStringAttribute(attributes["bodyText"])
+        if "comments" in attributes:  # pragma no branch
+            self._comments_page = as_rest_api_attributes(attributes["comments"]["nodes"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
