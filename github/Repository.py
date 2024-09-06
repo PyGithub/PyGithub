@@ -1049,6 +1049,8 @@ class Repository(CompletableGithubObject):
 
     @property
     def url(self) -> str:
+        if is_undefined(self._url) and is_defined(self._owner) and is_defined(self._name):
+            self._url = self._makeStringAttribute(self._requester.base_url + f'/repos/{self.owner.login}/{self.name}')
         self._completeIfNotSet(self._url)
         return self._url.value
 
