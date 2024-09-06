@@ -1625,7 +1625,8 @@ class Repository(Framework.TestCase):
           }"""
         discussions_pages = repo.get_discussions(discussion_schema)
         discussions = list(discussions_pages)
-        self.assertEqual(discussions_pages.totalCount, 64)  # would perform an extra request before iterating discussions_pages
+        # would perform an extra request if caled before iterating discussions_pages
+        self.assertEqual(discussions_pages.totalCount, 64)
         self.assertEqual(len(discussions), 64)
         self.assertEqual(discussions[0].number, 3033)
         self.assertEqual(discussions[-1].number, 1780)
@@ -1645,7 +1646,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(comments), 1)
         comment = comments[0]
         self.assertEqual(comment.node_id, "DC_kwDOADYVqs4AU3Mg")
-        self.assertEqual(comment.html_url, "https://github.com/PyGithub/PyGithub/discussions/2480#discussioncomment-5468960")
+        self.assertEqual(
+            comment.html_url, "https://github.com/PyGithub/PyGithub/discussions/2480#discussioncomment-5468960"
+        )
         self.assertEqual(comment.author.login, "EnricoMi")
 
         # inner inner page of GraphQL replies

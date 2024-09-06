@@ -22,14 +22,14 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 
 import github
 import github.Label
 import github.Reaction
 import github.Repository
 from github.DiscussionBase import DiscussionBase
-from github.GithubObject import Attribute, NotSet, as_rest_api_attributes
+from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list
 from github.PaginatedList import PaginatedList
 from github.RepositoryDiscussionComment import RepositoryDiscussionComment
 
@@ -87,12 +87,7 @@ class RepositoryDiscussion(DiscussionBase):
     def get_labels(self) -> PaginatedList[Label]:
         if self._labels_page is None:
             raise RuntimeError("Fetching labels not implemented")
-        return PaginatedList(
-            github.Label.Label,
-            self._requester,
-            firstData=self._labels_page,
-            firstHeaders={}
-        )
+        return PaginatedList(github.Label.Label, self._requester, firstData=self._labels_page, firstHeaders={})
 
     def get_comments(self) -> PaginatedList[RepositoryDiscussionComment]:
         if self._comments_page is None:
@@ -101,18 +96,13 @@ class RepositoryDiscussion(DiscussionBase):
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
             self._requester,
             firstData=self._comments_page,
-            firstHeaders={}
+            firstHeaders={},
         )
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         if self._reactions_page is None:
             raise RuntimeError("Fetching reactions not implemented")
-        return PaginatedList(
-            github.Reaction.Reaction,
-            self._requester,
-            firstData=self._reactions_page,
-            firstHeaders={}
-        )
+        return PaginatedList(github.Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         # super class is a REST API GithubObject, attributes are coming from GraphQL
@@ -128,9 +118,11 @@ class RepositoryDiscussion(DiscussionBase):
             self._id = self._makeStringAttribute(attributes["id"])
         if "labels" in attributes:  # pragma no branch
             # labels are REST API objects
-            self._labels_page = as_rest_api_attributes(attributes["labels"]["nodes"])
+            self._labels_page = as_rest_api_attributes_list(attributes["labels"]["nodes"])  # type: ignore
         if "reactions" in attributes:  # pragma no branch
             # reactions are REST API objects
-            self._reactions_page = as_rest_api_attributes(attributes["reactions"]["nodes"])
+            self._reactions_page = as_rest_api_attributes_list(attributes["reactions"]["nodes"])  # type: ignore
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, as_rest_api_attributes(attributes["repository"]))
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, as_rest_api_attributes(attributes["repository"])
+            )
