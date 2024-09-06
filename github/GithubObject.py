@@ -150,10 +150,19 @@ def as_rest_api_attributes(graphql_attributes: Union[Dict[str, Any], List[Any]])
     The GraphQL API uses lower camel case (e.g. createdAt), whereas REST API uses snake case (created_at). Initializing
     REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
 
+    Further renames GraphQL attributes to REST API attributes where the case conversion is not sufficient.
+    For example, GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
+
     """
+    attribute_translation = {
+        'id': 'node_id',
+        'databaseId': 'id',  # must be after 'id': 'node_id'!
+        'url': 'html_url',
+    }
+
     if isinstance(graphql_attributes, dict):
         return {
-            camel_to_snake_case_regexp.sub("_", k).lower(): as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
+            camel_to_snake_case_regexp.sub("_", attribute_translation.get(k, k)).lower(): as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
             for k, v in graphql_attributes.items()
         }
     if isinstance(graphql_attributes, list):
