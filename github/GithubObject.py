@@ -143,34 +143,33 @@ def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
-def as_rest_api_attributes(graphql_attributes: Union[Dict[str, Any], List[Any]]) -> Union[Dict[str, Any], List[Any]]:
+def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
     """
     Converts attributes from GraphQL schema to REST API schema.
 
     The GraphQL API uses lower camel case (e.g. createdAt), whereas REST API uses snake case (created_at). Initializing
     REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
 
-    Further renames GraphQL attributes to REST API attributes where the case conversion is not sufficient.
-    For example, GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
+    Further renames GraphQL attributes to REST API attributes where the case conversion is not sufficient. For example,
+    GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
 
     """
     attribute_translation = {
-        'id': 'node_id',
-        'databaseId': 'id',  # must be after 'id': 'node_id'!
-        'url': 'html_url',
+        "id": "node_id",
+        "databaseId": "id",  # must be after 'id': 'node_id'!
+        "url": "html_url",
     }
 
-    if isinstance(graphql_attributes, dict):
-        return {
-            camel_to_snake_case_regexp.sub("_", attribute_translation.get(k, k)).lower(): as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
-            for k, v in graphql_attributes.items()
-        }
-    if isinstance(graphql_attributes, list):
-        return [
-            as_rest_api_attributes(v) if isinstance(v, (dict, list)) else v
-            for v in graphql_attributes
-        ]
-    raise ValueError(f"Unsupported attributes type: {type(graphql_attributes)}")
+    return {
+        camel_to_snake_case_regexp.sub("_", attribute_translation.get(k, k)).lower(): as_rest_api_attributes(v)
+        if isinstance(v, dict)
+        else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
+        for k, v in graphql_attributes.items()
+    }
+
+
+def as_rest_api_attributes_list(graphql_attributes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [as_rest_api_attributes(v) if isinstance(v, dict) else v for v in graphql_attributes]
 
 
 class _ValuedAttribute(Attribute[T]):

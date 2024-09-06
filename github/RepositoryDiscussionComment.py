@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.Reaction
 from github.DiscussionCommentBase import DiscussionCommentBase
-from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, is_defined
+from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list, is_defined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -68,27 +68,19 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
     @property
     def node_id(self) -> str:
         if is_defined(self._node_id):
-            return super(RepositoryDiscussionComment, self).node_id
+            return super().node_id
         return self.id
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         if self._reactions_page is None:
             raise RuntimeError("Fetching reactions not implemented")
-        return PaginatedList(
-            github.Reaction.Reaction,
-            self._requester,
-            firstData=self._reactions_page,
-            firstHeaders={}
-        )
+        return PaginatedList(github.Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})
 
-    def get_replies(self) -> PaginatedList["RepositoryDiscussionComment"]:
+    def get_replies(self) -> PaginatedList[RepositoryDiscussionComment]:
         if self._replies_page is None:
             raise RuntimeError("Fetching replies not implemented")
         return PaginatedList(
-            RepositoryDiscussionComment,
-            self._requester,
-            firstData=self._replies_page,
-            firstHeaders={}
+            RepositoryDiscussionComment, self._requester, firstData=self._replies_page, firstHeaders={}
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -102,7 +94,7 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
             self._id = self._makeStringAttribute(attributes["id"])
         if "reactions" in attributes:  # pragma no branch
             # reactions are REST API objects
-            self._reactions_page = as_rest_api_attributes(attributes["reactions"]["nodes"])
+            self._reactions_page = as_rest_api_attributes_list(attributes["reactions"]["nodes"])  # type: ignore
         if "replies" in attributes:  # pragma no branch
             # replies are GraphQL API objects
             self._replies_page = attributes["replies"]["nodes"]
