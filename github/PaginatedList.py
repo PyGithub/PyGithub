@@ -198,6 +198,9 @@ class PaginatedList(PaginatedListBase[T]):
         first_page = []
         if firstData is not None:
             first_page = self._getPage(firstData, firstHeaders)
+            # this paginated list contains a single page
+            if self.__nextUrl is None and self.__totalCount is None:
+                self.__totalCount = len(first_page)
         super().__init__(first_page)
 
     @property
@@ -215,7 +218,7 @@ class PaginatedList(PaginatedListBase[T]):
 
     @property
     def totalCount(self) -> int:
-        if not self.__totalCount:
+        if self.__totalCount is None:
             if self.is_rest:
                 params = self.__nextParams.copy()
                 # set per_page = 1 so the totalCount is just the number of pages
