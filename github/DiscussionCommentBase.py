@@ -42,7 +42,9 @@ class DiscussionCommentBase(CompletableGithubObject):
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._last_edited_at: Attribute[datetime] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -68,6 +70,11 @@ class DiscussionCommentBase(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def last_edited_at(self) -> datetime:
@@ -98,6 +105,8 @@ class DiscussionCommentBase(CompletableGithubObject):
             self._body_html = self._makeStringAttribute(attributes["body_html"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "last_edited_at" in attributes:  # pragma no branch
             self._last_edited_at = self._makeDatetimeAttribute(attributes["last_edited_at"])
         if "node_id" in attributes:  # pragma no branch
