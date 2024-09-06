@@ -1545,6 +1545,8 @@ class Repository(Framework.TestCase):
                 hasPreviousPage
               }
               nodes {
+                id
+                url
                 createdAt
                 author {
                   login
@@ -1577,12 +1579,21 @@ class Repository(Framework.TestCase):
         self.assertEqual(discussions[0].number, 3033)
         self.assertEqual(discussions[-1].number, 1780)
 
-        self.assertEqual(discussions[0].author.login, "kostrykin")
+        discussion = discussions[0]
+        self.assertEqual(discussion.author.login, "kostrykin")
         self.assertEqual(
-            discussions[0].author.avatar_url,
+            discussion.author.avatar_url,
             "https://avatars.githubusercontent.com/u/6557139?u=9706d2b70049d79a090a052779c34d18064c7f69&v=4",
         )
-        self.assertEqual(discussions[0].author.url, "https://github.com/kostrykin")
+        self.assertEqual(discussion.author.url, "https://github.com/kostrykin")
+
+        discussion = discussions[1]
+        comments = list(discussion.get_comments())
+        self.assertEqual(len(comments), 2)
+        comment = comments[0]
+        self.assertEqual(comment.id, "DC_kwDOADYVqs4AnxkU")
+        self.assertEqual(comment.url, "https://github.com/PyGithub/PyGithub/discussions/2993#discussioncomment-10426644")
+        self.assertEqual(comment.author.login, "dawngerpony")
 
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
