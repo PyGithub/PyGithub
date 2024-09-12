@@ -238,9 +238,11 @@ class PaginatedList(PaginatedListBase[T]):
             self.__nextUrl = lastUrl
             if self.__nextParams:
                 # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
-                self.__nextParams = {k: v
-                                     for k, v in self.__nextParams.items()
-                                     if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()}
+                self.__nextParams = {
+                    k: v
+                    for k, v in self.__nextParams.items()
+                    if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
+                }
 
     def _couldGrow(self) -> bool:
         return self.__nextUrl is not None
