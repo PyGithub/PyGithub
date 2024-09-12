@@ -63,6 +63,7 @@ class GitCommit(CompletableGithubObject):
         self._message: Attribute[str] = NotSet
         self._parents: Attribute[list[GitCommit]] = NotSet
         self._sha: Attribute[str] = NotSet
+        self._signature: Attribute[str] = NotSet
         self._tree: Attribute[github.GitTree.GitTree] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -100,6 +101,11 @@ class GitCommit(CompletableGithubObject):
         return self._sha.value
 
     @property
+    def signature(self) -> str:
+        self._completeIfNotSet(self._signature)
+        return self._signature.value
+
+    @property
     def tree(self) -> github.GitTree.GitTree:
         self._completeIfNotSet(self._tree)
         return self._tree.value
@@ -126,6 +132,8 @@ class GitCommit(CompletableGithubObject):
             self._parents = self._makeListOfClassesAttribute(GitCommit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        if "signature" in attributes:  # pragma no branch
+            self._signature = self._makeStringAttribute(attributes["signature"])
         if "tree" in attributes:  # pragma no branch
             self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
         if "url" in attributes:  # pragma no branch

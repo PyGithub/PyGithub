@@ -90,6 +90,7 @@ class Commit(CompletableGithubObject):
         self._html_url: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._sha: Attribute[str] = NotSet
+        self._signature: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -146,6 +147,11 @@ class Commit(CompletableGithubObject):
     def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
+
+    @property
+    def signature(self) -> str:
+        self._completeIfNotSet(self._signature)
+        return self._signature.value
 
     @property
     def stats(self) -> CommitStats:
@@ -307,6 +313,8 @@ class Commit(CompletableGithubObject):
             self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        if "signature" in attributes:  # pragma no branch
+            self._signature = self._makeStringAttribute(attributes["signature"])
         if "stats" in attributes:  # pragma no branch
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "url" in attributes:  # pragma no branch
