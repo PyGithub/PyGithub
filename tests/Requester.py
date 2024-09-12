@@ -138,27 +138,33 @@ class Requester(Framework.TestCase):
             ),
         )
 
+    def testGetParametersOfUrl(self):
+        self.assertEqual({}, gr.Requester.get_parameters_of_url("https://github.com/api"))
+        self.assertEqual({'per_page': ['10']}, gr.Requester.get_parameters_of_url("https://github.com/api?per_page=10"))
+        self.assertEqual({"per_page": ['10'], "page": ['2']}, gr.Requester.get_parameters_of_url("https://github.com/api?per_page=10&page=2"))
+        self.assertEqual({"item": ['1', '2', '3']}, gr.Requester.get_parameters_of_url("https://github.com/api?item=1&item=2&item=3"))
+
     def testAddParametersToUrl(self):
-        self.assertEqual("https://github.com/api", gr.Requester.addParametersToUrl("https://github.com/api", {}))
+        self.assertEqual("https://github.com/api", gr.Requester.add_parameters_to_url("https://github.com/api", {}))
         self.assertEqual(
             "https://github.com/api?per_page=10",
-            gr.Requester.addParametersToUrl("https://github.com/api", {"per_page": 10}),
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10}),
         )
         self.assertEqual(
             "https://github.com/api?per_page=10&page=2",
-            gr.Requester.addParametersToUrl("https://github.com/api", {"per_page": 10, "page": 2}),
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10, "page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?page=2&per_page=10",
-            gr.Requester.addParametersToUrl("https://github.com/api?per_page=10", {"page": 2}),
+            "https://github.com/api?per_page=10&page=2",
+            gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10", {"page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?page=1&per_page=10",
-            gr.Requester.addParametersToUrl("https://github.com/api?per_page=10&page=1", {"page": 2}),
+            "https://github.com/api?per_page=10&page=2",
+            gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10&page=1", {"page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?item=1&item=2&item=3",
-            gr.Requester.addParametersToUrl("https://github.com/api?item=1&item=2&item=3", {"item": [3, 4]}),
+            "https://github.com/api?item=3&item=4",
+            gr.Requester.add_parameters_to_url("https://github.com/api?item=1&item=2&item=3", {"item": [3, 4]}),
         )
 
     def testCloseGithub(self):

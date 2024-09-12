@@ -472,17 +472,22 @@ class Requester:
         return path + "/graphql"
 
     @staticmethod
-    def addParametersToUrl(
+    def get_parameters_of_url(url: str) -> Dict[str, list]:
+        query = urllib.parse.urlparse(url)[4]
+        return urllib.parse.parse_qs(query)
+
+    @staticmethod
+    def add_parameters_to_url(
         url: str,
         parameters: Dict[str, Any],
     ) -> str:
-        # union parameters in url with given parameters, where url has precedence
+        # union parameters in url with given parameters, the latter have precedence
         scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
         url_params = urllib.parse.parse_qs(query)
-        parameters = dict(parameters, **url_params)
+        url_params.update(**parameters)
         parameter_list = [
             (key, value)
-            for key, values in parameters.items()
+            for key, values in url_params.items()
             for value in (values if isinstance(values, list) else [values])
         ]
         # remove query from url
@@ -823,7 +828,7 @@ class Requester:
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
-        url = Requester.addParametersToUrl(url, parameters)
+        url = Requester.add_parameters_to_url(url, parameters)
 
         encoded_input = None
         if input is not None:
