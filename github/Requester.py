@@ -481,9 +481,9 @@ class Requester:
         url: str,
         parameters: Dict[str, Any],
     ) -> str:
-        # union parameters in url with given parameters, the latter have precedence
         scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
         url_params = urllib.parse.parse_qs(query)
+        # union parameters in url with given parameters, the latter have precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
         parameter_list = [(key, value) for key, values in url_params.items() for value in values]
         # remove query from url
