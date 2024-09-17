@@ -27,7 +27,14 @@ from typing import TYPE_CHECKING, Any
 import github.NamedUser
 import github.Reaction
 from github.DiscussionCommentBase import DiscussionCommentBase
-from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list, is_defined
+from github.GithubObject import (
+    Attribute,
+    GraphQlObject,
+    NotSet,
+    as_rest_api_attributes,
+    as_rest_api_attributes_list,
+    is_defined,
+)
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -36,7 +43,7 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussion import RepositoryDiscussion
 
 
-class RepositoryDiscussionComment(DiscussionCommentBase):
+class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
     """
     This class represents GraphQL DiscussionComment.
 

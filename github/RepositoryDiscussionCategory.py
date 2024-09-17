@@ -26,13 +26,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.Reaction
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, as_rest_api_attributes
+from github.GithubObject import Attribute, GraphQlObject, NonCompletableGithubObject, NotSet, as_rest_api_attributes
 
 if TYPE_CHECKING:
     from github.Repository import Repository
 
 
-class RepositoryDiscussionCategory(NonCompletableGithubObject):
+class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
     """
     This class represents GraphQL DiscussionCategory.
 

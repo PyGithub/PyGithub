@@ -1553,7 +1553,9 @@ class Repository(Framework.TestCase):
     def testGetDiscussionsByAnswered(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
         discussions = repo.get_discussions("{ number title }", answered=True)
-        self.assertListEqual([d.number for d in discussions], [2993, 2619, 2104, 2500, 2292, 2153, 2277, 2023, 1964, 1778])
+        self.assertListEqual(
+            [d.number for d in discussions], [2993, 2619, 2104, 2500, 2292, 2153, 2277, 2023, 1964, 1778]
+        )
 
     def testGetDiscussionsByCategory(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
@@ -1562,7 +1564,7 @@ class Repository(Framework.TestCase):
 
     def testGetDiscussionsByStates(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
-        discussions = repo.get_discussions("{ number title }", states=['CLOSED'])
+        discussions = repo.get_discussions("{ number title }", states=["CLOSED"])
         self.assertListEqual([d.number for d in discussions], [2938, 2495, 2559, 2104, 2539, 2480])
 
     def testCreateFile(self):
