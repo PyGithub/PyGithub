@@ -53,7 +53,7 @@ import typing
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union, overload
 
 from typing_extensions import Protocol, TypeGuard
 
@@ -143,7 +143,17 @@ def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
+@overload
 def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+    ...
+
+
+@overload
+def as_rest_api_attributes(graphql_attributes: None) -> None:
+    ...
+
+
+def as_rest_api_attributes(graphql_attributes: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     """
     Converts attributes from GraphQL schema to REST API schema.
 
@@ -154,21 +164,35 @@ def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]
     GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
 
     """
+    if graphql_attributes is None:
+        return None
+
     attribute_translation = {
         "id": "node_id",
         "databaseId": "id",  # must be after 'id': 'node_id'!
         "url": "html_url",
     }
 
+    def translate(attr: str) -> str:
+        def un_capitalize(match: re.Match) -> str:
+            return match.group(1) + match.group(2).lower()
+
+        attr = attribute_translation.get(attr, attr)
+        attr = re.sub(r"([A-Z])([A-Z]+)", un_capitalize, attr)
+        attr = camel_to_snake_case_regexp.sub("_", attr)
+        attr = attr.lower()
+
+        return attr
+
     return {
-        camel_to_snake_case_regexp.sub("_", attribute_translation.get(k, k)).lower(): as_rest_api_attributes(v)
+        translate(k): as_rest_api_attributes(v)
         if isinstance(v, dict)
         else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
         for k, v in graphql_attributes.items()
     }
 
 
-def as_rest_api_attributes_list(graphql_attributes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def as_rest_api_attributes_list(graphql_attributes: List[Optional[Dict[str, Any]]]) -> List[Optional[Dict[str, Any]]]:
     return [as_rest_api_attributes(v) if isinstance(v, dict) else v for v in graphql_attributes]
 
 

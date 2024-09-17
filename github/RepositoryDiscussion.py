@@ -26,53 +26,70 @@ from typing import TYPE_CHECKING, Any
 
 import github
 import github.Label
+import github.NamedUser
 import github.Reaction
 import github.Repository
+import github.RepositoryDiscussionCategory
+import github.RepositoryDiscussionComment
 from github.DiscussionBase import DiscussionBase
 from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list
 from github.PaginatedList import PaginatedList
-from github.RepositoryDiscussionComment import RepositoryDiscussionComment
 
 if TYPE_CHECKING:
     from github.Label import Label
+    from github.NamedUser import NamedUser
     from github.Reaction import Reaction
     from github.Repository import Repository
+    from github.RepositoryDiscussionCategory import RepositoryDiscussionCategory
+    from github.RepositoryDiscussionComment import RepositoryDiscussionComment
 
 
 class RepositoryDiscussion(DiscussionBase):
     """
-    This class represents RepositoryDiscussions.
+    This class represents GraphQL Discussion.
 
     The reference can be found here
     https://docs.github.com/en/graphql/reference/objects#discussion
 
     """
 
-    minimal_graphql_schema = "{ id url number }"
+    minimal_graphql_schema = "{ id number }"
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._answer: Attribute[RepositoryDiscussionComment] = NotSet
         self._body_text: Attribute[str] = NotSet
+        self._category: Attribute[RepositoryDiscussionCategory] = NotSet
         self._comments_page = None
         self._database_id: Attribute[int] = NotSet
+        self._editor: Attribute[NamedUser] = NotSet
         self._id: Attribute[str] = NotSet
         self._labels_page = None
         self._reactions_page = None
         self._repository: Attribute[Repository] = NotSet
 
     @property
+    def answer(self) -> RepositoryDiscussionComment:
+        return self._answer.value
+
+    @property
     def body_text(self) -> str:
-        self._completeIfNotSet(self._body_text)
         return self._body_text.value
 
     @property
+    def category(self) -> RepositoryDiscussionCategory:
+        return self._category.value
+
+    @property
     def database_id(self) -> int:
-        self._completeIfNotSet(self._database_id)
         return self._database_id.value
 
     @property
+    def editor(self) -> NamedUser:
+        return self._editor.value
+
+    @property
     def id(self) -> str:
-        self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
@@ -81,13 +98,7 @@ class RepositoryDiscussion(DiscussionBase):
 
     @property
     def repository(self) -> Repository:
-        self._completeIfNotSet(self._repository)
         return self._repository.value
-
-    def get_labels(self) -> PaginatedList[Label]:
-        if self._labels_page is None:
-            raise RuntimeError("Fetching labels not implemented")
-        return PaginatedList(github.Label.Label, self._requester, firstData=self._labels_page, firstHeaders={})
 
     def get_comments(self) -> PaginatedList[RepositoryDiscussionComment]:
         if self._comments_page is None:
@@ -99,6 +110,11 @@ class RepositoryDiscussion(DiscussionBase):
             firstHeaders={},
         )
 
+    def get_labels(self) -> PaginatedList[Label]:
+        if self._labels_page is None:
+            raise RuntimeError("Fetching labels not implemented")
+        return PaginatedList(github.Label.Label, self._requester, firstData=self._labels_page, firstHeaders={})
+
     def get_reactions(self) -> PaginatedList[Reaction]:
         if self._reactions_page is None:
             raise RuntimeError("Fetching reactions not implemented")
@@ -107,13 +123,23 @@ class RepositoryDiscussion(DiscussionBase):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         # super class is a REST API GithubObject, attributes are coming from GraphQL
         super()._useAttributes(as_rest_api_attributes(attributes))
+        if "answer" in attributes:  # pragma no branch
+            self._answer = self._makeClassAttribute(
+                github.RepositoryDiscussionComment.RepositoryDiscussionComment, attributes["answer"]
+            )
         if "bodyText" in attributes:  # pragma no branch
             self._body_text = self._makeStringAttribute(attributes["bodyText"])
+        if "category" in attributes:  # pragma no branch
+            self._category = self._makeClassAttribute(
+                github.RepositoryDiscussionCategory.RepositoryDiscussionCategory, attributes["category"]
+            )
         if "comments" in attributes:  # pragma no branch
             # comments are GraphQL API objects
             self._comments_page = attributes["comments"]["nodes"]
         if "databaseId" in attributes:  # pragma no branch
             self._database_id = self._makeIntAttribute(attributes["databaseId"])
+        if "editor" in attributes:  # pragma no branch
+            self._editor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["editor"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "labels" in attributes:  # pragma no branch
