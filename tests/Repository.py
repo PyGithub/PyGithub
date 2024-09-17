@@ -1538,17 +1538,32 @@ class Repository(Framework.TestCase):
         discussions_pages = repo.get_discussions(discussion_schema)
         discussions = list(discussions_pages)
         # would perform an extra request if called before iterating discussions_pages
-        self.assertEqual(discussions_pages.totalCount, 64)
-        self.assertEqual(len(discussions), 64)
-        self.assertEqual(discussions[0].number, 3033)
+        self.assertEqual(discussions_pages.totalCount, 65)
+        self.assertEqual(len(discussions), 65)
+        self.assertEqual(discussions[0].number, 3044)
         self.assertEqual(discussions[-1].number, 1780)
 
-        discussion = discussions[27]
+        discussion = discussions[28]
         self.assertEqual(discussion.author.login, "arunanandhan")
-        self.assertEqual(discussion.number, 1)
+        self.assertEqual(discussion.number, 2480)
         self.assertEqual(discussion.repository.owner.login, "PyGithub")
         self.assertEqual(discussion.repository.name, "PyGithub")
-        self.assertEqual(discussion.title, "title")
+        self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
+
+    def testGetDiscussionsByAnswered(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("{ number title }", answered=True)
+        self.assertListEqual([d.number for d in discussions], [2993, 2619, 2104, 2500, 2292, 2153, 2277, 2023, 1964, 1778])
+
+    def testGetDiscussionsByCategory(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("{ number title }", category_id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMyMDI5MDYy")
+        self.assertListEqual([d.number for d in discussions], [3044, 2997, 2057, 2242, 2173, 1993, 1780])
+
+    def testGetDiscussionsByStates(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("{ number title }", states=['CLOSED'])
+        self.assertListEqual([d.number for d in discussions], [2938, 2495, 2559, 2104, 2539, 2480])
 
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
