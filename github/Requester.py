@@ -110,7 +110,9 @@ import requests.adapters
 from urllib3 import Retry
 
 import github.Consts as Consts
+import github.GithubException
 import github.GithubException as GithubException
+from github.GithubObject import as_rest_api_attributes
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -629,6 +631,10 @@ class Requester:
 
         response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:
+            if len(data["errors"]) == 1:
+                error = data["errors"][0]
+                if error.get("type") == "NOT_FOUND":
+                    raise github.UnknownObjectException(404, data, response_headers, error.get("message"))
             raise self.createException(400, response_headers, data)
         return response_headers, data
 
@@ -649,17 +655,23 @@ class Requester:
             """
             query Q($id: ID!) {
               node(id: $id) {
+                __typename
                 ... on """
-            + node_type
-            + " "
-            + graphql_schema
+            + f"{node_type} {graphql_schema}"
             + """
               }
             }
             """
         )
 
-        return self.graphql_query_class(query, {"id": node_id}, ["node"], klass)
+        obj = self.graphql_query_class(query, {"id": node_id}, ["node"], klass)
+        if obj._rawData.get("__typename", node_type) != node_type:
+            raise github.GithubException(
+                400,
+                obj._rawData,
+                message=f'Retrieved {node_type} object is of different type: {obj._rawData["__typename"]}',
+            )
+        return obj
 
     def graphql_query_class(
         self, query: str, variables: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
@@ -672,6 +684,8 @@ class Requester:
             if item not in data:
                 raise RuntimeError(f"GraphQL path {data_path} not found in data: {self.paths_of_dict(data)}")
             data = data[item]
+        if klass.is_rest():
+            data = as_rest_api_attributes(data)
         return klass(self, headers, data, completed=False)
 
     def graphql_named_mutation(

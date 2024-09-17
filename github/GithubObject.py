@@ -230,6 +230,14 @@ class GithubObject:
     _url: Attribute[str]
 
     @classmethod
+    def is_rest(cls) -> bool:
+        return not cls.is_graphql()
+
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return False
+
+    @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
         cls.CHECK_AFTER_INIT_FLAG = flag
 
@@ -452,6 +460,12 @@ class GithubObject:
 
     def _completeIfNeeded(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
+
+
+class GraphQlObject:
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return True
 
 
 class NonCompletableGithubObject(GithubObject):

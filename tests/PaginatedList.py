@@ -392,15 +392,15 @@ class PaginatedList(Framework.TestCase):
         rev = discussions.reversed
 
         discussions_list = list(discussions)
-        self.assertEqual(discussions.totalCount, 64)
-        self.assertEqual(len(discussions_list), 64)
-        self.assertEqual(discussions_list[0].number, 3033)
+        self.assertEqual(discussions.totalCount, 65)
+        self.assertEqual(len(discussions_list), 65)
+        self.assertEqual(discussions_list[0].number, 3044)
         self.assertEqual(discussions_list[-1].number, 1780)
 
         reversed_list = list(rev)
-        self.assertEqual(rev.totalCount, 64)
-        self.assertEqual(len(reversed_list), 64)
+        self.assertEqual(rev.totalCount, 65)
+        self.assertEqual(len(reversed_list), 65)
         self.assertListEqual([d.number for d in reversed_list], [d.number for d in reversed(discussions_list)])
 
         # accessing totalCount before iterating the PaginatedList triggers another request
-        self.assertEqual(repo.get_discussions().totalCount, 64)
+        self.assertEqual(repo.get_discussions().totalCount, 65)

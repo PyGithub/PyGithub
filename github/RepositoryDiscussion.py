@@ -32,7 +32,7 @@ import github.Repository
 import github.RepositoryDiscussionCategory
 import github.RepositoryDiscussionComment
 from github.DiscussionBase import DiscussionBase
-from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list
+from github.GithubObject import Attribute, GraphQlObject, NotSet, as_rest_api_attributes, as_rest_api_attributes_list
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussionComment import RepositoryDiscussionComment
 
 
-class RepositoryDiscussion(DiscussionBase):
+class RepositoryDiscussion(GraphQlObject, DiscussionBase):
     """
     This class represents GraphQL Discussion.
 
