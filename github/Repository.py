@@ -2337,15 +2337,20 @@ class Repository(CompletableGithubObject):
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
 
     def get_discussions(
-        self, discussion_graphql_schema: str | None = None, category_id: str | None = None
+        self,
+        discussion_graphql_schema: str | None = None,
+        *,
+        answered: bool | None = None,
+        category_id: str | None = None,
+        states: list[str] | None = None,
     ) -> PaginatedList[RepositoryDiscussion]:
         if discussion_graphql_schema is None:
             discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
         query = (
             """
-            query Q($repo: String!, $owner: String!, $category_id: ID, $first: Int, $last: Int, $before: String, $after: String) {
+            query Q($repo: String!, $owner: String!, $answered: Boolean, $category_id: ID, $states: [DiscussionState!], $first: Int, $last: Int, $before: String, $after: String) {
               repository(name: $repo, owner: $owner) {
-                discussions(categoryId: $category_id, first: $first, last: $last, before: $before, after: $after) {
+                discussions(answered: $answered, categoryId: $category_id, states: $states, first: $first, last: $last, before: $before, after: $after) {
                   totalCount
                   pageInfo {
                     startCursor
@@ -2361,7 +2366,13 @@ class Repository(CompletableGithubObject):
             }
             """
         )
-        variables = {"repo": self.name, "owner": self.owner.login, "category_id": category_id}
+        variables = {
+            "repo": self.name,
+            "owner": self.owner.login,
+            "answered": answered,
+            "category_id": category_id,
+            "states": states,
+        }
         return PaginatedList(
             github.RepositoryDiscussion.RepositoryDiscussion,
             self._requester,
