@@ -24,18 +24,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
 import github.Reaction
 from github.DiscussionCommentBase import DiscussionCommentBase
 from github.GithubObject import Attribute, NotSet, as_rest_api_attributes, as_rest_api_attributes_list, is_defined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
     from github.Reaction import Reaction
+    from github.RepositoryDiscussion import RepositoryDiscussion
 
 
 class RepositoryDiscussionComment(DiscussionCommentBase):
     """
-    This class represents RepositoryDiscussionComments.
+    This class represents GraphQL DiscussionComment.
 
     The reference can be found here
     https://docs.github.com/en/graphql/reference/objects#discussioncomment
@@ -46,23 +49,30 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet
         self._database_id: Attribute[int] = NotSet
+        self._discussion: Attribute[RepositoryDiscussion]
+        self._editor: Attribute[NamedUser] = NotSet
         self._id: Attribute[str] = NotSet
         self._reactions_page = None
         self._replies_page = None
 
     @property
     def body_text(self) -> str:
-        self._completeIfNotSet(self._body_text)
         return self._body_text.value
 
     @property
     def database_id(self) -> int:
-        self._completeIfNotSet(self._database_id)
         return self._database_id.value
 
     @property
+    def discussion(self) -> RepositoryDiscussion:
+        return self._discussion.value
+
+    @property
+    def editor(self) -> NamedUser:
+        return self._editor.value
+
+    @property
     def id(self) -> str:
-        self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
@@ -90,6 +100,16 @@ class RepositoryDiscussionComment(DiscussionCommentBase):
             self._body_text = self._makeStringAttribute(attributes["bodyText"])
         if "databaseId" in attributes:  # pragma no branch
             self._database_id = self._makeIntAttribute(attributes["databaseId"])
+        if "discussion" in attributes:  # pragma no branch
+            # RepositoryDiscussion is a GraphQL API object
+            self._discussion = self._makeClassAttribute(
+                github.RepositoryDiscussion.RepositoryDiscussion, attributes["discussion"]
+            )
+        if "editor" in attributes:  # pragma no branch
+            # NamedUser is a REST API object
+            self._editor = self._makeClassAttribute(
+                github.NamedUser.NamedUser, as_rest_api_attributes(attributes["editor"])
+            )
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "reactions" in attributes:  # pragma no branch

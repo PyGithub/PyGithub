@@ -119,6 +119,7 @@ if TYPE_CHECKING:
     from .InstallationAuthorization import InstallationAuthorization
 
 T = TypeVar("T")
+T_gh = TypeVar("T_gh", bound="GithubObject")
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -630,6 +631,48 @@ class Requester:
         if "errors" in data:
             raise self.createException(400, response_headers, data)
         return response_headers, data
+
+    @classmethod
+    def paths_of_dict(cls, d: dict) -> dict:
+        return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
+
+    def graphql_node(
+        self, node_id: str, graphql_schema: str, klass: Type[T_gh], node_type: Optional[str] = None
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        if node_type is None:
+            node_type = klass.__name__
+
+        query = (
+            """
+            query Q($id: ID!) {
+              node(id: $id) {
+                ... on """
+            + node_type
+            + " "
+            + graphql_schema
+            + """
+              }
+            }
+            """
+        )
+
+        return self.graphql_query_class(query, {"id": node_id}, ["node"], klass)
+
+    def graphql_query_class(
+        self, query: str, variables: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        headers, data = self.graphql_query(query, variables)
+        for item in ["data"] + data_path:
+            if item not in data:
+                raise RuntimeError(f"GraphQL path {data_path} not found in data: {self.paths_of_dict(data)}")
+            data = data[item]
+        return klass(self, headers, data, completed=False)
 
     def graphql_named_mutation(
         self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str

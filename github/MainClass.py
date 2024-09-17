@@ -143,6 +143,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
     from github.Repository import Repository
+    from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
@@ -465,6 +466,15 @@ class Github:
             self.__requester,
             "/repositories",
             url_parameters,
+        )
+
+    def get_repository_discussion(
+        self, node_id: str, discussion_graphql_schema: str | None = None
+    ) -> RepositoryDiscussion:
+        if discussion_graphql_schema is None:
+            discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
+        return self.__requester.graphql_node(
+            node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
 
     def get_project(self, id: int) -> Project:

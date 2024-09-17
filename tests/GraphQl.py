@@ -70,3 +70,152 @@ class GraphQl(Framework.TestCase):
         pull = gh.get_repo("PyGithub/PyGithub").get_pull(31)
         response = pull.disable_automerge()
         assert response == self.expected(base_url)
+
+    def testPaginationAndRestIntegration(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion_schema = """{
+            id
+            url
+            number
+            author {
+              login
+              avatarUrl
+              url
+            }
+            repository {
+              owner { login }
+              name
+              issues(first: 10) {
+                totalCount
+                pageInfo {
+                  startCursor
+                  endCursor
+                  hasNextPage
+                  hasPreviousPage
+                }
+                nodes {
+                  databaseId
+                  id
+                  number
+                  title
+                }
+              }
+            }
+            title
+            createdAt
+            comments(first: 10) {
+              totalCount
+              pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+              }
+              nodes {
+                id
+                url
+                createdAt
+                author {
+                  login
+                  avatarUrl
+                  url
+                }
+                isAnswer
+                replies(first: 10) {
+                  totalCount
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  nodes {
+                    id
+                    url
+                    createdAt
+                    author {
+                      login
+                      avatarUrl
+                      url
+                    }
+                  }
+                }
+              }
+            }
+            labels(first: 10) {
+              totalCount
+              pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+              }
+              nodes {
+                id
+                name
+                issues(first: 10) {
+                  totalCount
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  nodes {
+                    databaseId
+                    id
+                    number
+                    title
+                  }
+                }
+              }
+            }
+          }"""
+        discussions_pages = repo.get_discussions(discussion_schema)
+        discussions = list(discussions_pages)
+        # would perform an extra request if called before iterating discussions_pages
+        self.assertEqual(discussions_pages.totalCount, 65)
+        self.assertEqual(len(discussions), 65)
+        self.assertEqual(discussions[0].number, 3044)
+        self.assertEqual(discussions[-1].number, 1780)
+
+        discussion = discussions[28]
+        self.assertEqual(discussion.author.login, "arunanandhan")
+        self.assertEqual(discussion.node_id, "D_kwDOADYVqs4ATJZD")
+        self.assertEqual(
+            discussion.author.avatar_url,
+            "https://avatars.githubusercontent.com/u/48812131?u=571c345a5994a55100a16b45a9688f5d6d340730&v=4",
+        )
+        self.assertEqual(discussion.author.html_url, "https://github.com/arunanandhan")
+
+        # inner page of GraphQL comments
+        comments = discussion.get_comments()
+        self.assertEqual(comments.totalCount, 1)  # does not perform an extra request
+        comments = list(comments)
+        self.assertEqual(len(comments), 1)
+        comment = comments[0]
+        self.assertEqual(comment.node_id, "DC_kwDOADYVqs4AU3Mg")
+        self.assertEqual(
+            comment.html_url, "https://github.com/PyGithub/PyGithub/discussions/2480#discussioncomment-5468960"
+        )
+        self.assertEqual(comment.author.login, "EnricoMi")
+
+        # inner inner page of GraphQL replies
+        replies = comment.get_replies()
+        self.assertEqual(replies.totalCount, 5)  # does not perform an extra request
+        self.assertEqual(replies[0].node_id, "DC_kwDOADYVqs4AU3Wg")
+
+        # inner page of REST labels
+        labels_pages = discussions[3].get_labels()
+        self.assertEqual(labels_pages.totalCount, 1)
+        label = labels_pages[0]
+        self.assertEqual(label.name, "Call for Contribution")
+
+        # inner REST repository
+        repo = discussion.repository
+        issues_pages = repo.get_issues()
+        issue = issues_pages[0]
+        # GraphQL retrieved 10 issues, but repo.get_issues() is not aware of that data
+        # it calls the REST API
+        self.assertEqual(issues_pages.totalCount, 341)
+        self.assertEqual(issue.number, 3045)
