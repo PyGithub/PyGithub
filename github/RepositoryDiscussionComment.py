@@ -52,6 +52,8 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
 
     """
 
+    minimal_graphql_schema = "{ id }"
+
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet

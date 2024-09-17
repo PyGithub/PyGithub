@@ -32,7 +32,7 @@ import github.Repository
 import github.RepositoryDiscussionCategory
 import github.RepositoryDiscussionComment
 from github.DiscussionBase import DiscussionBase
-from github.GithubObject import Attribute, GraphQlObject, NotSet, as_rest_api_attributes, as_rest_api_attributes_list
+from github.GithubObject import Attribute, GraphQlObject, NotSet, as_rest_api_attributes, as_rest_api_attributes_list, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -100,14 +100,46 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
     def repository(self) -> Repository:
         return self._repository.value
 
-    def get_comments(self) -> PaginatedList[RepositoryDiscussionComment]:
-        if self._comments_page is None:
-            raise RuntimeError("Fetching comments not implemented")
+    def get_comments(self, comment_graphql_schema: str | None = None) -> PaginatedList[RepositoryDiscussionComment]:
+        if self._comments_page is not None:
+            return PaginatedList(
+                github.RepositoryDiscussionComment.RepositoryDiscussionComment,
+                self._requester,
+                firstData=self._comments_page,
+                firstHeaders={},
+            )
+
+        if is_undefined(self._id):
+            raise RuntimeError("Retrieving discussion comments requires the discussion field 'id'")
+
+        if comment_graphql_schema is None:
+            comment_graphql_schema = github.RepositoryDiscussionComment.RepositoryDiscussionComment.minimal_graphql_schema
+        query = ("""
+            query Q($discussionId: ID!, $first: Int, $last: Int, $before: String, $after: String) {
+              node(id: $discussionId) {
+                ... on Discussion {
+                  comments(first: $first, last: $last, before: $before, after: $after) {
+                    totalCount
+                    pageInfo {
+                      startCursor
+                      endCursor
+                      hasNextPage
+                      hasPreviousPage
+                    }
+                    nodes """
+                 + comment_graphql_schema
+                 + """
+                  }
+                }
+              }
+            }""")
+        variables = {"discussionId": self.node_id}
         return PaginatedList(
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
             self._requester,
-            firstData=self._comments_page,
-            firstHeaders={},
+            graphql_query=query,
+            graphql_variables=variables,
+            list_item=["node", "comments"],
         )
 
     def get_labels(self) -> PaginatedList[Label]:
