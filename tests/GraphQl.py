@@ -25,6 +25,7 @@ from typing import Any, Dict
 import github
 import github.GithubException
 import github.Repository
+import github.Organization
 import github.RepositoryDiscussion
 import github.RepositoryDiscussionComment
 import github.Requester
@@ -78,14 +79,47 @@ class GraphQl(Framework.TestCase):
 
     def testNode(self):
         requester = self.g._Github__requester
-        discussion = requester.graphql_node(
+        headers, data = requester.graphql_node("D_kwDOADYVqs4ATJZD", "{ title }", "Discussion")
+        self.assertTrue(headers)
+        self.assertEqual(data.get("data", {}).get("node", {}).get("title"), "Is there a way to search if a string present in default branch?")
+
+        # non-existing node should throw a NOT FOUND exception
+        with self.assertRaises(github.UnknownObjectException) as e:
+            requester.graphql_node("D_abcdefgh", "{ title }", "Discussion")
+        self.assertEqual(e.exception.status, 404)
+        self.assertEqual(
+            e.exception.data,
+            {
+                "data": {"node": None},
+                "errors": [
+                    {
+                        "type": "NOT_FOUND",
+                        "path": ["node"],
+                        "locations": [{"line": 3, "column": 15}],
+                        "message": "Could not resolve to a node with the global id of 'D_abcdefgh'",
+                    }
+                ],
+            },
+        )
+        self.assertEqual(e.exception.message, "Could not resolve to a node with the global id of 'D_abcdefgh'")
+
+        # wrong type should throw an exception
+        with self.assertRaises(github.GithubException) as e:
+            requester.graphql_node("D_kwDOADYVqs4ATJZD", "{ login }", "User")
+        self.assertEqual(e.exception.status, 400)
+        self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
+        self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
+
+    def testNodeClass(self):
+        requester = self.g._Github__requester
+        discussion = requester.graphql_node_class(
             "D_kwDOADYVqs4ATJZD", "{ title }", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
         self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
 
         # non-existing node should throw a NOT FOUND exception
         with self.assertRaises(github.UnknownObjectException) as e:
-            requester.graphql_node(
+            requester.graphql_node_class(
                 "D_abcdefgh", "{ title }", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
             )
         self.assertEqual(e.exception.status, 404)
@@ -107,11 +141,11 @@ class GraphQl(Framework.TestCase):
 
         # wrong type should throw an exception
         with self.assertRaises(github.GithubException) as e:
-            requester.graphql_node(
+            requester.graphql_node_class(
                 "D_kwDOADYVqs4ATJZD", "{ login }", github.RepositoryDiscussion.RepositoryDiscussion, "User"
             )
         self.assertEqual(e.exception.status, 400)
-        self.assertEqual(e.exception.data, {"__typename": "Discussion"})
+        self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
         self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
 
     def testQuery(self):
@@ -150,6 +184,17 @@ class GraphQl(Framework.TestCase):
         self.assertEqual(
             comment.html_url, "https://github.com/PyGithub/PyGithub/discussions/2480#discussioncomment-5468960"
         )
+
+    def testMutation(self):
+        requester: github.Requester.Requester = self.g._Github__requester
+        header, data = requester.graphql_named_mutation("followOrganization", {"organizationId": "O_kgDOAKxBpA"}, "{ organization { name } }")
+        self.assertTrue(header)
+        self.assertEqual(data, {"organization": {"name": "PyGithub"}})
+
+    def testMutationClass(self):
+        requester: github.Requester.Requester = self.g._Github__requester
+        org = requester.graphql_named_mutation_class("followOrganization", {"organizationId": "O_kgDOAKxBpA"}, "{ organization { name } }", "organization", github.Organization.Organization)
+        self.assertEqual(org.name, "PyGithub")
 
     def testPaginationAndRestIntegration(self):
         repo = self.g.get_repo("PyGithub/PyGithub")

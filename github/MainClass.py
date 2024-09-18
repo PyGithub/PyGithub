@@ -473,7 +473,7 @@ class Github:
     ) -> RepositoryDiscussion:
         if discussion_graphql_schema is None:
             discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
-        return self.__requester.graphql_node(
+        return self.__requester.graphql_node_class(
             node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
 
