@@ -102,6 +102,24 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
             RepositoryDiscussionComment, self._requester, firstData=self._replies_page, firstHeaders={}
         )
 
+    def edit(self, body: str, output_schema: str = "{ id }") -> RepositoryDiscussionComment:
+        return self._requester.graphql_named_mutation_class(
+            "updateDiscussionComment",
+            {"commentId": self.node_id, "body": body},
+            f"{{ comment {output_schema} }}",
+            "comment",
+            github.RepositoryDiscussionComment.RepositoryDiscussionComment,
+        )
+
+    def delete(self, output_schema: str = "{ id }") -> RepositoryDiscussionComment:
+        return self._requester.graphql_named_mutation_class(
+            "deleteDiscussionComment",
+            {"id": self.id},
+            f"{{ comment {output_schema} }}",
+            "comment",
+            github.RepositoryDiscussionComment.RepositoryDiscussionComment,
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         # super class is a REST API GithubObject, attributes are coming from GraphQL
         super()._useAttributes(as_rest_api_attributes(attributes))

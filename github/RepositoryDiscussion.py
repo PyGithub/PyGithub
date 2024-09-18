@@ -152,6 +152,19 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
             raise RuntimeError("Fetching reactions not implemented")
         return PaginatedList(github.Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})
 
+    def add_comment(
+        self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "{ id }"
+    ) -> RepositoryDiscussionComment:
+        reply_to_id = reply_to.id if isinstance(reply_to, github.RepositoryDiscussionComment.RepositoryDiscussionComment) else reply_to
+        variables = {"body": body, "discussionId": self.id, "replyToId": reply_to_id}
+        return self._requester.graphql_named_mutation_class(
+            "addDiscussionComment",
+            NotSet.remove_unset_items(variables),
+            f"{{ comment {output_schema} }}",
+            "comment",
+            github.RepositoryDiscussionComment.RepositoryDiscussionComment,
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         # super class is a REST API GithubObject, attributes are coming from GraphQL
         super()._useAttributes(as_rest_api_attributes(attributes))
