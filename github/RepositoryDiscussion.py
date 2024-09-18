@@ -32,7 +32,14 @@ import github.Repository
 import github.RepositoryDiscussionCategory
 import github.RepositoryDiscussionComment
 from github.DiscussionBase import DiscussionBase
-from github.GithubObject import Attribute, GraphQlObject, NotSet, as_rest_api_attributes, as_rest_api_attributes_list, is_undefined
+from github.GithubObject import (
+    Attribute,
+    GraphQlObject,
+    NotSet,
+    as_rest_api_attributes,
+    as_rest_api_attributes_list,
+    is_undefined,
+)
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -113,8 +120,11 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
             raise RuntimeError("Retrieving discussion comments requires the discussion field 'id'")
 
         if comment_graphql_schema is None:
-            comment_graphql_schema = github.RepositoryDiscussionComment.RepositoryDiscussionComment.minimal_graphql_schema
-        query = ("""
+            comment_graphql_schema = (
+                github.RepositoryDiscussionComment.RepositoryDiscussionComment.minimal_graphql_schema
+            )
+        query = (
+            """
             query Q($discussionId: ID!, $first: Int, $last: Int, $before: String, $after: String) {
               node(id: $discussionId) {
                 ... on Discussion {
@@ -127,12 +137,13 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
                       hasPreviousPage
                     }
                     nodes """
-                 + comment_graphql_schema
-                 + """
+            + comment_graphql_schema
+            + """
                   }
                 }
               }
-            }""")
+            }"""
+        )
         variables = {"discussionId": self.node_id}
         return PaginatedList(
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
@@ -155,7 +166,11 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
     def add_comment(
         self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "{ id }"
     ) -> RepositoryDiscussionComment:
-        reply_to_id = reply_to.id if isinstance(reply_to, github.RepositoryDiscussionComment.RepositoryDiscussionComment) else reply_to
+        reply_to_id = (
+            reply_to.id
+            if isinstance(reply_to, github.RepositoryDiscussionComment.RepositoryDiscussionComment)
+            else reply_to
+        )
         variables = {"body": body, "discussionId": self.id, "replyToId": reply_to_id}
         return self._requester.graphql_named_mutation_class(
             "addDiscussionComment",

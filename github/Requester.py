@@ -642,7 +642,9 @@ class Requester:
     def paths_of_dict(cls, d: dict) -> dict:
         return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
 
-    def data_as_class(self, headers: Dict[str, Any], data: Dict[str, Any], data_path: List[str], klass: Type[T_gh]) -> T_gh:
+    def data_as_class(
+        self, headers: Dict[str, Any], data: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
         for item in data_path:
             if item not in data:
                 raise RuntimeError(f"GraphQL path {data_path} not found in data: {self.paths_of_dict(data)}")
@@ -674,12 +676,12 @@ class Requester:
             raise github.GithubException(
                 400,
                 data,
-                message=f'Retrieved {node_type} object is of different type: {actual_node_type}',
+                message=f"Retrieved {node_type} object is of different type: {actual_node_type}",
             )
         return headers, data
 
     def graphql_node_class(
-            self, node_id: str, graphql_schema: str, klass: Type[T_gh], node_type: Optional[str] = None
+        self, node_id: str, graphql_schema: str, klass: Type[T_gh], node_type: Optional[str] = None
     ) -> T_gh:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
@@ -721,7 +723,9 @@ class Requester:
     ) -> T_gh:
         """
         Executes a mutation and returns the output object as the given GithubObject.
+
         See {@link graphql_named_mutation}.
+
         """
         headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output or "{ id }")
         return self.data_as_class(headers, data, [item], klass)
