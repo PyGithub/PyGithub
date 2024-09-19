@@ -20,4 +20,3 @@ jobs:
           top_issues: true
           top_pull_requests: true
           top_list_size: 10
-
