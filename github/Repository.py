@@ -2398,7 +2398,7 @@ class Repository(CompletableGithubObject):
             self._requester,
             f"{self.url}/projects",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_autolinks(self) -> PaginatedList[Autolink]:
