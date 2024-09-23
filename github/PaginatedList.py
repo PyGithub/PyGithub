@@ -52,6 +52,7 @@
 from typing import Any, Callable, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
 from urllib.parse import parse_qs
 
+from github import Consts
 from github.GithubObject import GithubObject
 from github.Requester import Requester
 
@@ -284,7 +285,7 @@ class PaginatedList(PaginatedListBase[T]):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
-        if self.__requester.per_page != 30:
+        if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=params, headers=self.__headers
