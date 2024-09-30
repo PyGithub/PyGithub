@@ -945,7 +945,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return f"{url}?{urllib.parse.urlencode(parameters)}"
+            return f"{url}?{urllib.parse.urlencode(parameters, safe=':')}"
 
     def __createConnection(
         self,
