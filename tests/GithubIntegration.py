@@ -132,6 +132,7 @@ class GithubIntegration(Framework.BasicTestCase):
                 user_agent="PyGithub/Python-Test",
                 per_page=Consts.DEFAULT_PER_PAGE + 10,
                 verify=False,
+                cert=None,
                 retry=3,
                 pool_size=10,
                 seconds_between_requests=100,

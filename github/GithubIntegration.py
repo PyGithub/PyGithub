@@ -74,6 +74,7 @@ class GithubIntegration:
         user_agent: str = Consts.DEFAULT_USER_AGENT,
         per_page: int = Consts.DEFAULT_PER_PAGE,
         verify: bool | str = True,
+        cert: str | None = None,
         retry: int | Retry | None = None,
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
@@ -92,6 +93,7 @@ class GithubIntegration:
         :param per_page: int
         :param verify: boolean or string
         :param retry: int or urllib3.util.retry.Retry object
+        :param cert: string or None to set user client certs
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
@@ -152,6 +154,7 @@ class GithubIntegration:
             user_agent=user_agent,
             per_page=per_page,
             verify=verify,
+            cert=cert,
             retry=retry,
             pool_size=pool_size,
             seconds_between_requests=seconds_between_requests,
