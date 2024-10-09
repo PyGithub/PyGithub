@@ -200,6 +200,16 @@ class GithubObject:
         self._useAttributes(attributes)
 
     @property
+    def requester(self) -> "Requester":
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self._requester
+
+    @property
     def raw_data(self) -> Dict[str, Any]:
         """
         :type: dict
