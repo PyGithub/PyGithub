@@ -105,7 +105,7 @@ def _datetime_from_github_isoformat(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
-class _NotSetType:
+class _NotSetType(Attribute[Any]):
     def __repr__(self) -> str:
         return "NotSet"
 
@@ -148,14 +148,14 @@ class _ValuedAttribute(Attribute[T]):
         return self._value
 
 
-class _BadAttribute(Attribute):
+class _BadAttribute(Attribute[T]):
     def __init__(self, value: Any, expectedType: Any, exception: Optional[Exception] = None):
         self.__value = value
         self.__expectedType = expectedType
         self.__exception = exception
 
     @property
-    def value(self) -> Any:
+    def value(self) -> T:
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
