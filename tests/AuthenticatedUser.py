@@ -783,3 +783,14 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testGetMemberships(self):
+        membership_data = self.user.get_organization_memberships()
+        self.assertListKeyEqual(
+            membership_data,
+            lambda e: e.organization.login,
+            ["aneyem-github", "nko4", "geoservel", "iic2154-uc-cl", "nnodes", "sushiclm"],
+        )
+        self.assertListKeyEqual(
+            membership_data, lambda e: e.role, ["member", "member", "admin", "member", "member", "admin"]
+        )
