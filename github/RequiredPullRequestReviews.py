@@ -47,11 +47,13 @@ from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Team
+import github.GithubApp
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Team import Team
+    from github.GithubApp import GithubApp
 
 
 class RequiredPullRequestReviews(CompletableGithubObject):
@@ -67,8 +69,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         self._dismiss_stale_reviews: Attribute[bool] = NotSet
         self._require_code_owner_reviews: Attribute[bool] = NotSet
         self._required_approving_review_count: Attribute[int] = NotSet
-        self._users: Attribute[list[NamedUser]] = NotSet
-        self._teams: Attribute[list[Team]] = NotSet
+        self._dismissal_users: Attribute[list[NamedUser]] = NotSet
+        self._dismissal_teams: Attribute[list[Team]] = NotSet
+        self._dismissal_apps: Attribute[list[GithubApp]] = NotSet
+        self._bypass_users: Attribute[list[NamedUser]] = NotSet
+        self._bypass_teams: Attribute[list[Team]] = NotSet
+        self._bypass_apps: Attribute[list[GithubApp]] = NotSet
         self._require_last_push_approval: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
@@ -108,24 +114,48 @@ class RequiredPullRequestReviews(CompletableGithubObject):
 
     @property
     def dismissal_users(self) -> list[NamedUser]:
-        self._completeIfNotSet(self._users)
-        return self._users.value
+        self._completeIfNotSet(self._dismissal_users)
+        return self._dismissal_users.value
 
     @property
     def dismissal_teams(self) -> list[Team]:
-        self._completeIfNotSet(self._teams)
-        return self._teams.value
+        self._completeIfNotSet(self._dismissal_teams)
+        return self._dismissal_teams.value
+
+    @property
+    def dismissal_apps(self) -> list[GithubApp]:
+        self._completeIfNotSet(self._dismissal_apps)
+        return self._dismissal_apps.value
+
+    @property
+    def bypass_users(self) -> list[NamedUser]:
+        self._completeIfNotSet(self._bypass_users)
+        return self._bypass_users.value
+
+    @property
+    def bypass_teams(self) -> list[Team]:
+        self._completeIfNotSet(self._bypass_teams)
+        return self._bypass_teams.value
+
+    @property
+    def bypass_apps(self) -> list[GithubApp]:
+        self._completeIfNotSet(self._bypass_apps)
+        return self._bypass_apps.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "dismissal_restrictions" in attributes:  # pragma no branch
             if "users" in attributes["dismissal_restrictions"]:
-                self._users = self._makeListOfClassesAttribute(
+                self._dismissal_users = self._makeListOfClassesAttribute(
                     github.NamedUser.NamedUser,
                     attributes["dismissal_restrictions"]["users"],
                 )
             if "teams" in attributes["dismissal_restrictions"]:  # pragma no branch
-                self._teams = self._makeListOfClassesAttribute(
+                self._dismissal_teams = self._makeListOfClassesAttribute(
                     github.Team.Team, attributes["dismissal_restrictions"]["teams"]
+                )
+            if "apps" in attributes["dismissal_restrictions"]:  # pragma no branch
+                self._dismissal_apps = self._makeListOfClassesAttribute(
+                    github.GithubApp.GithubApp, attributes["dismissal_restrictions"]["apps"]
                 )
         if "dismiss_stale_reviews" in attributes:  # pragma no branch
             self._dismiss_stale_reviews = self._makeBoolAttribute(attributes["dismiss_stale_reviews"])
@@ -139,3 +169,17 @@ class RequiredPullRequestReviews(CompletableGithubObject):
             self._require_last_push_approval = self._makeBoolAttribute(attributes["require_last_push_approval"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "bypass_pull_request_allowances" in attributes:  # pragma no branch
+            if "users" in attributes["bypass_pull_request_allowances"]:
+                self._bypass_users = self._makeListOfClassesAttribute(
+                    github.NamedUser.NamedUser,
+                    attributes["bypass_pull_request_allowances"]["users"],
+                )
+            if "teams" in attributes["bypass_pull_request_allowances"]:  # pragma no branch
+                self._bypass_teams = self._makeListOfClassesAttribute(
+                    github.Team.Team, attributes["bypass_pull_request_allowances"]["teams"]
+                )
+            if "apps" in attributes["bypass_pull_request_allowances"]:  # pragma no branch
+                self._bypass_apps = self._makeListOfClassesAttribute(
+                    github.GithubApp.GithubApp, attributes["bypass_pull_request_allowances"]["apps"]
+                )
