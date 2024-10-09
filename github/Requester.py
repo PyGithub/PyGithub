@@ -547,6 +547,15 @@ class Requester:
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with JSON body.
+
+        :param input: request body, serialized to JSON if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(
@@ -557,6 +566,15 @@ class Requester:
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Dict[str, str]] = None,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+        """
+        Send a request with multi-part-encoded body.
+
+        :param input: request body, will be multi-part encoded if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(
@@ -568,6 +586,15 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Send a request with a file for the body.
+
+        :param input: path to a file to use for the request body
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -709,6 +736,14 @@ class Requester:
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with JSON input.
+
+        :param input: request body, will be serialized as JSON
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
@@ -723,6 +758,14 @@ class Requester:
         input: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with multi-part encoding.
+
+        :param input: request body, will be serialized as multipart form data
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -747,6 +790,13 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with a file as request body.
+
+        :param input: path to a local file to use for request body
+        :returns:``(status, headers, body)``
+
+        """
         if headers is None:
             headers = {}
 
@@ -772,6 +822,15 @@ class Requester:
         file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with a binary file-like for the body.
+
+        :param file_like: file-like object to use for the request body
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
+
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like

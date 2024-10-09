@@ -274,6 +274,16 @@ class Github:
         self.close()
 
     @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
+
+    @property
     def FIX_REPO_GET_GIT_REF(self) -> bool:
         return self.__requester.FIX_REPO_GET_GIT_REF
 
