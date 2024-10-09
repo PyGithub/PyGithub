@@ -97,6 +97,7 @@ import github.OrganizationVariable
 import github.Plan
 import github.Project
 import github.Repository
+import github.RepositoryAdvisory
 import github.Team
 from github import Consts
 from github.GithubObject import (
@@ -1450,6 +1451,34 @@ class Organization(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()],
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
+
+    def get_repo_security_advisories(
+        self,
+        state: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]:
+        """:calls: `GET /orgs/{owner}security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories#list-repository-security-advisories-for-an-organization--parameters>`_
+
+        :param sort: string
+        :param state: string
+        :param direct: string
+        :rtype: :class:`PaginatedList` of
+        :class:`github.RepoSecurityAdvisory.RepoSecurityAdvisory`
+        """
+        assert is_optional(sort, str), sort
+        assert is_optional(state, str), state
+        assert is_optional(direction, str), direction
+
+        url_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"state": state, "sort": sort, "direction": direction}
+        )
+        return PaginatedList(
+            github.RepositoryAdvisory.RepositoryAdvisory,
+            self._requester,
+            f"{self.url}/security-advisories",
+            url_parameters,
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archived_at" in attributes:  # pragma no branch

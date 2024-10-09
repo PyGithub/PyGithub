@@ -704,3 +704,8 @@ class Organization(Framework.TestCase):
         self.org.remove_custom_property("property_1")
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
+
+    def testGetRepoSecurityAdvisories(self):
+        advisories = list(self.org.get_repo_security_advisories())
+        self.assertEqual(advisories[0].ghsa_id, "GHSA-3q9q-2pjh-q4vf")
+        self.assertEqual(advisories[0].state, "draft")
