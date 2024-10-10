@@ -857,6 +857,26 @@ class Requester:
                     raise
                 return {"data": data}
 
+    def requestFile(
+        self,
+        verb: str,
+        url: str,
+        headers: Optional[Dict[str, Any]] = {},
+        cnx=None, path=None):
+        """Request a file from the server and save it to the given path"""
+        headers["Accept"] = "application/octet-stream"
+        headers["User-Agent"] = self.__userAgent
+        if self.__auth is not None:
+            self.__auth.authentication(headers)
+
+        cnx = self.__createConnection()
+        cnx.request(verb, url, input, headers)
+        response = cnx.session.get(url, stream=True, headers=headers)
+        with open(path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    f.write(chunk)
+
     def requestJson(
         self,
         verb: str,
