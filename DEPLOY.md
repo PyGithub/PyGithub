@@ -1,19 +1,24 @@
 ## Upload a new version to PyPI
 
-Github workflow (`.github/workflows/python-publish.yml`) will push tagged commits to PyPI. Here are the steps:
+Github [PyPi release](.github/workflows/pypi-release.yml) workflow will push tagged commits to PyPI. Here are the steps:
 
-1. Run `manage.py` 
+1. Run `scripts/prepare_release.sh`
 
 ```bash
-./manage.sh publish
-Next version number? (previous: 'XXX')
+./scripts/prepare_release.sh
 ```
 
-2. Give the new version number based on previous version (Use semantic versioning)
+2. Complete the changes in `doc/changes.rst`:
+   - Replace `Version ?.?.?` with the release version.
+   - Organize commits into sub-sections like "New features" or "Bug Fixes", see earlier releases for inspiration.
 
-3. Create a new Github [release](https://github.com/PyGithub/PyGithub/releases) from the tag that has just been committed, with the same release note from `doc/changes.rst`. This step is the hook that will trigger the workflow. (also needed for some web spiders for changelog parsing)
- 
-4. Now the push will be on hold until you press Enter. Manually inspect the changelog (`doc/changes.rst`) to make changes if necessary. Once you are sure, go back and press Enter. 
+3. Commit these changes and create a pull request.
 
-5. Once the `python-publish` workflow completes, a new version will appear on [PyPI](https://pypi.org/project/PyGithub/#history) shortly.
+4. After merging those changes into `main` branch, create a new Github [release](https://github.com/PyGithub/PyGithub/releases):
+   - Choose the merge commit in `main`.
+   - Choose a new tag with release version prefixed with `v`, e.g. `v2.2.0`.
+   - Add the same release note from `doc/changes.rst`.
 
+   Creating the release also creates the tag chosen, which will trigger the PyPi release workflow.
+
+5. Once the PyPi release workflow completes, a new version will appear on [PyPI](https://pypi.org/project/PyGithub/#history) shortly.

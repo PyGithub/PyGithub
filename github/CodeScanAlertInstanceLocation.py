@@ -1,6 +1,12 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2020 Dhruv Manilawala <dhruvmanila@gmail.com>                      #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +25,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -27,7 +34,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CodeScanAlertInstanceLocation(NonCompletableGithubObject):
     """
     This class represents code scanning alert instance locations.
-    The reference can be found here https://docs.github.com/en/rest/reference/code-scanning.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/code-scanning.
+
     """
 
     def _initAttributes(self) -> None:

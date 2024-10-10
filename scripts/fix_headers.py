@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -10,6 +9,9 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -65,7 +67,7 @@ def generateLicenseSection(filename):
 def listContributors(filename):
     contributors = set()
     result = subprocess.check_output(
-        ["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
+        ["git", "log", "--follow", "--format=format:%ad %an <%ae>", "--date=short", "--", filename],
         text=True,
     )
     for line in result.split("\n"):
@@ -97,13 +99,11 @@ def extractBodyLines(lines):
 
 class PythonHeader:
     def fix(self, filename, lines):
-        isExecutable = lines[0].startswith("#!")
+        isExecutable = len(lines) > 0 and lines[0].startswith("#!")
         newLines = []
 
         if isExecutable:
             newLines.append("#!/usr/bin/env python")
-        newLines.append("# -*- coding: utf-8 -*-")
-        newLines.append("")
 
         for line in generateLicenseSection(filename):
             newLines.append(line)
@@ -137,18 +137,12 @@ class StandardHeader:
 
 def findHeadersAndFiles():
     for root, dirs, files in os.walk(".", topdown=True):
-        if ".git" in dirs:
-            dirs.remove(".git")
-        if "developer.github.com" in dirs:
-            dirs.remove("developer.github.com")
-        if "build" in dirs:
-            dirs.remove("build")
-        if ".tox" in dirs:
-            dirs.remove(".tox")
-        if ".venv" in dirs:
-            dirs.remove(".venv")
-        if "PyGithub.egg-info" in dirs:
-            dirs.remove("PyGithub.egg-info")
+        for dir in list(dirs):
+            if dir.startswith("."):
+                dirs.remove(dir)
+        for excluded in ["developer.github.com", "build", "venv", "PyGithub.egg-info", "requirements", "pre-commit"]:
+            if excluded in dirs:
+                dirs.remove(excluded)
 
         for filename in files:
             fullname = os.path.join(root, filename)
@@ -156,7 +150,7 @@ def findHeadersAndFiles():
                 pass
             elif filename.endswith(".py"):
                 yield (PythonHeader(), fullname)
-            elif filename in ["COPYING", "COPYING.LESSER"]:
+            elif filename in ["COPYING", "COPYING.LESSER", "MAINTAINERS"]:
                 pass
             elif filename.endswith(".rst") or filename.endswith(".md"):
                 pass
@@ -164,21 +158,23 @@ def findHeadersAndFiles():
                 yield (StandardHeader(), fullname)
             elif "ReplayData" in fullname:
                 pass
+            elif fullname.endswith(".pyi"):
+                pass
             elif fullname.endswith(".pyc"):
                 pass
             else:
-                print("Don't know what to do with", filename)
+                print(f"Don't know what to do with {filename} in {root}")
 
 
 def main():
     for header, filename in findHeadersAndFiles():
         print("Analyzing", filename)
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             lines = list(line.rstrip() for line in f)
         newLines = header.fix(filename, lines)
         if newLines != lines:
             print(" => actually modifying", filename)
-            with open(filename, "w") as f:
+            with open(filename, "w", encoding="utf-8") as f:
                 for line in newLines:
                     f.write(line + "\n")
 

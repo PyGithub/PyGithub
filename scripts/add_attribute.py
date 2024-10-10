@@ -14,7 +14,11 @@
 # Copyright 2020 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
 # Copyright 2022 Gabriele Oliaro <ict@gabrieleoliaro.it>                       #
-# Copyright 2023 Jonathan Leitschuh <Jonathan.Leitschuh@gmail.com>             #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,6 +37,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import os.path
@@ -68,6 +73,12 @@ types = {
         "str",
         'self._makeDatetimeAttribute(attributes["' + attributeName + '"])',
         "datetime",
+    ),
+    "dict": (
+        "dict[" + attributeClassType + "]",
+        None,
+        'self._makeDictAttribute(attributes["' + attributeName + '"])',
+        "dict[" + attributeClassType + "]",
     ),
     "class": (
         ":class:`" + attributeClassType + "`",

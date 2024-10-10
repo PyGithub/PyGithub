@@ -14,6 +14,17 @@
 # Copyright 2018 Laurent Raufaste <analogue@glop.org>                          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Floyd Hightower <floyd.hightower27@gmail.com>                 #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Ramiro Morales <ramiro@users.noreply.github.com>              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +43,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from datetime import datetime
 from typing import Any, Dict
 
@@ -40,13 +52,19 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class RepositoryKey(CompletableGithubObject):
     """
-    This class represents RepositoryKeys. The reference can be found here https://docs.github.com/en/rest/reference/repos#deploy-keys
+    This class represents RepositoryKeys.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#deploy-keys
+
     """
 
     def _initAttributes(self) -> None:
+        self._added_by: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._last_used: Attribute[datetime] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verified: Attribute[bool] = NotSet
@@ -54,6 +72,11 @@ class RepositoryKey(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
+
+    @property
+    def added_by(self) -> str:
+        self._completeIfNotSet(self._added_by)
+        return self._added_by.value
 
     @property
     def created_at(self) -> datetime:
@@ -69,6 +92,11 @@ class RepositoryKey(CompletableGithubObject):
     def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
+
+    @property
+    def last_used(self) -> datetime:
+        self._completeIfNotSet(self._last_used)
+        return self._last_used.value
 
     @property
     def title(self) -> str:
@@ -97,12 +125,17 @@ class RepositoryKey(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "added_by" in attributes:  # pragma no branch
+            self._added_by = self._makeStringAttribute(attributes["added_by"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
+        if "last_used" in attributes:  # pragma no branch
+            assert attributes["last_used"] is None or isinstance(attributes["last_used"], str), attributes["last_used"]
+            self._last_used = self._makeDatetimeAttribute(attributes["last_used"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch

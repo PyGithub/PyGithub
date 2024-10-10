@@ -1,9 +1,14 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Dima Kukushkin <dima@kukushkin.me>                            #
+# Copyright 2012 Luke Cawood <luke.cawood@99designs.com>                       #
+# Copyright 2012 Michael Woodworth <mwoodworth@upverter.com>                   #
+# Copyright 2012 Steve English <steve.english@navetas.com>                     #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
-# Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Steve Brown <steve@evolvedlight.co.uk>                        #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 C. R. Oldham <cro@ncbt.org>                                   #
@@ -13,22 +18,59 @@
 # Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
 # Copyright 2015 Joseph Rawson <joseph.rawson.works@littledebian.org>          #
 # Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
-# Copyright 2015 edhollandAL <eholland@alertlogic.com>                         #
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Colin Hoglund <colinhoglund@users.noreply.github.com>         #
 # Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2018 Agor Maxime <maxime.agor23@gmail.com>                         #
+# Copyright 2018 Arda Kuyumcu <kuyumcuarda@gmail.com>                          #
+# Copyright 2018 Benoit Latinier <benoit@latinier.fr>                          #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
 # Copyright 2018 Joshua Hoblitt <josh@hoblitt.com>                             #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 Yossarian King <yggy@blackbirdinteractive.com>                #
+# Copyright 2018 h.shi <10385628+AnYeMoWang@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
-# Copyright 2019 Tomas Tomecek <tomas@tomecek.net>                             #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Caleb Sweeney <caleb.w.sweeney@gmail.com>                     #
+# Copyright 2019 Hamel Husain <hamelsmu@github.com>                            #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Jake Klingensmith <jklingen92@users.noreply.github.com>       #
+# Copyright 2019 Jake Wilkins <jakewilkins@github.com>                         #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
-# Copyright 2023 Yugo Hino <henom06@gmail.com>                                 #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tomas Tomecek <nereone@gmail.com>                             #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2019 chillipeper <miguel.tpy@gmail.com>                            #
+# Copyright 2019 秋葉 <ambiguous404@gmail.com>                                   #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Mahesh Raju <coder@mahesh.net>                                #
+# Copyright 2020 Nikolay Edigaryev <edigaryev@gmail.com>                       #
+# Copyright 2020 Omar Brikaa <brikaaomar@gmail.com>                            #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Sachi King <nakato@nakato.io>                                 #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,9 +89,11 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import pickle
+import urllib.parse
 import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
@@ -67,6 +111,7 @@ import github.GithubApp
 import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
+import github.GlobalAdvisory
 import github.License
 import github.NamedUser
 import github.Topic
@@ -90,6 +135,7 @@ if TYPE_CHECKING:
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
+    from github.GlobalAdvisory import GlobalAdvisory
     from github.Issue import Issue
     from github.License import License
     from github.NamedUser import NamedUser
@@ -104,7 +150,10 @@ TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
 class Github:
     """
-    This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
+    This is the main class you instantiate to access the Github API v3.
+
+    Optional parameters allow different authentication methods.
+
     """
 
     __requester: Requester
@@ -208,8 +257,8 @@ class Github:
         )
 
     def close(self) -> None:
-        """
-        Close connections to the server. Alternatively, use the Github object as a context manager:
+        """Close connections to the server. Alternatively, use the Github
+        object as a context manager:
 
         .. code-block:: python
 
@@ -223,6 +272,16 @@ class Github:
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.close()
+
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
 
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool:
@@ -267,7 +326,9 @@ class Github:
         """
         Rate limit status for different resources (core/search/graphql).
 
-        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls: `GET /rate_limit
+        <https://docs.github.com/en/rest/reference/rate-limit>`_
+
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
         return RateLimit(self.__requester, headers, data["resources"], True)
@@ -285,6 +346,7 @@ class Github:
         """
 
         assert isinstance(key, str), key
+        key = urllib.parse.quote(key)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
         return github.License.License(self.__requester, headers, data, completed=True)
 
@@ -308,10 +370,11 @@ class Github:
         """
         :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        assert login is NotSet or isinstance(login, str), login
         if login is NotSet:
             return github.AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
+            assert isinstance(login, str), login
+            login = urllib.parse.quote(login)
             headers, data = self.__requester.requestJsonAndCheck("GET", f"/users/{login}")
             return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
@@ -340,6 +403,7 @@ class Github:
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
         assert isinstance(login, str), login
+        login = urllib.parse.quote(login)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
@@ -443,6 +507,120 @@ class Github:
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
+
+    def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory:
+        """
+        :calls: `GET /advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/global-advisories>`_
+        :param ghsa_id: string
+        :rtype: :class:`github.GlobalAdvisory.GlobalAdvisory`
+        """
+        assert isinstance(ghsa_id, str), ghsa_id
+        ghsa_id = urllib.parse.quote(ghsa_id)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/advisories/{ghsa_id}")
+        return github.GlobalAdvisory.GlobalAdvisory(self.__requester, headers, data, completed=True)
+
+    def get_global_advisories(
+        self,
+        type: Opt[str] = NotSet,
+        ghsa_id: Opt[str] = NotSet,
+        cve_id: Opt[str] = NotSet,
+        ecosystem: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+        cwes: list[Opt[str]] | Opt[str] = NotSet,
+        is_withdrawn: Opt[bool] = NotSet,
+        affects: list[str] | Opt[str] = NotSet,
+        published: Opt[str] = NotSet,
+        updated: Opt[str] = NotSet,
+        modified: Opt[str] = NotSet,
+        keywords: Opt[str] = NotSet,
+        before: Opt[str] = NotSet,
+        after: Opt[str] = NotSet,
+        per_page: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+    ) -> PaginatedList[GlobalAdvisory]:
+        """
+        :calls: `GET /advisories <https://docs.github.com/en/rest/security-advisories/global-advisories>`
+        :param type: Optional string
+        :param ghsa_id: Optional string
+        :param cve_id: Optional string
+        :param ecosystem: Optional string
+        :param severity: Optional string
+        :param cwes: Optional comma separated string or list of integer or string
+        :param is_withdrawn: Optional bool
+        :param affects: Optional comma separated string or list of string
+        :param published: Optional string
+        :param updated: Optional string
+        :param modified: Optional string
+        :param before: Optional string
+        :param after: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GlobalAdvisory.GlobalAdvisory`
+        """
+        assert type is github.GithubObject.NotSet or isinstance(type, str), type
+        assert ghsa_id is github.GithubObject.NotSet or isinstance(ghsa_id, str)
+        assert cve_id is github.GithubObject.NotSet or isinstance(cve_id, str), cve_id
+        assert ecosystem is github.GithubObject.NotSet or isinstance(ecosystem, str), ecosystem
+        assert severity is github.GithubObject.NotSet or isinstance(severity, str), severity
+        assert cwes is github.GithubObject.NotSet or isinstance(cwes, list) or isinstance(cwes, str), cwes
+        assert is_withdrawn is github.GithubObject.NotSet or isinstance(is_withdrawn, bool), is_withdrawn
+        assert affects is github.GithubObject.NotSet or isinstance(affects, list) or isinstance(affects, str), affects
+        assert published is github.GithubObject.NotSet or isinstance(published, str), published
+        assert updated is github.GithubObject.NotSet or isinstance(updated, str), updated
+        assert modified is github.GithubObject.NotSet or isinstance(modified, str), modified
+        assert before is github.GithubObject.NotSet or isinstance(before, str), before
+        assert after is github.GithubObject.NotSet or isinstance(after, str), after
+        assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, str), direction
+
+        url_parameters: dict[str, Opt[str | bool]] = dict()
+        if type is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+            assert type in ("reviewed", "unreviewed", "malware"), type
+            url_parameters["type"] = type
+        if ghsa_id is not github.GithubObject.NotSet:
+            url_parameters["ghsa_id"] = ghsa_id
+        if cve_id is not github.GithubObject.NotSet:
+            url_parameters["cve_id"] = cve_id
+        # Can be one of: actions, composer, erlang, go, maven, npm, nuget, other, pip, pub, rubygems, rust
+        # Not asserting in that list so that the package doesn't need to be updated when a new ecosystem is added
+        if ecosystem is not github.GithubObject.NotSet:
+            url_parameters["ecosystem"] = ecosystem
+        if severity is not github.GithubObject.NotSet:
+            assert severity in ("null", "low", "medium", "high", "critical"), severity
+            url_parameters["severity"] = severity
+        if cwes is not github.GithubObject.NotSet:
+            if isinstance(cwes, list):
+                cwes = ",".join([str(cwe) for cwe in cwes])
+            url_parameters["cwes"] = cwes
+        if is_withdrawn is not github.GithubObject.NotSet:
+            url_parameters["is_withdrawn"] = is_withdrawn
+        if affects is not github.GithubObject.NotSet:
+            if isinstance(affects, list):
+                affects = ",".join(affects)
+            url_parameters["affects"] = affects
+        if published is not github.GithubObject.NotSet:
+            url_parameters["published"] = published
+        if updated is not github.GithubObject.NotSet:
+            url_parameters["updated"] = updated
+        if modified is not github.GithubObject.NotSet:
+            url_parameters["modified"] = modified
+        if before is not github.GithubObject.NotSet:
+            url_parameters["before"] = before
+        if after is not github.GithubObject.NotSet:
+            url_parameters["after"] = after
+        if sort is not github.GithubObject.NotSet:
+            assert sort in ("published", "updated"), sort
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            assert direction in ("asc", "desc"), direction
+            url_parameters["direction"] = direction
+        return github.PaginatedList.PaginatedList(
+            github.GlobalAdvisory.GlobalAdvisory,
+            self.__requester,
+            "/advisories",
+            url_parameters,
+        )
 
     def search_repositories(
         self,
@@ -698,6 +876,7 @@ class Github:
         :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
         return HookDescription(self.__requester, headers, attributes, completed=True)
 
@@ -743,6 +922,7 @@ class Github:
         :calls: `GET /gitignore/templates/{name} <https://docs.github.com/en/rest/reference/gitignore>`_
         """
         assert isinstance(name, str), name
+        name = urllib.parse.quote(name)
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/gitignore/templates/{name}")
         return github.GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
@@ -758,13 +938,14 @@ class Github:
         self, klass: type[TGithubObject], raw_data: dict[str, Any], headers: dict[str, str | int] | None = None
     ) -> TGithubObject:
         """
-        Creates an object from raw_data previously obtained by :attr:`GithubObject.raw_data`,
-        and optionally headers previously obtained by :attr:`GithubObject.raw_headers`.
+        Creates an object from raw_data previously obtained by :attr:`GithubObject.raw_data`, and optionally headers
+        previously obtained by :attr:`GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
         :param headers: dict
         :rtype: instance of class ``klass``
+
         """
         if headers is None:
             headers = {}
@@ -773,13 +954,35 @@ class Github:
 
     def dump(self, obj: GithubObject, file: BinaryIO, protocol: int = 0) -> None:
         """
-        Dumps (pickles) a PyGithub object to a file-like object.
-        Some effort is made to not pickle sensitive information like the Github credentials used in the :class:`Github` instance.
-        But NO EFFORT is made to remove sensitive information from the object's attributes.
+        Dumps (pickles) a PyGithub object to a file-like object. Some effort is made to not pickle sensitive
+        information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
+        sensitive information from the object's attributes.
 
+        :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
+         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+             stream-format>`_ :param obj: the object to pickle :param file: the file-like object to pickle to :param
+        protocol: the
+        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
+            stream-format>`_
+
         """
         pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
 
@@ -789,6 +992,7 @@ class Github:
 
         :param f: the file-like object to unpickle from
         :return: the unpickled object
+
         """
         return self.create_from_raw_data(*pickle.load(f))
 
@@ -804,7 +1008,6 @@ class Github:
         """
         :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-        assert slug is NotSet or isinstance(slug, str), slug
 
         if slug is NotSet:
             # with no slug given, calling /app returns the authenticated app,
@@ -816,5 +1019,7 @@ class Github:
             )
             return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
+            assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp
+            slug = urllib.parse.quote(slug)
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)

@@ -17,21 +17,45 @@
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2015 Brian Eugley <Brian.Eugley@capitalone.com>                    #
 # Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
-# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
 # Copyright 2016 Denis K <f1nal@cgaming.org>                                   #
 # Copyright 2016 Jared K. Smith <jaredsmith@jaredsmith.net>                    #
-# Copyright 2016 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
 # Copyright 2016 Mathieu Mitchell <mmitchell@iweb.com>                         #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
 # Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Arda Kuyumcu <kuyumcuarda@gmail.com>                          #
 # Copyright 2018 Dylan <djstein@ncsu.edu>                                      #
 # Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
 # Copyright 2018 Mike Miller <github@mikeage.net>                              #
 # Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
+# Copyright 2018 Shubham Singh <41840111+singh811@users.noreply.github.com>    #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Tuuu Nya <yuzesheji@qq.com>                                   #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2022 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2019 Isac Souza <isouza@daitan.com>                                #
+# Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Jesse Li <jesse.li2002@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Phillip Tran <phillip.qtr@gmail.com>                          #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -323,8 +347,7 @@ class Requester:
 
     def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str) -> None:
         """
-        Update current frame with response
-        Current frame index will be attached to responseHeader
+        Update current frame with response Current frame index will be attached to responseHeader.
         """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             self._frameBuffer[self._frameCount][1:4] = [
@@ -375,6 +398,8 @@ class Requester:
         self.__base_url = base_url
 
         o = urllib.parse.urlparse(base_url)
+        self.__graphql_prefix = self.get_graphql_prefix(o.path)
+        self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
@@ -430,6 +455,22 @@ class Requester:
         self.__connection = None
         self.__custom_connections = deque()
 
+    @staticmethod
+    # replace with str.removesuffix once support for Python 3.8 is dropped
+    def remove_suffix(string: str, suffix: str) -> str:
+        if string.endswith(suffix):
+            return string[: -len(suffix)]
+        return string
+
+    @staticmethod
+    def get_graphql_prefix(path: Optional[str]) -> str:
+        if path is None or path in ["", "/"]:
+            path = ""
+        if path.endswith(("/v3", "/v3/")):
+            path = Requester.remove_suffix(path, "/")
+            path = Requester.remove_suffix(path, "/v3")
+        return path + "/graphql"
+
     def close(self) -> None:
         """
         Close the connection to the server.
@@ -444,9 +485,8 @@ class Requester:
     @property
     def kwargs(self) -> Dict[str, Any]:
         """
-        Returns arguments required to recreate this Requester with Requester.__init__, as well as
-        with MainClass.__init__ and GithubIntegration.__init__.
-        :return:
+        Returns arguments required to recreate this Requester with Requester.__init__, as well as with
+        MainClass.__init__ and GithubIntegration.__init__.
         """
         return dict(
             auth=self.__auth,
@@ -466,8 +506,22 @@ class Requester:
         return self.__base_url
 
     @property
+    def graphql_url(self) -> str:
+        return self.__graphql_url
+
+    @property
+    def scheme(self) -> str:
+        return self.__scheme
+
+    @property
     def hostname(self) -> str:
         return self.__hostname
+
+    @property
+    def hostname_and_port(self) -> str:
+        if self.__port is None:
+            return self.hostname
+        return f"{self.hostname}:{self.__port}"
 
     @property
     def auth(self) -> Optional["Auth"]:
@@ -476,8 +530,10 @@ class Requester:
     def withAuth(self, auth: Optional["Auth"]) -> "Requester":
         """
         Create a new requester instance with identical configuration but the given authentication method.
+
         :param auth: authentication method
         :return: new Requester implementation
+
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)
@@ -491,6 +547,15 @@ class Requester:
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with JSON body.
+
+        :param input: request body, serialized to JSON if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(
@@ -501,6 +566,15 @@ class Requester:
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Dict[str, str]] = None,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+        """
+        Send a request with multi-part-encoded body.
+
+        :param input: request body, will be multi-part encoded if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(
@@ -512,7 +586,46 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Send a request with a file for the body.
+
+        :param input: path to a file to use for the request body
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+
+    def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        input_ = {"query": query, "variables": variables}
+
+        response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
+        if "errors" in data:
+            raise self.createException(400, response_headers, data)
+        return response_headers, data
+
+    def graphql_named_mutation(
+        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Create a mutation in the format:
+            mutation MutationName($input: MutationNameInput!) {
+                mutationName(input: $input) {
+                    <output>
+                }
+            }
+        and call the self.graphql_query method
+        """
+        title = "".join([x.capitalize() for x in mutation_name.split("_")])
+        mutation_name = title[:1].lower() + title[1:]
+        output = output or ""
+        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+
+        return self.graphql_query(query, variables)
 
     def __check(
         self,
@@ -623,6 +736,14 @@ class Requester:
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with JSON input.
+
+        :param input: request body, will be serialized as JSON
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
@@ -637,6 +758,14 @@ class Requester:
         input: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with multi-part encoding.
+
+        :param input: request body, will be serialized as multipart form data
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -661,6 +790,13 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with a file as request body.
+
+        :param input: path to a local file to use for request body
+        :returns:``(status, headers, body)``
+
+        """
         if headers is None:
             headers = {}
 
@@ -686,6 +822,15 @@ class Requester:
         file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with a binary file-like for the body.
+
+        :param file_like: file-like object to use for the request body
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
+
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like
@@ -711,7 +856,7 @@ class Requester:
             requestHeaders = {}
 
         if self.__auth is not None:
-            requestHeaders["Authorization"] = f"{self.__auth.token_type} {self.__auth.token}"
+            self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -844,8 +989,8 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, "/api/"))
-            assert o.port == self.__port
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
+            assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
@@ -901,17 +1046,8 @@ class Requester:
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
-            if "Authorization" in requestHeaders:
-                if requestHeaders["Authorization"].startswith("Basic"):
-                    headersForRequest["Authorization"] = "Basic (login and password removed)"
-                elif requestHeaders["Authorization"].startswith("token"):
-                    headersForRequest["Authorization"] = "token (oauth token removed)"
-                elif requestHeaders["Authorization"].startswith("Bearer"):
-                    headersForRequest["Authorization"] = "Bearer (jwt removed)"
-                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    headersForRequest[
-                        "Authorization"
-                    ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+            if self.__auth:
+                self.__auth.mask_authentication(headersForRequest)
             self._logger.debug(
                 "%s %s://%s%s %s %s ==> %i %s %s",
                 verb,

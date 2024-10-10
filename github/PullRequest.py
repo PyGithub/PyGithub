@@ -13,14 +13,41 @@
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Ben Yohay <ben@lightricks.com>                                #
+# Copyright 2018 Brian J. Murrell <brian@interlinx.bc.ca>                      #
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
 # Copyright 2018 Martin Monperrus <monperrus@users.noreply.github.com>         #
 # Copyright 2018 Matt Babineau <9685860+babineaum@users.noreply.github.com>    #
 # Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 Thibault Jamet <tjamet@users.noreply.github.com>              #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 MarcoFalke <falke.marco@gmail.com>                            #
+# Copyright 2019 Mark Browning <mark@cerebras.net>                             #
+# Copyright 2019 MurphyZhao <d2014zjt@163.com>                                 #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Pavan Kunisetty <nagapavan@users.noreply.github.com>          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 tison <wander4096@gmail.com>                                  #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Heitor Polidoro <14806300+heitorpolidoro@users.noreply.github.com>#
+# Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
+# Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,6 +66,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import urllib.parse
@@ -75,6 +103,7 @@ from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.GitRef import GitRef
     from github.NamedUser import NamedUser
 
 
@@ -90,7 +119,11 @@ class ReviewComment(TypedDict):
 
 class PullRequest(CompletableGithubObject):
     """
-    This class represents PullRequests. The reference can be found here https://docs.github.com/en/rest/reference/pulls
+    This class represents PullRequests.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls
+
     """
 
     def _initAttributes(self) -> None:
@@ -134,6 +167,7 @@ class PullRequest(CompletableGithubObject):
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
         self._maintainer_can_modify: Attribute[bool] = NotSet
+        self._node_id: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -342,6 +376,11 @@ class PullRequest(CompletableGithubObject):
     def maintainer_can_modify(self) -> bool:
         self._completeIfNotSet(self._maintainer_can_modify)
         return self._maintainer_can_modify.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     def as_issue(self) -> Issue:
         """
@@ -727,12 +766,94 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
+    def restore_branch(self) -> GitRef:
+        """
+        Convenience function that calls :meth:`Repository.create_git_ref` :rtype: :class:`github.GitRef.GitRef`
+        """
+        return self.head.repo.create_git_ref(f"refs/heads/{self.head.ref}", sha=self.head.sha)
+
+    def delete_branch(self, force: bool = False) -> None:
+        """
+        Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
+        """
+        if not force:
+            remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+            if remaining_pulls.totalCount > 0:
+                raise RuntimeError(
+                    "This branch is referenced by open pull requests, set force=True to delete this branch."
+                )
+        return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
+
+    def enable_automerge(
+        self,
+        merge_method: Opt[str] = "MERGE",
+        author_email: Opt[str] = NotSet,
+        client_mutation_id: Opt[str] = NotSet,
+        commit_body: Opt[str] = NotSet,
+        commit_headline: Opt[str] = NotSet,
+        expected_head_oid: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
+        <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
+        """
+        assert is_optional(author_email, str), author_email
+        assert is_optional(client_mutation_id, str), client_mutation_id
+        assert is_optional(commit_body, str), commit_body
+        assert is_optional(commit_headline, str), commit_headline
+        assert is_optional(expected_head_oid, str), expected_head_oid
+        assert isinstance(merge_method, str) and merge_method in ["MERGE", "REBASE", "SQUASH"], merge_method
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "authorEmail": author_email,
+            "clientMutationId": client_mutation_id,
+            "commitBody": commit_body,
+            "commitHeadline": commit_headline,
+            "expectedHeadOid": expected_head_oid,
+            "mergeMethod": merge_method,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="enable_pull_request_auto_merge",
+            variables={"input": NotSet.remove_unset_items(variables)},
+            output="actor { avatarUrl login resourcePath url } clientMutationId",
+        )
+        return data
+
+    def disable_automerge(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
+        <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="disable_pull_request_auto_merge",
+            variables={"input": NotSet.remove_unset_items(variables)},
+            output="actor { avatarUrl login resourcePath url } clientMutationId",
+        )
+        return data
+
     def merge(
         self,
         commit_message: Opt[str] = NotSet,
         commit_title: Opt[str] = NotSet,
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
+        delete_branch: bool = False,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
@@ -745,11 +866,14 @@ class PullRequest(CompletableGithubObject):
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
+        if delete_branch:
+            self.delete_branch()
+
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
-    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser) -> None:
+    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/issues/assignees?apiVersion=2022-11-28#add-assignees-to-an-issue>`_
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
@@ -885,3 +1009,5 @@ class PullRequest(CompletableGithubObject):
             )
         if "requested_teams" in attributes:
             self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])

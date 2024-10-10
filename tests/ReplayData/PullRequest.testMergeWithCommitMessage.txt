@@ -19,4 +19,3 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4989'), ('content-length', '109'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"378c85a4f6b6694e0f7686effbc2c29f"'), ('date', 'Tue, 29 May 2012 18:07:54 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"merged":true,"message":"Pull Request successfully merged","sha":"2525d86ae3bf7d26003e2a6d5226a8d870499792"}
-

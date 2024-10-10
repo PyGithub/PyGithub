@@ -1,6 +1,21 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 # Copyright 2019 Rigas Papathanasopoulos <rigaspapas@gmail.com>                #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,6 +50,8 @@ class ApplicationOAuth(Framework.TestCase):
         self.CLIENT_ID = "client_id_removed"
         self.CLIENT_SECRET = "client_secret_removed"
         self.app = self.g.get_oauth_application(self.CLIENT_ID, self.CLIENT_SECRET)
+        self.ent_gh = github.Github(base_url="http://my.enterprise.com/path/to/github")
+        self.ent_app = self.ent_gh.get_oauth_application(self.CLIENT_ID, self.CLIENT_SECRET)
 
     def testLoginURL(self):
         BASE_URL = "https://github.com/login/oauth/authorize"
@@ -49,6 +66,45 @@ class ApplicationOAuth(Framework.TestCase):
 
     def testGetAccessToken(self):
         access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
+        # Test string representation
+        self.assertEqual(
+            str(access_token),
+            'AccessToken(type="bearer", token="acces...", scope="", '
+            "refresh_token_expires_in=None, refresh_token=None, expires_in=None)",
+        )
+        self.assertEqual(access_token.token, "access_token_removed")
+        self.assertEqual(access_token.type, "bearer")
+        self.assertEqual(access_token.scope, "")
+        self.assertIsNone(access_token.expires_in)
+        self.assertIsNone(access_token.expires_at)
+        self.assertIsNone(access_token.refresh_token)
+        self.assertIsNone(access_token.refresh_expires_in)
+        self.assertIsNone(access_token.refresh_expires_at)
+
+    def testEnterpriseSupport(self):
+        requester = self.ent_gh._Github__requester
+        self.assertEqual(requester.scheme, "http")
+        self.assertEqual(requester.hostname, "my.enterprise.com")
+        self.assertEqual(requester.hostname_and_port, "my.enterprise.com")
+        self.assertEqual(self.ent_app.get_oauth_url("auth"), "http://my.enterprise.com/login/oauth/auth")
+        gh_w_port = github.Github(
+            base_url="http://my.enterprise.com:443/path/to/github"
+        )._Github__requester.hostname_and_port
+        self.assertEqual(gh_w_port, "my.enterprise.com:443")
+
+    def testEnterpriseLoginURL(self):
+        BASE_URL = "http://my.enterprise.com/login/oauth/authorize"
+        sample_uri = "https://myapp.com/some/path"
+        sample_uri_encoded = "https%3A%2F%2Fmyapp.com%2Fsome%2Fpath"
+        self.assertEqual(self.ent_app.get_login_url(), f"{BASE_URL}?client_id={self.CLIENT_ID}")
+        self.assertTrue(f"redirect_uri={sample_uri_encoded}" in self.ent_app.get_login_url(redirect_uri=sample_uri))
+        self.assertTrue(f"client_id={self.CLIENT_ID}" in self.ent_app.get_login_url(redirect_uri=sample_uri))
+        self.assertTrue("state=123abc" in self.ent_app.get_login_url(state="123abc", login="user"))
+        self.assertTrue("login=user" in self.ent_app.get_login_url(state="123abc", login="user"))
+        self.assertTrue(f"client_id={self.CLIENT_ID}" in self.ent_app.get_login_url(state="123abc", login="user"))
+
+    def testEnterpriseGetAccessToken(self):
+        access_token = self.ent_app.get_access_token("oauth_code_removed", state="state_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),

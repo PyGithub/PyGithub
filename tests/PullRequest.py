@@ -9,7 +9,24 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 MarcoFalke <falke.marco@gmail.com>                            #
 # Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 MarcoFalke <falke.marco@gmail.com>                            #
+# Copyright 2019 Mark Browning <mark@cerebras.net>                             #
+# Copyright 2019 Pavan Kunisetty <nagapavan@users.noreply.github.com>          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Florent Clarret <florent.clarret@gmail.com>                   #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Heitor Polidoro <14806300+heitorpolidoro@users.noreply.github.com>#
+# Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,6 +48,10 @@
 
 from datetime import datetime, timezone
 
+import pytest
+
+import github
+
 from . import Framework
 
 
@@ -48,6 +69,9 @@ class PullRequest(Framework.TestCase):
 
         flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
         self.pullMaintainerCanModify = flo_repo.get_pull(2)
+
+        self.delete_restore_repo = self.g.get_repo("austinsasko/PyGithub")
+        self.delete_restore_pull = self.delete_restore_repo.get_pull(21)
 
     def testAttributesIssue256(self):
         self.assertEqual(
@@ -234,6 +258,7 @@ class PullRequest(Framework.TestCase):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
+        self.assertListKeyEqual(comments, lambda c: c.pull_request_review_id, [131593233, None])
 
     def testReviewRequests(self):
         self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
@@ -327,24 +352,24 @@ class PullRequest(Framework.TestCase):
         )
 
     def testGetLabels(self):
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testAddAndRemoveLabels(self):
         wip = self.repo.get_label("wip")
         refactoring = self.repo.get_label("refactoring")
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
 
@@ -353,17 +378,17 @@ class PullRequest(Framework.TestCase):
         refactoring = "refactoring"
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.remove_from_labels(wip)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["refactoring", "improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["refactoring", "improvement"])
         self.pull.remove_from_labels(refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["improvement"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["improvement"])
         self.pull.add_to_labels(wip, refactoring)
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
 
@@ -372,26 +397,26 @@ class PullRequest(Framework.TestCase):
         refactoring = self.repo.get_label("refactoring")
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testDeleteAndSetLabelsWithStringArguments(self):
         wip = "wip"
         refactoring = "refactoring"
         self.assertListKeyEqual(
             self.pull.get_labels(),
-            lambda l: l.name,
+            lambda lb: lb.name,
             ["wip", "refactoring", "improvement"],
         )
         self.pull.delete_labels()
         self.assertListKeyEqual(self.pull.get_labels(), None, [])
         self.pull.set_labels(wip, refactoring)
-        self.assertListKeyEqual(self.pull.get_labels(), lambda l: l.name, ["wip", "refactoring"])
+        self.assertListKeyEqual(self.pull.get_labels(), lambda lb: lb.name, ["wip", "refactoring"])
 
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())
@@ -427,3 +452,129 @@ class PullRequest(Framework.TestCase):
     def testUpdateBranch(self):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
+
+    def testDeleteOnMerge(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertFalse(self.delete_restore_pull.is_merged())
+        status = self.delete_restore_pull.merge(delete_branch=True)
+        self.assertTrue(status.merged)
+        self.assertTrue(self.delete_restore_pull.is_merged())
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testRestoreBranch(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+        self.assertTrue(self.delete_restore_pull.restore_branch())
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+
+    def testDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.delete_restore_pull.delete_branch(force=False)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testForceDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testEnableAutomerge(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
+        response = self.pull.enable_automerge(
+            merge_method="SQUASH",
+            author_email="foo@example.com",
+            client_mutation_id="1234",
+            commit_body="body of the commit",
+            commit_headline="The commit headline",
+            expected_head_oid="0283d46537193f1fed7d46859f15c5304b9836f9",
+        )
+        assert response == {
+            "data": {
+                "enablePullRequestAutoMerge": {
+                    "actor": {
+                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                        "login": "heitorpolidoro",
+                        "resourcePath": "/heitorpolidoro",
+                        "url": "https://github.com/heitorpolidoro",
+                    },
+                    "clientMutationId": None,
+                }
+            }
+        }
+
+    def testEnableAutomergeDefaultValues(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
+        # The default values are:
+        # - merge_method = "MERGE"
+        self.pull.enable_automerge()
+
+    def testEnableAutomergeNotValidMergeMethod(self):
+        with pytest.raises(AssertionError):
+            self.pull.enable_automerge(merge_method="INVALID")
+
+    def testEnableAutomergeError(self):
+        # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
+        with pytest.raises(github.GithubException) as error:
+            self.pull.enable_automerge()
+
+        assert error.value.status == 400
+        assert error.value.data == {
+            "data": {"enablePullRequestAutoMerge": None},
+            "errors": [
+                {
+                    "locations": [{"column": 81, "line": 1}],
+                    "message": "Pull request Auto merge is not allowed for this repository",
+                    "path": ["enablePullRequestAutoMerge"],
+                    "type": "UNPROCESSABLE",
+                }
+            ],
+        }
+
+    def testDisableAutomerge(self):
+        response = self.pull.disable_automerge()
+        assert response == {
+            "data": {
+                "disablePullRequestAutoMerge": {
+                    "actor": {
+                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                        "login": "heitorpolidoro",
+                        "resourcePath": "/heitorpolidoro",
+                        "url": "https://github.com/heitorpolidoro",
+                    },
+                    "clientMutationId": None,
+                }
+            }
+        }

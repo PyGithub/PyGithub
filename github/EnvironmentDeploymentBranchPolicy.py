@@ -1,6 +1,11 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2022 Alson van der Meulen <alson.vandermeulen@dearhealth.com>      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 alson <git@alm.nufan.net>                                     #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,6 +24,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -26,7 +32,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     """
-    This class represents a deployment branch policy for an environment. The reference can be found here https://docs.github.com/en/rest/reference/deployments#environments
+    This class represents a deployment branch policy for an environment.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/deployments#environments
+
     """
 
     def _initAttributes(self) -> None:

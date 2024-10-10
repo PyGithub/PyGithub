@@ -52,4 +52,3 @@ None
 403
 [('status', '403 Forbidden'), ('x-ratelimit-remaining', '0'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('content-length', '56'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '60'), ('access-control-allow-credentials', 'true'), ('date', 'Fri, 17 May 2013 12:23:56 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]
 {"message":"API Rate Limit Exceeded for 92.104.200.119"}
-

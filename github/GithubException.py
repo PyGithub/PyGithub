@@ -9,6 +9,15 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2016 humbug <bah>                                                  #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,15 +36,18 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 import json
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 
 class GithubException(Exception):
     """
-    Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub (but :class:`github.GithubException.BadAttributeException`).
+    Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub
+    (but :class:`github.GithubException.BadAttributeException`).
 
     Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
+
     """
 
     def __init__(
@@ -59,21 +71,21 @@ class GithubException(Exception):
     @property
     def status(self) -> int:
         """
-        The status returned by the Github API
+        The status returned by the Github API.
         """
         return self.__status
 
     @property
     def data(self) -> Any:
         """
-        The (decoded) data returned by the Github API
+        The (decoded) data returned by the Github API.
         """
         return self.__data
 
     @property
     def headers(self) -> Optional[Dict[str, str]]:
         """
-        The headers returned by the Github API
+        The headers returned by the Github API.
         """
         return self.__headers
 
@@ -106,13 +118,15 @@ class UnknownObjectException(GithubException):
 
 class BadUserAgentException(GithubException):
     """
-    Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user agent HTML status)
+    Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user
+    agent HTML status)
     """
 
 
 class RateLimitExceededException(GithubException):
     """
-    Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
+    Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML
+    status)
     """
 
 
@@ -139,7 +153,7 @@ class BadAttributeException(Exception):
     @property
     def actual_value(self) -> Any:
         """
-        The value returned by Github
+        The value returned by Github.
         """
         return self.__actualValue
 
@@ -153,25 +167,25 @@ class BadAttributeException(Exception):
         List[Tuple[Type[str], Type[str]]],
     ]:
         """
-        The type PyGithub expected
+        The type PyGithub expected.
         """
         return self.__expectedType
 
     @property
     def transformation_exception(self) -> Optional[Exception]:
         """
-        The exception raised when PyGithub tried to parse the value
+        The exception raised when PyGithub tried to parse the value.
         """
         return self.__transformationException
 
 
 class TwoFactorException(GithubException):
     """
-    Exception raised when Github requires a onetime password for two-factor authentication
+    Exception raised when Github requires a onetime password for two-factor authentication.
     """
 
 
 class IncompletableObject(GithubException):
     """
-    Exception raised when we can not request an object from Github because the data returned did not include a URL
+    Exception raised when we can not request an object from Github because the data returned did not include a URL.
     """
