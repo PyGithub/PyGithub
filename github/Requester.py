@@ -861,9 +861,16 @@ class Requester:
         self,
         verb: str,
         url: str,
-        headers: Optional[Dict[str, Any]] = {},
-        cnx=None, path=None):
-        """Request a file from the server and save it to the given path"""
+        path: str,
+        headers: Optional[Dict[str, str]] = None,
+        input: Optional[Any] = None,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> None:
+        """
+        Request a file from the server and save it to the given path.
+        """
+        if headers is None:
+            headers = {}
         headers["Accept"] = "application/octet-stream"
         headers["User-Agent"] = self.__userAgent
         if self.__auth is not None:

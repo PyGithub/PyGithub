@@ -150,10 +150,9 @@ class GitReleaseAsset(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
-    def download_asset(self, path):
+    def download_asset(self, path: str) -> bool:
         """
         Download asset to the path.
-        :rtype: bool
         """
         assert isinstance(path, str), path
         self._requester.requestFile("GET", self.url, path=path)
