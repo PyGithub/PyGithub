@@ -7,6 +7,7 @@
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -180,6 +181,16 @@ class GithubIntegration:
         # The installation has to authenticate as an installation, not an app
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
+
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
 
     def _get_headers(self) -> dict[str, str]:
         """

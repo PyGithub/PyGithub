@@ -10,6 +10,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Chris Gavin <chris@chrisgavin.me>                             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -256,6 +258,13 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
+        return status == 201
+
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", f"{self.url}/rerun-failed-jobs")
         return status == 201
 
     def timing(self) -> TimingData:

@@ -26,6 +26,7 @@
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -197,6 +198,16 @@ class GithubObject:
         self._headers = headers
         self._rawData = attributes
         self._useAttributes(attributes)
+
+    @property
+    def requester(self) -> "Requester":
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self._requester
 
     @property
     def raw_data(self) -> Dict[str, Any]:

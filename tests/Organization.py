@@ -38,6 +38,7 @@
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <n_othing@hotmail.com>    #
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
@@ -65,6 +66,7 @@ from datetime import datetime, timezone
 from unittest import mock
 
 import github
+from github.OrganizationCustomProperty import CustomProperty
 
 from . import Framework
 
@@ -629,3 +631,76 @@ class Organization(Framework.TestCase):
         with self.assertRaises(AssertionError) as exc:
             secret.edit(value="newvalue", secret_type="supersecret")
         self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    def testCreateCustomProperties(self):
+        properties = [
+            CustomProperty(
+                property_name="property_1",
+                value_type="string",
+                required=False,
+                description="description",
+                values_editable_by="org_actors",
+            ),
+            CustomProperty(
+                property_name="property_2",
+                value_type="single_select",
+                required=True,
+                default_value="bar",
+                description="Lorem ipsum",
+                allowed_values=["foo", "bar"],
+                values_editable_by="org_and_repo_actors",
+            ),
+        ]
+        properties = self.org.create_custom_properties(properties)
+        properties_map = {p.property_name: p for p in properties}
+        property_1 = properties_map["property_1"]
+        self.assertEqual(property_1.value_type, "string")
+        property_2 = properties_map["property_2"]
+        self.assertEqual(property_2.description, "Lorem ipsum")
+
+    def testCreateCustomProperty(self):
+        custom_property = CustomProperty(
+            property_name="property_1",
+            value_type="string",
+            required=True,
+            default_value="foo",
+            description="description",
+        )
+        created_property = self.org.create_custom_property(custom_property)
+        self.assertEqual(created_property.property_name, "property_1")
+        self.assertEqual(created_property.value_type, "string")
+        self.assertEqual(created_property.required, True)
+        self.assertEqual(created_property.default_value, "foo")
+        self.assertEqual(created_property.description, "description")
+        self.assertEqual(created_property.values_editable_by, "org_actors")
+
+    def testGetCustomProperties(self):
+        properties = self.org.get_custom_properties()
+        properties_map = {p.property_name: p for p in properties}
+        self.assertIn("property_1", properties_map)
+        self.assertIn("property_2", properties_map)
+
+    def testGetCustomProperty(self):
+        custom_property = self.org.get_custom_property("property_1")
+        self.assertEqual(custom_property.property_name, "property_1")
+        self.assertEqual(custom_property.value_type, "string")
+        self.assertEqual(custom_property.required, True)
+        self.assertEqual(custom_property.default_value, "foo")
+        self.assertEqual(custom_property.description, "description")
+        self.assertEqual(custom_property.values_editable_by, "org_actors")
+
+    def testCreateCustomPropertyValues(self):
+        self.org.create_custom_property_values(["TestPyGithub"], {"property_1": "bar"})
+        self.testListCustomPropertyValues()
+
+    def testListCustomPropertyValues(self):
+        repos = list(self.org.list_custom_property_values("repo:BeaverSoftware/TestPyGithub"))
+        repos_map = {r.repository_name: r for r in repos}
+        self.assertIn("TestPyGithub", repos_map)
+        self.assertIn("property_1", repos_map["TestPyGithub"].properties)
+        self.assertEqual(repos_map["TestPyGithub"].properties["property_1"], "bar")
+
+    def testRemoveCustomProperty(self):
+        self.org.remove_custom_property("property_1")
+        with self.assertRaises(github.UnknownObjectException):
+            self.org.get_custom_property("property_1")

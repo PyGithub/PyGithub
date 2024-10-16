@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Xavi Vega <xabi1309@gmail.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #

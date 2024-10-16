@@ -69,6 +69,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -271,6 +272,16 @@ class Github:
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.close()
+
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
 
     @property
     def FIX_REPO_GET_GIT_REF(self) -> bool:

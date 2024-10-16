@@ -140,7 +140,7 @@ def findHeadersAndFiles():
         for dir in list(dirs):
             if dir.startswith("."):
                 dirs.remove(dir)
-        for excluded in ["developer.github.com", "build", "venv", "PyGithub.egg-info", "requirements"]:
+        for excluded in ["developer.github.com", "build", "venv", "PyGithub.egg-info", "requirements", "pre-commit"]:
             if excluded in dirs:
                 dirs.remove(excluded)
 

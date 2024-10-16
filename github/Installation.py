@@ -19,6 +19,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -102,6 +103,16 @@ class Installation(NonCompletableGithubObject):
 
     def get_github_for_installation(self) -> Github:
         return github.Github(**self._requester.kwargs)
+
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self._requester
 
     @property
     def id(self) -> int:

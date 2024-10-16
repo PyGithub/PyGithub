@@ -19,7 +19,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Matthias Bilger <matthias@bilger.info>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -126,6 +128,15 @@ class Notification(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
+            self.url,
+        )
+
+    def mark_as_done(self) -> None:
+        """
+        :calls: `DELETE /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
             self.url,
         )
 

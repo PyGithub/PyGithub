@@ -63,8 +63,11 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
@@ -123,6 +126,7 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
         )
         self.assertFalse(self.repo.has_wiki)
+        self.assertFalse(self.repo.has_discussions)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
@@ -167,6 +171,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.custom_properties, {"foo": "bar"})
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -180,6 +185,7 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
+            has_discussions=False,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
@@ -203,6 +209,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
+        self.assertFalse(self.repo.has_discussions)
         self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
@@ -1997,6 +2004,14 @@ class Repository(Framework.TestCase):
             repo.get_secret(secret_name="splat", secret_type="supersecret")
         self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
 
+    def testGetCustomProperties(self):
+        custom_properties = self.repo.get_custom_properties()
+        self.assertDictEqual(custom_properties, {"foo": "bar"})
+
+    def testUpdateCustomProperties(self):
+        custom_properties = {"foo": "bar"}
+        self.repo.update_custom_properties(custom_properties)
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
@@ -2066,3 +2081,7 @@ class LazyRepository(Framework.TestCase):
     def testGetVulnerabilityAlertWhenTurnedOff(self):
         lazy_repo = self.getEagerRepository()
         self.assertFalse(lazy_repo.get_vulnerability_alert())
+
+    def testRequester(self):
+        lazy_repo = self.getLazyRepository()
+        assert lazy_repo.requester is lazy_repo._requester
