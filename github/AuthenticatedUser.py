@@ -88,6 +88,7 @@ import github.Migration
 import github.NamedUser
 import github.Notification
 import github.Organization
+import github.Package
 import github.Plan
 import github.Repository
 import github.UserKey
@@ -118,6 +119,7 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Notification import Notification
     from github.Organization import Organization
+    from github.Package import Package
     from github.Plan import Plan
     from github.Project import Project
     from github.Repository import Repository
@@ -856,6 +858,24 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/orgs <http://docs.github.com/en/rest/reference/orgs>`_
         """
         return PaginatedList(github.Organization.Organization, self._requester, "/user/orgs", None)
+
+    def get_package(self, package_type: github.Package.PackageType, package_name: str) -> Package:
+        """
+        :calls: `GET /user/packages/PACKAGE_TYPE/PACKAGE_NAME <https://docs.github.com/en/rest/reference/packages>`_
+        """
+        assert isinstance(package_type , github.Package.PackageType), package_type
+        assert isinstance(package_name, str), package_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type.value}/{package_name}")
+        return github.Package.Package(self._requester, headers, data, completed=True)
+
+    def get_packages(self, package_type: github.Package.PackageType) -> PaginatedList[Package]:
+        """
+        :calls: `GET /user/packages <https://docs.github.com/en/rest/reference/packages>`_
+        """
+        return PaginatedList(
+            github.Package.Package,
+            self._requester, f"{self.url}/packages?package_type={package_type.value}", None
+        )
 
     def get_repo(self, name: str) -> Repository:
         """
