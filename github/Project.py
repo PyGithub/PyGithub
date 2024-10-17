@@ -201,7 +201,7 @@ class Project(CompletableGithubObject):
             self._requester,
             self.columns_url,
             None,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_column(self, name: str) -> github.ProjectColumn.ProjectColumn:
