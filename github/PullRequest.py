@@ -777,7 +777,7 @@ class PullRequest(CompletableGithubObject):
         Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
         """
         if not force:
-            remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+            remaining_pulls = self.head.repo.get_pulls(head=f"{self.head.repo.owner.name}:{self.head.ref}")
             if remaining_pulls.totalCount > 0:
                 raise RuntimeError(
                     "This branch is referenced by open pull requests, set force=True to delete this branch."
