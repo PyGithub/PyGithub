@@ -1208,6 +1208,7 @@ class Repository(CompletableGithubObject):
         parents: list[GitCommit],
         author: Opt[InputGitAuthor] = NotSet,
         committer: Opt[InputGitAuthor] = NotSet,
+        signature: Opt[str] = NotSet,
     ) -> GitCommit:
         """
         :calls: `POST /repos/{owner}/{repo}/git/commits <https://docs.github.com/en/rest/reference/git#commits>`_
@@ -1216,6 +1217,7 @@ class Repository(CompletableGithubObject):
         :param parents: list of :class:`github.GitCommit.GitCommit`
         :param author: :class:`github.InputGitAuthor.InputGitAuthor`
         :param committer: :class:`github.InputGitAuthor.InputGitAuthor`
+        :param signature: string
         :rtype: :class:`github.GitCommit.GitCommit`
         """
         assert isinstance(message, str), message
@@ -1223,6 +1225,7 @@ class Repository(CompletableGithubObject):
         assert all(isinstance(element, github.GitCommit.GitCommit) for element in parents), parents
         assert is_optional(author, github.InputGitAuthor), author
         assert is_optional(committer, github.InputGitAuthor), committer
+        assert is_optional(signature, str), signature
         post_parameters: dict[str, Any] = {
             "message": message,
             "tree": tree._identity,
@@ -1232,6 +1235,8 @@ class Repository(CompletableGithubObject):
             post_parameters["author"] = author._identity
         if is_defined(committer):
             post_parameters["committer"] = committer._identity
+        if is_defined(signature):
+            post_parameters["signature"] = signature
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/git/commits", input=post_parameters)
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
