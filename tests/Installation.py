@@ -95,3 +95,8 @@ class Installation(Framework.BasicTestCase):
 
             repo = g.get_repo("PyGithub/PyGithub")
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+
+    def testRequester(self):
+        self.assertEqual(len(self.installations), 1)
+        installation = self.installations[0]
+        assert installation.requester is installation._requester
