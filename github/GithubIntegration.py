@@ -137,13 +137,21 @@ class GithubIntegration:
                 "please use auth=github.Auth.AppAuth(...) instead",
                 category=DeprecationWarning,
             )
-            auth = AppAuth(
-                integration_id,  # type: ignore
-                private_key,  # type: ignore
-                jwt_expiry=jwt_expiry,
-                jwt_issued_at=jwt_issued_at,
-                jwt_algorithm=jwt_algorithm,
-            )
+            if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key=None,  # type: ignore
+                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
+            else:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key,  # type: ignore
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
 
         assert isinstance(
             auth, AppAuth
