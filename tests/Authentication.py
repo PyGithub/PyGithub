@@ -203,9 +203,9 @@ class Authentication(Framework.BasicTestCase):
                 datetime(2025, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
             )
 
-        # use the token
-        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+            # use the token
+            self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+            self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
 
     def testAppInstallationAuthAuthenticationRequesterArgs(self):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
