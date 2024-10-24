@@ -1308,8 +1308,8 @@ class Repository(CompletableGithubObject):
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
-        make_latest: str = "true",
         target_commitish: Opt[str] = NotSet,
+        make_latest: str = "true",
     ) -> GitRelease:
         """
         :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
@@ -1319,8 +1319,8 @@ class Repository(CompletableGithubObject):
         :param draft: bool
         :param prerelease: bool
         :param generate_release_notes: bool
-        :param make_latest: string
         :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :param make_latest: string
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
