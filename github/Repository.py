@@ -2336,6 +2336,39 @@ class Repository(CompletableGithubObject):
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
 
+    def get_discussion(
+        self,
+        number: int,
+        discussion_graphql_schema: str | None = None,
+    ) -> RepositoryDiscussion:
+        assert isinstance(number, int), number
+        if discussion_graphql_schema is None:
+            discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
+        query = (
+            """
+            query Q($repo: String!, $owner: String!, $number: Int!) {
+              repository(name: $repo, owner: $owner) {
+                discussion(number: $number)
+            """
+            + discussion_graphql_schema
+            + """
+              }
+            }
+            """
+        )
+        variables = {
+            "repo": self.name,
+            "owner": self.owner.login,
+            "number": number,
+        }
+        headers, data = self._requester.graphql_query(query, variables)
+        return github.RepositoryDiscussion.RepositoryDiscussion(
+            requester=self._requester,
+            headers=headers,
+            attributes=data["data"]["repository"]["discussion"],
+            completed=True,
+        )
+
     def get_discussions(
         self,
         discussion_graphql_schema: str,
