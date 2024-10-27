@@ -182,6 +182,16 @@ class GithubIntegration:
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
+
     def _get_headers(self) -> dict[str, str]:
         """
         Get headers for the requests.
