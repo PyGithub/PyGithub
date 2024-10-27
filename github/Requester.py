@@ -471,6 +471,29 @@ class Requester:
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
 
+    @staticmethod
+    def get_parameters_of_url(url: str) -> Dict[str, list]:
+        query = urllib.parse.urlparse(url)[4]
+        return urllib.parse.parse_qs(query)
+
+    @staticmethod
+    def add_parameters_to_url(
+        url: str,
+        parameters: Dict[str, Any],
+    ) -> str:
+        scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
+        url_params = urllib.parse.parse_qs(query)
+        # union parameters in url with given parameters, the latter have precedence
+        url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
+        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # remove query from url
+        url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
+
+        if len(parameter_list) == 0:
+            return url
+        else:
+            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
+
     def close(self) -> None:
         """
         Close the connection to the server.
@@ -860,7 +883,7 @@ class Requester:
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
-        url = self.__addParametersToUrl(url, parameters)
+        url = Requester.add_parameters_to_url(url, parameters)
 
         encoded_input = None
         if input is not None:
@@ -995,16 +1018,6 @@ class Requester:
             if o.query != "":
                 url += f"?{o.query}"
         return url
-
-    def __addParametersToUrl(
-        self,
-        url: str,
-        parameters: Dict[str, Any],
-    ) -> str:
-        if len(parameters) == 0:
-            return url
-        else:
-            return f"{url}?{urllib.parse.urlencode(parameters)}"
 
     def __createConnection(
         self,
