@@ -329,9 +329,6 @@ class PaginatedList(PaginatedListBase[T]):
 
             _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
 
-            import json
-
-            print(json.dumps(data, indent=2))
 
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
             return self._getPage(pagination, {})
