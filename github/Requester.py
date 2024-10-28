@@ -471,6 +471,29 @@ class Requester:
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
 
+    @staticmethod
+    def get_parameters_of_url(url: str) -> Dict[str, list]:
+        query = urllib.parse.urlparse(url)[4]
+        return urllib.parse.parse_qs(query)
+
+    @staticmethod
+    def add_parameters_to_url(
+        url: str,
+        parameters: Dict[str, Any],
+    ) -> str:
+        scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
+        url_params = urllib.parse.parse_qs(query)
+        # union parameters in url with given parameters, the latter have precedence
+        url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
+        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # remove query from url
+        url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
+
+        if len(parameter_list) == 0:
+            return url
+        else:
+            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
+
     def close(self) -> None:
         """
         Close the connection to the server.
@@ -547,6 +570,15 @@ class Requester:
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with JSON body.
+
+        :param input: request body, serialized to JSON if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(
@@ -557,6 +589,15 @@ class Requester:
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Dict[str, str]] = None,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+        """
+        Send a request with multi-part-encoded body.
+
+        :param input: request body, will be multi-part encoded if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(
@@ -568,6 +609,15 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Send a request with a file for the body.
+
+        :param input: path to a file to use for the request body
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -582,23 +632,21 @@ class Requester:
         return response_headers, data
 
     def graphql_named_mutation(
-        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         Create a mutation in the format:
-            mutation MutationName($input: MutationNameInput!) {
-                mutationName(input: $input) {
-                    <output>
-                }
+            mutation Mutation($input: MutationNameInput!) {
+                mutationName(input: $input) { <output_schema> }
             }
-        and call the self.graphql_query method
-        """
-        title = "".join([x.capitalize() for x in mutation_name.split("_")])
-        mutation_name = title[:1].lower() + title[1:]
-        output = output or ""
-        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+        and call the self.graphql_query method.
 
-        return self.graphql_query(query, variables)
+        Returns the response data according to given output schema.
+        """
+        mutation_input_name = mutation_name[:1].upper() + mutation_name[1:] + "Input!"
+        query = f"mutation Mutation($input: {mutation_input_name}) {{ {mutation_name}(input: $input) {{ {output_schema} }} }}"
+        headers, data = self.graphql_query(query, {"input": mutation_input})
+        return headers, data.get("data", {}).get(mutation_name, {})
 
     def __check(
         self,
@@ -709,6 +757,14 @@ class Requester:
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with JSON input.
+
+        :param input: request body, will be serialized as JSON
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
@@ -723,6 +779,14 @@ class Requester:
         input: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with multi-part encoding.
+
+        :param input: request body, will be serialized as multipart form data
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -747,6 +811,13 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with a file as request body.
+
+        :param input: path to a local file to use for request body
+        :returns:``(status, headers, body)``
+
+        """
         if headers is None:
             headers = {}
 
@@ -772,6 +843,15 @@ class Requester:
         file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with a binary file-like for the body.
+
+        :param file_like: file-like object to use for the request body
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
+
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like
@@ -801,7 +881,7 @@ class Requester:
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
-        url = self.__addParametersToUrl(url, parameters)
+        url = Requester.add_parameters_to_url(url, parameters)
 
         encoded_input = None
         if input is not None:
@@ -936,16 +1016,6 @@ class Requester:
             if o.query != "":
                 url += f"?{o.query}"
         return url
-
-    def __addParametersToUrl(
-        self,
-        url: str,
-        parameters: Dict[str, Any],
-    ) -> str:
-        if len(parameters) == 0:
-            return url
-        else:
-            return f"{url}?{urllib.parse.urlencode(parameters)}"
 
     def __createConnection(
         self,

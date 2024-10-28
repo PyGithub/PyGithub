@@ -34,17 +34,13 @@ class GraphQl(Framework.TestCase):
 
     def expected(self, base_url: str = "https://github.com") -> Dict[Any, Any]:
         return {
-            "data": {
-                "disablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": f"{base_url}/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": f"{base_url}/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }
 
     def testRequesterGraphQlPrefix(self):

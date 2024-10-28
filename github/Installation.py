@@ -105,6 +105,16 @@ class Installation(NonCompletableGithubObject):
         return github.Github(**self._requester.kwargs)
 
     @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self._requester
+
+    @property
     def id(self) -> int:
         return self._id.value
 

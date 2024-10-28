@@ -628,3 +628,6 @@ class Github(Framework.TestCase):
             lambda e: e.type,
             ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
         )
+
+    def testRequester(self):
+        assert self.g.requester is self.g.__requester

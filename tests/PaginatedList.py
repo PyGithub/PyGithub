@@ -37,6 +37,8 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime, timezone
+
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
@@ -329,6 +331,40 @@ class PaginatedList(Framework.TestCase):
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
+
+    def testCustomPerPageIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments()
+        self.assertEqual(
+            [
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
+    def testCustomPerPageReversedIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments().reversed
+        self.assertEqual(
+            [
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
 
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
