@@ -129,7 +129,7 @@ class ProjectColumn(CompletableGithubObject):
             self._requester,
             f"{self.url}/cards",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_card(

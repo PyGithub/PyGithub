@@ -51,6 +51,10 @@ class PaginatedList(Framework.TestCase):
         self.list = self.repo.get_issues()
         self.licenses = self.g.get_enterprise("beaver-group").get_consumed_licenses()
 
+    def testIsApiType(self):
+        self.assertTrue(self.list.is_rest)
+        self.assertFalse(self.list.is_graphql)
+
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
 

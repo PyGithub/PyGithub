@@ -993,7 +993,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/projects",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_public_members(self) -> PaginatedList[NamedUser]:
@@ -1285,7 +1285,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/installations",
             None,
-            None,
+            headers=None,
             list_item="installations",
         )
 
