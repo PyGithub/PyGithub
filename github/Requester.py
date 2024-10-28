@@ -632,23 +632,21 @@ class Requester:
         return response_headers, data
 
     def graphql_named_mutation(
-        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         Create a mutation in the format:
-            mutation MutationName($input: MutationNameInput!) {
-                mutationName(input: $input) {
-                    <output>
-                }
+            mutation Mutation($input: MutationNameInput!) {
+                mutationName(input: $input) { <output_schema> }
             }
-        and call the self.graphql_query method
-        """
-        title = "".join([x.capitalize() for x in mutation_name.split("_")])
-        mutation_name = title[:1].lower() + title[1:]
-        output = output or ""
-        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+        and call the self.graphql_query method.
 
-        return self.graphql_query(query, variables)
+        Returns the response data according to given output schema.
+        """
+        mutation_input_name = mutation_name[:1].upper() + mutation_name[1:] + "Input!"
+        query = f"mutation Mutation($input: {mutation_input_name}) {{ {mutation_name}(input: $input) {{ {output_schema} }} }}"
+        headers, data = self.graphql_query(query, {"input": mutation_input})
+        return headers, data.get("data", {}).get(mutation_name, {})
 
     def __check(
         self,
